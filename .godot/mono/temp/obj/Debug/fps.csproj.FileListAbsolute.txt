@@ -1,0 +1,17 @@
+/Users/zackgg/Godot/fps-godot-mono/.godot/mono/temp/bin/Debug/fps.deps.json
+/Users/zackgg/Godot/fps-godot-mono/.godot/mono/temp/bin/Debug/fps.runtimeconfig.json
+/Users/zackgg/Godot/fps-godot-mono/.godot/mono/temp/bin/Debug/fps.dll
+/Users/zackgg/Godot/fps-godot-mono/.godot/mono/temp/bin/Debug/fps.pdb
+/Users/zackgg/Godot/fps-godot-mono/.godot/mono/temp/bin/Debug/GodotSharp.dll
+/Users/zackgg/Godot/fps-godot-mono/.godot/mono/temp/bin/Debug/GodotSharpEditor.dll
+/Users/zackgg/Godot/fps-godot-mono/.godot/mono/temp/obj/Debug/fps.csproj.AssemblyReference.cache
+/Users/zackgg/Godot/fps-godot-mono/.godot/mono/temp/obj/Debug/fps.GeneratedMSBuildEditorConfig.editorconfig
+/Users/zackgg/Godot/fps-godot-mono/.godot/mono/temp/obj/Debug/fps.AssemblyInfoInputs.cache
+/Users/zackgg/Godot/fps-godot-mono/.godot/mono/temp/obj/Debug/fps.AssemblyInfo.cs
+/Users/zackgg/Godot/fps-godot-mono/.godot/mono/temp/obj/Debug/fps.csproj.CoreCompileInputs.cache
+/Users/zackgg/Godot/fps-godot-mono/.godot/mono/temp/obj/Debug/fps.csproj.Up2Date
+/Users/zackgg/Godot/fps-godot-mono/.godot/mono/temp/obj/Debug/fps.dll
+/Users/zackgg/Godot/fps-godot-mono/.godot/mono/temp/obj/Debug/refint/fps.dll
+/Users/zackgg/Godot/fps-godot-mono/.godot/mono/temp/obj/Debug/fps.pdb
+/Users/zackgg/Godot/fps-godot-mono/.godot/mono/temp/obj/Debug/fps.genruntimeconfig.cache
+/Users/zackgg/Godot/fps-godot-mono/.godot/mono/temp/obj/Debug/ref/fps.dll
