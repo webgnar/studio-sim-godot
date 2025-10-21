@@ -1,20 +1,20 @@
 63f7b34db8d8cdea90c76aacccf841ec
-::res://::1761034209
+::res://::1761077318
 icon.svg::CompressedTexture2D::2126835338060944900::1760937980::1761029103::1::::<><><>0<>0<>c511fe3db7501179497f362af9747f17<>res://.godot/imported/icon.svg-218a8f2b3041327d8a5756f3a245f83b.ctex::
-::res://materials/::1761032149
+::res://materials/::1761034491
 brickwhite.tres::StandardMaterial3D::2104820844770818005::1761019173::0::1::::<><><>0<>0<><>::uid://iucb8t01gwth::::res://sprites/brickswhite.jpg<>uid://w37wcrmdvee5::::res://sprites/normals/brickswhite_normal.png
 floor.tres::StandardMaterial3D::1329459971527261149::1761030067::0::1::::<><><>0<>0<><>::uid://d1iyx5benjdbo::::res://sprites/floor.jpg<>uid://drlag2fiaq8ak::::res://sprites/normals/floor_normal.png
 humanskin.tres::StandardMaterial3D::7472201561840425083::1761029874::0::1::::<><><>0<>0<><>::uid://dvi43txkn6cty::::res://models/human figure_0.png<>uid://c6ichykhg0cah::::res://sprites/normals/human figure_0_ambient.png<>uid://bfhte0o8dued7::::res://sprites/normals/human figure_0_normal.png
 skeletonskin.tres::StandardMaterial3D::2398893118778631077::1761029874::0::1::::<><><>0<>0<><>::uid://bgjdwhnujebbp::::res://models/human skeleton rewrite_0.png<>uid://bo86ppi867uwo::::res://sprites/normals/human skeleton rewrite_0_ambient.png<>uid://bgngbhxf10ne0::::res://sprites/normals/human skeleton rewrite_0_normal.png
-wall.tres::StandardMaterial3D::1203482867017653707::1761032149::0::1::::<><><>0<>0<><>::uid://8mrntpocwvao::::res://sprites/normals/wall_specular.png<>uid://5kcrsmi7omc8::::res://sprites/normals/wall_normal.png
+wall.tres::StandardMaterial3D::1203482867017653707::1761034491::0::1::::<><><>0<>0<><>::uid://8mrntpocwvao::::res://sprites/normals/wall_specular.png<>uid://5kcrsmi7omc8::::res://sprites/normals/wall_normal.png
 wood.tres::StandardMaterial3D::1590271667034205650::1761019173::0::1::::<><><>0<>0<><>::uid://cbn0d3riillev::::res://sprites/wood.jpg<>uid://dyuvtxhp260rj::::res://sprites/normals/wood_ambient.png<>uid://3smflfln5x7y::::res://sprites/normals/wood_specular.png<>uid://bifvpuur5heg3::::res://sprites/normals/wood_normal.png
-::res://models/::1761034199
+::res://models/::1761074870
 human figure_0.png::CompressedTexture2D::8651554618477128302::1761029543::1761029544::1::::<><><>0<>0<>0246684bccb6038afb79604fbe58d8a8<>res://.godot/imported/human figure_0.png-002998ac143a09001a1691c85c187669.s3tc.ctex::
-human skeleton rewrite.glb::PackedScene::1312399607314389988::1761019727::1761034199::1::::<><><>0<>0<>da66862949b623548c919cb65d2e3377<>res://.godot/imported/human skeleton rewrite.glb-555992a02adb4f9e8ee8ab29834400b3.scn::uid://bgjdwhnujebbp::::res://models/human skeleton rewrite_0.png
+human skeleton rewrite.glb::PackedScene::1312399607314389988::1761019727::1761074870::1::::<><><>0<>0<>9ffb6957a9a9b6e61f14113adb9a702e<>res://.godot/imported/human skeleton rewrite.glb-555992a02adb4f9e8ee8ab29834400b3.scn::uid://depuckvrgdvcl::::res://materials/humanskin.tres
 human skeleton rewrite_0.png::CompressedTexture2D::2826354972418842789::1761019727::1761029103::1::::<><><>0<>0<>b18666d67ddfd7aae793bdc394400825<>res://.godot/imported/human skeleton rewrite_0.png-81ac48995d7f7b2e0641cbafa7765af3.s3tc.ctex::
-::res://scenes/::1761034199
+::res://scenes/::1761034826
 human.tscn::PackedScene::1698309852409355828::1761034199::0::1::::<><><>0<>0<><>::uid://sx0bao2oqis7::::res://models/human skeleton rewrite.glb
-world.tscn::PackedScene::5710592644140018997::1761034199::0::1::::<><><>0<>0<><>::uid://re8gmfn1nbgt::::res://materials/wall.tres<>uid://5ya7pbibeigd::::res://scripts/PlayerController.cs<>uid://s7aanj1sph6l::::res://materials/floor.tres<>uid://wwlsotlotycw::::res://materials/wood.tres<>uid://48uded6h5otx::::res://materials/brickwhite.tres<>uid://ygw6d51stbbw::::res://scenes/human.tscn<>uid://do8y5c5ly05en::::res://scripts/PlayerAnimation.cs
+world.tscn::PackedScene::5710592644140018997::1761034826::0::1::::<><><>0<>0<><>::uid://re8gmfn1nbgt::::res://materials/wall.tres<>uid://5ya7pbibeigd::::res://scripts/PlayerController.cs<>uid://s7aanj1sph6l::::res://materials/floor.tres<>uid://wwlsotlotycw::::res://materials/wood.tres<>uid://48uded6h5otx::::res://materials/brickwhite.tres<>uid://ygw6d51stbbw::::res://scenes/human.tscn<>uid://do8y5c5ly05en::::res://scripts/PlayerAnimation.cs
 ::res://scripts/::1761022016
 PlayerAnimation.cs::CSharpScript::8211541261462983093::1761022787::0::1::::<>Node<><>0<>0<><>::
 PlayerController.cs::CSharpScript::2155268310403405791::1761022606::0::1::::<>CharacterBody3D<><>0<>0<><>::
