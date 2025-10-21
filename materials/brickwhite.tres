@@ -1,13 +1,18 @@
-[gd_resource type="StandardMaterial3D" load_steps=3 format=3 uid="uid://48uded6h5otx"]
+[gd_resource type="StandardMaterial3D" load_steps=4 format=3 uid="uid://48uded6h5otx"]
 
-[ext_resource type="Texture2D" uid="uid://iucb8t01gwth" path="res://sprites/brickswhite.jpg" id="1_51p4d"]
-[ext_resource type="Texture2D" uid="uid://w37wcrmdvee5" path="res://sprites/normals/brickswhite_normal.png" id="2_nsivn"]
+[ext_resource type="Texture2D" uid="uid://djd4xqb57hhr7" path="res://sprites/brick_bump.jpg" id="1_nsivn"]
+[ext_resource type="Texture2D" uid="uid://dv58j61xl61oc" path="res://sprites/brick_diffuse_ambient.png" id="2_4uj3d"]
+[ext_resource type="Texture2D" uid="uid://bqkunprbwvn68" path="res://sprites/brick_diffuse_normal.png" id="3_ovhg2"]
 
 [resource]
-albedo_texture = ExtResource("1_51p4d")
+albedo_texture = ExtResource("1_nsivn")
+albedo_texture_force_srgb = true
 normal_enabled = true
-normal_texture = ExtResource("2_nsivn")
-uv1_scale = Vector3(0.11, 0.11, 0.11)
+normal_scale = 0.33
+normal_texture = ExtResource("3_ovhg2")
+ao_enabled = true
+ao_texture = ExtResource("2_4uj3d")
+uv1_scale = Vector3(0.21, 0.21, 0.21)
 uv1_offset = Vector3(-0.12, 0.01, 1.34)
 uv1_triplanar = true
 uv1_world_triplanar = true

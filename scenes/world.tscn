@@ -1,8 +1,15 @@
-[gd_scene load_steps=11 format=3 uid="uid://cnmivki1rop3b"]
+[gd_scene load_steps=20 format=3 uid="uid://cnmivki1rop3b"]
 
+[ext_resource type="Material" uid="uid://wwlsotlotycw" path="res://materials/wood.tres" id="1_4mrxx"]
 [ext_resource type="Script" uid="uid://d4bxpnphvld1d" path="res://scripts/PlayerController.gd" id="1_4wyf3"]
+[ext_resource type="Texture2D" uid="uid://bke1xjp3mdreb" path="res://sprites/door.jpg" id="1_i7141"]
 [ext_resource type="Material" uid="uid://s7aanj1sph6l" path="res://materials/floor.tres" id="1_k0juu"]
+[ext_resource type="Texture2D" uid="uid://cbn0d3riillev" path="res://sprites/wood.jpg" id="1_q5onr"]
+[ext_resource type="Texture2D" uid="uid://dyuvtxhp260rj" path="res://sprites/normals/wood_ambient.png" id="2_jhx03"]
 [ext_resource type="Script" uid="uid://bw58chvxj0io6" path="res://scripts/PlayerAnimation.gd" id="3_k0juu"]
+[ext_resource type="Texture2D" uid="uid://3smflfln5x7y" path="res://sprites/normals/wood_specular.png" id="3_o8fc1"]
+[ext_resource type="Material" uid="uid://48uded6h5otx" path="res://materials/brickwhite.tres" id="3_qfnet"]
+[ext_resource type="Texture2D" uid="uid://bifvpuur5heg3" path="res://sprites/normals/wood_normal.png" id="4_xo05s"]
 [ext_resource type="Material" uid="uid://re8gmfn1nbgt" path="res://materials/wall.tres" id="5_71j4m"]
 [ext_resource type="PackedScene" uid="uid://ygw6d51stbbw" path="res://scenes/human.tscn" id="6_qfnet"]
 
@@ -19,6 +26,21 @@ sky = SubResource("Sky_rwgxs")
 tonemap_mode = 2
 glow_enabled = true
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dss4m"]
+albedo_texture = ExtResource("1_q5onr")
+metallic = 1.0
+metallic_texture = ExtResource("3_o8fc1")
+normal_enabled = true
+normal_texture = ExtResource("4_xo05s")
+ao_enabled = true
+ao_texture = ExtResource("2_jhx03")
+uv1_scale = Vector3(1.085, -1.798, 0.455)
+uv1_offset = Vector3(4.91, 0, 0)
+uv1_triplanar = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4mrxx"]
+albedo_texture = ExtResource("1_i7141")
+
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_k0juu"]
 
 [sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_71j4m"]
@@ -32,6 +54,30 @@ shadow_enabled = true
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_4wyf3")
+
+[node name="strut" type="CSGBox3D" parent="."]
+transform = Transform3D(-3.4785522e-08, 7.4899993, 0, 3.478552e-08, -1.2298791e-14, 0.4527999, 0.7957999, 3.2739825e-07, -1.9792513e-08, 0.05760669, 5.2334404, 4.026943)
+size = Vector3(0.7, 1, 1)
+material = SubResource("StandardMaterial3D_dss4m")
+
+[node name="strut2" type="CSGBox3D" parent="."]
+transform = Transform3D(-3.4785522e-08, 7.4899993, 0, 3.478552e-08, -1.2298791e-14, 0.4527999, 0.7957999, 3.2739825e-07, -1.9792513e-08, 0.05760669, 5.2334404, 7.926943)
+size = Vector3(0.7, 1, 1)
+material = SubResource("StandardMaterial3D_dss4m")
+
+[node name="strut3" type="CSGBox3D" parent="."]
+transform = Transform3D(-3.4785522e-08, 7.4899993, 0, 3.478552e-08, -1.2298791e-14, 0.4527999, 0.7957999, 3.2739825e-07, -1.9792513e-08, 0.05760669, 5.2334404, 10.926943)
+size = Vector3(0.7, 1, 1)
+material = SubResource("StandardMaterial3D_dss4m")
+
+[node name="strut4" type="CSGBox3D" parent="."]
+transform = Transform3D(-3.4785522e-08, 7.4899993, 0, 3.478552e-08, -1.2298791e-14, 0.4527999, 0.7957999, 3.2739825e-07, -1.9792513e-08, 0.05760669, 5.2334404, 13.926943)
+size = Vector3(0.7, 1, 1)
+material = SubResource("StandardMaterial3D_dss4m")
+
+[node name="celing" type="CSGBox3D" parent="."]
+transform = Transform3D(-2.0107239e-08, 7.49, 0, -0.46, -3.2739828e-07, 0, 0, 0, 22.64, 0.057606697, 5.544661, 4)
+material = ExtResource("1_4mrxx")
 
 [node name="studio" type="CSGCombiner3D" parent="."]
 transform = Transform3D(0.46, 0, 0, 0, 7.49, 0, 0, 0, 22.64, -4.9423933, 3.544661, 4)
@@ -59,6 +105,40 @@ transform = Transform3D(-4.371139e-08, 0, 24.108696, 0, 1, 0, -0.020318022, 0, -
 use_collision = true
 size = Vector3(1, 0.8, 1)
 material = ExtResource("5_71j4m")
+
+[node name="pillar" type="CSGBox3D" parent="studio"]
+transform = Transform3D(2.13, 0, 0, 0, 0.88, 0, 0, 0, 0.05, 2.173913, -0.13351133, 0)
+material = ExtResource("3_qfnet")
+
+[node name="pillar2" type="CSGBox3D" parent="studio"]
+transform = Transform3D(2.13, 0, 0, 0, 0.88, 0, 0, 0, 0.05, 2.173913, -0.13351133, 0.3091873)
+material = ExtResource("3_qfnet")
+
+[node name="pillar3" type="CSGBox3D" parent="studio"]
+transform = Transform3D(2.13, 0, 0, 0, 0.88, 0, 0, 0, 0.05, 2.173913, -0.13351133, -0.48586574)
+material = ExtResource("3_qfnet")
+
+[node name="pillar4" type="CSGBox3D" parent="studio"]
+transform = Transform3D(18.05, 0, 0, 0, 0.88, 0, 0, 0, 0.05, 10.869565, -0.66755676, -0.48586574)
+material = ExtResource("3_qfnet")
+
+[node name="pillar7" type="CSGBox3D" parent="studio"]
+transform = Transform3D(18.05, 0, 0, 0, 0.88, 0, 0, 0, 0.05, 10.869565, 0.30330312, -0.48586574)
+size = Vector3(1, 0.17089844, 1)
+material = ExtResource("3_qfnet")
+
+[node name="pillar5" type="CSGBox3D" parent="studio"]
+transform = Transform3D(2.13, 0, 0, 0, 0.88, 0, 0, 0, 0.05, 19.565216, -0.13351133, 0)
+material = ExtResource("3_qfnet")
+
+[node name="pillar6" type="CSGBox3D" parent="studio"]
+transform = Transform3D(2.13, 0, 0, 0, 0.88, 0, 0, 0, 0.05, 19.565216, -0.13351133, 0.3091873)
+material = ExtResource("3_qfnet")
+
+[node name="door" type="CSGBox3D" parent="studio"]
+transform = Transform3D(-1.0000001, -3.7729234e-07, -2.0582363e-06, 5.369091e-09, -4.779656e-08, -1.4459279, 1.2916772e-09, -0.12058302, 6.272892e-08, 19.293882, -0.26620448, -0.11051236)
+size = Vector3(1, 0.6, 0.3)
+material = SubResource("StandardMaterial3D_4mrxx")
 
 [node name="Player" type="CharacterBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2067637, 0)
