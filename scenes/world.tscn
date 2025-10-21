@@ -1,7 +1,9 @@
-[gd_scene load_steps=9 format=3 uid="uid://cnmivki1rop3b"]
+[gd_scene load_steps=11 format=3 uid="uid://cnmivki1rop3b"]
 
 [ext_resource type="Script" uid="uid://d4bxpnphvld1d" path="res://scripts/PlayerController.gd" id="1_4wyf3"]
+[ext_resource type="Material" uid="uid://s7aanj1sph6l" path="res://materials/floor.tres" id="1_k0juu"]
 [ext_resource type="Script" uid="uid://bw58chvxj0io6" path="res://scripts/PlayerAnimation.gd" id="3_k0juu"]
+[ext_resource type="Material" uid="uid://re8gmfn1nbgt" path="res://materials/wall.tres" id="5_71j4m"]
 [ext_resource type="PackedScene" uid="uid://ygw6d51stbbw" path="res://scenes/human.tscn" id="6_qfnet"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_nnsk1"]
@@ -31,12 +33,35 @@ shadow_enabled = true
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_4wyf3")
 
-[node name="CSGBox3D" type="CSGBox3D" parent="."]
-transform = Transform3D(10.31, 0, 0, 0, 0.06, 0, 0, 0, 29.97, 0, 0, 0)
+[node name="studio" type="CSGCombiner3D" parent="."]
+transform = Transform3D(0.46, 0, 0, 0, 7.49, 0, 0, 0, 22.64, -4.9423933, 3.544661, 4)
 use_collision = true
 
+[node name="floor" type="CSGBox3D" parent="studio"]
+transform = Transform3D(22.413044, 0, 0, 0, 0.008010681, 0, 0, 0, 1.0114841, 10.744333, -0.47325248, 0)
+use_collision = true
+material = ExtResource("1_k0juu")
+
+[node name="wall" type="CSGBox3D" parent="studio"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.173913, -0.099999994, 0)
+use_collision = true
+size = Vector3(1, 0.8, 1)
+material = ExtResource("5_71j4m")
+
+[node name="wall2" type="CSGBox3D" parent="studio"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1.0247351, 19.533485, -0.099999994, 0)
+use_collision = true
+size = Vector3(1, 0.8, 1)
+material = ExtResource("5_71j4m")
+
+[node name="wall3" type="CSGBox3D" parent="studio"]
+transform = Transform3D(-4.371139e-08, 0, 24.108696, 0, 1, 0, -0.020318022, 0, -2.1411632e-08, 10.837832, -0.099999994, 0.48586574)
+use_collision = true
+size = Vector3(1, 0.8, 1)
+material = ExtResource("5_71j4m")
+
 [node name="Player" type="CharacterBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2067637, 0)
 script = ExtResource("1_4wyf3")
 walk_speed = 3.0
 sprint_speed = 6.0
@@ -54,7 +79,7 @@ mesh = SubResource("CapsuleMesh_k0juu")
 shape = SubResource("ConvexPolygonShape3D_71j4m")
 
 [node name="human" parent="Player" instance=ExtResource("6_qfnet")]
-transform = Transform3D(-4.371139e-09, 0, 0.1, 0, 0.1, 0, -0.1, 0, -4.371139e-09, 0.013, -1, 0.032)
+transform = Transform3D(-4.371139e-09, 0, 0.1, 0, 0.1, 0, -0.1, 0, -4.371139e-09, 0.013, -1.05, 0.192)
 script = ExtResource("3_k0juu")
 walk_speed = 5.0
 run_speed = 10.0
