@@ -6207,6 +6207,13 @@ _subresources={
 "slice_99/start_frame": 0,
 "slices/amount": 0
 }
+},
+"materials": {
+"texture_1": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://materials/humanskin.tres",
+"use_external/path": "uid://depuckvrgdvcl"
+}
 }
 }
 gltf/naming_version=2

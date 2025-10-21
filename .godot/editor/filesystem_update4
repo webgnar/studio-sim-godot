@@ -1,7 +1,4 @@
-res://scenes/world.tscn
-res://materials/wall.tres
-res://materials/humanskin.tres
-res://materials/skeletonskin.tres
 res://scripts/PlayerAnimation.cs
 res://scripts/PlayerController.cs
-res://materials/floor.tres
+res://scenes/world.tscn
+res://materials/wall.tres
