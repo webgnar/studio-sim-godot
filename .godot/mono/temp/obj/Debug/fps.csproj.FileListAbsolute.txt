@@ -15,3 +15,4 @@
 /Users/zackgg/Godot/fps-godot-mono/.godot/mono/temp/obj/Debug/fps.pdb
 /Users/zackgg/Godot/fps-godot-mono/.godot/mono/temp/obj/Debug/fps.genruntimeconfig.cache
 /Users/zackgg/Godot/fps-godot-mono/.godot/mono/temp/obj/Debug/ref/fps.dll
+/Users/zackgg/Godot/fps-godot-mono/.godot/mono/temp/obj/Debug/fps.sourcelink.json

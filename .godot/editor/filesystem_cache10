@@ -1,33 +1,40 @@
 63f7b34db8d8cdea90c76aacccf841ec
-::res://::1761029102
+::res://::1761029195
 icon.svg::CompressedTexture2D::2126835338060944900::1760937980::1761029103::1::::<><><>0<>0<>c511fe3db7501179497f362af9747f17<>res://.godot/imported/icon.svg-218a8f2b3041327d8a5756f3a245f83b.ctex::
-::res://materials/::1761028976
+::res://materials/::1761029632
 brickwhite.tres::StandardMaterial3D::2104820844770818005::1761019173::0::1::::<><><>0<>0<><>::uid://iucb8t01gwth::::res://sprites/brickswhite.jpg<>uid://w37wcrmdvee5::::res://sprites/normals/brickswhite_normal.png
 floor.tres::StandardMaterial3D::1329459971527261149::1761018531::0::1::::<><><>0<>0<><>::uid://d1iyx5benjdbo::::res://sprites/floor.jpg<>uid://drlag2fiaq8ak::::res://sprites/normals/floor_normal.png
+humanskin.tres::StandardMaterial3D::7472201561840425083::1761029599::0::1::::<><><>0<>0<><>::
+skeletonskin.tres::StandardMaterial3D::2398893118778631077::1761029632::0::1::::<><><>0<>0<><>::
 wall.tres::StandardMaterial3D::1203482867017653707::1761028976::0::1::::<><><>0<>0<><>::uid://8mrntpocwvao::::res://sprites/normals/wall_specular.png<>uid://5kcrsmi7omc8::::res://sprites/normals/wall_normal.png
 wood.tres::StandardMaterial3D::1590271667034205650::1761019173::0::1::::<><><>0<>0<><>::uid://cbn0d3riillev::::res://sprites/wood.jpg<>uid://dyuvtxhp260rj::::res://sprites/normals/wood_ambient.png<>uid://3smflfln5x7y::::res://sprites/normals/wood_specular.png<>uid://bifvpuur5heg3::::res://sprites/normals/wood_normal.png
-::res://models/::1761028935
+::res://models/::1761029556
 human skeleton rewrite.glb::PackedScene::1312399607314389988::1761019727::1761029103::1::::<><><>0<>0<>da66862949b623548c919cb65d2e3377<>res://.godot/imported/human skeleton rewrite.glb-555992a02adb4f9e8ee8ab29834400b3.scn::uid://bgjdwhnujebbp::::res://models/human skeleton rewrite_0.png
 human skeleton rewrite_0.png::CompressedTexture2D::2826354972418842789::1761019727::1761029103::1::::<><><>0<>0<>b18666d67ddfd7aae793bdc394400825<>res://.godot/imported/human skeleton rewrite_0.png-81ac48995d7f7b2e0641cbafa7765af3.s3tc.ctex::
+human figure_0.png::CompressedTexture2D::8651554618477128302::1761029543::1761029544::1::::<><><>0<>0<>0246684bccb6038afb79604fbe58d8a8<>res://.godot/imported/human figure_0.png-002998ac143a09001a1691c85c187669.s3tc.ctex::
 ::res://scenes/::1761028976
 human.tscn::PackedScene::1698309852409355828::1761021020::0::1::::<><><>0<>0<><>::uid://sx0bao2oqis7::::res://models/human skeleton rewrite.glb
 world.tscn::PackedScene::5710592644140018997::1761028976::0::1::::<><><>0<>0<><>::uid://re8gmfn1nbgt::::res://materials/wall.tres<>uid://5ya7pbibeigd::::res://scripts/PlayerController.cs<>uid://s7aanj1sph6l::::res://materials/floor.tres<>uid://wwlsotlotycw::::res://materials/wood.tres<>uid://48uded6h5otx::::res://materials/brickwhite.tres<>uid://ygw6d51stbbw::::res://scenes/human.tscn<>uid://do8y5c5ly05en::::res://scripts/PlayerAnimation.cs
 ::res://scripts/::1761022016
-PlayerAnimation.cs::CSharpScript::8211541261462983093::1761022787::0::1::::<><><>0<>0<><>::
-PlayerController.cs::CSharpScript::2155268310403405791::1761022606::0::1::::<><><>0<>0<><>::
-::res://sprites/::1761018384
+PlayerAnimation.cs::CSharpScript::8211541261462983093::1761022787::0::1::::<>Node<><>0<>0<><>::
+PlayerController.cs::CSharpScript::2155268310403405791::1761022606::0::1::::<>CharacterBody3D<><>0<>0<><>::
+::res://sprites/::1761029103
 brickswhite.jpg::CompressedTexture2D::602923287757623317::1761017159::1761029103::1::::<><><>0<>0<>bcf847059ba83faef0511159f5eaf65a<>res://.godot/imported/brickswhite.jpg-2ef5dd5939b6d64fae0101b6da7744e6.s3tc.ctex::
 floor2.jpg::CompressedTexture2D::12581505023851521::1761017159::1761029103::1::::<><><>0<>0<>8582b012f9d02fd31a9d91ed5040362e<>res://.godot/imported/floor2.jpg-5d9503f47bf52e9ceeb1cfcffcb7dd52.ctex::
 floor.jpg::CompressedTexture2D::9002186866231611156::1761017159::1761029103::1::::<><><>0<>0<>60d1bc02a6ce4acd599ef2dedde97df0<>res://.godot/imported/floor.jpg-de5e2b97aece82a326cb3ddc0ce88633.s3tc.ctex::
 wall.jpg::CompressedTexture2D::3576362921534608400::1761017159::1761029103::1::::<><><>0<>0<>e01e93ce466a798dbd19afbe03d21013<>res://.godot/imported/wall.jpg-406628462c90f45281003b1ed7b7c9b4.s3tc.ctex::
 wood.jpg::CompressedTexture2D::4871391901317986273::1761017159::1761029103::1::::<><><>0<>0<>91368d915d38b9400277a807314b8b56<>res://.godot/imported/wood.jpg-01240e422271cfa6bf6b21d4165d0295.s3tc.ctex::
-::res://sprites/normals/::1761019166
+::res://sprites/normals/::1761029768
 brickswhite_displacement.png::CompressedTexture2D::71681923954913180::1761018474::1761029103::1::::<><><>0<>0<>46bea52099d283f664f146043af9942c<>res://.godot/imported/brickswhite_displacement.png-f49dfde752e45839a269ec13999fbb43.ctex::
 brickswhite_normal.png::CompressedTexture2D::1603939500243260366::1761018474::1761029103::1::::<><><>0<>0<>8e4fea8a44bf9b22e71aa8f109d2cd02<>res://.godot/imported/brickswhite_normal.png-4f1fe9ec64c4fd5e771a5bce34c241dc.s3tc.ctex::
 floor_ambient.png::CompressedTexture2D::8283066948312311270::1761018474::1761029103::1::::<><><>0<>0<>24e52b09869ee4bd6f858f90e2ae1449<>res://.godot/imported/floor_ambient.png-9e4f4f1aae7ab9de63879f34dadc0bfd.ctex::
 floor_displacement.png::CompressedTexture2D::2569099325117768914::1761018474::1761029103::1::::<><><>0<>0<>28805d3a55abce8f297c9bbefdcd1bf7<>res://.godot/imported/floor_displacement.png-8fe40097b2850c538af9a9022bac08a5.ctex::
 floor_normal.png::CompressedTexture2D::8375192689202566990::1761018474::1761029103::1::::<><><>0<>0<>2af5559777d1e79e639b378c28240527<>res://.godot/imported/floor_normal.png-815182a2be07296adcbc256a62b3fcb8.s3tc.ctex::
 floor_specular.png::CompressedTexture2D::3355235681465707768::1761018474::1761029103::1::::<><><>0<>0<>26cab01b914513e72f8cd2c328ccd78f<>res://.godot/imported/floor_specular.png-c44df9312c91958b3b8040b8a8964cdd.ctex::
+human figure_0_ambient.png::CompressedTexture2D::6965345753076049943::1761029768::1761029796::1::::<><><>0<>0<>953a5e230ca4337ff372ad8cb0ac67b6<>res://.godot/imported/human figure_0_ambient.png-c3043b7f2c52dbd93d54a51b4e43a9bb.s3tc.ctex::
+human figure_0_normal.png::CompressedTexture2D::2752977648415048070::1761029768::1761029780::1::::<><><>0<>0<>ab491509c4225bed067d3ef99fe3b130<>res://.godot/imported/human figure_0_normal.png-42ad13c6cc83fd6395e0e93d5e68a2b0.s3tc.ctex::
+human skeleton rewrite_0_ambient.png::CompressedTexture2D::3439098775944625370::1761029768::1761029868::1::::<><><>0<>0<>6dd2656d25a0487cc44059fe206936be<>res://.godot/imported/human skeleton rewrite_0_ambient.png-1d5b636865c6dd5f99d457c14d1e31c4.s3tc.ctex::
+human skeleton rewrite_0_normal.png::CompressedTexture2D::2834757147531448349::1761029768::1761029835::1::::<><><>0<>0<>4c8c62e87f701502a391d57e06b4be33<>res://.godot/imported/human skeleton rewrite_0_normal.png-47c79768c6f8dfad0b95c769a4370be0.s3tc.ctex::
 wall_ambient.png::CompressedTexture2D::1821783713554525216::1761018474::1761029103::1::::<><><>0<>0<>5ecd7de209d88b8884ec1c45e861c268<>res://.godot/imported/wall_ambient.png-f163c7c41b3c47ba9b6c7b3d1f5835db.ctex::
 wall_displacement.png::CompressedTexture2D::2884267766338127340::1761018474::1761029103::1::::<><><>0<>0<>e327cfb0fa15adf5190dcdfdcf3d0300<>res://.godot/imported/wall_displacement.png-737def88a189ca3356a7ae0989d65d65.ctex::
 wall_normal.png::CompressedTexture2D::2126461843528251397::1761018474::1761029103::1::::<><><>0<>0<>d51dfdbfcea5605097c17bca6a5bd7a1<>res://.godot/imported/wall_normal.png-2f8dfdde889f044e13d0274b85317391.s3tc.ctex::
