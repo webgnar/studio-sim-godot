@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/Users/zackgg/Godot/fps-godot-mono/fps.csproj": {}
+    "/Users/zackgg/Godot/studio-sim-godot/fps.csproj": {}
   },
   "projects": {
-    "/Users/zackgg/Godot/fps-godot-mono/fps.csproj": {
+    "/Users/zackgg/Godot/studio-sim-godot/fps.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/zackgg/Godot/fps-godot-mono/fps.csproj",
+        "projectUniqueName": "/Users/zackgg/Godot/studio-sim-godot/fps.csproj",
         "projectName": "fps",
-        "projectPath": "/Users/zackgg/Godot/fps-godot-mono/fps.csproj",
+        "projectPath": "/Users/zackgg/Godot/studio-sim-godot/fps.csproj",
         "packagesPath": "/Users/zackgg/.nuget/packages/",
-        "outputPath": "/Users/zackgg/Godot/fps-godot-mono/.godot/mono/temp/obj/",
+        "outputPath": "/Users/zackgg/Godot/studio-sim-godot/.godot/mono/temp/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/zackgg/.nuget/NuGet/NuGet.Config"

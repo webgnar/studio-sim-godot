@@ -1,2 +1,3 @@
 res://scenes/world.tscn
 res://materials/mirror.tres
+res://scripts/mirror.gd

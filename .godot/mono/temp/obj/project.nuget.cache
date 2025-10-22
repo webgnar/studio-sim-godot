@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "YemVEOwztEc=",
+  "dgSpecHash": "EGUu8jl4yUQ=",
   "success": true,
-  "projectFilePath": "/Users/zackgg/Godot/fps-godot-mono/fps.csproj",
+  "projectFilePath": "/Users/zackgg/Godot/studio-sim-godot/fps.csproj",
   "expectedPackageFiles": [
     "/Users/zackgg/.nuget/packages/godot.sourcegenerators/4.5.0/godot.sourcegenerators.4.5.0.nupkg.sha512",
     "/Users/zackgg/.nuget/packages/godotsharp/4.5.0/godotsharp.4.5.0.nupkg.sha512",
