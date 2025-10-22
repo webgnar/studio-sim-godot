@@ -1,6 +1,6 @@
 63f7b34db8d8cdea90c76aacccf841ec
-::res://::1761102661
-export_presets.cfg::TextFile::-1::1761083460::0::1::::<><><>0<>0<><>::
+::res://::1761103008
+export_presets.cfg::TextFile::-1::1761103008::0::1::::<><><>0<>0<><>::
 icon.svg::CompressedTexture2D::2126835338060944900::1760937980::1761029103::1::::<><><>0<>0<>c511fe3db7501179497f362af9747f17<>res://.godot/imported/icon.svg-218a8f2b3041327d8a5756f3a245f83b.ctex::
 ::res://materials/::1761094938
 brickwhite.tres::StandardMaterial3D::2104820844770818005::1761081658::0::1::::<><><>0<>0<><>::uid://djd4xqb57hhr7::::res://sprites/brick_bump.jpg<>uid://dv58j61xl61oc::::res://sprites/brick_diffuse_ambient.png<>uid://bqkunprbwvn68::::res://sprites/brick_diffuse_normal.png
@@ -71,7 +71,8 @@ wood_ambient.png::CompressedTexture2D::8886392059975109239::1761018751::17610291
 wood_displacement.png::CompressedTexture2D::367758578295660012::1761018751::1761029103::1::::<><><>0<>0<>4d0faf20f136b9a184c30d50df0e145c<>res://.godot/imported/wood_displacement.png-3515fa22ec3941307f4d8ab54c13be12.ctex::
 wood_normal.png::CompressedTexture2D::2959556247500191664::1761018751::1761029103::1::::<><><>0<>0<>7a1eaff3c737f43bf51ee70464593dd5<>res://.godot/imported/wood_normal.png-6632775222bd2ac18d1f2383617d4ed3.s3tc.ctex::
 wood_specular.png::CompressedTexture2D::2003184540319947284::1761018751::1761029103::1::::<><><>0<>0<>59ec2ef0990710cff46ca58a32719929<>res://.godot/imported/wood_specular.png-6c9cb34ac7f3925834b62e09715acb5d.s3tc.ctex::
-::res://web exports/::1761087400
-fps.apple-touch-icon.png::CompressedTexture2D::7864100725989876188::1761083459::1761087400::1::::<><><>0<>0<>81a7ef9920e0be46e024d615759c16ab<>res://.godot/imported/fps.apple-touch-icon.png-a1c28a7333fe736b8a67d7b2a6f48e0f.ctex::
-fps.icon.png::CompressedTexture2D::6336638966284913510::1761083459::1761087400::1::::<><><>0<>0<>20f2409f63a71389f6ef449b6d83c1db<>res://.godot/imported/fps.icon.png-6ef4cdcd8265a07c328eba39a0e307d9.ctex::
-fps.png::CompressedTexture2D::6992639698647842497::1761083459::1761087400::1::::<><><>0<>0<>02eef41a66a9e7f8a158efddd7a70012<>res://.godot/imported/fps.png-7344ef2be640e391ebf0e6b00da6fd59.ctex::
+::res://web exports/::1761103046
+::res://web exports/game/::1761103044
+index.apple-touch-icon.png::CompressedTexture2D::9061165200945668807::1761103008::1761103048::1::::<><><>0<>0<>8b36fbddbc847225609a770076c17b85<>res://.godot/imported/index.apple-touch-icon.png-ba0d2cf8a7b38ef0f6b1db1af6426c12.ctex::
+index.icon.png::CompressedTexture2D::5836592534277110749::1761103008::1761103048::1::::<><><>0<>0<>09f987f7ea8baf74cf71628b4eebae52<>res://.godot/imported/index.icon.png-3d25783b6def9221734ef29fc5b11d1d.ctex::
+index.png::CompressedTexture2D::1755490665785451690::1761103008::1761103048::1::::<><><>0<>0<>dd16b14e6234dd95157b23041513a411<>res://.godot/imported/index.png-884f2e8397c2cdff3e7fa25c7602695a.ctex::

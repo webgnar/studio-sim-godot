@@ -128,6 +128,14 @@ shadow_enabled = true
 omni_range = 108.238
 omni_attenuation = 6.793
 
+[node name="OmniLight3D2" type="OmniLight3D" parent="celing/light2"]
+transform = Transform3D(3.030303, 0, 0, 0, 3.030303, 0, 0, 0, 3.030303, 6.2457914, -5.6061153, 18.056469)
+light_color = Color(0.7137255, 1, 1, 1)
+light_energy = 1.574
+shadow_enabled = true
+omni_range = 134.294
+omni_attenuation = 1.275
+
 [node name="light3" parent="celing" instance=ExtResource("6_jhx03")]
 transform = Transform3D(-3.135817e-08, -0.7173913, 0, 0.044058748, -1.925869e-09, 0, 0, 0, 0.014575972, 1.5583811, -0.007691144, 0.23070204)
 
@@ -142,8 +150,8 @@ transform = Transform3D(3.030303, 0, 0, 0, 3.030303, 0, 0, 0, 3.030303, 0, -5.35
 light_color = Color(0.7137255, 1, 1, 1)
 light_energy = 1.574
 shadow_enabled = true
-omni_range = 8.053
-omni_attenuation = 0.629
+omni_range = 21.515
+omni_attenuation = 1.81
 
 [node name="studio" type="CSGCombiner3D" parent="."]
 transform = Transform3D(0.46, 0, 0, 0, 7.49, 0, 0, 0, 22.64, -4.9423933, 3.544661, 4)
@@ -341,6 +349,18 @@ transform = Transform3D(0.062, -9.157744e-09, 5.558806e-17, 1.2478684e-09, 0.455
 [node name="pipe gray13" parent="." instance=ExtResource("19_xgqkh")]
 transform = Transform3D(0.062, -5.333631e-09, 5.558806e-17, 1.2478684e-09, 0.265, 1.1188159e-24, -5.558806e-17, 0, 0.062, 3.7510738, 2.2732072, 8.761548)
 
+[node name="pipe gray15" parent="." instance=ExtResource("19_xgqkh")]
+transform = Transform3D(0.062, -4.126017e-09, -5.4546066e-17, 0, -8.960835e-09, 0.062, -1.2478685e-09, -0.205, -2.7101061e-09, 3.7590442, 3.458334, 1.4281845)
+
+[node name="pipe gray17" parent="." instance=ExtResource("19_xgqkh")]
+transform = Transform3D(0.062, -5.1323625e-09, -5.4546066e-17, 0, -1.1146404e-08, 0.062, -1.2478685e-09, -0.255, -2.7101061e-09, 3.7590442, 3.37368, -1.1944834)
+
+[node name="pipe gray18" parent="." instance=ExtResource("19_xgqkh")]
+transform = Transform3D(0.062, -3.3209409e-09, -1.6468017e-16, 1.2478686e-09, 0.165, -2.1594925e-16, 1.6468017e-16, 5.7470365e-16, 0.062, 3.7590442, 2.2779539, -2.8206809)
+
+[node name="pipe gray16" parent="." instance=ExtResource("19_xgqkh")]
+transform = Transform3D(0.062, -2.918402e-09, 5.558806e-17, 1.2478684e-09, 0.145, 1.1188159e-24, -5.558806e-17, 0, 0.062, 3.7510738, 2.448935, 2.7635207)
+
 [node name="pipe gray14" parent="." instance=ExtResource("19_xgqkh")]
 transform = Transform3D(0.062, -1.5095183e-09, 5.558806e-17, 1.2478684e-09, 0.075, 1.1188159e-24, -5.558806e-17, 0, 0.062, 3.7157836, 1.2482965, 9.082784)
 
@@ -357,7 +377,13 @@ transform = Transform3D(0.0012795784, 0.08997952, -3.4961152e-09, -4.993593e-18,
 transform = Transform3D(0.059954196, 0.0035145422, -1.3655632e-10, 3.4086445e-17, -3.9340247e-09, -0.07999999, -0.0023430279, 0.089931324, -3.4942422e-09, 3.7753751, 0.72288877, 14.668949)
 
 [node name="pipe graybent9" parent="." instance=ExtResource("19_kpybi")]
-transform = Transform3D(0.059954233, 0.0035145439, -7.8676086e-11, -6.574431e-05, 0.002523435, 0.059976373, 0.0023421065, -0.08989594, 0.0016835742, 3.7452352, 3.8375065, 2.9239583)
+transform = Transform3D(0.059954233, 0.0035145439, -7.8676086e-11, -6.574431e-05, 0.002523435, 0.059976373, 0.0023421065, -0.08989594, 0.0016835742, 3.7452352, 3.826956, 2.9056592)
+
+[node name="pipe graybent11" parent="." instance=ExtResource("19_kpybi")]
+transform = Transform3D(-0.059404176, -0.01264951, 0.00017142213, -6.5744316e-05, 0.0025234353, 0.05997638, -0.008434491, 0.08907089, -0.0016748243, 3.7452352, 3.4006267, 2.6987946)
+
+[node name="pipe graybent12" parent="." instance=ExtResource("19_kpybi")]
+transform = Transform3D(-0.059404172, -0.012649508, 0.0001714221, -0.008426081, 0.08907921, 0.0015124555, -0.000382244, 0.0022100434, -0.059980694, 3.7452352, 3.3062863, -2.7645743)
 
 [node name="pipe graybent10" parent="." instance=ExtResource("19_kpybi")]
 transform = Transform3D(0.059954237, 0.003514544, -6.8746724e-11, 0.0023430274, -0.08993127, -8.5968466e-05, -3.3576175e-06, 0.0001288542, -0.059999935, 3.7452352, 0.72132206, 8.818544)
@@ -503,7 +529,7 @@ transform = Transform3D(0.13333331, 0, 0, 0, 0.13333331, 0, 0, 0, 0.13333331, -0
 [node name="outlets" type="Node3D" parent="."]
 
 [node name="outlet" parent="outlets" instance=ExtResource("18_ctatt")]
-transform = Transform3D(0.12705004, 0, 0, 0, 0.12705004, 0, 0, 0, 0.12705006, 3.7025113, 1.6040921, -3.1925855)
+transform = Transform3D(0.12705004, 0, 0, 0, 0.12705004, 0, 0, 0, 0.12705006, 3.7025113, 1.2561202, -2.807802)
 
 [node name="outlet8" parent="outlets" instance=ExtResource("18_ctatt")]
 transform = Transform3D(0.12705004, 0, 0, 0, 0.12705004, 0, 0, 0, 0.12705006, 3.7670677, 0.6725974, 10.761079)
@@ -513,6 +539,9 @@ transform = Transform3D(0.12705004, 0, 0, 0, 0.12705004, 0, 0, 0, 0.12705006, 3.
 
 [node name="outlet11" parent="outlets" instance=ExtResource("18_ctatt")]
 transform = Transform3D(-0.1270013, 0, 0.0035186368, 0, 0.12705003, 0, -0.0035186366, 0, -0.12700132, 3.7630396, 3.9268103, 8.712986)
+
+[node name="outlet12" parent="outlets" instance=ExtResource("18_ctatt")]
+transform = Transform3D(-0.1270013, 0, 0.0035186368, 0, 0.12705003, 0, -0.0035186366, 0, -0.12700132, 3.7630396, 3.3981094, 0.29659438)
 
 [node name="outlet9" parent="outlets" instance=ExtResource("18_ctatt")]
 transform = Transform3D(0.12705004, 0, 0, 0, 0.12705004, 0, 0, 0, 0.12705006, 3.7661774, 0.62042475, 2.8552802)

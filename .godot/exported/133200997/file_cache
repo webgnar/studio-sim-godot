@@ -1,8 +1,9 @@
 res://materials/brickwhite.tres::1fe51653dfc673a0b20cc984d24ddc1c::1761081658::res://.godot/exported/133200997/export-db5fc47609ea4c9f1526f20cf40b2019-brickwhite.res
 res://materials/floor.tres::9c6cd78bbcd3c463d47202eb51046346::1761079910::res://.godot/exported/133200997/export-bc06fe75718c970f19f26afc7c91abff-floor.res
-res://materials/humanskin.tres::e53312a728068e55b4a0aaaa14c4d078::1761029874::res://.godot/exported/133200997/export-bf10a97c4ab2c74494b70baacd99b118-humanskin.res
-res://materials/skeletonskin.tres::2f37d0d0ed19831a3c627269b05acea0::1761029874::res://.godot/exported/133200997/export-72a902b8f7168c84dd7844cbb8d09713-skeletonskin.res
+res://materials/humanskin.tres::a045734e6caf0828c6f21c2fa62c3bdb::1761094386::res://.godot/exported/133200997/export-bf10a97c4ab2c74494b70baacd99b118-humanskin.res
+res://materials/skeletonskin.tres::4d730ad8246c5c5fa84c31e17445c436::1761094403::res://.godot/exported/133200997/export-72a902b8f7168c84dd7844cbb8d09713-skeletonskin.res
 res://materials/wall.tres::95e96e06d68ff545b1c52073ec97f3a8::1761080715::res://.godot/exported/133200997/export-1c84afdd05f518f898d96b6833632398-wall.res
 res://materials/wood.tres::5f18c53c2621a7fc282482e6f8735e23::1761019173::res://.godot/exported/133200997/export-6bab30075bec6dca5efb9a8285be1fb5-wood.res
 res://scenes/human.tscn::965d0d0bf19ede3b801d8ced7658e1eb::1761034199::res://.godot/exported/133200997/export-eba661b9dcbe38bde83515c9e6eec66a-human.scn
-res://scenes/world.tscn::ad05818e5691da954f1008ca1d3de53c::1761083070::res://.godot/exported/133200997/export-6b9c1b1fd6ae6f795188dfdc89e222b0-world.scn
+res://scenes/world.tscn::7d605a9a8cb787d149d421c76f53c81a::1761102582::res://.godot/exported/133200997/export-6b9c1b1fd6ae6f795188dfdc89e222b0-world.scn
+res://materials/windowglass.tres::a3bb15912c191d195432ed7664d093f4::1761094938::res://.godot/exported/133200997/export-9f29ef6ad686a14f33562fc30aac2334-windowglass.res
