@@ -1,4 +1,4 @@
-[gd_scene load_steps=37 format=3 uid="uid://cnmivki1rop3b"]
+[gd_scene load_steps=41 format=3 uid="uid://cnmivki1rop3b"]
 
 [ext_resource type="Material" uid="uid://wwlsotlotycw" path="res://materials/wood.tres" id="1_4mrxx"]
 [ext_resource type="Script" uid="uid://d4bxpnphvld1d" path="res://scripts/PlayerController.gd" id="1_4wyf3"]
@@ -24,6 +24,7 @@
 [ext_resource type="PackedScene" uid="uid://dfy02uk1jbflb" path="res://models/light_switch box.glb" id="21_ts3gi"]
 [ext_resource type="PackedScene" uid="uid://bp08vdgdcjkvv" path="res://models/light_switch.glb" id="22_0nbtd"]
 [ext_resource type="Script" uid="uid://djltcowfnfdh7" path="res://scripts/mirror.gd" id="24_ctatt"]
+[ext_resource type="Shader" uid="uid://br4qh8mg5yosn" path="res://shaders/mirror.gdshader" id="25_xgqkh"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_nnsk1"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -73,6 +74,17 @@ resource_local_to_scene = true
 albedo_texture = SubResource("ViewportTexture_ctatt")
 
 [sub_resource type="World3D" id="World3D_munwf"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_munwf"]
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_xgqkh"]
+viewport_path = NodePath("MirrorNew/SubViewport")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ts3gi"]
+resource_local_to_scene = true
+render_priority = 0
+shader = ExtResource("25_xgqkh")
+shader_parameter/refl_tx = SubResource("ViewportTexture_xgqkh")
 
 [node name="World" type="Node3D"]
 
@@ -584,7 +596,7 @@ transform = Transform3D(1.6420351e-08, -3.7252903e-09, -0.12705019, -7.450583e-0
 transform = Transform3D(1.6420351e-08, -3.7252903e-09, -0.12705019, -7.450583e-09, 0.12705007, 0, 0.1270501, 1.4901168e-08, 1.6660616e-08, 3.6888297, 1.0056915, 14.732135)
 
 [node name="mirror" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.03245741, -0.9994733, -7.1054274e-15, 0.9994733, 0.03245741, 0, 0, 0, 1, 3.700161, 1.2115258, 4.4239473)
+transform = Transform3D(0.15967444, -0.9871699, -7.047392e-15, 0.9871699, 0.15967444, 9.062924e-16, 0, 0, 1, 3.637775, 1.0085149, 4.4239473)
 mesh = SubResource("PlaneMesh_kpybi")
 surface_material_override/0 = SubResource("StandardMaterial3D_xgqkh")
 script = ExtResource("24_ctatt")
@@ -595,3 +607,17 @@ size = Vector2i(256, 256)
 
 [node name="Camera3D" type="Camera3D" parent="mirror/SubViewport"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8393148, 0)
+
+[node name="MirrorNew" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.16199991, -0.9867908, 0, 0.9867908, 0.16199991, 0, 0, 0, 1, 3.6321473, 1.012416, 7)
+mesh = SubResource("PlaneMesh_munwf")
+surface_material_override/0 = SubResource("ShaderMaterial_ts3gi")
+
+[node name="dummycam" type="Node3D" parent="MirrorNew"]
+transform = Transform3D(1.9106855e-15, 1, 4.371139e-08, 4.371139e-08, -4.371139e-08, 1, 1, 0, -4.371139e-08, -0.8476826, -3, 1.3113416e-07)
+
+[node name="SubViewport" type="SubViewport" parent="MirrorNew"]
+size = Vector2i(256, 256)
+
+[node name="Camera3D" type="Camera3D" parent="MirrorNew/SubViewport"]
+transform = Transform3D(1.2796953e-07, 0.21836469, 0.9758673, -2.8635068e-08, 0.9758673, -0.21836469, -1, 0, 1.3113417e-07, 4.2467685, 1.1345179, 6.6101465)

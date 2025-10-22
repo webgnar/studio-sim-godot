@@ -1,11 +1,12 @@
 63f7b34db8d8cdea90c76aacccf841ec
-::res://::1761103008
+::res://::1761117422
 export_presets.cfg::TextFile::-1::1761103008::0::1::::<><><>0<>0<><>::
 icon.svg::CompressedTexture2D::2126835338060944900::1760937980::1761029103::1::::<><><>0<>0<>c511fe3db7501179497f362af9747f17<>res://.godot/imported/icon.svg-218a8f2b3041327d8a5756f3a245f83b.ctex::
-::res://materials/::1761094938
+::res://materials/::1761106682
 brickwhite.tres::StandardMaterial3D::2104820844770818005::1761081658::0::1::::<><><>0<>0<><>::uid://djd4xqb57hhr7::::res://sprites/brick_bump.jpg<>uid://dv58j61xl61oc::::res://sprites/brick_diffuse_ambient.png<>uid://bqkunprbwvn68::::res://sprites/brick_diffuse_normal.png
 floor.tres::StandardMaterial3D::1329459971527261149::1761079910::0::1::::<><><>0<>0<><>::uid://daneppyy5y8cp::::res://sprites/floor-cement-2.jpg<>uid://dcij21opo0juo::::res://sprites/normals/floor-cement-2_ambient.png<>uid://lcah2yte71x6::::res://sprites/normals/floor-cement-2_normal.png
 humanskin.tres::StandardMaterial3D::7472201561840425083::1761094386::0::1::::<><><>0<>0<><>::uid://dvi43txkn6cty::::res://models/humanskin.png<>uid://c6ichykhg0cah::::res://sprites/normals/human figure_0_ambient.png<>uid://bfhte0o8dued7::::res://sprites/normals/human figure_0_normal.png
+mirror.tres::StandardMaterial3D::5304583076135473255::1761106682::0::1::::<><><>0<>0<><>::
 skeletonskin.tres::StandardMaterial3D::2398893118778631077::1761094403::0::1::::<><><>0<>0<><>::uid://bgjdwhnujebbp::::res://models/humanskeletonskin.png<>uid://bo86ppi867uwo::::res://sprites/normals/human skeleton rewrite_0_ambient.png<>uid://bgngbhxf10ne0::::res://sprites/normals/human skeleton rewrite_0_normal.png
 wall.tres::StandardMaterial3D::1203482867017653707::1761080715::0::1::::<><><>0<>0<><>::uid://fgkr11lem74k::::res://sprites/wall-new.jpg<>uid://bw6anp2m20wyf::::res://sprites/normals/wall-new_ambient.png<>uid://dhtvy1vi0gvek::::res://sprites/normals/wall-new_normal.png
 windowglass.tres::StandardMaterial3D::9068357911622963793::1761094938::0::1::::<><><>0<>0<><>::uid://cqmp06etflq7n::::res://models/window_0.png
@@ -36,12 +37,17 @@ spotlight_1.png::CompressedTexture2D::8913767494135283862::1761094365::176109436
 window.glb::PackedScene::5291615734676921467::1761094364::1761099989::1::::<><><>0<>0<>89cece3613d8a6bbfaa90b80c04234fc<>res://.godot/imported/window.glb-2c4bf4ffdacd7726d9b5e3ee40467dad.scn::uid://d2g1sathpvh5b::::res://materials/windowglass.tres<>uid://y2n84osgfxtl::::res://models/window_1.png
 window_0.png::CompressedTexture2D::5921592433656035733::1761094364::1761094366::1::::<><><>0<>0<>d539960c07e490f805bfcd1052836dfd<>res://.godot/imported/window_0.png-9c7adc87f09e65157d2e66e6d8474626.s3tc.ctex::
 window_1.png::CompressedTexture2D::1741120244407712181::1761094364::1761099989::1::::<><><>0<>0<>06209bf9da109c6c72f8240fae17c04d<>res://.godot/imported/window_1.png-f827ce01ef04dd72a3729bedc70d2b66.s3tc.ctex::
-::res://scenes/::1761102582
+::res://scenes/::1761113898
 human.tscn::PackedScene::1698309852409355828::1761034199::0::1::::<><><>0<>0<><>::uid://sx0bao2oqis7::::res://models/human skeleton rewrite.glb
-world.tscn::PackedScene::5710592644140018997::1761102582::0::1::::<><><>0<>0<><>::uid://wwlsotlotycw::::res://materials/wood.tres<>uid://d4bxpnphvld1d::::res://scripts/PlayerController.gd<>uid://bke1xjp3mdreb::::res://sprites/door.jpg<>uid://s7aanj1sph6l::::res://materials/floor.tres<>uid://cbn0d3riillev::::res://sprites/wood.jpg<>uid://dyuvtxhp260rj::::res://sprites/normals/wood_ambient.png<>uid://bw58chvxj0io6::::res://scripts/PlayerAnimation.gd<>uid://3smflfln5x7y::::res://sprites/normals/wood_specular.png<>uid://48uded6h5otx::::res://materials/brickwhite.tres<>uid://bifvpuur5heg3::::res://sprites/normals/wood_normal.png<>uid://re8gmfn1nbgt::::res://materials/wall.tres<>uid://boyehvhrdbdi6::::res://models/lights.glb<>uid://ygw6d51stbbw::::res://scenes/human.tscn<>uid://b3ty4ce0xhyow::::res://sprites/hvac.jpg<>uid://chnkextlwxa7d::::res://models/window.glb<>uid://xeaph8bqk1j1::::res://models/pipe_red.glb<>uid://fjppju80c5ic::::res://models/pipe_yellow.glb<>uid://db8764j2674fq::::res://models/outlet_box.glb<>uid://44g07prjgs5x::::res://models/pipe_gray bent.glb<>uid://cmaavrflrf4d4::::res://models/pipe_gray.glb<>uid://c8duo4thyjdsv::::res://models/spotlight.glb<>uid://dfy02uk1jbflb::::res://models/light_switch box.glb<>uid://bp08vdgdcjkvv::::res://models/light_switch.glb
-::res://scripts/::1761077624
+mirror_2.gd::GDScript::1296850971002468943::1761113793::0::1::::<>MeshInstance3D<><>0<>0<><>::
+world.tscn::PackedScene::5710592644140018997::1761113898::0::1::::<><><>0<>0<><>::uid://wwlsotlotycw::::res://materials/wood.tres<>uid://d4bxpnphvld1d::::res://scripts/PlayerController.gd<>uid://bke1xjp3mdreb::::res://sprites/door.jpg<>uid://s7aanj1sph6l::::res://materials/floor.tres<>uid://cbn0d3riillev::::res://sprites/wood.jpg<>uid://dyuvtxhp260rj::::res://sprites/normals/wood_ambient.png<>uid://bw58chvxj0io6::::res://scripts/PlayerAnimation.gd<>uid://3smflfln5x7y::::res://sprites/normals/wood_specular.png<>uid://48uded6h5otx::::res://materials/brickwhite.tres<>uid://bifvpuur5heg3::::res://sprites/normals/wood_normal.png<>uid://re8gmfn1nbgt::::res://materials/wall.tres<>uid://boyehvhrdbdi6::::res://models/lights.glb<>uid://ygw6d51stbbw::::res://scenes/human.tscn<>uid://b3ty4ce0xhyow::::res://sprites/hvac.jpg<>uid://chnkextlwxa7d::::res://models/window.glb<>uid://xeaph8bqk1j1::::res://models/pipe_red.glb<>uid://fjppju80c5ic::::res://models/pipe_yellow.glb<>uid://db8764j2674fq::::res://models/outlet_box.glb<>uid://44g07prjgs5x::::res://models/pipe_gray bent.glb<>uid://cmaavrflrf4d4::::res://models/pipe_gray.glb<>uid://c8duo4thyjdsv::::res://models/spotlight.glb<>uid://dfy02uk1jbflb::::res://models/light_switch box.glb<>uid://bp08vdgdcjkvv::::res://models/light_switch.glb<>uid://djltcowfnfdh7::::res://scripts/mirror.gd
+::res://scripts/::1761113836
+mirror2.gd::GDScript::4083344906647238704::1761113836::0::1::::<>MeshInstance3D<><>0<>0<><>::
 PlayerAnimation.gd::GDScript::3994514209863087763::1761077187::0::1::::PlayerAnimation<>Node<><>0<>0<><>::
 PlayerController.gd::GDScript::9198226878400670027::1761077187::0::1::::<>CharacterBody3D<><>0<>0<><>::
+mirror.gd::GDScript::7814827763123973682::1761113613::0::1::::<>MeshInstance3D<><>0<>0<><>::
+::res://shaders/::1761117422
+world.gdshader::Shader::3640483704970853257::1761117424::0::1::::<><><>0<>0<><>::
 ::res://sprites/::1761088999
 brickswhite.jpg::CompressedTexture2D::602923287757623317::1761017159::1761029103::1::::<><><>0<>0<>bcf847059ba83faef0511159f5eaf65a<>res://.godot/imported/brickswhite.jpg-2ef5dd5939b6d64fae0101b6da7744e6.s3tc.ctex::
 brick_bump.jpg::CompressedTexture2D::7798957486458330038::1761081225::1761081245::1::::<><><>0<>0<>a76eebbb65fcb20d3ea63625ab7b230e<>res://.godot/imported/brick_bump.jpg-e109f37b2b87e2f26ecda5f0e9cff7ff.s3tc.ctex::
@@ -71,8 +77,8 @@ wood_ambient.png::CompressedTexture2D::8886392059975109239::1761018751::17610291
 wood_displacement.png::CompressedTexture2D::367758578295660012::1761018751::1761029103::1::::<><><>0<>0<>4d0faf20f136b9a184c30d50df0e145c<>res://.godot/imported/wood_displacement.png-3515fa22ec3941307f4d8ab54c13be12.ctex::
 wood_normal.png::CompressedTexture2D::2959556247500191664::1761018751::1761029103::1::::<><><>0<>0<>7a1eaff3c737f43bf51ee70464593dd5<>res://.godot/imported/wood_normal.png-6632775222bd2ac18d1f2383617d4ed3.s3tc.ctex::
 wood_specular.png::CompressedTexture2D::2003184540319947284::1761018751::1761029103::1::::<><><>0<>0<>59ec2ef0990710cff46ca58a32719929<>res://.godot/imported/wood_specular.png-6c9cb34ac7f3925834b62e09715acb5d.s3tc.ctex::
-::res://web exports/::1761103046
-::res://web exports/game/::1761103044
+::res://web exports/::1761103048
+::res://web exports/game/::1761103048
 index.apple-touch-icon.png::CompressedTexture2D::9061165200945668807::1761103008::1761103048::1::::<><><>0<>0<>8b36fbddbc847225609a770076c17b85<>res://.godot/imported/index.apple-touch-icon.png-ba0d2cf8a7b38ef0f6b1db1af6426c12.ctex::
 index.icon.png::CompressedTexture2D::5836592534277110749::1761103008::1761103048::1::::<><><>0<>0<>09f987f7ea8baf74cf71628b4eebae52<>res://.godot/imported/index.icon.png-3d25783b6def9221734ef29fc5b11d1d.ctex::
 index.png::CompressedTexture2D::1755490665785451690::1761103008::1761103048::1::::<><><>0<>0<>dd16b14e6234dd95157b23041513a411<>res://.godot/imported/index.png-884f2e8397c2cdff3e7fa25c7602695a.ctex::

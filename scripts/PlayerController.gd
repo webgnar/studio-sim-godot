@@ -94,6 +94,11 @@ func _ready() -> void:
 	else:
 		print("PlayerAnimation script found and connected!")
 
+func _process(delta):
+	# Update mirrors with camera transform
+	if _camera:
+		get_tree().call_group("mirrors", "update_cam", _camera.global_transform)
+
 func _physics_process(delta: float) -> void:
 	# --- GRAVITY ---
 	# Add gravity. If the character is on the floor, we don't apply gravity.

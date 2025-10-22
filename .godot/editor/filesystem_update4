@@ -1,3 +1,7 @@
 res://scenes/world.tscn
 res://materials/mirror.tres
 res://scripts/mirror.gd
+res://scripts/mirror2.gd
+res://shaders/mirror.gdshader
+res://scripts/mirror_new.gd
+res://scripts/PlayerController.gd
