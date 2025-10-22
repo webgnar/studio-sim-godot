@@ -31,7 +31,7 @@ func _ready():
 func _process(delta):
 	if player_camera:
 		# Get the mirror's plane (assuming the mirror faces along its local Z-axis)
-		var mirror_normal = global_transform.basis.z.normalized()
+		var mirror_normal = global_transform.basis.y.normalized()
 		var mirror_position = global_transform.origin
 		
 		# Calculate the reflected camera position
@@ -39,13 +39,19 @@ func _process(delta):
 		var distance_to_mirror = mirror_normal.dot(player_cam_pos - mirror_position)
 		var reflected_pos = player_cam_pos - 2.0 * distance_to_mirror * mirror_normal
 		
+		# Clamp the mirror camera to not go too far behind the mirror surface
+		var max_distance_behind = 0.2  # Adjust this value as needed
+		var distance_behind_mirror = mirror_normal.dot(mirror_position - reflected_pos)
+		if distance_behind_mirror > max_distance_behind:
+			reflected_pos = mirror_position - mirror_normal * max_distance_behind
+		
 		# Set the mirror camera's position
 		mirror_camera.global_transform.origin = reflected_pos
 		
 		# Calculate the reflected camera orientation
 		var player_forward = -player_camera.global_transform.basis.z.normalized()
 		var reflected_forward = player_forward - 2.0 * (player_forward.dot(mirror_normal)) * mirror_normal
-		var reflected_up = player_camera.global_transform.basis.y.normalized()
+		var reflected_up = player_camera.global_transform.basis.x.normalized()
 		
 		# Set the mirror camera to look at the reflected target
 		var look_target = reflected_pos + reflected_forward
