@@ -1,0 +1,9 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://d2g1sathpvh5b"]
+
+[ext_resource type="Texture2D" uid="uid://cqmp06etflq7n" path="res://models/window_0.png" id="1_rlxct"]
+
+[resource]
+transparency = 1
+cull_mode = 2
+albedo_color = Color(0.67058825, 1, 1, 1)
+albedo_texture = ExtResource("1_rlxct")

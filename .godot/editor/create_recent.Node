@@ -1,2 +1,6 @@
+Node3D
+OmniLight3D
+SpotLight3D
+CSGCylinder3D
 CSGBox3D
 CSGCombiner3D
