@@ -1,6 +1,4 @@
+res://scripts/ClickableBox.gd
 res://scenes/world.tscn
 res://shaders/mirror.gdshader
 res://scripts/PlayerController.gd
-res://scripts/BoxInteraction.gd
-res://scripts/BoxInteractionManager.gd
-res://scripts/ClickableBox.gd

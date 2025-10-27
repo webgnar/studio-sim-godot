@@ -23,10 +23,6 @@ extends CharacterBody3D
 @export var max_fov_increase: float = 15.0
 @export var fov_transition_speed: float = 2.0
 
-@export_group("Interaction Settings")
-@export var interaction_distance: float = 5.0
-@export var interaction_action: String = "interact"  # Input action name
-
 # --- PRIVATE VARIABLES ---
 
 # We get a reference to the camera in _ready().
@@ -214,14 +210,16 @@ func _unhandled_input(event: InputEvent) -> void:
 			rotation.x = clamp(rotation.x, deg_to_rad(-80), deg_to_rad(80))
 			_camera.rotation = rotation
 
-	# --- INTERACTION ---
-	# Handle left mouse click for interacting with objects
+	# --- MOUSE CLICK HANDLING ---
+	# Handle mouse clicks to recapture mouse or interact with objects
 	if event is InputEventMouseButton and _camera != null:
 		var mouse_event := event as InputEventMouseButton
 		if mouse_event.button_index == MOUSE_BUTTON_LEFT and mouse_event.pressed:
-			# Only interact if mouse is captured (in game mode)
-			if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
-				_handle_interaction()
+			# If mouse is not captured, capture it (re-enter game mode)
+			if Input.mouse_mode == Input.MOUSE_MODE_VISIBLE:
+				Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+				print("Mouse captured by clicking")
+				return  # Don't process other interactions while recapturing
 
 	# You can also handle other inputs here, like pausing the game.
 	if Input.is_action_just_pressed("ui_cancel"): # ESC key
@@ -237,180 +235,3 @@ func _exit_tree() -> void:
 	# Make sure to release the mouse when the player object is removed.
 	# This is good practice for when changing scenes or quitting the game.
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-
-# --- INTERACTION METHODS ---
-
-func _handle_interaction() -> void:
-	# Cast a ray from the camera to see what we're looking at
-	var interactable_object = _get_object_under_crosshair()
-	
-	if interactable_object:
-		print("Clicked on: " + str(interactable_object.name))
-		_interact_with_object(interactable_object)
-
-func _get_object_under_crosshair() -> Node3D:
-	if not _camera:
-		return null
-	
-	# Cast ray from camera center (crosshair position)
-	var space_state = _camera.get_world_3d().direct_space_state
-	var from = _camera.global_transform.origin
-	var to = from + (-_camera.global_transform.basis.z * interaction_distance)
-	
-	# Create ray query
-	var query = PhysicsRayQueryParameters3D.create(from, to)
-	query.exclude = [self]  # Don't hit the player
-	query.collision_mask = 1  # Default collision layer
-	
-	var result = space_state.intersect_ray(query)
-	
-	if result and result.has("collider"):
-		var hit_object = result.collider
-		
-		# Find the root interactable object (walk up the tree)
-		return _find_interactable_parent(hit_object)
-	
-	return null
-
-func _find_interactable_parent(node: Node) -> Node3D:
-	# Walk up the scene tree to find an interactable object
-	var current = node
-	while current and current != get_tree().root:
-		if _is_interactable(current):
-			return current
-		current = current.get_parent()
-	return null
-
-func _is_interactable(node: Node) -> bool:
-	# Define what makes an object interactable
-	var node_name = node.name.to_lower()
-	
-	# Check for interactable object names
-	var interactable_keywords = ["box", "bottom", "lid", "door", "switch", "button", "lever"]
-	
-	for keyword in interactable_keywords:
-		if keyword in node_name:
-			return true
-	
-	# You can also check for groups or specific scripts
-	if node.is_in_group("interactable"):
-		return true
-	
-	return false
-
-func _interact_with_object(object: Node3D) -> void:
-	print("Interacting with: " + object.name)
-	
-	# Handle different types of interactions based on the object
-	var object_name = object.name.to_lower()
-	
-	if "box" in object_name or "bottom" in object_name:
-		_interact_with_box(object)
-	elif "door" in object_name:
-		_interact_with_door(object)
-	elif "switch" in object_name or "button" in object_name:
-		_interact_with_switch(object)
-	else:
-		# Generic interaction
-		_generic_interaction(object)
-
-func _interact_with_box(box: Node3D) -> void:
-	print("Opening/interacting with box: " + box.name)
-	
-	# Find and control animations
-	var animation_players = _find_animation_players_in_object(box)
-	
-	for anim_player in animation_players:
-		if anim_player.has_animation("open"):
-			print("Playing 'open' animation")
-			anim_player.play("open")
-		elif anim_player.has_animation("rotate"):
-			print("Restarting 'rotate' animation")
-			anim_player.stop()
-			anim_player.play("rotate")
-		else:
-			# Just restart the current animation
-			print("Restarting current animation")
-			anim_player.stop()
-			anim_player.play()
-	
-	# Add a visual effect (brief glow)
-	_add_interaction_effect(box)
-
-func _interact_with_door(door: Node3D) -> void:
-	print("Opening/closing door: " + door.name)
-	# Add door-specific logic here
-	_generic_interaction(door)
-
-func _interact_with_switch(switch: Node3D) -> void:
-	print("Toggling switch: " + switch.name)
-	# Add switch-specific logic here
-	_generic_interaction(switch)
-
-func _generic_interaction(object: Node3D) -> void:
-	print("Generic interaction with: " + object.name)
-	
-	# Find and trigger animations
-	var animation_players = _find_animation_players_in_object(object)
-	for anim_player in animation_players:
-		anim_player.stop()
-		anim_player.play()
-	
-	# Add visual feedback
-	_add_interaction_effect(object)
-
-func _find_animation_players_in_object(object: Node3D) -> Array[AnimationPlayer]:
-	var animation_players: Array[AnimationPlayer] = []
-	_collect_animation_players_recursive(object, animation_players)
-	return animation_players
-
-func _collect_animation_players_recursive(node: Node, collection: Array[AnimationPlayer]) -> void:
-	if node is AnimationPlayer:
-		collection.append(node)
-	
-	for child in node.get_children():
-		_collect_animation_players_recursive(child, collection)
-
-func _add_interaction_effect(object: Node3D) -> void:
-	# Add a brief visual effect to show interaction
-	var mesh_instances = _find_mesh_instances_in_object(object)
-	
-	for mesh_instance in mesh_instances:
-		_create_interaction_glow(mesh_instance)
-
-func _find_mesh_instances_in_object(object: Node3D) -> Array[MeshInstance3D]:
-	var mesh_instances: Array[MeshInstance3D] = []
-	_collect_mesh_instances_recursive(object, mesh_instances)
-	return mesh_instances
-
-func _collect_mesh_instances_recursive(node: Node, collection: Array[MeshInstance3D]) -> void:
-	if node is MeshInstance3D:
-		collection.append(node)
-	
-	for child in node.get_children():
-		_collect_mesh_instances_recursive(child, collection)
-
-func _create_interaction_glow(mesh_instance: MeshInstance3D) -> void:
-	# Create a brief glow effect
-	var original_materials = []
-	
-	# Store original materials
-	for i in mesh_instance.get_surface_override_material_count():
-		original_materials.append(mesh_instance.get_surface_override_material(i))
-	
-	# Apply glow effect
-	for i in mesh_instance.get_surface_override_material_count():
-		var material = mesh_instance.get_surface_override_material(i)
-		if material and material is StandardMaterial3D:
-			var glow_material = material.duplicate()
-			var std_mat = glow_material as StandardMaterial3D
-			std_mat.emission_enabled = true
-			std_mat.emission = Color(0.3, 0.3, 1.0)  # Blue glow
-			mesh_instance.set_surface_override_material(i, glow_material)
-	
-	# Remove glow after a short delay
-	await get_tree().create_timer(0.3).timeout
-	
-	# Restore original materials
-	for i in original_materials.size():
-		mesh_instance.set_surface_override_material(i, original_materials[i])

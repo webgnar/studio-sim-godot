@@ -9,19 +9,24 @@ signal hover_ended
 # --- EXPORTED VARIABLES ---
 @export_group("Interaction Settings")
 @export var interaction_distance: float = 5.0
-@export var highlight_on_hover: bool = true
 @export var click_sound: AudioStream  # Optional click sound
 @export var hover_sound: AudioStream  # Optional hover sound
 @export var open_sound: AudioStream   # Sound when box fully opens
 @export var close_sound: AudioStream  # Sound when box closes
 
+@export_group("Animation Timing")
+@export var sequence_buffer: float = 0.3  # Buffer time between lid pair animations
+
 # --- ENUMS ---
 enum BoxState {
-	CLOSED,      # Box is closed, ready for first click
-	OPENING_1,   # First pair of lids opening
-	OPENING_2,   # Second pair of lids opening  
-	OPEN,        # Box is fully open
-	CLOSING      # Box is closing
+	CLOSED,        # Box is closed, ready for first click
+	OPENING_1,     # First pair of lids opening
+	PAIR_1_OPEN,   # First pair open, waiting for second click
+	OPENING_2,     # Second pair of lids opening  
+	OPEN,          # Box is fully open
+	CLOSING_1,     # First closing pair (lid3&lid4) closing
+	PAIR_2_CLOSED, # Second pair closed, waiting for next click to close pair 1
+	CLOSING_2      # Second closing pair (lid1&lid2) closing
 }
 
 # --- SIGNALS ---
@@ -30,7 +35,6 @@ signal box_closed        # Emitted when box closes
 signal box_state_changed(new_state: BoxState)
 
 # --- PRIVATE VARIABLES ---
-var _original_materials: Array = []
 var _is_hovered: bool = false
 var _player_camera: Camera3D
 var _audio_player: AudioStreamPlayer3D
@@ -45,10 +49,6 @@ func _ready() -> void:
 	
 	# Setup audio player if we have sounds
 	_setup_audio()
-	
-	# Store original materials for highlighting
-	if highlight_on_hover:
-		_store_original_materials()
 	
 	print("ClickableBox ready: " + name)
 
@@ -69,11 +69,13 @@ func _unhandled_input(event: InputEvent) -> void:
 	if not _is_hovered:
 		return
 	
-	# Handle mouse click
+	# Handle mouse click - only when mouse is captured (in game mode)
 	if event is InputEventMouseButton:
 		var mouse_event = event as InputEventMouseButton
 		if mouse_event.button_index == MOUSE_BUTTON_LEFT and mouse_event.pressed:
-			_on_clicked()
+			# Only interact with box if mouse is captured (not in menu mode)
+			if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
+				_on_clicked()
 
 # --- PRIVATE METHODS ---
 
@@ -135,66 +137,7 @@ func _is_part_of_this_box(node: Node) -> bool:
 		current = current.get_parent()
 	return false
 
-func _store_original_materials() -> void:
-	var mesh_instances = _get_all_mesh_instances()
-	_original_materials.clear()
-	
-	for mesh_instance in mesh_instances:
-		var materials = []
-		for i in mesh_instance.get_surface_override_material_count():
-			materials.append(mesh_instance.get_surface_override_material(i))
-		_original_materials.append({
-			"mesh": mesh_instance,
-			"materials": materials
-		})
 
-func _get_all_mesh_instances() -> Array[MeshInstance3D]:
-	var instances: Array[MeshInstance3D] = []
-	_collect_mesh_instances(self, instances)
-	return instances
-
-func _collect_mesh_instances(node: Node, collection: Array[MeshInstance3D]) -> void:
-	if node is MeshInstance3D:
-		collection.append(node)
-	
-	for child in node.get_children():
-		_collect_mesh_instances(child, collection)
-
-func _highlight_box(enable: bool) -> void:
-	if not highlight_on_hover:
-		return
-	
-	var mesh_instances = _get_all_mesh_instances()
-	
-	if enable:
-		# Apply highlight effect
-		for mesh_instance in mesh_instances:
-			_apply_highlight_to_mesh(mesh_instance)
-	else:
-		# Restore original materials
-		_restore_original_materials()
-
-func _apply_highlight_to_mesh(mesh_instance: MeshInstance3D) -> void:
-	# Create a highlighted material
-	for i in mesh_instance.get_surface_override_material_count():
-		var original_material = mesh_instance.get_surface_override_material(i)
-		if original_material and original_material is StandardMaterial3D:
-			var highlight_material = original_material.duplicate()
-			var std_mat = highlight_material as StandardMaterial3D
-			
-			# Add emission glow
-			std_mat.emission_enabled = true
-			std_mat.emission = Color(0.2, 0.2, 1.0)  # Blue glow
-			
-			mesh_instance.set_surface_override_material(i, highlight_material)
-
-func _restore_original_materials() -> void:
-	for material_data in _original_materials:
-		var mesh_instance = material_data.mesh
-		var materials = material_data.materials
-		
-		for i in materials.size():
-			mesh_instance.set_surface_override_material(i, materials[i])
 
 func _play_sound(sound: AudioStream) -> void:
 	if sound and _audio_player:
@@ -205,7 +148,6 @@ func _play_sound(sound: AudioStream) -> void:
 
 func _on_hover_started() -> void:
 	print("Hovering over box: " + name)
-	_highlight_box(true)
 	
 	if hover_sound:
 		_play_sound(hover_sound)
@@ -214,7 +156,6 @@ func _on_hover_started() -> void:
 
 func _on_hover_ended() -> void:
 	print("Stopped hovering over box: " + name)
-	_highlight_box(false)
 	hover_ended.emit()
 
 func _on_clicked() -> void:
@@ -231,102 +172,126 @@ func _on_clicked() -> void:
 func _handle_box_interaction() -> void:
 	match _current_state:
 		BoxState.CLOSED:
-			_start_opening_sequence()
+			_open_lid_pair_1()
 		BoxState.OPENING_1:
-			# Box is already opening, ignore clicks during animation
-			print("Box is currently opening (pair 1), please wait...")
-			return
+			# Allow clicking to start pair 2 while pair 1 is still opening (with delay)
+			print("Queuing lid pair 2 to open after pair 1 gets a head start...")
+			_open_lid_pair_2_with_delay()
+		BoxState.PAIR_1_OPEN:
+			_open_lid_pair_2()
 		BoxState.OPENING_2:
-			# Box is already opening, ignore clicks during animation
-			print("Box is currently opening (pair 2), please wait...")
+			# Box is already opening pair 2, ignore clicks during animation  
+			print("Lid pair 2 is opening, please wait...")
 			return
 		BoxState.OPEN:
-			_start_closing_sequence()
-		BoxState.CLOSING:
-			# Box is already closing, ignore clicks during animation
-			print("Box is currently closing, please wait...")
+			_close_lid_pair_2()
+		BoxState.CLOSING_1:
+			# Allow clicking to start closing pair 1 while pair 2 is still closing (with delay)
+			print("Queuing lid pair 1 to close after pair 2 gets a head start...")
+			_close_lid_pair_1_with_delay()
+		BoxState.PAIR_2_CLOSED:
+			_close_lid_pair_1()
+		BoxState.CLOSING_2:
+			# Box is already closing pair 1, ignore clicks during animation
+			print("Lid pair 1 is closing, please wait...")
 			return
 
 # --- BOX STATE MANAGEMENT ---
 
-func _start_opening_sequence() -> void:
-	print("=== STARTING BOX OPENING SEQUENCE ===")
+func _open_lid_pair_1() -> void:
+	print("Opening lid pair 1 (lid1 & lid2)...")
 	_set_state(BoxState.OPENING_1)
-	print("DEBUG: Starting pair 1 animation...")
 	_animate_lid_pair(["lid1", "lid2"])
 	
-	# Wait for first animation to complete, then start second pair
-	print("DEBUG: Waiting for pair 1 animations to complete...")
+	# Wait for animation to complete, then check current state
 	await _wait_for_animations_to_complete()
-	print("DEBUG: Pair 1 completed, starting pair 2...")
 	
+	# Only set to PAIR_1_OPEN if we haven't already started opening pair 2
+	if _current_state == BoxState.OPENING_1:
+		_set_state(BoxState.PAIR_1_OPEN)
+		print("Lid pair 1 open. Click again to open pair 2.")
+
+func _open_lid_pair_2() -> void:
+	print("Opening lid pair 2 (lid3 & lid4)...")
 	_set_state(BoxState.OPENING_2)
 	_animate_lid_pair(["lid3", "lid4"])
 	
-	# Wait for second animation to complete, then mark as fully open
-	print("DEBUG: Waiting for pair 2 animations to complete...")
+	# Wait for animation to complete, then mark as fully open
 	await _wait_for_animations_to_complete()
-	print("DEBUG: Pair 2 completed, box should be fully open!")
-	
 	_set_state(BoxState.OPEN)
 	_on_box_fully_opened()
 
-func _start_closing_sequence() -> void:
-	print("=== STARTING BOX CLOSING SEQUENCE ===")
-	_set_state(BoxState.CLOSING)
+func _open_lid_pair_2_with_delay() -> void:
+	# Set state immediately to prevent multiple calls
+	_set_state(BoxState.OPENING_2)
 	
-	# Close in reverse order: pair 2 first (lid3, lid4), then pair 1 (lid1, lid2)
-	print("DEBUG: Starting closing pair 2 (lid3, lid4)...")
+	# Wait a bit to ensure lid pair 1 gets a head start
+	await get_tree().create_timer(sequence_buffer).timeout
+	
+	print("Opening lid pair 2 (lid3 & lid4) after delay...")
+	_animate_lid_pair(["lid3", "lid4"])
+	
+	# Wait for animation to complete, then mark as fully open
+	await _wait_for_animations_to_complete()
+	_set_state(BoxState.OPEN)
+	_on_box_fully_opened()
+
+func _close_lid_pair_2() -> void:
+	print("Closing lid pair 2 (lid3 & lid4)...")
+	_set_state(BoxState.CLOSING_1)
 	_animate_lid_pair_reverse(["lid3", "lid4"])
 	
-	# Wait for first closing animation to complete
-	print("DEBUG: Waiting for closing pair 2 to complete...")
+	# Wait for animation to complete, then check current state
 	await _wait_for_animations_to_complete()
-	print("DEBUG: Closing pair 2 completed, starting closing pair 1...")
 	
+	# Only set to PAIR_2_CLOSED if we haven't already started closing pair 1
+	if _current_state == BoxState.CLOSING_1:
+		_set_state(BoxState.PAIR_2_CLOSED)
+		print("Lid pair 2 closed. Click again to close pair 1.")
+
+func _close_lid_pair_1() -> void:
+	print("Closing lid pair 1 (lid1 & lid2)...")
+	_set_state(BoxState.CLOSING_2)
 	_animate_lid_pair_reverse(["lid1", "lid2"])
 	
-	# Wait for second closing animation to complete
-	print("DEBUG: Waiting for closing pair 1 to complete...")
+	# Wait for animation to complete, then mark as fully closed
 	await _wait_for_animations_to_complete()
-	print("DEBUG: All closing animations completed, box should be closed!")
+	_set_state(BoxState.CLOSED)
+	_on_box_fully_closed()
+
+func _close_lid_pair_1_with_delay() -> void:
+	# Set state immediately to prevent multiple calls
+	_set_state(BoxState.CLOSING_2)
 	
+	# Wait a bit to ensure lid pair 2 gets a head start closing
+	await get_tree().create_timer(sequence_buffer).timeout
+	
+	print("Closing lid pair 1 (lid1 & lid2) after delay...")
+	_animate_lid_pair_reverse(["lid1", "lid2"])
+	
+	# Wait for animation to complete, then mark as fully closed
+	await _wait_for_animations_to_complete()
 	_set_state(BoxState.CLOSED)
 	_on_box_fully_closed()
 
 func _animate_lid_pair(lid_names: Array[String]) -> void:
-	print("DEBUG: Animating lid pair: " + str(lid_names))
-	
 	var animations_started = 0
 	for lid_name in lid_names:
-		print("DEBUG: Looking for lid node: " + lid_name)
 		var lid_node = get_node_or_null(lid_name)
 		if lid_node:
-			print("DEBUG: Found lid node: " + lid_name + " at path: " + str(lid_node.get_path()))
 			var anim_player = _find_animation_player_in_node(lid_node)
-			if anim_player:
-				print("DEBUG: Found animation player: " + str(anim_player.get_path()))
-				if anim_player.has_animation("rotate"):
-					print("DEBUG: 'rotate' animation exists, starting playback...")
-					anim_player.play("rotate")
-					animations_started += 1
-					print("✓ Started animation for: " + lid_name + " (Length: " + str(anim_player.get_animation("rotate").length) + "s)")
-				else:
-					print("✗ No 'rotate' animation found for: " + lid_name)
-					var available_anims = anim_player.get_animation_library("").get_animation_list()
-					print("DEBUG: Available animations: " + str(available_anims))
+			if anim_player and anim_player.has_animation("rotate"):
+				anim_player.play("rotate")
+				animations_started += 1
 			else:
-				print("✗ Animation player not found in: " + lid_name)
+				print("Warning: Animation not found for " + lid_name)
 		else:
-			print("✗ Lid node not found: " + lid_name)
+			print("Warning: Lid node not found: " + lid_name)
 	
-	print("DEBUG: Total animations started: " + str(animations_started))
 	if animations_started == 0:
-		print("WARNING: No animations were started!")
+		print("Warning: No animations were started for pair: " + str(lid_names))
 
 func _animate_lid_pair_reverse(lid_names: Array[String]) -> void:
-	print("Closing lid pair: " + str(lid_names))
-	
 	var animations_started = 0
 	for lid_name in lid_names:
 		var lid_node = get_node_or_null(lid_name)
@@ -336,56 +301,34 @@ func _animate_lid_pair_reverse(lid_names: Array[String]) -> void:
 				# Play animation in reverse to close
 				anim_player.play_backwards("rotate")
 				animations_started += 1
-				print("✓ Closing lid: " + lid_name)
 			else:
-				print("✗ Animation player or 'rotate' animation not found for: " + lid_name)
+				print("Warning: Animation not found for " + lid_name)
 		else:
-			print("✗ Lid node not found: " + lid_name)
+			print("Warning: Lid node not found: " + lid_name)
 	
-	print("Total closing animations started: " + str(animations_started))
+	if animations_started == 0:
+		print("Warning: No closing animations started for pair: " + str(lid_names))
 
 func _wait_for_animations_to_complete() -> void:
-	print("DEBUG: _wait_for_animations_to_complete() called")
-	
 	# Wait for all currently playing animations to finish
 	var all_anim_players = _get_animation_players()
-	print("DEBUG: Found " + str(all_anim_players.size()) + " total animation players")
-	
 	var playing_animations = []
 	
 	for anim_player in all_anim_players:
-		print("DEBUG: Checking animation player: " + str(anim_player.get_path()) + " - Playing: " + str(anim_player.is_playing()))
 		if anim_player.is_playing():
 			playing_animations.append(anim_player)
-			print("DEBUG: Added playing animation: " + str(anim_player.get_path()))
-	
-	print("DEBUG: Total playing animations: " + str(playing_animations.size()))
 	
 	if playing_animations.size() > 0:
-		print("DEBUG: Waiting for " + str(playing_animations.size()) + " animations to complete...")
-		
 		# Wait for all animations to finish
-		for i in range(playing_animations.size()):
-			var anim_player = playing_animations[i]
-			print("DEBUG: Waiting for animation " + str(i + 1) + "/" + str(playing_animations.size()) + ": " + str(anim_player.get_path()))
-			
+		for anim_player in playing_animations:
 			if anim_player.is_playing():
 				await anim_player.animation_finished
-				print("DEBUG: Animation finished: " + str(anim_player.get_path()))
-			else:
-				print("DEBUG: Animation was no longer playing: " + str(anim_player.get_path()))
-		
-		print("DEBUG: All animations completed!")
 	else:
-		print("DEBUG: No animations playing, using fallback timer")
 		# Small delay to ensure smooth state transitions
 		await get_tree().create_timer(0.1).timeout
-		print("DEBUG: Fallback timer completed")
 
 func _set_state(new_state: BoxState) -> void:
-	var old_state = _current_state
 	_current_state = new_state
-	print("Box state changed: " + str(BoxState.keys()[old_state]) + " → " + str(BoxState.keys()[new_state]))
 	box_state_changed.emit(new_state)
 
 func _on_box_fully_opened() -> void:
@@ -461,15 +404,15 @@ func is_box_closed() -> bool:
 	return _current_state == BoxState.CLOSED
 
 func is_box_animating() -> bool:
-	return _current_state in [BoxState.OPENING_1, BoxState.OPENING_2, BoxState.CLOSING]
+	return _current_state in [BoxState.OPENING_1, BoxState.OPENING_2, BoxState.CLOSING_1, BoxState.CLOSING_2]
 
 func force_close_box() -> void:
 	if _current_state == BoxState.OPEN:
-		_start_closing_sequence()
+		_close_lid_pair_2()
 
 func force_open_box() -> void:
 	if _current_state == BoxState.CLOSED:
-		_start_opening_sequence()
+		_open_lid_pair_1()
 
 # --- PUBLIC METHODS ---
 

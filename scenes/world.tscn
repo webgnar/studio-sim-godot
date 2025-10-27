@@ -88,6 +88,24 @@ resource_local_to_scene = true
 render_priority = 0
 shader = ExtResource("25_xgqkh")
 shader_parameter/refl_tx = SubResource("ViewportTexture_xgqkh")
+shader_parameter/metallic = 0.7950000377625
+shader_parameter/roughness = 0.29600001406
+shader_parameter/reflection_strength = 1.0
+
+[sub_resource type="Animation" id="Animation_x2olw"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, -1.5707963, 0)]
+}
 
 [sub_resource type="Animation" id="Animation_f17e3"]
 resource_name = "rotate"
@@ -105,7 +123,13 @@ tracks/0/keys = {
 "values": [Vector3(0, -1.5707963, 0), Vector3(0, -1.5707964, -2.1223204), Vector3(0, -1.5707964, -3.3108895), Vector3(0, -1.5707964, -4.0090213)]
 }
 
-[sub_resource type="Animation" id="Animation_x2olw"]
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_817gm"]
+_data = {
+&"RESET": SubResource("Animation_x2olw"),
+&"rotate": SubResource("Animation_f17e3")
+}
+
+[sub_resource type="Animation" id="Animation_l8ah6"]
 length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
@@ -117,13 +141,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector3(0, -1.5707963, 0)]
-}
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_817gm"]
-_data = {
-&"RESET": SubResource("Animation_x2olw"),
-&"rotate": SubResource("Animation_f17e3")
+"values": [Vector3(0, 1.5707965, 0)]
 }
 
 [sub_resource type="Animation" id="Animation_ggc52"]
@@ -142,7 +160,13 @@ tracks/0/keys = {
 "values": [Vector3(0, 1.5707965, 0), Vector3(0, 1.5707964, -2.1066124), Vector3(0, 1.5707964, -4.160865)]
 }
 
-[sub_resource type="Animation" id="Animation_l8ah6"]
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_e75v4"]
+_data = {
+&"RESET": SubResource("Animation_l8ah6"),
+&"rotate": SubResource("Animation_ggc52")
+}
+
+[sub_resource type="Animation" id="Animation_navra"]
 length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
@@ -154,13 +178,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector3(0, 1.5707965, 0)]
-}
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_e75v4"]
-_data = {
-&"RESET": SubResource("Animation_l8ah6"),
-&"rotate": SubResource("Animation_ggc52")
+"values": [Vector3(0, 0, 0)]
 }
 
 [sub_resource type="Animation" id="Animation_37qwj"]
@@ -179,7 +197,13 @@ tracks/0/keys = {
 "values": [Vector3(0, 0, 0), Vector3(0, 0, -3.2986722), Vector3(0, 0, -3.6390114), Vector3(0, 0, -3.848451)]
 }
 
-[sub_resource type="Animation" id="Animation_navra"]
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_luhhm"]
+_data = {
+&"RESET": SubResource("Animation_navra"),
+&"rotate": SubResource("Animation_37qwj")
+}
+
+[sub_resource type="Animation" id="Animation_rup4s"]
 length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
@@ -191,13 +215,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector3(0, 0, 0)]
-}
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_luhhm"]
-_data = {
-&"RESET": SubResource("Animation_navra"),
-&"rotate": SubResource("Animation_37qwj")
+"values": [Vector3(0, -3.1415925, 0)]
 }
 
 [sub_resource type="Animation" id="Animation_fh13f"]
@@ -214,21 +232,6 @@ tracks/0/keys = {
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1),
 "update": 0,
 "values": [Vector3(0, -3.1415925, 0), Vector3(0, -3.1415927, -1.2740904), Vector3(0, -3.1415927, -2.8867745), Vector3(0, -3.1415927, -4.197517), Vector3(0, -3.1415927, -4.4593163)]
-}
-
-[sub_resource type="Animation" id="Animation_rup4s"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:rotation")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(0, -3.1415925, 0)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_4kbfs"]
@@ -774,10 +777,9 @@ size = Vector2i(256, 256)
 transform = Transform3D(1.2796953e-07, 0.21836469, 0.9758673, -2.8635068e-08, 0.9758673, -0.21836469, -1, 0, 1.3113417e-07, 4.2467685, 1.1345179, 6.6101465)
 
 [node name="box 1" parent="." instance=ExtResource("26_ts3gi")]
-transform = Transform3D(0.33, 0, 0, 0, 0.33, 0, 0, 0, 0.33, 0.5824034, 0.41803676, -4.4426527)
+transform = Transform3D(0.33, 0, 0, 0, 0.33, 0, 0, 0, 0.33, 0.5824034, 0.2992636, 8.296764)
 script = ExtResource("27_37qwj")
-interaction_distance = null
-highlight_on_hover = null
+sequence_buffer = 0.7
 
 [node name="lid1" parent="box 1" instance=ExtResource("27_0nbtd")]
 transform = Transform3D(7.54979e-08, 0, -1, 0, 1, 0, 1, 0, 7.54979e-08, 0.0021412373, 1.230222, 0.9953356)
