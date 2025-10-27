@@ -1,6 +1,8 @@
+CollisionShape3D
+AnimationPlayer
+Node3D
 Camera3D
 SubViewport
-Node3D
 MeshInstance3D
 OmniLight3D
 SpotLight3D

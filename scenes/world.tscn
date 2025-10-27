@@ -1,4 +1,4 @@
-[gd_scene load_steps=41 format=3 uid="uid://cnmivki1rop3b"]
+[gd_scene load_steps=56 format=3 uid="uid://cnmivki1rop3b"]
 
 [ext_resource type="Material" uid="uid://wwlsotlotycw" path="res://materials/wood.tres" id="1_4mrxx"]
 [ext_resource type="Script" uid="uid://d4bxpnphvld1d" path="res://scripts/PlayerController.gd" id="1_4wyf3"]
@@ -25,6 +25,9 @@
 [ext_resource type="PackedScene" uid="uid://bp08vdgdcjkvv" path="res://models/light_switch.glb" id="22_0nbtd"]
 [ext_resource type="Script" uid="uid://djltcowfnfdh7" path="res://scripts/mirror.gd" id="24_ctatt"]
 [ext_resource type="Shader" uid="uid://br4qh8mg5yosn" path="res://shaders/mirror.gdshader" id="25_xgqkh"]
+[ext_resource type="PackedScene" uid="uid://d0y6fk05wn5dc" path="res://models/box.glb" id="26_ts3gi"]
+[ext_resource type="PackedScene" uid="uid://tejn0hfpdhf7" path="res://models/box topL.glb" id="27_0nbtd"]
+[ext_resource type="Script" uid="uid://c47e2pgvr3gnn" path="res://scripts/ClickableBox.gd" id="27_37qwj"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_nnsk1"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -85,6 +88,154 @@ resource_local_to_scene = true
 render_priority = 0
 shader = ExtResource("25_xgqkh")
 shader_parameter/refl_tx = SubResource("ViewportTexture_xgqkh")
+
+[sub_resource type="Animation" id="Animation_f17e3"]
+resource_name = "rotate"
+length = 1.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.82, 1.31, 1.5),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(0, -1.5707963, 0), Vector3(0, -1.5707964, -2.1223204), Vector3(0, -1.5707964, -3.3108895), Vector3(0, -1.5707964, -4.0090213)]
+}
+
+[sub_resource type="Animation" id="Animation_x2olw"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, -1.5707963, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_817gm"]
+_data = {
+&"RESET": SubResource("Animation_x2olw"),
+&"rotate": SubResource("Animation_f17e3")
+}
+
+[sub_resource type="Animation" id="Animation_ggc52"]
+resource_name = "rotate"
+length = 2.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.4, 2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 1.5707965, 0), Vector3(0, 1.5707964, -2.1066124), Vector3(0, 1.5707964, -4.160865)]
+}
+
+[sub_resource type="Animation" id="Animation_l8ah6"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 1.5707965, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_e75v4"]
+_data = {
+&"RESET": SubResource("Animation_l8ah6"),
+&"rotate": SubResource("Animation_ggc52")
+}
+
+[sub_resource type="Animation" id="Animation_37qwj"]
+resource_name = "rotate"
+length = 2.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0.01666665, 0.86666656, 1.3866668, 1.9666667),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, 0, -3.2986722), Vector3(0, 0, -3.6390114), Vector3(0, 0, -3.848451)]
+}
+
+[sub_resource type="Animation" id="Animation_navra"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_luhhm"]
+_data = {
+&"RESET": SubResource("Animation_navra"),
+&"rotate": SubResource("Animation_37qwj")
+}
+
+[sub_resource type="Animation" id="Animation_fh13f"]
+resource_name = "rotate"
+length = 1.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(-1.1920929e-07, 0.37333333, 0.6733333, 1.1333333, 1.5),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(0, -3.1415925, 0), Vector3(0, -3.1415927, -1.2740904), Vector3(0, -3.1415927, -2.8867745), Vector3(0, -3.1415927, -4.197517), Vector3(0, -3.1415927, -4.4593163)]
+}
+
+[sub_resource type="Animation" id="Animation_rup4s"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, -3.1415925, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_4kbfs"]
+_data = {
+&"RESET": SubResource("Animation_rup4s"),
+&"rotate": SubResource("Animation_fh13f")
+}
 
 [node name="World" type="Node3D"]
 
@@ -621,3 +772,41 @@ size = Vector2i(256, 256)
 
 [node name="Camera3D" type="Camera3D" parent="MirrorNew/SubViewport"]
 transform = Transform3D(1.2796953e-07, 0.21836469, 0.9758673, -2.8635068e-08, 0.9758673, -0.21836469, -1, 0, 1.3113417e-07, 4.2467685, 1.1345179, 6.6101465)
+
+[node name="box 1" parent="." instance=ExtResource("26_ts3gi")]
+transform = Transform3D(0.33, 0, 0, 0, 0.33, 0, 0, 0, 0.33, 0.5824034, 0.41803676, -4.4426527)
+script = ExtResource("27_37qwj")
+interaction_distance = null
+highlight_on_hover = null
+
+[node name="lid1" parent="box 1" instance=ExtResource("27_0nbtd")]
+transform = Transform3D(7.54979e-08, 0, -1, 0, 1, 0, 1, 0, 7.54979e-08, 0.0021412373, 1.230222, 0.9953356)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="box 1/lid1"]
+libraries = {
+&"": SubResource("AnimationLibrary_817gm")
+}
+
+[node name="lid2" parent="box 1" instance=ExtResource("27_0nbtd")]
+transform = Transform3D(-1.6292068e-07, 0, 1, 0, 1, 0, -1, 0, -1.6292068e-07, 0.0021412373, 1.2153144, -1.0046644)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="box 1/lid2"]
+libraries = {
+&"": SubResource("AnimationLibrary_e75v4")
+}
+
+[node name="lid3" parent="box 1" instance=ExtResource("27_0nbtd")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.0016555, 1.2000515, -0.0047330856)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="box 1/lid3"]
+libraries = {
+&"": SubResource("AnimationLibrary_luhhm")
+}
+
+[node name="lid4" parent="box 1" instance=ExtResource("27_0nbtd")]
+transform = Transform3D(-1, 0, -1.509958e-07, 0, 1, 0, 1.509958e-07, 0, -1, -0.99834454, 1.2000515, -0.0047330856)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="box 1/lid4"]
+libraries = {
+&"": SubResource("AnimationLibrary_4kbfs")
+}
