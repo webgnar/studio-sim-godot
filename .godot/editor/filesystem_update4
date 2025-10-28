@@ -1,4 +1,2 @@
-res://scripts/ClickableBox.gd
 res://scenes/world.tscn
 res://shaders/mirror.gdshader
-res://scripts/PlayerController.gd

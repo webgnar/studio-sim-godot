@@ -1,4 +1,4 @@
-[gd_scene load_steps=56 format=3 uid="uid://cnmivki1rop3b"]
+[gd_scene load_steps=83 format=3 uid="uid://cnmivki1rop3b"]
 
 [ext_resource type="Material" uid="uid://wwlsotlotycw" path="res://materials/wood.tres" id="1_4mrxx"]
 [ext_resource type="Script" uid="uid://d4bxpnphvld1d" path="res://scripts/PlayerController.gd" id="1_4wyf3"]
@@ -28,6 +28,12 @@
 [ext_resource type="PackedScene" uid="uid://d0y6fk05wn5dc" path="res://models/box.glb" id="26_ts3gi"]
 [ext_resource type="PackedScene" uid="uid://tejn0hfpdhf7" path="res://models/box topL.glb" id="27_0nbtd"]
 [ext_resource type="Script" uid="uid://c47e2pgvr3gnn" path="res://scripts/ClickableBox.gd" id="27_37qwj"]
+[ext_resource type="PackedScene" uid="uid://65f11slkoyvf" path="res://models/artbox/2.glb" id="29_4kbfs"]
+[ext_resource type="PackedScene" uid="uid://dsv2g0obaio51" path="res://models/artbox/1.glb" id="30_f17e3"]
+[ext_resource type="PackedScene" uid="uid://bgyknl62rv8i2" path="res://models/artbox/3.glb" id="31_x2olw"]
+[ext_resource type="PackedScene" uid="uid://bscbli4kb5p5n" path="res://models/artbox/4.glb" id="32_817gm"]
+[ext_resource type="PackedScene" uid="uid://cwhj4w40hwp52" path="res://models/artbox/5.glb" id="33_ggc52"]
+[ext_resource type="PackedScene" uid="uid://uwpxuwjxopad" path="res://models/artbox/6.glb" id="34_l8ah6"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_nnsk1"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -240,6 +246,288 @@ _data = {
 &"rotate": SubResource("Animation_fh13f")
 }
 
+[sub_resource type="Animation" id="Animation_8u370"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 1.5707964, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_e75v4"]
+resource_name = "fold out"
+length = 2.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0.020000458, 2.4666667),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, 1.5707964, 0), Vector3(0, 0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_rga7q"]
+_data = {
+&"RESET": SubResource("Animation_8u370"),
+&"fold out": SubResource("Animation_e75v4")
+}
+
+[sub_resource type="Animation" id="Animation_hi6a0"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(1.5707964, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_6oujy"]
+resource_name = "foldout"
+length = 2.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 2.4666667),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(1.5707964, 0, 0), Vector3(0, 0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_eo1xk"]
+_data = {
+&"RESET": SubResource("Animation_hi6a0"),
+&"foldout": SubResource("Animation_6oujy")
+}
+
+[sub_resource type="Animation" id="Animation_4wdv8"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(-1.5707964, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_18clu"]
+resource_name = "fold out"
+length = 2.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 2.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(-1.5707964, 0, 0), Vector3(0, 0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_d46x8"]
+_data = {
+&"RESET": SubResource("Animation_4wdv8"),
+&"fold out": SubResource("Animation_18clu")
+}
+
+[sub_resource type="Animation" id="Animation_x28ej"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, -1.5707964, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_3l05q"]
+resource_name = "fold out"
+length = 2.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, -1.5707964, 0), Vector3(0, 0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_1jxku"]
+_data = {
+&"RESET": SubResource("Animation_x28ej"),
+&"fold out": SubResource("Animation_3l05q")
+}
+
+[sub_resource type="Animation" id="Animation_e68xj"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(-7.1054274e-15, -1.5707964, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_1dgkn"]
+resource_name = "fold out"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0.016666412, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(-7.1054274e-15, -1.5707964, 0), Vector3(0, 0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_5hglh"]
+_data = {
+&"RESET": SubResource("Animation_e68xj"),
+&"fold out": SubResource("Animation_1dgkn")
+}
+
+[sub_resource type="Animation" id="Animation_pf35h"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(8.7408296e-08, 1.5525925, 8.583144e-08)]
+}
+
+[sub_resource type="Animation" id="Animation_qg546"]
+resource_name = "orient to wall"
+length = 1.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1.4),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(8.7408296e-08, 1.5525925, 8.583144e-08), Vector3(-0.01820377, 1.5707964, -1.5707963)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_iexy4"]
+_data = {
+&"RESET": SubResource("Animation_pf35h"),
+&"orient to wall": SubResource("Animation_qg546")
+}
+
+[sub_resource type="Animation" id="Animation_817gm"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.001),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0.587, 0.307, 8.244), Vector3(0.587, 0.08535507, 8.244)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:scale")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0.029999997, 0.03, 0.029999997)]
+}
+
+[sub_resource type="Animation" id="Animation_4kbfs"]
+resource_name = "move up and rotate"
+length = 9.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 2.3666666, 4.02, 4.9, 9),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(0.587, 0.09874722, 8.244), Vector3(0.587, 1.2629869, 8.244), Vector3(0.587, 1.2629869, 8.244), Vector3(0.587, 1.5638123, 8.244), Vector3(-2.6450505, 1.7834857, 7.7934494)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:scale")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(3.44, 4.94),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0.029999997, 0.03, 0.029999997), Vector3(0.05, 0.05, 0.05)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_ggc52"]
+_data = {
+&"RESET": SubResource("Animation_817gm"),
+&"move up and rotate": SubResource("Animation_4kbfs")
+}
+
 [node name="World" type="Node3D"]
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
@@ -276,61 +564,11 @@ material = SubResource("StandardMaterial3D_dss4m")
 [node name="light" parent="celing" instance=ExtResource("6_jhx03")]
 transform = Transform3D(-3.135817e-08, -0.7173913, 0, 0.044058748, -1.925869e-09, 0, 0, 0, 0.014575972, 0.96535206, -0.0076911454, -0.3091873)
 
-[node name="SpotLight3D" type="SpotLight3D" parent="celing/light"]
-transform = Transform3D(3.030303, 0, 0, 0, -1.3245875e-07, 3.030303, 0, -3.030303, -1.3245875e-07, -1.1288758e-08, 0, 0)
-light_color = Color(0.8666667, 1, 1, 1)
-spot_range = 8.499
-spot_attenuation = 0.01
-
-[node name="OmniLight3D" type="OmniLight3D" parent="celing/light"]
-transform = Transform3D(3.030303, 0, 0, 0, 3.030303, 0, 0, 0, 3.030303, -0.10587212, -3.6087408, 0)
-light_color = Color(0.7137255, 1, 1, 1)
-light_energy = 10.283
-shadow_enabled = true
-omni_range = 101.884
-omni_attenuation = 4.087
-
 [node name="light2" parent="celing" instance=ExtResource("6_jhx03")]
 transform = Transform3D(-3.135817e-08, -0.7173913, 0, 0.044058748, -1.925869e-09, 0, 0, 0, 0.014575972, 0.96535206, -0.0076911454, -0.07728043)
 
-[node name="SpotLight3D" type="SpotLight3D" parent="celing/light2"]
-transform = Transform3D(3.030303, 0, 0, 0, -1.3245875e-07, 3.030303, 0, -3.030303, -1.3245875e-07, -1.1288758e-08, 0, 0)
-light_color = Color(0.8666667, 1, 1, 1)
-spot_range = 8.499
-spot_attenuation = 0.01
-
-[node name="OmniLight3D" type="OmniLight3D" parent="celing/light2"]
-transform = Transform3D(3.030303, 0, 0, 0, 3.030303, 0, 0, 0, 3.030303, 0, -1.3586922, 0)
-light_color = Color(0.7137255, 1, 1, 1)
-light_energy = 0.054
-shadow_enabled = true
-omni_range = 108.238
-omni_attenuation = 6.793
-
-[node name="OmniLight3D2" type="OmniLight3D" parent="celing/light2"]
-transform = Transform3D(3.030303, 0, 0, 0, 3.030303, 0, 0, 0, 3.030303, 6.2457914, -5.6061153, 18.056469)
-light_color = Color(0.7137255, 1, 1, 1)
-light_energy = 1.574
-shadow_enabled = true
-omni_range = 134.294
-omni_attenuation = 2.715
-
 [node name="light3" parent="celing" instance=ExtResource("6_jhx03")]
 transform = Transform3D(-3.135817e-08, -0.7173913, 0, 0.044058748, -1.925869e-09, 0, 0, 0, 0.014575972, 1.5583811, -0.007691144, 0.23070204)
-
-[node name="SpotLight3D" type="SpotLight3D" parent="celing/light3"]
-transform = Transform3D(3.030303, 0, 0, 0, -1.3245875e-07, 3.030303, 0, -3.030303, -1.3245875e-07, -1.1288758e-08, 0, 0)
-light_color = Color(0.8666667, 1, 1, 1)
-spot_range = 8.499
-spot_attenuation = 0.01
-
-[node name="OmniLight3D" type="OmniLight3D" parent="celing/light3"]
-transform = Transform3D(3.030303, 0, 0, 0, 3.030303, 0, 0, 0, 3.030303, 0, -5.352392, 0)
-light_color = Color(0.7137255, 1, 1, 1)
-light_energy = 1.574
-shadow_enabled = true
-omni_range = 21.515
-omni_attenuation = 3.582
 
 [node name="studio" type="CSGCombiner3D" parent="."]
 transform = Transform3D(0.46, 0, 0, 0, 7.49, 0, 0, 0, 22.64, -4.9423933, 3.544661, 4)
@@ -458,13 +696,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 73.35469, -0.15820313, 0)
 [node name="window2" parent="windows" instance=ExtResource("15_xo05s")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 25.254845, 0)
 
-[node name="spotlights" type="Node3D" parent="."]
-transform = Transform3D(3.7252903e-09, 0.88005006, 0, -0.10005001, 2.9802322e-08, 0, 0, 0, 0.10005001, -0.16451585, 4.917156, 7.3508925)
+[node name="spot" parent="." instance=ExtResource("20_munwf")]
+transform = Transform3D(0.1499385, 0.0042955433, 0, -0.0042955433, 0.1499385, 0, 0, 0, 0.14999999, -3.3168278, 4.545951, 7.324863)
 
-[node name="spot" parent="spotlights" instance=ExtResource("20_munwf")]
-transform = Transform3D(0.04293401, -1.4986355, 0, 0.17037496, 0.0048810276, 0, 0, 0, 1.4992502, 3.7101974, -3.5819688, -123.90574)
-
-[node name="SpotLight3D" type="SpotLight3D" parent="spotlights/spot"]
+[node name="SpotLight3D" type="SpotLight3D" parent="spot"]
 transform = Transform3D(6.666666, 0, 0, 0, -2.9140926e-07, 6.666666, 0, -6.666666, -2.9140926e-07, 0, 1.25, 0)
 light_energy = 2.98
 spot_range = 4.437
@@ -472,97 +707,7 @@ spot_attenuation = -1.82
 spot_angle = 33.33
 spot_angle_attenuation = 36.758244
 
-[node name="OmniLight3D" type="OmniLight3D" parent="spotlights/spot"]
-transform = Transform3D(6.666666, 0, 0, 0, 6.666666, 0, 0, 0, 6.666666, 0, -1.64, 0)
-omni_range = 0.249
-
-[node name="spot2" parent="spotlights" instance=ExtResource("20_munwf")]
-transform = Transform3D(0.04293401, -1.4986355, 0, 0.17037496, 0.0048810276, 0, 0, 0, 1.4992502, 3.7101974, -3.5819688, -101.56516)
-
-[node name="SpotLight3D" type="SpotLight3D" parent="spotlights/spot2"]
-transform = Transform3D(6.666666, 0, 0, 0, -2.9140926e-07, 6.666666, 0, -6.666666, -2.9140926e-07, 0, 1.25, 0)
-light_energy = 2.98
-spot_range = 4.437
-spot_attenuation = -1.82
-spot_angle = 33.33
-spot_angle_attenuation = 36.758244
-
-[node name="OmniLight3D" type="OmniLight3D" parent="spotlights/spot2"]
-transform = Transform3D(6.666666, 0, 0, 0, 6.666666, 0, 0, 0, 6.666666, 0, -1.64, 0)
-omni_range = 0.249
-
-[node name="spot3" parent="spotlights" instance=ExtResource("20_munwf")]
-transform = Transform3D(0.04293401, -1.4986355, 0, 0.17037496, 0.0048810276, 0, 0, 0, 1.4992502, 3.7101974, -3.5819688, -73.86635)
-
-[node name="SpotLight3D" type="SpotLight3D" parent="spotlights/spot3"]
-transform = Transform3D(6.666666, 0, 0, 0, -2.9140926e-07, 6.666666, 0, -6.666666, -2.9140926e-07, 0, 1.25, 0)
-light_energy = 2.98
-spot_range = 4.437
-spot_attenuation = -1.82
-spot_angle = 33.33
-spot_angle_attenuation = 36.758244
-
-[node name="OmniLight3D" type="OmniLight3D" parent="spotlights/spot3"]
-transform = Transform3D(6.666666, 0, 0, 0, 6.666666, 0, 0, 0, 6.666666, 0, -1.64, 0)
-omni_range = 0.249
-
-[node name="spot4" parent="spotlights" instance=ExtResource("20_munwf")]
-transform = Transform3D(0.04293401, -1.4986355, 0, 0.17037496, 0.0048810276, 0, 0, 0, 1.4992502, 3.7101974, -3.5819688, -39.45423)
-
-[node name="SpotLight3D" type="SpotLight3D" parent="spotlights/spot4"]
-transform = Transform3D(6.666666, 0, 0, 0, -2.9140926e-07, 6.666666, 0, -6.666666, -2.9140926e-07, 0, 1.25, 0)
-light_energy = 2.98
-spot_range = 4.437
-spot_attenuation = -1.82
-spot_angle = 33.33
-spot_angle_attenuation = 36.758244
-
-[node name="OmniLight3D" type="OmniLight3D" parent="spotlights/spot4"]
-transform = Transform3D(6.666666, 0, 0, 0, 6.666666, 0, 0, 0, 6.666666, 0, -1.64, 0)
-omni_range = 0.249
-
-[node name="spot5" parent="spotlights" instance=ExtResource("20_munwf")]
-transform = Transform3D(0.04293401, -1.4986355, 0, 0.17037496, 0.0048810276, 0, 0, 0, 1.4992502, 3.7101974, -3.5819688, -12.212349)
-
-[node name="SpotLight3D" type="SpotLight3D" parent="spotlights/spot5"]
-transform = Transform3D(6.666666, 0, 0, 0, -2.9140926e-07, 6.666666, 0, -6.666666, -2.9140926e-07, 0, 1.25, 0)
-light_energy = 2.98
-spot_range = 4.437
-spot_attenuation = -1.82
-spot_angle = 33.33
-spot_angle_attenuation = 36.758244
-
-[node name="OmniLight3D" type="OmniLight3D" parent="spotlights/spot5"]
-transform = Transform3D(6.666666, 0, 0, 0, 6.666666, 0, 0, 0, 6.666666, 0, -1.64, 0)
-omni_range = 0.249
-
-[node name="spot6" parent="spotlights" instance=ExtResource("20_munwf")]
-transform = Transform3D(0.04293401, -1.4986355, 0, 0.17037496, 0.0048810276, 0, 0, 0, 1.4992502, 3.7101974, -3.5819688, 17.936699)
-
-[node name="SpotLight3D" type="SpotLight3D" parent="spotlights/spot6"]
-transform = Transform3D(6.666666, 0, 0, 0, -2.9140926e-07, 6.666666, 0, -6.666666, -2.9140926e-07, 0, 1.25, 0)
-light_energy = 2.98
-spot_range = 4.437
-spot_attenuation = -1.82
-spot_angle = 33.33
-spot_angle_attenuation = 36.758244
-
-[node name="OmniLight3D" type="OmniLight3D" parent="spotlights/spot6"]
-transform = Transform3D(6.666666, 0, 0, 0, 6.666666, 0, 0, 0, 6.666666, 0, -1.64, 0)
-omni_range = 0.249
-
-[node name="spot7" parent="spotlights" instance=ExtResource("20_munwf")]
-transform = Transform3D(0.04293401, -1.4986355, 0, 0.17037496, 0.0048810276, 0, 0, 0, 1.4992502, 3.7101974, -3.5819688, 57.87007)
-
-[node name="SpotLight3D" type="SpotLight3D" parent="spotlights/spot7"]
-transform = Transform3D(6.666666, 0, 0, 0, -2.9140926e-07, 6.666666, 0, -6.666666, -2.9140926e-07, 0, 1.25, 0)
-light_energy = 2.98
-spot_range = 4.437
-spot_attenuation = -1.82
-spot_angle = 33.33
-spot_angle_attenuation = 36.758244
-
-[node name="OmniLight3D" type="OmniLight3D" parent="spotlights/spot7"]
+[node name="OmniLight3D" type="OmniLight3D" parent="spot"]
 transform = Transform3D(6.666666, 0, 0, 0, 6.666666, 0, 0, 0, 6.666666, 0, -1.64, 0)
 omni_range = 0.249
 
@@ -777,7 +922,7 @@ size = Vector2i(256, 256)
 transform = Transform3D(1.2796953e-07, 0.21836469, 0.9758673, -2.8635068e-08, 0.9758673, -0.21836469, -1, 0, 1.3113417e-07, 4.2467685, 1.1345179, 6.6101465)
 
 [node name="box 1" parent="." instance=ExtResource("26_ts3gi")]
-transform = Transform3D(0.33, 0, 0, 0, 0.33, 0, 0, 0, 0.33, 0.5824034, 0.2992636, 8.296764)
+transform = Transform3D(0.33, 0, 0, 0, 0.33, 0, 0, 0, 0.33, 0.30824864, 0.2992636, 8.296764)
 script = ExtResource("27_37qwj")
 sequence_buffer = 0.7
 
@@ -812,3 +957,66 @@ transform = Transform3D(-1, 0, -1.509958e-07, 0, 1, 0, 1.509958e-07, 0, -1, -0.9
 libraries = {
 &"": SubResource("AnimationLibrary_4kbfs")
 }
+
+[node name="artbox" type="Node3D" parent="."]
+transform = Transform3D(-0.029999997, 4.529874e-09, -1.9800707e-16, 0, -1.3113416e-09, -0.029999997, -4.529874e-09, -0.03, 1.3113416e-09, 0.587, 0.307, 8.244)
+
+[node name="fold6" parent="artbox" instance=ExtResource("31_x2olw")]
+transform = Transform3D(0.018202784, 8.583139e-08, 0.99983317, 8.583134e-08, 0.99999934, -8.7408196e-08, -0.9998331, 8.740823e-08, 0.018202785, 0.9763241, 0, -6.7096863)
+
+[node name="fold5" parent="artbox/fold6" instance=ExtResource("32_817gm")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -7.9999986, 0, 0)
+
+[node name="unfold" type="AnimationPlayer" parent="artbox/fold6/fold5"]
+libraries = {
+&"": SubResource("AnimationLibrary_rga7q")
+}
+autoplay = "fold out"
+
+[node name="fold4" parent="artbox/fold6" instance=ExtResource("33_ggc52")]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 8.000004, 0)
+
+[node name="unfold" type="AnimationPlayer" parent="artbox/fold6/fold4"]
+libraries = {
+&"": SubResource("AnimationLibrary_eo1xk")
+}
+autoplay = "foldout"
+
+[node name="fold3" parent="artbox/fold6" instance=ExtResource("34_l8ah6")]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, -7.999996, 0)
+
+[node name="unfold" type="AnimationPlayer" parent="artbox/fold6/fold3"]
+libraries = {
+&"": SubResource("AnimationLibrary_d46x8")
+}
+autoplay = "fold out"
+
+[node name="fold2" parent="artbox/fold6" instance=ExtResource("29_4kbfs")]
+transform = Transform3D(-4.371144e-08, 7.1054274e-15, -1.0000012, 0, 1, 7.105436e-15, 1.0000012, 3.105881e-22, -4.371144e-08, 7.999997, 0, -0.00012588501)
+
+[node name="fold1" parent="artbox/fold6/fold2" instance=ExtResource("30_f17e3")]
+transform = Transform3D(-4.3711385e-08, 0, -1, 0, 1, 0, 0.99999994, 0, -4.371139e-08, 16.000015, 0, 0)
+
+[node name="unfoldfinal" type="AnimationPlayer" parent="artbox/fold6/fold2/fold1"]
+libraries = {
+&"": SubResource("AnimationLibrary_1jxku")
+}
+autoplay = "fold out"
+
+[node name="unfold" type="AnimationPlayer" parent="artbox/fold6/fold2"]
+libraries = {
+&"": SubResource("AnimationLibrary_5hglh")
+}
+autoplay = "fold out"
+
+[node name="orient to horizontal T" type="AnimationPlayer" parent="artbox/fold6"]
+libraries = {
+&"": SubResource("AnimationLibrary_iexy4")
+}
+autoplay = "orient to wall"
+
+[node name="go to wall" type="AnimationPlayer" parent="artbox"]
+libraries = {
+&"": SubResource("AnimationLibrary_ggc52")
+}
+autoplay = "move up and rotate"
