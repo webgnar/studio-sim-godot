@@ -1,4 +1,4 @@
-[gd_scene load_steps=96 format=3 uid="uid://cnmivki1rop3b"]
+[gd_scene load_steps=103 format=3 uid="uid://cnmivki1rop3b"]
 
 [ext_resource type="Material" uid="uid://wwlsotlotycw" path="res://materials/wood.tres" id="1_4mrxx"]
 [ext_resource type="Script" uid="uid://d4bxpnphvld1d" path="res://scripts/PlayerController.gd" id="1_4wyf3"]
@@ -33,16 +33,18 @@
 [ext_resource type="Script" uid="uid://gtfub3c0olxj" path="res://scripts/ClickableArtbox.gd" id="28_artbox"]
 [ext_resource type="PackedScene" uid="uid://65f11slkoyvf" path="res://models/artbox/2.glb" id="29_4kbfs"]
 [ext_resource type="Script" uid="uid://bknsj7r2b3wte" path="res://scripts/ClickableLightSwitch.gd" id="29_lightswitch"]
-[ext_resource type="Script" path="res://scripts/ClickableBoombox.gd" id="36_boombox"]
-[ext_resource type="AudioStream" path="res://sounds/halloween.ogg" id="halloween_audio"]
-[ext_resource type="AudioStream" path="res://sounds/box open 1.ogg" id="box_open_1"]
-[ext_resource type="AudioStream" path="res://sounds/box open 2.ogg" id="box_open_2"]
 [ext_resource type="PackedScene" uid="uid://dsv2g0obaio51" path="res://models/artbox/1.glb" id="30_f17e3"]
 [ext_resource type="PackedScene" uid="uid://bgyknl62rv8i2" path="res://models/artbox/3.glb" id="31_x2olw"]
 [ext_resource type="PackedScene" uid="uid://bscbli4kb5p5n" path="res://models/artbox/4.glb" id="32_817gm"]
 [ext_resource type="PackedScene" uid="uid://cwhj4w40hwp52" path="res://models/artbox/5.glb" id="33_ggc52"]
 [ext_resource type="PackedScene" uid="uid://uwpxuwjxopad" path="res://models/artbox/6.glb" id="34_l8ah6"]
-[ext_resource type="PackedScene" uid="uid://fl4b23iycmhe" path="res://models/interactables/boombox.gltf" id="35_f17e3"]
+[ext_resource type="Script" uid="uid://q64g52716sf3" path="res://scripts/ClickableBoombox.gd" id="36_boombox"]
+[ext_resource type="PackedScene" uid="uid://ddornft2ln8sq" path="res://models/boomBox.glb" id="41_rga7q"]
+[ext_resource type="AudioStream" uid="uid://84rjpuccue2i" path="res://sounds/boomboxSwitch.ogg" id="boombox_switch"]
+[ext_resource type="AudioStream" uid="uid://8so1mqtnfhkh" path="res://sounds/box open 1.ogg" id="box_open_1"]
+[ext_resource type="AudioStream" uid="uid://bkyiswhv5fuaf" path="res://sounds/box open 2.ogg" id="box_open_2"]
+[ext_resource type="AudioStream" uid="uid://cemldiwrdj70h" path="res://sounds/halloween.ogg" id="halloween_audio"]
+[ext_resource type="AudioStream" uid="uid://bw0ig22tombxc" path="res://sounds/ministudio.ogg" id="ministudio_audio"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_nnsk1"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -125,9 +127,6 @@ _data = {
 [sub_resource type="BoxShape3D" id="BoxShape3D_l8ah6"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_e75v4"]
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_boombox"]
-size = Vector3(1.0, 1.0, 1.0)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_kpybi"]
 resource_local_to_scene = true
@@ -594,6 +593,8 @@ _data = {
 &"move closer to wall": SubResource("Animation_rga7q"),
 &"move up and rotate": SubResource("Animation_4kbfs")
 }
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_boombox"]
 
 [node name="World" type="Node3D"]
 
@@ -1125,9 +1126,9 @@ transform = Transform3D(1.2796953e-07, 0.21836469, 0.9758673, -2.8635068e-08, 0.
 [node name="cardboard box" parent="." instance=ExtResource("26_ts3gi")]
 transform = Transform3D(0.33, 0, 0, 0, 0.33, 0, 0, 0, 0.33, 0.23469448, 0.29857874, 8.047825)
 script = ExtResource("27_37qwj")
-sequence_buffer = 0.7
 flap_1_open_sound = ExtResource("box_open_1")
 flap_2_open_sound = ExtResource("box_open_2")
+sequence_buffer = 0.7
 
 [node name="lid1" parent="cardboard box" instance=ExtResource("27_0nbtd")]
 transform = Transform3D(7.54979e-08, 0, -1, 0, 1, 0, 1, 0, 7.54979e-08, 0.0021412373, 1.230222, 0.9953356)
@@ -1166,7 +1167,7 @@ transform = Transform3D(-0.029999997, 4.529874e-09, -1.9800707e-16, 0, -1.311341
 script = ExtResource("28_artbox")
 
 [node name="fold6" parent="artbox" instance=ExtResource("31_x2olw")]
-transform = Transform3D(0.018202769, 8.583139e-08, 0.9998323, 8.583126e-08, 0.99999934, -8.740812e-08, -0.9998322, 8.740823e-08, 0.018202769, 0.9763241, 0, -6.7096863)
+transform = Transform3D(0.018202767, 8.583139e-08, 0.9998322, 8.583125e-08, 0.99999934, -8.740811e-08, -0.99983215, 8.740823e-08, 0.018202769, 0.9763241, 0, -6.7096863)
 
 [node name="fold5" parent="artbox/fold6" instance=ExtResource("32_817gm")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -7.9999986, 0, 0)
@@ -1221,15 +1222,16 @@ libraries = {
 [node name="artbox container" type="Node3D" parent="."]
 transform = Transform3D(-0.029999997, 4.529874e-09, -1.9800707e-16, 0, -1.3113416e-09, -0.029999997, -4.529874e-09, -0.03, 1.3113416e-09, 0.587, 0.09874722, 9.862482)
 
-[node name="boombox" parent="." instance=ExtResource("35_f17e3")]
-transform = Transform3D(-0.2, 0, -3.019916e-08, 0, 0.2, 0, 3.019916e-08, 0, -0.2, 3.5715868, 0.30607077, 11.853438)
+[node name="BoomBox" parent="." instance=ExtResource("41_rga7q")]
+transform = Transform3D(0.22, 0, 0, 0, 0.22, 0, 0, 0, 0.22, 3.2782955, 0.33177572, 11.589592)
 script = ExtResource("36_boombox")
-boombox_id = "main_boombox"
-audio_file = ExtResource("halloween_audio")
-default_volume = 0.7
+audio_file = ExtResource("ministudio_audio")
+secret_audio_file = ExtResource("halloween_audio")
+switch_sound = ExtResource("boombox_switch")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="boombox"]
+[node name="StaticBody3D" type="StaticBody3D" parent="BoomBox"]
+transform = Transform3D(-0.90909094, 0, -1.3726891e-07, 0, 0.90909094, 0, 1.3726891e-07, 0, -0.90909094, 1.3331423, -0.1168406, 1.1993027)
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="boombox/StaticBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="BoomBox/StaticBody3D"]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
 shape = SubResource("BoxShape3D_boombox")
-transform = Transform3D(2.0, 0, 0, 0, 2.0, 0, 0, 0, 2.0, 0, 0, 0)

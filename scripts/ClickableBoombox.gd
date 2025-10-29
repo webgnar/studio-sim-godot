@@ -5,8 +5,8 @@ class_name ClickableBoombox
 signal clicked
 signal hover_started
 signal hover_ended
-signal radio_started(station_name: String)
-signal radio_stopped
+signal audio_started(song_name: String)
+signal audio_stopped
 
 # --- EXPORTED VARIABLES ---
 @export_group("Interaction Settings")
@@ -14,12 +14,13 @@ signal radio_stopped
 @export var boombox_id: String = "boombox_1"
 
 @export_group("Audio Settings")
-@export var audio_file: AudioStream  # Single audio file to play
+@export var audio_file: AudioStream  # Main audio file (halloween.ogg)
+@export var secret_audio_file: AudioStream  # Secret audio file (ministudio.ogg) 
+@export var switch_sound: AudioStream  # Sound when toggling boombox on/off
 @export var default_volume: float = 0.5
 @export var max_hearing_distance: float = 15.0  # Maximum distance where audio can be heard
 @export var min_distance: float = 1.0  # Distance where volume is at maximum
 @export var attenuation_model: AudioStreamPlayer3D.AttenuationModel = AudioStreamPlayer3D.ATTENUATION_INVERSE_DISTANCE
-@export var click_sound: AudioStream
 @export var hover_sound: AudioStream
 
 @export_group("Visual Settings")
@@ -39,11 +40,12 @@ var _player_camera: Camera3D
 var _audio_player: AudioStreamPlayer3D
 var _ui_audio_player: AudioStreamPlayer3D  # For click/hover sounds
 var _current_state: BoomboxState = BoomboxState.OFF
-var _current_station_index: int = 0
 var _mesh_instance: MeshInstance3D
 var _original_material: Material
 var _hover_material: StandardMaterial3D
-var _http_request: HTTPRequest
+var _is_playing_secret_song: bool = false  # Track if we're playing the secret song
+var _main_song_has_played: bool = false   # Track if main song finished once
+var _animation_player: AnimationPlayer  # For boombox animation control
 
 # --- GODOT METHODS ---
 
@@ -54,20 +56,23 @@ func _ready() -> void:
 	# Setup audio players
 	_setup_audio()
 	
-	# Setup HTTP request for streaming
-	_setup_http_request()
+	# Setup animation player
+	_setup_animation()
 	
 	# Setup hover visual effect
 	_setup_hover_effect()
 	
-	# Load the audio file if provided
+	# Load the main audio file
 	if audio_file:
-		_audio_player.stream = audio_file
-		print("Audio file loaded: " + str(audio_file.resource_path))
+		print("Main audio file loaded: " + str(audio_file.resource_path))
 	else:
-		print("No audio file assigned to boombox!")
+		print("No main audio file assigned to boombox!")
+	
+	if secret_audio_file:
+		print("🤫 Secret audio file loaded: " + str(secret_audio_file.resource_path))
 	
 	print("ClickableBoombox ready: " + name + " (ID: " + boombox_id + ")")
+	print("🎵 Secret song system activated!")
 
 func _process(_delta: float) -> void:
 	if not _player_camera:
@@ -85,6 +90,30 @@ func _process(_delta: float) -> void:
 	# Update distance-based audio (for debugging/monitoring)
 	if _current_state == BoomboxState.PLAYING:
 		_update_distance_info()
+		_check_if_audio_finished()
+
+func _check_if_audio_finished() -> void:
+	# Check if audio has finished playing
+	if _audio_player and not _audio_player.playing and not _audio_player.stream_paused:
+		# Stop animation when song finishes
+		if _animation_player and _animation_player.is_playing():
+			_animation_player.stop()
+			print("🎬 Stopped boombox animation (song finished)")
+		
+		if _is_playing_secret_song:
+			print("🤫 Secret song (Halloween) finished playing")
+			# Secret song finished - turn off boombox
+			_current_state = BoomboxState.OFF
+			audio_stopped.emit()
+			print("📻 Boombox turned off (secret song ended)")
+		else:
+			print("� Main song (Ministudio) finished playing")
+			# Main song finished - mark it and turn off, next start will be secret song
+			_main_song_has_played = true
+			_current_state = BoomboxState.OFF
+			audio_stopped.emit()
+			print("📻 Boombox turned off (main song ended)")
+			print("🤫 SECRET UNLOCKED! Next time you turn on the boombox, you'll hear a secret song!")
 
 func _unhandled_input(event: InputEvent) -> void:
 	if not _is_hovered:
@@ -135,18 +164,33 @@ func _setup_audio() -> void:
 	add_child(_audio_player)
 	
 	# UI sound effects player (should be quieter and not distance-based)
-	if click_sound or hover_sound:
+	if switch_sound or hover_sound:
 		_ui_audio_player = AudioStreamPlayer3D.new()
 		_ui_audio_player.name = "UIAudioPlayer"
 		_ui_audio_player.max_distance = 5.0  # UI sounds have shorter range
 		_ui_audio_player.volume_db = -10.0  # UI sounds are quieter
 		add_child(_ui_audio_player)
 
-func _setup_http_request() -> void:
-	_http_request = HTTPRequest.new()
-	_http_request.name = "HTTPRequest"
-	_http_request.timeout = 10.0  # 10 second timeout
-	add_child(_http_request)
+func _setup_animation() -> void:
+	# Find the AnimationPlayer in this node or its children
+	_animation_player = _find_animation_player_in_node(self)
+	
+	if _animation_player:
+		print("✅ Found AnimationPlayer for boombox: " + _animation_player.name)
+		# Stop any currently playing animation
+		_animation_player.stop()
+	else:
+		print("⚠️ No AnimationPlayer found in boombox - animation features disabled")
+
+func _find_animation_player_in_node(node: Node) -> AnimationPlayer:
+	if node is AnimationPlayer:
+		return node
+	
+	for child in node.get_children():
+		var anim_player = _find_animation_player_in_node(child)
+		if anim_player:
+			return anim_player
+	return null
 
 func _setup_hover_effect() -> void:
 	# Find the MeshInstance3D in this node or its children
@@ -256,15 +300,18 @@ func _on_hover_ended() -> void:
 func _on_clicked() -> void:
 	print("Boombox clicked: " + boombox_id + " (Current state: " + str(BoomboxState.keys()[_current_state]) + ")")
 	
-	if click_sound:
-		_play_ui_sound(click_sound)
-	
+	# Switch sound is now played inside _toggle_radio()
 	_toggle_radio()
 	clicked.emit()
 
 # --- RADIO CONTROL METHODS ---
 
 func _toggle_radio() -> void:
+	# Play switch sound every time we toggle
+	if switch_sound:
+		_play_ui_sound(switch_sound)
+		print("🔊 Playing boombox switch sound")
+	
 	match _current_state:
 		BoomboxState.OFF:
 			# Check if audio is paused vs completely stopped
@@ -278,25 +325,56 @@ func _toggle_radio() -> void:
 			print("Audio is loading, please wait...")
 
 func _start_audio() -> void:
-	if not audio_file:
-		print("❌ No audio file assigned to boombox!")
+	var song_to_play: AudioStream = null
+	var song_name: String = ""
+	
+	# Determine which song to play
+	if _main_song_has_played and secret_audio_file:
+		# Main song finished once, now play secret song
+		song_to_play = secret_audio_file
+		song_name = "Ministudio (Secret Song)"
+		_is_playing_secret_song = true
+		print("🤫 Starting SECRET SONG!")
+	elif audio_file:
+		# Play main song
+		song_to_play = audio_file
+		song_name = "Halloween Audio"
+		_is_playing_secret_song = false
+		print("� Starting main song")
+	else:
+		print("❌ No audio files assigned to boombox!")
 		return
 	
-	if not _audio_player.stream:
-		_audio_player.stream = audio_file
-	
-	print("🎵 Starting audio: " + str(audio_file.resource_path))
+	_audio_player.stream = song_to_play
 	_audio_player.play()
 	_current_state = BoomboxState.PLAYING
-	radio_started.emit("Halloween Audio")
-	print("✅ Now playing audio")
+	
+	# Start animation when music plays
+	if _animation_player and _animation_player.has_animation("default"):
+		_animation_player.play("default")
+		print("🎬 Started boombox animation")
+	elif _animation_player:
+		# Try to play the first available animation
+		var anim_list = _animation_player.get_animation_list()
+		if anim_list.size() > 0:
+			_animation_player.play(anim_list[0])
+			print("🎬 Started boombox animation: " + str(anim_list[0]))
+	
+	audio_started.emit(song_name)
+	print("✅ Now playing: " + song_name)
 
 func _stop_audio() -> void:
 	if _audio_player and _audio_player.playing:
 		print("⏸️ Pausing audio (will resume from current position)")
 		_audio_player.stream_paused = true
 		_current_state = BoomboxState.OFF
-		radio_stopped.emit()
+		
+		# Pause animation when music stops
+		if _animation_player and _animation_player.is_playing():
+			_animation_player.pause()
+			print("⏸️ Paused boombox animation")
+		
+		audio_stopped.emit()
 		print("📻 Audio paused")
 
 func _resume_audio() -> void:
@@ -304,7 +382,13 @@ func _resume_audio() -> void:
 		print("▶️ Resuming audio from paused position")
 		_audio_player.stream_paused = false
 		_current_state = BoomboxState.PLAYING
-		radio_started.emit("Halloween Audio")
+		
+		# Resume animation when music resumes
+		if _animation_player and not _animation_player.is_playing():
+			_animation_player.play()
+			print("▶️ Resumed boombox animation")
+		
+		audio_started.emit("Audio Resumed")
 		print("✅ Audio resumed")
 
 # --- PUBLIC METHODS ---
@@ -319,8 +403,10 @@ func set_volume(volume: float) -> void:
 	if _audio_player:
 		_audio_player.volume_db = linear_to_db(clamp(volume, 0.0, 1.0))
 
-func get_audio_name() -> String:
-	if audio_file:
+func get_current_audio_name() -> String:
+	if _is_playing_secret_song and secret_audio_file:
+		return secret_audio_file.resource_path.get_file()
+	elif audio_file:
 		return audio_file.resource_path.get_file()
 	return "No Audio File"
 
