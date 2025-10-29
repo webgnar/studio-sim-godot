@@ -1,2 +1,3 @@
 res://scenes/world.tscn
 res://shaders/mirror.gdshader
+res://shaders/outline.gdshader

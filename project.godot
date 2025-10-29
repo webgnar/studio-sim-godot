@@ -57,6 +57,13 @@ interact={
 ]
 }
 
+[layer_names]
+
+3d_physics/layer_1="Player"
+3d_physics/layer_2="Static World"
+3d_physics/layer_3="Moving Objects"
+3d_physics/layer_4="Interactables"
+
 [rendering]
 
 renderer/rendering_method="gl_compatibility"
