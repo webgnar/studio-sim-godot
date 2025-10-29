@@ -11,7 +11,8 @@ signal lights_toggled(switch_id: String, is_on: bool)
 @export_group("Interaction Settings")
 @export var interaction_distance: float = 5.0
 @export var switch_id: String = "switch_1"  # Unique ID for this switch
-@export var click_sound: AudioStream
+@export var switch_on_sound: AudioStream   # Sound when turning switch ON
+@export var switch_off_sound: AudioStream  # Sound when turning switch OFF
 @export var hover_sound: AudioStream
 
 @export_group("Light Control")
@@ -105,7 +106,7 @@ func _find_camera_in_node(node: Node) -> Camera3D:
 	return null
 
 func _setup_audio() -> void:
-	if click_sound or hover_sound:
+	if switch_on_sound or switch_off_sound or hover_sound:
 		_audio_player = AudioStreamPlayer3D.new()
 		add_child(_audio_player)
 
@@ -273,9 +274,6 @@ func _on_hover_ended() -> void:
 func _on_clicked() -> void:
 	print("Light switch clicked: " + switch_id + " (Current state: " + str(SwitchState.keys()[_current_state]) + ")")
 	
-	if click_sound:
-		_play_sound(click_sound)
-	
 	_toggle_switch()
 	clicked.emit()
 
@@ -293,6 +291,14 @@ func _toggle_switch() -> void:
 	_current_state = SwitchState.ANIMATING
 	
 	print("💡 Toggling lights " + ("ON" if is_turning_on else "OFF") + " for switch: " + switch_id)
+	
+	# Play appropriate sound based on switch direction
+	if is_turning_on and switch_on_sound:
+		_play_sound(switch_on_sound)
+		print("🔊 Playing switch ON sound")
+	elif not is_turning_on and switch_off_sound:
+		_play_sound(switch_off_sound)
+		print("🔊 Playing switch OFF sound")
 	
 	# Play switch animation
 	if _animation_player and _animation_player.has_animation(toggle_animation_name):

@@ -1,4 +1,4 @@
-[gd_scene load_steps=94 format=3 uid="uid://cnmivki1rop3b"]
+[gd_scene load_steps=96 format=3 uid="uid://cnmivki1rop3b"]
 
 [ext_resource type="Material" uid="uid://wwlsotlotycw" path="res://materials/wood.tres" id="1_4mrxx"]
 [ext_resource type="Script" uid="uid://d4bxpnphvld1d" path="res://scripts/PlayerController.gd" id="1_4wyf3"]
@@ -23,7 +23,9 @@
 [ext_resource type="PackedScene" uid="uid://c8duo4thyjdsv" path="res://models/props/spotlight.glb" id="20_munwf"]
 [ext_resource type="PackedScene" uid="uid://dfy02uk1jbflb" path="res://models/props/light_switch box.glb" id="21_ts3gi"]
 [ext_resource type="PackedScene" uid="uid://bp08vdgdcjkvv" path="res://models/interactables/light_switch.glb" id="22_0nbtd"]
+[ext_resource type="AudioStream" uid="uid://cfqmga8or17qn" path="res://sounds/lightswitchON.ogg" id="23_l8ah6"]
 [ext_resource type="Script" uid="uid://djltcowfnfdh7" path="res://scripts/mirror.gd" id="24_ctatt"]
+[ext_resource type="AudioStream" uid="uid://o3kakxscxwb1" path="res://sounds/lightswitchOFF.ogg" id="24_e75v4"]
 [ext_resource type="Shader" uid="uid://br4qh8mg5yosn" path="res://shaders/mirror.gdshader" id="25_xgqkh"]
 [ext_resource type="PackedScene" uid="uid://d0y6fk05wn5dc" path="res://models/interactables/cardboard box/box.glb" id="26_ts3gi"]
 [ext_resource type="PackedScene" uid="uid://tejn0hfpdhf7" path="res://models/interactables/cardboard box/box topL.glb" id="27_0nbtd"]
@@ -31,6 +33,8 @@
 [ext_resource type="Script" uid="uid://gtfub3c0olxj" path="res://scripts/ClickableArtbox.gd" id="28_artbox"]
 [ext_resource type="PackedScene" uid="uid://65f11slkoyvf" path="res://models/artbox/2.glb" id="29_4kbfs"]
 [ext_resource type="Script" uid="uid://bknsj7r2b3wte" path="res://scripts/ClickableLightSwitch.gd" id="29_lightswitch"]
+[ext_resource type="Script" path="res://scripts/ClickableBoombox.gd" id="36_boombox"]
+[ext_resource type="AudioStream" path="res://sounds/halloween.ogg" id="halloween_audio"]
 [ext_resource type="PackedScene" uid="uid://dsv2g0obaio51" path="res://models/artbox/1.glb" id="30_f17e3"]
 [ext_resource type="PackedScene" uid="uid://bgyknl62rv8i2" path="res://models/artbox/3.glb" id="31_x2olw"]
 [ext_resource type="PackedScene" uid="uid://bscbli4kb5p5n" path="res://models/artbox/4.glb" id="32_817gm"]
@@ -119,6 +123,9 @@ _data = {
 [sub_resource type="BoxShape3D" id="BoxShape3D_l8ah6"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_e75v4"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_boombox"]
+size = Vector3(1.0, 1.0, 1.0)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_kpybi"]
 resource_local_to_scene = true
@@ -878,6 +885,8 @@ transform = Transform3D(0.15, 0, 0, 0, 0.15, 0, 0, 0, 0.15, 3.7619934, 1.4918613
 transform = Transform3D(0.11477976, -0.067848116, 0, 0.067848116, 0.11477976, 0, 0, 0, 0.1333333, -0.16674995, -0.052223206, -0.31477928)
 script = ExtResource("29_lightswitch")
 switch_id = "main_room_lights"
+switch_on_sound = ExtResource("23_l8ah6")
+switch_off_sound = ExtResource("24_e75v4")
 controlled_light_paths = Array[String](["../../light1/OmniLight3D", "../../spot3/SpotLight3D", "../../spot3/OmniLight3D", "../../spot4/SpotLight3D", "../../spot4/OmniLight3D"])
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="light switch box/lightswitch1"]
@@ -896,6 +905,8 @@ shape = SubResource("BoxShape3D_817gm")
 transform = Transform3D(0.1147798, -0.06784814, 0, 0.06784814, 0.1147798, 0, 0, 0, 0.13333331, -0.16674995, -0.052223206, 0.33827782)
 script = ExtResource("29_lightswitch")
 switch_id = "ceiling_light2"
+switch_on_sound = ExtResource("23_l8ah6")
+switch_off_sound = ExtResource("24_e75v4")
 controlled_light_paths = Array[String](["../../light2/OmniLight3D"])
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="light switch box/lightwitch2"]
@@ -916,6 +927,8 @@ transform = Transform3D(0.15, 0, 0, 0, 0.15, 0, 0, 0, 0.15, 3.7406611, 1.6819067
 transform = Transform3D(0.1147798, -0.06784814, 0, 0.06784814, 0.1147798, 0, 0, 0, 0.13333331, -0.16674995, -0.052223206, -0.31477928)
 script = ExtResource("29_lightswitch")
 switch_id = "light3_and_spots"
+switch_on_sound = ExtResource("23_l8ah6")
+switch_off_sound = ExtResource("24_e75v4")
 controlled_light_paths = Array[String](["../../light3/OmniLight3D", "../../spot/SpotLight3D", "../../spot/OmniLight3D", "../../spot2/SpotLight3D", "../../spot2/OmniLight3D"])
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="light switch box2/lightswitch1"]
@@ -933,7 +946,8 @@ shape = SubResource("BoxShape3D_l8ah6")
 transform = Transform3D(0.1147798, -0.06784814, 0, 0.06784814, 0.1147798, 0, 0, 0, 0.13333331, -0.16674995, -0.052223206, 0.33827782)
 script = ExtResource("29_lightswitch")
 switch_id = "unused_switch"
-controlled_light_paths = Array[String]([])
+switch_on_sound = ExtResource("23_l8ah6")
+switch_off_sound = ExtResource("24_e75v4")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="light switch box2/lightwitch2"]
 libraries = {
@@ -1148,7 +1162,7 @@ transform = Transform3D(-0.029999997, 4.529874e-09, -1.9800707e-16, 0, -1.311341
 script = ExtResource("28_artbox")
 
 [node name="fold6" parent="artbox" instance=ExtResource("31_x2olw")]
-transform = Transform3D(0.018202769, 8.583139e-08, 0.99983233, 8.583127e-08, 0.99999934, -8.7408125e-08, -0.9998323, 8.740823e-08, 0.01820277, 0.9763241, 0, -6.7096863)
+transform = Transform3D(0.018202769, 8.583139e-08, 0.9998323, 8.583126e-08, 0.99999934, -8.740812e-08, -0.9998322, 8.740823e-08, 0.018202769, 0.9763241, 0, -6.7096863)
 
 [node name="fold5" parent="artbox/fold6" instance=ExtResource("32_817gm")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -7.9999986, 0, 0)
@@ -1205,3 +1219,13 @@ transform = Transform3D(-0.029999997, 4.529874e-09, -1.9800707e-16, 0, -1.311341
 
 [node name="boombox" parent="." instance=ExtResource("35_f17e3")]
 transform = Transform3D(-0.2, 0, -3.019916e-08, 0, 0.2, 0, 3.019916e-08, 0, -0.2, 3.5715868, 0.30607077, 11.853438)
+script = ExtResource("36_boombox")
+boombox_id = "main_boombox"
+audio_file = ExtResource("halloween_audio")
+default_volume = 0.7
+
+[node name="StaticBody3D" type="StaticBody3D" parent="boombox"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="boombox/StaticBody3D"]
+shape = SubResource("BoxShape3D_boombox")
+transform = Transform3D(2.0, 0, 0, 0, 2.0, 0, 0, 0, 2.0, 0, 0, 0)
