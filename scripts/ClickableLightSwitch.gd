@@ -33,6 +33,9 @@ var _audio_player: AudioStreamPlayer3D
 var _current_state: SwitchState = SwitchState.OFF
 var _animation_player: AnimationPlayer
 var _controlled_lights: Array[Light3D] = []
+var _mesh_instance: MeshInstance3D
+var _original_material: Material
+var _hover_material: StandardMaterial3D
 
 # --- GODOT METHODS ---
 
@@ -48,6 +51,9 @@ func _ready() -> void:
 	
 	# Find controlled lights
 	_setup_controlled_lights()
+	
+	# Setup hover visual effect
+	_setup_hover_effect()
 	
 	# Initialize lights based on switch starting state
 	_initialize_lights_state()
@@ -143,6 +149,51 @@ func _setup_controlled_lights() -> void:
 	
 	print("Light switch " + switch_id + " controlling " + str(_controlled_lights.size()) + " lights")
 
+func _setup_hover_effect() -> void:
+	# Find the MeshInstance3D in this node or its children
+	_mesh_instance = _find_mesh_instance_in_node(self)
+	
+	if _mesh_instance and _mesh_instance.get_surface_override_material_count() > 0:
+		_original_material = _mesh_instance.get_surface_override_material(0)
+	elif _mesh_instance:
+		_original_material = _mesh_instance.material_override
+	
+	if not _original_material and _mesh_instance and _mesh_instance.mesh:
+		# Try to get material from mesh
+		var mesh = _mesh_instance.mesh
+		if mesh.get_surface_count() > 0:
+			_original_material = mesh.surface_get_material(0)
+	
+	# Create a hover material with emission
+	_hover_material = StandardMaterial3D.new()
+	if _original_material:
+		# Copy properties from original material if it exists
+		if _original_material is StandardMaterial3D:
+			var orig_std = _original_material as StandardMaterial3D
+			_hover_material.albedo_color = orig_std.albedo_color
+			_hover_material.albedo_texture = orig_std.albedo_texture
+		else:
+			_hover_material.albedo_color = Color.WHITE
+	else:
+		_hover_material.albedo_color = Color.WHITE
+	
+	# Add bright emission for hover effect
+	_hover_material.emission_enabled = true
+	_hover_material.emission = Color(0.3, 0.7, 1.0, 1.0)  # Bright cyan glow
+	_hover_material.emission_energy = 0.8
+	
+	print("Hover effect setup for switch: " + name)
+
+func _find_mesh_instance_in_node(node: Node) -> MeshInstance3D:
+	if node is MeshInstance3D:
+		return node
+	
+	for child in node.get_children():
+		var mesh_instance = _find_mesh_instance_in_node(child)
+		if mesh_instance:
+			return mesh_instance
+	return null
+
 func _initialize_lights_state() -> void:
 	# Set the initial switch state
 	_current_state = SwitchState.ON if starts_on else SwitchState.OFF
@@ -199,12 +250,24 @@ func _play_sound(sound: AudioStream) -> void:
 func _on_hover_started() -> void:
 	print("Hovering over light switch: " + switch_id)
 	
+	# Apply hover visual effect
+	if _mesh_instance and _hover_material:
+		_mesh_instance.material_override = _hover_material
+		print("Applied hover material to switch")
+	
 	if hover_sound:
 		_play_sound(hover_sound)
 	
 	hover_started.emit()
 
 func _on_hover_ended() -> void:
+	print("Stopped hovering over light switch: " + switch_id)
+	
+	# Remove hover visual effect
+	if _mesh_instance:
+		_mesh_instance.material_override = _original_material
+		print("Removed hover material from switch")
+	
 	hover_ended.emit()
 
 func _on_clicked() -> void:

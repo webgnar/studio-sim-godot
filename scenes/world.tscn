@@ -1,4 +1,4 @@
-[gd_scene load_steps=90 format=3 uid="uid://cnmivki1rop3b"]
+[gd_scene load_steps=94 format=3 uid="uid://cnmivki1rop3b"]
 
 [ext_resource type="Material" uid="uid://wwlsotlotycw" path="res://materials/wood.tres" id="1_4mrxx"]
 [ext_resource type="Script" uid="uid://d4bxpnphvld1d" path="res://scripts/PlayerController.gd" id="1_4wyf3"]
@@ -111,6 +111,14 @@ _data = {
 &"RESET": SubResource("Animation_d46x8"),
 &"toggle": SubResource("Animation_eo1xk")
 }
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_817gm"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ggc52"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_l8ah6"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_e75v4"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_kpybi"]
 resource_local_to_scene = true
@@ -870,12 +878,19 @@ transform = Transform3D(0.15, 0, 0, 0, 0.15, 0, 0, 0, 0.15, 3.7619934, 1.4918613
 transform = Transform3D(0.11477976, -0.067848116, 0, 0.067848116, 0.11477976, 0, 0, 0, 0.1333333, -0.16674995, -0.052223206, -0.31477928)
 script = ExtResource("29_lightswitch")
 switch_id = "main_room_lights"
-controlled_light_paths = Array[String](["../../light1/OmniLight3D", "../../spot/SpotLight3D", "../../spot/OmniLight3D", "../../spot2/SpotLight3D", "../../spot2/OmniLight3D"])
+controlled_light_paths = Array[String](["../../light1/OmniLight3D", "../../spot3/SpotLight3D", "../../spot3/OmniLight3D", "../../spot4/SpotLight3D", "../../spot4/OmniLight3D"])
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="light switch box/lightswitch1"]
 libraries = {
 &"": SubResource("AnimationLibrary_3l05q")
 }
+
+[node name="StaticBody3D" type="StaticBody3D" parent="light switch box/lightswitch1"]
+collision_layer = 8
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="light switch box/lightswitch1/StaticBody3D"]
+transform = Transform3D(3.2799997, 1.1920929e-07, 0, -1.1920929e-07, 3.2799997, 0, 0, 0, 3.2799997, -2.730011, 3.8146973e-06, 0)
+shape = SubResource("BoxShape3D_817gm")
 
 [node name="lightwitch2" parent="light switch box" instance=ExtResource("22_0nbtd")]
 transform = Transform3D(0.1147798, -0.06784814, 0, 0.06784814, 0.1147798, 0, 0, 0, 0.13333331, -0.16674995, -0.052223206, 0.33827782)
@@ -887,6 +902,12 @@ controlled_light_paths = Array[String](["../../light2/OmniLight3D"])
 libraries = {
 &"": SubResource("AnimationLibrary_3l05q")
 }
+
+[node name="StaticBody3D" type="StaticBody3D" parent="light switch box/lightwitch2"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="light switch box/lightwitch2/StaticBody3D"]
+transform = Transform3D(3.2, 0, 0, 0, 3.2, 0, 0, 0, 3.2, -2.8601685, 0.37416458, 0)
+shape = SubResource("BoxShape3D_ggc52")
 
 [node name="light switch box2" parent="." instance=ExtResource("21_ts3gi")]
 transform = Transform3D(0.15, 0, 0, 0, 0.15, 0, 0, 0, 0.15, 3.7406611, 1.6819067, 9.071993)
@@ -902,16 +923,28 @@ libraries = {
 &"": SubResource("AnimationLibrary_3l05q")
 }
 
+[node name="StaticBody3D" type="StaticBody3D" parent="light switch box2/lightswitch1"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="light switch box2/lightswitch1/StaticBody3D"]
+transform = Transform3D(3.31, 0, 0, 0, 3.31, 0, 0, 0, 3.3099997, -2.949997, 0, 0)
+shape = SubResource("BoxShape3D_l8ah6")
+
 [node name="lightwitch2" parent="light switch box2" instance=ExtResource("22_0nbtd")]
 transform = Transform3D(0.1147798, -0.06784814, 0, 0.06784814, 0.1147798, 0, 0, 0, 0.13333331, -0.16674995, -0.052223206, 0.33827782)
 script = ExtResource("29_lightswitch")
-switch_id = "room2_lights"
-controlled_light_paths = Array[String](["../../spot2/SpotLight3D", "../../spot2/OmniLight3D", "../../spot3/SpotLight3D", "../../spot3/OmniLight3D", "../../spot4/SpotLight3D", "../../spot4/OmniLight3D"])
+switch_id = "unused_switch"
+controlled_light_paths = Array[String]([])
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="light switch box2/lightwitch2"]
 libraries = {
 &"": SubResource("AnimationLibrary_3l05q")
 }
+
+[node name="StaticBody3D" type="StaticBody3D" parent="light switch box2/lightwitch2"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="light switch box2/lightwitch2/StaticBody3D"]
+transform = Transform3D(2.85, 1.1920929e-07, 0, -1.1920929e-07, 2.85, 0, 0, 0, 2.85, -3.0112762, 0.25697327, 0)
+shape = SubResource("BoxShape3D_e75v4")
 
 [node name="electrical conduit" type="Node3D" parent="."]
 transform = Transform3D(-0.1270013, 0, 0.0035186368, 0, 0.12705003, 0, -0.0035186366, 0, -0.12700132, 3.7630396, 3.3981094, 0.29659438)
@@ -1115,7 +1148,7 @@ transform = Transform3D(-0.029999997, 4.529874e-09, -1.9800707e-16, 0, -1.311341
 script = ExtResource("28_artbox")
 
 [node name="fold6" parent="artbox" instance=ExtResource("31_x2olw")]
-transform = Transform3D(0.01820277, 8.583139e-08, 0.9998324, 8.583127e-08, 0.99999934, -8.740813e-08, -0.99983233, 8.740823e-08, 0.01820277, 0.9763241, 0, -6.7096863)
+transform = Transform3D(0.018202769, 8.583139e-08, 0.99983233, 8.583127e-08, 0.99999934, -8.7408125e-08, -0.9998323, 8.740823e-08, 0.01820277, 0.9763241, 0, -6.7096863)
 
 [node name="fold5" parent="artbox/fold6" instance=ExtResource("32_817gm")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -7.9999986, 0, 0)
