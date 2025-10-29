@@ -35,6 +35,8 @@
 [ext_resource type="Script" uid="uid://bknsj7r2b3wte" path="res://scripts/ClickableLightSwitch.gd" id="29_lightswitch"]
 [ext_resource type="Script" path="res://scripts/ClickableBoombox.gd" id="36_boombox"]
 [ext_resource type="AudioStream" path="res://sounds/halloween.ogg" id="halloween_audio"]
+[ext_resource type="AudioStream" path="res://sounds/box open 1.ogg" id="box_open_1"]
+[ext_resource type="AudioStream" path="res://sounds/box open 2.ogg" id="box_open_2"]
 [ext_resource type="PackedScene" uid="uid://dsv2g0obaio51" path="res://models/artbox/1.glb" id="30_f17e3"]
 [ext_resource type="PackedScene" uid="uid://bgyknl62rv8i2" path="res://models/artbox/3.glb" id="31_x2olw"]
 [ext_resource type="PackedScene" uid="uid://bscbli4kb5p5n" path="res://models/artbox/4.glb" id="32_817gm"]
@@ -1124,6 +1126,8 @@ transform = Transform3D(1.2796953e-07, 0.21836469, 0.9758673, -2.8635068e-08, 0.
 transform = Transform3D(0.33, 0, 0, 0, 0.33, 0, 0, 0, 0.33, 0.23469448, 0.29857874, 8.047825)
 script = ExtResource("27_37qwj")
 sequence_buffer = 0.7
+flap_1_open_sound = ExtResource("box_open_1")
+flap_2_open_sound = ExtResource("box_open_2")
 
 [node name="lid1" parent="cardboard box" instance=ExtResource("27_0nbtd")]
 transform = Transform3D(7.54979e-08, 0, -1, 0, 1, 0, 1, 0, 7.54979e-08, 0.0021412373, 1.230222, 0.9953356)

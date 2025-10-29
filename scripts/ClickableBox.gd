@@ -9,10 +9,15 @@ signal hover_ended
 # --- EXPORTED VARIABLES ---
 @export_group("Interaction Settings")
 @export var interaction_distance: float = 5.0
-@export var click_sound: AudioStream  # Optional click sound
 @export var hover_sound: AudioStream  # Optional hover sound
-@export var open_sound: AudioStream   # Sound when box fully opens
-@export var close_sound: AudioStream  # Sound when box closes
+
+@export_group("Box Sounds")
+@export var flap_1_open_sound: AudioStream   # Sound for first set of flaps (lid1 & lid2)
+@export var flap_2_open_sound: AudioStream   # Sound for second set of flaps (lid3 & lid4)
+@export var box_close_sound: AudioStream     # Sound when box closes completely
+@export var max_hearing_distance: float = 10.0  # Maximum distance where audio can be heard
+@export var min_distance: float = 1.0  # Distance where volume is at maximum
+@export var attenuation_model: AudioStreamPlayer3D.AttenuationModel = AudioStreamPlayer3D.ATTENUATION_INVERSE_DISTANCE
 
 @export_group("Animation Timing")
 @export var sequence_buffer: float = 0.3  # Buffer time between lid pair animations
@@ -105,9 +110,23 @@ func _find_camera_in_node(node: Node) -> Camera3D:
 	return null
 
 func _setup_audio() -> void:
-	if click_sound or hover_sound:
+	if hover_sound or flap_1_open_sound or flap_2_open_sound or box_close_sound:
 		_audio_player = AudioStreamPlayer3D.new()
+		_audio_player.name = "BoxAudioPlayer"
+		
+		# Configure 3D audio distance attenuation
+		_audio_player.attenuation_model = attenuation_model
+		_audio_player.max_distance = max_hearing_distance
+		_audio_player.unit_size = min_distance
+		
+		# Make it sound realistic in 3D space
+		_audio_player.emission_angle_enabled = false  # Omnidirectional sound
+		_audio_player.panning_strength = 1.0  # Full stereo panning based on position
+		_audio_player.volume_db = 0.0  # Default volume
+		
 		add_child(_audio_player)
+		
+		print("📦 Box 3D audio configured - Max distance: " + str(max_hearing_distance) + "m")
 
 func _is_looking_at_box() -> bool:
 	if not _player_camera:
@@ -161,10 +180,7 @@ func _on_hover_ended() -> void:
 func _on_clicked() -> void:
 	print("Box clicked: " + name + " (Current state: " + str(BoxState.keys()[_current_state]) + ")")
 	
-	if click_sound:
-		_play_sound(click_sound)
-	
-	# Handle box interaction based on current state
+	# Handle box interaction based on current state (sounds are played in specific methods)
 	_handle_box_interaction()
 	
 	clicked.emit()
@@ -200,6 +216,12 @@ func _handle_box_interaction() -> void:
 
 func _open_lid_pair_1() -> void:
 	print("Opening lid pair 1 (lid1 & lid2)...")
+	
+	# Play first flap opening sound
+	if flap_1_open_sound:
+		_play_sound(flap_1_open_sound)
+		print("🔊 Playing flap 1 open sound")
+	
 	_set_state(BoxState.OPENING_1)
 	_animate_lid_pair(["lid1", "lid2"])
 	
@@ -213,6 +235,12 @@ func _open_lid_pair_1() -> void:
 
 func _open_lid_pair_2() -> void:
 	print("Opening lid pair 2 (lid3 & lid4)...")
+	
+	# Play second flap opening sound
+	if flap_2_open_sound:
+		_play_sound(flap_2_open_sound)
+		print("🔊 Playing flap 2 open sound")
+	
 	_set_state(BoxState.OPENING_2)
 	_animate_lid_pair(["lid3", "lid4"])
 	
@@ -229,6 +257,12 @@ func _open_lid_pair_2_with_delay() -> void:
 	await get_tree().create_timer(sequence_buffer).timeout
 	
 	print("Opening lid pair 2 (lid3 & lid4) after delay...")
+	
+	# Play second flap opening sound
+	if flap_2_open_sound:
+		_play_sound(flap_2_open_sound)
+		print("🔊 Playing flap 2 open sound (delayed)")
+	
 	_animate_lid_pair(["lid3", "lid4"])
 	
 	# Wait for animation to complete, then mark as fully open
@@ -238,6 +272,12 @@ func _open_lid_pair_2_with_delay() -> void:
 
 func _close_lid_pair_2() -> void:
 	print("Closing lid pair 2 (lid3 & lid4)...")
+	
+	# Play second flap closing sound (reverse of opening)
+	if flap_2_open_sound:
+		_play_sound(flap_2_open_sound)
+		print("🔊 Playing flap 2 close sound")
+	
 	_set_state(BoxState.CLOSING_1)
 	_animate_lid_pair_reverse(["lid3", "lid4"])
 	
@@ -251,6 +291,12 @@ func _close_lid_pair_2() -> void:
 
 func _close_lid_pair_1() -> void:
 	print("Closing lid pair 1 (lid1 & lid2)...")
+	
+	# Play first flap closing sound (reverse of opening)
+	if flap_1_open_sound:
+		_play_sound(flap_1_open_sound)
+		print("🔊 Playing flap 1 close sound")
+	
 	_set_state(BoxState.CLOSING_2)
 	_animate_lid_pair_reverse(["lid1", "lid2"])
 	
@@ -267,6 +313,12 @@ func _close_lid_pair_1_with_delay() -> void:
 	await get_tree().create_timer(sequence_buffer).timeout
 	
 	print("Closing lid pair 1 (lid1 & lid2) after delay...")
+	
+	# Play first flap closing sound (reverse of opening)
+	if flap_1_open_sound:
+		_play_sound(flap_1_open_sound)
+		print("🔊 Playing flap 1 close sound (delayed)")
+	
 	_animate_lid_pair_reverse(["lid1", "lid2"])
 	
 	# Wait for animation to complete, then mark as fully closed
@@ -334,9 +386,6 @@ func _set_state(new_state: BoxState) -> void:
 func _on_box_fully_opened() -> void:
 	print("🎉 BOX IS FULLY OPEN!")
 	
-	if open_sound:
-		_play_sound(open_sound)
-	
 	# Spawn object if not already spawned
 	if not _spawned_object:
 		_spawn_object()
@@ -346,8 +395,9 @@ func _on_box_fully_opened() -> void:
 func _on_box_fully_closed() -> void:
 	print("📦 BOX IS CLOSED!")
 	
-	if close_sound:
-		_play_sound(close_sound)
+	if box_close_sound:
+		_play_sound(box_close_sound)
+		print("🔊 Playing box close sound")
 	
 	# Optionally remove spawned object when box closes
 	if _spawned_object:
@@ -423,3 +473,12 @@ func connect_clicked(callable: Callable) -> void:
 
 func set_interaction_distance(distance: float) -> void:
 	interaction_distance = distance
+
+func get_distance_to_player() -> float:
+	if not _player_camera:
+		return 999.0
+	return global_transform.origin.distance_to(_player_camera.global_transform.origin)
+
+func set_audio_volume(volume_db: float) -> void:
+	if _audio_player:
+		_audio_player.volume_db = volume_db
