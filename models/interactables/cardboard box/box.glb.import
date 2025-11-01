@@ -41,7 +41,7 @@ _subresources={
 "nodes": {
 "PATH:box": {
 "generate/physics": true,
-"physics/layer": 4
+"physics/layer": 6
 }
 }
 }

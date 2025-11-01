@@ -277,10 +277,10 @@ func _play_ui_sound(sound: AudioStream) -> void:
 func _on_hover_started() -> void:
 	print("Hovering over boombox: " + boombox_id)
 	
-	# Apply hover visual effect
-	if _mesh_instance and _hover_material:
-		_mesh_instance.material_override = _hover_material
-		print("Applied hover material to boombox")
+	# Apply hover visual effect (DISABLED)
+	# if _mesh_instance and _hover_material:
+	#	_mesh_instance.material_override = _hover_material
+	#	print("Applied hover material to boombox")
 	
 	if hover_sound:
 		_play_ui_sound(hover_sound)
@@ -290,10 +290,10 @@ func _on_hover_started() -> void:
 func _on_hover_ended() -> void:
 	print("Stopped hovering over boombox: " + boombox_id)
 	
-	# Remove hover visual effect
-	if _mesh_instance:
-		_mesh_instance.material_override = _original_material
-		print("Removed hover material from boombox")
+	# Remove hover visual effect (DISABLED - no material to remove)
+	# if _mesh_instance:
+	#	_mesh_instance.material_override = _original_material
+	#	print("Removed hover material from boombox")
 	
 	hover_ended.emit()
 

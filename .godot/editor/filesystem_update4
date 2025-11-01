@@ -1,5 +1,6 @@
-res://scripts/ClickableBox.gd
-res://scripts/ClickableBoombox.gd
 res://scenes/world.tscn
 res://shaders/mirror.gdshader
 res://shaders/outline.gdshader
+res://materials/alley.tres
+res://scripts/ClickableBoombox.gd
+res://scenes/brute trash can.tscn

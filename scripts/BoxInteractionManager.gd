@@ -87,8 +87,8 @@ func spawn_item_from_box() -> void:
 	var box_node = get_node("bottom")
 	if box_node:
 		# Create a simple item (could be a pickup, particle effect, etc.)
-		var item = preload("res://scenes/ItemPickup.tscn")  # Replace with your item scene
-		if item:
-			var item_instance = item.instantiate()
-			get_parent().add_child(item_instance)
-			item_instance.global_position = box_node.global_position + Vector3(0, 2, 0)
+		# var item = preload("res://scenes/ItemPickup.tscn")  # Replace with your item scene
+		# if item:
+		#	var item_instance = item.instantiate()
+		#	get_parent().add_child(item_instance)
+		#	item_instance.global_position = box_node.global_position + Vector3(0, 2, 0)

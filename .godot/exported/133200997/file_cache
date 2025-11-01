@@ -5,6 +5,7 @@ res://materials/skeletonskin.tres::388efc2498dae1806d0bc29c02af5e0e::1761713575:
 res://materials/wall.tres::95e96e06d68ff545b1c52073ec97f3a8::1761080715::res://.godot/exported/133200997/export-1c84afdd05f518f898d96b6833632398-wall.res
 res://materials/wood.tres::5f18c53c2621a7fc282482e6f8735e23::1761019173::res://.godot/exported/133200997/export-6bab30075bec6dca5efb9a8285be1fb5-wood.res
 res://scenes/human.tscn::69a111d5920c0beed20be7f22b41c616::1761713575::res://.godot/exported/133200997/export-eba661b9dcbe38bde83515c9e6eec66a-human.scn
-res://scenes/world.tscn::96d2b5f657b2e83031fbddf39e232e8d::1761720916::res://.godot/exported/133200997/export-6b9c1b1fd6ae6f795188dfdc89e222b0-world.scn
+res://scenes/world.tscn::a974284b337ffdccabed8f98631adfc1::1761804344::res://.godot/exported/133200997/export-6b9c1b1fd6ae6f795188dfdc89e222b0-world.scn
 res://materials/windowglass.tres::22faeaae20ee86f95a677ea77854befd::1761713651::res://.godot/exported/133200997/export-9f29ef6ad686a14f33562fc30aac2334-windowglass.res
 res://materials/mirror.tres::0c8bcc20e8f23b169024b73a136da9fc::1761106682::res://.godot/exported/133200997/export-afb007463ebee55a4f65259bdc477898-mirror.res
+res://scenes/brute trash can.tscn::5c4afcf1e8e728bae660fd6095c93342::1761804098::res://.godot/exported/133200997/export-67e222280376f1807efcc352d31096e7-brute trash can.scn

@@ -1,4 +1,4 @@
-[gd_scene load_steps=103 format=3 uid="uid://cnmivki1rop3b"]
+[gd_scene load_steps=111 format=3 uid="uid://cnmivki1rop3b"]
 
 [ext_resource type="Material" uid="uid://wwlsotlotycw" path="res://materials/wood.tres" id="1_4mrxx"]
 [ext_resource type="Script" uid="uid://d4bxpnphvld1d" path="res://scripts/PlayerController.gd" id="1_4wyf3"]
@@ -40,6 +40,11 @@
 [ext_resource type="PackedScene" uid="uid://uwpxuwjxopad" path="res://models/artbox/6.glb" id="34_l8ah6"]
 [ext_resource type="Script" uid="uid://q64g52716sf3" path="res://scripts/ClickableBoombox.gd" id="36_boombox"]
 [ext_resource type="PackedScene" uid="uid://ddornft2ln8sq" path="res://models/boomBox.glb" id="41_rga7q"]
+[ext_resource type="PackedScene" uid="uid://bhsyl3tj8hblj" path="res://scenes/brute trash can.tscn" id="46_18clu"]
+[ext_resource type="PackedScene" uid="uid://b7y2nsov4op11" path="res://models/paintings/alley.glb" id="47_4wdv8"]
+[ext_resource type="PackedScene" uid="uid://dxk1gusj3uuj7" path="res://models/interactables/fan/legs.glb" id="48_x28ej"]
+[ext_resource type="PackedScene" uid="uid://d334ujfwmx8lp" path="res://models/interactables/fan/cage.glb" id="49_1jxku"]
+[ext_resource type="PackedScene" uid="uid://bsdobk5wd61u" path="res://models/interactables/fan/blade.glb" id="50_1dgkn"]
 [ext_resource type="AudioStream" uid="uid://84rjpuccue2i" path="res://sounds/boomboxSwitch.ogg" id="boombox_switch"]
 [ext_resource type="AudioStream" uid="uid://8so1mqtnfhkh" path="res://sounds/box open 1.ogg" id="box_open_1"]
 [ext_resource type="AudioStream" uid="uid://bkyiswhv5fuaf" path="res://sounds/box open 2.ogg" id="box_open_2"]
@@ -596,6 +601,44 @@ _data = {
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_boombox"]
 
+[sub_resource type="Animation" id="Animation_5hglh"]
+resource_name = "spin"
+length = 0.1
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.100000024),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, 0, 6.2831855)]
+}
+
+[sub_resource type="Animation" id="Animation_iexy4"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_npbic"]
+_data = {
+&"RESET": SubResource("Animation_iexy4"),
+&"spin": SubResource("Animation_5hglh")
+}
+
 [node name="World" type="Node3D"]
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
@@ -1096,7 +1139,6 @@ transform = Transform3D(1.6420351e-08, -3.7252903e-09, -0.12705019, -7.450583e-0
 
 [node name="mirror" type="MeshInstance3D" parent="."]
 transform = Transform3D(0.15967436, -0.98716974, 7.2844835e-22, 0.98716974, 0.15967436, 0, -1.3524944e-22, 8.361653e-22, 0.86, 3.637775, 1.0085149, 4.4239473)
-visible = false
 mesh = SubResource("PlaneMesh_kpybi")
 surface_material_override/0 = SubResource("StandardMaterial3D_xgqkh")
 script = ExtResource("24_ctatt")
@@ -1110,7 +1152,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8393148, 0)
 
 [node name="MirrorNew" type="MeshInstance3D" parent="."]
 transform = Transform3D(0.16199991, -0.9867908, 0, 0.9867908, 0.16199991, 0, 0, 0, 1, 3.6321473, 1.012416, 7)
-visible = false
 mesh = SubResource("PlaneMesh_munwf")
 surface_material_override/0 = SubResource("ShaderMaterial_ts3gi")
 
@@ -1167,7 +1208,7 @@ transform = Transform3D(-0.029999997, 4.529874e-09, -1.9800707e-16, 0, -1.311341
 script = ExtResource("28_artbox")
 
 [node name="fold6" parent="artbox" instance=ExtResource("31_x2olw")]
-transform = Transform3D(0.018202767, 8.583139e-08, 0.9998322, 8.583125e-08, 0.99999934, -8.740811e-08, -0.99983215, 8.740823e-08, 0.018202769, 0.9763241, 0, -6.7096863)
+transform = Transform3D(0.018202761, 8.583139e-08, 0.99983186, 8.5831225e-08, 0.99999934, -8.740808e-08, -0.9998318, 8.740823e-08, 0.018202761, 0.9763241, 0, -6.7096863)
 
 [node name="fold5" parent="artbox/fold6" instance=ExtResource("32_817gm")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -7.9999986, 0, 0)
@@ -1223,8 +1264,9 @@ libraries = {
 transform = Transform3D(-0.029999997, 4.529874e-09, -1.9800707e-16, 0, -1.3113416e-09, -0.029999997, -4.529874e-09, -0.03, 1.3113416e-09, 0.587, 0.09874722, 9.862482)
 
 [node name="BoomBox" parent="." instance=ExtResource("41_rga7q")]
-transform = Transform3D(0.22, 0, 0, 0, 0.22, 0, 0, 0, 0.22, 3.2782955, 0.33177572, 11.589592)
+transform = Transform3D(0.284849, 0, 0.0941331, 0, 0.29999998, 0, -0.0941331, 0, 0.284849, 2.1454182, 0.44880646, -5.434042)
 script = ExtResource("36_boombox")
+interaction_distance = 2.0
 audio_file = ExtResource("ministudio_audio")
 secret_audio_file = ExtResource("halloween_audio")
 switch_sound = ExtResource("boombox_switch")
@@ -1235,3 +1277,23 @@ transform = Transform3D(-0.90909094, 0, -1.3726891e-07, 0, 0.90909094, 0, 1.3726
 [node name="CollisionShape3D" type="CollisionShape3D" parent="BoomBox/StaticBody3D"]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
 shape = SubResource("BoxShape3D_boombox")
+
+[node name="Brute_L_NoMaterial" parent="." instance=ExtResource("46_18clu")]
+transform = Transform3D(0.9301743, 0, 0.3671182, 0, 1, 0, -0.3671182, 0, 0.9301743, 0.26508617, 0.070207834, -4.700662)
+
+[node name="alley" parent="." instance=ExtResource("47_4wdv8")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -3.6867952, 1.62026, -4)
+
+[node name="legs" parent="." instance=ExtResource("48_x28ej")]
+transform = Transform3D(-0.07, 0, 6.119594e-09, 0, 0.07, 0, -6.119594e-09, 0, -0.07, -0.25056076, 0.10264242, 11.737907)
+
+[node name="cage" parent="legs" instance=ExtResource("49_1jxku")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.016191006, 5.825101, 1.146759)
+
+[node name="blade" parent="legs/cage" instance=ExtResource("50_1dgkn")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.10343838, -0.08967781, 0.51927185)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="legs/cage/blade"]
+libraries = {
+&"": SubResource("AnimationLibrary_npbic")
+}
