@@ -42,6 +42,9 @@ var plug_socket_position: Vector3:
 func _ready() -> void:
 	super._ready()
 	
+	# Ensure audio player exists for outlet sounds
+	_ensure_audio_player()
+	
 	# Add to outlets group for easy finding
 	add_to_group("outlets")
 	
@@ -55,6 +58,16 @@ func _ready() -> void:
 	_update_visual_state()
 	
 	print("✅ OutletComponent ready: " + parent_object.name)
+
+func _ensure_audio_player() -> void:
+	"""Make sure we have an audio player for plug sounds"""
+	if (plug_in_sound or plug_out_sound) and not _audio_player:
+		_audio_player = AudioStreamPlayer3D.new()
+		_audio_player.name = "OutletAudio"
+		_audio_player.max_distance = 10.0
+		_audio_player.attenuation_model = AudioStreamPlayer3D.ATTENUATION_INVERSE_DISTANCE
+		add_child(_audio_player)
+		print("Created audio player for outlet sounds")
 
 # --- INTERACTION ---
 
@@ -101,6 +114,9 @@ func accept_plug(plug: PowerCordPlugComponent) -> bool:
 		# Play sound
 		if plug_in_sound:
 			_play_sound(plug_in_sound)
+			print("🔊 Playing plug IN sound")
+		else:
+			print("⚠️ No plug_in_sound assigned!")
 		
 		# Emit signal
 		plug_inserted.emit(plug)
@@ -136,6 +152,9 @@ func remove_plug() -> bool:
 		# Play sound
 		if plug_out_sound:
 			_play_sound(plug_out_sound)
+			print("🔊 Playing plug OUT sound")
+		else:
+			print("⚠️ No plug_out_sound assigned!")
 		
 		# Emit signal
 		plug_removed.emit(plug)

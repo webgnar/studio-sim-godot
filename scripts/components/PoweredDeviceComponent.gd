@@ -23,6 +23,11 @@ signal device_turned_off()
 @export var off_interaction_text: String = "Turn On" ## Text when device is off
 @export var no_power_text: String = "No Power" ## Text when device has no power
 
+@export_group("Device Audio")
+@export var turn_on_sound: AudioStream ## Sound when device turns on
+@export var turn_off_sound: AudioStream ## Sound when device turns off
+@export var no_power_sound: AudioStream ## Sound when trying to use with no power
+
 # --- PRIVATE VARIABLES ---
 var has_power: bool = false
 
@@ -53,6 +58,9 @@ func interact(_interactor: Node3D) -> void:
 	
 	if requires_power and not has_power:
 		print("⚠️ " + parent_object.name + " has no power!")
+		# Play "no power" sound
+		if no_power_sound:
+			_play_sound(no_power_sound)
 		return
 	
 	# Toggle state
@@ -61,11 +69,15 @@ func interact(_interactor: Node3D) -> void:
 	# Update interaction text
 	_update_interaction_text()
 	
-	# Emit signals
+	# Play appropriate sound and emit signals
 	if is_on:
+		if turn_on_sound:
+			_play_sound(turn_on_sound)
 		device_turned_on.emit()
 		print("✅ " + parent_object.name + " turned ON")
 	else:
+		if turn_off_sound:
+			_play_sound(turn_off_sound)
 		device_turned_off.emit()
 		print("✅ " + parent_object.name + " turned OFF")
 
@@ -112,6 +124,8 @@ func turn_on() -> bool:
 	
 	if not is_on:
 		is_on = true
+		if turn_on_sound:
+			_play_sound(turn_on_sound)
 		device_turned_on.emit()
 		_update_interaction_text()
 	return true
@@ -120,6 +134,8 @@ func turn_off() -> bool:
 	"""Programmatically turn off the device"""
 	if is_on:
 		is_on = false
+		if turn_off_sound:
+			_play_sound(turn_off_sound)
 		device_turned_off.emit()
 		_update_interaction_text()
 	return true

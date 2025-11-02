@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://c7etdc3b1aau1"
+path="res://.godot/imported/fan loop.ogg-47f72d5009ec09dde3f03aa6465f1c6c.oggvorbisstr"
+
+[deps]
+
+source_file="res://sounds/fan loop.ogg"
+dest_files=["res://.godot/imported/fan loop.ogg-47f72d5009ec09dde3f03aa6465f1c6c.oggvorbisstr"]
+
+[params]
+
+loop=true
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

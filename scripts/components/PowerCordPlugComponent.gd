@@ -140,9 +140,7 @@ func plug_into(outlet: OutletComponent) -> bool:
 	nearby_outlet = null
 	was_near_outlet = false
 	
-	# Play plug sound if available
-	if pickup_sound:
-		_play_sound(pickup_sound)
+	# Don't play sound here - outlet will play the plug in sound
 	
 	# Emit signal
 	plugged_into.emit(outlet)
@@ -163,28 +161,50 @@ func unplug() -> bool:
 	
 	var outlet = current_outlet
 	
-	# Restore physics
+	print("🔌 UNPLUGGING - Before state:")
+	print("  - Freeze: " + str(parent_rigid_body.freeze))
+	print("  - Lock rotation: " + str(parent_rigid_body.lock_rotation))
+	print("  - Collision layer: " + str(parent_rigid_body.collision_layer))
+	print("  - Collision mask: " + str(parent_rigid_body.collision_mask))
+	print("  - In interactable group: " + str(parent_object.is_in_group("interactable")))
+	
+	# Move plug slightly away from outlet BEFORE unfreezing to avoid clipping
+	if is_instance_valid(outlet):
+		var push_dir = (parent_rigid_body.global_position - outlet.global_position).normalized()
+		# Move it out a bit before unfreezing
+		parent_rigid_body.global_position += push_dir * 0.2
+	
+	# Restore physics AFTER repositioning
 	parent_rigid_body.freeze = false
 	parent_rigid_body.lock_rotation = false
 	
-	# Give a little push away from outlet
-	if is_instance_valid(outlet):
-		var push_dir = (parent_rigid_body.global_position - outlet.global_position).normalized()
-		parent_rigid_body.apply_central_impulse(push_dir * 0.5)
+	# Reset velocities to prevent sudden movements
+	parent_rigid_body.linear_velocity = Vector3.ZERO
+	parent_rigid_body.angular_velocity = Vector3.ZERO
 	
 	# Update state
 	is_plugged = false
+	current_outlet = null
 	interaction_text = "Pick Up Plug"
 	
-	# Play unplug sound
-	if drop_sound:
-		_play_sound(drop_sound)
+	# Give a gentle push away from outlet (smaller impulse)
+	if is_instance_valid(outlet):
+		var push_dir = (parent_rigid_body.global_position - outlet.global_position).normalized()
+		parent_rigid_body.apply_central_impulse(push_dir * 0.2)  # Reduced from 0.5
+	
+	# Don't play sound here - outlet will play the plug out sound
 	
 	# Emit signal
 	unplugged_from.emit(outlet)
-	current_outlet = null
 	
-	print("🔌 Unplugged from outlet: " + outlet.parent_object.name if outlet else "unknown")
+	print("🔌 UNPLUGGED - After state:")
+	print("  - Freeze: " + str(parent_rigid_body.freeze))
+	print("  - Lock rotation: " + str(parent_rigid_body.lock_rotation))
+	print("  - Collision layer: " + str(parent_rigid_body.collision_layer))
+	print("  - Collision mask: " + str(parent_rigid_body.collision_mask))
+	print("  - In interactable group: " + str(parent_object.is_in_group("interactable")))
+	print("  - Interaction text: " + interaction_text)
+	
 	return true
 
 # --- OVERRIDE INTERACTION ---
@@ -193,15 +213,16 @@ func _on_interacted(player_interaction: PlayerInteractionComponent) -> void:
 	"""Override interaction based on plug state"""
 	
 	if is_plugged:
-		# If plugged, unplug it
+		# If plugged, unplug it (but don't pick it up yet - player needs to interact again)
 		unplug()
+		# Player will need to interact again to pick it up after unplugging
 	elif is_carried and nearby_outlet:
 		# If carrying near outlet, plug it in
 		if nearby_outlet.accept_plug(self):
 			# Outlet will call our plug_into() method
 			pass
 	else:
-		# Normal pickup/drop behavior
+		# Normal pickup/drop behavior (when not plugged and not near outlet)
 		super._on_interacted(player_interaction)
 
 # --- OVERRIDE DROP ---

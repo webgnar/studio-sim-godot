@@ -1,4 +1,4 @@
-[gd_scene load_steps=126 format=3 uid="uid://cnmivki1rop3b"]
+[gd_scene load_steps=134 format=3 uid="uid://cnmivki1rop3b"]
 
 [ext_resource type="Material" uid="uid://wwlsotlotycw" path="res://materials/wood.tres" id="1_4mrxx"]
 [ext_resource type="Script" uid="uid://d4bxpnphvld1d" path="res://scripts/PlayerController.gd" id="1_4wyf3"]
@@ -56,8 +56,16 @@
 [ext_resource type="PackedScene" uid="uid://ddoijgnx5221v" path="res://models/interactables/plug.glb" id="53_pf35h"]
 [ext_resource type="Script" uid="uid://dlksqcf0lda80" path="res://scripts/components/OutletComponent.gd" id="54_qg546"]
 [ext_resource type="AudioStream" uid="uid://84rjpuccue2i" path="res://sounds/boomboxSwitch.ogg" id="boombox_switch"]
+[ext_resource type="AudioStream" uid="uid://8so1mqtnfhkh" path="res://sounds/box open 1.ogg" id="box_open_1"]
+[ext_resource type="AudioStream" uid="uid://bkyiswhv5fuaf" path="res://sounds/box open 2.ogg" id="box_open_2"]
+[ext_resource type="AudioStream" uid="uid://c7etdc3b1aau1" path="res://sounds/fan loop.ogg" id="fan_loop"]
+[ext_resource type="AudioStream" uid="uid://drutnrfsg6uij" path="res://sounds/fan shutdown.ogg" id="fan_shutdown"]
+[ext_resource type="AudioStream" uid="uid://cgdgvauaqxr5i" path="res://sounds/fan startup.ogg" id="fan_startup"]
+[ext_resource type="AudioStream" uid="uid://bukro42figtah" path="res://sounds/fan switch.ogg" id="fan_switch"]
 [ext_resource type="AudioStream" uid="uid://cemldiwrdj70h" path="res://sounds/halloween.ogg" id="halloween_audio"]
 [ext_resource type="AudioStream" uid="uid://bw0ig22tombxc" path="res://sounds/ministudio.ogg" id="ministudio_audio"]
+[ext_resource type="AudioStream" uid="uid://b01s70tsty74h" path="res://sounds/plugIn.ogg" id="plug_in"]
+[ext_resource type="AudioStream" uid="uid://8wuf6nkvi1wl" path="res://sounds/plugOut.ogg" id="plug_out"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_nnsk1"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -1251,7 +1259,7 @@ transform = Transform3D(-0.029999997, 4.529874e-09, -1.9800707e-16, 0, -1.311341
 script = ExtResource("28_artbox_new")
 
 [node name="fold6" parent="artbox" instance=ExtResource("31_x2olw")]
-transform = Transform3D(0.018202744, 8.583139e-08, 0.99983096, 8.583115e-08, 0.99999934, -8.7408004e-08, -0.9998309, 8.740823e-08, 0.018202744, 0.9763241, 0, -6.7096863)
+transform = Transform3D(0.018202743, 8.583139e-08, 0.99983084, 8.583114e-08, 0.99999934, -8.740799e-08, -0.9998308, 8.740823e-08, 0.018202743, 0.9763241, 0, -6.7096863)
 
 [node name="fold5" parent="artbox/fold6" instance=ExtResource("32_817gm")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -7.9999986, 0, 0)
@@ -1359,6 +1367,8 @@ libraries = {
 [node name="PoweredDeviceComponent" type="Node3D" parent="fan legs" node_paths=PackedStringArray("power_cord_plug")]
 script = ExtResource("51_iexy4")
 power_cord_plug = NodePath("../../plug/PowerCordPlugComponent")
+turn_on_sound = ExtResource("fan_switch")
+turn_off_sound = ExtResource("fan_switch")
 metadata/_custom_type_script = "uid://u01mbabuiguh"
 
 [node name="StaticBody3D" type="StaticBody3D" parent="fan legs"]
@@ -1371,6 +1381,9 @@ shape = SubResource("BoxShape3D_iexy4")
 script = ExtResource("49_npbic")
 powered_device = NodePath("../PoweredDeviceComponent")
 animation_player = NodePath("../cage/blade/AnimationPlayer")
+startup_sound = ExtResource("fan_startup")
+shutdown_sound = ExtResource("fan_shutdown")
+running_loop_sound = ExtResource("fan_loop")
 
 [node name="plug" type="RigidBody3D" parent="."]
 transform = Transform3D(-0.10440699, 0, -0.9945347, 0, 1, 0, 0.9945347, 0, -0.10440699, 1.034552, 1.530381, -1.3465371)
@@ -1382,11 +1395,14 @@ shape = SubResource("BoxShape3D_npbic")
 
 [node name="PowerCordPlugComponent" type="Node3D" parent="plug"]
 script = ExtResource("51_pf35h")
+pickup_sound = ExtResource("box_open_1")
+drop_sound = ExtResource("box_open_2")
 metadata/_custom_type_script = "uid://d1d8fhujnbpfy"
 
-[node name="Node3D" type="Node3D" parent="plug" node_paths=PackedStringArray("connected_device")]
+[node name="black cord script" type="Node3D" parent="plug" node_paths=PackedStringArray("connected_device")]
 script = ExtResource("52_iexy4")
 connected_device = NodePath("../../fan legs/cage")
+sag_amount = 0.0
 
 [node name="plug model" parent="plug" instance=ExtResource("53_pf35h")]
 transform = Transform3D(-2.3283064e-09, 0, 0.050000004, 0, 0.05, 0, -0.050000004, 0, -2.3283064e-09, 0, 0, 0)
@@ -1429,3 +1445,5 @@ shape = SubResource("BoxShape3D_pf35h")
 
 [node name="OutletComponent" type="Node3D" parent="wall outlet"]
 script = ExtResource("54_qg546")
+plug_in_sound = ExtResource("plug_in")
+plug_out_sound = ExtResource("plug_out")

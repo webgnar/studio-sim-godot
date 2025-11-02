@@ -118,6 +118,10 @@ func drop() -> void:
 	if not is_carried:
 		return
 	
+	# Reset velocities BEFORE restoring physics to prevent tunneling
+	parent_rigid_body.linear_velocity = Vector3.ZERO
+	parent_rigid_body.angular_velocity = Vector3.ZERO
+	
 	# Restore physics state
 	if lock_rotation_when_carried:
 		parent_rigid_body.lock_rotation = false  # Allow natural rotation again
@@ -150,10 +154,14 @@ func throw(power: float) -> void:
 	# Get throw direction (where player is looking)
 	var throw_direction = player_ref.get_look_direction()
 	
+	# Reset velocities first to get clean throw
+	parent_rigid_body.linear_velocity = Vector3.ZERO
+	parent_rigid_body.angular_velocity = Vector3.ZERO
+	
 	# Drop first (cleans up state)
 	drop()
 	
-	# Calculate and apply impulse
+	# Calculate and apply impulse AFTER drop has reset velocities
 	var impulse = throw_direction * power
 	parent_rigid_body.apply_central_impulse(impulse)
 	

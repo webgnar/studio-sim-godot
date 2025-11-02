@@ -25,10 +25,21 @@ var _controlled_lights: Array[Light3D] = []
 
 func _on_ready() -> void:
 	interaction_text = "Toggle Switch"
+	_ensure_audio_player()
 	_setup_animation_player()
 	_setup_controlled_lights()
 	_initialize_lights_state()
 	print("✅ LightSwitchInteraction ready: " + parent_object.name + " (ID: " + switch_id + ")")
+
+func _ensure_audio_player() -> void:
+	# Make sure we have an audio player for switch sounds
+	if (switch_on_sound or switch_off_sound) and not _audio_player:
+		_audio_player = AudioStreamPlayer3D.new()
+		_audio_player.name = "SwitchAudio"
+		_audio_player.max_distance = 10.0
+		_audio_player.attenuation_model = AudioStreamPlayer3D.ATTENUATION_INVERSE_DISTANCE
+		add_child(_audio_player)
+		print("Created audio player for switch sounds")
 
 func _on_interacted(_player_interaction_component: PlayerInteractionComponent) -> void:
 	if _current_state != SwitchState.ANIMATING:
