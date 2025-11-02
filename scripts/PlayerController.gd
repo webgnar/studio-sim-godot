@@ -109,6 +109,7 @@ func _setup_interaction_component() -> void:
 		if child is PlayerInteractionComponent:
 			_interaction_component = child
 			print("Found existing PlayerInteractionComponent")
+			_setup_carry_marker()
 			return
 	
 	# If not found, create one programmatically
@@ -116,6 +117,33 @@ func _setup_interaction_component() -> void:
 	_interaction_component.name = "PlayerInteractionComponent"
 	add_child(_interaction_component)
 	print("Created PlayerInteractionComponent programmatically")
+	
+	# Setup carry marker
+	_setup_carry_marker()
+
+func _setup_carry_marker() -> void:
+	"""Create or find the carry marker for the interaction component"""
+	if not _camera:
+		print("⚠️ Cannot setup carry marker - no camera found")
+		return
+	
+	# Check if CarryMarker already exists
+	var carry_marker = _camera.get_node_or_null("CarryMarker")
+	
+	if not carry_marker:
+		# Create it programmatically
+		carry_marker = Marker3D.new()
+		carry_marker.name = "CarryMarker"
+		_camera.add_child(carry_marker)
+		carry_marker.position = Vector3(0, 0, -2)  # 2 units in front of camera
+		print("✅ Created CarryMarker programmatically at position: " + str(carry_marker.position))
+	else:
+		print("✅ Found existing CarryMarker")
+	
+	# Assign to interaction component
+	if _interaction_component:
+		_interaction_component.carry_marker = carry_marker
+		print("✅ CarryMarker assigned to PlayerInteractionComponent")
 
 func _process(_delta) -> void:
 	# Update mirrors with camera transform

@@ -1,6 +1,6 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=2 format=3 uid="uid://cmkthatew8dv2"]
 
-[ext_resource type="Script" path="res://scripts/HUD.gd" id="1"]
+[ext_resource type="Script" uid="uid://d2t2wfmgd2wmn" path="res://scripts/HUD.gd" id="1"]
 
 [node name="HUD" type="CanvasLayer"]
 script = ExtResource("1")
@@ -110,3 +110,15 @@ offset_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(1, 1, 1, 0.8)
+
+[node name="CarryHint" type="Label" parent="."]
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -23.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "\"[E] Drop  |  [Left Click] Throw\""
+horizontal_alignment = 1
+vertical_alignment = 2

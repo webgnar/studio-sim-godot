@@ -1,4 +1,4 @@
-[gd_scene load_steps=117 format=3 uid="uid://cnmivki1rop3b"]
+[gd_scene load_steps=118 format=3 uid="uid://cnmivki1rop3b"]
 
 [ext_resource type="Material" uid="uid://wwlsotlotycw" path="res://materials/wood.tres" id="1_4mrxx"]
 [ext_resource type="Script" uid="uid://d4bxpnphvld1d" path="res://scripts/PlayerController.gd" id="1_4wyf3"]
@@ -13,7 +13,7 @@
 [ext_resource type="Material" uid="uid://re8gmfn1nbgt" path="res://materials/wall.tres" id="5_71j4m"]
 [ext_resource type="PackedScene" uid="uid://boyehvhrdbdi6" path="res://models/props/lights.glb" id="6_jhx03"]
 [ext_resource type="PackedScene" uid="uid://ygw6d51stbbw" path="res://scenes/human.tscn" id="6_qfnet"]
-[ext_resource type="PackedScene" path="res://scenes/HUD.tscn" id="14_1jxku"]
+[ext_resource type="PackedScene" uid="uid://cmkthatew8dv2" path="res://scenes/HUD.tscn" id="14_1jxku"]
 [ext_resource type="Texture2D" uid="uid://b3ty4ce0xhyow" path="res://sprites/hvac.jpg" id="14_o8fc1"]
 [ext_resource type="PackedScene" uid="uid://chnkextlwxa7d" path="res://models/props/window.glb" id="15_xo05s"]
 [ext_resource type="PackedScene" uid="uid://xeaph8bqk1j1" path="res://models/props/pipe_red.glb" id="16_oo54l"]
@@ -48,6 +48,7 @@
 [ext_resource type="PackedScene" uid="uid://bsdobk5wd61u" path="res://models/interactables/fan/blade.glb" id="50_1dgkn"]
 [ext_resource type="Script" uid="uid://dpnghglurvaq0" path="res://scripts/consolelog.gd" id="51_1jxku"]
 [ext_resource type="Script" uid="uid://dud4lcqfc1h5w" path="res://scripts/SimpleInteraction.gd" id="52_1dgkn"]
+[ext_resource type="PackedScene" uid="uid://dtharqrj0cj5y" path="res://scenes/test_box.tscn" id="52_e68xj"]
 [ext_resource type="AudioStream" uid="uid://84rjpuccue2i" path="res://sounds/boomboxSwitch.ogg" id="boombox_switch"]
 [ext_resource type="AudioStream" uid="uid://cemldiwrdj70h" path="res://sounds/halloween.ogg" id="halloween_audio"]
 [ext_resource type="AudioStream" uid="uid://bw0ig22tombxc" path="res://sounds/ministudio.ogg" id="ministudio_audio"]
@@ -664,6 +665,8 @@ environment = SubResource("Environment_4wyf3")
 
 [node name="celing" type="CSGBox3D" parent="."]
 transform = Transform3D(-2.0107239e-08, 7.49, 0, -0.46, -3.2739828e-07, 0, 0, 0, 22.64, 0.057606697, 5.5446606, 4)
+use_collision = true
+collision_layer = 2
 material = ExtResource("1_4mrxx")
 
 [node name="strut" type="CSGBox3D" parent="celing"]
@@ -811,6 +814,9 @@ run_speed = 10.0
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.64091873, 0)
 
 [node name="Camera3D" type="Camera3D" parent="Player/Head"]
+
+[node name="CarryMarker" type="Marker3D" parent="Player/Head/Camera3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2)
 
 [node name="HUD" parent="Player" instance=ExtResource("14_1jxku")]
 
@@ -1233,7 +1239,7 @@ transform = Transform3D(-0.029999997, 4.529874e-09, -1.9800707e-16, 0, -1.311341
 script = ExtResource("28_artbox_new")
 
 [node name="fold6" parent="artbox" instance=ExtResource("31_x2olw")]
-transform = Transform3D(0.018202757, 8.583139e-08, 0.9998317, 8.583121e-08, 0.99999934, -8.740807e-08, -0.9998316, 8.740823e-08, 0.018202757, 0.9763241, 0, -6.7096863)
+transform = Transform3D(0.018202756, 8.583139e-08, 0.99983156, 8.5831196e-08, 0.99999934, -8.7408054e-08, -0.9998315, 8.740823e-08, 0.018202756, 0.9763241, 0, -6.7096863)
 
 [node name="fold5" parent="artbox/fold6" instance=ExtResource("32_817gm")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -7.9999986, 0, 0)
@@ -1340,6 +1346,7 @@ interaction_text = "Test Cube"
 
 [node name="console log" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 1, -2)
+visible = false
 
 [node name="SubViewport" type="SubViewport" parent="console log"]
 render_target_update_mode = 4
@@ -1359,3 +1366,6 @@ offset_bottom = 23.0
 [node name="MeshInstance3D" type="MeshInstance3D" parent="console log"]
 mesh = SubResource("PlaneMesh_1dgkn")
 surface_material_override/0 = SubResource("StandardMaterial3D_5hglh")
+
+[node name="TestBox" parent="." instance=ExtResource("52_e68xj")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 1, -3)

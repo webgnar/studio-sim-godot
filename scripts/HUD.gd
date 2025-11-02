@@ -6,6 +6,7 @@ extends CanvasLayer
 # --- NODE REFERENCES ---
 @onready var interaction_label: Label = $CenterContainer/InteractionPrompt
 @onready var crosshair: Control = $Crosshair
+@onready var carry_hint: Label = $CarryHint  # Will show carry controls when holding object
 
 # --- PRIVATE VARIABLES ---
 var _player: CharacterBody3D
@@ -24,6 +25,10 @@ func _ready() -> void:
 	# Hide interaction prompt initially
 	if interaction_label:
 		interaction_label.hide()
+	
+	# Hide carry hint initially
+	if carry_hint:
+		carry_hint.hide()
 	
 	# Connect to player interaction component signals
 	_connect_to_player_interaction_component()
@@ -51,6 +56,10 @@ func _connect_to_player_interaction_component() -> void:
 	
 	print("✅ HUD connected to PlayerInteractionComponent")
 
+func _process(_delta: float) -> void:
+	# Update carry hint based on carrying state
+	_update_carry_hint()
+
 # --- SIGNAL HANDLERS ---
 
 func _on_prompt_changed(prompt_text: String) -> void:
@@ -74,6 +83,21 @@ func _on_nothing_detected() -> void:
 	# Optional: Reset visual feedback
 	if interaction_label:
 		interaction_label.hide()
+
+func _update_carry_hint() -> void:
+	"""Update the carry controls hint based on whether player is carrying something"""
+	if not _player_interaction_component or not carry_hint:
+		return
+	
+	if _player_interaction_component.is_carrying:
+		carry_hint.text = "[E] Drop  |  [Left Click] Throw"
+		carry_hint.show()
+		
+		# Hide normal interaction prompt while carrying
+		if interaction_label:
+			interaction_label.hide()
+	else:
+		carry_hint.hide()
 
 # --- PUBLIC METHODS ---
 
