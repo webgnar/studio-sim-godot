@@ -88,6 +88,9 @@ func pickup(player_interaction: PlayerInteractionComponent) -> void:
 	
 	player_ref = player_interaction
 	
+	# Disable CCD while carrying (not needed for smooth velocity-based movement)
+	parent_rigid_body.continuous_cd = false
+	
 	# Configure physics state
 	if lock_rotation_when_carried:
 		parent_rigid_body.lock_rotation = true  # Prevents tumbling
@@ -158,6 +161,9 @@ func throw(power: float) -> void:
 	parent_rigid_body.linear_velocity = Vector3.ZERO
 	parent_rigid_body.angular_velocity = Vector3.ZERO
 	
+	# Enable continuous collision detection for fast-moving throws
+	parent_rigid_body.continuous_cd = true
+	
 	# Drop first (cleans up state)
 	drop()
 	
@@ -168,7 +174,37 @@ func throw(power: float) -> void:
 	# Emit signal for potential VFX/audio
 	thrown.emit(impulse)
 	
+	# Disable CCD after object comes to rest (check in physics process)
+	_monitor_throw_velocity()
+	
 	print("🎯 Threw: " + parent_object.name + " with power: " + str(power))
+
+func _monitor_throw_velocity() -> void:
+	"""Monitor velocity after throw and disable CCD when object settles"""
+	# Wait a frame to let physics start
+	await get_tree().physics_frame
+	
+	# Check velocity over several frames
+	var settle_threshold = 0.5  # Speed below which we consider it "settled"
+	var check_frames = 10  # Number of frames to check
+	
+	for i in range(check_frames):
+		await get_tree().physics_frame
+		
+		if not is_instance_valid(parent_rigid_body):
+			return
+		
+		var speed = parent_rigid_body.linear_velocity.length()
+		
+		# If settled, disable CCD and stop monitoring
+		if speed < settle_threshold:
+			parent_rigid_body.continuous_cd = false
+			print("💤 " + parent_object.name + " settled, CCD disabled")
+			return
+	
+	# If still moving after check frames, keep CCD enabled but stop monitoring
+	# It will get disabled on next pickup/drop cycle
+	print("⚡ " + parent_object.name + " still moving fast, keeping CCD enabled")
 
 # --- COLLISION HANDLING ---
 

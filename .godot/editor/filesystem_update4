@@ -8,3 +8,4 @@ res://scripts/components/PowerCordPlugComponent.gd
 res://scripts/components/OutletComponent.gd
 res://scripts/PlayerInteractionComponent.gd
 res://scripts/components/CarryableComponent.gd
+res://scripts/BoxInteraction.gd

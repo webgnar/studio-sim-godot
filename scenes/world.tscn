@@ -745,6 +745,7 @@ omni_attenuation = 1.429
 transform = Transform3D(0.46, 0, 0, 0, 7.49, 0, 0, 0, 22.64, -4.9423933, 3.544661, 4)
 use_collision = true
 collision_layer = 2
+collision_mask = 0
 
 [node name="floor" type="CSGBox3D" parent="studio"]
 transform = Transform3D(22.413044, 0, 0, 0, 0.008010681, 0, 0, 0, 1.0114841, 10.744333, -0.47325248, 0)
@@ -1152,41 +1153,6 @@ transform = Transform3D(0.014088948, -0.019586174, -0.62915206, 0.47128618, 0.04
 [node name="pipegraybent2" parent="electrical conduit" instance=ExtResource("19_kpybi")]
 transform = Transform3D(0.013917993, 0.06352692, -0.6286893, 0.017449299, 1.3355626, 0.030572794, 0.47172707, -0.05127709, 0.01741816, 58.345383, 9.54422, -27.782818)
 
-[node name="outlets" type="Node3D" parent="."]
-
-[node name="outlet8" parent="outlets" instance=ExtResource("18_ctatt")]
-transform = Transform3D(0.12705004, 0, 0, 0, 0.12705004, 0, 0, 0, 0.12705006, 3.7670677, 0.6725974, 10.761079)
-
-[node name="outlet10" parent="outlets" instance=ExtResource("18_ctatt")]
-transform = Transform3D(0.12705004, 0, 0, 0, 0.12705004, 0, 0, 0, 0.12705006, 3.7170048, 0.7464384, 9.060747)
-
-[node name="outlet11" parent="outlets" instance=ExtResource("18_ctatt")]
-transform = Transform3D(-0.1270013, 0, 0.0035186368, 0, 0.12705003, 0, -0.0035186366, 0, -0.12700132, 3.7630396, 3.9268103, 8.712986)
-
-[node name="outlet12" parent="outlets" instance=ExtResource("18_ctatt")]
-transform = Transform3D(-0.1270013, 0, 0.0035186368, 0, 0.12705003, 0, -0.0035186366, 0, -0.12700132, 3.7630396, 3.3981094, 0.29659438)
-
-[node name="outlet9" parent="outlets" instance=ExtResource("18_ctatt")]
-transform = Transform3D(0.12705004, 0, 0, 0, 0.12705004, 0, 0, 0, 0.12705006, 3.7661774, 0.62042475, 2.8552802)
-
-[node name="outlet2" parent="outlets" instance=ExtResource("18_ctatt")]
-transform = Transform3D(-0.12705007, -1.4901161e-08, -1.1107072e-08, -1.4901161e-08, 0.12705007, -8.881784e-16, 1.1107073e-08, 8.88179e-16, -0.12705016, -3.6719358, 0.6040931, -3.234541)
-
-[node name="outlet4" parent="outlets" instance=ExtResource("18_ctatt")]
-transform = Transform3D(-0.12705007, -1.4901161e-08, -1.1107072e-08, -1.4901161e-08, 0.12705007, -8.881784e-16, 1.1107073e-08, 8.88179e-16, -0.12705016, -3.6709163, 0.5895046, 6.7141256)
-
-[node name="outlet5" parent="outlets" instance=ExtResource("18_ctatt")]
-transform = Transform3D(-0.12705007, -1.4901161e-08, -1.1107072e-08, -1.4901161e-08, 0.12705007, -8.881784e-16, 1.1107073e-08, 8.88179e-16, -0.12705016, -3.6674304, 0.5772761, 12.627346)
-
-[node name="outlet3" parent="outlets" instance=ExtResource("18_ctatt")]
-transform = Transform3D(1.6420351e-08, -3.7252903e-09, -0.12705019, -7.450583e-09, 0.12705007, 0, 0.1270501, 1.4901168e-08, 1.6660616e-08, -3.5582354, 1.3306421, 3.6151316)
-
-[node name="outlet6" parent="outlets" instance=ExtResource("18_ctatt")]
-transform = Transform3D(1.6420351e-08, -3.7252903e-09, -0.12705019, -7.450583e-09, 0.12705007, 0, 0.1270501, 1.4901168e-08, 1.6660616e-08, -0.92640615, 0.6040931, 14.737796)
-
-[node name="outlet7" parent="outlets" instance=ExtResource("18_ctatt")]
-transform = Transform3D(1.6420351e-08, -3.7252903e-09, -0.12705019, -7.450583e-09, 0.12705007, 0, 0.1270501, 1.4901168e-08, 1.6660616e-08, 3.6888297, 1.0056915, 14.732135)
-
 [node name="mirror" type="MeshInstance3D" parent="."]
 transform = Transform3D(0.15967436, -0.98716974, 7.2844835e-22, 0.98716974, 0.15967436, 0, -1.3524944e-22, 8.361653e-22, 0.86, 3.637775, 1.0085149, 4.4239473)
 mesh = SubResource("PlaneMesh_kpybi")
@@ -1219,6 +1185,9 @@ transform = Transform3D(0.33, 0, 0, 0, 0.33, 0, 0, 0, 0.33, 0.23469448, 0.298578
 
 [node name="BoxInteraction" type="Node3D" parent="cardboard box"]
 script = ExtResource("31_x28ej")
+flap_1_open_sound = ExtResource("box_open_1")
+flap_2_open_sound = ExtResource("box_open_2")
+box_close_sound = ExtResource("box_open_2")
 
 [node name="lid1" parent="cardboard box" instance=ExtResource("27_0nbtd")]
 transform = Transform3D(7.54979e-08, 0, -1, 0, 1, 0, 1, 0, 7.54979e-08, 0.0021412373, 1.230222, 0.9953356)
@@ -1259,7 +1228,7 @@ transform = Transform3D(-0.029999997, 4.529874e-09, -1.9800707e-16, 0, -1.311341
 script = ExtResource("28_artbox_new")
 
 [node name="fold6" parent="artbox" instance=ExtResource("31_x2olw")]
-transform = Transform3D(0.018202743, 8.583139e-08, 0.99983084, 8.583114e-08, 0.99999934, -8.740799e-08, -0.9998308, 8.740823e-08, 0.018202743, 0.9763241, 0, -6.7096863)
+transform = Transform3D(0.018202739, 8.583139e-08, 0.9998307, 8.5831125e-08, 0.99999934, -8.740798e-08, -0.99983066, 8.740823e-08, 0.01820274, 0.9763241, 0, -6.7096863)
 
 [node name="fold5" parent="artbox/fold6" instance=ExtResource("32_817gm")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -7.9999986, 0, 0)
@@ -1330,7 +1299,7 @@ shape = SubResource("BoxShape3D_boombox")
 [node name="RigidBody3D" type="RigidBody3D" parent="."]
 transform = Transform3D(0.9301743, 0, 0.3671182, 0, 1, 0, -0.3671182, 0, 0.9301743, 0.26508617, 0.070207834, -4.700662)
 collision_layer = 8
-collision_mask = 3
+collision_mask = 11
 
 [node name="Brute_L_NoMaterial" parent="RigidBody3D" instance=ExtResource("46_18clu")]
 
@@ -1351,7 +1320,7 @@ visible = false
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -3.6867952, 1.62026, -4)
 
 [node name="fan legs" parent="." instance=ExtResource("48_x28ej")]
-transform = Transform3D(-0.007308489, 0, -0.06961743, 0, 0.07, 0, 0.06961743, 0, -0.007308489, -0.24869871, 0.10264242, -1.3465371)
+transform = Transform3D(-0.06961743, 0, 0.0073084915, 0, 0.07000001, 0, -0.0073084915, 0, -0.06961743, -1.2486987, 0.10264242, 10.731506)
 
 [node name="cage" parent="fan legs" instance=ExtResource("49_1jxku")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.016191006, 5.825101, 1.146759)
@@ -1386,9 +1355,9 @@ shutdown_sound = ExtResource("fan_shutdown")
 running_loop_sound = ExtResource("fan_loop")
 
 [node name="plug" type="RigidBody3D" parent="."]
-transform = Transform3D(-0.10440699, 0, -0.9945347, 0, 1, 0, 0.9945347, 0, -0.10440699, 1.034552, 1.530381, -1.3465371)
+transform = Transform3D(-0.10440699, 0, -0.9945347, 0, 1, 0, 0.9945347, 0, -0.10440699, 1.034552, 1.530381, 12.653463)
 collision_layer = 8
-collision_mask = 2
+collision_mask = 10
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="plug"]
 shape = SubResource("BoxShape3D_npbic")
@@ -1444,6 +1413,141 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.042541504, 0.031188965, -0
 shape = SubResource("BoxShape3D_pf35h")
 
 [node name="OutletComponent" type="Node3D" parent="wall outlet"]
+script = ExtResource("54_qg546")
+plug_in_sound = ExtResource("plug_in")
+plug_out_sound = ExtResource("plug_out")
+
+[node name="wall outlet2" type="StaticBody3D" parent="."]
+transform = Transform3D(0.14, 0, 0, 0, 0.14, 0, 0, 0, 0.14, 3.7523398, 0.6093946, 2.8480759)
+collision_layer = 2
+
+[node name="default" parent="wall outlet2" instance=ExtResource("18_ctatt")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="wall outlet2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.042541504, 0.031188965, -0.0026855469)
+shape = SubResource("BoxShape3D_pf35h")
+
+[node name="OutletComponent" type="Node3D" parent="wall outlet2"]
+script = ExtResource("54_qg546")
+plug_in_sound = ExtResource("plug_in")
+plug_out_sound = ExtResource("plug_out")
+
+[node name="wall outlet3" type="StaticBody3D" parent="."]
+transform = Transform3D(0.14, 0, 0, 0, 0.14, 0, 0, 0, 0.14, 3.7246866, 0.7468788, 9.078153)
+collision_layer = 2
+
+[node name="default" parent="wall outlet3" instance=ExtResource("18_ctatt")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="wall outlet3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.042541504, 0.031188965, -0.0026855469)
+shape = SubResource("BoxShape3D_pf35h")
+
+[node name="OutletComponent" type="Node3D" parent="wall outlet3"]
+script = ExtResource("54_qg546")
+plug_in_sound = ExtResource("plug_in")
+plug_out_sound = ExtResource("plug_out")
+
+[node name="wall outlet4" type="StaticBody3D" parent="."]
+transform = Transform3D(0.14, 0, 0, 0, 0.14, 0, 0, 0, 0.14, 3.7644172, 0.66663843, 10.74867)
+collision_layer = 2
+
+[node name="default" parent="wall outlet4" instance=ExtResource("18_ctatt")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="wall outlet4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.042541504, 0.031188965, -0.0026855469)
+shape = SubResource("BoxShape3D_pf35h")
+
+[node name="OutletComponent" type="Node3D" parent="wall outlet4"]
+script = ExtResource("54_qg546")
+plug_in_sound = ExtResource("plug_in")
+plug_out_sound = ExtResource("plug_out")
+
+[node name="wall outlet5" type="StaticBody3D" parent="."]
+transform = Transform3D(-6.119594e-09, 0, -0.14, 0, 0.14, 0, 0.14, 0, -6.119594e-09, 3.6785972, 1.0041871, 14.752853)
+collision_layer = 2
+
+[node name="default" parent="wall outlet5" instance=ExtResource("18_ctatt")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="wall outlet5"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.042541504, 0.031188965, -0.0026855469)
+shape = SubResource("BoxShape3D_pf35h")
+
+[node name="OutletComponent" type="Node3D" parent="wall outlet5"]
+script = ExtResource("54_qg546")
+plug_in_sound = ExtResource("plug_in")
+plug_out_sound = ExtResource("plug_out")
+
+[node name="wall outlet6" type="StaticBody3D" parent="."]
+transform = Transform3D(-6.119594e-09, 0, -0.14, 0, 0.14, 0, 0.14, 0, -6.119594e-09, -0.9278619, 0.58810973, 14.752853)
+collision_layer = 2
+
+[node name="default" parent="wall outlet6" instance=ExtResource("18_ctatt")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="wall outlet6"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.042541504, 0.031188965, -0.0026855469)
+shape = SubResource("BoxShape3D_pf35h")
+
+[node name="OutletComponent" type="Node3D" parent="wall outlet6"]
+script = ExtResource("54_qg546")
+plug_in_sound = ExtResource("plug_in")
+plug_out_sound = ExtResource("plug_out")
+
+[node name="wall outlet7" type="StaticBody3D" parent="."]
+transform = Transform3D(-0.14, 0, 1.2239188e-08, 0, 0.14, 0, -1.2239188e-08, 0, -0.14, -3.667911, 0.58810973, 12.6370125)
+collision_layer = 2
+
+[node name="default" parent="wall outlet7" instance=ExtResource("18_ctatt")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="wall outlet7"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.042541504, 0.031188965, -0.0026855469)
+shape = SubResource("BoxShape3D_pf35h")
+
+[node name="OutletComponent" type="Node3D" parent="wall outlet7"]
+script = ExtResource("54_qg546")
+plug_in_sound = ExtResource("plug_in")
+plug_out_sound = ExtResource("plug_out")
+
+[node name="wall outlet8" type="StaticBody3D" parent="."]
+transform = Transform3D(-0.14, 0, 1.2239188e-08, 0, 0.14, 0, -1.2239188e-08, 0, -0.14, -3.667911, 0.58810973, 6.7184095)
+collision_layer = 2
+
+[node name="default" parent="wall outlet8" instance=ExtResource("18_ctatt")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="wall outlet8"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.042541504, 0.031188965, -0.0026855469)
+shape = SubResource("BoxShape3D_pf35h")
+
+[node name="OutletComponent" type="Node3D" parent="wall outlet8"]
+script = ExtResource("54_qg546")
+plug_in_sound = ExtResource("plug_in")
+plug_out_sound = ExtResource("plug_out")
+
+[node name="wall outlet9" type="StaticBody3D" parent="."]
+transform = Transform3D(-0.14, 0, 1.2239188e-08, 0, 0.14, 0, -1.2239188e-08, 0, -0.14, -3.667911, 0.601435, -3.2387514)
+collision_layer = 2
+
+[node name="default" parent="wall outlet9" instance=ExtResource("18_ctatt")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="wall outlet9"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.042541504, 0.031188965, -0.0026855469)
+shape = SubResource("BoxShape3D_pf35h")
+
+[node name="OutletComponent" type="Node3D" parent="wall outlet9"]
+script = ExtResource("54_qg546")
+plug_in_sound = ExtResource("plug_in")
+plug_out_sound = ExtResource("plug_out")
+
+[node name="wall outlet10" type="StaticBody3D" parent="."]
+transform = Transform3D(-6.119594e-09, 0, -0.14, 0, 0.14, 0, 0.14, 0, -6.119594e-09, -3.5578737, 1.3362472, 3.6211665)
+collision_layer = 2
+
+[node name="default" parent="wall outlet10" instance=ExtResource("18_ctatt")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="wall outlet10"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.042541504, 0.031188965, -0.0026855469)
+shape = SubResource("BoxShape3D_pf35h")
+
+[node name="OutletComponent" type="Node3D" parent="wall outlet10"]
 script = ExtResource("54_qg546")
 plug_in_sound = ExtResource("plug_in")
 plug_out_sound = ExtResource("plug_out")

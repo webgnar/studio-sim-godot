@@ -32,7 +32,18 @@ var _spawned_object: Node3D = null
 
 func _on_ready() -> void:
 	interaction_text = "Open Box"
+	_ensure_audio_player()
 	print("✅ BoxInteraction ready: " + parent_object.name)
+
+func _ensure_audio_player() -> void:
+	"""Make sure we have an audio player for box sounds"""
+	if (flap_1_open_sound or flap_2_open_sound or box_close_sound) and not _audio_player:
+		_audio_player = AudioStreamPlayer3D.new()
+		_audio_player.name = "BoxAudio"
+		_audio_player.max_distance = 15.0
+		_audio_player.attenuation_model = AudioStreamPlayer3D.ATTENUATION_INVERSE_DISTANCE
+		add_child(_audio_player)
+		print("Created audio player for box sounds")
 
 func _on_interacted(_player_interaction_component: PlayerInteractionComponent) -> void:
 	_handle_box_interaction()
