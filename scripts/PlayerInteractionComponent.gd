@@ -139,15 +139,6 @@ func _update_interactable() -> void:
 		_clear_interactable()
 		return
 	
-	# DEBUG: Print what we're hitting
-	if hit.name.contains("plug"):
-		print("🔍 Raycast hit: " + hit.name + " (" + hit.get_class() + ")")
-		print("  - In interactable group: " + str(hit.is_in_group("interactable")))
-		print("  - Collision layer: " + str(hit.collision_layer))
-		print("  - Collision mask: " + str(hit.collision_mask))
-		if hit.get_parent():
-			print("  - Parent: " + hit.get_parent().name + " (in interactable: " + str(hit.get_parent().is_in_group("interactable")) + ")")
-	
 	# Find the root interactable (might be a parent of what we hit)
 	# The raycast might hit a child (like StaticBody3D), but the parent has the group
 	var interactable = _find_interactable_root(hit)

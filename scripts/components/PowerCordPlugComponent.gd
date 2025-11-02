@@ -2,6 +2,25 @@ extends CarryableComponent
 class_name PowerCordPlugComponent
 ## Physics-based power cord plug that can be carried and plugged into outlets
 ## Extends CarryableComponent to reuse carrying mechanics
+##
+## USAGE:
+## 1. Attach to a RigidBody3D node (the plug)
+## 2. Set snap_distance to control how close player must be to outlet
+## 3. Optionally configure cord_segments and anchor_point for visual feedback
+##
+## INTERACTION FLOW:
+## - When unplugged: Pick up with E key (normal CarryableComponent behavior)
+## - When carrying near outlet: Auto-plugs on release if auto_plug_on_release is true
+## - When plugged: Interact with E key to unplug and pick up in one action
+##
+## KNOWN ISSUE:
+## - After unplugging via outlet interaction, plug may not be pickupable
+## - Workaround: Always interact with plug directly, not outlet
+
+# --- CONSTANTS ---
+const UNPLUG_OFFSET: float = 0.2  ## Distance to push plug away from outlet when unplugging
+const WAKE_VELOCITY: Vector3 = Vector3(0, -0.1, 0)  ## Small velocity to prevent RigidBody sleeping
+const SLEEP_DELAY: float = 1.0  ## Seconds to wait before allowing RigidBody to sleep again
 
 # --- SIGNALS ---
 signal plugged_into(outlet: OutletComponent)
@@ -38,7 +57,8 @@ func _ready() -> void:
 	drop_distance = 3.0  # Allow more slack
 	lock_rotation_when_carried = false  # Never lock rotation on cords!
 	
-	# Add to group for easy finding
+	# Note: parent_object already added to "interactable" group by InteractionComponent._ready()
+	# Just add to power_plugs group for easy finding
 	add_to_group("power_plugs")
 	
 	print("✅ PowerCordPlugComponent ready: " + parent_object.name)
@@ -161,49 +181,42 @@ func unplug() -> bool:
 	
 	var outlet = current_outlet
 	
-	print("🔌 UNPLUGGING - Before state:")
-	print("  - Freeze: " + str(parent_rigid_body.freeze))
-	print("  - Lock rotation: " + str(parent_rigid_body.lock_rotation))
-	print("  - Collision layer: " + str(parent_rigid_body.collision_layer))
-	print("  - Collision mask: " + str(parent_rigid_body.collision_mask))
-	print("  - In interactable group: " + str(parent_object.is_in_group("interactable")))
-	
 	# Move plug slightly away from outlet BEFORE unfreezing to avoid clipping
 	if is_instance_valid(outlet):
 		var push_dir = (parent_rigid_body.global_position - outlet.global_position).normalized()
-		# Move it out a bit before unfreezing
-		parent_rigid_body.global_position += push_dir * 0.2
+		parent_rigid_body.global_position += push_dir * UNPLUG_OFFSET
 	
 	# Restore physics AFTER repositioning
 	parent_rigid_body.freeze = false
 	parent_rigid_body.lock_rotation = false
 	
-	# Reset velocities to prevent sudden movements
-	parent_rigid_body.linear_velocity = Vector3.ZERO
+	# Give tiny downward velocity to prevent immediate sleeping and allow natural fall
+	# This keeps the physics body "awake" so it can be picked up immediately
+	parent_rigid_body.linear_velocity = WAKE_VELOCITY
 	parent_rigid_body.angular_velocity = Vector3.ZERO
+	
+	# Prevent sleeping for a moment to ensure plug remains interactable
+	parent_rigid_body.sleeping = false
+	parent_rigid_body.can_sleep = false
+	
+	# Re-enable sleeping after a short delay (after it settles) - non-blocking
+	_reenable_sleep_after_delay()
 	
 	# Update state
 	is_plugged = false
 	current_outlet = null
 	interaction_text = "Pick Up Plug"
 	
-	# Give a gentle push away from outlet (smaller impulse)
-	if is_instance_valid(outlet):
-		var push_dir = (parent_rigid_body.global_position - outlet.global_position).normalized()
-		parent_rigid_body.apply_central_impulse(push_dir * 0.2)  # Reduced from 0.5
+	# Don't push the plug - just let it drop naturally
+	# This prevents it from flying away or getting lost
+	# if is_instance_valid(outlet):
+	# 	var push_dir = (parent_rigid_body.global_position - outlet.global_position).normalized()
+	# 	parent_rigid_body.apply_central_impulse(push_dir * 0.2)
 	
 	# Don't play sound here - outlet will play the plug out sound
 	
 	# Emit signal
 	unplugged_from.emit(outlet)
-	
-	print("🔌 UNPLUGGED - After state:")
-	print("  - Freeze: " + str(parent_rigid_body.freeze))
-	print("  - Lock rotation: " + str(parent_rigid_body.lock_rotation))
-	print("  - Collision layer: " + str(parent_rigid_body.collision_layer))
-	print("  - Collision mask: " + str(parent_rigid_body.collision_mask))
-	print("  - In interactable group: " + str(parent_object.is_in_group("interactable")))
-	print("  - Interaction text: " + interaction_text)
 	
 	return true
 
@@ -213,9 +226,10 @@ func _on_interacted(player_interaction: PlayerInteractionComponent) -> void:
 	"""Override interaction based on plug state"""
 	
 	if is_plugged:
-		# If plugged, unplug it (but don't pick it up yet - player needs to interact again)
+		# If plugged, unplug it AND pick it up in one action
 		unplug()
-		# Player will need to interact again to pick it up after unplugging
+		# After unplugging, pick it up immediately (don't make player interact twice)
+		pickup(player_interaction)
 	elif is_carried and nearby_outlet:
 		# If carrying near outlet, plug it in
 		if nearby_outlet.accept_plug(self):
@@ -269,3 +283,11 @@ func get_cord_length() -> float:
 func is_near_outlet() -> bool:
 	"""Check if plug is currently near an outlet"""
 	return nearby_outlet != null
+
+# --- HELPER METHODS ---
+
+func _reenable_sleep_after_delay() -> void:
+	"""Re-enable RigidBody sleeping after a delay (non-blocking)"""
+	await get_tree().create_timer(SLEEP_DELAY).timeout
+	if is_instance_valid(parent_rigid_body):
+		parent_rigid_body.can_sleep = true

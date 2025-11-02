@@ -9,3 +9,7 @@ res://scripts/components/OutletComponent.gd
 res://scripts/PlayerInteractionComponent.gd
 res://scripts/components/CarryableComponent.gd
 res://scripts/BoxInteraction.gd
+res://scenes/test_box.tscn
+res://materials/styrafoam.tres
+res://scripts/ArtboxInteraction.gd
+res://scenes/HUD.tscn

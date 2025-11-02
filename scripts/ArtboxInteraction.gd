@@ -99,12 +99,33 @@ func _start_complete_sequence() -> void:
 	_current_state = ArtboxState.MOVING_TO_WALL
 	interaction_text = ""  # Hide prompt during animation
 	
+	# Start movement immediately
 	_start_move_to_wall()
+	
+	# Schedule orient to trigger at 5 seconds (during movement)
+	_schedule_orient_animation()
+	
+	# Schedule unfold to trigger at 9 seconds (during movement)
+	_schedule_unfold_animation()
+	
+	# Wait for movement to complete
 	await _wait_for_move_to_wall_to_complete()
 	
 	_current_state = ArtboxState.COMPLETED
 	interaction_text = "Art Displayed"
 	print("✨ Artbox sequence complete!")
+
+func _schedule_orient_animation() -> void:
+	await get_tree().create_timer(5.0).timeout
+	print("🔄 Step 2: Orienting to horizontal (during movement)...")
+	_current_state = ArtboxState.ORIENTING
+	await _orient_to_horizontal()
+
+func _schedule_unfold_animation() -> void:
+	await get_tree().create_timer(9.0).timeout
+	print("📂 Step 3: Unfolding panels (during movement)...")
+	_current_state = ArtboxState.UNFOLDING
+	await _unfold_all_panels()
 
 func _start_move_to_wall() -> void:
 	if not _go_to_wall_player:
@@ -142,20 +163,17 @@ func trigger_unfold_sequence() -> void:
 
 func _orient_to_horizontal() -> void:
 	if not _orient_to_horizontal_player:
-		print("Warning: Cannot orient - no 'orient to horizontal T' animation player found")
+		push_warning("Cannot orient - no 'orient to horizontal T' animation player found")
 		return
 	
-	print("🔄 Step 2: Orienting to horizontal...")
 	_current_state = ArtboxState.ORIENTING
 	
 	if _orient_to_horizontal_player.has_animation("orient to wall"):
 		_orient_to_horizontal_player.play("orient to wall")
 		await _orient_to_horizontal_player.animation_finished
-	
-	print("✅ Orient to horizontal complete!")
 
 func _unfold_all_panels() -> void:
-	print("📂 Step 3: Unfolding all panels simultaneously...")
+	print("📂 Unfolding all panels...")
 	_current_state = ArtboxState.UNFOLDING
 	
 	if unfold_sound:
@@ -172,16 +190,14 @@ func _unfold_all_panels() -> void:
 			anim_name = "fold out"
 		
 		if anim_name != "":
-			print("Playing animation: " + anim_name + " on " + str(anim_player.get_path()))
 			anim_player.play(anim_name)
 			started_animations += 1
 	
-	print("Started " + str(started_animations) + " unfold animations")
-	
-	await _wait_for_unfold_animations_to_complete()
-	
-	print("✅ All panels unfolded!")
-	artbox_unfolded.emit()
+	if started_animations > 0:
+		await _wait_for_unfold_animations_to_complete()
+		artbox_unfolded.emit()
+	else:
+		push_warning("No unfold animations were started!")
 
 func _wait_for_unfold_animations_to_complete() -> void:
 	var playing_animations = []
@@ -191,8 +207,6 @@ func _wait_for_unfold_animations_to_complete() -> void:
 			playing_animations.append(anim_player)
 	
 	if playing_animations.size() > 0:
-		print("Waiting for " + str(playing_animations.size()) + " unfold animations to complete...")
-		
 		for anim_player in playing_animations:
 			if anim_player.is_playing():
 				await anim_player.animation_finished

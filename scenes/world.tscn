@@ -153,6 +153,7 @@ _data = {
 resource_local_to_scene = true
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_ctatt"]
+resource_name = "_albedo"
 viewport_path = NodePath("mirror/SubViewport")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xgqkh"]
@@ -616,9 +617,11 @@ _data = {
 }
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_boombox"]
+size = Vector3(0.5506592, 1, 2.1767578)
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_e68xj"]
-height = 1.1479492
+height = 1.1965942
+radius = 0.5859375
 
 [sub_resource type="Animation" id="Animation_iexy4"]
 length = 0.001
@@ -667,6 +670,7 @@ size = Vector3(0.14697266, 0.10101318, 0.31085205)
 [sub_resource type="PlaneMesh" id="PlaneMesh_1dgkn"]
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_e68xj"]
+resource_name = "_albedo"
 viewport_path = NodePath("console log/SubViewport")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5hglh"]
@@ -938,26 +942,6 @@ omni_range = 0.249
 
 [node name="hvac group" type="Node3D" parent="."]
 
-[node name="hvac" type="CSGCylinder3D" parent="hvac group"]
-transform = Transform3D(1, 0, 0, 0, -1.3419395e-07, 1, 0, -3.07, -4.371139e-08, 1.4474611, 3.9866352, 8)
-material = SubResource("StandardMaterial3D_xo05s")
-
-[node name="hvac5" type="CSGCylinder3D" parent="hvac group"]
-transform = Transform3D(0.29, 0, 0, 0, -9.004546e-08, 0.29, 0, -2.06, -1.2676303e-08, 2.3573995, 3.9866352, 12.943859)
-material = SubResource("StandardMaterial3D_xo05s")
-
-[node name="hvac2" type="CSGCylinder3D" parent="hvac group"]
-transform = Transform3D(0.63, 0, 0, 0, -1.3419395e-07, 0.66, 0, -3.07, -2.8849517e-08, 1.430491, 4.003311, 2.2156167)
-material = SubResource("StandardMaterial3D_xo05s")
-
-[node name="hvac3" type="CSGCylinder3D" parent="hvac group"]
-transform = Transform3D(-2.4041263e-08, -3.52, -2.5352605e-08, 0, -1.538641e-07, 0.58, -0.55, 1.538641e-07, 1.1081976e-15, -2.005461, 3.9867706, 1.609428)
-material = SubResource("StandardMaterial3D_xo05s")
-
-[node name="hvac4" type="CSGCylinder3D" parent="hvac group"]
-transform = Transform3D(-3.016086e-08, -3.52, -3.6717566e-08, 0, -1.538641e-07, 0.84, -0.69, 1.538641e-07, 1.6049757e-15, 4.990994, 3.973661, 10.65699)
-material = SubResource("StandardMaterial3D_xo05s")
-
 [node name="pipe red" parent="hvac group" instance=ExtResource("16_oo54l")]
 transform = Transform3D(3.7252903e-09, 0.88005006, 0, -0.10005001, 2.9802322e-08, 0, 0, 0, 0.10005001, -0.16451585, 4.917156, 7.3508925)
 
@@ -969,6 +953,31 @@ transform = Transform3D(-7.450581e-09, -1.08255, 0, 0.21855, -2.9802322e-08, 0, 
 
 [node name="pipe gray" parent="hvac group" instance=ExtResource("19_xgqkh")]
 transform = Transform3D(0.25155005, -3.96611e-08, 7.450581e-09, -7.450581e-09, -7.2522084e-08, 0.25155005, -5.0629247e-09, -1.9705498, -9.257785e-09, -3.37526, 4.862561, 4.2031384)
+
+[node name="CSGCombiner3D" type="CSGCombiner3D" parent="hvac group"]
+transform = Transform3D(1, 0, 0, 0, -1.3419395e-07, 1, 0, -3.07, -4.371139e-08, 1.4474611, 3.9866352, 8)
+use_collision = true
+collision_layer = 2
+collision_mask = 0
+
+[node name="hvac" type="CSGCylinder3D" parent="hvac group/CSGCombiner3D"]
+material = SubResource("StandardMaterial3D_xo05s")
+
+[node name="hvac5" type="CSGCylinder3D" parent="hvac group/CSGCombiner3D"]
+transform = Transform3D(0.29, 0, 0, 0, 0.6710098, 0, 0, 0, 0.29, 0.90993834, -1.6103776, -2.3841858e-07)
+material = SubResource("StandardMaterial3D_xo05s")
+
+[node name="hvac2" type="CSGCylinder3D" parent="hvac group/CSGCombiner3D"]
+transform = Transform3D(0.63, 0, 0, 0, 1, -8.881784e-16, 0, 0, 0.66, -0.016970158, 1.884164, 0.016676188)
+material = SubResource("StandardMaterial3D_xo05s")
+
+[node name="hvac3" type="CSGCylinder3D" parent="hvac group/CSGCombiner3D"]
+transform = Transform3D(-2.4041263e-08, -3.52, -2.5352605e-08, 0.17915311, -5.0118597e-08, -8.258178e-09, 2.4041263e-08, -1.538641e-07, 0.58, -3.452922, 2.0816195, 0.00013566017)
+material = SubResource("StandardMaterial3D_xo05s")
+
+[node name="hvac4" type="CSGCylinder3D" parent="hvac group/CSGCombiner3D"]
+transform = Transform3D(-3.016086e-08, -3.52, -3.6717566e-08, 0.2247557, -5.0118597e-08, -1.1960121e-08, 3.016086e-08, -1.538641e-07, 0.84, 3.5435328, -0.8654692, -0.012974501)
+material = SubResource("StandardMaterial3D_xo05s")
 
 [node name="light switch box" parent="." instance=ExtResource("21_ts3gi")]
 transform = Transform3D(0.15, 0, 0, 0, 0.15, 0, 0, 0, 0.15, 3.7619934, 1.4918613, 2.850231)
@@ -1228,7 +1237,7 @@ transform = Transform3D(-0.029999997, 4.529874e-09, -1.9800707e-16, 0, -1.311341
 script = ExtResource("28_artbox_new")
 
 [node name="fold6" parent="artbox" instance=ExtResource("31_x2olw")]
-transform = Transform3D(0.018202739, 8.583139e-08, 0.9998307, 8.5831125e-08, 0.99999934, -8.740798e-08, -0.99983066, 8.740823e-08, 0.01820274, 0.9763241, 0, -6.7096863)
+transform = Transform3D(0.018202739, 8.583139e-08, 0.99983066, 8.583112e-08, 0.99999934, -8.7407976e-08, -0.9998306, 8.740823e-08, 0.018202739, 0.9763241, 0, -6.7096863)
 
 [node name="fold5" parent="artbox/fold6" instance=ExtResource("32_817gm")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -7.9999986, 0, 0)
@@ -1289,11 +1298,10 @@ audio_file = ExtResource("ministudio_audio")
 secret_audio_file = ExtResource("halloween_audio")
 switch_sound = ExtResource("boombox_switch")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="BoomBox"]
-transform = Transform3D(-0.90909094, 0, -1.3726891e-07, 0, 0.90909094, 0, 1.3726891e-07, 0, -0.90909094, 1.3331423, -0.1168406, 1.1993027)
+[node name="RigidBody3D" type="RigidBody3D" parent="BoomBox"]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="BoomBox/StaticBody3D"]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
+[node name="CollisionShape3D" type="CollisionShape3D" parent="BoomBox/RigidBody3D"]
+transform = Transform3D(-1.8181819, 0, -2.3841858e-07, 0, 1.8181821, 0, 2.3841858e-07, 0, -1.8181819, 0.10062218, -0.4236536, 0.1738863)
 shape = SubResource("BoxShape3D_boombox")
 
 [node name="RigidBody3D" type="RigidBody3D" parent="."]
@@ -1308,7 +1316,7 @@ script = ExtResource("46_e68xj")
 metadata/_custom_type_script = "uid://cbwg344irqecy"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBody3D"]
-transform = Transform3D(0.7000001, 0, 3.427267e-07, 0, 0.78, 0, -4.172325e-07, 0, 0.6, -0.23017645, 0.45898628, -0.044195175)
+transform = Transform3D(0.7000001, 0, 3.427267e-07, 0, 0.78, 0, -4.172325e-07, 0, 0.6, -0.255064, 0.46115243, -0.054019928)
 shape = SubResource("CylinderShape3D_e68xj")
 debug_color = Color(0.9490196, 0, 0.58431375, 0.8117647)
 
