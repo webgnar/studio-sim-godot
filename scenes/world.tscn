@@ -1,4 +1,4 @@
-[gd_scene load_steps=116 format=3 uid="uid://cnmivki1rop3b"]
+[gd_scene load_steps=117 format=3 uid="uid://cnmivki1rop3b"]
 
 [ext_resource type="Material" uid="uid://wwlsotlotycw" path="res://materials/wood.tres" id="1_4mrxx"]
 [ext_resource type="Script" uid="uid://d4bxpnphvld1d" path="res://scripts/PlayerController.gd" id="1_4wyf3"]
@@ -32,22 +32,21 @@
 [ext_resource type="PackedScene" uid="uid://tejn0hfpdhf7" path="res://models/interactables/cardboard box/box topL.glb" id="27_0nbtd"]
 [ext_resource type="Script" uid="uid://b56ugw7vd7hf1" path="res://scripts/ArtboxInteraction.gd" id="28_artbox_new"]
 [ext_resource type="PackedScene" uid="uid://65f11slkoyvf" path="res://models/artbox/2.glb" id="29_4kbfs"]
-[ext_resource type="Script" uid="uid://bknsj7r2b3wte" path="res://scripts/ClickableLightSwitch.gd" id="29_lightswitch"]
-[ext_resource type="Script" path="res://scripts/LightSwitchInteraction.gd" id="29_lightswitch_new"]
+[ext_resource type="Script" uid="uid://cftd54g3pgkr1" path="res://scripts/LightSwitchInteraction.gd" id="29_lightswitch_new"]
 [ext_resource type="PackedScene" uid="uid://dsv2g0obaio51" path="res://models/artbox/1.glb" id="30_f17e3"]
 [ext_resource type="PackedScene" uid="uid://bgyknl62rv8i2" path="res://models/artbox/3.glb" id="31_x2olw"]
 [ext_resource type="Script" uid="uid://d5m48bcsj83f" path="res://scripts/BoxInteraction.gd" id="31_x28ej"]
 [ext_resource type="PackedScene" uid="uid://bscbli4kb5p5n" path="res://models/artbox/4.glb" id="32_817gm"]
 [ext_resource type="PackedScene" uid="uid://cwhj4w40hwp52" path="res://models/artbox/5.glb" id="33_ggc52"]
 [ext_resource type="PackedScene" uid="uid://uwpxuwjxopad" path="res://models/artbox/6.glb" id="34_l8ah6"]
-[ext_resource type="Script" uid="uid://q64g52716sf3" path="res://scripts/ClickableBoombox.gd" id="36_boombox"]
-[ext_resource type="Script" path="res://scripts/BoomboxInteraction.gd" id="36_boombox_new"]
+[ext_resource type="Script" uid="uid://cdcxs0jsffsfb" path="res://scripts/BoomboxInteraction.gd" id="36_boombox_new"]
 [ext_resource type="PackedScene" uid="uid://ddornft2ln8sq" path="res://models/boomBox.glb" id="41_rga7q"]
 [ext_resource type="PackedScene" uid="uid://bhsyl3tj8hblj" path="res://scenes/brute trash can.tscn" id="46_18clu"]
 [ext_resource type="PackedScene" uid="uid://b7y2nsov4op11" path="res://models/paintings/alley.glb" id="47_4wdv8"]
 [ext_resource type="PackedScene" uid="uid://dxk1gusj3uuj7" path="res://models/interactables/fan/legs.glb" id="48_x28ej"]
 [ext_resource type="PackedScene" uid="uid://d334ujfwmx8lp" path="res://models/interactables/fan/cage.glb" id="49_1jxku"]
 [ext_resource type="PackedScene" uid="uid://bsdobk5wd61u" path="res://models/interactables/fan/blade.glb" id="50_1dgkn"]
+[ext_resource type="Script" uid="uid://dpnghglurvaq0" path="res://scripts/consolelog.gd" id="51_1jxku"]
 [ext_resource type="Script" uid="uid://dud4lcqfc1h5w" path="res://scripts/SimpleInteraction.gd" id="52_1dgkn"]
 [ext_resource type="AudioStream" uid="uid://84rjpuccue2i" path="res://sounds/boomboxSwitch.ogg" id="boombox_switch"]
 [ext_resource type="AudioStream" uid="uid://cemldiwrdj70h" path="res://sounds/halloween.ogg" id="halloween_audio"]
@@ -645,6 +644,15 @@ _data = {
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_5hglh"]
 
+[sub_resource type="PlaneMesh" id="PlaneMesh_1dgkn"]
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_e68xj"]
+viewport_path = NodePath("console log/SubViewport")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5hglh"]
+resource_local_to_scene = true
+albedo_texture = SubResource("ViewportTexture_e68xj")
+
 [node name="World" type="Node3D"]
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
@@ -1225,7 +1233,7 @@ transform = Transform3D(-0.029999997, 4.529874e-09, -1.9800707e-16, 0, -1.311341
 script = ExtResource("28_artbox_new")
 
 [node name="fold6" parent="artbox" instance=ExtResource("31_x2olw")]
-transform = Transform3D(0.018202757, 8.583139e-08, 0.99983174, 8.583121e-08, 0.99999934, -8.740807e-08, -0.9998317, 8.740823e-08, 0.01820276, 0.9763241, 0, -6.7096863)
+transform = Transform3D(0.018202757, 8.583139e-08, 0.9998317, 8.583121e-08, 0.99999934, -8.740807e-08, -0.9998316, 8.740823e-08, 0.018202757, 0.9763241, 0, -6.7096863)
 
 [node name="fold5" parent="artbox/fold6" instance=ExtResource("32_817gm")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -7.9999986, 0, 0)
@@ -1282,7 +1290,6 @@ transform = Transform3D(0.284849, 0, 0.0941331, 0, 0.29999998, 0, -0.0941331, 0,
 
 [node name="BoomboxInteraction" type="Node3D" parent="BoomBox"]
 script = ExtResource("36_boombox_new")
-boombox_id = "boombox_1"
 audio_file = ExtResource("ministudio_audio")
 secret_audio_file = ExtResource("halloween_audio")
 switch_sound = ExtResource("boombox_switch")
@@ -1330,3 +1337,25 @@ shape = SubResource("BoxShape3D_5hglh")
 script = ExtResource("52_1dgkn")
 message = "hello from the new interaction system"
 interaction_text = "Test Cube"
+
+[node name="console log" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 1, -2)
+
+[node name="SubViewport" type="SubViewport" parent="console log"]
+render_target_update_mode = 4
+
+[node name="Control" type="Control" parent="console log/SubViewport"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("51_1jxku")
+
+[node name="Label" type="Label" parent="console log/SubViewport/Control"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="console log"]
+mesh = SubResource("PlaneMesh_1dgkn")
+surface_material_override/0 = SubResource("StandardMaterial3D_5hglh")

@@ -13,3 +13,4 @@ res://scripts/BoxInteraction.gd
 res://scripts/ArtboxInteraction.gd
 res://scripts/BoomboxInteraction.gd
 res://scripts/LightSwitchInteraction.gd
+res://scripts/consolelog.gd
