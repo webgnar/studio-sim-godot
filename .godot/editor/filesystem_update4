@@ -1,6 +1,15 @@
 res://scenes/world.tscn
 res://shaders/mirror.gdshader
 res://shaders/outline.gdshader
-res://materials/alley.tres
+res://scripts/PlayerController.gd
+res://scripts/PlayerInteractionComponent.gd
+res://scripts/HUD.gd
+res://scripts/InteractionComponent.gd
+res://scripts/SimpleInteraction.gd
 res://scripts/ClickableBoombox.gd
-res://scenes/brute trash can.tscn
+res://scripts/mirror.gd
+res://scripts/PlayerAnimation.gd
+res://scripts/BoxInteraction.gd
+res://scripts/ArtboxInteraction.gd
+res://scripts/BoomboxInteraction.gd
+res://scripts/LightSwitchInteraction.gd

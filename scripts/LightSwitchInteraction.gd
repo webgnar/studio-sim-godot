@@ -1,0 +1,159 @@
+extends InteractionComponent
+class_name LightSwitchInteraction
+## Light switch interaction component - handles toggling lights on/off
+## Extends InteractionComponent to inherit common interaction functionality
+
+enum SwitchState {
+	OFF,
+	ON,
+	ANIMATING
+}
+
+signal lights_toggled(switch_id: String, is_on: bool)
+
+@export_group("Light Switch Settings")
+@export var switch_id: String = "switch_1"
+@export var switch_on_sound: AudioStream
+@export var switch_off_sound: AudioStream
+@export var controlled_light_paths: Array[String] = []
+@export var toggle_animation_name: String = "toggle"
+@export var starts_on: bool = false
+
+var _current_state: SwitchState = SwitchState.OFF
+var _animation_player: AnimationPlayer
+var _controlled_lights: Array[Light3D] = []
+
+func _on_ready() -> void:
+	interaction_text = "Toggle Switch"
+	_setup_animation_player()
+	_setup_controlled_lights()
+	_initialize_lights_state()
+	print("✅ LightSwitchInteraction ready: " + parent_object.name + " (ID: " + switch_id + ")")
+
+func _on_interacted(_player_interaction_component: PlayerInteractionComponent) -> void:
+	if _current_state != SwitchState.ANIMATING:
+		_toggle_switch()
+
+func _setup_animation_player() -> void:
+	_animation_player = find_animation_player()
+	if not _animation_player:
+		print("Warning: No AnimationPlayer found for light switch: " + parent_object.name)
+	else:
+		print("Found AnimationPlayer: " + str(_animation_player.get_path()))
+		var animation_list = _animation_player.get_animation_list()
+		print("Available animations: " + str(animation_list))
+		
+		if _animation_player.has_animation(toggle_animation_name):
+			print("Toggle animation '" + toggle_animation_name + "' found")
+		else:
+			print("Warning: Toggle animation '" + toggle_animation_name + "' NOT found")
+
+func _setup_controlled_lights() -> void:
+	_controlled_lights.clear()
+	
+	for light_path in controlled_light_paths:
+		# Try the path as-is first
+		var light_node = get_node_or_null(light_path)
+		
+		# If not found, try from parent_object
+		if not light_node:
+			light_node = parent_object.get_node_or_null(light_path)
+		
+		if light_node and light_node is Light3D:
+			_controlled_lights.append(light_node)
+			print("Light switch " + switch_id + " will control: " + light_path)
+		else:
+			print("Warning: Could not find light at path: " + light_path)
+	
+	print("Light switch " + switch_id + " controlling " + str(_controlled_lights.size()) + " lights")
+
+func _initialize_lights_state() -> void:
+	_current_state = SwitchState.ON if starts_on else SwitchState.OFF
+	
+	_toggle_controlled_lights(starts_on)
+	
+	if _animation_player and _animation_player.has_animation(toggle_animation_name):
+		if starts_on:
+			_animation_player.seek(_animation_player.get_animation(toggle_animation_name).length, true)
+		else:
+			_animation_player.seek(0.0, true)
+	
+	print("💡 Switch " + switch_id + " initialized: " + ("ON" if starts_on else "OFF"))
+
+func _toggle_switch() -> void:
+	if _current_state == SwitchState.ANIMATING:
+		return
+	
+	var new_state = SwitchState.ON if _current_state != SwitchState.ON else SwitchState.OFF
+	var is_turning_on = (new_state == SwitchState.ON)
+	
+	_current_state = SwitchState.ANIMATING
+	interaction_text = ""  # Hide prompt during animation
+	
+	print("💡 Toggling lights " + ("ON" if is_turning_on else "OFF") + " for switch: " + switch_id)
+	
+	if is_turning_on and switch_on_sound:
+		_play_sound(switch_on_sound)
+		print("🔊 Playing switch ON sound")
+	elif not is_turning_on and switch_off_sound:
+		_play_sound(switch_off_sound)
+		print("🔊 Playing switch OFF sound")
+	
+	if _animation_player and _animation_player.has_animation(toggle_animation_name):
+		print("Playing animation: " + toggle_animation_name + " " + ("forward" if is_turning_on else "backward"))
+		if is_turning_on:
+			_animation_player.play(toggle_animation_name)
+		else:
+			_animation_player.play_backwards(toggle_animation_name)
+		
+		print("Waiting for animation to finish...")
+		await _animation_player.animation_finished
+		print("Animation finished!")
+	else:
+		print("Skipping animation - not found or no animation player")
+	
+	_toggle_controlled_lights(is_turning_on)
+	
+	_current_state = new_state
+	interaction_text = "Toggle Switch"
+	
+	lights_toggled.emit(switch_id, is_turning_on)
+	
+	print("✅ Switch " + switch_id + " is now " + ("ON" if is_turning_on else "OFF"))
+
+func _toggle_controlled_lights(turn_on: bool) -> void:
+	print("_toggle_controlled_lights called with turn_on: " + str(turn_on))
+	print("Controlled lights array size: " + str(_controlled_lights.size()))
+	
+	if _controlled_lights.size() == 0:
+		print("ERROR: No controlled lights found!")
+		return
+		
+	for i in range(_controlled_lights.size()):
+		var light = _controlled_lights[i]
+		if light and is_instance_valid(light):
+			light.visible = turn_on
+			print("  Light " + light.name + " turned " + ("ON" if turn_on else "OFF"))
+		else:
+			print("  ERROR: Light at index " + str(i) + " is null or invalid!")
+
+func get_switch_state() -> SwitchState:
+	return _current_state
+
+func is_switch_on() -> bool:
+	return _current_state == SwitchState.ON
+
+func force_switch_on() -> void:
+	if _current_state != SwitchState.ON:
+		_toggle_switch()
+
+func force_switch_off() -> void:
+	if _current_state != SwitchState.OFF:
+		_toggle_switch()
+
+func add_controlled_light(light_path: String) -> void:
+	controlled_light_paths.append(light_path)
+	_setup_controlled_lights()
+
+func set_switch_id(new_id: String) -> void:
+	switch_id = new_id

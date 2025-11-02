@@ -417,12 +417,12 @@ func get_distance_to_player() -> float:
 
 func _update_distance_info() -> void:
 	# This runs every frame when radio is playing, for monitoring
-	var distance = get_distance_to_player()
+	var _distance = get_distance_to_player()  # Track distance for potential future use
 	
 	# Optional: Print distance info every few seconds for debugging
 	# Uncomment the next 3 lines if you want to see distance info in console
 	# if Engine.get_process_frames() % 180 == 0:  # Every ~3 seconds at 60fps
-	#     print("📻 Distance to boombox: " + str(distance) + "m (max: " + str(max_hearing_distance) + "m)")
+	#     print("📻 Distance to boombox: " + str(_distance) + "m (max: " + str(max_hearing_distance) + "m)")
 	
 	# The AudioStreamPlayer3D automatically handles volume attenuation based on distance
 	# But you could add custom effects here if needed

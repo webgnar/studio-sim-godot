@@ -31,6 +31,9 @@ var _camera: Camera3D
 # Animation controller reference
 var _player_animation: PlayerAnimation
 
+# Interaction component reference
+var _interaction_component: PlayerInteractionComponent
+
 # Head bob variables
 var _bob_time: float = 0.0
 var _original_camera_position: Vector3
@@ -46,6 +49,9 @@ var current_speed: float:
 # --- GODOT METHODS ---
 
 func _ready() -> void:
+	# Add player to group for easy reference
+	add_to_group("player")
+	
 	# Get a reference to the Camera3D node.
 	# Try multiple possible paths for the camera
 	if has_node("Head/Camera3D"):
@@ -93,8 +99,25 @@ func _ready() -> void:
 			print("  - " + child.name + " (" + child.get_class() + ")")
 	else:
 		print("PlayerAnimation script found and connected!")
+	
+	# Setup interaction component
+	_setup_interaction_component()
 
-func _process(delta):
+func _setup_interaction_component() -> void:
+	# Check if PlayerInteractionComponent already exists as a child
+	for child in get_children():
+		if child is PlayerInteractionComponent:
+			_interaction_component = child
+			print("Found existing PlayerInteractionComponent")
+			return
+	
+	# If not found, create one programmatically
+	_interaction_component = PlayerInteractionComponent.new()
+	_interaction_component.name = "PlayerInteractionComponent"
+	add_child(_interaction_component)
+	print("Created PlayerInteractionComponent programmatically")
+
+func _process(_delta) -> void:
 	# Update mirrors with camera transform
 	if _camera:
 		get_tree().call_group("mirrors", "update_cam", _camera.global_transform)
@@ -206,9 +229,9 @@ func _unhandled_input(event: InputEvent) -> void:
 			_camera.rotate_x(-mouse_motion.relative.y * sensitivity)
 
 			# Clamp the vertical rotation to prevent the camera from flipping over.
-			var rotation := _camera.rotation
-			rotation.x = clamp(rotation.x, deg_to_rad(-80), deg_to_rad(80))
-			_camera.rotation = rotation
+			var cam_rotation := _camera.rotation
+			cam_rotation.x = clamp(cam_rotation.x, deg_to_rad(-80), deg_to_rad(80))
+			_camera.rotation = cam_rotation
 
 	# --- MOUSE CLICK HANDLING ---
 	# Handle mouse clicks to recapture mouse or interact with objects

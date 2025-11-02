@@ -1,4 +1,4 @@
-[gd_scene load_steps=111 format=3 uid="uid://cnmivki1rop3b"]
+[gd_scene load_steps=116 format=3 uid="uid://cnmivki1rop3b"]
 
 [ext_resource type="Material" uid="uid://wwlsotlotycw" path="res://materials/wood.tres" id="1_4mrxx"]
 [ext_resource type="Script" uid="uid://d4bxpnphvld1d" path="res://scripts/PlayerController.gd" id="1_4wyf3"]
@@ -13,6 +13,7 @@
 [ext_resource type="Material" uid="uid://re8gmfn1nbgt" path="res://materials/wall.tres" id="5_71j4m"]
 [ext_resource type="PackedScene" uid="uid://boyehvhrdbdi6" path="res://models/props/lights.glb" id="6_jhx03"]
 [ext_resource type="PackedScene" uid="uid://ygw6d51stbbw" path="res://scenes/human.tscn" id="6_qfnet"]
+[ext_resource type="PackedScene" path="res://scenes/HUD.tscn" id="14_1jxku"]
 [ext_resource type="Texture2D" uid="uid://b3ty4ce0xhyow" path="res://sprites/hvac.jpg" id="14_o8fc1"]
 [ext_resource type="PackedScene" uid="uid://chnkextlwxa7d" path="res://models/props/window.glb" id="15_xo05s"]
 [ext_resource type="PackedScene" uid="uid://xeaph8bqk1j1" path="res://models/props/pipe_red.glb" id="16_oo54l"]
@@ -29,25 +30,26 @@
 [ext_resource type="Shader" uid="uid://br4qh8mg5yosn" path="res://shaders/mirror.gdshader" id="25_xgqkh"]
 [ext_resource type="PackedScene" uid="uid://d0y6fk05wn5dc" path="res://models/interactables/cardboard box/box.glb" id="26_ts3gi"]
 [ext_resource type="PackedScene" uid="uid://tejn0hfpdhf7" path="res://models/interactables/cardboard box/box topL.glb" id="27_0nbtd"]
-[ext_resource type="Script" uid="uid://c47e2pgvr3gnn" path="res://scripts/ClickableBox.gd" id="27_37qwj"]
-[ext_resource type="Script" uid="uid://gtfub3c0olxj" path="res://scripts/ClickableArtbox.gd" id="28_artbox"]
+[ext_resource type="Script" uid="uid://b56ugw7vd7hf1" path="res://scripts/ArtboxInteraction.gd" id="28_artbox_new"]
 [ext_resource type="PackedScene" uid="uid://65f11slkoyvf" path="res://models/artbox/2.glb" id="29_4kbfs"]
 [ext_resource type="Script" uid="uid://bknsj7r2b3wte" path="res://scripts/ClickableLightSwitch.gd" id="29_lightswitch"]
+[ext_resource type="Script" path="res://scripts/LightSwitchInteraction.gd" id="29_lightswitch_new"]
 [ext_resource type="PackedScene" uid="uid://dsv2g0obaio51" path="res://models/artbox/1.glb" id="30_f17e3"]
 [ext_resource type="PackedScene" uid="uid://bgyknl62rv8i2" path="res://models/artbox/3.glb" id="31_x2olw"]
+[ext_resource type="Script" uid="uid://d5m48bcsj83f" path="res://scripts/BoxInteraction.gd" id="31_x28ej"]
 [ext_resource type="PackedScene" uid="uid://bscbli4kb5p5n" path="res://models/artbox/4.glb" id="32_817gm"]
 [ext_resource type="PackedScene" uid="uid://cwhj4w40hwp52" path="res://models/artbox/5.glb" id="33_ggc52"]
 [ext_resource type="PackedScene" uid="uid://uwpxuwjxopad" path="res://models/artbox/6.glb" id="34_l8ah6"]
 [ext_resource type="Script" uid="uid://q64g52716sf3" path="res://scripts/ClickableBoombox.gd" id="36_boombox"]
+[ext_resource type="Script" path="res://scripts/BoomboxInteraction.gd" id="36_boombox_new"]
 [ext_resource type="PackedScene" uid="uid://ddornft2ln8sq" path="res://models/boomBox.glb" id="41_rga7q"]
 [ext_resource type="PackedScene" uid="uid://bhsyl3tj8hblj" path="res://scenes/brute trash can.tscn" id="46_18clu"]
 [ext_resource type="PackedScene" uid="uid://b7y2nsov4op11" path="res://models/paintings/alley.glb" id="47_4wdv8"]
 [ext_resource type="PackedScene" uid="uid://dxk1gusj3uuj7" path="res://models/interactables/fan/legs.glb" id="48_x28ej"]
 [ext_resource type="PackedScene" uid="uid://d334ujfwmx8lp" path="res://models/interactables/fan/cage.glb" id="49_1jxku"]
 [ext_resource type="PackedScene" uid="uid://bsdobk5wd61u" path="res://models/interactables/fan/blade.glb" id="50_1dgkn"]
+[ext_resource type="Script" uid="uid://dud4lcqfc1h5w" path="res://scripts/SimpleInteraction.gd" id="52_1dgkn"]
 [ext_resource type="AudioStream" uid="uid://84rjpuccue2i" path="res://sounds/boomboxSwitch.ogg" id="boombox_switch"]
-[ext_resource type="AudioStream" uid="uid://8so1mqtnfhkh" path="res://sounds/box open 1.ogg" id="box_open_1"]
-[ext_resource type="AudioStream" uid="uid://bkyiswhv5fuaf" path="res://sounds/box open 2.ogg" id="box_open_2"]
 [ext_resource type="AudioStream" uid="uid://cemldiwrdj70h" path="res://sounds/halloween.ogg" id="halloween_audio"]
 [ext_resource type="AudioStream" uid="uid://bw0ig22tombxc" path="res://sounds/ministudio.ogg" id="ministudio_audio"]
 
@@ -601,6 +603,21 @@ _data = {
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_boombox"]
 
+[sub_resource type="Animation" id="Animation_iexy4"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+
 [sub_resource type="Animation" id="Animation_5hglh"]
 resource_name = "spin"
 length = 0.1
@@ -618,26 +635,15 @@ tracks/0/keys = {
 "values": [Vector3(0, 0, 0), Vector3(0, 0, 6.2831855)]
 }
 
-[sub_resource type="Animation" id="Animation_iexy4"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:rotation")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(0, 0, 0)]
-}
-
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_npbic"]
 _data = {
 &"RESET": SubResource("Animation_iexy4"),
 &"spin": SubResource("Animation_5hglh")
 }
+
+[sub_resource type="BoxMesh" id="BoxMesh_e68xj"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_5hglh"]
 
 [node name="World" type="Node3D"]
 
@@ -798,6 +804,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.64091873, 0)
 
 [node name="Camera3D" type="Camera3D" parent="Player/Head"]
 
+[node name="HUD" parent="Player" instance=ExtResource("14_1jxku")]
+
 [node name="windows" type="Node3D" parent="."]
 transform = Transform3D(0.07, 0, 0, 0, 0.08, 0, 0, 0, 0.07, -2.5211992, 2.1913948, -6.7073708)
 
@@ -929,7 +937,9 @@ transform = Transform3D(0.15, 0, 0, 0, 0.15, 0, 0, 0, 0.15, 3.7619934, 1.4918613
 
 [node name="lightswitch1" parent="light switch box" instance=ExtResource("22_0nbtd")]
 transform = Transform3D(0.11477976, -0.067848116, 0, 0.067848116, 0.11477976, 0, 0, 0, 0.1333333, -0.16674995, -0.052223206, -0.31477928)
-script = ExtResource("29_lightswitch")
+
+[node name="LightSwitchInteraction" type="Node3D" parent="light switch box/lightswitch1"]
+script = ExtResource("29_lightswitch_new")
 switch_id = "main_room_lights"
 switch_on_sound = ExtResource("23_l8ah6")
 switch_off_sound = ExtResource("24_e75v4")
@@ -949,7 +959,9 @@ shape = SubResource("BoxShape3D_817gm")
 
 [node name="lightwitch2" parent="light switch box" instance=ExtResource("22_0nbtd")]
 transform = Transform3D(0.1147798, -0.06784814, 0, 0.06784814, 0.1147798, 0, 0, 0, 0.13333331, -0.16674995, -0.052223206, 0.33827782)
-script = ExtResource("29_lightswitch")
+
+[node name="LightSwitchInteraction" type="Node3D" parent="light switch box/lightwitch2"]
+script = ExtResource("29_lightswitch_new")
 switch_id = "ceiling_light2"
 switch_on_sound = ExtResource("23_l8ah6")
 switch_off_sound = ExtResource("24_e75v4")
@@ -971,7 +983,9 @@ transform = Transform3D(0.15, 0, 0, 0, 0.15, 0, 0, 0, 0.15, 3.7406611, 1.6819067
 
 [node name="lightswitch1" parent="light switch box2" instance=ExtResource("22_0nbtd")]
 transform = Transform3D(0.1147798, -0.06784814, 0, 0.06784814, 0.1147798, 0, 0, 0, 0.13333331, -0.16674995, -0.052223206, -0.31477928)
-script = ExtResource("29_lightswitch")
+
+[node name="LightSwitchInteraction" type="Node3D" parent="light switch box2/lightswitch1"]
+script = ExtResource("29_lightswitch_new")
 switch_id = "light3_and_spots"
 switch_on_sound = ExtResource("23_l8ah6")
 switch_off_sound = ExtResource("24_e75v4")
@@ -990,7 +1004,9 @@ shape = SubResource("BoxShape3D_l8ah6")
 
 [node name="lightwitch2" parent="light switch box2" instance=ExtResource("22_0nbtd")]
 transform = Transform3D(0.1147798, -0.06784814, 0, 0.06784814, 0.1147798, 0, 0, 0, 0.13333331, -0.16674995, -0.052223206, 0.33827782)
-script = ExtResource("29_lightswitch")
+
+[node name="LightSwitchInteraction" type="Node3D" parent="light switch box2/lightwitch2"]
+script = ExtResource("29_lightswitch_new")
 switch_id = "unused_switch"
 switch_on_sound = ExtResource("23_l8ah6")
 switch_off_sound = ExtResource("24_e75v4")
@@ -1166,10 +1182,9 @@ transform = Transform3D(1.2796953e-07, 0.21836469, 0.9758673, -2.8635068e-08, 0.
 
 [node name="cardboard box" parent="." instance=ExtResource("26_ts3gi")]
 transform = Transform3D(0.33, 0, 0, 0, 0.33, 0, 0, 0, 0.33, 0.23469448, 0.29857874, 8.047825)
-script = ExtResource("27_37qwj")
-flap_1_open_sound = ExtResource("box_open_1")
-flap_2_open_sound = ExtResource("box_open_2")
-sequence_buffer = 0.7
+
+[node name="BoxInteraction" type="Node3D" parent="cardboard box"]
+script = ExtResource("31_x28ej")
 
 [node name="lid1" parent="cardboard box" instance=ExtResource("27_0nbtd")]
 transform = Transform3D(7.54979e-08, 0, -1, 0, 1, 0, 1, 0, 7.54979e-08, 0.0021412373, 1.230222, 0.9953356)
@@ -1205,10 +1220,12 @@ libraries = {
 
 [node name="artbox" type="Node3D" parent="."]
 transform = Transform3D(-0.029999997, 4.529874e-09, -1.9800707e-16, 0, -1.3113416e-09, -0.029999997, -4.529874e-09, -0.03, 1.3113416e-09, 0.5, 0.1, 8)
-script = ExtResource("28_artbox")
+
+[node name="ArtboxInteraction" type="Node3D" parent="artbox"]
+script = ExtResource("28_artbox_new")
 
 [node name="fold6" parent="artbox" instance=ExtResource("31_x2olw")]
-transform = Transform3D(0.018202761, 8.583139e-08, 0.99983186, 8.5831225e-08, 0.99999934, -8.740808e-08, -0.9998318, 8.740823e-08, 0.018202761, 0.9763241, 0, -6.7096863)
+transform = Transform3D(0.018202757, 8.583139e-08, 0.99983174, 8.583121e-08, 0.99999934, -8.740807e-08, -0.9998317, 8.740823e-08, 0.01820276, 0.9763241, 0, -6.7096863)
 
 [node name="fold5" parent="artbox/fold6" instance=ExtResource("32_817gm")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -7.9999986, 0, 0)
@@ -1260,13 +1277,12 @@ libraries = {
 &"": SubResource("AnimationLibrary_ggc52")
 }
 
-[node name="artbox container" type="Node3D" parent="."]
-transform = Transform3D(-0.029999997, 4.529874e-09, -1.9800707e-16, 0, -1.3113416e-09, -0.029999997, -4.529874e-09, -0.03, 1.3113416e-09, 0.587, 0.09874722, 9.862482)
-
 [node name="BoomBox" parent="." instance=ExtResource("41_rga7q")]
 transform = Transform3D(0.284849, 0, 0.0941331, 0, 0.29999998, 0, -0.0941331, 0, 0.284849, 2.1454182, 0.44880646, -5.434042)
-script = ExtResource("36_boombox")
-interaction_distance = 2.0
+
+[node name="BoomboxInteraction" type="Node3D" parent="BoomBox"]
+script = ExtResource("36_boombox_new")
+boombox_id = "boombox_1"
 audio_file = ExtResource("ministudio_audio")
 secret_audio_file = ExtResource("halloween_audio")
 switch_sound = ExtResource("boombox_switch")
@@ -1297,3 +1313,20 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.10343838, -0.08967781, 0.51
 libraries = {
 &"": SubResource("AnimationLibrary_npbic")
 }
+autoplay = "spin"
+
+[node name="TestCube" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 1, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="TestCube"]
+mesh = SubResource("BoxMesh_e68xj")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="TestCube"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TestCube/StaticBody3D"]
+shape = SubResource("BoxShape3D_5hglh")
+
+[node name="Node3D" type="Node3D" parent="TestCube"]
+script = ExtResource("52_1dgkn")
+message = "hello from the new interaction system"
+interaction_text = "Test Cube"

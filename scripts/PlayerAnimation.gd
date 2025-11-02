@@ -29,7 +29,7 @@ func update_animation_state(velocity: Vector3, is_on_floor: bool, is_sprinting: 
 		print("AnimationPlayer is null!")
 		return
 	
-	var was_moving := _is_moving
+	var _was_moving := _is_moving  # Track previous state for potential future use
 	_is_moving = velocity.length() > 0.1
 	_is_sprinting = is_sprinting and _is_moving
 	

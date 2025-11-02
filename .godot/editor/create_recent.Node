@@ -1,11 +1,11 @@
-AnimationPlayer
 Node3D
-FlowContainer
-Decal
-MeshInstance3D
-Area3D
 CollisionShape3D
 StaticBody3D
+MeshInstance3D
+AnimationPlayer
+FlowContainer
+Decal
+Area3D
 OmniLight3D
 AnimationTree
 Camera3D

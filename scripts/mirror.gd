@@ -8,7 +8,9 @@ func _ready():
 	var viewport = $SubViewport
 	viewport.size = Vector2(256, 256)  # Adjust resolution as needed
 	viewport.own_world_3d = false  # Use the same world as the main scene
-	viewport.world_3d = null  # Clear the custom world to use the main scene's world
+	# Note: Setting world_3d to null can cause warnings, but it's needed for mirror functionality
+	if viewport.world_3d:
+		viewport.world_3d = null  # Clear the custom world to use the main scene's world
 	viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	
 	# Prevent the mirror camera from seeing the mirror itself (avoid infinite loop)
@@ -28,7 +30,7 @@ func _ready():
 		material.albedo_texture = viewport.get_texture()
 		print("Material updated with viewport texture")
 
-func _process(delta):
+func _process(_delta):
 	if player_camera:
 		# Get the mirror's plane (assuming the mirror faces along its local Z-axis)
 		var mirror_normal = global_transform.basis.y.normalized()
