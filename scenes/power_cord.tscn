@@ -1,0 +1,38 @@
+[gd_scene load_steps=6 format=3 uid="uid://1ip40i6aklgh"]
+
+[ext_resource type="Script" uid="uid://dqp07gb58nlbf" path="res://scripts/components/PowerCord.gd" id="1_d3bg4"]
+[ext_resource type="Script" uid="uid://d1d8fhujnbpfy" path="res://scripts/components/PowerCordPlugComponent.gd" id="2_lrwj0"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_d3bg4"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bex05"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_pjwud"]
+material = SubResource("StandardMaterial3D_bex05")
+
+[node name="Node3D" type="Node3D" node_paths=PackedStringArray("anchor_point", "plug_body", "plug_attachment_point")]
+script = ExtResource("1_d3bg4")
+anchor_point = NodePath("AnchorPoint")
+plug_body = NodePath("plug")
+plug_attachment_point = NodePath("plug/PlugAttachment")
+cord_thickness = 0.02
+
+[node name="AnchorPoint" type="Marker3D" parent="."]
+
+[node name="plug" type="RigidBody3D" parent="."]
+collision_layer = 8
+collision_mask = 7
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="plug"]
+transform = Transform3D(0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, 0, 0, 0)
+shape = SubResource("SphereShape3D_d3bg4")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="plug"]
+transform = Transform3D(0.14, 0, 0, 0, 0.14, 0, 0, 0, 0.14, 0, 0, 0)
+mesh = SubResource("CapsuleMesh_pjwud")
+
+[node name="Node3D" type="Node3D" parent="plug"]
+script = ExtResource("2_lrwj0")
+
+[node name="PlugAttachment" type="Marker3D" parent="plug"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)

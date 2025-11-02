@@ -1,7 +1,16 @@
 63f7b34db8d8cdea90c76aacccf841ec
-::res://::1762040848
+::res://::1762057570
+COGITO_INTERACTION_SYSTEM_ANALYSIS.md::TextFile::-1::1762042271::0::1::::<><><>0<>0<><>::
+COGITO_PICKUP_IMPLEMENTATION_NOTES.md::TextFile::-1::1762048879::0::1::::<><><>0<>0<><>::
+COGITO_SOURCE_FILES_NEEDED.md::TextFile::-1::1762048580::0::1::::<><><>0<>0<><>::
+DEBUG_CONSOLE_PLAN.md::TextFile::-1::1762049798::0::1::::<><><>0<>0<><>::
 export_presets.cfg::TextFile::-1::1761804468::0::1::::<><><>0<>0<><>::
+GLB_OUTLET_SETUP.md::TextFile::-1::1762054418::0::1::::<><><>0<>0<><>::
 icon.svg::CompressedTexture2D::2126835338060944900::1760937980::1761029103::1::::<><><>0<>0<>c511fe3db7501179497f362af9747f17<>res://.godot/imported/icon.svg-218a8f2b3041327d8a5756f3a245f83b.ctex::
+PHASE1_SETUP_INSTRUCTIONS.md::TextFile::-1::1762050886::0::1::::<><><>0<>0<><>::
+PICKUP_SYSTEM_ROADMAP.md::TextFile::-1::1762049798::0::1::::<><><>0<>0<><>::
+POWER_CORD_SETUP_GUIDE.md::TextFile::-1::1762054418::0::1::::<><><>0<>0<><>::
+REFACTOR_PLAN.md::TextFile::-1::1762043942::0::1::::<><><>0<>0<><>::
 ::res://materials/::1761807134
 alley.tres::StandardMaterial3D::8419763837814347599::1761807134::0::1::::<><><>0<>0<><>::uid://b2ttptaroo824::::res://models/paintings/alley_Painting_Alley_12.jpg
 brickwhite.tres::StandardMaterial3D::2104820844770818005::1761081658::0::1::::<><><>0<>0<><>::uid://djd4xqb57hhr7::::res://sprites/brick_bump.jpg<>uid://dv58j61xl61oc::::res://sprites/brick_diffuse_ambient.png<>uid://bqkunprbwvn68::::res://sprites/brick_diffuse_normal.png
@@ -12,10 +21,10 @@ skeletonskin.tres::StandardMaterial3D::2398893118778631077::1761713575::0::1::::
 wall.tres::StandardMaterial3D::1203482867017653707::1761080715::0::1::::<><><>0<>0<><>::uid://fgkr11lem74k::::res://sprites/wall-new.jpg<>uid://bw6anp2m20wyf::::res://sprites/normals/wall-new_ambient.png<>uid://dhtvy1vi0gvek::::res://sprites/normals/wall-new_normal.png
 windowglass.tres::StandardMaterial3D::9068357911622963793::1761713651::0::1::::<><><>0<>0<><>::uid://cqmp06etflq7n::::res://models/props/window_0.png
 wood.tres::StandardMaterial3D::1590271667034205650::1761019173::0::1::::<><><>0<>0<><>::uid://cbn0d3riillev::::res://sprites/wood.jpg<>uid://dyuvtxhp260rj::::res://sprites/normals/wood_ambient.png<>uid://3smflfln5x7y::::res://sprites/normals/wood_specular.png<>uid://bifvpuur5heg3::::res://sprites/normals/wood_normal.png
-::res://models/::1761808917
+::res://models/::1762054426
 boomBox.glb::PackedScene::7399785567958071216::1761808917::1761808917::1::::<><><>0<>0<>b2feef0a4505d39f48191e9ccb6bf884<>res://.godot/imported/boomBox.glb-80967b1318c7458f2ae0fee9c007a11c.scn::uid://cgf3xh63fficl::::res://models/boomBox_0.png
 boomBox_0.png::CompressedTexture2D::5206037883873436199::1761726424::1761808917::1::::<><><>0<>0<>b512ecf42ed53a07dcd9aac696dd106e<>res://.godot/imported/boomBox_0.png-4d87b48cfc8e8f9850dcbf51ebaa9c88.s3tc.ctex::
-Brute_L_NoMaterial.glb::PackedScene::8593710297391302209::1761799888::1761801133::1::::<><><>0<>0<>6c840d8723d6b759ea14a48724c719d6<>res://.godot/imported/Brute_L_NoMaterial.glb-3c75d1ae09c9dffd03f26c32b1d05656.scn::
+Brute_L_NoMaterial.glb::PackedScene::8593710297391302209::1761799888::1762054426::1::::<><><>0<>0<>f01bd803923d41d8cae98504bf41227e<>res://.godot/imported/Brute_L_NoMaterial.glb-3c75d1ae09c9dffd03f26c32b1d05656.scn::
 fireescape2.gltf::PackedScene::8251067840553398301::1761799326::1761799434::1::::<><><>0<>0<>7a42bab0728598de51c66129d09bc658<>res://.godot/imported/fireescape2.gltf-e6e347a078ff5ecb19d9b43628536827.scn::uid://biq8i1gncbf6x::::res://models/fireescape2_0.png
 fireescape2_0.png::CompressedTexture2D::2982980799444158609::1761799327::1761799327::1::::<><><>0<>0<>3b7b309b44fecf5191278c821d641a1e<>res://.godot/imported/fireescape2_0.png-a83f5a50747a5e9bca0f254ce7971c7e.s3tc.ctex::
 ::res://models/artbox/::1761713556
@@ -38,9 +47,11 @@ cube_full_2.png::CompressedTexture2D::8020523631721481283::1761637710::176163771
 cube_full_3.png::CompressedTexture2D::5621435126292450646::1761637710::1761637710::1::::<><><>0<>0<>e1cc527a8927b89a163c7a2657e98a5f<>res://.godot/imported/cube_full_3.png-2dadf42060c3492a60d0c5266a32389f.s3tc.ctex::
 cube_full_4.png::CompressedTexture2D::5379237190578598070::1761637710::1761637710::1::::<><><>0<>0<>c846c181786631381bedfb3fb7e2d5a2<>res://.godot/imported/cube_full_4.png-2b2a8a8e334deb7c81ecb57ed6d99cff.s3tc.ctex::
 cube_full_5.png::CompressedTexture2D::8550743911448765214::1761637710::1761637710::1::::<><><>0<>0<>e06f3fb03e38d334fe8d0d86d1b1b42c<>res://.godot/imported/cube_full_5.png-124382756187ab7fea92e1468202b8e9.s3tc.ctex::
-::res://models/interactables/::1761987744
+::res://models/interactables/::1762062065
 light_switch.glb::PackedScene::3492904111526599247::1761094364::1761715158::1::::<><><>0<>0<>3da0b425c4be73b996fa1b23a0ca3449<>res://.godot/imported/light_switch.glb-923cb790240f242bd6e1a23b5e636bc2.scn::uid://ci1se556aoso1::::res://models/interactables/light_switch_0.png
 light_switch_0.png::CompressedTexture2D::5389127610595137806::1761094366::1761715158::1::::<><><>0<>0<>b9cafcbecd7dd4c01d11a2755a21b304<>res://.godot/imported/light_switch_0.png-3618fe5a22c5c81392a09984b62b914e.s3tc.ctex::
+plug.glb::PackedScene::7399232014946269389::1762062065::1762062066::1::::<><><>0<>0<>b04f50cf174bec8aa06793d71591aa7b<>res://.godot/imported/plug.glb-45823c2a8f2519a991324884d68c6507.scn::uid://dk3d81vpvkddr::::res://models/interactables/plug_0.png
+plug_0.png::CompressedTexture2D::7919195545508449219::1762062065::1762062066::1::::<><><>0<>0<>a7f0b565a7dd9e8a264220ff2fa6d578<>res://.godot/imported/plug_0.png-8c05f1bbdc7d9b03c5b32aea25fc85bc.s3tc.ctex::
 ::res://models/interactables/cardboard box/::1761798830
 box topL.glb::PackedScene::1342416532539249102::1761532355::1761713688::1::::<><><>0<>0<>dfc4f31b827ec3044f39b19df7abd8f6<>res://.godot/imported/box topL.glb-608cc71e53d346959215768e6fa32fce.scn::uid://dd0mo6rqyuw5x::::res://models/interactables/cardboard box/box topL_0.png
 box topL_0.png::CompressedTexture2D::7422193286118141771::1761532367::1761713687::1::::<><><>0<>0<>eff4e5cbd5179d587bcc7421accebdb3<>res://.godot/imported/box topL_0.png-421a0c258d7e20ec5b91c6c8d38cb2c8.s3tc.ctex::
@@ -90,25 +101,43 @@ spotlight_1.png::CompressedTexture2D::8913767494135283862::1761094365::176171365
 window.glb::PackedScene::5291615734676921467::1761094364::1761713652::1::::<><><>0<>0<>4e1f62c3310c47aac3e116becdc20d04<>res://.godot/imported/window.glb-7084b929be5a813770d7c2361ad9a348.scn::uid://d2g1sathpvh5b::::res://materials/windowglass.tres<>uid://y2n84osgfxtl::::res://models/props/window_1.png
 window_0.png::CompressedTexture2D::5921592433656035733::1761094364::1761713651::1::::<><><>0<>0<>bb4be02aabb0cc95013b099018902519<>res://.godot/imported/window_0.png-1450b2024545dc31d8ff099a39770a7d.s3tc.ctex::
 window_1.png::CompressedTexture2D::1741120244407712181::1761094364::1761713651::1::::<><><>0<>0<>0aef58b4aee8fb99cbd6cf4b6f113b28<>res://.godot/imported/window_1.png-09e374cdf04aa419789d5b8918df04e0.s3tc.ctex::
-::res://scenes/::1761989238
-brute trash can.tscn::PackedScene::2916379740750135211::1761809526::0::1::::<><><>0<>0<><>::uid://duo4fg6er7gvp::::res://models/Brute_L_NoMaterial.glb<>uid://dcu1lw1rmyk::::res://sprites/trashcan/TexturesCom_Plastic_PolypropyleneRough_1K_normal.png<>uid://cubccvt5724u3::::res://sprites/trashcan/Brute_Logo.png<>uid://ccc82eucwlhbu::::res://sprites/trashcan/TexturesCom_Plastic_PolypropyleneRough_1K_roughness.png
+::res://scenes/::1762061305
+brute trash can.tscn::PackedScene::2916379740750135211::1762052451::0::1::::<><><>0<>0<><>::uid://duo4fg6er7gvp::::res://models/Brute_L_NoMaterial.glb<>uid://dcu1lw1rmyk::::res://sprites/trashcan/TexturesCom_Plastic_PolypropyleneRough_1K_normal.png<>uid://cubccvt5724u3::::res://sprites/trashcan/Brute_Logo.png<>uid://ccc82eucwlhbu::::res://sprites/trashcan/TexturesCom_Plastic_PolypropyleneRough_1K_roughness.png
+HUD.tscn::PackedScene::5636917421566811801::1762050670::0::1::::<><><>0<>0<><>::uid://d2t2wfmgd2wmn::::res://scripts/HUD.gd
 human.tscn::PackedScene::1698309852409355828::1761713575::0::1::::<><><>0<>0<><>::uid://sx0bao2oqis7::::res://models/player/human skeleton rewrite.glb
 mirror_2.gd::GDScript::1296850971002468943::1761113793::0::1::::<>MeshInstance3D<><>0<>0<><>::
-world.tscn::PackedScene::5710592644140018997::1761989238::0::1::::<><><>0<>0<><>::uid://wwlsotlotycw::::res://materials/wood.tres<>uid://d4bxpnphvld1d::::res://scripts/PlayerController.gd<>uid://bke1xjp3mdreb::::res://sprites/door.jpg<>uid://s7aanj1sph6l::::res://materials/floor.tres<>uid://cbn0d3riillev::::res://sprites/wood.jpg<>uid://dyuvtxhp260rj::::res://sprites/normals/wood_ambient.png<>uid://bw58chvxj0io6::::res://scripts/PlayerAnimation.gd<>uid://3smflfln5x7y::::res://sprites/normals/wood_specular.png<>uid://48uded6h5otx::::res://materials/brickwhite.tres<>uid://bifvpuur5heg3::::res://sprites/normals/wood_normal.png<>uid://re8gmfn1nbgt::::res://materials/wall.tres<>uid://boyehvhrdbdi6::::res://models/props/lights.glb<>uid://ygw6d51stbbw::::res://scenes/human.tscn<>uid://b3ty4ce0xhyow::::res://sprites/hvac.jpg<>uid://chnkextlwxa7d::::res://models/props/window.glb<>uid://xeaph8bqk1j1::::res://models/props/pipe_red.glb<>uid://fjppju80c5ic::::res://models/props/pipe_yellow.glb<>uid://db8764j2674fq::::res://models/props/outlet_box.glb<>uid://44g07prjgs5x::::res://models/props/pipe_gray bent.glb<>uid://cmaavrflrf4d4::::res://models/props/pipe_gray.glb<>uid://c8duo4thyjdsv::::res://models/props/spotlight.glb<>uid://dfy02uk1jbflb::::res://models/props/light_switch box.glb<>uid://bp08vdgdcjkvv::::res://models/interactables/light_switch.glb<>uid://cfqmga8or17qn::::res://sounds/lightswitchON.ogg<>uid://djltcowfnfdh7::::res://scripts/mirror.gd<>uid://o3kakxscxwb1::::res://sounds/lightswitchOFF.ogg<>uid://br4qh8mg5yosn::::res://shaders/mirror.gdshader<>uid://d0y6fk05wn5dc::::res://models/interactables/cardboard box/box.glb<>uid://tejn0hfpdhf7::::res://models/interactables/cardboard box/box topL.glb<>uid://c47e2pgvr3gnn::::res://scripts/ClickableBox.gd<>uid://gtfub3c0olxj::::res://scripts/ClickableArtbox.gd<>uid://65f11slkoyvf::::res://models/artbox/2.glb<>uid://bknsj7r2b3wte::::res://scripts/ClickableLightSwitch.gd<>uid://dsv2g0obaio51::::res://models/artbox/1.glb<>uid://bgyknl62rv8i2::::res://models/artbox/3.glb<>uid://bscbli4kb5p5n::::res://models/artbox/4.glb<>uid://cwhj4w40hwp52::::res://models/artbox/5.glb<>uid://uwpxuwjxopad::::res://models/artbox/6.glb<>uid://q64g52716sf3::::res://scripts/ClickableBoombox.gd<>uid://ddornft2ln8sq::::res://models/boomBox.glb<>uid://bhsyl3tj8hblj::::res://scenes/brute trash can.tscn<>uid://b7y2nsov4op11::::res://models/paintings/alley.glb<>uid://dxk1gusj3uuj7::::res://models/interactables/fan/legs.glb<>uid://d334ujfwmx8lp::::res://models/interactables/fan/cage.glb<>uid://bsdobk5wd61u::::res://models/interactables/fan/blade.glb<>uid://84rjpuccue2i::::res://sounds/boomboxSwitch.ogg<>uid://8so1mqtnfhkh::::res://sounds/box open 1.ogg<>uid://bkyiswhv5fuaf::::res://sounds/box open 2.ogg<>uid://cemldiwrdj70h::::res://sounds/halloween.ogg<>uid://bw0ig22tombxc::::res://sounds/ministudio.ogg
-::res://scripts/::1761989238
-BoxInteraction.gd::GDScript::273279990403006889::1761534838::0::1::::BoxInteraction<>Node3D<><>0<>0<><>::
+power_cord.tscn::PackedScene::1842388826387152175::1762059710::0::1::::<><><>0<>0<><>::uid://dqp07gb58nlbf::::res://scripts/components/PowerCord.gd<>uid://d1d8fhujnbpfy::::res://scripts/components/PowerCordPlugComponent.gd
+test_box.tscn::PackedScene::8507331950054414776::1762051008::0::1::::<><><>0<>0<><>::uid://cbwg344irqecy::::res://scripts/components/CarryableComponent.gd
+world.tscn::PackedScene::5710592644140018997::1762061305::0::1::::<><><>0<>0<><>::uid://wwlsotlotycw::::res://materials/wood.tres<>uid://d4bxpnphvld1d::::res://scripts/PlayerController.gd<>uid://bke1xjp3mdreb::::res://sprites/door.jpg<>uid://s7aanj1sph6l::::res://materials/floor.tres<>uid://cbn0d3riillev::::res://sprites/wood.jpg<>uid://dyuvtxhp260rj::::res://sprites/normals/wood_ambient.png<>uid://bw58chvxj0io6::::res://scripts/PlayerAnimation.gd<>uid://3smflfln5x7y::::res://sprites/normals/wood_specular.png<>uid://48uded6h5otx::::res://materials/brickwhite.tres<>uid://bifvpuur5heg3::::res://sprites/normals/wood_normal.png<>uid://re8gmfn1nbgt::::res://materials/wall.tres<>uid://boyehvhrdbdi6::::res://models/props/lights.glb<>uid://ygw6d51stbbw::::res://scenes/human.tscn<>uid://cmkthatew8dv2::::res://scenes/HUD.tscn<>uid://b3ty4ce0xhyow::::res://sprites/hvac.jpg<>uid://chnkextlwxa7d::::res://models/props/window.glb<>uid://xeaph8bqk1j1::::res://models/props/pipe_red.glb<>uid://fjppju80c5ic::::res://models/props/pipe_yellow.glb<>uid://db8764j2674fq::::res://models/props/outlet_box.glb<>uid://44g07prjgs5x::::res://models/props/pipe_gray bent.glb<>uid://cmaavrflrf4d4::::res://models/props/pipe_gray.glb<>uid://c8duo4thyjdsv::::res://models/props/spotlight.glb<>uid://dfy02uk1jbflb::::res://models/props/light_switch box.glb<>uid://bp08vdgdcjkvv::::res://models/interactables/light_switch.glb<>uid://cfqmga8or17qn::::res://sounds/lightswitchON.ogg<>uid://djltcowfnfdh7::::res://scripts/mirror.gd<>uid://o3kakxscxwb1::::res://sounds/lightswitchOFF.ogg<>uid://br4qh8mg5yosn::::res://shaders/mirror.gdshader<>uid://d0y6fk05wn5dc::::res://models/interactables/cardboard box/box.glb<>uid://tejn0hfpdhf7::::res://models/interactables/cardboard box/box topL.glb<>uid://b56ugw7vd7hf1::::res://scripts/ArtboxInteraction.gd<>uid://65f11slkoyvf::::res://models/artbox/2.glb<>uid://cftd54g3pgkr1::::res://scripts/LightSwitchInteraction.gd<>uid://dsv2g0obaio51::::res://models/artbox/1.glb<>uid://bgyknl62rv8i2::::res://models/artbox/3.glb<>uid://d5m48bcsj83f::::res://scripts/BoxInteraction.gd<>uid://bscbli4kb5p5n::::res://models/artbox/4.glb<>uid://cwhj4w40hwp52::::res://models/artbox/5.glb<>uid://uwpxuwjxopad::::res://models/artbox/6.glb<>uid://cdcxs0jsffsfb::::res://scripts/BoomboxInteraction.gd<>uid://ddornft2ln8sq::::res://models/boomBox.glb<>uid://bhsyl3tj8hblj::::res://scenes/brute trash can.tscn<>uid://cbwg344irqecy::::res://scripts/components/CarryableComponent.gd<>uid://b7y2nsov4op11::::res://models/paintings/alley.glb<>uid://dxk1gusj3uuj7::::res://models/interactables/fan/legs.glb<>uid://d334ujfwmx8lp::::res://models/interactables/fan/cage.glb<>uid://bsdobk5wd61u::::res://models/interactables/fan/blade.glb<>uid://dpnghglurvaq0::::res://scripts/consolelog.gd<>uid://d1d8fhujnbpfy::::res://scripts/components/PowerCordPlugComponent.gd<>uid://dtharqrj0cj5y::::res://scenes/test_box.tscn<>uid://dqp07gb58nlbf::::res://scripts/components/PowerCord.gd<>uid://dlksqcf0lda80::::res://scripts/components/OutletComponent.gd<>uid://84rjpuccue2i::::res://sounds/boomboxSwitch.ogg<>uid://cemldiwrdj70h::::res://sounds/halloween.ogg<>uid://bw0ig22tombxc::::res://sounds/ministudio.ogg
+::res://scripts/::1762053065
+ArtboxInteraction.gd::GDScript::4557307963735547696::1762047225::0::1::::ArtboxInteraction<>InteractionComponent<><>0<>0<><>::
+BoomboxInteraction.gd::GDScript::4988966616744065771::1762047454::0::1::::BoomboxInteraction<>InteractionComponent<><>0<>0<><>::
+BoxInteraction.gd::GDScript::273279990403006889::1762046804::0::1::::BoxInteraction<>InteractionComponent<><>0<>0<><>::
 BoxInteractionManager.gd::GDScript::7387510967602913199::1761798196::0::1::::<>Node3D<><>0<>0<><>::
 ClickableArtbox.gd::GDScript::460695635899977091::1761708414::0::1::::ClickableArtbox<>Node3D<><>0<>0<><>::
-ClickableBoombox.gd::GDScript::1188790335038169318::1761807994::0::1::::ClickableBoombox<>Node3D<><>0<>0<><>::
+ClickableBoombox.gd::GDScript::1188790335038169318::1762044269::0::1::::ClickableBoombox<>Node3D<><>0<>0<><>::
 ClickableBox.gd::GDScript::6874669803522600303::1761728346::0::1::::ClickableBox<>Node3D<><>0<>0<><>::
 ClickableLightSwitch.gd::GDScript::3116256717129241458::1761719196::0::1::::ClickableLightSwitch<>Node3D<><>0<>0<><>::
-mirror.gd::GDScript::7814827763123973682::1761113613::0::1::::<>MeshInstance3D<><>0<>0<><>::
+consolelog.gd::GDScript::8239308752031700657::1762049804::0::1::::<>Control<><>0<>0<><>::
+HUD.gd::GDScript::9095262934336027845::1762050886::0::1::::<>CanvasLayer<><>0<>0<><>::
+InteractionComponent.gd::GDScript::3026879056774981478::1762044269::0::1::::InteractionComponent<>Node3D<><>0<>0<><>::
+LightSwitchInteraction.gd::GDScript::5163246021437411620::1762047807::0::1::::LightSwitchInteraction<>InteractionComponent<><>0<>0<><>::
+mirror.gd::GDScript::7814827763123973682::1762044269::0::1::::<>MeshInstance3D<><>0<>0<><>::
 mirror_new.gd::GDScript::3779223385012197752::1761119308::0::1::::<>MeshInstance3D<><>0<>0<><>::
-PlayerAnimation.gd::GDScript::3994514209863087763::1761077187::0::1::::PlayerAnimation<>Node<><>0<>0<><>::
-PlayerController.gd::GDScript::9198226878400670027::1761989238::0::1::::<>CharacterBody3D<><>0<>0<><>::
-::res://shaders/::1761807134
-mirror.gdshader::Shader::3640483704970853257::1761807134::0::1::::<><><>0<>0<><>::
-outline.gdshader::Shader::4563622192783248570::1761807134::0::1::::<><><>0<>0<><>::
+PlayerAnimation.gd::GDScript::3994514209863087763::1762044269::0::1::::PlayerAnimation<>Node<><>0<>0<><>::
+PlayerController.gd::GDScript::9198226878400670027::1762050887::0::1::::<>CharacterBody3D<><>0<>0<><>::
+PlayerInteractionComponent.gd::GDScript::7370778824892455188::1762060749::0::1::::PlayerInteractionComponent<>Node3D<><>0<>0<><>::
+SimpleInteraction.gd::GDScript::8571012623619763262::1762043942::0::1::::SimpleInteraction<>InteractionComponent<><>0<>0<><>::
+::res://scripts/components/::1762056864
+CarryableComponent.gd::GDScript::4888862394162802364::1762050846::0::1::::CarryableComponent<>InteractionComponent<><>0<>0<><>::
+OutletComponent.gd::GDScript::7953104701131958563::1762054418::0::1::::OutletComponent<>InteractionComponent<><>0<>0<><>::
+PowerCord.gd::GDScript::8314824603915427019::1762061080::0::1::::PowerCord<>Node3D<><>0<>0<><>::
+PowerCordPlugComponent.gd::GDScript::8992378107647029622::1762055659::0::1::::PowerCordPlugComponent<>CarryableComponent<><>0<>0<><>::
+::res://scripts/tools/::1762056864
+create_power_cord.gd::GDScript::1820023332295702997::1762057172::0::1::::<>EditorScript<><>0<>1<><>::
+::res://shaders/::1762054575
+mirror.gdshader::Shader::3640483704970853257::1762054575::0::1::::<><><>0<>0<><>::
+outline.gdshader::Shader::4563622192783248570::1762054575::0::1::::<><><>0<>0<><>::
 ::res://sounds/::1761723976
 boomboxSwitch.ogg::AudioStreamOggVorbis::2377147874785651758::1761723976::1761723976::1::::<><><>0<>0<>b230ab4b35fd5b2938b1ce9d859478e7<>res://.godot/imported/boomboxSwitch.ogg-326bdc10ed46ea0a74a5427f74abc8db.oggvorbisstr::
 box open 1.ogg::AudioStreamOggVorbis::2354287764046325199::1761720683::1761720693::1::::<><><>0<>0<>87fde55430ef7f4548077b749ac75a72<>res://.godot/imported/box open 1.ogg-9461a55a1907cf128562cd9f23a60e53.oggvorbisstr::

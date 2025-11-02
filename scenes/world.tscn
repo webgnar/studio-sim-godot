@@ -1,4 +1,4 @@
-[gd_scene load_steps=118 format=3 uid="uid://cnmivki1rop3b"]
+[gd_scene load_steps=126 format=3 uid="uid://cnmivki1rop3b"]
 
 [ext_resource type="Material" uid="uid://wwlsotlotycw" path="res://materials/wood.tres" id="1_4mrxx"]
 [ext_resource type="Script" uid="uid://d4bxpnphvld1d" path="res://scripts/PlayerController.gd" id="1_4wyf3"]
@@ -42,13 +42,19 @@
 [ext_resource type="Script" uid="uid://cdcxs0jsffsfb" path="res://scripts/BoomboxInteraction.gd" id="36_boombox_new"]
 [ext_resource type="PackedScene" uid="uid://ddornft2ln8sq" path="res://models/boomBox.glb" id="41_rga7q"]
 [ext_resource type="PackedScene" uid="uid://bhsyl3tj8hblj" path="res://scenes/brute trash can.tscn" id="46_18clu"]
+[ext_resource type="Script" uid="uid://cbwg344irqecy" path="res://scripts/components/CarryableComponent.gd" id="46_e68xj"]
 [ext_resource type="PackedScene" uid="uid://b7y2nsov4op11" path="res://models/paintings/alley.glb" id="47_4wdv8"]
 [ext_resource type="PackedScene" uid="uid://dxk1gusj3uuj7" path="res://models/interactables/fan/legs.glb" id="48_x28ej"]
 [ext_resource type="PackedScene" uid="uid://d334ujfwmx8lp" path="res://models/interactables/fan/cage.glb" id="49_1jxku"]
+[ext_resource type="Script" uid="uid://c63c2n2vhd5r6" path="res://scripts/FanController.gd" id="49_npbic"]
 [ext_resource type="PackedScene" uid="uid://bsdobk5wd61u" path="res://models/interactables/fan/blade.glb" id="50_1dgkn"]
 [ext_resource type="Script" uid="uid://dpnghglurvaq0" path="res://scripts/consolelog.gd" id="51_1jxku"]
-[ext_resource type="Script" uid="uid://dud4lcqfc1h5w" path="res://scripts/SimpleInteraction.gd" id="52_1dgkn"]
+[ext_resource type="Script" uid="uid://u01mbabuiguh" path="res://scripts/components/PoweredDeviceComponent.gd" id="51_iexy4"]
+[ext_resource type="Script" uid="uid://d1d8fhujnbpfy" path="res://scripts/components/PowerCordPlugComponent.gd" id="51_pf35h"]
 [ext_resource type="PackedScene" uid="uid://dtharqrj0cj5y" path="res://scenes/test_box.tscn" id="52_e68xj"]
+[ext_resource type="Script" uid="uid://dqp07gb58nlbf" path="res://scripts/components/PowerCord.gd" id="52_iexy4"]
+[ext_resource type="PackedScene" uid="uid://ddoijgnx5221v" path="res://models/interactables/plug.glb" id="53_pf35h"]
+[ext_resource type="Script" uid="uid://dlksqcf0lda80" path="res://scripts/components/OutletComponent.gd" id="54_qg546"]
 [ext_resource type="AudioStream" uid="uid://84rjpuccue2i" path="res://sounds/boomboxSwitch.ogg" id="boombox_switch"]
 [ext_resource type="AudioStream" uid="uid://cemldiwrdj70h" path="res://sounds/halloween.ogg" id="halloween_audio"]
 [ext_resource type="AudioStream" uid="uid://bw0ig22tombxc" path="res://sounds/ministudio.ogg" id="ministudio_audio"]
@@ -603,6 +609,9 @@ _data = {
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_boombox"]
 
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_e68xj"]
+height = 1.1479492
+
 [sub_resource type="Animation" id="Animation_iexy4"]
 length = 0.001
 tracks/0/type = "value"
@@ -641,9 +650,11 @@ _data = {
 &"spin": SubResource("Animation_5hglh")
 }
 
-[sub_resource type="BoxMesh" id="BoxMesh_e68xj"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_iexy4"]
+size = Vector3(9.757992, 10.63894, 3.158015)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_5hglh"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_npbic"]
+size = Vector3(0.14697266, 0.10101318, 0.31085205)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_1dgkn"]
 
@@ -653,6 +664,9 @@ viewport_path = NodePath("console log/SubViewport")
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5hglh"]
 resource_local_to_scene = true
 albedo_texture = SubResource("ViewportTexture_e68xj")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_pf35h"]
+size = Vector3(0.914917, 1.9637451, 1.8647461)
 
 [node name="World" type="Node3D"]
 
@@ -817,6 +831,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.64091873, 0)
 
 [node name="CarryMarker" type="Marker3D" parent="Player/Head/Camera3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2)
+visible = false
 
 [node name="HUD" parent="Player" instance=ExtResource("14_1jxku")]
 
@@ -1131,9 +1146,6 @@ transform = Transform3D(0.013917993, 0.06352692, -0.6286893, 0.017449299, 1.3355
 
 [node name="outlets" type="Node3D" parent="."]
 
-[node name="outlet" parent="outlets" instance=ExtResource("18_ctatt")]
-transform = Transform3D(0.12705004, 0, 0, 0, 0.12705004, 0, 0, 0, 0.12705006, 3.7025113, 1.2561202, -2.807802)
-
 [node name="outlet8" parent="outlets" instance=ExtResource("18_ctatt")]
 transform = Transform3D(0.12705004, 0, 0, 0, 0.12705004, 0, 0, 0, 0.12705006, 3.7670677, 0.6725974, 10.761079)
 
@@ -1239,7 +1251,7 @@ transform = Transform3D(-0.029999997, 4.529874e-09, -1.9800707e-16, 0, -1.311341
 script = ExtResource("28_artbox_new")
 
 [node name="fold6" parent="artbox" instance=ExtResource("31_x2olw")]
-transform = Transform3D(0.018202756, 8.583139e-08, 0.99983156, 8.5831196e-08, 0.99999934, -8.7408054e-08, -0.9998315, 8.740823e-08, 0.018202756, 0.9763241, 0, -6.7096863)
+transform = Transform3D(0.018202744, 8.583139e-08, 0.99983096, 8.583115e-08, 0.99999934, -8.7408004e-08, -0.9998309, 8.740823e-08, 0.018202744, 0.9763241, 0, -6.7096863)
 
 [node name="fold5" parent="artbox/fold6" instance=ExtResource("32_817gm")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -7.9999986, 0, 0)
@@ -1307,42 +1319,77 @@ transform = Transform3D(-0.90909094, 0, -1.3726891e-07, 0, 0.90909094, 0, 1.3726
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
 shape = SubResource("BoxShape3D_boombox")
 
+[node name="RigidBody3D" type="RigidBody3D" parent="."]
+transform = Transform3D(0.9301743, 0, 0.3671182, 0, 1, 0, -0.3671182, 0, 0.9301743, 0.26508617, 0.070207834, -4.700662)
+collision_layer = 8
+collision_mask = 3
+
+[node name="Brute_L_NoMaterial" parent="RigidBody3D" instance=ExtResource("46_18clu")]
+
+[node name="CarryableComponent" type="Node3D" parent="RigidBody3D"]
+script = ExtResource("46_e68xj")
+metadata/_custom_type_script = "uid://cbwg344irqecy"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBody3D"]
+transform = Transform3D(0.7000001, 0, 3.427267e-07, 0, 0.78, 0, -4.172325e-07, 0, 0.6, -0.23017645, 0.45898628, -0.044195175)
+shape = SubResource("CylinderShape3D_e68xj")
+debug_color = Color(0.9490196, 0, 0.58431375, 0.8117647)
+
 [node name="Brute_L_NoMaterial" parent="." instance=ExtResource("46_18clu")]
 transform = Transform3D(0.9301743, 0, 0.3671182, 0, 1, 0, -0.3671182, 0, 0.9301743, 0.26508617, 0.070207834, -4.700662)
+visible = false
 
 [node name="alley" parent="." instance=ExtResource("47_4wdv8")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -3.6867952, 1.62026, -4)
 
-[node name="legs" parent="." instance=ExtResource("48_x28ej")]
-transform = Transform3D(-0.07, 0, 6.119594e-09, 0, 0.07, 0, -6.119594e-09, 0, -0.07, -0.25056076, 0.10264242, 11.737907)
+[node name="fan legs" parent="." instance=ExtResource("48_x28ej")]
+transform = Transform3D(-0.007308489, 0, -0.06961743, 0, 0.07, 0, 0.06961743, 0, -0.007308489, -0.24869871, 0.10264242, -1.3465371)
 
-[node name="cage" parent="legs" instance=ExtResource("49_1jxku")]
+[node name="cage" parent="fan legs" instance=ExtResource("49_1jxku")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.016191006, 5.825101, 1.146759)
 
-[node name="blade" parent="legs/cage" instance=ExtResource("50_1dgkn")]
+[node name="blade" parent="fan legs/cage" instance=ExtResource("50_1dgkn")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.10343838, -0.08967781, 0.51927185)
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="legs/cage/blade"]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="fan legs/cage/blade"]
 libraries = {
 &"": SubResource("AnimationLibrary_npbic")
 }
-autoplay = "spin"
 
-[node name="TestCube" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 1, 0)
+[node name="PoweredDeviceComponent" type="Node3D" parent="fan legs" node_paths=PackedStringArray("power_cord_plug")]
+script = ExtResource("51_iexy4")
+power_cord_plug = NodePath("../../plug/PowerCordPlugComponent")
+metadata/_custom_type_script = "uid://u01mbabuiguh"
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="TestCube"]
-mesh = SubResource("BoxMesh_e68xj")
+[node name="StaticBody3D" type="StaticBody3D" parent="fan legs"]
 
-[node name="StaticBody3D" type="StaticBody3D" parent="TestCube"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="fan legs/StaticBody3D"]
+transform = Transform3D(1, 0, 2.9802322e-08, 0, 1.0000993, 0, -2.9802322e-08, 0, 1, 0.107860565, 4.8197436, 1.6303358)
+shape = SubResource("BoxShape3D_iexy4")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="TestCube/StaticBody3D"]
-shape = SubResource("BoxShape3D_5hglh")
+[node name="Node3D" type="Node3D" parent="fan legs" node_paths=PackedStringArray("powered_device", "animation_player")]
+script = ExtResource("49_npbic")
+powered_device = NodePath("../PoweredDeviceComponent")
+animation_player = NodePath("../cage/blade/AnimationPlayer")
 
-[node name="Node3D" type="Node3D" parent="TestCube"]
-script = ExtResource("52_1dgkn")
-message = "hello from the new interaction system"
-interaction_text = "Test Cube"
+[node name="plug" type="RigidBody3D" parent="."]
+transform = Transform3D(-0.10440699, 0, -0.9945347, 0, 1, 0, 0.9945347, 0, -0.10440699, 1.034552, 1.530381, -1.3465371)
+collision_layer = 8
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="plug"]
+shape = SubResource("BoxShape3D_npbic")
+
+[node name="PowerCordPlugComponent" type="Node3D" parent="plug"]
+script = ExtResource("51_pf35h")
+metadata/_custom_type_script = "uid://d1d8fhujnbpfy"
+
+[node name="Node3D" type="Node3D" parent="plug" node_paths=PackedStringArray("connected_device")]
+script = ExtResource("52_iexy4")
+connected_device = NodePath("../../fan legs/cage")
+
+[node name="plug model" parent="plug" instance=ExtResource("53_pf35h")]
+transform = Transform3D(-2.3283064e-09, 0, 0.050000004, 0, 0.05, 0, -0.050000004, 0, -2.3283064e-09, 0, 0, 0)
 
 [node name="console log" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 1, -2)
@@ -1369,3 +1416,16 @@ surface_material_override/0 = SubResource("StandardMaterial3D_5hglh")
 
 [node name="TestBox" parent="." instance=ExtResource("52_e68xj")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 1, -3)
+
+[node name="wall outlet" type="StaticBody3D" parent="."]
+transform = Transform3D(0.14, 0, 0, 0, 0.14, 0, 0, 0, 0.14, 3.7523398, 1.4185596, -2.825792)
+collision_layer = 2
+
+[node name="default" parent="wall outlet" instance=ExtResource("18_ctatt")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="wall outlet"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.042541504, 0.031188965, -0.0026855469)
+shape = SubResource("BoxShape3D_pf35h")
+
+[node name="OutletComponent" type="Node3D" parent="wall outlet"]
+script = ExtResource("54_qg546")

@@ -52,6 +52,15 @@ func _input(event: InputEvent) -> void:
 	# Throw while carrying (left click / primary action)
 	if is_carrying and event.is_action_pressed("action_primary"):
 		if is_instance_valid(carried_object):
+			# Special case: carrying a power plug near an outlet
+			if carried_object is PowerCordPlugComponent:
+				var plug = carried_object as PowerCordPlugComponent
+				if plug.is_near_outlet():
+					# Plug it in instead of throwing
+					plug.drop()  # This will auto-plug due to auto_plug_on_release
+					return
+			
+			# Normal throw
 			throw_carried_object()
 		return
 	
@@ -59,6 +68,15 @@ func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("interact"):
 		# If carrying, drop the object
 		if is_carrying and is_instance_valid(carried_object):
+			# Special case: carrying a power plug near an outlet
+			if carried_object is PowerCordPlugComponent:
+				var plug = carried_object as PowerCordPlugComponent
+				if plug.nearby_outlet:
+					# Plug it in
+					plug.nearby_outlet.accept_plug(plug)
+					return
+			
+			# Normal drop
 			drop_carried_object()
 			return
 		
@@ -302,3 +320,10 @@ func drop_carried_object() -> void:
 	
 	print("📦 Player dropping object gently")
 	carried_object.throw(1.0)  # Gentle drop
+
+## Show a hint to the player (for feedback)
+func show_hint(icon: Texture2D, text: String) -> void:
+	"""Show a temporary hint to the player"""
+	# This could be connected to HUD or notification system
+	print("💡 Hint: " + text)
+	# TODO: Implement visual hint in HUD

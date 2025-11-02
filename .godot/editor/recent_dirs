@@ -1,6 +1,7 @@
-res://scenes
-res://scripts/components
 res://scripts
+res://scripts/components
+res://scenes
+res://scripts/tools
 res://sprites
 res://materials
 /Users/zackgg/Godot/studio-sim-godot/web exports
