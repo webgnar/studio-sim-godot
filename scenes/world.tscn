@@ -1,4 +1,4 @@
-[gd_scene load_steps=133 format=3 uid="uid://cnmivki1rop3b"]
+[gd_scene load_steps=138 format=3 uid="uid://cnmivki1rop3b"]
 
 [ext_resource type="Material" uid="uid://wwlsotlotycw" path="res://materials/wood.tres" id="1_4mrxx"]
 [ext_resource type="Script" uid="uid://d4bxpnphvld1d" path="res://scripts/PlayerController.gd" id="1_4wyf3"]
@@ -57,7 +57,12 @@
 [ext_resource type="Script" uid="uid://dqp07gb58nlbf" path="res://scripts/components/PowerCord.gd" id="52_iexy4"]
 [ext_resource type="PackedScene" uid="uid://ddoijgnx5221v" path="res://models/interactables/plug.glb" id="53_pf35h"]
 [ext_resource type="PackedScene" uid="uid://kraxm2alr635" path="res://scenes/breakable_window.tscn" id="66_4kmvx"]
+[ext_resource type="PackedScene" uid="uid://dfhlm4stso71r" path="res://models/SfRoadFlat.gltf" id="66_5nedk"]
 [ext_resource type="PackedScene" uid="uid://clyqlnamf1d2w" path="res://scenes/wall_outlet.tscn" id="66_8lgfd"]
+[ext_resource type="PackedScene" uid="uid://bv5evbgl66ba6" path="res://models/sfRoadFlat2.gltf" id="67_40xph"]
+[ext_resource type="PackedScene" uid="uid://chnk8fr52q3yk" path="res://models/sewerroad.gltf" id="68_5nedk"]
+[ext_resource type="PackedScene" uid="uid://drijdy8rlc67s" path="res://models/treeSmallOak2.gltf" id="69_40xph"]
+[ext_resource type="PackedScene" uid="uid://cqwacwlbuqbe" path="res://models/crazy2.gltf" id="70_8lgfd"]
 [ext_resource type="AudioStream" uid="uid://84rjpuccue2i" path="res://sounds/boomboxSwitch.ogg" id="boombox_switch"]
 [ext_resource type="AudioStream" uid="uid://8so1mqtnfhkh" path="res://sounds/box open 1.ogg" id="box_open_1"]
 [ext_resource type="AudioStream" uid="uid://bkyiswhv5fuaf" path="res://sounds/box open 2.ogg" id="box_open_2"]
@@ -1459,3 +1464,21 @@ transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 2.3344998, 2.467302, -6
 
 [node name="window6" parent="." instance=ExtResource("66_4kmvx")]
 transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 2.3344998, 4.0959244, -6.759644)
+
+[node name="sf road 1" parent="." instance=ExtResource("66_5nedk")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0650413, -4.3903933, -15.761627)
+
+[node name="sf road 2" parent="." instance=ExtResource("67_40xph")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -7.746293, -2.1804824, 23.88415)
+
+[node name="swewer road 1" parent="." instance=ExtResource("68_5nedk")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -91.405945, 27.74163, -45.000565)
+
+[node name="sewer road 2" parent="." instance=ExtResource("68_5nedk")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 81.11546, 23.927578, -45.000565)
+
+[node name="tree" parent="." instance=ExtResource("69_40xph")]
+transform = Transform3D(0.14846256, 0, -0.28347638, 0, 0.32, 0, 0.28347638, 0, 0.14846256, -16.026949, -3.2422662, -21.854856)
+
+[node name="condo thing" parent="." instance=ExtResource("70_8lgfd")]
+transform = Transform3D(1.2982281e-07, -2.97, 2.5964562e-07, -2.97, -1.2982281e-07, -3.748667e-29, 1.1349471e-14, -2.5964562e-07, -2.97, -0.0149002075, 24.848328, -32.45153)
