@@ -27,7 +27,6 @@ func _ready() -> void:
 	# Connect to power signals
 	powered_device.device_turned_on.connect(_on_fan_turned_on)
 	powered_device.device_turned_off.connect(_on_fan_turned_off)
-	powered_device.powered_off.connect(_on_power_lost)
 	
 	# Set initial state
 	if powered_device.is_on and powered_device.has_power:
@@ -47,6 +46,13 @@ func _setup_audio() -> void:
 	if running_loop_sound:
 		_loop_player = AudioStreamPlayer3D.new()
 		_loop_player.name = "FanLoopAudio"
+		
+		# Ensure the stream is set to loop
+		if running_loop_sound is AudioStreamOggVorbis:
+			running_loop_sound.loop = true
+		elif running_loop_sound is AudioStreamWAV:
+			running_loop_sound.loop_mode = AudioStreamWAV.LOOP_FORWARD
+		
 		_loop_player.stream = running_loop_sound
 		_loop_player.max_distance = 15.0
 		_loop_player.attenuation_model = AudioStreamPlayer3D.ATTENUATION_INVERSE_DISTANCE
@@ -72,18 +78,6 @@ func _on_fan_turned_off() -> void:
 	# Fade out the loop sound
 	if _loop_player:
 		_fade_out_sound()
-
-func _on_power_lost() -> void:
-	"""Power cut - stop the fan immediately"""
-	if animation_player:
-		animation_player.stop()
-		print("⚡ Fan lost power")
-	
-	# Immediately stop loop sound (no fade on power loss)
-	if _loop_player and _loop_player.playing:
-		_loop_player.stop()
-		_loop_player.volume_db = -80.0
-		print("⚡ Fan stopped due to power loss (immediate stop)")
 
 func _fade_in_sound() -> void:
 	"""Fade in the fan loop sound"""

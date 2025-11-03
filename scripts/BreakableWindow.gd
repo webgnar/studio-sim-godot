@@ -62,7 +62,9 @@ func _ready():
 	update_texture()
 	
 	# Find the Area3D for collision detection
-	if has_node("DetectionArea"):
+	if has_node("Area3D"):
+		detection_area = $Area3D
+	elif has_node("DetectionArea"):
 		detection_area = $DetectionArea
 	else:
 		# Try to find any Area3D child
@@ -95,11 +97,10 @@ func _on_body_entered(body: Node):
 	print("BreakableWindow: Something hit the window! Body: ", body.name)
 	
 	# Check if the object is being carried (not thrown) - don't damage
-	if body.has_method("is_being_carried"):
-		var carryable = _find_carryable_component(body)
-		if carryable and carryable.is_being_carried():
-			print("  -> Object is being carried by player, no damage")
-			return
+	var carryable = _find_carryable_component(body)
+	if carryable and carryable.is_being_carried():
+		print("  -> Object is being carried by player, no damage")
+		return
 	
 	# Check if the body has enough velocity to damage the window
 	if body is RigidBody3D:

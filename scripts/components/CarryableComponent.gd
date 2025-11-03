@@ -308,6 +308,11 @@ func _on_body_shape_entered(_body_rid: RID, body: Node, _body_shape_index: int, 
 	
 	# Play impact sound with volume based on impact strength
 	var volume_db = _calculate_impact_volume(impact_velocity)
+	
+	# Apply random pitch variation for variety
+	if _audio_player:
+		_audio_player.pitch_scale = randf_range(0.9, 1.1)  # ±0.1 pitch shift
+	
 	_play_sound(impact_sound, volume_db)
 	
 	last_impact_time = current_time

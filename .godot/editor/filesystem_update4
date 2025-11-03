@@ -1,16 +1,7 @@
 res://scenes/world.tscn
 res://shaders/mirror.gdshader
 res://shaders/outline.gdshader
-res://scripts/PlayerInteractionComponent.gd
-res://scenes/wall_outlet.tscn
-res://scripts/components/PowerCordPlugComponent.gd
+res://scripts/FanController.gd
+res://scripts/components/CarryableComponent.gd
 res://scripts/ArtboxInteraction.gd
-res://scripts/BoxInteraction.gd
-res://scripts/LightSwitchInteraction.gd
-res://scripts/MirrorInteraction.gd
-res://scenes/breakable_window.tscn
 res://scripts/BreakableWindow.gd
-res://materials/windowglass.tres
-res://materials/styrafoam.tres
-res://scenes/brute trash can.tscn
-res://scripts/PlayerController.gd

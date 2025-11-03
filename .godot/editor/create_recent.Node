@@ -1,3 +1,4 @@
+Node3D
 CollisionShape3D
 Area3D
 StaticBody3D
@@ -6,7 +7,6 @@ Marker3D
 CarryableComponent
 BoomboxInteraction
 CSGCombiner3D
-Node3D
 PoweredDeviceComponent
 PowerCordPlugComponent
 MeshInstance3D

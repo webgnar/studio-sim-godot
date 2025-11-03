@@ -17,15 +17,21 @@ signal artbox_moved_to_wall
 @export_group("Artbox Sounds")
 @export var unfold_sound: AudioStream
 @export var move_sound: AudioStream
+@export var move_sound_fade_in_duration: float = 1.0 ## Fade in time for move sound
+@export var move_sound_fade_out_duration: float = 1.0 ## Fade out time for move sound
 
 @export_group("Animation Timing")
 @export var fold_sequence_delay: float = 0.5
 @export var move_delay: float = 2.0
+@export var orient_trigger_time: float = 5.0 ## When to start orienting (seconds into sequence)
+@export var unfold_trigger_time: float = 9.0 ## When to start unfolding (seconds into sequence)
 
 var _current_state: ArtboxState = ArtboxState.FOLDED
 var _go_to_wall_player: AnimationPlayer
 var _orient_to_horizontal_player: AnimationPlayer
 var _unfold_animation_players: Array[AnimationPlayer] = []
+var _move_sound_played: bool = false ## Track if move sound has been played
+var _is_fading_sound: bool = false ## Track if currently fading audio
 
 func _on_ready() -> void:
 	# interaction_text set via inspector
@@ -99,13 +105,13 @@ func _start_complete_sequence() -> void:
 	_current_state = ArtboxState.MOVING_TO_WALL
 	interaction_text = ""  # Hide prompt during animation
 	
-	# Start movement immediately
+	# Start movement immediately (with sound on first click only)
 	_start_move_to_wall()
 	
-	# Schedule orient to trigger at 5 seconds (during movement)
+	# Schedule orient to trigger at configured time (during movement)
 	_schedule_orient_animation()
 	
-	# Schedule unfold to trigger at 9 seconds (during movement)
+	# Schedule unfold to trigger at configured time (during movement)
 	_schedule_unfold_animation()
 	
 	# Wait for movement to complete
@@ -116,13 +122,13 @@ func _start_complete_sequence() -> void:
 	print("✨ Artbox sequence complete!")
 
 func _schedule_orient_animation() -> void:
-	await get_tree().create_timer(5.0).timeout
+	await get_tree().create_timer(orient_trigger_time).timeout
 	print("🔄 Step 2: Orienting to horizontal (during movement)...")
 	_current_state = ArtboxState.ORIENTING
 	await _orient_to_horizontal()
 
 func _schedule_unfold_animation() -> void:
-	await get_tree().create_timer(9.0).timeout
+	await get_tree().create_timer(unfold_trigger_time).timeout
 	print("📂 Step 3: Unfolding panels (during movement)...")
 	_current_state = ArtboxState.UNFOLDING
 	await _unfold_all_panels()
@@ -135,8 +141,10 @@ func _start_move_to_wall() -> void:
 	print("🚀 Step 1: Moving artbox to wall...")
 	_current_state = ArtboxState.MOVING_TO_WALL
 	
-	if move_sound:
-		_play_sound(move_sound)
+	# Play move sound ONLY on first click with fade in/out
+	if move_sound and not _move_sound_played:
+		_play_move_sound_with_fade()
+		_move_sound_played = true
 	
 	if _go_to_wall_player.has_animation("move up and rotate"):
 		_go_to_wall_player.play("move up and rotate")
@@ -150,6 +158,52 @@ func _wait_for_move_to_wall_to_complete() -> void:
 	
 	print("✅ Move to wall complete!")
 	artbox_moved_to_wall.emit()
+
+func _play_move_sound_with_fade() -> void:
+	"""Play move sound with fade in and fade out"""
+	if _is_fading_sound:
+		return
+	
+	# Ensure audio player exists
+	if not _audio_player:
+		print("⚠️ No audio player found, creating one for move sound...")
+		_audio_player = AudioStreamPlayer3D.new()
+		_audio_player.name = "ArtboxAudio"
+		_audio_player.max_distance = 30.0
+		_audio_player.attenuation_model = AudioStreamPlayer3D.ATTENUATION_INVERSE_DISTANCE
+		add_child(_audio_player)
+	
+	_is_fading_sound = true
+	
+	# Set the stream and start playing from beginning
+	_audio_player.stream = move_sound
+	_audio_player.volume_db = -80.0  # Start silent
+	_audio_player.play()
+	
+	print("🔊 Fading in move sound...")
+	
+	# Fade in
+	var fade_in_tween = create_tween()
+	fade_in_tween.tween_property(_audio_player, "volume_db", -5.0, move_sound_fade_in_duration)
+	await fade_in_tween.finished
+	
+	# Calculate when to start fade out (sound length - fade out duration)
+	var sound_length = move_sound.get_length()
+	var wait_time = sound_length - move_sound_fade_out_duration - move_sound_fade_in_duration
+	
+	if wait_time > 0:
+		await get_tree().create_timer(wait_time).timeout
+	
+	print("🔉 Fading out move sound...")
+	
+	# Fade out
+	var fade_out_tween = create_tween()
+	fade_out_tween.tween_property(_audio_player, "volume_db", -80.0, move_sound_fade_out_duration)
+	await fade_out_tween.finished
+	
+	_audio_player.stop()
+	_is_fading_sound = false
+	print("🔇 Move sound complete")
 
 func trigger_orient_horizontal() -> void:
 	print("🎬 Animation signal: Starting orient to horizontal!")
