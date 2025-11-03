@@ -30,12 +30,16 @@ signal e_key_interacted(player_interaction_component: PlayerInteractionComponent
 @export_group("Audio")
 @export var pickup_sound: AudioStream
 @export var drop_sound: AudioStream
+@export var impact_sound: AudioStream ## Sound when object hits surfaces
+@export var impact_velocity_threshold: float = 2.0 ## Minimum velocity to trigger impact sound
+@export var impact_cooldown: float = 0.1 ## Minimum time between impact sounds (prevents spam)
 
 # --- PRIVATE VARIABLES ---
 var parent_rigid_body: RigidBody3D
 var player_ref: PlayerInteractionComponent
 var is_carried: bool = false
 var carry_target: Vector3
+var last_impact_time: float = 0.0 ## Track last impact sound to enforce cooldown
 
 # --- GODOT METHODS ---
 
@@ -48,9 +52,20 @@ func _ready() -> void:
 		push_error("CarryableComponent: Parent must be RigidBody3D! Found: " + get_parent().get_class())
 		return
 	
+	# Ensure audio player exists for our sounds (parent might not have created one)
+	_ensure_audio_player()
+	
+	# Enable contact monitoring for collision detection (required for body_entered/body_shape_entered signals)
+	parent_rigid_body.contact_monitor = true
+	parent_rigid_body.max_contacts_reported = 4  # Track up to 4 contact points (good balance)
+	
 	# Connect to collision signal for auto-drop on player collision
 	if parent_rigid_body.has_signal("body_entered"):
 		parent_rigid_body.body_entered.connect(_on_body_entered)
+	
+	# Connect to collision signal for impact sounds
+	if parent_rigid_body.has_signal("body_shape_entered"):
+		parent_rigid_body.body_shape_entered.connect(_on_body_shape_entered)
 	
 	interaction_text = "Pick Up"
 	print("✅ CarryableComponent ready: " + parent_object.name + " (mass: " + str(parent_rigid_body.mass) + "kg)")
@@ -263,6 +278,68 @@ func _on_body_entered(body: Node) -> void:
 	if body.is_in_group("Player") and is_carried:
 		print("⚠️ Carried object hit player - auto-dropping")
 		drop()
+
+func _on_body_shape_entered(_body_rid: RID, body: Node, _body_shape_index: int, _local_shape_index: int) -> void:
+	"""Handle collision impacts for sound effects"""
+	# Don't play impact sounds while being carried (feels weird)
+	if is_carried:
+		return
+	
+	# Don't play impact sound if colliding with player
+	if body.is_in_group("Player"):
+		return
+	
+	# Check if we have an impact sound assigned
+	if not impact_sound:
+		print("⚠️ No impact_sound assigned to " + parent_object.name)
+		return
+	
+	# Enforce cooldown to prevent sound spam
+	var current_time = Time.get_ticks_msec() / 1000.0
+	if current_time - last_impact_time < impact_cooldown:
+		print("🔇 Impact cooldown active for " + parent_object.name)
+		return
+	
+	# Check velocity - only play sound if impact is strong enough
+	var impact_velocity = parent_rigid_body.linear_velocity.length()
+	if impact_velocity < impact_velocity_threshold:
+		print("🔇 Impact too soft: " + str(impact_velocity) + " < " + str(impact_velocity_threshold))
+		return
+	
+	# Play impact sound with volume based on impact strength
+	var volume_db = _calculate_impact_volume(impact_velocity)
+	_play_sound(impact_sound, volume_db)
+	
+	last_impact_time = current_time
+	
+	print("💥 Impact: " + parent_object.name + " (velocity: " + str(impact_velocity) + ", volume: " + str(volume_db) + "db)")
+
+func _calculate_impact_volume(velocity: float) -> float:
+	"""Calculate volume based on impact velocity (louder = harder impact)"""
+	# Map velocity to volume range
+	# Soft impact (threshold) = -15db, Hard impact (10+ m/s) = -5db
+	var min_velocity = impact_velocity_threshold
+	var max_velocity = 10.0
+	var min_volume = -15.0  # Quieter minimum
+	var max_volume = -5.0   # Quieter maximum
+	
+	# Clamp and normalize velocity
+	var normalized = clamp((velocity - min_velocity) / (max_velocity - min_velocity), 0.0, 1.0)
+	
+	# Linear interpolation between min and max volume
+	return lerp(min_volume, max_volume, normalized)
+
+# --- AUDIO HELPER ---
+
+func _ensure_audio_player() -> void:
+	"""Ensure audio player exists for CarryableComponent sounds"""
+	if not _audio_player and (pickup_sound or drop_sound or impact_sound):
+		_audio_player = AudioStreamPlayer3D.new()
+		_audio_player.name = "CarryableAudio"
+		_audio_player.max_distance = 30.0  # Can hear impacts from farther away
+		_audio_player.attenuation_model = AudioStreamPlayer3D.ATTENUATION_INVERSE_DISTANCE
+		add_child(_audio_player)
+		print("🔊 Created audio player for " + parent_object.name)
 
 # --- PUBLIC METHODS ---
 

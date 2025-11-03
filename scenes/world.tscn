@@ -1,4 +1,4 @@
-[gd_scene load_steps=134 format=3 uid="uid://cnmivki1rop3b"]
+[gd_scene load_steps=137 format=3 uid="uid://cnmivki1rop3b"]
 
 [ext_resource type="Material" uid="uid://wwlsotlotycw" path="res://materials/wood.tres" id="1_4mrxx"]
 [ext_resource type="Script" uid="uid://d4bxpnphvld1d" path="res://scripts/PlayerController.gd" id="1_4wyf3"]
@@ -27,6 +27,9 @@
 [ext_resource type="AudioStream" uid="uid://cfqmga8or17qn" path="res://sounds/lightswitchON.ogg" id="23_l8ah6"]
 [ext_resource type="Script" uid="uid://djltcowfnfdh7" path="res://scripts/mirror.gd" id="24_ctatt"]
 [ext_resource type="AudioStream" uid="uid://o3kakxscxwb1" path="res://sounds/lightswitchOFF.ogg" id="24_e75v4"]
+[ext_resource type="Script" uid="uid://dxwj5n7bxo3mk" path="res://scripts/MirrorInteraction.gd" id="24_mirror"]
+[ext_resource type="Material" uid="uid://depuckvrgdvcl" path="res://materials/humanskin.tres" id="25_humanskin"]
+[ext_resource type="Material" uid="uid://bagboitufgv5v" path="res://materials/skeletonskin.tres" id="25_skeletonskin"]
 [ext_resource type="Shader" uid="uid://br4qh8mg5yosn" path="res://shaders/mirror.gdshader" id="25_xgqkh"]
 [ext_resource type="PackedScene" uid="uid://d0y6fk05wn5dc" path="res://models/interactables/cardboard box/box.glb" id="26_ts3gi"]
 [ext_resource type="PackedScene" uid="uid://tejn0hfpdhf7" path="res://models/interactables/cardboard box/box topL.glb" id="27_0nbtd"]
@@ -49,6 +52,7 @@
 [ext_resource type="Script" uid="uid://c63c2n2vhd5r6" path="res://scripts/FanController.gd" id="49_npbic"]
 [ext_resource type="PackedScene" uid="uid://bsdobk5wd61u" path="res://models/interactables/fan/blade.glb" id="50_1dgkn"]
 [ext_resource type="Script" uid="uid://dpnghglurvaq0" path="res://scripts/consolelog.gd" id="51_1jxku"]
+[ext_resource type="AudioStream" uid="uid://dpg8irmcjmgbd" path="res://sounds/trash can.ogg" id="51_5nedk"]
 [ext_resource type="Script" uid="uid://u01mbabuiguh" path="res://scripts/components/PoweredDeviceComponent.gd" id="51_iexy4"]
 [ext_resource type="Script" uid="uid://d1d8fhujnbpfy" path="res://scripts/components/PowerCordPlugComponent.gd" id="51_pf35h"]
 [ext_resource type="PackedScene" uid="uid://dtharqrj0cj5y" path="res://scenes/test_box.tscn" id="52_e68xj"]
@@ -59,8 +63,6 @@
 [ext_resource type="AudioStream" uid="uid://8so1mqtnfhkh" path="res://sounds/box open 1.ogg" id="box_open_1"]
 [ext_resource type="AudioStream" uid="uid://bkyiswhv5fuaf" path="res://sounds/box open 2.ogg" id="box_open_2"]
 [ext_resource type="AudioStream" uid="uid://c7etdc3b1aau1" path="res://sounds/fan loop.ogg" id="fan_loop"]
-[ext_resource type="AudioStream" uid="uid://drutnrfsg6uij" path="res://sounds/fan shutdown.ogg" id="fan_shutdown"]
-[ext_resource type="AudioStream" uid="uid://cgdgvauaqxr5i" path="res://sounds/fan startup.ogg" id="fan_startup"]
 [ext_resource type="AudioStream" uid="uid://bukro42figtah" path="res://sounds/fan switch.ogg" id="fan_switch"]
 [ext_resource type="AudioStream" uid="uid://cemldiwrdj70h" path="res://sounds/halloween.ogg" id="halloween_audio"]
 [ext_resource type="AudioStream" uid="uid://bw0ig22tombxc" path="res://sounds/ministudio.ogg" id="ministudio_audio"]
@@ -159,6 +161,9 @@ viewport_path = NodePath("mirror/SubViewport")
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xgqkh"]
 resource_local_to_scene = true
 albedo_texture = SubResource("ViewportTexture_ctatt")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_mirror"]
+size = Vector3(2, 2, 0.041088868)
 
 [sub_resource type="World3D" id="World3D_munwf"]
 
@@ -1163,10 +1168,21 @@ transform = Transform3D(0.014088948, -0.019586174, -0.62915206, 0.47128618, 0.04
 transform = Transform3D(0.013917993, 0.06352692, -0.6286893, 0.017449299, 1.3355626, 0.030572794, 0.47172707, -0.05127709, 0.01741816, 58.345383, 9.54422, -27.782818)
 
 [node name="mirror" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.15967436, -0.98716974, 7.2844835e-22, 0.98716974, 0.15967436, 0, -1.3524944e-22, 8.361653e-22, 0.86, 3.637775, 1.0085149, 4.4239473)
+transform = Transform3D(0.15967436, -0.98716974, 7.2844835e-22, 0.98716974, 0.15967436, 0, -1.3524944e-22, 8.361653e-22, 0.86, 3.5676813, 1.0085149, 4.4239473)
 mesh = SubResource("PlaneMesh_kpybi")
 surface_material_override/0 = SubResource("StandardMaterial3D_xgqkh")
 script = ExtResource("24_ctatt")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="mirror"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="mirror/StaticBody3D"]
+transform = Transform3D(0.99995476, 0.0050280425, 0.008100539, -0.007948324, -0.029610021, 0.9995302, 0.005265377, -0.9995489, -0.029568743, 0.000238657, 0.029442072, -0.0008711815)
+shape = SubResource("BoxShape3D_mirror")
+
+[node name="MirrorInteraction" type="Node3D" parent="mirror"]
+script = ExtResource("24_mirror")
+human_skin_material = ExtResource("25_humanskin")
+skeleton_skin_material = ExtResource("25_skeletonskin")
 
 [node name="SubViewport" type="SubViewport" parent="mirror"]
 world_3d = SubResource("World3D_munwf")
@@ -1237,7 +1253,7 @@ transform = Transform3D(-0.029999997, 4.529874e-09, -1.9800707e-16, 0, -1.311341
 script = ExtResource("28_artbox_new")
 
 [node name="fold6" parent="artbox" instance=ExtResource("31_x2olw")]
-transform = Transform3D(0.018202737, 8.583139e-08, 0.99983054, 8.583111e-08, 0.99999934, -8.740797e-08, -0.9998305, 8.740823e-08, 0.018202737, 0.9763241, 0, -6.7096863)
+transform = Transform3D(0.018202735, 8.583139e-08, 0.9998304, 8.58311e-08, 0.99999934, -8.7407955e-08, -0.99983037, 8.740823e-08, 0.018202735, 0.9763241, 0, -6.7096863)
 
 [node name="fold5" parent="artbox/fold6" instance=ExtResource("32_817gm")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -7.9999986, 0, 0)
@@ -1289,20 +1305,20 @@ libraries = {
 &"": SubResource("AnimationLibrary_ggc52")
 }
 
-[node name="RigidBody3D" type="RigidBody3D" parent="."]
+[node name="BOOMbox" type="RigidBody3D" parent="."]
 transform = Transform3D(0.7866657, 0, 0.6173793, 0, 1, 0, -0.6173793, 0, 0.7866657, 1.8297244, 0.3116727, -3.198355)
 collision_layer = 8
 collision_mask = 11
 mass = 2.0
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="BOOMbox"]
 transform = Transform3D(0.9999999, 0, 0, 0, 1, 0, 0, 0, 0.9999999, 4.7683716e-07, -0.06947191, 0.016858816)
 shape = SubResource("BoxShape3D_4kmvx")
 
-[node name="boombox model" parent="RigidBody3D" instance=ExtResource("41_rga7q")]
+[node name="boombox model" parent="BOOMbox" instance=ExtResource("41_rga7q")]
 transform = Transform3D(0.17, 0, 0, 0, 0.17, 0, 0, 0, 0.17, 0, 0, 0)
 
-[node name="BoomboxInteraction" type="Node3D" parent="RigidBody3D"]
+[node name="BoomboxInteraction" type="Node3D" parent="BOOMbox"]
 script = ExtResource("36_boombox_new")
 audio_file = ExtResource("halloween_audio")
 secret_audio_file = ExtResource("ministudio_audio")
@@ -1321,6 +1337,7 @@ collision_mask = 11
 
 [node name="CarryableComponent" type="Node3D" parent="trash can"]
 script = ExtResource("46_e68xj")
+impact_sound = ExtResource("51_5nedk")
 metadata/_custom_type_script = "uid://cbwg344irqecy"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="trash can"]
@@ -1362,8 +1379,6 @@ shape = SubResource("BoxShape3D_iexy4")
 script = ExtResource("49_npbic")
 powered_device = NodePath("../PoweredDeviceComponent")
 animation_player = NodePath("../cage/blade/AnimationPlayer")
-startup_sound = ExtResource("fan_startup")
-shutdown_sound = ExtResource("fan_shutdown")
 running_loop_sound = ExtResource("fan_loop")
 
 [node name="plug" type="RigidBody3D" parent="."]

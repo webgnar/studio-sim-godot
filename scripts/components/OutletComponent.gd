@@ -1,7 +1,8 @@
-extends InteractionComponent
+extends Node3D
 class_name OutletComponent
 ## Electrical outlet that power cords can plug into
 ## Manages plug connections and power state
+## Note: Outlet is NOT interactable - plugs detect and connect to outlets, not the other way around
 
 # --- SIGNALS ---
 signal power_state_changed(is_powered: bool)
@@ -27,6 +28,10 @@ signal plug_removed(plug: PowerCordPlugComponent)
 var is_occupied: bool = false
 var plugged_cord: PowerCordPlugComponent = null
 var is_powered: bool = false
+var _audio_player: AudioStreamPlayer3D
+
+# --- INTERNAL REFERENCES ---
+var parent_object: Node3D  ## Reference to parent object for positioning
 
 # --- COMPUTED PROPERTIES ---
 
@@ -40,19 +45,17 @@ var plug_socket_position: Vector3:
 # --- GODOT METHODS ---
 
 func _ready() -> void:
-	super._ready()
+	# Get parent reference
+	parent_object = get_parent() as Node3D
+	if not parent_object:
+		push_error("OutletComponent must be child of a Node3D!")
+		return
 	
 	# Ensure audio player exists for outlet sounds
 	_ensure_audio_player()
 	
 	# Add to outlets group for easy finding
 	add_to_group("outlets")
-	
-	# Setup interaction text
-	if is_occupied:
-		interaction_text = "Unplug"
-	else:
-		interaction_text = "Outlet (Empty)"
 	
 	# Update visual state
 	_update_visual_state()
@@ -68,25 +71,6 @@ func _ensure_audio_player() -> void:
 		_audio_player.attenuation_model = AudioStreamPlayer3D.ATTENUATION_INVERSE_DISTANCE
 		add_child(_audio_player)
 		print("Created audio player for outlet sounds")
-
-# --- INTERACTION ---
-
-func _on_interacted(player_interaction: PlayerInteractionComponent) -> void:
-	"""Handle player interaction with outlet"""
-	
-	if is_occupied and plugged_cord:
-		# Unplug the cord
-		if allow_unplug:
-			remove_plug()
-		else:
-			player_interaction.show_hint(null, "Cannot unplug this outlet")
-	else:
-		# Check if player is carrying a plug
-		if player_interaction.is_carrying:
-			var carried = player_interaction.carried_object
-			if carried is PowerCordPlugComponent:
-				# Try to plug it in
-				accept_plug(carried)
 
 # --- PLUG MANAGEMENT ---
 
@@ -105,15 +89,15 @@ func accept_plug(plug: PowerCordPlugComponent) -> bool:
 	if plug.plug_into(self):
 		is_occupied = true
 		plugged_cord = plug
-		interaction_text = "Unplug" if allow_unplug else "Outlet (Locked)"
 		
 		# Update power state
 		if auto_power_on_plug:
 			set_powered(true)
 		
 		# Play sound
-		if plug_in_sound:
-			_play_sound(plug_in_sound)
+		if plug_in_sound and _audio_player:
+			_audio_player.stream = plug_in_sound
+			_audio_player.play()
 			print("🔊 Playing plug IN sound")
 		else:
 			print("⚠️ No plug_in_sound assigned!")
@@ -143,15 +127,15 @@ func remove_plug() -> bool:
 	if plug.unplug():
 		is_occupied = false
 		plugged_cord = null
-		interaction_text = "Outlet (Empty)"
 		
 		# Update power state
 		if auto_power_on_plug:
 			set_powered(false)
 		
 		# Play sound
-		if plug_out_sound:
-			_play_sound(plug_out_sound)
+		if plug_out_sound and _audio_player:
+			_audio_player.stream = plug_out_sound
+			_audio_player.play()
 			print("🔊 Playing plug OUT sound")
 		else:
 			print("⚠️ No plug_out_sound assigned!")
@@ -212,9 +196,7 @@ func force_unplug() -> void:
 func lock_outlet() -> void:
 	"""Prevent unplugging"""
 	allow_unplug = false
-	interaction_text = "Outlet (Locked)"
 
 func unlock_outlet() -> void:
 	"""Allow unplugging"""
 	allow_unplug = true
-	interaction_text = "Unplug" if is_occupied else "Outlet (Empty)"
