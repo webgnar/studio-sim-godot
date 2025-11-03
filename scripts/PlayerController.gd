@@ -23,6 +23,9 @@ extends CharacterBody3D
 @export var max_fov_increase: float = 15.0
 @export var fov_transition_speed: float = 2.0
 
+@export_group("Interaction Settings")
+@export var interaction_distance: float = 5.0
+
 # --- PRIVATE VARIABLES ---
 
 # We get a reference to the camera in _ready().
@@ -115,6 +118,7 @@ func _setup_interaction_component() -> void:
 	# If not found, create one programmatically
 	_interaction_component = PlayerInteractionComponent.new()
 	_interaction_component.name = "PlayerInteractionComponent"
+	_interaction_component.interaction_distance = interaction_distance  # Set from PlayerController export
 	add_child(_interaction_component)
 	print("Created PlayerInteractionComponent programmatically")
 	

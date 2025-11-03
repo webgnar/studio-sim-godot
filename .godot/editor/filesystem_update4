@@ -13,3 +13,4 @@ res://scripts/BreakableWindow.gd
 res://materials/windowglass.tres
 res://materials/styrafoam.tres
 res://scenes/brute trash can.tscn
+res://scripts/PlayerController.gd
