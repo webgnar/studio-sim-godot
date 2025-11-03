@@ -146,8 +146,10 @@ func plug_into(outlet: OutletComponent) -> bool:
 			player_ref.carried_object = null
 			player_ref.is_carrying = false
 	
-	# Snap to outlet position
+	# Snap to outlet position and rotation
 	parent_rigid_body.global_position = outlet.plug_socket_position
+	if outlet.plug_socket_marker:
+		parent_rigid_body.global_rotation = outlet.plug_socket_marker.global_rotation
 	parent_rigid_body.freeze = true  # Lock in place
 	parent_rigid_body.lock_rotation = true
 	

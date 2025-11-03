@@ -61,8 +61,9 @@ func _input(event: InputEvent) -> void:
 					plug.drop()  # This will auto-plug due to auto_plug_on_release
 					return
 			
-			# Normal throw
-			throw_carried_object()
+			# Normal throw - use object's throw_power setting
+			var throw_force = carried_object.throw_power if carried_object else 15.0
+			throw_carried_object(throw_force)
 			return
 		
 		# If not carrying, check if looking at a carryable object
@@ -366,8 +367,9 @@ func drop_carried_object() -> void:
 	if not is_carrying or not is_instance_valid(carried_object):
 		return
 	
-	print("📦 Player dropping object gently")
-	carried_object.throw(1.0)  # Gentle drop
+	var drop_force = carried_object.drop_power if carried_object else 1.0
+	print("📦 Player dropping object gently with force: " + str(drop_force))
+	carried_object.throw(drop_force)
 
 ## Show a hint to the player (for feedback)
 func show_hint(icon: Texture2D, text: String) -> void:

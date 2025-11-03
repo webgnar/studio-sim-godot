@@ -15,7 +15,7 @@ var _player_node: CharacterBody3D = null
 var _player_meshes: Array[MeshInstance3D] = []
 
 func _on_ready() -> void:
-	interaction_text = "Change Skin"
+	# interaction_text set via inspector
 	_ensure_audio_player()
 	_find_player()
 	_find_meshes()

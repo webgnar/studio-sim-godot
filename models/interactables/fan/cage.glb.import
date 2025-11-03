@@ -40,7 +40,6 @@ materials/extract_path=""
 _subresources={
 "nodes": {
 "PATH:cage": {
-"generate/physics": true,
 "physics/layer": 9,
 "physics/mask": 9
 }

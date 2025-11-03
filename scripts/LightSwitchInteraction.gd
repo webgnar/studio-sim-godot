@@ -22,9 +22,11 @@ signal lights_toggled(switch_id: String, is_on: bool)
 var _current_state: SwitchState = SwitchState.OFF
 var _animation_player: AnimationPlayer
 var _controlled_lights: Array[Light3D] = []
+var _default_interaction_text: String = ""  # Store inspector value
 
 func _on_ready() -> void:
-	interaction_text = "Toggle Switch"
+	# Store the inspector value before any changes
+	_default_interaction_text = interaction_text if interaction_text != "" else "Toggle Switch"
 	_ensure_audio_player()
 	_setup_animation_player()
 	_setup_controlled_lights()
@@ -126,7 +128,7 @@ func _toggle_switch() -> void:
 	_toggle_controlled_lights(is_turning_on)
 	
 	_current_state = new_state
-	interaction_text = "Toggle Switch"
+	interaction_text = _default_interaction_text  # Restore inspector value
 	
 	lights_toggled.emit(switch_id, is_turning_on)
 	

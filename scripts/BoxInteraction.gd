@@ -29,9 +29,13 @@ signal box_state_changed(new_state: BoxState)
 
 var _current_state: BoxState = BoxState.CLOSED
 var _spawned_object: Node3D = null
+var _open_text: String = ""  # Store open text from inspector
+var _close_text: String = ""  # Store close text
 
 func _on_ready() -> void:
-	interaction_text = "Open Box"
+	# Store inspector value as the "open" text (default state)
+	_open_text = interaction_text if interaction_text != "" else "Open Box"
+	_close_text = "Close Box"  # Can be made @export if needed
 	_ensure_audio_player()
 	print("✅ BoxInteraction ready: " + parent_object.name)
 
@@ -224,7 +228,7 @@ func _set_state(new_state: BoxState) -> void:
 
 func _on_box_fully_opened() -> void:
 	print("🎉 BOX IS FULLY OPEN!")
-	interaction_text = "Close Box"
+	interaction_text = _close_text
 	emit_state_change("OPEN")
 	
 	if not _spawned_object:
@@ -234,7 +238,7 @@ func _on_box_fully_opened() -> void:
 
 func _on_box_fully_closed() -> void:
 	print("📦 BOX IS CLOSED!")
-	interaction_text = "Open Box"
+	interaction_text = _open_text
 	emit_state_change("CLOSED")
 	
 	if box_close_sound:

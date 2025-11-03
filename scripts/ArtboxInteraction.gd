@@ -28,7 +28,7 @@ var _orient_to_horizontal_player: AnimationPlayer
 var _unfold_animation_players: Array[AnimationPlayer] = []
 
 func _on_ready() -> void:
-	interaction_text = "Unfold Art"
+	# interaction_text set via inspector
 	_setup_animation_players()
 	print("✅ ArtboxInteraction ready: " + parent_object.name)
 

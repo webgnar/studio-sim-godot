@@ -1,15 +1,14 @@
-BoomboxInteraction
+Marker3D
 CarryableComponent
 CollisionShape3D
 RigidBody3D
+BoomboxInteraction
 CSGCombiner3D
 Node3D
 StaticBody3D
 PoweredDeviceComponent
 PowerCordPlugComponent
 MeshInstance3D
-Marker3D
 Path3D
 OutletComponent
 Label
-Control

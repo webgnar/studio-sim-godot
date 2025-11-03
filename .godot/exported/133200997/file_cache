@@ -5,12 +5,12 @@ res://materials/skeletonskin.tres::388efc2498dae1806d0bc29c02af5e0e::1761713575:
 res://materials/wall.tres::95e96e06d68ff545b1c52073ec97f3a8::1761080715::res://.godot/exported/133200997/export-1c84afdd05f518f898d96b6833632398-wall.res
 res://materials/wood.tres::5f18c53c2621a7fc282482e6f8735e23::1761019173::res://.godot/exported/133200997/export-6bab30075bec6dca5efb9a8285be1fb5-wood.res
 res://scenes/human.tscn::69a111d5920c0beed20be7f22b41c616::1761713575::res://.godot/exported/133200997/export-eba661b9dcbe38bde83515c9e6eec66a-human.scn
-res://scenes/world.tscn::f8a01dd8e7cc1d95aafcd9334ef27a24::1762070296::res://.godot/exported/133200997/export-6b9c1b1fd6ae6f795188dfdc89e222b0-world.scn
+res://scenes/world.tscn::281663f0e0b55cf30230e20833c4ab7d::1762140745::res://.godot/exported/133200997/export-6b9c1b1fd6ae6f795188dfdc89e222b0-world.scn
 res://materials/windowglass.tres::22faeaae20ee86f95a677ea77854befd::1761713651::res://.godot/exported/133200997/export-9f29ef6ad686a14f33562fc30aac2334-windowglass.res
 res://materials/mirror.tres::0c8bcc20e8f23b169024b73a136da9fc::1761106682::res://.godot/exported/133200997/export-afb007463ebee55a4f65259bdc477898-mirror.res
 res://scenes/brute trash can.tscn::20bd3c59f785504d3c3a592e500f0e8b::1762052451::res://.godot/exported/133200997/export-67e222280376f1807efcc352d31096e7-brute trash can.scn
 res://materials/alley.tres::11a59d6afbb1a76be50b601d327b6a8f::1761807134::res://.godot/exported/133200997/export-41a862069041f200415bdc5cdc28c79f-alley.res
 res://materials/styrafoam.tres::79375074f12e9f10af48be27338ba23b::1762068608::res://.godot/exported/133200997/export-e094e779d06ac45f494c2f395614da18-styrafoam.res
-res://scenes/HUD.tscn::2c75ceb3ad36ca5109abf30e6d288a2f::1762050670::res://.godot/exported/133200997/export-2ea9781d6f9f7562c1d276c7fdd0b0ab-HUD.scn
+res://scenes/HUD.tscn::bb888f88a73943ea38668541791d048a::1762072388::res://.godot/exported/133200997/export-2ea9781d6f9f7562c1d276c7fdd0b0ab-HUD.scn
 res://scenes/power_cord.tscn::417efdcb8a7341e2bbe55c22dca0ad32::1762059710::res://.godot/exported/133200997/export-56e832ab65183e1d7a49942756318e6b-power_cord.scn
 res://scenes/test_box.tscn::95de282d95425f848588e173cf859029::1762068608::res://.godot/exported/133200997/export-aee4948c089277e4f1d84b2a9722c2bb-test_box.scn

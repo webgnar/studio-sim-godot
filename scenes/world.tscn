@@ -1,4 +1,4 @@
-[gd_scene load_steps=137 format=3 uid="uid://cnmivki1rop3b"]
+[gd_scene load_steps=134 format=3 uid="uid://cnmivki1rop3b"]
 
 [ext_resource type="Material" uid="uid://wwlsotlotycw" path="res://materials/wood.tres" id="1_4mrxx"]
 [ext_resource type="Script" uid="uid://d4bxpnphvld1d" path="res://scripts/PlayerController.gd" id="1_4wyf3"]
@@ -18,7 +18,6 @@
 [ext_resource type="PackedScene" uid="uid://chnkextlwxa7d" path="res://models/props/window.glb" id="15_xo05s"]
 [ext_resource type="PackedScene" uid="uid://xeaph8bqk1j1" path="res://models/props/pipe_red.glb" id="16_oo54l"]
 [ext_resource type="PackedScene" uid="uid://fjppju80c5ic" path="res://models/props/pipe_yellow.glb" id="17_kpybi"]
-[ext_resource type="PackedScene" uid="uid://db8764j2674fq" path="res://models/props/outlet_box.glb" id="18_ctatt"]
 [ext_resource type="PackedScene" uid="uid://44g07prjgs5x" path="res://models/props/pipe_gray bent.glb" id="19_kpybi"]
 [ext_resource type="PackedScene" uid="uid://cmaavrflrf4d4" path="res://models/props/pipe_gray.glb" id="19_xgqkh"]
 [ext_resource type="PackedScene" uid="uid://c8duo4thyjdsv" path="res://models/props/spotlight.glb" id="20_munwf"]
@@ -46,6 +45,7 @@
 [ext_resource type="PackedScene" uid="uid://ddornft2ln8sq" path="res://models/interactables/boomBox.glb" id="41_rga7q"]
 [ext_resource type="PackedScene" uid="uid://bhsyl3tj8hblj" path="res://scenes/brute trash can.tscn" id="46_18clu"]
 [ext_resource type="Script" uid="uid://cbwg344irqecy" path="res://scripts/components/CarryableComponent.gd" id="46_e68xj"]
+[ext_resource type="Script" uid="uid://dski42rg3yjwf" path="res://scripts/components/FanCarryableComponent.gd" id="46_fan_carry"]
 [ext_resource type="PackedScene" uid="uid://b7y2nsov4op11" path="res://models/paintings/alley.glb" id="47_4wdv8"]
 [ext_resource type="PackedScene" uid="uid://dxk1gusj3uuj7" path="res://models/interactables/fan/legs.glb" id="48_x28ej"]
 [ext_resource type="PackedScene" uid="uid://d334ujfwmx8lp" path="res://models/interactables/fan/cage.glb" id="49_1jxku"]
@@ -58,7 +58,7 @@
 [ext_resource type="PackedScene" uid="uid://dtharqrj0cj5y" path="res://scenes/test_box.tscn" id="52_e68xj"]
 [ext_resource type="Script" uid="uid://dqp07gb58nlbf" path="res://scripts/components/PowerCord.gd" id="52_iexy4"]
 [ext_resource type="PackedScene" uid="uid://ddoijgnx5221v" path="res://models/interactables/plug.glb" id="53_pf35h"]
-[ext_resource type="Script" uid="uid://dlksqcf0lda80" path="res://scripts/components/OutletComponent.gd" id="54_qg546"]
+[ext_resource type="PackedScene" uid="uid://clyqlnamf1d2w" path="res://scenes/wall_outlet.tscn" id="66_8lgfd"]
 [ext_resource type="AudioStream" uid="uid://84rjpuccue2i" path="res://sounds/boomboxSwitch.ogg" id="boombox_switch"]
 [ext_resource type="AudioStream" uid="uid://8so1mqtnfhkh" path="res://sounds/box open 1.ogg" id="box_open_1"]
 [ext_resource type="AudioStream" uid="uid://bkyiswhv5fuaf" path="res://sounds/box open 2.ogg" id="box_open_2"]
@@ -66,8 +66,6 @@
 [ext_resource type="AudioStream" uid="uid://bukro42figtah" path="res://sounds/fan switch.ogg" id="fan_switch"]
 [ext_resource type="AudioStream" uid="uid://cemldiwrdj70h" path="res://sounds/halloween.ogg" id="halloween_audio"]
 [ext_resource type="AudioStream" uid="uid://bw0ig22tombxc" path="res://sounds/ministudio.ogg" id="ministudio_audio"]
-[ext_resource type="AudioStream" uid="uid://b01s70tsty74h" path="res://sounds/plugIn.ogg" id="plug_in"]
-[ext_resource type="AudioStream" uid="uid://8wuf6nkvi1wl" path="res://sounds/plugOut.ogg" id="plug_out"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_nnsk1"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -667,7 +665,7 @@ _data = {
 }
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_iexy4"]
-size = Vector3(9.757992, 10.63894, 3.158015)
+size = Vector3(9.757992, 11.056286, 4.682035)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_npbic"]
 size = Vector3(0.14697266, 0.10101318, 0.31085205)
@@ -681,9 +679,6 @@ viewport_path = NodePath("console log/SubViewport")
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5hglh"]
 resource_local_to_scene = true
 albedo_texture = SubResource("ViewportTexture_e68xj")
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_pf35h"]
-size = Vector3(0.914917, 1.9637451, 1.8647461)
 
 [node name="World" type="Node3D"]
 
@@ -759,23 +754,27 @@ collision_mask = 0
 [node name="floor" type="CSGBox3D" parent="studio"]
 transform = Transform3D(22.413044, 0, 0, 0, 0.008010681, 0, 0, 0, 1.0114841, 10.744333, -0.47325248, 0)
 use_collision = true
+collision_mask = 0
 material = ExtResource("1_k0juu")
 
 [node name="wall" type="CSGBox3D" parent="studio"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.173913, -0.099999994, 0)
 use_collision = true
+collision_mask = 0
 size = Vector3(1, 0.8, 1)
 material = ExtResource("5_71j4m")
 
 [node name="wall2" type="CSGBox3D" parent="studio"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1.0247351, 19.533485, -0.099999994, 0)
 use_collision = true
+collision_mask = 0
 size = Vector3(1, 0.8, 1)
 material = ExtResource("5_71j4m")
 
 [node name="wall3" type="CSGBox3D" parent="studio"]
 transform = Transform3D(-4.371139e-08, 0, 24.108696, 0, 1, 0, -0.020318022, 0, -2.1411632e-08, 10.837832, -0.099999994, 0.48586574)
 use_collision = true
+collision_mask = 0
 size = Vector3(1, 0.8, 1)
 material = ExtResource("5_71j4m")
 
@@ -1183,6 +1182,7 @@ shape = SubResource("BoxShape3D_mirror")
 script = ExtResource("24_mirror")
 human_skin_material = ExtResource("25_humanskin")
 skeleton_skin_material = ExtResource("25_skeletonskin")
+interaction_text = "Change"
 
 [node name="SubViewport" type="SubViewport" parent="mirror"]
 world_3d = SubResource("World3D_munwf")
@@ -1253,7 +1253,7 @@ transform = Transform3D(-0.029999997, 4.529874e-09, -1.9800707e-16, 0, -1.311341
 script = ExtResource("28_artbox_new")
 
 [node name="fold6" parent="artbox" instance=ExtResource("31_x2olw")]
-transform = Transform3D(0.018202735, 8.583139e-08, 0.9998304, 8.58311e-08, 0.99999934, -8.7407955e-08, -0.99983037, 8.740823e-08, 0.018202735, 0.9763241, 0, -6.7096863)
+transform = Transform3D(0.018202726, 8.583139e-08, 0.99982995, 8.583106e-08, 0.99999934, -8.740791e-08, -0.9998299, 8.740823e-08, 0.018202726, 0.9763241, 0, -6.7096863)
 
 [node name="fold5" parent="artbox/fold6" instance=ExtResource("32_817gm")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -7.9999986, 0, 0)
@@ -1348,56 +1348,63 @@ debug_color = Color(0.9490196, 0, 0.58431375, 0.8117647)
 [node name="alley" parent="." instance=ExtResource("47_4wdv8")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -3.6867952, 1.62026, -4)
 
-[node name="fan legs" parent="." instance=ExtResource("48_x28ej")]
-transform = Transform3D(-0.06961743, 0, 0.0073084915, 0, 0.07000001, 0, -0.0073084915, 0, -0.06961743, -1.2486987, 0.10264242, 10.731506)
+[node name="FAN" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5079603, 0.17234671, 9.255304)
+collision_layer = 8
+collision_mask = 3
 
-[node name="cage" parent="fan legs" instance=ExtResource("49_1jxku")]
+[node name="CarryableComponent" type="Node3D" parent="FAN" node_paths=PackedStringArray("powered_device")]
+script = ExtResource("46_fan_carry")
+powered_device = NodePath("../fan legs/PoweredDeviceComponent")
+
+[node name="fan legs" parent="FAN" instance=ExtResource("48_x28ej")]
+transform = Transform3D(-0.06961743, 0, 0.0073084915, 0, 0.07000001, 0, -0.0073084915, 0, -0.06961743, 0, 0, 0)
+
+[node name="cage" parent="FAN/fan legs" instance=ExtResource("49_1jxku")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.016191006, 5.825101, 1.146759)
 
-[node name="blade" parent="fan legs/cage" instance=ExtResource("50_1dgkn")]
+[node name="blade" parent="FAN/fan legs/cage" instance=ExtResource("50_1dgkn")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.10343838, -0.08967781, 0.51927185)
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="fan legs/cage/blade"]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="FAN/fan legs/cage/blade"]
 libraries = {
 &"": SubResource("AnimationLibrary_npbic")
 }
 
-[node name="PoweredDeviceComponent" type="Node3D" parent="fan legs" node_paths=PackedStringArray("power_cord_plug")]
+[node name="PoweredDeviceComponent" type="Node3D" parent="FAN/fan legs" node_paths=PackedStringArray("power_cord_plug")]
 script = ExtResource("51_iexy4")
-power_cord_plug = NodePath("../../plug/PowerCordPlugComponent")
+power_cord_plug = NodePath("../../../plug/PowerCordPlugComponent")
 turn_on_sound = ExtResource("fan_switch")
 turn_off_sound = ExtResource("fan_switch")
 metadata/_custom_type_script = "uid://u01mbabuiguh"
 
-[node name="StaticBody3D" type="StaticBody3D" parent="fan legs"]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="fan legs/StaticBody3D"]
-transform = Transform3D(1, 0, 2.9802322e-08, 0, 1.0000993, 0, -2.9802322e-08, 0, 1, 0.107860565, 4.8197436, 1.6303358)
-shape = SubResource("BoxShape3D_iexy4")
-
-[node name="Node3D" type="Node3D" parent="fan legs" node_paths=PackedStringArray("powered_device", "animation_player")]
+[node name="Node3D" type="Node3D" parent="FAN/fan legs" node_paths=PackedStringArray("powered_device", "animation_player")]
 script = ExtResource("49_npbic")
 powered_device = NodePath("../PoweredDeviceComponent")
 animation_player = NodePath("../cage/blade/AnimationPlayer")
 running_loop_sound = ExtResource("fan_loop")
 
+[node name="CollisionShape3D" type="CollisionShape3D" parent="FAN"]
+transform = Transform3D(-0.06961743, 0, 0.0073084896, 0, 0.07000696, 0, -0.0073084896, 0, -0.06961743, -0.0011628214, 0.32277358, -0.061239004)
+shape = SubResource("BoxShape3D_iexy4")
+
 [node name="plug" type="RigidBody3D" parent="."]
-transform = Transform3D(-0.10440699, 0, -0.9945347, 0, 1, 0, 0.9945347, 0, -0.10440699, 1.034552, 1.530381, 12.653463)
+transform = Transform3D(-0.10440699, 0, -0.9945347, 0, 1, 0, 0.9945347, 0, -0.10440699, 1.034552, 0.37396324, 10.767699)
 collision_layer = 8
-collision_mask = 10
+collision_mask = 3
+continuous_cd = true
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="plug"]
 shape = SubResource("BoxShape3D_npbic")
 
 [node name="PowerCordPlugComponent" type="Node3D" parent="plug"]
 script = ExtResource("51_pf35h")
-pickup_sound = ExtResource("box_open_1")
-drop_sound = ExtResource("box_open_2")
+throw_power = 5.0
 metadata/_custom_type_script = "uid://d1d8fhujnbpfy"
 
 [node name="black cord script" type="Node3D" parent="plug" node_paths=PackedStringArray("connected_device")]
 script = ExtResource("52_iexy4")
-connected_device = NodePath("../../fan legs/cage")
+connected_device = NodePath("../../FAN/fan legs/cage")
 sag_amount = 0.0
 
 [node name="plug model" parent="plug" instance=ExtResource("53_pf35h")]
@@ -1429,152 +1436,32 @@ surface_material_override/0 = SubResource("StandardMaterial3D_5hglh")
 [node name="TestBox" parent="." instance=ExtResource("52_e68xj")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 1, -3)
 
-[node name="wall outlet" type="StaticBody3D" parent="."]
-transform = Transform3D(0.14, 0, 0, 0, 0.14, 0, 0, 0, 0.14, 3.7523398, 1.4185596, -2.825792)
-collision_layer = 2
+[node name="wall outlet" parent="." instance=ExtResource("66_8lgfd")]
+transform = Transform3D(0.14, 0, 0, 0, 0.14, 0, 0, 0, 0.14, 3.763795, 0.64233637, 10.863092)
 
-[node name="default" parent="wall outlet" instance=ExtResource("18_ctatt")]
+[node name="wall outlet2" parent="." instance=ExtResource("66_8lgfd")]
+transform = Transform3D(0.14, 0, 0, 0, 0.14, 0, 0, 0, 0.14, 3.7160342, 0.6808944, 9.028285)
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="wall outlet"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.042541504, 0.031188965, -0.0026855469)
-shape = SubResource("BoxShape3D_pf35h")
+[node name="wall outlet3" parent="." instance=ExtResource("66_8lgfd")]
+transform = Transform3D(0.14, 0, 0, 0, 0.14, 0, 0, 0, 0.14, 3.752054, 0.6808944, 2.8168354)
 
-[node name="OutletComponent" type="Node3D" parent="wall outlet"]
-script = ExtResource("54_qg546")
-plug_in_sound = ExtResource("plug_in")
-plug_out_sound = ExtResource("plug_out")
+[node name="wall outlet4" parent="." instance=ExtResource("66_8lgfd")]
+transform = Transform3D(0.14, 0, 0, 0, 0.14, 0, 0, 0, 0.14, 3.752054, 1.2143235, -2.8032422)
 
-[node name="wall outlet2" type="StaticBody3D" parent="."]
-transform = Transform3D(0.14, 0, 0, 0, 0.14, 0, 0, 0, 0.14, 3.7523398, 0.6093946, 2.8480759)
-collision_layer = 2
+[node name="wall outlet5" parent="." instance=ExtResource("66_8lgfd")]
+transform = Transform3D(-0.14, 0, 1.2239188e-08, 0, 0.14, 0, -1.2239188e-08, 0, -0.14, -3.6596956, 0.60044175, -3.287808)
 
-[node name="default" parent="wall outlet2" instance=ExtResource("18_ctatt")]
+[node name="wall outlet6" parent="." instance=ExtResource("66_8lgfd")]
+transform = Transform3D(-0.14, 0, 1.2239188e-08, 0, 0.14, 0, -1.2239188e-08, 0, -0.14, -3.6596956, 0.60044175, 6.767965)
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="wall outlet2"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.042541504, 0.031188965, -0.0026855469)
-shape = SubResource("BoxShape3D_pf35h")
+[node name="wall outlet8" parent="." instance=ExtResource("66_8lgfd")]
+transform = Transform3D(-0.14, 0, 1.2239188e-08, 0, 0.14, 0, -1.2239188e-08, 0, -0.14, -3.6596956, 0.60044175, 12.57127)
 
-[node name="OutletComponent" type="Node3D" parent="wall outlet2"]
-script = ExtResource("54_qg546")
-plug_in_sound = ExtResource("plug_in")
-plug_out_sound = ExtResource("plug_out")
+[node name="wall outlet9" parent="." instance=ExtResource("66_8lgfd")]
+transform = Transform3D(-1.1175871e-08, 0, -0.14, 0, 0.14, 0, 0.14, 0, -1.1175871e-08, -0.93246937, 0.60044175, 14.7264385)
 
-[node name="wall outlet3" type="StaticBody3D" parent="."]
-transform = Transform3D(0.14, 0, 0, 0, 0.14, 0, 0, 0, 0.14, 3.7246866, 0.7468788, 9.078153)
-collision_layer = 2
+[node name="wall outlet10" parent="." instance=ExtResource("66_8lgfd")]
+transform = Transform3D(-1.1175871e-08, 0, -0.14, 0, 0.14, 0, 0.14, 0, -1.1175871e-08, 3.6608849, 0.97617894, 14.7264385)
 
-[node name="default" parent="wall outlet3" instance=ExtResource("18_ctatt")]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="wall outlet3"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.042541504, 0.031188965, -0.0026855469)
-shape = SubResource("BoxShape3D_pf35h")
-
-[node name="OutletComponent" type="Node3D" parent="wall outlet3"]
-script = ExtResource("54_qg546")
-plug_in_sound = ExtResource("plug_in")
-plug_out_sound = ExtResource("plug_out")
-
-[node name="wall outlet4" type="StaticBody3D" parent="."]
-transform = Transform3D(0.14, 0, 0, 0, 0.14, 0, 0, 0, 0.14, 3.7644172, 0.66663843, 10.74867)
-collision_layer = 2
-
-[node name="default" parent="wall outlet4" instance=ExtResource("18_ctatt")]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="wall outlet4"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.042541504, 0.031188965, -0.0026855469)
-shape = SubResource("BoxShape3D_pf35h")
-
-[node name="OutletComponent" type="Node3D" parent="wall outlet4"]
-script = ExtResource("54_qg546")
-plug_in_sound = ExtResource("plug_in")
-plug_out_sound = ExtResource("plug_out")
-
-[node name="wall outlet5" type="StaticBody3D" parent="."]
-transform = Transform3D(-6.119594e-09, 0, -0.14, 0, 0.14, 0, 0.14, 0, -6.119594e-09, 3.6785972, 1.0041871, 14.752853)
-collision_layer = 2
-
-[node name="default" parent="wall outlet5" instance=ExtResource("18_ctatt")]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="wall outlet5"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.042541504, 0.031188965, -0.0026855469)
-shape = SubResource("BoxShape3D_pf35h")
-
-[node name="OutletComponent" type="Node3D" parent="wall outlet5"]
-script = ExtResource("54_qg546")
-plug_in_sound = ExtResource("plug_in")
-plug_out_sound = ExtResource("plug_out")
-
-[node name="wall outlet6" type="StaticBody3D" parent="."]
-transform = Transform3D(-6.119594e-09, 0, -0.14, 0, 0.14, 0, 0.14, 0, -6.119594e-09, -0.9278619, 0.58810973, 14.752853)
-collision_layer = 2
-
-[node name="default" parent="wall outlet6" instance=ExtResource("18_ctatt")]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="wall outlet6"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.042541504, 0.031188965, -0.0026855469)
-shape = SubResource("BoxShape3D_pf35h")
-
-[node name="OutletComponent" type="Node3D" parent="wall outlet6"]
-script = ExtResource("54_qg546")
-plug_in_sound = ExtResource("plug_in")
-plug_out_sound = ExtResource("plug_out")
-
-[node name="wall outlet7" type="StaticBody3D" parent="."]
-transform = Transform3D(-0.14, 0, 1.2239188e-08, 0, 0.14, 0, -1.2239188e-08, 0, -0.14, -3.667911, 0.58810973, 12.6370125)
-collision_layer = 2
-
-[node name="default" parent="wall outlet7" instance=ExtResource("18_ctatt")]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="wall outlet7"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.042541504, 0.031188965, -0.0026855469)
-shape = SubResource("BoxShape3D_pf35h")
-
-[node name="OutletComponent" type="Node3D" parent="wall outlet7"]
-script = ExtResource("54_qg546")
-plug_in_sound = ExtResource("plug_in")
-plug_out_sound = ExtResource("plug_out")
-
-[node name="wall outlet8" type="StaticBody3D" parent="."]
-transform = Transform3D(-0.14, 0, 1.2239188e-08, 0, 0.14, 0, -1.2239188e-08, 0, -0.14, -3.667911, 0.58810973, 6.7184095)
-collision_layer = 2
-
-[node name="default" parent="wall outlet8" instance=ExtResource("18_ctatt")]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="wall outlet8"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.042541504, 0.031188965, -0.0026855469)
-shape = SubResource("BoxShape3D_pf35h")
-
-[node name="OutletComponent" type="Node3D" parent="wall outlet8"]
-script = ExtResource("54_qg546")
-plug_in_sound = ExtResource("plug_in")
-plug_out_sound = ExtResource("plug_out")
-
-[node name="wall outlet9" type="StaticBody3D" parent="."]
-transform = Transform3D(-0.14, 0, 1.2239188e-08, 0, 0.14, 0, -1.2239188e-08, 0, -0.14, -3.667911, 0.601435, -3.2387514)
-collision_layer = 2
-
-[node name="default" parent="wall outlet9" instance=ExtResource("18_ctatt")]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="wall outlet9"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.042541504, 0.031188965, -0.0026855469)
-shape = SubResource("BoxShape3D_pf35h")
-
-[node name="OutletComponent" type="Node3D" parent="wall outlet9"]
-script = ExtResource("54_qg546")
-plug_in_sound = ExtResource("plug_in")
-plug_out_sound = ExtResource("plug_out")
-
-[node name="wall outlet10" type="StaticBody3D" parent="."]
-transform = Transform3D(-6.119594e-09, 0, -0.14, 0, 0.14, 0, 0.14, 0, -6.119594e-09, -3.5578737, 1.3362472, 3.6211665)
-collision_layer = 2
-
-[node name="default" parent="wall outlet10" instance=ExtResource("18_ctatt")]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="wall outlet10"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.042541504, 0.031188965, -0.0026855469)
-shape = SubResource("BoxShape3D_pf35h")
-
-[node name="OutletComponent" type="Node3D" parent="wall outlet10"]
-script = ExtResource("54_qg546")
-plug_in_sound = ExtResource("plug_in")
-plug_out_sound = ExtResource("plug_out")
+[node name="wall outlet7" parent="." instance=ExtResource("66_8lgfd")]
+transform = Transform3D(-6.119594e-09, 0, -0.14, 0, 0.14, 0, 0.14, 0, -6.119594e-09, -3.5728824, 1.6572046, 3.6067662)

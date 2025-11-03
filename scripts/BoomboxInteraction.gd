@@ -38,7 +38,7 @@ func _ready() -> void:
 	# Enable E-key interaction while allowing pickup (AFTER parent ready)
 	has_e_key_interaction = true
 	can_interact_while_carried = true  # Can toggle radio while carrying!
-	e_key_interaction_text = "Turn On Radio"
+	# e_key_interaction_text set via inspector
 	
 	# Adjust carry physics for boombox
 	carry_smoothness = 8.0  # Slightly less aggressive
@@ -133,7 +133,7 @@ func _start_audio() -> void:
 	_radio_audio_player.stream = song_to_play
 	_radio_audio_player.play()
 	_current_state = BoomboxState.PLAYING
-	e_key_interaction_text = "Turn Off Radio"
+	# Don't change e_key_interaction_text - keep inspector value
 	
 	print("🎵 Audio stream set: " + str(song_to_play))
 	print("🎵 Audio player playing: " + str(_radio_audio_player.playing))
@@ -156,7 +156,7 @@ func _stop_audio() -> void:
 		print("⏸️ Pausing audio (will resume from current position)")
 		_radio_audio_player.stream_paused = true
 		_current_state = BoomboxState.OFF
-		e_key_interaction_text = "Turn On Radio"
+		# Don't change e_key_interaction_text - keep inspector value
 		
 		if _animation_player and _animation_player.is_playing():
 			_animation_player.pause()
@@ -170,7 +170,7 @@ func _resume_audio() -> void:
 		print("▶️ Resuming audio from paused position")
 		_radio_audio_player.stream_paused = false
 		_current_state = BoomboxState.PLAYING
-		e_key_interaction_text = "Turn Off Radio"
+		# Don't change e_key_interaction_text - keep inspector value
 		
 		if _animation_player and not _animation_player.is_playing():
 			_animation_player.play()
@@ -188,14 +188,14 @@ func _check_if_audio_finished() -> void:
 		if _is_playing_secret_song:
 			print("🤫 Secret song (Halloween) finished playing")
 			_current_state = BoomboxState.OFF
-			e_key_interaction_text = "Turn On Radio"
+			# Don't change e_key_interaction_text - keep inspector value
 			audio_stopped.emit()
 			print("📻 Boombox turned off (secret song ended)")
 		else:
 			print("🎵 Main song (Ministudio) finished playing")
 			_main_song_has_played = true
 			_current_state = BoomboxState.OFF
-			e_key_interaction_text = "Turn On Radio"
+			# Don't change e_key_interaction_text - keep inspector value
 			audio_stopped.emit()
 			print("📻 Boombox turned off (main song ended)")
 			print("🤫 SECRET UNLOCKED! Next time you turn on the boombox, you'll hear a secret song!")
