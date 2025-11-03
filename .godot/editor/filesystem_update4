@@ -5,3 +5,5 @@ res://scripts/FanController.gd
 res://scripts/components/CarryableComponent.gd
 res://scripts/ArtboxInteraction.gd
 res://scripts/BreakableWindow.gd
+res://scenes/dust_particle_test.tscn
+res://scenes/particle_test.tscn

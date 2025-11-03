@@ -289,6 +289,10 @@ func _on_body_shape_entered(_body_rid: RID, body: Node, _body_shape_index: int, 
 	if body.is_in_group("Player"):
 		return
 	
+	# Ignore impacts when object is sleeping (resting/stacked objects)
+	if parent_rigid_body.sleeping:
+		return
+	
 	# Check if we have an impact sound assigned
 	if not impact_sound:
 		print("⚠️ No impact_sound assigned to " + parent_object.name)
@@ -297,13 +301,13 @@ func _on_body_shape_entered(_body_rid: RID, body: Node, _body_shape_index: int, 
 	# Enforce cooldown to prevent sound spam
 	var current_time = Time.get_ticks_msec() / 1000.0
 	if current_time - last_impact_time < impact_cooldown:
-		print("🔇 Impact cooldown active for " + parent_object.name)
+		# Remove debug spam - cooldown is working as intended
 		return
 	
 	# Check velocity - only play sound if impact is strong enough
 	var impact_velocity = parent_rigid_body.linear_velocity.length()
 	if impact_velocity < impact_velocity_threshold:
-		print("🔇 Impact too soft: " + str(impact_velocity) + " < " + str(impact_velocity_threshold))
+		# Remove debug spam - low velocity jitter is normal for stacked objects
 		return
 	
 	# Play impact sound with volume based on impact strength

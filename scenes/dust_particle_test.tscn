@@ -1,0 +1,29 @@
+[gd_scene load_steps=3 format=3 uid="uid://hmanpvvk8cbv"]
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_dust"]
+emission_shape = 2
+emission_sphere_radius = 2.0
+direction = Vector3(0, 0, 1)
+spread = 60.0
+initial_velocity_min = 2.0
+initial_velocity_max = 5.0
+gravity = Vector3(0, -3, 0)
+scale_min = 0.2
+scale_max = 0.5
+color = Color(0.8, 1, 1, 1)
+
+[sub_resource type="QuadMesh" id="QuadMesh_lixhd"]
+
+[node name="DustParticleTest" type="Node3D"]
+
+[node name="GPUParticles3D" type="GPUParticles3D" parent="."]
+amount = 30
+explosiveness = 0.9
+process_material = SubResource("ParticleProcessMaterial_dust")
+draw_pass_1 = SubResource("QuadMesh_lixhd")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 10)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 10, 0)
