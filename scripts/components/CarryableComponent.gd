@@ -7,6 +7,7 @@ class_name CarryableComponent
 # --- SIGNALS ---
 signal being_carried_changed(is_being_carried: bool)
 signal thrown(impulse: Vector3)
+signal e_key_interacted(player_interaction_component: PlayerInteractionComponent)
 
 # --- EXPORTED VARIABLES ---
 @export_group("Carry Settings")
@@ -14,10 +15,17 @@ signal thrown(impulse: Vector3)
 @export var carry_smoothness: float = 10.0 ## Higher = snappier, lower = floatier (COGITO uses 10)
 @export var drop_distance: float = 1.5 ## Auto-drop if object gets this far from carry position
 @export var lock_rotation_when_carried: bool = true ## Prevents object from tumbling while held
+@export var gravity_while_carrying: float = 0.2 ## Gravity multiplier while carrying (0 = none, 1 = full, affects heavy objects)
 
 @export_group("Throw Settings")
 @export var throw_power: float = 15.0 ## Force applied when throwing
 @export var drop_power: float = 1.0 ## Force applied when gently dropping
+
+@export_group("E-Key Interaction (Optional)")
+@export var has_e_key_interaction: bool = false ## Enable separate E-key interaction
+@export var e_key_interaction_text: String = "Interact" ## Text for E-key prompt
+@export var can_interact_while_carried: bool = false ## Allow E-key while carrying
+@export var e_key_interaction_sound: AudioStream ## Sound for E-key interaction
 
 @export_group("Audio")
 @export var pickup_sound: AudioStream
@@ -72,11 +80,41 @@ func _exit_tree() -> void:
 # --- INTERACTION METHODS ---
 
 func _on_interacted(player_interaction: PlayerInteractionComponent) -> void:
-	# Toggle: drop if already carrying, pickup if not
-	if is_carried:
-		drop()
+	# E key pressed
+	# If has_e_key_interaction is enabled, call the E-key method instead of pickup/drop
+	if has_e_key_interaction:
+		_handle_e_key_interaction(player_interaction)
 	else:
-		pickup(player_interaction)
+		# Old behavior: toggle pickup/drop with E key
+		if is_carried:
+			drop()
+		else:
+			pickup(player_interaction)
+
+func _handle_e_key_interaction(player_interaction: PlayerInteractionComponent) -> void:
+	"""Handle E-key interaction (separate from pickup)"""
+	# Check if we can interact based on carry state
+	if is_carried and not can_interact_while_carried:
+		# If carrying and can't interact while carried, just drop
+		drop()
+		return
+	
+	# Play E-key interaction sound
+	if e_key_interaction_sound:
+		_play_sound(e_key_interaction_sound)
+	
+	# Emit signal for external systems
+	e_key_interacted.emit(player_interaction)
+	
+	# Call virtual method for subclass implementation
+	_on_e_key_interacted(player_interaction)
+	
+	print("✨ E-key interaction: " + parent_object.name)
+
+## Virtual method - override in subclasses for custom E-key interaction behavior
+func _on_e_key_interacted(_player_interaction_component: PlayerInteractionComponent) -> void:
+	# Override in subclass if needed
+	pass
 
 # --- CARRY METHODS ---
 
@@ -91,12 +129,18 @@ func pickup(player_interaction: PlayerInteractionComponent) -> void:
 	# Disable CCD while carrying (not needed for smooth velocity-based movement)
 	parent_rigid_body.continuous_cd = false
 	
+	# Reduce gravity while carrying (makes heavy objects feel weighty but manageable)
+	parent_rigid_body.gravity_scale = gravity_while_carrying
+	
 	# Configure physics state
 	if lock_rotation_when_carried:
 		parent_rigid_body.lock_rotation = true  # Prevents tumbling
 	
 	parent_rigid_body.freeze = false  # MUST be false to allow velocity movement
 	parent_rigid_body.angular_velocity = Vector3.ZERO  # Stop any spinning
+	
+	# Disable collision with player (layer 1) while carrying to prevent pushing
+	parent_rigid_body.collision_mask = parent_rigid_body.collision_mask & ~1  # Remove layer 1
 	
 	# Tell player to start carrying this object
 	player_ref.start_carrying(self)
@@ -128,6 +172,12 @@ func drop() -> void:
 	# Restore physics state
 	if lock_rotation_when_carried:
 		parent_rigid_body.lock_rotation = false  # Allow natural rotation again
+	
+	# Re-enable gravity
+	parent_rigid_body.gravity_scale = 1.0
+	
+	# Re-enable collision with player (layer 1)
+	parent_rigid_body.collision_mask = parent_rigid_body.collision_mask | 1  # Add layer 1 back
 	
 	# Tell player to stop carrying
 	if player_ref and is_instance_valid(player_ref):

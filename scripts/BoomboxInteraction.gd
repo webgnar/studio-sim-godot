@@ -1,7 +1,7 @@
-extends InteractionComponent
+extends CarryableComponent
 class_name BoomboxInteraction
 ## Boombox interaction component - handles radio playback with secret song system
-## Extends InteractionComponent to inherit common interaction functionality
+## Extends CarryableComponent to allow pickup + E-key interaction
 
 enum BoomboxState {
 	OFF,
@@ -31,8 +31,21 @@ var _animation_player: AnimationPlayer
 var _radio_audio_player: AudioStreamPlayer3D
 var _switch_audio_player: AudioStreamPlayer3D
 
-func _on_ready() -> void:
-	interaction_text = "Turn On Radio"
+func _ready() -> void:
+	# Call parent ready first (CarryableComponent._ready())
+	super._ready()
+	
+	# Enable E-key interaction while allowing pickup (AFTER parent ready)
+	has_e_key_interaction = true
+	can_interact_while_carried = true  # Can toggle radio while carrying!
+	e_key_interaction_text = "Turn On Radio"
+	
+	# Adjust carry physics for boombox
+	carry_smoothness = 8.0  # Slightly less aggressive
+	carry_distance_offset = 0.0  # Keep at default distance
+	lock_rotation_when_carried = true  # Don't tumble while carrying
+	drop_distance = 2.0  # Give more leeway before auto-drop
+	
 	_setup_radio_audio()
 	_setup_switch_audio()
 	_setup_animation()
@@ -49,7 +62,7 @@ func _process(_delta: float) -> void:
 	if _current_state == BoomboxState.PLAYING:
 		_check_if_audio_finished()
 
-func _on_interacted(_player_interaction_component: PlayerInteractionComponent) -> void:
+func _on_e_key_interacted(_player_interaction_component: PlayerInteractionComponent) -> void:
 	_toggle_radio()
 
 func _setup_radio_audio() -> void:
@@ -120,7 +133,7 @@ func _start_audio() -> void:
 	_radio_audio_player.stream = song_to_play
 	_radio_audio_player.play()
 	_current_state = BoomboxState.PLAYING
-	interaction_text = "Turn Off Radio"
+	e_key_interaction_text = "Turn Off Radio"
 	
 	print("🎵 Audio stream set: " + str(song_to_play))
 	print("🎵 Audio player playing: " + str(_radio_audio_player.playing))
@@ -143,7 +156,7 @@ func _stop_audio() -> void:
 		print("⏸️ Pausing audio (will resume from current position)")
 		_radio_audio_player.stream_paused = true
 		_current_state = BoomboxState.OFF
-		interaction_text = "Turn On Radio"
+		e_key_interaction_text = "Turn On Radio"
 		
 		if _animation_player and _animation_player.is_playing():
 			_animation_player.pause()
@@ -157,7 +170,7 @@ func _resume_audio() -> void:
 		print("▶️ Resuming audio from paused position")
 		_radio_audio_player.stream_paused = false
 		_current_state = BoomboxState.PLAYING
-		interaction_text = "Turn Off Radio"
+		e_key_interaction_text = "Turn Off Radio"
 		
 		if _animation_player and not _animation_player.is_playing():
 			_animation_player.play()
@@ -175,14 +188,14 @@ func _check_if_audio_finished() -> void:
 		if _is_playing_secret_song:
 			print("🤫 Secret song (Halloween) finished playing")
 			_current_state = BoomboxState.OFF
-			interaction_text = "Turn On Radio"
+			e_key_interaction_text = "Turn On Radio"
 			audio_stopped.emit()
 			print("📻 Boombox turned off (secret song ended)")
 		else:
 			print("🎵 Main song (Ministudio) finished playing")
 			_main_song_has_played = true
 			_current_state = BoomboxState.OFF
-			interaction_text = "Turn On Radio"
+			e_key_interaction_text = "Turn On Radio"
 			audio_stopped.emit()
 			print("📻 Boombox turned off (main song ended)")
 			print("🤫 SECRET UNLOCKED! Next time you turn on the boombox, you'll hear a secret song!")

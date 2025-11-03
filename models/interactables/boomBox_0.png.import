@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cgf3xh63fficl"
-path.s3tc="res://.godot/imported/boomBox_0.png-4d87b48cfc8e8f9850dcbf51ebaa9c88.s3tc.ctex"
+path.s3tc="res://.godot/imported/boomBox_0.png-5d492f1340537e5cb5a40a3941343076.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -14,8 +14,8 @@ generator_parameters={
 
 [deps]
 
-source_file="res://models/boomBox_0.png"
-dest_files=["res://.godot/imported/boomBox_0.png-4d87b48cfc8e8f9850dcbf51ebaa9c88.s3tc.ctex"]
+source_file="res://models/interactables/boomBox_0.png"
+dest_files=["res://.godot/imported/boomBox_0.png-5d492f1340537e5cb5a40a3941343076.s3tc.ctex"]
 
 [params]
 

@@ -49,9 +49,10 @@ func _process(_delta: float) -> void:
 	_update_interactable()
 
 func _input(event: InputEvent) -> void:
-	# Throw while carrying (left click / primary action)
-	if is_carrying and event.is_action_pressed("action_primary"):
-		if is_instance_valid(carried_object):
+	# LEFT CLICK - Pickup or Throw
+	if event.is_action_pressed("action_primary"):
+		# If carrying, throw the object
+		if is_carrying and is_instance_valid(carried_object):
 			# Special case: carrying a power plug near an outlet
 			if carried_object is PowerCordPlugComponent:
 				var plug = carried_object as PowerCordPlugComponent
@@ -62,12 +63,33 @@ func _input(event: InputEvent) -> void:
 			
 			# Normal throw
 			throw_carried_object()
-		return
+			return
+		
+		# If not carrying, check if looking at a carryable object
+		if current_interactable:
+			var carryable = _find_carryable_component(current_interactable)
+			if carryable and not carryable.is_being_carried():
+				# Pickup the object (don't call interact())
+				carryable.pickup(self)
+				return
 	
-	# Normal interaction (E key)
-	if event.is_action_pressed("interact"):
-		# If carrying, drop the object
+	# RIGHT CLICK - Drop (gentle release)
+	if event.is_action_pressed("action_secondary"):
 		if is_carrying and is_instance_valid(carried_object):
+			# Gentle drop
+			drop_carried_object()
+			return
+	
+	# E KEY - Interact (always interaction, never drop)
+	if event.is_action_pressed("interact"):
+		# If carrying an object with E-key interaction enabled, interact with it
+		if is_carrying and is_instance_valid(carried_object):
+			# Check if carried object has E-key interaction
+			if carried_object.has_e_key_interaction and carried_object.can_interact_while_carried:
+				# Call the interaction on the carried object
+				carried_object._handle_e_key_interaction(self)
+				return
+			
 			# Special case: carrying a power plug near an outlet
 			if carried_object is PowerCordPlugComponent:
 				var plug = carried_object as PowerCordPlugComponent
@@ -76,11 +98,10 @@ func _input(event: InputEvent) -> void:
 					plug.nearby_outlet.accept_plug(plug)
 					return
 			
-			# Normal drop
-			drop_carried_object()
+			# If no E-key interaction, do nothing (use right-click to drop)
 			return
 		
-		# Otherwise interact normally
+		# Not carrying - interact with what we're looking at
 		if current_interactable:
 			_handle_interaction()
 
@@ -187,17 +208,26 @@ func _update_interaction_prompt() -> void:
 		interaction_prompt_changed.emit("")
 		return
 	
-	# Try to get interaction text from InteractionComponent first
+	# Check if object is carryable
+	var carryable_component = _find_carryable_component(current_interactable)
 	var interaction_component = _find_interaction_component(current_interactable)
+	
 	var prompt_text = ""
 	
-	if interaction_component and "interaction_text" in interaction_component:
-		prompt_text = interaction_component.interaction_text
+	# If it's carryable with E-key interaction enabled, show both prompts
+	if carryable_component and carryable_component.has_e_key_interaction:
+		prompt_text = "[Click] Pick Up | [E] " + carryable_component.e_key_interaction_text
+	# If it's only carryable (no E-key interaction), show pickup prompt
+	elif carryable_component:
+		prompt_text = "[Click] Pick Up"
+	# If it has an interaction component (but not carryable), show E-key prompt
+	elif interaction_component and "interaction_text" in interaction_component:
+		prompt_text = "[E] " + interaction_component.interaction_text
 	elif "interaction_text" in current_interactable:
-		prompt_text = current_interactable.interaction_text
+		prompt_text = "[E] " + current_interactable.interaction_text
 	else:
 		# Default fallback
-		prompt_text = "Interact"
+		prompt_text = "[E] Interact"
 	
 	interaction_prompt_changed.emit(prompt_text)
 
@@ -231,6 +261,22 @@ func _find_interaction_component(node: Node) -> Node:
 			return child
 		# Recursively search deeper
 		var found = _find_interaction_component(child)
+		if found:
+			return found
+	
+	return null
+
+func _find_carryable_component(node: Node) -> CarryableComponent:
+	# Check if node itself is a CarryableComponent
+	if node is CarryableComponent:
+		return node
+	
+	# Search children for CarryableComponent
+	for child in node.get_children():
+		if child is CarryableComponent:
+			return child
+		# Recursively search deeper
+		var found = _find_carryable_component(child)
 		if found:
 			return found
 	

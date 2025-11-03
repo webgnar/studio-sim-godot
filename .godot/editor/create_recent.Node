@@ -1,8 +1,9 @@
+BoomboxInteraction
 CarryableComponent
+CollisionShape3D
 RigidBody3D
 CSGCombiner3D
 Node3D
-CollisionShape3D
 StaticBody3D
 PoweredDeviceComponent
 PowerCordPlugComponent

@@ -40,7 +40,7 @@
 [ext_resource type="PackedScene" uid="uid://cwhj4w40hwp52" path="res://models/artbox/5.glb" id="33_ggc52"]
 [ext_resource type="PackedScene" uid="uid://uwpxuwjxopad" path="res://models/artbox/6.glb" id="34_l8ah6"]
 [ext_resource type="Script" uid="uid://cdcxs0jsffsfb" path="res://scripts/BoomboxInteraction.gd" id="36_boombox_new"]
-[ext_resource type="PackedScene" uid="uid://ddornft2ln8sq" path="res://models/boomBox.glb" id="41_rga7q"]
+[ext_resource type="PackedScene" uid="uid://ddornft2ln8sq" path="res://models/interactables/boomBox.glb" id="41_rga7q"]
 [ext_resource type="PackedScene" uid="uid://bhsyl3tj8hblj" path="res://scenes/brute trash can.tscn" id="46_18clu"]
 [ext_resource type="Script" uid="uid://cbwg344irqecy" path="res://scripts/components/CarryableComponent.gd" id="46_e68xj"]
 [ext_resource type="PackedScene" uid="uid://b7y2nsov4op11" path="res://models/paintings/alley.glb" id="47_4wdv8"]
@@ -616,12 +616,12 @@ _data = {
 &"move up and rotate": SubResource("Animation_4kbfs")
 }
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_boombox"]
-size = Vector3(0.5506592, 1, 2.1767578)
+[sub_resource type="BoxShape3D" id="BoxShape3D_4kmvx"]
+size = Vector3(0.24666992, 0.373563, 0.6891837)
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_e68xj"]
 height = 1.1965942
-radius = 0.5859375
+radius = 0.64
 
 [sub_resource type="Animation" id="Animation_iexy4"]
 length = 0.001
@@ -1109,7 +1109,7 @@ transform = Transform3D(-0.48780954, 7.2052174e-08, -0.013515013, 9.821866e-09, 
 transform = Transform3D(-0.48780954, 4.1964455e-08, -0.013515013, 9.821866e-09, 2.0857923, 8.806105e-24, 0.013515012, -1.1626466e-09, -0.48780948, -1.7510796, -8.854012, -66.60398)
 
 [node name="pipe gray15" parent="electrical conduit" instance=ExtResource("19_xgqkh")]
-transform = Transform3D(-0.48780954, 0.044686772, 5.907605e-10, 0, -7.052997e-08, 0.48799673, 0.013515023, 1.6129185, 2.1322832e-08, -0.21523285, 0.4740219, -8.904102)
+transform = Transform3D(-0.48780954, 0.044686772, 5.9076055e-10, 0, -7.052997e-08, 0.48799673, 0.013515021, 1.6129187, 2.1322835e-08, -0.2139988, -0.15611267, -8.859549)
 
 [node name="pipe gray17" parent="electrical conduit" instance=ExtResource("19_xgqkh")]
 transform = Transform3D(-0.48780954, 0.055585984, 5.907605e-10, 0, -8.7732396e-08, 0.48799673, 0.013515023, 2.0063133, 2.1322832e-08, 0.3564663, -0.19228172, 11.730774)
@@ -1139,7 +1139,7 @@ transform = Transform3D(-0.47120264, -0.04725565, 1.8361002e-09, 2.6829152e-16, 
 transform = Transform3D(-0.47222424, -0.008056181, -0.0003669918, -0.00051746785, 0.019861743, 0.47206894, -0.0053583803, 0.70805794, -0.013246185, -0.4286499, 3.375414, -20.531729)
 
 [node name="pipe graybent11" parent="electrical conduit" instance=ExtResource("19_kpybi")]
-transform = Transform3D(0.46922448, 0.08010899, -0.0009836464, -0.0005174679, 0.019861745, 0.472069, 0.05341253, -0.7035578, 0.013214709, -0.38355827, 0.01981163, -18.90414)
+transform = Transform3D(0.46922454, 0.08010901, -0.0009836464, -0.0005174678, 0.019861745, 0.472069, 0.053412545, -0.7035578, 0.013214709, -0.38232422, -0.61032677, -18.85959)
 
 [node name="pipe graybent12" parent="electrical conduit" instance=ExtResource("19_kpybi")]
 transform = Transform3D(0.4674692, 0.099043265, 0.0117261065, -0.06632097, 0.70113486, 0.011904409, -0.009941708, -0.020145781, 0.47195917, 0.80736923, -0.72273254, 24.081074)
@@ -1237,7 +1237,7 @@ transform = Transform3D(-0.029999997, 4.529874e-09, -1.9800707e-16, 0, -1.311341
 script = ExtResource("28_artbox_new")
 
 [node name="fold6" parent="artbox" instance=ExtResource("31_x2olw")]
-transform = Transform3D(0.018202739, 8.583139e-08, 0.99983066, 8.583112e-08, 0.99999934, -8.7407976e-08, -0.9998306, 8.740823e-08, 0.018202739, 0.9763241, 0, -6.7096863)
+transform = Transform3D(0.018202737, 8.583139e-08, 0.99983054, 8.583111e-08, 0.99999934, -8.740797e-08, -0.9998305, 8.740823e-08, 0.018202737, 0.9763241, 0, -6.7096863)
 
 [node name="fold5" parent="artbox/fold6" instance=ExtResource("32_817gm")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -7.9999986, 0, 0)
@@ -1289,40 +1289,44 @@ libraries = {
 &"": SubResource("AnimationLibrary_ggc52")
 }
 
-[node name="BoomBox" parent="." instance=ExtResource("41_rga7q")]
-transform = Transform3D(0.284849, 0, 0.0941331, 0, 0.29999998, 0, -0.0941331, 0, 0.284849, 2.1454182, 0.44880646, -5.434042)
-
-[node name="BoomboxInteraction" type="Node3D" parent="BoomBox"]
-script = ExtResource("36_boombox_new")
-audio_file = ExtResource("ministudio_audio")
-secret_audio_file = ExtResource("halloween_audio")
-switch_sound = ExtResource("boombox_switch")
-
-[node name="RigidBody3D" type="RigidBody3D" parent="BoomBox"]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="BoomBox/RigidBody3D"]
-transform = Transform3D(-1.8181819, 0, -2.3841858e-07, 0, 1.8181821, 0, 2.3841858e-07, 0, -1.8181819, 0.10062218, -0.4236536, 0.1738863)
-shape = SubResource("BoxShape3D_boombox")
-
 [node name="RigidBody3D" type="RigidBody3D" parent="."]
+transform = Transform3D(0.7866657, 0, 0.6173793, 0, 1, 0, -0.6173793, 0, 0.7866657, 1.8297244, 0.3116727, -3.198355)
+collision_layer = 8
+collision_mask = 11
+mass = 2.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBody3D"]
+transform = Transform3D(0.9999999, 0, 0, 0, 1, 0, 0, 0, 0.9999999, 4.7683716e-07, -0.06947191, 0.016858816)
+shape = SubResource("BoxShape3D_4kmvx")
+
+[node name="boombox model" parent="RigidBody3D" instance=ExtResource("41_rga7q")]
+transform = Transform3D(0.17, 0, 0, 0, 0.17, 0, 0, 0, 0.17, 0, 0, 0)
+
+[node name="BoomboxInteraction" type="Node3D" parent="RigidBody3D"]
+script = ExtResource("36_boombox_new")
+audio_file = ExtResource("halloween_audio")
+secret_audio_file = ExtResource("ministudio_audio")
+switch_sound = ExtResource("boombox_switch")
+has_e_key_interaction = true
+e_key_interaction_text = "Play Tape"
+can_interact_while_carried = true
+metadata/_custom_type_script = "uid://cdcxs0jsffsfb"
+
+[node name="trash can" type="RigidBody3D" parent="."]
 transform = Transform3D(0.9301743, 0, 0.3671182, 0, 1, 0, -0.3671182, 0, 0.9301743, 0.26508617, 0.070207834, -4.700662)
 collision_layer = 8
 collision_mask = 11
 
-[node name="Brute_L_NoMaterial" parent="RigidBody3D" instance=ExtResource("46_18clu")]
+[node name="Brute_L_NoMaterial" parent="trash can" instance=ExtResource("46_18clu")]
 
-[node name="CarryableComponent" type="Node3D" parent="RigidBody3D"]
+[node name="CarryableComponent" type="Node3D" parent="trash can"]
 script = ExtResource("46_e68xj")
 metadata/_custom_type_script = "uid://cbwg344irqecy"
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="trash can"]
 transform = Transform3D(0.7000001, 0, 3.427267e-07, 0, 0.78, 0, -4.172325e-07, 0, 0.6, -0.255064, 0.46115243, -0.054019928)
 shape = SubResource("CylinderShape3D_e68xj")
 debug_color = Color(0.9490196, 0, 0.58431375, 0.8117647)
-
-[node name="Brute_L_NoMaterial" parent="." instance=ExtResource("46_18clu")]
-transform = Transform3D(0.9301743, 0, 0.3671182, 0, 1, 0, -0.3671182, 0, 0.9301743, 0.26508617, 0.070207834, -4.700662)
-visible = false
 
 [node name="alley" parent="." instance=ExtResource("47_4wdv8")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -3.6867952, 1.62026, -4)

@@ -69,9 +69,8 @@ func _on_prompt_changed(prompt_text: String) -> void:
 	if prompt_text == "":
 		interaction_label.hide()
 	else:
-		# Format the prompt text
-		var formatted_text = "[E] " + prompt_text
-		interaction_label.text = formatted_text
+		# Display the prompt directly (already formatted by PlayerInteractionComponent)
+		interaction_label.text = prompt_text
 		interaction_label.show()
 
 func _on_object_detected(_interactable: Node3D) -> void:
@@ -90,7 +89,12 @@ func _update_carry_hint() -> void:
 		return
 	
 	if _player_interaction_component.is_carrying:
-		carry_hint.text = "[E] Drop  |  [Left Click] Throw"
+		# Check if carried object has E-key interaction
+		var carried = _player_interaction_component.carried_object
+		if carried and carried.has_e_key_interaction and carried.can_interact_while_carried:
+			carry_hint.text = "[E] " + carried.e_key_interaction_text + "  |  [Right Click] Drop  |  [Left Click] Throw"
+		else:
+			carry_hint.text = "[Right Click] Drop  |  [Left Click] Throw"
 		carry_hint.show()
 		
 		# Hide normal interaction prompt while carrying

@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://ddornft2ln8sq"
-path="res://.godot/imported/boomBox.glb-80967b1318c7458f2ae0fee9c007a11c.scn"
+path="res://.godot/imported/boomBox.glb-55e6e2a4affa8cd3c8596b3a73ae1484.scn"
 
 [deps]
 
-source_file="res://models/boomBox.glb"
-dest_files=["res://.godot/imported/boomBox.glb-80967b1318c7458f2ae0fee9c007a11c.scn"]
+source_file="res://models/interactables/boomBox.glb"
+dest_files=["res://.godot/imported/boomBox.glb-55e6e2a4affa8cd3c8596b3a73ae1484.scn"]
 
 [params]
 
@@ -2098,7 +2098,6 @@ _subresources={
 },
 "nodes": {
 "PATH:Skeleton3D/boombox2": {
-"generate/physics": true,
 "physics/layer": 8
 }
 }
