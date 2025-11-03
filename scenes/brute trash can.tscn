@@ -23,7 +23,7 @@ albedo_texture = ExtResource("2_lx68q")
 [node name="Brute_L_NoMaterial" instance=ExtResource("1_x1lc3")]
 
 [node name="Wheel_005" parent="." index="0"]
-transform = Transform3D(0.48053226, 0, -0.8771104, 0, 1.0001168, 0, 0.8771104, 0, 0.48053226, -0.2743784, 0, -0.061123013)
+transform = Transform3D(1.000117, 0, 0, 0, 1.0001168, 0, 0, 0, 1.000117, 0, 0, 0)
 surface_material_override/0 = SubResource("StandardMaterial3D_jt62n")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Wheel_005" index="0"]

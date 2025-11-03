@@ -8,3 +8,8 @@ res://scripts/ArtboxInteraction.gd
 res://scripts/BoxInteraction.gd
 res://scripts/LightSwitchInteraction.gd
 res://scripts/MirrorInteraction.gd
+res://scenes/breakable_window.tscn
+res://scripts/BreakableWindow.gd
+res://materials/windowglass.tres
+res://materials/styrafoam.tres
+res://scenes/brute trash can.tscn
