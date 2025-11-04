@@ -1,4 +1,4 @@
-[gd_scene load_steps=138 format=3 uid="uid://cnmivki1rop3b"]
+[gd_scene load_steps=140 format=3 uid="uid://cnmivki1rop3b"]
 
 [ext_resource type="Material" uid="uid://wwlsotlotycw" path="res://materials/wood.tres" id="1_4mrxx"]
 [ext_resource type="Script" uid="uid://d4bxpnphvld1d" path="res://scripts/PlayerController.gd" id="1_4wyf3"]
@@ -64,6 +64,7 @@
 [ext_resource type="PackedScene" uid="uid://chnk8fr52q3yk" path="res://models/outside/sewerroad.gltf" id="68_5nedk"]
 [ext_resource type="PackedScene" uid="uid://drijdy8rlc67s" path="res://models/outside/treeSmallOak2.gltf" id="69_40xph"]
 [ext_resource type="PackedScene" uid="uid://cqwacwlbuqbe" path="res://models/outside/crazy2.gltf" id="70_8lgfd"]
+[ext_resource type="PackedScene" uid="uid://k5bi7w8gtday" path="res://scenes/CameraZone.tscn" id="71_dyafi"]
 [ext_resource type="AudioStream" uid="uid://84rjpuccue2i" path="res://sounds/boomboxSwitch.ogg" id="boombox_switch"]
 [ext_resource type="AudioStream" uid="uid://8so1mqtnfhkh" path="res://sounds/box open 1.ogg" id="box_open_1"]
 [ext_resource type="AudioStream" uid="uid://bkyiswhv5fuaf" path="res://sounds/box open 2.ogg" id="box_open_2"]
@@ -683,6 +684,9 @@ viewport_path = NodePath("console log/SubViewport")
 resource_local_to_scene = true
 albedo_texture = SubResource("ViewportTexture_e68xj")
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_dyafi"]
+size = Vector3(6.665, 4.69, 8.981)
+
 [node name="World" type="Node3D"]
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
@@ -846,24 +850,24 @@ transform = Transform3D(-1.0000001, -3.7729234e-07, -2.0582363e-06, 5.369091e-09
 size = Vector3(1, 0.6, 0.3)
 material = SubResource("StandardMaterial3D_4mrxx")
 
-[node name="windows2" type="Node3D" parent="."]
+[node name="WINDOWS" type="Node3D" parent="."]
 
-[node name="window2" parent="windows2" instance=ExtResource("66_4kmvx")]
+[node name="window2" parent="WINDOWS" instance=ExtResource("66_4kmvx")]
 transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -2.301294, 4.0959244, -6.759644)
 
-[node name="window3" parent="windows2" instance=ExtResource("66_4kmvx")]
+[node name="window3" parent="WINDOWS" instance=ExtResource("66_4kmvx")]
 transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -0.008910894, 2.467302, -6.661096)
 
-[node name="window7" parent="windows2" instance=ExtResource("66_4kmvx")]
+[node name="window7" parent="WINDOWS" instance=ExtResource("66_4kmvx")]
 transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -2.2844849, 2.467302, -6.661096)
 
-[node name="window4" parent="windows2" instance=ExtResource("66_4kmvx")]
+[node name="window4" parent="WINDOWS" instance=ExtResource("66_4kmvx")]
 transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -0.008910894, 4.0959244, -6.759644)
 
-[node name="window5" parent="windows2" instance=ExtResource("66_4kmvx")]
+[node name="window5" parent="WINDOWS" instance=ExtResource("66_4kmvx")]
 transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 2.3344998, 2.467302, -6.661096)
 
-[node name="window6" parent="windows2" instance=ExtResource("66_4kmvx")]
+[node name="window6" parent="WINDOWS" instance=ExtResource("66_4kmvx")]
 transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 2.3344998, 4.0959244, -6.759644)
 
 [node name="outlets" type="Node3D" parent="."]
@@ -1306,7 +1310,7 @@ move_sound = ExtResource("44_dyafi")
 move_sound_fade_in_duration = 3.0
 
 [node name="fold6" parent="artbox" instance=ExtResource("31_x2olw")]
-transform = Transform3D(0.018202716, 8.583139e-08, 0.9998294, 8.583101e-08, 0.99999934, -8.740787e-08, -0.99982935, 8.740823e-08, 0.018202716, 0.9763241, 0, -6.7096863)
+transform = Transform3D(0.018202713, 8.583139e-08, 0.9998293, 8.5831005e-08, 0.99999934, -8.7407855e-08, -0.99982923, 8.740823e-08, 0.018202715, 0.9763241, 0, -6.7096863)
 
 [node name="fold5" parent="artbox/fold6" instance=ExtResource("32_817gm")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -7.9999986, 0, 0)
@@ -1486,3 +1490,25 @@ surface_material_override/0 = SubResource("StandardMaterial3D_5hglh")
 
 [node name="Styrofoam cube" parent="." instance=ExtResource("52_e68xj")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 1, -3)
+
+[node name="CameraZone" parent="." instance=ExtResource("71_dyafi")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -0.123270035, 0.96045446, -6.987212)
+
+[node name="CollisionShape3D" parent="CameraZone" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0831607, 1.6094971, 1.3782663)
+
+[node name="SecurityCamera1" parent="CameraZone" index="1"]
+transform = Transform3D(0.8496623, -0.119170085, -0.5136851, -0.0009949702, 0.97376585, -0.2275502, 0.52732617, 0.19385192, 0.82725364, -2.8629904, 0.15246916, 3.1513882)
+
+[node name="CameraZone2" parent="." instance=ExtResource("71_dyafi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5786886, 0.7386246, -13.823423)
+
+[node name="CollisionShape3D" parent="CameraZone2" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.60888004)
+shape = SubResource("BoxShape3D_dyafi")
+
+[node name="SecurityCamera1" parent="CameraZone2" index="1"]
+transform = Transform3D(-0.99890953, 0.042298827, -0.019762916, 0, 0.42329812, 0.9059905, 0.04668794, 0.90500253, -0.4228365, 0, 8.30962, -2.8352451)
+
+[editable path="CameraZone"]
+[editable path="CameraZone2"]

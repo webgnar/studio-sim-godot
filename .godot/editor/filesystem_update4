@@ -7,3 +7,8 @@ res://models/new_array_mesh2.tres
 res://models/new_array_mesh3.tres
 res://shaders/outline.gdshader
 res://scenes/world.tscn
+res://scripts/PlayerController.gd
+res://scripts/CameraManager.gd
+res://scripts/CameraZone.gd
+res://scenes/breakable_window.tscn
+res://scenes/CameraZone.tscn

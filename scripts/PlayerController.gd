@@ -81,6 +81,10 @@ func _ready() -> void:
 	_camera.fov = base_fov
 	_current_fov = base_fov
 	
+	# Register player camera with CameraManager
+	if _camera:
+		CameraManager.register_player_camera(_camera)
+	
 	# Get reference to animation controller (try common paths)
 	if has_node("Model/PlayerAnimation"):
 		_player_animation = get_node("Model/PlayerAnimation")
@@ -155,6 +159,14 @@ func _process(_delta) -> void:
 		get_tree().call_group("mirrors", "update_cam", _camera.global_transform)
 
 func _physics_process(delta: float) -> void:
+	# Skip movement if CameraManager has disabled input (e.g., cinematic camera zones)
+	if not CameraManager.player_input_enabled:
+		# Still apply gravity and move_and_slide to keep physics working
+		if not is_on_floor():
+			velocity.y -= gravity * delta
+		move_and_slide()
+		return
+	
 	# --- GRAVITY ---
 	# Add gravity. If the character is on the floor, we don't apply gravity.
 	if not is_on_floor():
@@ -246,6 +258,10 @@ func _physics_process(delta: float) -> void:
 		_player_animation.update_animation_state(velocity, is_on_floor(), is_sprinting)
 
 func _unhandled_input(event: InputEvent) -> void:
+	# Skip input if CameraManager has disabled it (e.g., during cinematic cameras)
+	if not CameraManager.player_input_enabled:
+		return
+	
 	# --- MOUSE LOOK ---
 	# This function handles mouse rotation for the camera.
 	if event is InputEventMouseMotion and _camera != null:
