@@ -20,6 +20,7 @@ signal e_key_interacted(player_interaction_component: PlayerInteractionComponent
 @export_group("Throw Settings")
 @export var throw_power: float = 15.0 ## Force applied when throwing
 @export var drop_power: float = 1.0 ## Force applied when gently dropping
+@export var impact_damage: float = 1.0 ## Damage dealt to breakable objects (0.5=light, 1.0=normal, 2.0=heavy)
 
 @export_group("E-Key Interaction (Optional)")
 @export var has_e_key_interaction: bool = false ## Enable separate E-key interaction

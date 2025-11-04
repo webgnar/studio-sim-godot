@@ -1,0 +1,43 @@
+[gd_resource type="ArrayMesh" load_steps=4 format=4 uid="uid://rmvygaicu8nx"]
+
+[ext_resource type="Texture2D" uid="uid://dycbuvsh1tkr8" path="res://models/shard1_0.png" id="1_gvybx"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_amkjp"]
+resource_name = "texture_1"
+transparency = 4
+cull_mode = 2
+albedo_texture = ExtResource("1_gvybx")
+texture_filter = 0
+texture_repeat = false
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_wmqwa"]
+_surfaces = [{
+"aabb": AABB(-1.171875, -0.984375, 0, 1.875, 2, 1e-05),
+"format": 34359742465,
+"index_count": 12,
+"index_data": PackedByteArray("AAABAAIAAAACAAMAAQAEAAIAAQAFAAQA"),
+"name": "texture_1",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 6,
+"vertex_data": PackedByteArray("AACWvwAAfL8AAAAAAACYvgAAgDwAAAAAAAA0PwAAgDwAAAAAAADoPgAAHL8AAAAAAABQPgAABD8AAAAAAACYvgAAgj8AAAAA")
+}]
+blend_shape_mode = 0
+
+[resource]
+resource_name = "default_mesh"
+_surfaces = [{
+"aabb": AABB(-1.171875, -0.984375, 0, 1.875, 2, 1e-05),
+"attribute_data": PackedByteArray("AAAAAAAAgD8AAAAAAAAAAAAAgD8AAAAAAACAPwAAgD8AAAAAAACAPwAAAAAAAAAAAACAPwAAAAAAAIA/AACAPw=="),
+"format": 34359742487,
+"index_count": 12,
+"index_data": PackedByteArray("AAABAAIAAAACAAMABAAFAAYABAAGAAcA"),
+"material": SubResource("StandardMaterial3D_amkjp"),
+"name": "texture_1",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 8,
+"vertex_data": PackedByteArray("AACWvwAAfL8AAAAAAACYvgAAgDwAAAAAAAA0PwAAgDwAAAAAAADoPgAAHL8AAAAAAACYvgAAgDwAAAAAAACYvgAAgj8AAAAAAABQPgAABD8AAAAAAAA0PwAAgDwAAAAA/3//f9H0lsX/f/9/////v/9//3/W8JPH/3//f//n/8v/f/9/gdpArf9//3//v/+f/3//f4HaQK3/f/9/////vw==")
+}]
+blend_shape_mode = 0
+shadow_mesh = SubResource("ArrayMesh_wmqwa")

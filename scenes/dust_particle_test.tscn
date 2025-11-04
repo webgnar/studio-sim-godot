@@ -1,4 +1,4 @@
-[gd_scene load_steps=3 format=3 uid="uid://hmanpvvk8cbv"]
+[gd_scene load_steps=3 format=3 uid="uid://d3151wdrvbyyo"]
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_dust"]
 emission_shape = 2
@@ -17,6 +17,7 @@ color = Color(0.8, 1, 1, 1)
 [node name="DustParticleTest" type="Node3D"]
 
 [node name="GPUParticles3D" type="GPUParticles3D" parent="."]
+emitting = false
 amount = 30
 explosiveness = 0.9
 process_material = SubResource("ParticleProcessMaterial_dust")

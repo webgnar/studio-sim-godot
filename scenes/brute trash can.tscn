@@ -1,6 +1,6 @@
 [gd_scene load_steps=8 format=3 uid="uid://bhsyl3tj8hblj"]
 
-[ext_resource type="PackedScene" uid="uid://duo4fg6er7gvp" path="res://models/Brute_L_NoMaterial.glb" id="1_x1lc3"]
+[ext_resource type="PackedScene" uid="uid://duo4fg6er7gvp" path="res://models/props/Brute_L_NoMaterial.glb" id="1_x1lc3"]
 [ext_resource type="Texture2D" uid="uid://dcu1lw1rmyk" path="res://sprites/trashcan/TexturesCom_Plastic_PolypropyleneRough_1K_normal.png" id="2_8ytka"]
 [ext_resource type="Texture2D" uid="uid://cubccvt5724u3" path="res://sprites/trashcan/Brute_Logo.png" id="2_lx68q"]
 [ext_resource type="Texture2D" uid="uid://ccc82eucwlhbu" path="res://sprites/trashcan/TexturesCom_Plastic_PolypropyleneRough_1K_roughness.png" id="3_lx68q"]

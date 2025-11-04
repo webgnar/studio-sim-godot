@@ -20,3 +20,4 @@ mesh = SubResource("BoxMesh_gsqoq")
 
 [node name="Node3D" type="Node3D" parent="."]
 script = ExtResource("1_uecpb")
+impact_damage = 0
