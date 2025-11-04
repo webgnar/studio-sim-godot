@@ -1,4 +1,4 @@
-[gd_scene load_steps=140 format=3 uid="uid://cnmivki1rop3b"]
+[gd_scene load_steps=142 format=3 uid="uid://cnmivki1rop3b"]
 
 [ext_resource type="Material" uid="uid://wwlsotlotycw" path="res://materials/wood.tres" id="1_4mrxx"]
 [ext_resource type="Script" uid="uid://d4bxpnphvld1d" path="res://scripts/PlayerController.gd" id="1_4wyf3"]
@@ -20,6 +20,7 @@
 [ext_resource type="PackedScene" uid="uid://44g07prjgs5x" path="res://models/props/pipe_gray bent.glb" id="19_kpybi"]
 [ext_resource type="PackedScene" uid="uid://cmaavrflrf4d4" path="res://models/props/pipe_gray.glb" id="19_xgqkh"]
 [ext_resource type="PackedScene" uid="uid://c8duo4thyjdsv" path="res://models/props/spotlight.glb" id="20_munwf"]
+[ext_resource type="Script" uid="uid://cmfquih6gna04" path="res://scripts/PlayerLaserBeam.gd" id="21_r5yoc"]
 [ext_resource type="PackedScene" uid="uid://dfy02uk1jbflb" path="res://models/props/light_switch box.glb" id="21_ts3gi"]
 [ext_resource type="PackedScene" uid="uid://bp08vdgdcjkvv" path="res://models/interactables/light_switch.glb" id="22_0nbtd"]
 [ext_resource type="AudioStream" uid="uid://cfqmga8or17qn" path="res://sounds/lightswitchON.ogg" id="23_l8ah6"]
@@ -684,6 +685,9 @@ viewport_path = NodePath("console log/SubViewport")
 resource_local_to_scene = true
 albedo_texture = SubResource("ViewportTexture_e68xj")
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_r5yoc"]
+size = Vector3(6.555237, 4.649658, 3.814176)
+
 [sub_resource type="BoxShape3D" id="BoxShape3D_dyafi"]
 size = Vector3(6.665, 4.69, 8.981)
 
@@ -923,7 +927,7 @@ mesh = SubResource("CapsuleMesh_k0juu")
 shape = SubResource("ConvexPolygonShape3D_71j4m")
 
 [node name="human" parent="Player" instance=ExtResource("6_qfnet")]
-transform = Transform3D(-4.371139e-09, 0, 0.1, 0, 0.1, 0, -0.1, 0, -4.371139e-09, 0.013, -0.9715148, 0.192)
+transform = Transform3D(-4.371139e-09, 0, 0.1, 0, 0.1, 0, -0.1, 0, -4.371139e-09, 0, -0.94919425, 0.13251299)
 script = ExtResource("3_k0juu")
 walk_speed = 5.0
 run_speed = 10.0
@@ -938,6 +942,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2)
 visible = false
 
 [node name="HUD" parent="Player" instance=ExtResource("14_1jxku")]
+
+[node name="LaserBeamVisualizer" type="Node3D" parent="Player"]
+script = ExtResource("21_r5yoc")
 
 [node name="spot" parent="." instance=ExtResource("20_munwf")]
 transform = Transform3D(0.1499385, 0.0042955433, 0, -0.0042955433, 0.1499385, 0, 0, 0, 0.14999999, -3.3168278, 4.545951, 7.324863)
@@ -1495,10 +1502,14 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 1, -3)
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -0.123270035, 0.96045446, -6.987212)
 
 [node name="CollisionShape3D" parent="CameraZone" index="0"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0831607, 1.6094971, 1.3782663)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.08316077, 1.6094971, 2.0615368)
+shape = SubResource("BoxShape3D_r5yoc")
 
 [node name="SecurityCamera1" parent="CameraZone" index="1"]
 transform = Transform3D(0.8496623, -0.119170085, -0.5136851, -0.0009949702, 0.97376585, -0.2275502, 0.52732617, 0.19385192, 0.82725364, -2.8629904, 0.15246916, 3.1513882)
+
+[node name="Label3D" parent="CameraZone" index="3"]
+visible = false
 
 [node name="CameraZone2" parent="." instance=ExtResource("71_dyafi")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5786886, 0.7386246, -13.823423)
@@ -1510,5 +1521,19 @@ shape = SubResource("BoxShape3D_dyafi")
 [node name="SecurityCamera1" parent="CameraZone2" index="1"]
 transform = Transform3D(-0.99890953, 0.042298827, -0.019762916, 0, 0.42329812, 0.9059905, 0.04668794, 0.90500253, -0.4228365, 0, 8.30962, -2.8352451)
 
+[node name="Label3D" parent="CameraZone2" index="3"]
+visible = false
+
+[node name="CameraZone3" parent="." instance=ExtResource("71_dyafi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.056339264, 0.03000021, 11.679458)
+
+[node name="CollisionShape3D" parent="CameraZone3" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.54077053)
+
+[node name="Label3D" parent="CameraZone3" index="3"]
+visible = false
+
+[editable path="Styrofoam cube"]
 [editable path="CameraZone"]
 [editable path="CameraZone2"]
+[editable path="CameraZone3"]

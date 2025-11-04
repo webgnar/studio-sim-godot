@@ -12,3 +12,4 @@ res://scripts/CameraManager.gd
 res://scripts/CameraZone.gd
 res://scenes/breakable_window.tscn
 res://scenes/CameraZone.tscn
+res://scripts/PlayerLaserBeam.gd

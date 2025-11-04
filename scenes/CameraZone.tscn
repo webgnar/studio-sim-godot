@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://b22dadyq42n4b" path="res://scripts/CameraZone.gd" id="1_zone"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_zone"]
-size = Vector3(6.555237, 4.649658, 2.6576767)
+size = Vector3(6.555237, 4.649658, 9.327633)
 
 [node name="CameraZone" type="Area3D"]
 collision_layer = 0
