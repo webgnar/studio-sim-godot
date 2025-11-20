@@ -1,3 +1,5 @@
+VBoxContainer
+Container
 TextureRect
 PanelContainer
 CanvasLayer
@@ -5,11 +7,8 @@ Button
 Label
 HBoxContainer
 HSeparator
-VBoxContainer
 ScrollContainer
 HScrollBar
 MarginContainer
 Panel
 Node3D
-CollisionShape3D
-StaticBody3D

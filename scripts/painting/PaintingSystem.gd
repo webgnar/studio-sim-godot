@@ -44,21 +44,38 @@ func _ready():
 
 func _load_sticker_library():
 	"""Load all sticker textures from the sprites/painting layers folder"""
-	var sticker_paths = [
-		"res://sprites/painting layers/1.png",
-		"res://sprites/painting layers/2.png",
-		"res://sprites/painting layers/3.png",
-		"res://sprites/painting layers/4.png",
-		"res://sprites/painting layers/5.png"
-	]
+	var folder_path = "res://sprites/painting layers/"
+	var dir = DirAccess.open(folder_path)
 
-	for i in range(sticker_paths.size()):
-		var path = sticker_paths[i]
+	if not dir:
+		push_error("Failed to open sticker folder: %s" % folder_path)
+		return
+
+	# Get all PNG files in the folder
+	var file_names: Array[String] = []
+	dir.list_dir_begin()
+	var file_name = dir.get_next()
+
+	while file_name != "":
+		if not dir.current_is_dir() and file_name.ends_with(".png"):
+			file_names.append(file_name)
+		file_name = dir.get_next()
+
+	dir.list_dir_end()
+
+	# Sort alphabetically so they're in consistent order
+	file_names.sort()
+
+	# Load each texture
+	for i in range(file_names.size()):
+		var path = folder_path + file_names[i]
 		var texture = load(path) as Texture2D
 		if texture:
-			var definition = PaintingLayerDefinition.new("sticker_%d" % (i + 1), texture, 0)
+			var sticker_name = file_names[i].get_basename()  # Remove .png extension
+			var definition = PaintingLayerDefinition.new(sticker_name, texture, 0)
 			definition.unlocked = true  # All unlocked for testing
 			sticker_library.append(definition)
+			print("Loaded sticker: %s" % sticker_name)
 		else:
 			push_error("Failed to load sticker texture: %s" % path)
 

@@ -1,88 +1,167 @@
 extends Control
 class_name PaintingUI
 
-## Minimal painting UI - shows 5 sticker slots with visual highlight on equipped layer
-## Controlled entirely by Q/E keys (no mouse interaction)
+## Scrolling carousel UI for painting stickers
+## Selected sticker always stays centered, column scrolls up/down
 
 @export var painting_system: PaintingSystem
 
-# References to the 5 layer slots (assign from scene tree)
-@onready var layer_slots: Array[PanelContainer] = [
-	$MarginContainer/VBoxContainer/LayerSlot1,
-	$MarginContainer/VBoxContainer/LayerSlot2,
-	$MarginContainer/VBoxContainer/LayerSlot3,
-	$MarginContainer/VBoxContainer/LayerSlot4,
-	$MarginContainer/VBoxContainer/LayerSlot5
-]
+# UI References
+@onready var slots_container: VBoxContainer = $MarginContainer/ClipContainer/SlotsContainer
 
-# Visual style settings
-var default_border_color = Color("#555555")  # Gray border for unselected
-var equipped_border_color = Color("#3399FF")  # Blue border for equipped
-var default_border_width = 2
-var equipped_border_width = 4
+# Carousel settings
+@export var slot_size: Vector2 = Vector2(80, 80)  # Size of each slot
+@export var slot_spacing: float = 10.0  # Gap between slots
+@export var center_scale: float = 1.2  # Scale multiplier for center item
+@export var side_scale: float = 0.8  # Scale multiplier for side items
+@export var scroll_speed: float = 0.15  # Animation speed (lower = smoother)
+
+# State
+var slot_nodes: Array[PanelContainer] = []  # All slot UI elements
+var current_scroll_offset: float = 0.0  # Current scroll position
+var target_scroll_offset: float = 0.0  # Target scroll position (for smooth animation)
+
+# Visual style
+var default_border_color = Color("#555555")
+var equipped_border_color = Color("#3399FF")
+var default_bg_color = Color("#333333", 0.7)
 
 func _ready():
-	# Set up initial styles for all slots
-	_setup_slot_styles()
-
-	# Connect to painting system signals
+	# Connect to painting system
 	if painting_system:
 		painting_system.layer_equipped.connect(_on_layer_equipped)
+		# Build the UI once the painting system is ready
+		call_deferred("_build_carousel")
+	else:
+		push_error("PaintingUI: No PaintingSystem assigned!")
 
-	# Update highlight to show initial selection
-	_update_highlight()
+func _build_carousel():
+	"""Create all the slot UI elements dynamically"""
+	if not painting_system or painting_system.sticker_library.is_empty():
+		push_error("PaintingUI: Cannot build carousel - no stickers loaded")
+		return
 
-func _setup_slot_styles():
-	"""Initialize the visual style for all 5 layer slots"""
-	for i in range(layer_slots.size()):
-		var slot = layer_slots[i]
-		if slot:
-			# Create default style
-			var style = StyleBoxFlat.new()
-			style.bg_color = Color("#333333", 0.7)  # Semi-transparent dark gray
-			style.border_color = default_border_color
-			style.set_border_width_all(default_border_width)
-			style.corner_radius_top_left = 4
-			style.corner_radius_top_right = 4
-			style.corner_radius_bottom_left = 4
-			style.corner_radius_bottom_right = 4
+	# Clear any existing slots
+	for child in slots_container.get_children():
+		child.queue_free()
+	slot_nodes.clear()
 
-			# Apply style
-			slot.add_theme_stylebox_override("panel", style)
+	# Create a slot for each sticker in the library
+	for i in range(painting_system.sticker_library.size()):
+		var sticker = painting_system.sticker_library[i]
 
-func _update_highlight():
-	"""Update visual highlight to show which layer is currently equipped"""
-	if not painting_system:
+		# Create PanelContainer for this slot
+		var panel = PanelContainer.new()
+		panel.custom_minimum_size = slot_size
+
+		# Create style
+		var style = StyleBoxFlat.new()
+		style.bg_color = default_bg_color
+		style.border_color = default_border_color
+		style.set_border_width_all(2)
+		style.corner_radius_top_left = 4
+		style.corner_radius_top_right = 4
+		style.corner_radius_bottom_left = 4
+		style.corner_radius_bottom_right = 4
+		panel.add_theme_stylebox_override("panel", style)
+
+		# Create TextureRect for the sticker image
+		var tex_rect = TextureRect.new()
+		tex_rect.texture = sticker.texture
+		tex_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		tex_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		tex_rect.custom_minimum_size = slot_size * 0.9  # Slightly smaller for border visibility
+
+		panel.add_child(tex_rect)
+		slots_container.add_child(panel)
+		slot_nodes.append(panel)
+
+	# Set initial scroll position to center the first item
+	_update_carousel_position(true)
+
+	print("PaintingUI: Built carousel with %d slots" % slot_nodes.size())
+
+func _process(delta):
+	# Smoothly animate scroll position
+	if abs(target_scroll_offset - current_scroll_offset) > 0.1:
+		current_scroll_offset = lerp(current_scroll_offset, target_scroll_offset, scroll_speed)
+		_apply_scroll_position()
+		_update_slot_visuals()
+	else:
+		current_scroll_offset = target_scroll_offset
+
+func _on_layer_equipped(index: int):
+	"""Called when Q/E or mouse wheel changes the equipped sticker"""
+	_update_carousel_position(false)
+
+func _update_carousel_position(instant: bool):
+	"""Update scroll position to center the currently equipped sticker"""
+	if not painting_system or slot_nodes.is_empty():
 		return
 
 	var equipped_index = painting_system.selected_sticker_index
 
-	# Update all 5 slots
-	for i in range(layer_slots.size()):
-		var slot = layer_slots[i]
-		if not slot:
-			continue
+	# Calculate target position to center the equipped item
+	# The center of the ClipContainer should show the equipped item
+	var clip_height = $MarginContainer/ClipContainer.size.y
+	var center_y = clip_height / 2.0
 
-		# Create new style for this slot
+	# Each slot takes up (slot_size.y + spacing)
+	var slot_height = slot_size.y + slot_spacing
+	var equipped_position = equipped_index * slot_height + (slot_size.y / 2.0)
+
+	# Offset needed to center this item
+	target_scroll_offset = equipped_position - center_y
+
+	if instant:
+		current_scroll_offset = target_scroll_offset
+		_apply_scroll_position()
+		_update_slot_visuals()
+
+func _apply_scroll_position():
+	"""Move the SlotsContainer vertically to create scrolling effect"""
+	slots_container.position.y = -current_scroll_offset
+
+func _update_slot_visuals():
+	"""Update visual appearance of slots based on distance from center"""
+	if not painting_system or slot_nodes.is_empty():
+		return
+
+	var equipped_index = painting_system.selected_sticker_index
+	var clip_height = $MarginContainer/ClipContainer.size.y
+	var center_y = clip_height / 2.0
+
+	for i in range(slot_nodes.size()):
+		var slot = slot_nodes[i]
+		var is_equipped = (i == equipped_index)
+
+		# Calculate distance from center
+		var slot_height = slot_size.y + slot_spacing
+		var slot_center_y = (i * slot_height + slot_size.y / 2.0) - current_scroll_offset
+		var distance_from_center = abs(slot_center_y - center_y)
+
+		# Update style based on equipped state
 		var style = StyleBoxFlat.new()
-		style.bg_color = Color("#333333", 0.7)  # Same background for all
+		style.bg_color = default_bg_color
 		style.corner_radius_top_left = 4
 		style.corner_radius_top_right = 4
 		style.corner_radius_bottom_left = 4
 		style.corner_radius_bottom_right = 4
 
-		# Apply equipped style or default style
-		if i == equipped_index:
-			# This is the equipped layer - bright blue border
+		if is_equipped:
+			# Equipped item - bright blue, thicker border
 			style.border_color = equipped_border_color
-			style.set_border_width_all(equipped_border_width)
+			style.set_border_width_all(4)
+			slot.scale = Vector2.ONE * center_scale
+			slot.modulate = Color.WHITE  # Full brightness
 		else:
-			# Not equipped - subtle gray border
+			# Not equipped - gray border, smaller
 			style.border_color = default_border_color
-			style.set_border_width_all(default_border_width)
+			style.set_border_width_all(2)
+			slot.scale = Vector2.ONE * side_scale
+
+			# Fade out items further from center
+			var fade = clamp(1.0 - (distance_from_center / 200.0), 0.3, 1.0)
+			slot.modulate = Color(1, 1, 1, fade)
 
 		slot.add_theme_stylebox_override("panel", style)
-
-func _on_layer_equipped(index: int):
-	"""Called when the equipped layer changes (via Q/E keys)"""
-	_update_highlight()

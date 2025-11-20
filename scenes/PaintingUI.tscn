@@ -1,19 +1,6 @@
-[gd_scene load_steps=8 format=3 uid="uid://bqbqfg2mfb0iw"]
+[gd_scene load_steps=2 format=3 uid="uid://bqbqfg2mfb0iw"]
 
 [ext_resource type="Script" uid="uid://phrbgxs6gg70" path="res://scripts/painting/PaintingUI.gd" id="1_3egl6"]
-[ext_resource type="Texture2D" uid="uid://d05lsi475iwdf" path="res://sprites/painting layers/1.png" id="2_p7ag4"]
-[ext_resource type="Texture2D" uid="uid://bikmggtd45keb" path="res://sprites/painting layers/2.png" id="3_fi52i"]
-[ext_resource type="Texture2D" uid="uid://deieph68phnvw" path="res://sprites/painting layers/3.png" id="4_vf8el"]
-[ext_resource type="Texture2D" uid="uid://cgljak2oabbc3" path="res://sprites/painting layers/4.png" id="5_iehrv"]
-[ext_resource type="Texture2D" uid="uid://c24d530jdoy8w" path="res://sprites/painting layers/5.png" id="6_kootb"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_iybag"]
-bg_color = Color(0.2, 0.2, 0.2, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.6, 0.6, 0.6, 1)
 
 [node name="PaintingUi" type="Control"]
 layout_mode = 3
@@ -40,66 +27,11 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+[node name="ClipContainer" type="Container" parent="MarginContainer"]
+clip_contents = true
+custom_minimum_size = Vector2(80, 400)
 layout_mode = 2
-theme_override_constants/separation = 8
 
-[node name="LayerSlot1" type="PanelContainer" parent="MarginContainer/VBoxContainer"]
-custom_minimum_size = Vector2(64, 64)
+[node name="SlotsContainer" type="VBoxContainer" parent="MarginContainer/ClipContainer"]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_iybag")
-
-[node name="TextureRect" type="TextureRect" parent="MarginContainer/VBoxContainer/LayerSlot1"]
-custom_minimum_size = Vector2(60, 60)
-layout_mode = 2
-texture = ExtResource("2_p7ag4")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="LayerSlot2" type="PanelContainer" parent="MarginContainer/VBoxContainer"]
-custom_minimum_size = Vector2(64, 64)
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_iybag")
-
-[node name="TextureRect" type="TextureRect" parent="MarginContainer/VBoxContainer/LayerSlot2"]
-custom_minimum_size = Vector2(60, 60)
-layout_mode = 2
-texture = ExtResource("3_fi52i")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="LayerSlot3" type="PanelContainer" parent="MarginContainer/VBoxContainer"]
-custom_minimum_size = Vector2(64, 64)
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_iybag")
-
-[node name="TextureRect" type="TextureRect" parent="MarginContainer/VBoxContainer/LayerSlot3"]
-custom_minimum_size = Vector2(60, 60)
-layout_mode = 2
-texture = ExtResource("4_vf8el")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="LayerSlot4" type="PanelContainer" parent="MarginContainer/VBoxContainer"]
-custom_minimum_size = Vector2(64, 64)
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_iybag")
-
-[node name="TextureRect" type="TextureRect" parent="MarginContainer/VBoxContainer/LayerSlot4"]
-custom_minimum_size = Vector2(60, 60)
-layout_mode = 2
-texture = ExtResource("5_iehrv")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="LayerSlot5" type="PanelContainer" parent="MarginContainer/VBoxContainer"]
-custom_minimum_size = Vector2(64, 64)
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_iybag")
-
-[node name="TextureRect" type="TextureRect" parent="MarginContainer/VBoxContainer/LayerSlot5"]
-custom_minimum_size = Vector2(60, 60)
-layout_mode = 2
-texture = ExtResource("6_kootb")
-expand_mode = 1
-stretch_mode = 5
+theme_override_constants/separation = 10
