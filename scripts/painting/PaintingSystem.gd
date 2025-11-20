@@ -4,6 +4,9 @@ class_name PaintingSystem
 ## Core painting system - manages stickers on canvas
 ## Handles spawning, movement, ordering, rotation of layers
 
+# Signals
+signal layer_equipped(index: int)  # Emitted when Q/E changes the equipped sticker
+
 # Node references (assign in inspector or via code)
 @export var canvas_root: Node3D
 @export var wall_collision: CollisionObject3D  # The StaticBody3D for raycasting
@@ -19,7 +22,6 @@ var selected_sticker_index: int = 0  # Which sticker is selected from library
 var selected_layer: PlacedLayer = null  # Currently selected placed layer
 var is_dragging: bool = false
 var next_order: int = 0  # Next available order value
-var last_cycle_time: float = 0.0  # For debouncing Q/E keys
 
 # Input settings
 @export var raycast_distance: float = 10.0
@@ -64,15 +66,11 @@ func _process(delta):
 	if not camera or not canvas_root:
 		return
 
-	var current_time = Time.get_ticks_msec() / 1000.0
-
-	# Cycle stickers with Q/E keys (debounced)
-	if Input.is_physical_key_pressed(KEY_Q) and (current_time - last_cycle_time) > 0.2:
+	# Cycle stickers with Q/E keys or mouse wheel
+	if Input.is_action_just_pressed("cycle_sticker_prev"):
 		cycle_sticker(-1)
-		last_cycle_time = current_time
-	if Input.is_physical_key_pressed(KEY_E) and (current_time - last_cycle_time) > 0.2:
+	if Input.is_action_just_pressed("cycle_sticker_next"):
 		cycle_sticker(1)
-		last_cycle_time = current_time
 
 	# Number keys 1-5 to select placed stickers
 	if Input.is_action_just_pressed("ui_text_delete"):  # Delete selected sticker
@@ -242,6 +240,9 @@ func cycle_sticker(direction: int):
 		selected_sticker_index + 1,
 		sticker_library.size()
 	])
+
+	# Notify UI that the equipped layer changed
+	layer_equipped.emit(selected_sticker_index)
 
 func rotate_layer_90(layer: PlacedLayer, direction: int):
 	"""Rotate a layer by 90 degrees (snapping)"""

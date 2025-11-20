@@ -9,6 +9,7 @@ size = Vector2(3, 2)
 albedo_color = Color(1, 1, 0.83137256, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_unlfn"]
+size = Vector3(3.03, 0.22, 2.03)
 
 [node name="PaintingRoot" type="Node3D" node_paths=PackedStringArray("canvas_root", "wall_collision")]
 script = ExtResource("1_4j7ff")

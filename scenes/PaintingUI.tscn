@@ -1,25 +1,38 @@
-[gd_scene load_steps=2 format=3 uid="uid://bqbqfg2mfb0iw"]
+[gd_scene load_steps=8 format=3 uid="uid://bqbqfg2mfb0iw"]
 
 [ext_resource type="Script" uid="uid://phrbgxs6gg70" path="res://scripts/painting/PaintingUI.gd" id="1_3egl6"]
+[ext_resource type="Texture2D" uid="uid://d05lsi475iwdf" path="res://sprites/painting layers/1.png" id="2_p7ag4"]
+[ext_resource type="Texture2D" uid="uid://bikmggtd45keb" path="res://sprites/painting layers/2.png" id="3_fi52i"]
+[ext_resource type="Texture2D" uid="uid://deieph68phnvw" path="res://sprites/painting layers/3.png" id="4_vf8el"]
+[ext_resource type="Texture2D" uid="uid://cgljak2oabbc3" path="res://sprites/painting layers/4.png" id="5_iehrv"]
+[ext_resource type="Texture2D" uid="uid://c24d530jdoy8w" path="res://sprites/painting layers/5.png" id="6_kootb"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_iybag"]
+bg_color = Color(0.2, 0.2, 0.2, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.6, 0.6, 0.6, 1)
 
 [node name="PaintingUi" type="Control"]
 layout_mode = 3
 anchors_preset = 0
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 20.0
+offset_bottom = 20.0
 script = ExtResource("1_3egl6")
 
-[node name="Panel" type="Panel" parent="."]
+[node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="MarginContainer" type="MarginContainer" parent="Panel"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
+offset_left = -130.0
+offset_top = -261.5
+offset_right = 130.0
+offset_bottom = 261.5
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/margin_left = 10
@@ -27,50 +40,66 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Panel/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="CurrentStickerLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer"]
+[node name="LayerSlot1" type="PanelContainer" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
-theme_override_font_sizes/font_size = 18
-text = "Current Sticker: Loading..."
+theme_override_styles/panel = SubResource("StyleBoxFlat_iybag")
 
-[node name="HSeparator" type="HSeparator" parent="Panel/MarginContainer/VBoxContainer"]
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/VBoxContainer/LayerSlot1"]
+custom_minimum_size = Vector2(60, 60)
 layout_mode = 2
+texture = ExtResource("2_p7ag4")
+expand_mode = 1
+stretch_mode = 5
 
-[node name="Label" type="Label" parent="Panel/MarginContainer/VBoxContainer"]
+[node name="LayerSlot2" type="PanelContainer" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
-text = "Placed Stickers"
+theme_override_styles/panel = SubResource("StyleBoxFlat_iybag")
 
-[node name="ScrollContainer" type="ScrollContainer" parent="Panel/MarginContainer/VBoxContainer"]
-custom_minimum_size = Vector2(0, 250)
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/VBoxContainer/LayerSlot2"]
+custom_minimum_size = Vector2(60, 60)
 layout_mode = 2
+texture = ExtResource("3_fi52i")
+expand_mode = 1
+stretch_mode = 5
 
-[node name="LayersList" type="VBoxContainer" parent="Panel/MarginContainer/VBoxContainer/ScrollContainer"]
+[node name="LayerSlot3" type="PanelContainer" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_iybag")
 
-[node name="HSeparator2" type="HSeparator" parent="Panel/MarginContainer/VBoxContainer"]
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/VBoxContainer/LayerSlot3"]
+custom_minimum_size = Vector2(60, 60)
 layout_mode = 2
+texture = ExtResource("4_vf8el")
+expand_mode = 1
+stretch_mode = 5
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer"]
+[node name="LayerSlot4" type="PanelContainer" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_iybag")
 
-[node name="Delete Button" type="Button" parent="Panel/MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/VBoxContainer/LayerSlot4"]
+custom_minimum_size = Vector2(60, 60)
 layout_mode = 2
-text = "Delete Selected"
+texture = ExtResource("5_iehrv")
+expand_mode = 1
+stretch_mode = 5
 
-[node name="ClearButton" type="Button" parent="Panel/MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="LayerSlot5" type="PanelContainer" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
-text = "Clear Canvas"
+theme_override_styles/panel = SubResource("StyleBoxFlat_iybag")
 
-[node name="HelpLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer"]
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/VBoxContainer/LayerSlot5"]
+custom_minimum_size = Vector2(60, 60)
 layout_mode = 2
-theme_override_font_sizes/font_size = 12
-text = "CONTROLS:
-Q/E - Change sticker
-Click - Place sticker
-1-9 - Select layer
-Delete - Remove
-Arrows - Rotate/Order"
-autowrap_mode = 3
+texture = ExtResource("6_kootb")
+expand_mode = 1
+stretch_mode = 5

@@ -1,3 +1,5 @@
+TextureRect
+PanelContainer
 CanvasLayer
 Button
 Label
@@ -11,5 +13,3 @@ Panel
 Node3D
 CollisionShape3D
 StaticBody3D
-MeshInstance3D
-Area3D
