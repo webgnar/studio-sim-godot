@@ -67,6 +67,7 @@
 [ext_resource type="PackedScene" uid="uid://cqwacwlbuqbe" path="res://models/outside/crazy2.gltf" id="70_8lgfd"]
 [ext_resource type="PackedScene" uid="uid://k5bi7w8gtday" path="res://scenes/CameraZone.tscn" id="71_dyafi"]
 [ext_resource type="PackedScene" uid="uid://btuhdnbc2hjii" path="res://scenes/PaintingRoot.tscn" id="73_1m1ue"]
+[ext_resource type="PackedScene" uid="uid://bqbqfg2mfb0iw" path="res://scenes/PaintingUI.tscn" id="74_ntuqo"]
 [ext_resource type="AudioStream" uid="uid://84rjpuccue2i" path="res://sounds/boomboxSwitch.ogg" id="boombox_switch"]
 [ext_resource type="AudioStream" uid="uid://8so1mqtnfhkh" path="res://sounds/box open 1.ogg" id="box_open_1"]
 [ext_resource type="AudioStream" uid="uid://bkyiswhv5fuaf" path="res://sounds/box open 2.ogg" id="box_open_2"]
@@ -688,9 +689,6 @@ albedo_texture = SubResource("ViewportTexture_e68xj")
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_r5yoc"]
 size = Vector3(6.555237, 4.649658, 3.814176)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_dyafi"]
-size = Vector3(6.665, 4.69, 8.981)
 
 [node name="World" type="Node3D"]
 
@@ -1324,7 +1322,7 @@ move_sound = ExtResource("44_dyafi")
 move_sound_fade_in_duration = 3.0
 
 [node name="fold6" parent="artbox" instance=ExtResource("31_x2olw")]
-transform = Transform3D(0.01820271, 8.583139e-08, 0.9998291, 8.583099e-08, 0.99999934, -8.740784e-08, -0.99982905, 8.740823e-08, 0.01820271, 0.9763241, 0, -6.7096863)
+transform = Transform3D(0.018202709, 8.583139e-08, 0.99982905, 8.583098e-08, 0.99999934, -8.7407834e-08, -0.999829, 8.740823e-08, 0.01820271, 0.9763241, 0, -6.7096863)
 
 [node name="fold5" parent="artbox/fold6" instance=ExtResource("32_817gm")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -7.9999986, 0, 0)
@@ -1518,24 +1516,14 @@ transform = Transform3D(0.8496623, -0.119170085, -0.5136851, -0.0009949702, 0.97
 [node name="Label3D" parent="CameraZone" index="3"]
 visible = false
 
-[node name="CameraZone2" parent="." instance=ExtResource("71_dyafi")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5786886, 0.7386246, -13.823423)
-
-[node name="CollisionShape3D" parent="CameraZone2" index="0"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.60888004)
-shape = SubResource("BoxShape3D_dyafi")
-
-[node name="SecurityCamera1" parent="CameraZone2" index="1"]
-transform = Transform3D(-0.99890953, 0.042298827, -0.019762916, 0, 0.42329812, 0.9059905, 0.04668794, 0.90500253, -0.4228365, 0, 8.30962, -2.8352451)
-
-[node name="Label3D" parent="CameraZone2" index="3"]
-visible = false
-
 [node name="CameraZone3 inside" parent="." instance=ExtResource("71_dyafi")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.056339264, 0.03000021, 11.679458)
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -3.3620632, 0.03000021, 8.233387)
 
 [node name="CollisionShape3D" parent="CameraZone3 inside" index="0"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2.6507254)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.20675659, 1.3248291, 2.4091783)
+
+[node name="SecurityCamera1" parent="CameraZone3 inside" index="1"]
+transform = Transform3D(1, -2.1855696e-08, -5.8562186e-09, 2.1855715e-08, 1.0000001, 2.0861626e-07, 5.856222e-09, -2.0861626e-07, 1.0000001, 0, 2, 3)
 
 [node name="Label3D" parent="CameraZone3 inside" index="3"]
 visible = false
@@ -1543,7 +1531,13 @@ visible = false
 [node name="PaintingRoot" parent="." instance=ExtResource("73_1m1ue")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -3, 2, 8)
 
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+offset = Vector2(133.96, 269.07)
+transform = Transform2D(1, 0, 0, 1, 133.96, 269.07)
+
+[node name="PaintingUi" parent="CanvasLayer" node_paths=PackedStringArray("painting_system") instance=ExtResource("74_ntuqo")]
+painting_system = NodePath("../../PaintingRoot")
+
 [editable path="Styrofoam cube"]
 [editable path="CameraZone"]
-[editable path="CameraZone2"]
 [editable path="CameraZone3 inside"]

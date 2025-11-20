@@ -23,7 +23,8 @@ var last_cycle_time: float = 0.0  # For debouncing Q/E keys
 
 # Input settings
 @export var raycast_distance: float = 10.0
-@export var rotation_speed: float = 90.0  # Degrees per second
+@export var sticker_scale: float = 0.3  # Scale stickers to fit canvas better
+@export var enable_dragging: bool = false  # Disable dragging for now
 
 # References
 var camera: Camera3D = null
@@ -73,11 +74,15 @@ func _process(delta):
 		cycle_sticker(1)
 		last_cycle_time = current_time
 
-	# Handle rotation of selected layer
-	if selected_layer and Input.is_action_pressed("ui_left"):
-		rotate_layer(selected_layer, rotation_speed * delta)
-	if selected_layer and Input.is_action_pressed("ui_right"):
-		rotate_layer(selected_layer, -rotation_speed * delta)
+	# Number keys 1-5 to select placed stickers
+	if Input.is_action_just_pressed("ui_text_delete"):  # Delete selected sticker
+		delete_selected_layer()
+
+	# Handle rotation of selected layer (90 degree snapping)
+	if selected_layer and Input.is_action_just_pressed("ui_left"):
+		rotate_layer_90(selected_layer, -1)  # Counter-clockwise
+	if selected_layer and Input.is_action_just_pressed("ui_right"):
+		rotate_layer_90(selected_layer, 1)  # Clockwise
 
 	# Handle z-order adjustment
 	if selected_layer and Input.is_action_just_pressed("ui_up"):
@@ -89,21 +94,11 @@ func _input(event):
 	if not camera or not canvas_root:
 		return
 
-	# Left click to place sticker or start dragging
-	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
-		if event.pressed:
-			_handle_mouse_click()
-		else:
-			is_dragging = false
-
-	# Mouse motion for dragging
-	if event is InputEventMouseMotion and is_dragging and selected_layer:
-		_handle_drag_motion()
-
-	# Right click to deselect
-	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT and event.pressed:
-		selected_layer = null
-		print("Deselected layer")
+	# Left click to place sticker only (no selection)
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+		var raycast_result = _raycast_from_mouse()
+		if raycast_result:
+			spawn_sticker(raycast_result.position, raycast_result.normal)
 
 func _handle_mouse_click():
 	"""Handle left mouse click - place new sticker or select existing one"""
@@ -196,9 +191,17 @@ func spawn_sticker(world_position: Vector3, normal: Vector3):
 	sprite.alpha_cut = SpriteBase3D.ALPHA_CUT_DISABLED
 	sprite.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 	sprite.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
-	sprite.pixel_size = 0.005  # Smaller size - adjust as needed
 	sprite.no_depth_test = false
 	sprite.render_priority = next_order
+
+	# Calculate pixel size based on texture dimensions and canvas size
+	# Goal: Make stickers fit proportionally on the canvas
+	var texture_size = definition.texture.get_size()
+	var aspect_ratio = texture_size.x / texture_size.y
+
+	# Base pixel size to fit canvas (3x2 wall)
+	# This makes the sticker take up roughly 1/4 of the canvas by default
+	sprite.pixel_size = sticker_scale / max(texture_size.x, texture_size.y)
 
 	# Add to canvas FIRST
 	canvas_root.add_child(sprite)
@@ -206,15 +209,17 @@ func spawn_sticker(world_position: Vector3, normal: Vector3):
 	# Convert world position to canvas local space
 	var local_pos = canvas_root.to_local(world_position)
 
-	# Offset slightly in front of canvas (towards camera) to ensure visibility
-	# Assuming canvas faces -Z, we offset in +Z
-	local_pos.z = 0.001 * next_order  # Stack stickers slightly apart
+	# Keep stickers flat on canvas plane (no Z movement)
+	local_pos.z = 0.0  # Always flush on canvas plane
 
 	sprite.position = local_pos
 
 	# Make sprite face the camera (along canvas -Z axis)
-	# This assumes CanvasRoot is oriented correctly
 	sprite.look_at(sprite.global_position + canvas_root.global_transform.basis.z, Vector3.UP)
+
+	# Reset rotation to be perfectly flat (no tilt)
+	sprite.rotation.x = 0
+	sprite.rotation.y = 0
 
 	# Debug print
 	print("Spawned sticker: %s at local pos: %s, global pos: %s" % [definition.id, local_pos, sprite.global_position])
@@ -243,16 +248,25 @@ func cycle_sticker(direction: int):
 		sticker_library.size()
 	])
 
-func rotate_layer(layer: PlacedLayer, degrees: float):
-	"""Rotate a layer around the canvas normal"""
+func rotate_layer_90(layer: PlacedLayer, direction: int):
+	"""Rotate a layer by 90 degrees (snapping)"""
 	if not layer or not layer.node:
 		return
 
-	layer.rotation_deg += degrees
+	# Snap to 90-degree increments
+	var rotation_step = 90.0 * direction
+	layer.rotation_deg += rotation_step
 
-	# Rotate around local Z axis (perpendicular to canvas)
-	var radians = deg_to_rad(degrees)
+	# Normalize to 0-360 range
+	layer.rotation_deg = fmod(layer.rotation_deg, 360.0)
+	if layer.rotation_deg < 0:
+		layer.rotation_deg += 360.0
+
+	# Apply rotation around Z axis
+	var radians = deg_to_rad(rotation_step)
 	layer.node.rotate_object_local(Vector3(0, 0, 1), radians)
+
+	print("Rotated %s to %d degrees" % [layer.id, int(layer.rotation_deg)])
 
 func raise_layer_order(layer: PlacedLayer):
 	"""Increase layer's z-order (bring forward)"""
@@ -271,6 +285,30 @@ func lower_layer_order(layer: PlacedLayer):
 	layer.order -= 1
 	layer.node.render_priority = layer.order
 	print("Lowered layer %s to order %d" % [layer.id, layer.order])
+
+func delete_selected_layer():
+	"""Delete the currently selected layer"""
+	if not selected_layer:
+		print("No layer selected to delete")
+		return
+
+	# Remove from scene
+	if selected_layer.node:
+		selected_layer.node.queue_free()
+
+	# Remove from array
+	placed_layers.erase(selected_layer)
+
+	print("Deleted layer: %s" % selected_layer.id)
+	selected_layer = null
+
+func select_layer_by_index(index: int):
+	"""Select a placed layer by its index in the array"""
+	if index >= 0 and index < placed_layers.size():
+		selected_layer = placed_layers[index]
+		print("Selected layer %d: %s (order: %d)" % [index + 1, selected_layer.id, selected_layer.order])
+	else:
+		selected_layer = null
 
 func clear_canvas():
 	"""Remove all placed stickers from canvas"""
