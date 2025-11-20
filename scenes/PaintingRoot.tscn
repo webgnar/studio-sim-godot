@@ -1,0 +1,29 @@
+[gd_scene load_steps=5 format=3 uid="uid://btuhdnbc2hjii"]
+
+[ext_resource type="Script" uid="uid://djr5ixofwube3" path="res://scripts/painting/PaintingSystem.gd" id="1_4j7ff"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_unlfn"]
+size = Vector2(3, 2)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4j7ff"]
+albedo_color = Color(1, 1, 0.83137256, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_unlfn"]
+
+[node name="PaintingRoot" type="Node3D" node_paths=PackedStringArray("canvas_root", "wall_collision")]
+script = ExtResource("1_4j7ff")
+canvas_root = NodePath("CanvasRoot")
+wall_collision = NodePath("WallMesh/StaticBody3D")
+
+[node name="WallMesh" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)
+mesh = SubResource("PlaneMesh_unlfn")
+surface_material_override/0 = SubResource("StandardMaterial3D_4j7ff")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="WallMesh"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="WallMesh/StaticBody3D"]
+shape = SubResource("BoxShape3D_unlfn")
+
+[node name="CanvasRoot" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.049916506)
