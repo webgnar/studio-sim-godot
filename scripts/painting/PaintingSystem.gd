@@ -23,7 +23,7 @@ var last_cycle_time: float = 0.0  # For debouncing Q/E keys
 
 # Input settings
 @export var raycast_distance: float = 10.0
-@export var sticker_scale: float = 0.3  # Scale stickers to fit canvas better
+@export var sticker_scale: float = 1  # Scale stickers to fit canvas better
 @export var enable_dragging: bool = false  # Disable dragging for now
 
 # References
@@ -206,23 +206,18 @@ func spawn_sticker(world_position: Vector3, normal: Vector3):
 	# Add to canvas FIRST
 	canvas_root.add_child(sprite)
 
-	# Convert world position to canvas local space
-	var local_pos = canvas_root.to_local(world_position)
+	# Position sticker at raycast hit point (in world space first)
+	sprite.global_position = world_position
 
-	# Keep stickers flat on canvas plane (no Z movement)
-	local_pos.z = 0.0  # Always flush on canvas plane
+	# Align sprite to face away from wall (opposite of normal)
+	# The sprite should face the camera/player
+	sprite.look_at(world_position - normal, Vector3.UP)
 
-	sprite.position = local_pos
-
-	# Make sprite face the camera (along canvas -Z axis)
-	sprite.look_at(sprite.global_position + canvas_root.global_transform.basis.z, Vector3.UP)
-
-	# Reset rotation to be perfectly flat (no tilt)
-	sprite.rotation.x = 0
-	sprite.rotation.y = 0
+	# Offset slightly in front of wall to avoid z-fighting
+	sprite.global_position = world_position + (normal * 0.001)
 
 	# Debug print
-	print("Spawned sticker: %s at local pos: %s, global pos: %s" % [definition.id, local_pos, sprite.global_position])
+	print("Spawned sticker: %s at world pos: %s, normal: %s" % [definition.id, world_position, normal])
 
 	# Create placed layer data
 	var placed = PlacedLayer.new(definition.id, sprite, next_order)

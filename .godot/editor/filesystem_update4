@@ -5,3 +5,4 @@ res://models/new_array_mesh2.tres
 res://models/new_array_mesh3.tres
 res://shaders/outline.gdshader
 res://scenes/world.tscn
+res://scripts/painting/PaintingSystem.gd
