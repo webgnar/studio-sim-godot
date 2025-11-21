@@ -4,6 +4,8 @@ class_name PaintingMission
 ## Represents a painting mission/challenge for the player to complete
 
 @export var mission_id: String = ""
+@export var title: String = ""
+@export_multiline var description: String = ""
 @export var target_layers: Array[PaintingLayerDefinition] = []  # Ordered from back to front
 @export var reward: int = 100
 @export var difficulty: int = 1

@@ -76,7 +76,6 @@ func _load_sticker_library():
 			var definition = PaintingLayerDefinition.new(sticker_name, texture, 0)
 			definition.unlocked = true  # All unlocked for testing
 			sticker_library.append(definition)
-			print("Loaded sticker: %s" % sticker_name)
 		else:
 			push_error("Failed to load sticker texture: %s" % path)
 
@@ -133,7 +132,6 @@ func _handle_mouse_click():
 		# Select existing layer and prepare for dragging
 		selected_layer = clicked_layer
 		is_dragging = true
-		print("Selected layer: %s (order: %d)" % [selected_layer.id, selected_layer.order])
 	else:
 		# Only place new sticker if we're not currently dragging
 		if not is_dragging:
@@ -232,9 +230,6 @@ func spawn_sticker(world_position: Vector3, normal: Vector3):
 	# Offset slightly in front of wall to avoid z-fighting
 	sprite.global_position = world_position + (normal * 0.001)
 
-	# Debug print
-	print("Spawned sticker: %s at world pos: %s, normal: %s" % [definition.id, world_position, normal])
-
 	# Create placed layer data
 	var placed = PlacedLayer.new(definition.id, sprite, next_order)
 	placed_layers.append(placed)
@@ -280,8 +275,6 @@ func rotate_layer_90(layer: PlacedLayer, direction: int):
 	var radians = deg_to_rad(rotation_step)
 	layer.node.rotate_object_local(Vector3(0, 0, 1), radians)
 
-	print("Rotated %s to %d degrees" % [layer.id, int(layer.rotation_deg)])
-
 func raise_layer_order(layer: PlacedLayer):
 	"""Increase layer's z-order (bring forward)"""
 	if not layer or not layer.node:
@@ -289,7 +282,6 @@ func raise_layer_order(layer: PlacedLayer):
 
 	layer.order += 1
 	layer.node.render_priority = layer.order
-	print("Raised layer %s to order %d" % [layer.id, layer.order])
 
 func lower_layer_order(layer: PlacedLayer):
 	"""Decrease layer's z-order (send backward)"""
@@ -298,7 +290,6 @@ func lower_layer_order(layer: PlacedLayer):
 
 	layer.order -= 1
 	layer.node.render_priority = layer.order
-	print("Lowered layer %s to order %d" % [layer.id, layer.order])
 
 func delete_selected_layer():
 	"""Delete the currently selected layer"""
@@ -320,7 +311,6 @@ func select_layer_by_index(index: int):
 	"""Select a placed layer by its index in the array"""
 	if index >= 0 and index < placed_layers.size():
 		selected_layer = placed_layers[index]
-		print("Selected layer %d: %s (order: %d)" % [index + 1, selected_layer.id, selected_layer.order])
 	else:
 		selected_layer = null
 

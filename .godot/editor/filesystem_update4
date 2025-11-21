@@ -12,3 +12,5 @@ res://scenes/PaintingRoot2D.tscn
 res://scripts/painting/PaintingSystem2D.gd
 res://scripts/painting/PaintingRoot2D.gd
 res://scripts/WorldSetup.gd
+res://scripts/painting/PaintingMission.gd
+res://scripts/ui/MissionAuthoringUI.gd

@@ -285,8 +285,6 @@ func rotate_layer_90(layer: PlacedLayer2D, direction: int):
 	# Apply rotation (Sprite2D uses rotation property directly)
 	layer.node.rotation_degrees += rotation_step
 
-	print("Rotated %s to %d degrees" % [layer.id, int(layer.rotation_deg)])
-
 func raise_layer_order(layer: PlacedLayer2D):
 	"""Increase layer's z-order (bring forward)"""
 	if not layer or not layer.node:
@@ -294,7 +292,6 @@ func raise_layer_order(layer: PlacedLayer2D):
 
 	layer.order += 1
 	layer.node.z_index = layer.order
-	print("Raised layer %s to order %d" % [layer.id, layer.order])
 
 func lower_layer_order(layer: PlacedLayer2D):
 	"""Decrease layer's z-order (send backward)"""
@@ -303,7 +300,6 @@ func lower_layer_order(layer: PlacedLayer2D):
 
 	layer.order -= 1
 	layer.node.z_index = layer.order
-	print("Lowered layer %s to order %d" % [layer.id, layer.order])
 
 func delete_selected_layer():
 	"""Delete the currently selected layer"""
@@ -325,7 +321,6 @@ func select_layer_by_index(index: int):
 	"""Select a placed layer by its index in the array"""
 	if index >= 0 and index < placed_layers.size():
 		selected_layer = placed_layers[index]
-		print("Selected layer %d: %s (order: %d)" % [index + 1, selected_layer.id, selected_layer.order])
 	else:
 		selected_layer = null
 
@@ -339,22 +334,44 @@ func clear_canvas():
 	selected_layer = null
 	print("Canvas cleared")
 
-# Validation system (for future phases)
-func verify_painting(target: PaintingMission) -> bool:
+# Validation system
+func verify_painting(target: PaintingMission) -> ValidationResult:
 	"""Check if current canvas matches the target painting"""
+	var result = ValidationResult.new()
+
+	# Check layer count
 	if placed_layers.size() != target.target_layers.size():
-		return false
+		result.add_error("Wrong number of stickers: expected %d, got %d" % [
+			target.target_layers.size(),
+			placed_layers.size()
+		])
+		result.total_count = target.target_layers.size()
+		result.correct_count = 0
+		return result
 
 	# Sort player layers by order
 	var sorted_layers = placed_layers.duplicate()
 	sorted_layers.sort_custom(func(a, b): return a.order < b.order)
 
 	# Compare each layer ID
-	for i in range(target.target_layers.size()):
-		if sorted_layers[i].id != target.target_layers[i].id:
-			return false
+	result.total_count = target.target_layers.size()
+	result.correct_count = 0
 
-	return true
+	for i in range(target.target_layers.size()):
+		if sorted_layers[i].id == target.target_layers[i].id:
+			result.correct_count += 1
+		else:
+			result.add_error("Layer %d mismatch: expected '%s', got '%s'" % [
+				i + 1,
+				target.target_layers[i].id,
+				sorted_layers[i].id
+			])
+
+	# Success if all layers matched
+	if result.correct_count == result.total_count:
+		result.success = true
+
+	return result
 
 # Mode management
 func set_input_enabled(enabled: bool):
