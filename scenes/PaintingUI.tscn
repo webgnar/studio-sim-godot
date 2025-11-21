@@ -10,6 +10,7 @@ offset_top = 20.0
 offset_right = 20.0
 offset_bottom = 20.0
 script = ExtResource("1_3egl6")
+center_scale = 2.0
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 1
@@ -28,8 +29,7 @@ theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
 [node name="ClipContainer" type="Container" parent="MarginContainer"]
-clip_contents = true
-custom_minimum_size = Vector2(80, 400)
+custom_minimum_size = Vector2(200, 400)
 layout_mode = 2
 
 [node name="SlotsContainer" type="VBoxContainer" parent="MarginContainer/ClipContainer"]

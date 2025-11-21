@@ -54,6 +54,9 @@ func _build_carousel():
 		var panel = PanelContainer.new()
 		panel.custom_minimum_size = slot_size
 
+		# Set pivot offset to center so scaling happens from center point
+		panel.pivot_offset = slot_size / 2.0
+
 		# Create style
 		var style = StyleBoxFlat.new()
 		style.bg_color = default_bg_color

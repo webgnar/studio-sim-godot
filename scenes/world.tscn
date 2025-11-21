@@ -1322,7 +1322,7 @@ move_sound = ExtResource("44_dyafi")
 move_sound_fade_in_duration = 3.0
 
 [node name="fold6" parent="artbox" instance=ExtResource("31_x2olw")]
-transform = Transform3D(0.018202709, 8.583139e-08, 0.999829, 8.5830976e-08, 0.99999934, -8.7407834e-08, -0.99982893, 8.740823e-08, 0.018202709, 0.9763241, 0, -6.7096863)
+transform = Transform3D(0.018202707, 8.583139e-08, 0.99982893, 8.583097e-08, 0.99999934, -8.740783e-08, -0.9998289, 8.740823e-08, 0.018202709, 0.9763241, 0, -6.7096863)
 
 [node name="fold5" parent="artbox/fold6" instance=ExtResource("32_817gm")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -7.9999986, 0, 0)
@@ -1517,7 +1517,7 @@ transform = Transform3D(0.8496623, -0.119170085, -0.5136851, -0.0009949702, 0.97
 visible = false
 
 [node name="CameraZone3 inside" parent="." instance=ExtResource("71_dyafi")]
-transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -0.28859258, 0.03000021, 11.812575)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.28859258, 0.03000021, 11.812575)
 
 [node name="CollisionShape3D" parent="CameraZone3 inside" index="0"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.20675659, 1.3248291, 2.4091783)
