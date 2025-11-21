@@ -22,6 +22,7 @@ var placed_layers: Array[PlacedLayer2D] = []
 var selected_sticker_index: int = 0  # Which sticker is selected from library
 var selected_layer: PlacedLayer2D = null  # Currently selected placed layer
 var next_order: int = 0  # Next available z-index value
+var input_enabled: bool = false  # Starts disabled (3D mode is default)
 
 # Input settings
 @export var raycast_distance: float = 10.0
@@ -132,7 +133,7 @@ func _load_sticker_library():
 			push_error("Failed to load sticker texture: %s" % path)
 
 func _process(delta):
-	if not camera:
+	if not camera or not input_enabled:
 		return
 
 	# Cycle stickers with Q/E keys or mouse wheel
@@ -158,7 +159,7 @@ func _process(delta):
 		lower_layer_order(selected_layer)
 
 func _input(event):
-	if not camera:
+	if not camera or not input_enabled:
 		return
 
 	# Left click to place sticker
@@ -354,3 +355,8 @@ func verify_painting(target: PaintingMission) -> bool:
 			return false
 
 	return true
+
+# Mode management
+func set_input_enabled(enabled: bool):
+	"""Enable or disable input processing for this painting system"""
+	input_enabled = enabled
