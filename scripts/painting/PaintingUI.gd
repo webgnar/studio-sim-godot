@@ -3,8 +3,13 @@ class_name PaintingUI
 
 ## Scrolling carousel UI for painting stickers
 ## Selected sticker always stays centered, column scrolls up/down
+## Supports both 3D and 2D painting systems
 
-@export var painting_system: PaintingSystem
+@export var painting_system_3d: PaintingSystem
+@export var painting_system_2d: PaintingSystem2D
+
+# Active system reference (changes based on mode)
+var active_system = null
 
 # UI References
 @onready var slots_container: VBoxContainer = $MarginContainer/ClipContainer/SlotsContainer
@@ -27,17 +32,43 @@ var equipped_border_color = Color("#3399FF")
 var default_bg_color = Color("#333333", 0.7)
 
 func _ready():
-	# Connect to painting system
-	if painting_system:
-		painting_system.layer_equipped.connect(_on_layer_equipped)
-		# Build the UI once the painting system is ready
-		call_deferred("_build_carousel")
+	# Connect to mode manager to handle system switching
+	if PaintingModeManager:
+		PaintingModeManager.mode_changed.connect(_on_mode_changed)
+
+	# Set initial active system based on current mode
+	_set_active_system(PaintingModeManager.current_mode)
+
+	# Build the UI once the painting system is ready
+	call_deferred("_build_carousel")
+
+func _set_active_system(mode):
+	"""Switch to the appropriate painting system based on mode"""
+	# Disconnect from old system if connected
+	if active_system and active_system.layer_equipped.is_connected(_on_layer_equipped):
+		active_system.layer_equipped.disconnect(_on_layer_equipped)
+
+	# Set new active system
+	if mode == PaintingModeManager.Mode.MODE_3D:
+		active_system = painting_system_3d
 	else:
-		push_error("PaintingUI: No PaintingSystem assigned!")
+		active_system = painting_system_2d
+
+	# Connect to new system
+	if active_system:
+		active_system.layer_equipped.connect(_on_layer_equipped)
+	else:
+		push_error("PaintingUI: Active system is null for mode %d" % mode)
+
+func _on_mode_changed(new_mode):
+	"""Called when painting mode switches between 3D and 2D"""
+	_set_active_system(new_mode)
+	# Rebuild carousel for the new system
+	_build_carousel()
 
 func _build_carousel():
 	"""Create all the slot UI elements dynamically"""
-	if not painting_system or painting_system.sticker_library.is_empty():
+	if not active_system or active_system.sticker_library.is_empty():
 		push_error("PaintingUI: Cannot build carousel - no stickers loaded")
 		return
 
@@ -47,8 +78,8 @@ func _build_carousel():
 	slot_nodes.clear()
 
 	# Create a slot for each sticker in the library
-	for i in range(painting_system.sticker_library.size()):
-		var sticker = painting_system.sticker_library[i]
+	for i in range(active_system.sticker_library.size()):
+		var sticker = active_system.sticker_library[i]
 
 		# Create PanelContainer for this slot
 		var panel = PanelContainer.new()
@@ -99,10 +130,10 @@ func _on_layer_equipped(index: int):
 
 func _update_carousel_position(instant: bool):
 	"""Update scroll position to center the currently equipped sticker"""
-	if not painting_system or slot_nodes.is_empty():
+	if not active_system or slot_nodes.is_empty():
 		return
 
-	var equipped_index = painting_system.selected_sticker_index
+	var equipped_index = active_system.selected_sticker_index
 
 	# Calculate target position to center the equipped item
 	# The center of the ClipContainer should show the equipped item
@@ -127,10 +158,10 @@ func _apply_scroll_position():
 
 func _update_slot_visuals():
 	"""Update visual appearance of slots based on distance from center"""
-	if not painting_system or slot_nodes.is_empty():
+	if not active_system or slot_nodes.is_empty():
 		return
 
-	var equipped_index = painting_system.selected_sticker_index
+	var equipped_index = active_system.selected_sticker_index
 	var clip_height = $MarginContainer/ClipContainer.size.y
 	var center_y = clip_height / 2.0
 
