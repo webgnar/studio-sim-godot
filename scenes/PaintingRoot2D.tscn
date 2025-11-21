@@ -1,0 +1,38 @@
+[gd_scene load_steps=6 format=3 uid="uid://bshsrjrokypta"]
+
+[ext_resource type="Script" uid="uid://ddu5r4f51ufg2" path="res://scripts/painting/PaintingRoot2D.gd" id="1_616st"]
+[ext_resource type="Script" uid="uid://cwv7q3pr2rgqg" path="res://scripts/painting/PaintingSystem2D.gd" id="1_r7cr7"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_m05bo"]
+size = Vector2(3, 2)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_r7cr7"]
+transparency = 1
+shading_mode = 0
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_616st"]
+size = Vector3(3, 0.1, 2)
+
+[node name="PaintingRoot2d" type="Node3D"]
+script = ExtResource("1_616st")
+
+[node name="CanvasViewport" type="SubViewport" parent="."]
+transparent_bg = true
+size = Vector2i(1024, 1024)
+render_target_update_mode = 4
+
+[node name="CanvasRoot" type="Node2D" parent="CanvasViewport" node_paths=PackedStringArray("painting_plane", "plane_collision", "canvas_viewport")]
+script = ExtResource("1_r7cr7")
+painting_plane = NodePath("../../PaintingPlaneMesh")
+plane_collision = NodePath("../../PaintingPlaneMesh/StaticBody3D")
+canvas_viewport = NodePath("..")
+sticker_scale = 0.5
+
+[node name="PaintingPlaneMesh" type="MeshInstance3D" parent="."]
+mesh = SubResource("PlaneMesh_m05bo")
+surface_material_override/0 = SubResource("StandardMaterial3D_r7cr7")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="PaintingPlaneMesh"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PaintingPlaneMesh/StaticBody3D"]
+shape = SubResource("BoxShape3D_616st")
