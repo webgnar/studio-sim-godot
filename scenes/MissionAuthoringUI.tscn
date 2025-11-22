@@ -26,6 +26,7 @@ offset_right = 250.0
 offset_bottom = 200.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 1
 
 [node name="MarginContainer" type="MarginContainer" parent="Dialog"]
 layout_mode = 2
@@ -108,7 +109,7 @@ text = "Cancel"
 
 [node name="HelpLabel" type="Label" parent="Dialog/MarginContainer/VBoxContainer"]
 layout_mode = 2
-text = "Press Enter to Save | Escape to Cancel | Tab to navigate"
+text = "Ctrl+S: Quick Save | `: Nav Fields | Enter/Space: Press Button"
 horizontal_alignment = 1
 
 [connection signal="pressed" from="Dialog/MarginContainer/VBoxContainer/ButtonContainer/SaveButton" to="." method="_save_mission"]

@@ -37,13 +37,19 @@ func capture_current_canvas(mission_id: String, title: String, description: Stri
 	var sorted_layers = painting_system_2d.placed_layers.duplicate()
 	sorted_layers.sort_custom(func(a, b): return a.order < b.order)
 
-	# Convert PlacedLayer2D to PaintingLayerDefinition
+	# Convert PlacedLayer2D to PlacedStickerData with full placement info
 	for layer in sorted_layers:
-		# Find the definition in the library that matches this ID
-		for definition in painting_system_2d.sticker_library:
-			if definition.id == layer.id:
-				mission.target_layers.append(definition)
-				break
+		if not layer.node:
+			continue
+
+		var sticker_data = PlacedStickerData.new()
+		sticker_data.sticker_id = layer.id
+		sticker_data.position = layer.node.position
+		sticker_data.rotation_deg = layer.rotation_deg
+		sticker_data.scale = layer.node.scale.x  # Assume uniform scale
+		sticker_data.z_order = layer.order
+
+		mission.target_stickers.append(sticker_data)
 
 	return mission
 
@@ -59,6 +65,11 @@ func save_mission(mission: PaintingMission, file_path: String) -> bool:
 	if not dir.dir_exists(folder):
 		dir.make_dir_recursive(folder)
 
+	# Generate and save screenshot
+	var screenshot_path = _generate_screenshot(file_path)
+	if screenshot_path:
+		mission.reference_image_path = screenshot_path
+
 	# Save the resource
 	var error = ResourceSaver.save(mission, file_path)
 	if error != OK:
@@ -68,6 +79,37 @@ func save_mission(mission: PaintingMission, file_path: String) -> bool:
 	print("MissionAuthoringTool: Saved mission '%s' to %s" % [mission.title, file_path])
 	mission_saved.emit(file_path)
 	return true
+
+func _generate_screenshot(mission_path: String) -> String:
+	"""Capture screenshot of the 2D canvas and save as PNG"""
+	if not painting_system_2d or not painting_system_2d.canvas_viewport:
+		push_error("MissionAuthoringTool: Cannot generate screenshot - no viewport!")
+		return ""
+
+	# Get the viewport texture
+	var viewport_texture = painting_system_2d.canvas_viewport.get_texture()
+	if not viewport_texture:
+		push_error("MissionAuthoringTool: Cannot get viewport texture!")
+		return ""
+
+	# Get the image from the texture
+	var image = viewport_texture.get_image()
+	if not image:
+		push_error("MissionAuthoringTool: Cannot get image from texture!")
+		return ""
+
+	# Generate screenshot filename based on mission path
+	var base_path = mission_path.get_basename()  # Remove .tres extension
+	var screenshot_path = base_path + "_ref.png"
+
+	# Save the image as PNG
+	var error = image.save_png(screenshot_path)
+	if error != OK:
+		push_error("MissionAuthoringTool: Failed to save screenshot to %s (error: %d)" % [screenshot_path, error])
+		return ""
+
+	print("MissionAuthoringTool: Saved reference screenshot to %s" % screenshot_path)
+	return screenshot_path
 
 func create_and_save_mission(mission_id: String, title: String, description: String, reward: int, difficulty: int, file_path: String) -> bool:
 	"""Convenience function to capture and save in one call"""

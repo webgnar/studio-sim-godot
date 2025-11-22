@@ -336,40 +336,79 @@ func clear_canvas():
 
 # Validation system
 func verify_painting(target: PaintingMission) -> ValidationResult:
-	"""Check if current canvas matches the target painting"""
+	"""Check if current canvas matches the target painting with placement-based scoring"""
 	var result = ValidationResult.new()
 
 	# Check layer count
-	if placed_layers.size() != target.target_layers.size():
+	if placed_layers.size() != target.target_stickers.size():
 		result.add_error("Wrong number of stickers: expected %d, got %d" % [
-			target.target_layers.size(),
+			target.target_stickers.size(),
 			placed_layers.size()
 		])
-		result.total_count = target.target_layers.size()
-		result.correct_count = 0
+		result.set_placement_score(0.0, [])
 		return result
 
-	# Sort player layers by order
-	var sorted_layers = placed_layers.duplicate()
-	sorted_layers.sort_custom(func(a, b): return a.order < b.order)
+	if target.target_stickers.is_empty():
+		result.add_error("Mission has no target stickers defined")
+		result.set_placement_score(0.0, [])
+		return result
 
-	# Compare each layer ID
-	result.total_count = target.target_layers.size()
-	result.correct_count = 0
+	# Get tolerance settings from mission difficulty
+	var tolerances = target.get_tolerance_settings()
+	var position_tolerance = tolerances["position"]
+	var rotation_tolerance = tolerances["rotation"]
 
-	for i in range(target.target_layers.size()):
-		if sorted_layers[i].id == target.target_layers[i].id:
-			result.correct_count += 1
-		else:
-			result.add_error("Layer %d mismatch: expected '%s', got '%s'" % [
-				i + 1,
-				target.target_layers[i].id,
-				sorted_layers[i].id
-			])
+	# Convert placed layers to PlacedStickerData for comparison
+	var player_stickers: Array[PlacedStickerData] = []
+	for layer in placed_layers:
+		if not layer.node:
+			continue
 
-	# Success if all layers matched
-	if result.correct_count == result.total_count:
-		result.success = true
+		var sticker_data = PlacedStickerData.new()
+		sticker_data.sticker_id = layer.id
+		sticker_data.position = layer.node.position
+		sticker_data.rotation_deg = layer.rotation_deg
+		sticker_data.scale = layer.node.scale.x
+		sticker_data.z_order = layer.order
+
+		player_stickers.append(sticker_data)
+
+	# Sort both arrays by z_order for comparison
+	var sorted_player = player_stickers.duplicate()
+	sorted_player.sort_custom(func(a, b): return a.z_order < b.z_order)
+
+	var sorted_target = target.target_stickers.duplicate()
+	sorted_target.sort_custom(func(a, b): return a.z_order < b.z_order)
+
+	# Compare each sticker and calculate individual scores
+	var sticker_scores: Array[float] = []
+	var total_score: float = 0.0
+
+	for i in range(sorted_target.size()):
+		if i >= sorted_player.size():
+			sticker_scores.append(0.0)
+			continue
+
+		var target_sticker = sorted_target[i]
+		var player_sticker = sorted_player[i]
+
+		# Calculate match score for this sticker
+		var match_score = player_sticker.matches(target_sticker, position_tolerance, rotation_tolerance)
+		sticker_scores.append(match_score)
+		total_score += match_score
+
+	# Calculate overall percentage
+	var match_percentage = (total_score / float(sorted_target.size())) * 100.0
+
+	# Set the placement score
+	result.set_placement_score(match_percentage, sticker_scores)
+
+	# Add detailed feedback if not passing
+	if not result.success:
+		result.add_error("Match score: %.1f%% (need %.1f%% to pass)" % [
+			match_percentage,
+			result.pass_threshold
+		])
 
 	return result
 

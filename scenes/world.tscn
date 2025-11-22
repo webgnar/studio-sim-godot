@@ -1,4 +1,4 @@
-[gd_scene load_steps=145 format=3 uid="uid://cnmivki1rop3b"]
+[gd_scene load_steps=146 format=3 uid="uid://cnmivki1rop3b"]
 
 [ext_resource type="Material" uid="uid://wwlsotlotycw" path="res://materials/wood.tres" id="1_4mrxx"]
 [ext_resource type="Script" uid="uid://d4bxpnphvld1d" path="res://scripts/PlayerController.gd" id="1_4wyf3"]
@@ -1326,7 +1326,7 @@ move_sound = ExtResource("44_dyafi")
 move_sound_fade_in_duration = 3.0
 
 [node name="fold6" parent="artbox" instance=ExtResource("31_x2olw")]
-transform = Transform3D(0.018202705, 8.583139e-08, 0.9998288, 8.583096e-08, 0.99999934, -8.740782e-08, -0.99982876, 8.740823e-08, 0.018202705, 0.9763241, 0, -6.7096863)
+transform = Transform3D(0.018202703, 8.583139e-08, 0.99982876, 8.5830955e-08, 0.99999934, -8.740781e-08, -0.9998287, 8.740823e-08, 0.018202705, 0.9763241, 0, -6.7096863)
 
 [node name="fold5" parent="artbox/fold6" instance=ExtResource("32_817gm")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -7.9999986, 0, 0)
@@ -1546,8 +1546,7 @@ painting_system_2d = NodePath("../../PaintingRoot2d/CanvasViewport/CanvasRoot")
 [node name="MissionAuthoringUi" parent="CanvasLayer" instance=ExtResource("76_author")]
 
 [node name="PaintingRoot2d" parent="." instance=ExtResource("75_ca4ee")]
-transform = Transform3D(-4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0, 1, -3, 1, 4)
-visible = false
+transform = Transform3D(-4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0, 1, -3.609302, 2.4973063, 7)
 
 [editable path="Styrofoam cube"]
 [editable path="CameraZone"]
