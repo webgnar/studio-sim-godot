@@ -12,3 +12,4 @@ res://shaders/outline.gdshader
 res://resources/missions/misson 1.tres
 res://resources/missions/test1.tres
 res://scenes/PaintingRoot2D.tscn
+res://scripts/ui/MissionSelectionUI.gd

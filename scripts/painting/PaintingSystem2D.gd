@@ -136,6 +136,11 @@ func _process(delta):
 	if not camera or not input_enabled:
 		return
 
+	# F8 to submit painting for validation (only when mission is active)
+	if Input.is_key_pressed(KEY_F8) and MissionManager and MissionManager.current_mission:
+		submit_painting()
+		return
+
 	# Cycle stickers with Q/E keys or mouse wheel
 	if Input.is_action_just_pressed("cycle_sticker_prev"):
 		cycle_sticker(-1)
@@ -416,3 +421,52 @@ func verify_painting(target: PaintingMission) -> ValidationResult:
 func set_input_enabled(enabled: bool):
 	"""Enable or disable input processing for this painting system"""
 	input_enabled = enabled
+
+# Mission system
+func start_mission(mission: PaintingMission):
+	"""Start a new mission by clearing the canvas and preparing for painting"""
+	if not mission:
+		push_error("PaintingSystem2D: Cannot start null mission!")
+		return
+
+	# Clear the canvas
+	clear_canvas()
+
+	print("PaintingSystem2D: Mission '%s' loaded. Canvas cleared and ready." % mission.title)
+
+func submit_painting():
+	"""Submit the current painting for validation"""
+	if not MissionManager or not MissionManager.current_mission:
+		push_error("PaintingSystem2D: No active mission to submit!")
+		return
+
+	# Validate the painting
+	var result = verify_painting(MissionManager.current_mission)
+
+	# Save the result to mission manager
+	MissionManager.complete_mission(result)
+
+	# Find and show the validation result UI
+	var validation_ui = _find_validation_ui()
+	if validation_ui:
+		validation_ui.show_results(result, MissionManager.current_mission)
+	else:
+		push_error("PaintingSystem2D: Could not find ValidationResultUI!")
+		print("Validation result: %s, Score: %.1f%%" % [result.get_grade(), result.match_percentage])
+
+func _find_validation_ui() -> ValidationResultUI:
+	"""Find the ValidationResultUI in the scene tree"""
+	var root = get_tree().root
+	return _search_for_validation_ui(root)
+
+func _search_for_validation_ui(node: Node) -> ValidationResultUI:
+	"""Recursively search for ValidationResultUI"""
+	if node is ValidationResultUI:
+		return node
+
+	for child in node.get_children():
+		var result = _search_for_validation_ui(child)
+		if result:
+			return result
+
+	return null

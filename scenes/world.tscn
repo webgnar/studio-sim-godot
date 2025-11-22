@@ -71,6 +71,8 @@
 [ext_resource type="PackedScene" uid="uid://bqbqfg2mfb0iw" path="res://scenes/PaintingUI.tscn" id="74_ntuqo"]
 [ext_resource type="PackedScene" uid="uid://bshsrjrokypta" path="res://scenes/PaintingRoot2D.tscn" id="75_ca4ee"]
 [ext_resource type="PackedScene" uid="uid://c7vk8n8k7j8k8" path="res://scenes/MissionAuthoringUI.tscn" id="76_author"]
+[ext_resource type="PackedScene" uid="uid://ctv5r4f51ufg3" path="res://scenes/MissionSelectionUI.tscn" id="77_select"]
+[ext_resource type="PackedScene" uid="uid://dv6t5r4f51ufg4" path="res://scenes/ValidationResultUI.tscn" id="78_result"]
 [ext_resource type="AudioStream" uid="uid://84rjpuccue2i" path="res://sounds/boomboxSwitch.ogg" id="boombox_switch"]
 [ext_resource type="AudioStream" uid="uid://8so1mqtnfhkh" path="res://sounds/box open 1.ogg" id="box_open_1"]
 [ext_resource type="AudioStream" uid="uid://bkyiswhv5fuaf" path="res://sounds/box open 2.ogg" id="box_open_2"]
@@ -1544,6 +1546,10 @@ painting_system_3d = NodePath("../../PaintingRoot")
 painting_system_2d = NodePath("../../PaintingRoot2d/CanvasViewport/CanvasRoot")
 
 [node name="MissionAuthoringUi" parent="CanvasLayer" instance=ExtResource("76_author")]
+
+[node name="MissionSelectionUi" parent="CanvasLayer" instance=ExtResource("77_select")]
+
+[node name="ValidationResultUi" parent="CanvasLayer" instance=ExtResource("78_result")]
 
 [node name="PaintingRoot2d" parent="." instance=ExtResource("75_ca4ee")]
 transform = Transform3D(-4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0, 1, -3.609302, 2.4973063, 7)

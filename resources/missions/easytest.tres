@@ -1,0 +1,39 @@
+[gd_resource type="Resource" script_class="PaintingMission" load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://scripts/painting/PaintingMission.gd" id="1_i4n48"]
+[ext_resource type="Script" path="res://scripts/painting/PlacedStickerData.gd" id="2_xjvbb"]
+
+[sub_resource type="Resource" id="Resource_jtv5t"]
+script = ExtResource("2_xjvbb")
+sticker_id = "2"
+position = Vector2(450.79346, 729.8325)
+scale = 0.47407407
+
+[sub_resource type="Resource" id="Resource_3khj2"]
+script = ExtResource("2_xjvbb")
+sticker_id = "6"
+position = Vector2(719.3432, 78.208496)
+scale = 0.47407407
+z_order = 1
+
+[sub_resource type="Resource" id="Resource_yu27c"]
+script = ExtResource("2_xjvbb")
+sticker_id = "8"
+position = Vector2(218.38728, 280.1914)
+scale = 0.47407407
+z_order = 2
+
+[sub_resource type="Resource" id="Resource_vag81"]
+script = ExtResource("2_xjvbb")
+sticker_id = "10"
+position = Vector2(775.60516, 721.14795)
+scale = 0.47407407
+z_order = 3
+
+[resource]
+script = ExtResource("1_i4n48")
+mission_id = "easytest"
+title = "easytest"
+description = "try to test with this"
+target_stickers = Array[ExtResource("2_xjvbb")]([SubResource("Resource_jtv5t"), SubResource("Resource_3khj2"), SubResource("Resource_yu27c"), SubResource("Resource_vag81")])
+reference_image_path = "res://resources/missions/easytest_ref.png"

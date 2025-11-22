@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cmlpf0uhcuu2c"
-path="res://.godot/imported/newhard_ref.png-b76584cb7a24af5e7c180c0320a5695d.ctex"
+uid="uid://dfmy11pqj2f23"
+path="res://.godot/imported/easy2_ref.png-c03ac2937193aac0c1394d5399139967.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://resources/missions/newhard_ref.png"
-dest_files=["res://.godot/imported/newhard_ref.png-b76584cb7a24af5e7c180c0320a5695d.ctex"]
+source_file="res://resources/missions/easy2_ref.png"
+dest_files=["res://.godot/imported/easy2_ref.png-c03ac2937193aac0c1394d5399139967.ctex"]
 
 [params]
 
