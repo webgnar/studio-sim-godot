@@ -137,10 +137,12 @@ window_1.png::CompressedTexture2D::1741120244407712181::1761094364::1761713651::
 window_2.png::CompressedTexture2D::3843305821279394752::1762243908::1762243908::1::::<><><>0<>0<>77d89750d4ef12e3cff143c8294136a6<>res://.godot/imported/window_2.png-87c4605db02cf03dad312f2f80014718.ctex::
 window_3.png::CompressedTexture2D::8416963540277329472::1762243908::1762243908::1::::<><><>0<>0<>0c91ae31b89ff3e4df2dc32d8c237fb9<>res://.godot/imported/window_3.png-41ae1fb60d3b1a871cf4f15dca02d76a.ctex::
 ::res://resources/::1763748595
-::res://resources/missions/::1763796342
+::res://resources/missions/::1763797146
 misson 1.tres::Resource/PaintingMission::643084433131336824::1763796097::0::1::::<><><>0<>0<><>::uid://b8846po2cv0jq::::res://scripts/painting/PaintingMission.gd<>uid://c5u6lwuvv83fw::::res://scripts/painting/PlacedStickerData.gd
 newhard.tres::Resource/PaintingMission::-1::1763796342::0::1::::<><><>0<>0<><>::
 newhard_ref.png::CompressedTexture2D::5638736674499642376::1763796342::1763796361::1::::<><><>0<>0<>d200c9c915151f8b70bfdf7805524e60<>res://.godot/imported/newhard_ref.png-b76584cb7a24af5e7c180c0320a5695d.ctex::
+rottest.tres::Resource/PaintingMission::-1::1763797146::0::1::::<><><>0<>0<><>::
+rottest_ref.png::CompressedTexture2D::6241651539842219249::1763797146::1763797172::1::::<><><>0<>0<>35588b1f44b2b1cfe6328698a2a7969a<>res://.godot/imported/rottest_ref.png-4917e8b16bf59d1fd60471d34817e6a0.ctex::
 test1.tres::Resource/PaintingMission::1216060839633461714::1763796097::0::1::::<><><>0<>0<><>::uid://b8846po2cv0jq::::res://scripts/painting/PaintingMission.gd<>uid://c5u6lwuvv83fw::::res://scripts/painting/PlacedStickerData.gd
 test1_ref.png::CompressedTexture2D::5704082690162574504::1763795888::1763795989::1::::<><><>0<>0<>2658e2b4ee3e1bf3d0158ba0dcbb17df<>res://.godot/imported/test1_ref.png-5391b6b36cb18f8270daabc4f73f4976.ctex::
 ::res://scenes/::1763796126
@@ -210,9 +212,9 @@ PlacedLayer2D.gd::GDScript::4414825213457623402::1763691677::0::1::::PlacedLayer
 PlacedLayer.gd::GDScript::1047604470423822422::1763675314::0::1::::PlacedLayer<>RefCounted<><>0<>0<><>::
 PlacedStickerData.gd::GDScript::6921697289510411432::1763795397::0::1::::PlacedStickerData<>Resource<><>0<>0<><>::
 ValidationResult.gd::GDScript::4996310058925922904::1763795440::0::1::::ValidationResult<>RefCounted<><>0<>0<><>::
-::res://scripts/tools/::1763795511
+::res://scripts/tools/::1763796972
 create_power_cord.gd::GDScript::1820023332295702997::1762057172::0::1::::<>EditorScript<><>0<>1<><>::
-MissionAuthoringTool.gd::GDScript::6880012840404432544::1763795511::0::1::::MissionAuthoringTool<>Node<><>0<>0<><>::
+MissionAuthoringTool.gd::GDScript::6880012840404432544::1763796972::0::1::::MissionAuthoringTool<>Node<><>0<>0<><>::
 ::res://scripts/ui/::1763748524
 MissionAuthoringUI.gd::GDScript::1912430109288517738::1763748524::0::1::::<>Control<><>0<>0<><>::
 ::res://shaders/::1763796097

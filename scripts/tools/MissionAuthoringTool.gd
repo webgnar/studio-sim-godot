@@ -98,6 +98,10 @@ func _generate_screenshot(mission_path: String) -> String:
 		push_error("MissionAuthoringTool: Cannot get image from texture!")
 		return ""
 
+	# Rotate image 90 degrees clockwise to match in-game view
+	# (The 2D viewport is mapped to a horizontal 3D plane, causing a 90° rotation)
+	image.rotate_90(CLOCKWISE)
+
 	# Generate screenshot filename based on mission path
 	var base_path = mission_path.get_basename()  # Remove .tres extension
 	var screenshot_path = base_path + "_ref.png"
