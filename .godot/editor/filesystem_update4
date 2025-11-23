@@ -13,3 +13,5 @@ res://scripts/painting/PaintingMission.gd
 res://scripts/painting/ValidationResult.gd
 res://scenes/ValidationResultUI.tscn
 res://scripts/ui/ValidationResultUI.gd
+res://scenes/PaintingRoot.tscn
+res://scenes/artbox.tscn

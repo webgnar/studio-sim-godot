@@ -1,4 +1,4 @@
-[gd_scene load_steps=148 format=3 uid="uid://cnmivki1rop3b"]
+[gd_scene load_steps=118 format=3 uid="uid://cnmivki1rop3b"]
 
 [ext_resource type="Material" uid="uid://wwlsotlotycw" path="res://materials/wood.tres" id="1_4mrxx"]
 [ext_resource type="Script" uid="uid://d4bxpnphvld1d" path="res://scripts/PlayerController.gd" id="1_4wyf3"]
@@ -33,18 +33,10 @@
 [ext_resource type="Shader" uid="uid://br4qh8mg5yosn" path="res://shaders/mirror.gdshader" id="25_xgqkh"]
 [ext_resource type="PackedScene" uid="uid://d0y6fk05wn5dc" path="res://models/interactables/cardboard box/box.glb" id="26_ts3gi"]
 [ext_resource type="PackedScene" uid="uid://tejn0hfpdhf7" path="res://models/interactables/cardboard box/box topL.glb" id="27_0nbtd"]
-[ext_resource type="Script" uid="uid://b56ugw7vd7hf1" path="res://scripts/ArtboxInteraction.gd" id="28_artbox_new"]
-[ext_resource type="PackedScene" uid="uid://65f11slkoyvf" path="res://models/artbox/2.glb" id="29_4kbfs"]
 [ext_resource type="Script" uid="uid://cftd54g3pgkr1" path="res://scripts/LightSwitchInteraction.gd" id="29_lightswitch_new"]
-[ext_resource type="PackedScene" uid="uid://dsv2g0obaio51" path="res://models/artbox/1.glb" id="30_f17e3"]
-[ext_resource type="PackedScene" uid="uid://bgyknl62rv8i2" path="res://models/artbox/3.glb" id="31_x2olw"]
 [ext_resource type="Script" uid="uid://d5m48bcsj83f" path="res://scripts/BoxInteraction.gd" id="31_x28ej"]
-[ext_resource type="PackedScene" uid="uid://bscbli4kb5p5n" path="res://models/artbox/4.glb" id="32_817gm"]
-[ext_resource type="PackedScene" uid="uid://cwhj4w40hwp52" path="res://models/artbox/5.glb" id="33_ggc52"]
-[ext_resource type="PackedScene" uid="uid://uwpxuwjxopad" path="res://models/artbox/6.glb" id="34_l8ah6"]
 [ext_resource type="Script" uid="uid://cdcxs0jsffsfb" path="res://scripts/BoomboxInteraction.gd" id="36_boombox_new"]
 [ext_resource type="PackedScene" uid="uid://ddornft2ln8sq" path="res://models/interactables/boomBox.glb" id="41_rga7q"]
-[ext_resource type="AudioStream" uid="uid://cd41rjk7axmf0" path="res://sounds/droneRise.ogg" id="44_dyafi"]
 [ext_resource type="PackedScene" uid="uid://bhsyl3tj8hblj" path="res://scenes/brute trash can.tscn" id="46_18clu"]
 [ext_resource type="Script" uid="uid://cbwg344irqecy" path="res://scripts/components/CarryableComponent.gd" id="46_e68xj"]
 [ext_resource type="Script" uid="uid://dski42rg3yjwf" path="res://scripts/components/FanCarryableComponent.gd" id="46_fan_carry"]
@@ -72,7 +64,7 @@
 [ext_resource type="PackedScene" uid="uid://bshsrjrokypta" path="res://scenes/PaintingRoot2D.tscn" id="75_ca4ee"]
 [ext_resource type="PackedScene" uid="uid://c7vk8n8k7j8k8" path="res://scenes/MissionAuthoringUI.tscn" id="76_author"]
 [ext_resource type="PackedScene" path="res://scenes/MissionSelectionUI.tscn" id="77_select"]
-[ext_resource type="PackedScene" path="res://scenes/ValidationResultUI.tscn" id="78_result"]
+[ext_resource type="PackedScene" uid="uid://isbwb03yee7n" path="res://scenes/ValidationResultUI.tscn" id="78_result"]
 [ext_resource type="AudioStream" uid="uid://84rjpuccue2i" path="res://sounds/boomboxSwitch.ogg" id="boombox_switch"]
 [ext_resource type="AudioStream" uid="uid://8so1mqtnfhkh" path="res://sounds/box open 1.ogg" id="box_open_1"]
 [ext_resource type="AudioStream" uid="uid://bkyiswhv5fuaf" path="res://sounds/box open 2.ogg" id="box_open_2"]
@@ -338,298 +330,6 @@ tracks/0/keys = {
 _data = {
 &"RESET": SubResource("Animation_rup4s"),
 &"rotate": SubResource("Animation_fh13f")
-}
-
-[sub_resource type="Animation" id="Animation_8u370"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:rotation")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(0, 1.5707964, 0)]
-}
-
-[sub_resource type="Animation" id="Animation_e75v4"]
-resource_name = "fold out"
-length = 2.5
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:rotation")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0.020000458, 2.4666667),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Vector3(0, 1.5707964, 0), Vector3(0, 0, 0)]
-}
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_rga7q"]
-_data = {
-&"RESET": SubResource("Animation_8u370"),
-&"fold out": SubResource("Animation_e75v4")
-}
-
-[sub_resource type="Animation" id="Animation_hi6a0"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:rotation")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(1.5707964, 0, 0)]
-}
-
-[sub_resource type="Animation" id="Animation_6oujy"]
-resource_name = "foldout"
-length = 2.5
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:rotation")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 2.4666667),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Vector3(1.5707964, 0, 0), Vector3(0, 0, 0)]
-}
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_eo1xk"]
-_data = {
-&"RESET": SubResource("Animation_hi6a0"),
-&"foldout": SubResource("Animation_6oujy")
-}
-
-[sub_resource type="Animation" id="Animation_4wdv8"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:rotation")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(-1.5707964, 0, 0)]
-}
-
-[sub_resource type="Animation" id="Animation_18clu"]
-resource_name = "fold out"
-length = 2.5
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:rotation")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 2.5),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Vector3(-1.5707964, 0, 0), Vector3(0, 0, 0)]
-}
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_d46x8"]
-_data = {
-&"RESET": SubResource("Animation_4wdv8"),
-&"fold out": SubResource("Animation_18clu")
-}
-
-[sub_resource type="Animation" id="Animation_x28ej"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:rotation")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(0, -1.5707964, 0)]
-}
-
-[sub_resource type="Animation" id="Animation_3l05q"]
-resource_name = "fold out"
-length = 2.0
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:rotation")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 2),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Vector3(0, -1.5707964, 0), Vector3(0, 0, 0)]
-}
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_1jxku"]
-_data = {
-&"RESET": SubResource("Animation_x28ej"),
-&"fold out": SubResource("Animation_3l05q")
-}
-
-[sub_resource type="Animation" id="Animation_e68xj"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:rotation")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(-7.1054274e-15, -1.5707964, 0)]
-}
-
-[sub_resource type="Animation" id="Animation_1dgkn"]
-resource_name = "fold out"
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:rotation")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0.016666412, 1),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Vector3(-7.1054274e-15, -1.5707964, 0), Vector3(0, 0, 0)]
-}
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_5hglh"]
-_data = {
-&"RESET": SubResource("Animation_e68xj"),
-&"fold out": SubResource("Animation_1dgkn")
-}
-
-[sub_resource type="Animation" id="Animation_pf35h"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:rotation")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(8.7408296e-08, 1.5525925, 8.583144e-08)]
-}
-
-[sub_resource type="Animation" id="Animation_qg546"]
-resource_name = "orient to wall"
-length = 1.5
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:rotation")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 1.4),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Vector3(8.7408296e-08, 1.5525925, 8.583144e-08), Vector3(-0.01820377, 1.5707964, -1.5707963)]
-}
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_iexy4"]
-_data = {
-&"RESET": SubResource("Animation_pf35h"),
-&"orient to wall": SubResource("Animation_qg546")
-}
-
-[sub_resource type="Animation" id="Animation_817gm"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:position")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(0.5, 0.1, 8)]
-}
-
-[sub_resource type="Animation" id="Animation_rga7q"]
-resource_name = "move closer to wall"
-length = 2.0
-
-[sub_resource type="Animation" id="Animation_4kbfs"]
-resource_name = "move up and rotate"
-length = 15.0
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:position")
-tracks/0/interp = 2
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 2.3666666, 4.02, 4.9, 9, 12.360001, 15),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1),
-"update": 0,
-"values": [Vector3(0.5, 0.1, 8), Vector3(0.587, 1.2629869, 8.244), Vector3(0.587, 1.2629869, 8.244), Vector3(0.587, 1.5638123, 8.244), Vector3(-2.6450505, 1.7834857, 7.7934494), Vector3(-2.6450505, 1.7834857, 7.7934494), Vector3(-3.5792737, 1.9684112, 7.7934494)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath(".:scale")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(3.44, 4.94),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Vector3(0.029999997, 0.03, 0.029999997), Vector3(0.05, 0.05, 0.05)]
-}
-tracks/2/type = "method"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath(".")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(8.566667, 9),
-"transitions": PackedFloat32Array(1, 1),
-"values": [{
-"args": [],
-"method": &"trigger_orient_horizontal"
-}, {
-"args": [],
-"method": &"trigger_unfold_sequence"
-}]
-}
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_ggc52"]
-_data = {
-&"RESET": SubResource("Animation_817gm"),
-&"move closer to wall": SubResource("Animation_rga7q"),
-&"move up and rotate": SubResource("Animation_4kbfs")
 }
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_4kmvx"]
@@ -1279,7 +979,7 @@ size = Vector2i(256, 256)
 transform = Transform3D(1.2796953e-07, 0.21836469, 0.9758673, -2.8635068e-08, 0.9758673, -0.21836469, -1, 0, 1.3113417e-07, 4.2467685, 1.1345179, 6.6101465)
 
 [node name="cardboard box" parent="." instance=ExtResource("26_ts3gi")]
-transform = Transform3D(0.33, 0, 0, 0, 0.33, 0, 0, 0, 0.33, 0.23469448, 0.29857874, 8.047825)
+transform = Transform3D(0.33, 0, 0, 0, 0.33, 0, 0, 0, 0.33, 0.23469448, 0.29857874, 11.047825)
 
 [node name="BoxInteraction" type="Node3D" parent="cardboard box"]
 script = ExtResource("31_x28ej")
@@ -1317,67 +1017,6 @@ transform = Transform3D(-1, 0, -1.509958e-07, 0, 1, 0, 1.509958e-07, 0, -1, -0.9
 [node name="AnimationPlayer" type="AnimationPlayer" parent="cardboard box/lid4"]
 libraries = {
 &"": SubResource("AnimationLibrary_4kbfs")
-}
-
-[node name="artbox" type="Node3D" parent="."]
-transform = Transform3D(-0.029999997, 4.529874e-09, -1.9800707e-16, 0, -1.3113416e-09, -0.029999997, -4.529874e-09, -0.03, 1.3113416e-09, 0.5, 0.1, 8)
-
-[node name="ArtboxInteraction" type="Node3D" parent="artbox"]
-script = ExtResource("28_artbox_new")
-move_sound = ExtResource("44_dyafi")
-move_sound_fade_in_duration = 3.0
-
-[node name="fold6" parent="artbox" instance=ExtResource("31_x2olw")]
-transform = Transform3D(0.0182027, 8.583139e-08, 0.9998285, 8.583093e-08, 0.99999934, -8.740779e-08, -0.99982846, 8.740823e-08, 0.0182027, 0.9763241, 0, -6.7096863)
-
-[node name="fold5" parent="artbox/fold6" instance=ExtResource("32_817gm")]
-transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -7.9999986, 0, 0)
-
-[node name="unfold" type="AnimationPlayer" parent="artbox/fold6/fold5"]
-libraries = {
-&"": SubResource("AnimationLibrary_rga7q")
-}
-
-[node name="fold4" parent="artbox/fold6" instance=ExtResource("33_ggc52")]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 8.000004, 0)
-
-[node name="unfold" type="AnimationPlayer" parent="artbox/fold6/fold4"]
-libraries = {
-&"": SubResource("AnimationLibrary_eo1xk")
-}
-
-[node name="fold3" parent="artbox/fold6" instance=ExtResource("34_l8ah6")]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, -7.999996, 0)
-
-[node name="unfold" type="AnimationPlayer" parent="artbox/fold6/fold3"]
-libraries = {
-&"": SubResource("AnimationLibrary_d46x8")
-}
-
-[node name="fold2" parent="artbox/fold6" instance=ExtResource("29_4kbfs")]
-transform = Transform3D(-4.371144e-08, 7.1054274e-15, -1.0000012, 0, 1, 7.105436e-15, 1.0000012, 3.105881e-22, -4.371144e-08, 7.999997, 0, -0.00012588501)
-
-[node name="fold1" parent="artbox/fold6/fold2" instance=ExtResource("30_f17e3")]
-transform = Transform3D(-4.3711385e-08, 0, -1, 0, 1, 0, 0.99999994, 0, -4.371139e-08, 16.000015, 0, 0)
-
-[node name="unfoldfinal" type="AnimationPlayer" parent="artbox/fold6/fold2/fold1"]
-libraries = {
-&"": SubResource("AnimationLibrary_1jxku")
-}
-
-[node name="unfold" type="AnimationPlayer" parent="artbox/fold6/fold2"]
-libraries = {
-&"": SubResource("AnimationLibrary_5hglh")
-}
-
-[node name="orient to horizontal T" type="AnimationPlayer" parent="artbox/fold6"]
-libraries = {
-&"": SubResource("AnimationLibrary_iexy4")
-}
-
-[node name="go to wall" type="AnimationPlayer" parent="artbox"]
-libraries = {
-&"": SubResource("AnimationLibrary_ggc52")
 }
 
 [node name="BOOMbox" type="RigidBody3D" parent="."]
