@@ -10,9 +10,15 @@ var correct_count: int = 0
 var total_count: int = 0
 
 # Placement-based validation (new system)
-var match_percentage: float = 0.0  # 0.0 to 100.0
+var match_percentage: float = 0.0  # 0.0 to 100.0 (final blended score)
 var per_sticker_scores: Array[float] = []  # Individual scores for each sticker (0.0 to 1.0)
 var pass_threshold: float = 70.0  # Minimum percentage to pass
+
+# Hybrid validation scores (visual + coordinate)
+var coordinate_match_percentage: float = 0.0  # Position/rotation accuracy (0.0-100.0)
+var visual_match_percentage: float = 0.0  # Pixel-level visual similarity (0.0-100.0)
+var color_distribution_score: float = 0.0  # Color histogram similarity (0.0-100.0)
+var validation_weights: Dictionary = {}  # Weights used for blending scores
 
 func _init(p_success: bool = false):
 	success = p_success
@@ -37,8 +43,31 @@ func is_perfect() -> bool:
 	return success and errors.is_empty() and correct_count == total_count
 
 func set_placement_score(percentage: float, sticker_scores: Array[float]):
-	"""Set the placement-based validation score"""
-	match_percentage = clamp(percentage, 0.0, 100.0)
+	"""Set the placement-based validation score (backward compatibility)"""
+	coordinate_match_percentage = clamp(percentage, 0.0, 100.0)
+	match_percentage = coordinate_match_percentage
+	per_sticker_scores = sticker_scores
+	success = (match_percentage >= pass_threshold)
+
+func set_hybrid_score(coord_score: float, visual_score: float, color_score: float, weights: Dictionary, sticker_scores: Array[float]):
+	"""Set hybrid validation score combining coordinate, visual, and color distribution"""
+	coordinate_match_percentage = clamp(coord_score, 0.0, 100.0)
+	visual_match_percentage = clamp(visual_score, 0.0, 100.0)
+	color_distribution_score = clamp(color_score, 0.0, 100.0)
+	validation_weights = weights
+
+	# Blend scores using weights
+	var coord_weight = weights.get("coordinate", 0.5)
+	var visual_weight = weights.get("visual", 0.4)
+	var color_weight = weights.get("color", 0.1)
+
+	match_percentage = (
+		coordinate_match_percentage * coord_weight +
+		visual_match_percentage * visual_weight +
+		color_distribution_score * color_weight
+	)
+	match_percentage = clamp(match_percentage, 0.0, 100.0)
+
 	per_sticker_scores = sticker_scores
 	success = (match_percentage >= pass_threshold)
 

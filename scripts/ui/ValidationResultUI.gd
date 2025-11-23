@@ -9,6 +9,13 @@ class_name ValidationResultUI
 @onready var score_label = $Dialog/MarginContainer/VBoxContainer/ScoreLabel
 @onready var status_label = $Dialog/MarginContainer/VBoxContainer/StatusLabel
 @onready var message_label = $Dialog/MarginContainer/VBoxContainer/MessageLabel
+@onready var comparison_container = $Dialog/MarginContainer/VBoxContainer/ComparisonContainer
+@onready var your_image = $Dialog/MarginContainer/VBoxContainer/ComparisonContainer/YourPaintingPanel/YourImage
+@onready var target_image = $Dialog/MarginContainer/VBoxContainer/ComparisonContainer/TargetPaintingPanel/TargetImage
+@onready var breakdown_label = $Dialog/MarginContainer/VBoxContainer/BreakdownLabel
+@onready var coordinate_label = $Dialog/MarginContainer/VBoxContainer/CoordinateLabel
+@onready var visual_label = $Dialog/MarginContainer/VBoxContainer/VisualLabel
+@onready var color_label = $Dialog/MarginContainer/VBoxContainer/ColorLabel
 @onready var retry_button = $Dialog/MarginContainer/VBoxContainer/ButtonContainer/RetryButton
 @onready var back_button = $Dialog/MarginContainer/VBoxContainer/ButtonContainer/BackButton
 
@@ -109,6 +116,37 @@ func show_results(result: ValidationResult, mission: PaintingMission):
 	else:
 		message_label.text = "\n".join(result.errors)
 
+	# Show image comparison
+	_display_comparison_images(mission)
+
+	# Show score breakdown (hybrid validation)
+	if result.coordinate_match_percentage > 0.0 or result.visual_match_percentage > 0.0:
+		# Hybrid validation was used - show breakdown
+		breakdown_label.visible = true
+		coordinate_label.visible = true
+		visual_label.visible = true
+		color_label.visible = true
+
+		coordinate_label.text = "Placement: %.1f%%" % result.coordinate_match_percentage
+		visual_label.text = "Visual: %.1f%%" % result.visual_match_percentage
+		color_label.text = "Color: %.1f%%" % result.color_distribution_score
+
+		# Show weights if available
+		if not result.validation_weights.is_empty():
+			var coord_weight = result.validation_weights.get("coordinate", 0.0) * 100
+			var visual_weight = result.validation_weights.get("visual", 0.0) * 100
+			var color_weight = result.validation_weights.get("color", 0.0) * 100
+
+			coordinate_label.text = "Placement: %.1f%% (weight: %.0f%%)" % [result.coordinate_match_percentage, coord_weight]
+			visual_label.text = "Visual: %.1f%% (weight: %.0f%%)" % [result.visual_match_percentage, visual_weight]
+			color_label.text = "Color: %.1f%% (weight: %.0f%%)" % [result.color_distribution_score, color_weight]
+	else:
+		# Legacy coordinate-only validation - hide breakdown
+		breakdown_label.visible = false
+		coordinate_label.visible = false
+		visual_label.visible = false
+		color_label.visible = false
+
 	# Show dialog
 	dialog.visible = true
 
@@ -122,6 +160,43 @@ func show_results(result: ValidationResult, mission: PaintingMission):
 
 	# Focus retry button
 	retry_button.grab_focus()
+
+func _display_comparison_images(mission: PaintingMission):
+	"""Display side-by-side comparison of player's painting vs target"""
+	if not mission or not painting_system_2d:
+		comparison_container.visible = false
+		return
+
+	var player_texture: ImageTexture = null
+	var reference_texture: Texture2D = null
+
+	# Capture player's current painting
+	if painting_system_2d.canvas_viewport:
+		var viewport_texture = painting_system_2d.canvas_viewport.get_texture()
+		if viewport_texture:
+			var current_image = viewport_texture.get_image()
+			if current_image:
+				# Rotate to match reference orientation (references are rotated 90° clockwise)
+				current_image.rotate_90(CLOCKWISE)
+
+				# Convert Image to ImageTexture
+				player_texture = ImageTexture.create_from_image(current_image)
+
+	# Load reference image
+	if mission.reference_image_path and mission.reference_image_path != "":
+		reference_texture = load(mission.reference_image_path) as Texture2D
+
+	# Display images if both are available
+	if player_texture and reference_texture:
+		your_image.texture = player_texture
+		target_image.texture = reference_texture
+		comparison_container.visible = true
+	else:
+		comparison_container.visible = false
+		if not player_texture:
+			push_warning("ValidationResultUI: Could not capture player's painting")
+		if not reference_texture:
+			push_warning("ValidationResultUI: Could not load reference image from '%s'" % mission.reference_image_path)
 
 func _close_dialog():
 	"""Hide the results dialog"""

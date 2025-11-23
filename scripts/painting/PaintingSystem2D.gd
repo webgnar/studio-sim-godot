@@ -407,17 +407,77 @@ func verify_painting(target: PaintingMission) -> ValidationResult:
 		sticker_scores.append(match_score)
 		total_score += match_score
 
-	# Calculate overall percentage
-	var match_percentage = (total_score / float(sorted_target.size())) * 100.0
+	# Calculate overall coordinate-based percentage
+	var coordinate_percentage = (total_score / float(sorted_target.size())) * 100.0
 
-	# Set the placement score
-	result.set_placement_score(match_percentage, sticker_scores)
+	# Perform visual validation (hybrid approach)
+	var visual_percentage: float = 0.0
+	var color_distribution_percentage: float = 0.0
+
+	# Get reference image and compare with current canvas
+	if target.reference_image_path and target.reference_image_path != "":
+		# Capture current viewport as image
+		if canvas_viewport:
+			var current_texture = canvas_viewport.get_texture()
+			if current_texture:
+				var current_image = current_texture.get_image()
+
+				# Load reference image
+				var reference_texture = load(target.reference_image_path) as Texture2D
+				if reference_texture:
+					var reference_image = reference_texture.get_image()
+
+					if current_image and reference_image:
+						# Rotate current image to match reference orientation
+						# (Reference images are rotated 90° clockwise during capture)
+						current_image.rotate_90(CLOCKWISE)
+
+						# Get color tolerance based on difficulty
+						var color_tolerance = target.get_color_tolerance()
+
+						# Perform pixel-by-pixel comparison
+						var visual_result = VisualValidator.compare_images(current_image, reference_image, color_tolerance)
+						visual_percentage = visual_result["visual_score"]
+
+						# Compare color distributions
+						var current_hist = VisualValidator.calculate_color_distribution(current_image)
+						var reference_hist = VisualValidator.calculate_color_distribution(reference_image)
+						color_distribution_percentage = VisualValidator.compare_color_distributions(current_hist, reference_hist)
+
+						print("VisualValidator: Coordinate: %.1f%%, Visual: %.1f%%, Color: %.1f%%" % [
+							coordinate_percentage,
+							visual_percentage,
+							color_distribution_percentage
+						])
+					else:
+						push_warning("PaintingSystem2D: Could not extract images for visual validation")
+				else:
+					push_warning("PaintingSystem2D: Could not load reference image from '%s'" % target.reference_image_path)
+	else:
+		push_warning("PaintingSystem2D: No reference image path set, using coordinate-only validation")
+
+	# Get validation weights based on difficulty
+	var weights = target.get_validation_weights()
+
+	# Set hybrid score (blends coordinate, visual, and color scores)
+	result.set_hybrid_score(
+		coordinate_percentage,
+		visual_percentage,
+		color_distribution_percentage,
+		weights,
+		sticker_scores
+	)
 
 	# Add detailed feedback if not passing
 	if not result.success:
 		result.add_error("Match score: %.1f%% (need %.1f%% to pass)" % [
-			match_percentage,
+			result.match_percentage,
 			result.pass_threshold
+		])
+		result.add_error("Breakdown - Coordinate: %.1f%%, Visual: %.1f%%, Color: %.1f%%" % [
+			coordinate_percentage,
+			visual_percentage,
+			color_distribution_percentage
 		])
 
 	return result

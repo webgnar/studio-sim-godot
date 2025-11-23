@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cx6cr2vvuntir"
-path="res://.godot/imported/ultra_ref.png-a7b9d5fc4be3e6181a7b6411a22180c1.ctex"
+uid="uid://bjhctsnocbcn2"
+path="res://.godot/imported/many_ref.png-c3595ef05508da40573d7719177bf10c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://resources/missions/ultra_ref.png"
-dest_files=["res://.godot/imported/ultra_ref.png-a7b9d5fc4be3e6181a7b6411a22180c1.ctex"]
+source_file="res://resources/missions/many_ref.png"
+dest_files=["res://.godot/imported/many_ref.png-c3595ef05508da40573d7719177bf10c.ctex"]
 
 [params]
 

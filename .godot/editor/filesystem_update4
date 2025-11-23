@@ -8,3 +8,8 @@ res://shaders/outline.gdshader
 res://resources/missions/easytest.tres
 res://scenes/world.tscn
 res://resources/missions/rotation testing.tres
+res://resources/missions/ultra.tres
+res://scripts/painting/PaintingMission.gd
+res://scripts/painting/ValidationResult.gd
+res://scenes/ValidationResultUI.tscn
+res://scripts/ui/ValidationResultUI.gd
