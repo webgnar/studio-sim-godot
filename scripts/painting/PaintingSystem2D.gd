@@ -30,7 +30,7 @@ var input_enabled: bool = false  # Starts disabled (3D mode is default)
 
 # Plane dimensions (should match PlaneMesh size)
 @export var plane_width: float = 3.0
-@export var plane_height: float = 2.0
+@export var plane_height: float = 3.0
 
 # References
 var camera: Camera3D = null
@@ -215,8 +215,9 @@ func _world_to_viewport_coords(world_pos: Vector3) -> Vector2:
 	# Map UV to viewport pixels
 	var viewport_pos = uv * viewport_size
 
-	# Clamp to viewport bounds (auto-clip stickers)
-	viewport_pos = viewport_pos.clamp(Vector2.ZERO, viewport_size)
+	# Allow stickers to be placed partially off-canvas (like 3D system)
+	# Removed clamping to enable creative edge placement
+	# viewport_pos = viewport_pos.clamp(Vector2.ZERO, viewport_size)
 
 	return viewport_pos
 
@@ -243,11 +244,15 @@ func spawn_sticker(world_position: Vector3):
 	var scale_factor = sticker_scale * viewport_size.x / max(texture_size.x, texture_size.y)
 	sprite.scale = Vector2(scale_factor, scale_factor)
 
+	# Rotate to compensate for horizontal plane orientation (matches 3D system behavior)
+	sprite.rotation_degrees = -90
+
 	# Add to canvas (this Node2D is inside the SubViewport)
 	add_child(sprite)
 
 	# Create placed layer data
 	var placed = PlacedLayer2D.new(definition.id, sprite, next_order)
+	placed.rotation_deg = -90.0  # Track initial rotation offset
 	placed_layers.append(placed)
 
 	next_order += 1

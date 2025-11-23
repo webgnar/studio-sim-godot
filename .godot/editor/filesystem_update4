@@ -1,15 +1,10 @@
-res://scripts/ui/MissionAuthoringUI.gd
-res://scripts/painting/PaintingMission.gd
 res://scripts/painting/PaintingSystem2D.gd
-res://scripts/painting/ValidationResult.gd
-res://scripts/tools/MissionAuthoringTool.gd
-res://scenes/world.tscn
+res://scenes/PaintingRoot2D.tscn
 res://shaders/mirror.gdshader
 res://models/new_array_mesh.tres
 res://models/new_array_mesh2.tres
 res://models/new_array_mesh3.tres
 res://shaders/outline.gdshader
-res://resources/missions/misson 1.tres
-res://resources/missions/test1.tres
-res://scenes/PaintingRoot2D.tscn
-res://scripts/ui/MissionSelectionUI.gd
+res://resources/missions/easytest.tres
+res://scenes/world.tscn
+res://resources/missions/rotation testing.tres

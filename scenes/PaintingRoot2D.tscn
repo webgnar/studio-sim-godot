@@ -11,7 +11,7 @@ transparency = 1
 shading_mode = 0
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_616st"]
-size = Vector3(3, 0.1, 2)
+size = Vector3(3, 0.1, 3)
 
 [node name="PaintingRoot2d" type="Node3D"]
 script = ExtResource("1_616st")

@@ -1,4 +1,4 @@
-[gd_scene load_steps=146 format=3 uid="uid://cnmivki1rop3b"]
+[gd_scene load_steps=148 format=3 uid="uid://cnmivki1rop3b"]
 
 [ext_resource type="Material" uid="uid://wwlsotlotycw" path="res://materials/wood.tres" id="1_4mrxx"]
 [ext_resource type="Script" uid="uid://d4bxpnphvld1d" path="res://scripts/PlayerController.gd" id="1_4wyf3"]
@@ -71,8 +71,8 @@
 [ext_resource type="PackedScene" uid="uid://bqbqfg2mfb0iw" path="res://scenes/PaintingUI.tscn" id="74_ntuqo"]
 [ext_resource type="PackedScene" uid="uid://bshsrjrokypta" path="res://scenes/PaintingRoot2D.tscn" id="75_ca4ee"]
 [ext_resource type="PackedScene" uid="uid://c7vk8n8k7j8k8" path="res://scenes/MissionAuthoringUI.tscn" id="76_author"]
-[ext_resource type="PackedScene" uid="uid://ctv5r4f51ufg3" path="res://scenes/MissionSelectionUI.tscn" id="77_select"]
-[ext_resource type="PackedScene" uid="uid://dv6t5r4f51ufg4" path="res://scenes/ValidationResultUI.tscn" id="78_result"]
+[ext_resource type="PackedScene" path="res://scenes/MissionSelectionUI.tscn" id="77_select"]
+[ext_resource type="PackedScene" path="res://scenes/ValidationResultUI.tscn" id="78_result"]
 [ext_resource type="AudioStream" uid="uid://84rjpuccue2i" path="res://sounds/boomboxSwitch.ogg" id="boombox_switch"]
 [ext_resource type="AudioStream" uid="uid://8so1mqtnfhkh" path="res://sounds/box open 1.ogg" id="box_open_1"]
 [ext_resource type="AudioStream" uid="uid://bkyiswhv5fuaf" path="res://sounds/box open 2.ogg" id="box_open_2"]
@@ -1328,7 +1328,7 @@ move_sound = ExtResource("44_dyafi")
 move_sound_fade_in_duration = 3.0
 
 [node name="fold6" parent="artbox" instance=ExtResource("31_x2olw")]
-transform = Transform3D(0.018202703, 8.583139e-08, 0.99982876, 8.5830955e-08, 0.99999934, -8.740781e-08, -0.9998287, 8.740823e-08, 0.018202705, 0.9763241, 0, -6.7096863)
+transform = Transform3D(0.0182027, 8.583139e-08, 0.9998286, 8.583094e-08, 0.99999934, -8.74078e-08, -0.9998285, 8.740823e-08, 0.018202702, 0.9763241, 0, -6.7096863)
 
 [node name="fold5" parent="artbox/fold6" instance=ExtResource("32_817gm")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -7.9999986, 0, 0)
@@ -1462,7 +1462,7 @@ transform = Transform3D(-0.06961743, 0, 0.0073084896, 0, 0.07000696, 0, -0.00730
 shape = SubResource("BoxShape3D_iexy4")
 
 [node name="plug" type="RigidBody3D" parent="."]
-transform = Transform3D(-0.10440699, 0, -0.9945347, 0, 1, 0, 0.9945347, 0, -0.10440699, -1.965448, 0.37396324, 2.7676992)
+transform = Transform3D(-0.10440699, 0, -0.9945347, 0, 1, 0, 0.9945347, 0, -0.10440699, -2.6690016, 0.37396324, -1.8511305)
 collision_layer = 8
 collision_mask = 3
 continuous_cd = true
@@ -1552,7 +1552,7 @@ painting_system_2d = NodePath("../../PaintingRoot2d/CanvasViewport/CanvasRoot")
 [node name="ValidationResultUi" parent="CanvasLayer" instance=ExtResource("78_result")]
 
 [node name="PaintingRoot2d" parent="." instance=ExtResource("75_ca4ee")]
-transform = Transform3D(-4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0, 1, -3.609302, 2.4973063, 7)
+transform = Transform3D(-4.371139e-08, 1, 0, 1, 4.371139e-08, -8.742278e-08, -8.742278e-08, -3.821371e-15, -1, -3.4057033, 1.5300002, 7)
 
 [editable path="Styrofoam cube"]
 [editable path="CameraZone"]
