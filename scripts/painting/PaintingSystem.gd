@@ -9,7 +9,6 @@ signal layer_equipped(index: int)  # Emitted when Q/E changes the equipped stick
 
 # Node references (assign in inspector or via code)
 @export var canvas_root: Node3D
-@export var wall_collision: CollisionObject3D  # The StaticBody3D for raycasting
 
 # Sticker library - available stickers to place
 var sticker_library: Array[PaintingLayerDefinition] = []
