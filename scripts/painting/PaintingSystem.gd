@@ -43,29 +43,53 @@ func _ready():
 	if sticker_library.size() > 0:
 		print("Selected sticker: %s" % sticker_library[selected_sticker_index].id)
 
+	# HTML5 debugging
+	if OS.has_feature("web"):
+		print("Running in HTML5/WebGL mode")
+		print("Sticker library loaded:")
+		for i in range(min(3, sticker_library.size())):
+			var sticker = sticker_library[i]
+			print("  [%d] %s - Texture: %s (%s)" % [
+				i,
+				sticker.id,
+				"valid" if sticker.texture else "null",
+				str(sticker.texture.get_size()) if sticker.texture else "n/a"
+			])
+
 func _load_sticker_library():
 	"""Load all sticker textures from the sprites/painting layers folder"""
 	var folder_path = "res://sprites/painting layers/"
-	var dir = DirAccess.open(folder_path)
-
-	if not dir:
-		push_error("Failed to open sticker folder: %s" % folder_path)
-		return
-
-	# Get all PNG files in the folder
 	var file_names: Array[String] = []
-	dir.list_dir_begin()
-	var file_name = dir.get_next()
 
-	while file_name != "":
-		if not dir.current_is_dir() and file_name.ends_with(".png"):
-			file_names.append(file_name)
-		file_name = dir.get_next()
+	# HTML5/WebGL builds can't scan directories dynamically
+	# Use a predefined list of sticker files
+	if OS.has_feature("web"):
+		print("HTML5: Using predefined sticker list")
+		file_names = [
+			"1.png", "2.png", "3.png", "4.png", "5.png",
+			"6.png", "7.png", "8.png", "9.png", "10.png"
+		]
+	else:
+		# Desktop builds: scan directory dynamically
+		var dir = DirAccess.open(folder_path)
 
-	dir.list_dir_end()
+		if not dir:
+			push_error("Failed to open sticker folder: %s" % folder_path)
+			return
 
-	# Sort alphabetically so they're in consistent order
-	file_names.sort()
+		# Get all PNG files in the folder
+		dir.list_dir_begin()
+		var file_name = dir.get_next()
+
+		while file_name != "":
+			if not dir.current_is_dir() and file_name.ends_with(".png"):
+				file_names.append(file_name)
+			file_name = dir.get_next()
+
+		dir.list_dir_end()
+
+		# Sort alphabetically so they're in consistent order
+		file_names.sort()
 
 	# Load each texture
 	for i in range(file_names.size()):
@@ -138,21 +162,27 @@ func _handle_mouse_click():
 			spawn_sticker(hit_position, hit_normal)
 
 func _handle_drag_motion():
-	"""Handle mouse motion while dragging a sticker"""
+	"""Handle mouse motion while dragging a sticker (world-space)"""
 	var raycast_result = _raycast_from_mouse()
 
 	if raycast_result and selected_layer and selected_layer.node:
 		var hit_position = raycast_result.position
-		# Convert to canvas local space
-		var local_pos = canvas_root.to_local(hit_position)
-		selected_layer.node.position = local_pos
+		var hit_normal = raycast_result.normal
+
+		# Calculate z-offset to stay in front of surface
+		var z_offset = 0.001 + (selected_layer.order * 0.0001)
+
+		# Use world-space positioning
+		selected_layer.node.global_position = hit_position + (hit_normal * z_offset)
 
 func _raycast_from_mouse() -> Dictionary:
 	"""Perform raycast from camera through mouse position"""
 	if not camera:
 		return {}
 
-	var mouse_pos = get_viewport().get_mouse_position()
+	# Use camera's viewport to ensure correct mouse coordinates (fixes HTML5 scaling issues)
+	var viewport = camera.get_viewport()
+	var mouse_pos = viewport.get_mouse_position()
 	var from = camera.project_ray_origin(mouse_pos)
 	var to = from + camera.project_ray_normal(mouse_pos) * raycast_distance
 
@@ -165,22 +195,19 @@ func _raycast_from_mouse() -> Dictionary:
 	return result
 
 func _get_layer_at_position(world_position: Vector3) -> PlacedLayer:
-	"""Find if there's a placed layer near the clicked position"""
-	var local_pos = canvas_root.to_local(world_position)
-	var min_distance = 0.5  # Increased tolerance for click detection
+	"""Find if there's a placed layer near the clicked position (world-space)"""
+	var min_distance = 0.5  # Tolerance for click detection in world units
 	var closest_layer: PlacedLayer = null
 	var closest_dist = min_distance
 
-	# Check in reverse order (top layers first)
+	# Check in reverse order (top layers first - higher z-order)
 	var reversed_layers = placed_layers.duplicate()
 	reversed_layers.reverse()
 
 	for layer in reversed_layers:
 		if layer.node:
-			# Check 2D distance (ignore Z depth for selection)
-			var layer_pos_2d = Vector2(layer.node.position.x, layer.node.position.y)
-			var click_pos_2d = Vector2(local_pos.x, local_pos.y)
-			var dist = layer_pos_2d.distance_to(click_pos_2d)
+			# Compare in world space (3D distance)
+			var dist = layer.node.global_position.distance_to(world_position)
 
 			if dist < closest_dist:
 				closest_dist = dist
@@ -200,13 +227,17 @@ func spawn_sticker(world_position: Vector3, normal: Vector3):
 	# Create Sprite3D node
 	var sprite = Sprite3D.new()
 	sprite.texture = definition.texture
+	sprite.centered = true  # Center the sprite at its origin point
+	sprite.top_level = true  # Ignore parent transform (use world-space positioning)
 	sprite.billboard = BaseMaterial3D.BILLBOARD_DISABLED
 	sprite.shaded = false  # Unshaded material
 	sprite.alpha_cut = SpriteBase3D.ALPHA_CUT_DISABLED
 	sprite.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	sprite.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+	# Use LINEAR filter instead of LINEAR_WITH_MIPMAPS for HTML5/WebGL compatibility
+	# Mipmaps require power-of-2 textures which may not always be available
+	sprite.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR
 	sprite.no_depth_test = false
-	sprite.render_priority = next_order
+	# Note: render_priority doesn't work reliably in WebGL, using z-offset instead
 
 	# Calculate pixel size based on texture dimensions and canvas size
 	# Goal: Make stickers fit proportionally on the canvas
@@ -217,18 +248,38 @@ func spawn_sticker(world_position: Vector3, normal: Vector3):
 	# This makes the sticker take up roughly 1/4 of the canvas by default
 	sprite.pixel_size = sticker_scale / max(texture_size.x, texture_size.y)
 
-	# Add to canvas FIRST
+	# Add to canvas_root for organization (but use world-space positioning)
 	canvas_root.add_child(sprite)
 
-	# Position sticker at raycast hit point (in world space first)
-	sprite.global_position = world_position
-
-	# Align sprite to face away from wall (opposite of normal)
-	# The sprite should face the camera/player
-	sprite.look_at(world_position - normal, Vector3.UP)
+	# Debug logging for HTML5 troubleshooting
+	if OS.has_feature("web"):
+		print("Sprite3D created (HTML5):")
+		print("  ID: %s" % definition.id)
+		print("  Texture: %s" % ("valid" if sprite.texture else "null"))
+		print("  Texture size: %s" % str(texture_size))
+		print("  Pixel size: %.6f" % sprite.pixel_size)
+		print("  Order: %d" % next_order)
 
 	# Offset slightly in front of wall to avoid z-fighting
-	sprite.global_position = world_position + (normal * 0.001)
+	# Use z-offset stacking for layer ordering (WebGL-compatible alternative to render_priority)
+	var z_offset = 0.001 + (next_order * 0.0001)  # Each layer gets progressively more offset
+	var final_world_position = world_position + (normal * z_offset)
+
+	# Use world-space positioning (enables multi-surface painting)
+	# PaintingRoot can be positioned anywhere - stickers use global coordinates
+	sprite.global_position = final_world_position
+
+	# Align sprite to face away from wall (opposite of normal)
+	# The sprite should face outward (toward camera)
+	var look_target = world_position - normal
+	sprite.look_at(look_target, Vector3.UP)
+
+	# Debug: Verify sprite visibility in HTML5
+	if OS.has_feature("web"):
+		print("  Position: %s" % str(sprite.global_position))
+		print("  Visible: %s" % sprite.visible)
+		print("  In tree: %s" % sprite.is_inside_tree())
+		print("  Material: %s" % ("valid" if sprite.get_active_material(0) else "null"))
 
 	# Create placed layer data
 	var placed = PlacedLayer.new(definition.id, sprite, next_order)

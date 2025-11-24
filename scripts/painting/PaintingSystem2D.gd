@@ -95,30 +95,41 @@ func _setup_viewport_background():
 func _load_sticker_library():
 	"""Load all sticker textures from the sprites/painting layers folder"""
 	var folder_path = "res://sprites/painting layers/"
-	var dir = DirAccess.open(folder_path)
-
-	if not dir:
-		push_error("Failed to open sticker folder: %s" % folder_path)
-		return
-
-	# Get all PNG files in the folder
 	var file_names: Array[String] = []
-	dir.list_dir_begin()
-	var file_name = dir.get_next()
 
-	while file_name != "":
-		if not dir.current_is_dir() and file_name.ends_with(".png"):
-			file_names.append(file_name)
-		file_name = dir.get_next()
+	# HTML5/WebGL builds can't scan directories dynamically
+	# Use a predefined list of sticker files
+	if OS.has_feature("web"):
+		print("HTML5: Using predefined sticker list (2D)")
+		file_names = [
+			"1.png", "2.png", "3.png", "4.png", "5.png",
+			"6.png", "7.png", "8.png", "9.png", "10.png"
+		]
+	else:
+		# Desktop builds: scan directory dynamically
+		var dir = DirAccess.open(folder_path)
 
-	dir.list_dir_end()
+		if not dir:
+			push_error("Failed to open sticker folder: %s" % folder_path)
+			return
 
-	# Natural sort (1, 2, 3... 10 instead of 1, 10, 2...)
-	file_names.sort_custom(func(a, b):
-		var num_a = a.get_basename().to_int()
-		var num_b = b.get_basename().to_int()
-		return num_a < num_b
-	)
+		# Get all PNG files in the folder
+		dir.list_dir_begin()
+		var file_name = dir.get_next()
+
+		while file_name != "":
+			if not dir.current_is_dir() and file_name.ends_with(".png"):
+				file_names.append(file_name)
+			file_name = dir.get_next()
+
+		dir.list_dir_end()
+
+		# Natural sort (1, 2, 3... 10 instead of 1, 10, 2...)
+		file_names.sort_custom(func(a, b):
+			var num_a = a.get_basename().to_int()
+			var num_b = b.get_basename().to_int()
+			return num_a < num_b
+		)
 
 	# Load each texture
 	for i in range(file_names.size()):
