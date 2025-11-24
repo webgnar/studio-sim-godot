@@ -28,9 +28,6 @@ var material: StandardMaterial3D
 
 func _ready() -> void:
 	_setup_visual_cord()
-	print("✅ PowerCord ready on: " + get_parent().name if get_parent() else "no parent")
-	if connected_device:
-		print("   Connected to device: " + connected_device.name)
 
 func _process(_delta: float) -> void:
 	if connected_device:

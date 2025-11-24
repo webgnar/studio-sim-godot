@@ -39,23 +39,6 @@ func _ready():
 	# Load sticker library from folder
 	_load_sticker_library()
 
-	print("PaintingSystem ready. Loaded %d stickers." % sticker_library.size())
-	if sticker_library.size() > 0:
-		print("Selected sticker: %s" % sticker_library[selected_sticker_index].id)
-
-	# HTML5 debugging
-	if OS.has_feature("web"):
-		print("Running in HTML5/WebGL mode")
-		print("Sticker library loaded:")
-		for i in range(min(3, sticker_library.size())):
-			var sticker = sticker_library[i]
-			print("  [%d] %s - Texture: %s (%s)" % [
-				i,
-				sticker.id,
-				"valid" if sticker.texture else "null",
-				str(sticker.texture.get_size()) if sticker.texture else "n/a"
-			])
-
 func _load_sticker_library():
 	"""Load all sticker textures from the sprites/painting layers folder"""
 	var folder_path = "res://sprites/painting layers/"
@@ -64,7 +47,6 @@ func _load_sticker_library():
 	# HTML5/WebGL builds can't scan directories dynamically
 	# Use a predefined list of sticker files
 	if OS.has_feature("web"):
-		print("HTML5: Using predefined sticker list")
 		file_names = [
 			"1.png", "2.png", "3.png", "4.png", "5.png",
 			"6.png", "7.png", "8.png", "9.png", "10.png"
@@ -251,15 +233,6 @@ func spawn_sticker(world_position: Vector3, normal: Vector3):
 	# Add to canvas_root for organization (but use world-space positioning)
 	canvas_root.add_child(sprite)
 
-	# Debug logging for HTML5 troubleshooting
-	if OS.has_feature("web"):
-		print("Sprite3D created (HTML5):")
-		print("  ID: %s" % definition.id)
-		print("  Texture: %s" % ("valid" if sprite.texture else "null"))
-		print("  Texture size: %s" % str(texture_size))
-		print("  Pixel size: %.6f" % sprite.pixel_size)
-		print("  Order: %d" % next_order)
-
 	# Offset slightly in front of wall to avoid z-fighting
 	# Use z-offset stacking for layer ordering (WebGL-compatible alternative to render_priority)
 	var z_offset = 0.001 + (next_order * 0.0001)  # Each layer gets progressively more offset
@@ -273,13 +246,6 @@ func spawn_sticker(world_position: Vector3, normal: Vector3):
 	# The sprite should face outward (toward camera)
 	var look_target = world_position - normal
 	sprite.look_at(look_target, Vector3.UP)
-
-	# Debug: Verify sprite visibility in HTML5
-	if OS.has_feature("web"):
-		print("  Position: %s" % str(sprite.global_position))
-		print("  Visible: %s" % sprite.visible)
-		print("  In tree: %s" % sprite.is_inside_tree())
-		print("  Material: %s" % ("valid" if sprite.get_active_material(0) else "null"))
 
 	# Create placed layer data
 	var placed = PlacedLayer.new(definition.id, sprite, next_order)
@@ -298,12 +264,6 @@ func cycle_sticker(direction: int):
 	selected_sticker_index = (selected_sticker_index + direction) % sticker_library.size()
 	if selected_sticker_index < 0:
 		selected_sticker_index = sticker_library.size() - 1
-
-	print("Selected sticker: %s (%d/%d)" % [
-		sticker_library[selected_sticker_index].id,
-		selected_sticker_index + 1,
-		sticker_library.size()
-	])
 
 	# Notify UI that the equipped layer changed
 	layer_equipped.emit(selected_sticker_index)
@@ -345,7 +305,6 @@ func lower_layer_order(layer: PlacedLayer):
 func delete_selected_layer():
 	"""Delete the currently selected layer"""
 	if not selected_layer:
-		print("No layer selected to delete")
 		return
 
 	# Remove from scene
@@ -355,7 +314,6 @@ func delete_selected_layer():
 	# Remove from array
 	placed_layers.erase(selected_layer)
 
-	print("Deleted layer: %s" % selected_layer.id)
 	selected_layer = null
 
 func select_layer_by_index(index: int):
@@ -373,7 +331,6 @@ func clear_canvas():
 	placed_layers.clear()
 	next_order = 0
 	selected_layer = null
-	print("Canvas cleared")
 
 # Validation system (for Phase 2)
 func verify_painting(target: PaintingMission) -> bool:

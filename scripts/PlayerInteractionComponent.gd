@@ -42,8 +42,6 @@ func _ready() -> void:
 	
 	# Create raycast as child of camera
 	_setup_raycast()
-	
-	print("✅ PlayerInteractionComponent ready - Interaction distance: " + str(interaction_distance) + "m")
 
 func _process(_delta: float) -> void:
 	_update_interactable()
@@ -166,8 +164,6 @@ func _update_interactable() -> void:
 	var interactable = _find_interactable_root(hit)
 	
 	if not interactable:
-		if hit.name.contains("plug"):
-			print("  ❌ No interactable root found!")
 		_clear_interactable()
 		return
 	
@@ -313,26 +309,24 @@ func set_interaction_distance(distance: float) -> void:
 func start_carrying(carryable: CarryableComponent) -> void:
 	carried_object = carryable
 	_rebuild_interaction_prompts()
-	print("🤲 Player started carrying: " + carryable.parent_object.name)
 
 ## Stop carrying the current object
 func stop_carrying() -> void:
-	if carried_object:
-		print("📦 Player stopped carrying: " + carried_object.parent_object.name)
 	carried_object = null
 	_rebuild_interaction_prompts()
 
 ## Get the carry position in world space (where carried objects float)
 func get_carry_position(offset: float = 0.0) -> Vector3:
+	# Calculate camera forward direction
+	var forward = -_camera.global_transform.basis.z if _camera else Vector3.FORWARD
+
 	if not carry_marker:
 		# Fallback: 2 units in front of camera
 		if _camera:
-			var forward = -_camera.global_transform.basis.z
 			return _camera.global_position + forward * (2.0 + offset)
 		return global_position
-	
+
 	# Calculate position with offset along camera forward direction
-	var forward = -_camera.global_transform.basis.z
 	var destination = carry_marker.global_position + forward * offset
 	
 	# Check if raycast hits something between player and destination
@@ -358,22 +352,20 @@ func get_look_direction() -> Vector3:
 func throw_carried_object(power: float = 15.0) -> void:
 	if not is_carrying or not is_instance_valid(carried_object):
 		return
-	
-	print("🎯 Player throwing object with power: " + str(power))
+
 	carried_object.throw(power)
 
 ## Drop the carried object gently
 func drop_carried_object() -> void:
 	if not is_carrying or not is_instance_valid(carried_object):
 		return
-	
+
 	var drop_force = carried_object.drop_power if carried_object else 1.0
-	print("📦 Player dropping object gently with force: " + str(drop_force))
 	carried_object.throw(drop_force)
 
 ## Show a hint to the player (for feedback)
 func show_hint(icon: Texture2D, text: String) -> void:
 	"""Show a temporary hint to the player"""
 	# This could be connected to HUD or notification system
-	print("💡 Hint: " + text)
 	# TODO: Implement visual hint in HUD
+	pass

@@ -2,7 +2,7 @@ extends Node3D  # or whatever your world root extends
 
 @onready var painting_root_3d = $PaintingRoot
 @onready var painting_root_2d = $PaintingRoot2d
-@onready var mission_authoring_ui = $CanvasLayer/MissionAuthoringUi
+@onready var mission_authoring_ui = $DevTools_Layer/MissionAuthoringUi
 
 func _ready():
 	# Register both painting systems with the mode manager

@@ -50,17 +50,15 @@ func _ready() -> void:
 	if not parent_object:
 		push_error("OutletComponent must be child of a Node3D!")
 		return
-	
+
 	# Ensure audio player exists for outlet sounds
 	_ensure_audio_player()
-	
+
 	# Add to outlets group for easy finding
 	add_to_group("outlets")
-	
+
 	# Update visual state
 	_update_visual_state()
-	
-	print("✅ OutletComponent ready: " + parent_object.name)
 
 func _ensure_audio_player() -> void:
 	"""Make sure we have an audio player for plug sounds"""
@@ -70,97 +68,82 @@ func _ensure_audio_player() -> void:
 		_audio_player.max_distance = 10.0
 		_audio_player.attenuation_model = AudioStreamPlayer3D.ATTENUATION_INVERSE_DISTANCE
 		add_child(_audio_player)
-		print("Created audio player for outlet sounds")
 
 # --- PLUG MANAGEMENT ---
 
 func accept_plug(plug: PowerCordPlugComponent) -> bool:
 	"""Accept a plug into this outlet"""
-	
+
 	if is_occupied:
-		print("⚠️ Outlet already occupied!")
 		return false
-	
+
 	if not plug or not is_instance_valid(plug):
-		print("⚠️ Invalid plug!")
 		return false
-	
+
 	# Plug it in
 	if plug.plug_into(self):
 		is_occupied = true
 		plugged_cord = plug
-		
+
 		# Update power state
 		if auto_power_on_plug:
 			set_powered(true)
-		
+
 		# Play sound
 		if plug_in_sound and _audio_player:
 			_audio_player.stream = plug_in_sound
 			_audio_player.play()
-			print("🔊 Playing plug IN sound")
-		else:
-			print("⚠️ No plug_in_sound assigned!")
-		
+
 		# Emit signal
 		plug_inserted.emit(plug)
-		
-		print("🔌 Plug inserted into outlet: " + parent_object.name)
+
 		return true
-	
+
 	return false
 
 func remove_plug() -> bool:
 	"""Remove the current plug from this outlet"""
-	
+
 	if not is_occupied or not plugged_cord:
-		print("⚠️ No plug to remove!")
 		return false
-	
+
 	if not allow_unplug:
-		print("⚠️ Outlet is locked, cannot unplug!")
 		return false
-	
+
 	var plug = plugged_cord
-	
+
 	# Unplug it
 	if plug.unplug():
 		is_occupied = false
 		plugged_cord = null
-		
+
 		# Update power state
 		if auto_power_on_plug:
 			set_powered(false)
-		
+
 		# Play sound
 		if plug_out_sound and _audio_player:
 			_audio_player.stream = plug_out_sound
 			_audio_player.play()
-			print("🔊 Playing plug OUT sound")
-		else:
-			print("⚠️ No plug_out_sound assigned!")
-		
+
 		# Emit signal
 		plug_removed.emit(plug)
-		
-		print("🔌 Plug removed from outlet: " + parent_object.name)
+
 		return true
-	
+
 	return false
 
 # --- POWER STATE ---
 
 func set_powered(powered: bool) -> void:
 	"""Set the power state of this outlet"""
-	
+
 	if is_powered == powered:
 		return
-	
+
 	is_powered = powered
 	_update_visual_state()
 	power_state_changed.emit(is_powered)
-	
-	print("⚡ Outlet " + parent_object.name + " powered: " + str(is_powered))
 
 func get_is_powered() -> bool:
 	"""Check if outlet is currently powered"""

@@ -5,6 +5,9 @@ class_name PaintingUI
 ## Selected sticker always stays centered, column scrolls up/down
 ## Supports both 3D and 2D painting systems
 
+# Preload the sticker slot scene
+const StickerSlotScene = preload("res://scenes/UI/StickerSlot.tscn")
+
 @export var painting_system_3d: PaintingSystem
 @export var painting_system_2d: PaintingSystem2D
 
@@ -15,21 +18,16 @@ var active_system = null
 @onready var slots_container: VBoxContainer = $MarginContainer/ClipContainer/SlotsContainer
 
 # Carousel settings
-@export var slot_size: Vector2 = Vector2(80, 80)  # Size of each slot
+@export var slot_size: Vector2 = Vector2(120, 120)  # Size of each slot
 @export var slot_spacing: float = 10.0  # Gap between slots
 @export var center_scale: float = 1.2  # Scale multiplier for center item
 @export var side_scale: float = 0.8  # Scale multiplier for side items
 @export var scroll_speed: float = 0.15  # Animation speed (lower = smoother)
 
 # State
-var slot_nodes: Array[PanelContainer] = []  # All slot UI elements
+var slot_nodes: Array[StickerSlot] = []  # All slot UI elements
 var current_scroll_offset: float = 0.0  # Current scroll position
 var target_scroll_offset: float = 0.0  # Target scroll position (for smooth animation)
-
-# Visual style
-var default_border_color = Color("#555555")
-var equipped_border_color = Color("#3399FF")
-var default_bg_color = Color("#333333", 0.7)
 
 func _ready():
 	# Connect to mode manager to handle system switching
@@ -81,39 +79,16 @@ func _build_carousel():
 	for i in range(active_system.sticker_library.size()):
 		var sticker = active_system.sticker_library[i]
 
-		# Create PanelContainer for this slot
-		var panel = PanelContainer.new()
-		panel.custom_minimum_size = slot_size
+		# Instantiate slot from scene
+		var slot = StickerSlotScene.instantiate() as StickerSlot
+		slot.custom_minimum_size = slot_size
+		slot.setup(sticker.texture, i)
 
-		# Set pivot offset to center so scaling happens from center point
-		panel.pivot_offset = slot_size / 2.0
-
-		# Create style
-		var style = StyleBoxFlat.new()
-		style.bg_color = default_bg_color
-		style.border_color = default_border_color
-		style.set_border_width_all(2)
-		style.corner_radius_top_left = 4
-		style.corner_radius_top_right = 4
-		style.corner_radius_bottom_left = 4
-		style.corner_radius_bottom_right = 4
-		panel.add_theme_stylebox_override("panel", style)
-
-		# Create TextureRect for the sticker image
-		var tex_rect = TextureRect.new()
-		tex_rect.texture = sticker.texture
-		tex_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		tex_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		tex_rect.custom_minimum_size = slot_size * 0.9  # Slightly smaller for border visibility
-
-		panel.add_child(tex_rect)
-		slots_container.add_child(panel)
-		slot_nodes.append(panel)
+		slots_container.add_child(slot)
+		slot_nodes.append(slot)
 
 	# Set initial scroll position to center the first item
 	_update_carousel_position(true)
-
-	print("PaintingUI: Built carousel with %d slots" % slot_nodes.size())
 
 func _process(delta):
 	# Smoothly animate scroll position
@@ -174,28 +149,15 @@ func _update_slot_visuals():
 		var slot_center_y = (i * slot_height + slot_size.y / 2.0) - current_scroll_offset
 		var distance_from_center = abs(slot_center_y - center_y)
 
-		# Update style based on equipped state
-		var style = StyleBoxFlat.new()
-		style.bg_color = default_bg_color
-		style.corner_radius_top_left = 4
-		style.corner_radius_top_right = 4
-		style.corner_radius_bottom_left = 4
-		style.corner_radius_bottom_right = 4
+		# Update equipped state
+		slot.set_equipped(is_equipped)
 
+		# Update scale
 		if is_equipped:
-			# Equipped item - bright blue, thicker border
-			style.border_color = equipped_border_color
-			style.set_border_width_all(4)
-			slot.scale = Vector2.ONE * center_scale
-			slot.modulate = Color.WHITE  # Full brightness
+			slot.set_slot_scale(center_scale)
 		else:
-			# Not equipped - gray border, smaller
-			style.border_color = default_border_color
-			style.set_border_width_all(2)
-			slot.scale = Vector2.ONE * side_scale
+			slot.set_slot_scale(side_scale)
 
-			# Fade out items further from center
-			var fade = clamp(1.0 - (distance_from_center / 200.0), 0.3, 1.0)
-			slot.modulate = Color(1, 1, 1, fade)
-
-		slot.add_theme_stylebox_override("panel", style)
+		# Update fade based on distance from center
+		var fade = clamp(1.0 - (distance_from_center / 200.0), 0.3, 1.0)
+		slot.set_fade(fade)

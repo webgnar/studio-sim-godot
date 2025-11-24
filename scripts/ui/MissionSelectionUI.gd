@@ -4,6 +4,9 @@ class_name MissionSelectionUI
 ## UI for browsing and selecting painting missions
 ## Opens with F7 key in 3D mode, displays mission list and details
 
+# Preload the mission card scene
+const MissionCardScene = preload("res://scenes/UI/MissionCard.tscn")
+
 @onready var dialog = $Dialog
 @onready var mission_list_container = $Dialog/MarginContainer/HBoxContainer/LeftPanel/ScrollContainer/MissionList
 @onready var preview_image = $Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/PreviewImage
@@ -17,26 +20,9 @@ class_name MissionSelectionUI
 var painting_system_2d: PaintingSystem2D = null
 var selected_mission: PaintingMission = null
 var selected_index: int = 0
-var mission_cards: Array[PanelContainer] = []
-
-# UI styling
-var default_card_style: StyleBoxFlat
-var selected_card_style: StyleBoxFlat
+var mission_cards: Array[MissionCard] = []
 
 func _ready():
-	# Initialize card styles
-	default_card_style = StyleBoxFlat.new()
-	default_card_style.bg_color = Color(0.2, 0.2, 0.2, 0.9)
-	default_card_style.border_color = Color(0.4, 0.4, 0.4)
-	default_card_style.set_border_width_all(2)
-	default_card_style.set_corner_radius_all(4)
-
-	selected_card_style = StyleBoxFlat.new()
-	selected_card_style.bg_color = Color(0.2, 0.3, 0.4, 0.9)
-	selected_card_style.border_color = Color(0.2, 0.6, 1.0)  # Bright blue
-	selected_card_style.set_border_width_all(3)
-	selected_card_style.set_corner_radius_all(4)
-
 	# Connect button signals
 	start_button.pressed.connect(_on_start_mission)
 	back_button.pressed.connect(_close_dialog)
@@ -154,73 +140,17 @@ func _populate_mission_list():
 		mission_list_container.add_child(card)
 		mission_cards.append(card)
 
-func _create_mission_card(mission: PaintingMission, index: int) -> PanelContainer:
+func _create_mission_card(mission: PaintingMission, index: int) -> MissionCard:
 	"""Create a visual card for a mission"""
-	var card = PanelContainer.new()
-	card.custom_minimum_size = Vector2(300, 80)
-	card.add_theme_stylebox_override("panel", default_card_style)
-
-	# Add margin
-	var margin = MarginContainer.new()
-	margin.add_theme_constant_override("margin_left", 10)
-	margin.add_theme_constant_override("margin_top", 10)
-	margin.add_theme_constant_override("margin_right", 10)
-	margin.add_theme_constant_override("margin_bottom", 10)
-	card.add_child(margin)
-
-	# Content container
-	var hbox = HBoxContainer.new()
-	hbox.add_theme_constant_override("separation", 10)
-	margin.add_child(hbox)
-
-	# Thumbnail (if reference image exists)
-	if mission.reference_image_path and mission.reference_image_path != "":
-		var thumbnail = TextureRect.new()
-		thumbnail.custom_minimum_size = Vector2(60, 60)
-		thumbnail.expand_mode = TextureRect.EXPAND_FIT_WIDTH_PROPORTIONAL
-		thumbnail.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-
-		var texture = load(mission.reference_image_path) as Texture2D
-		if texture:
-			thumbnail.texture = texture
-
-		hbox.add_child(thumbnail)
-
-	# Info container
-	var vbox = VBoxContainer.new()
-	vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	hbox.add_child(vbox)
-
-	# Title
-	var title_label = Label.new()
-	title_label.text = mission.title
-	title_label.add_theme_font_size_override("font_size", 16)
-	vbox.add_child(title_label)
-
-	# Difficulty
-	var diff_label = Label.new()
-	diff_label.text = "Difficulty: %d/10" % mission.difficulty
-	diff_label.add_theme_font_size_override("font_size", 12)
-	diff_label.modulate = Color(0.8, 0.8, 0.8)
-	vbox.add_child(diff_label)
-
-	# Completion status
-	var completion_data = MissionManager.get_mission_completion(mission.mission_id)
-	if completion_data["completed"]:
-		var status_label = Label.new()
-		status_label.text = "Completed - Grade: %s" % completion_data["grade"]
-		status_label.add_theme_font_size_override("font_size", 12)
-		status_label.modulate = Color(0.4, 1.0, 0.4)  # Green
-		vbox.add_child(status_label)
-
-	# Make card clickable
-	card.gui_input.connect(func(event):
-		if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-			selected_index = index
-			_update_selection()
-	)
-
+	var card = MissionCardScene.instantiate() as MissionCard
+	card.setup(mission, index)
+	card.card_clicked.connect(_on_card_clicked)
 	return card
+
+func _on_card_clicked(index: int):
+	"""Handle mission card click"""
+	selected_index = index
+	_update_selection()
 
 func _select_next_mission():
 	"""Select the next mission in the list"""
@@ -245,12 +175,9 @@ func _update_selection():
 	if selected_index < 0 or selected_index >= MissionManager.available_missions.size():
 		return
 
-	# Update card styles
+	# Update card selection state
 	for i in range(mission_cards.size()):
-		if i == selected_index:
-			mission_cards[i].add_theme_stylebox_override("panel", selected_card_style)
-		else:
-			mission_cards[i].add_theme_stylebox_override("panel", default_card_style)
+		mission_cards[i].set_selected(i == selected_index)
 
 	# Update preview panel
 	selected_mission = MissionManager.available_missions[selected_index]

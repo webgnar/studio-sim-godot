@@ -51,8 +51,6 @@ func _resolve_cameras():
 	
 	if _cameras.is_empty():
 		push_warning("CameraZone '%s' has no cameras configured!" % name)
-	else:
-		print("CameraZone '%s': Found %d camera(s)" % [name, _cameras.size()])
 
 func _on_body_entered(body):
 	"""Player entered the zone"""

@@ -51,14 +51,11 @@ func load_all_missions():
 
 		if mission:
 			available_missions.append(mission)
-			print("MissionManager: Loaded mission '%s' (%s)" % [mission.title, mission.mission_id])
 		else:
 			push_error("MissionManager: Failed to load mission: %s" % path)
 
 	# Sort by difficulty (easiest first)
 	available_missions.sort_custom(func(a, b): return a.difficulty < b.difficulty)
-
-	print("MissionManager: Loaded %d missions total" % available_missions.size())
 
 func start_mission(mission: PaintingMission):
 	"""Start a new mission"""
@@ -68,7 +65,6 @@ func start_mission(mission: PaintingMission):
 
 	current_mission = mission
 	mission_started.emit(mission)
-	print("MissionManager: Started mission '%s'" % mission.title)
 
 func complete_mission(result: ValidationResult):
 	"""Mark current mission as completed with the given result"""
@@ -99,10 +95,8 @@ func complete_mission(result: ValidationResult):
 	if result.success:
 		mission_data["completed"] = true
 		mission_completed.emit(current_mission, result)
-		print("MissionManager: Mission completed! Grade: %s (%.1f%%)" % [grade, score])
 	else:
 		mission_failed.emit(current_mission, result)
-		print("MissionManager: Mission failed. Score: %.1f%%" % score)
 
 	save_progression()
 
@@ -125,7 +119,6 @@ func save_progression():
 		var json_string = JSON.stringify(progression, "\t")
 		file.store_string(json_string)
 		file.close()
-		print("MissionManager: Saved progression to %s" % save_path)
 	else:
 		push_error("MissionManager: Failed to save progression!")
 
@@ -134,7 +127,6 @@ func load_progression():
 	var save_path = "user://mission_progression.json"
 
 	if not FileAccess.file_exists(save_path):
-		print("MissionManager: No progression file found (starting fresh)")
 		return
 
 	var file = FileAccess.open(save_path, FileAccess.READ)
@@ -148,7 +140,6 @@ func load_progression():
 
 		if error == OK:
 			progression = json.data
-			print("MissionManager: Loaded progression (%d missions tracked)" % progression.size())
 		else:
 			push_error("MissionManager: Failed to parse progression JSON!")
 	else:

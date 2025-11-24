@@ -1,8 +1,24 @@
+res://scripts/PlayerInteractionComponent.gd
+res://scripts/painting/PaintingSystem.gd
+res://scripts/mirror.gd
 res://scenes/world.tscn
 res://shaders/mirror.gdshader
 res://models/new_array_mesh.tres
 res://models/new_array_mesh2.tres
 res://models/new_array_mesh3.tres
 res://shaders/outline.gdshader
-res://scripts/painting/PaintingSystem.gd
+res://scripts/painting/PaintingUI.gd
+res://scripts/ui/MissionSelectionUI.gd
+res://scripts/WorldSetup.gd
+res://scripts/ui/StickerSlot.gd
+res://scenes/UI/PaintingUI.tscn
+res://scripts/ui/MissionCard.gd
+res://scripts/components/BreakableComponent.gd
+res://scripts/components/CarryableComponent.gd
+res://scripts/components/OutletComponent.gd
+res://scripts/old stuff/LightSwitchInteraction.gd
+res://scripts/CameraZone.gd
+res://scripts/MissionManager.gd
+res://scripts/components/PowerCord.gd
+res://scripts/painting/PaintingModeManager.gd
 res://scripts/painting/PaintingSystem2D.gd

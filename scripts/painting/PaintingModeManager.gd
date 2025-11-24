@@ -16,7 +16,7 @@ var painting_root_3d: Node3D = null
 var painting_root_2d: Node3D = null
 
 func _ready():
-	print("PaintingModeManager ready. Starting in 3D mode.")
+	pass
 
 func _input(event):
 	# Toggle between modes with Tab key
@@ -28,10 +28,8 @@ func toggle_mode():
 	"""Switch between 3D and 2D painting modes"""
 	if current_mode == Mode.MODE_3D:
 		current_mode = Mode.MODE_2D
-		print("Switched to 2D painting mode")
 	else:
 		current_mode = Mode.MODE_3D
-		print("Switched to 3D painting mode")
 
 	# Update systems
 	_update_systems()
@@ -61,14 +59,12 @@ func register_3d_system(system: PaintingSystem, root: Node3D):
 	"""Register the 3D painting system"""
 	painting_system_3d = system
 	painting_root_3d = root
-	print("Registered 3D painting system")
 	_update_systems()
 
 func register_2d_system(system: PaintingSystem2D, root: Node3D):
 	"""Register the 2D painting system"""
 	painting_system_2d = system
 	painting_root_2d = root
-	print("Registered 2D painting system")
 	_update_systems()
 
 func sync_sticker_selection(index: int):

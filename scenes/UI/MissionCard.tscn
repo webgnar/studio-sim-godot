@@ -1,0 +1,46 @@
+[gd_scene load_steps=2 format=3 uid="uid://card123456"]
+
+[ext_resource type="Script" path="res://scripts/ui/MissionCard.gd" id="1_card"]
+
+[node name="MissionCard" type="PanelContainer"]
+custom_minimum_size = Vector2(300, 80)
+script = ExtResource("1_card")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Thumbnail" type="TextureRect" parent="MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(60, 60)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="InfoContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TitleLabel" type="Label" parent="MarginContainer/HBoxContainer/InfoContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Mission Title"
+
+[node name="DifficultyLabel" type="Label" parent="MarginContainer/HBoxContainer/InfoContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "Difficulty: 5/10"
+modulate = Color(0.8, 0.8, 0.8, 1)
+
+[node name="CompletionLabel" type="Label" parent="MarginContainer/HBoxContainer/InfoContainer"]
+visible = false
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "Completed - Grade: A"
+modulate = Color(0.4, 1, 0.4, 1)

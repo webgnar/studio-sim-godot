@@ -1,0 +1,28 @@
+[gd_scene load_steps=6 format=3 uid="uid://clyqlnamf1d2w"]
+
+[ext_resource type="PackedScene" uid="uid://db8764j2674fq" path="res://models/props/outlet_box.glb" id="1_bvpg8"]
+[ext_resource type="Script" uid="uid://dlksqcf0lda80" path="res://scripts/components/OutletComponent.gd" id="2_dkiyr"]
+[ext_resource type="AudioStream" uid="uid://b01s70tsty74h" path="res://sounds/plugIn.ogg" id="3_00cg2"]
+[ext_resource type="AudioStream" uid="uid://8wuf6nkvi1wl" path="res://sounds/plugOut.ogg" id="4_5a31k"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_pf35h"]
+size = Vector3(0.914917, 1.9637451, 1.8647461)
+
+[node name="wall outlet" type="StaticBody3D"]
+transform = Transform3D(0.14, 0, 0, 0, 0.14, 0, 0, 0, 0.14, 0, 0, 0)
+collision_layer = 2
+
+[node name="default" parent="." instance=ExtResource("1_bvpg8")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.042541504, 0.031188965, -0.0026855469)
+shape = SubResource("BoxShape3D_pf35h")
+
+[node name="OutletComponent" type="Node3D" parent="." node_paths=PackedStringArray("plug_socket_marker")]
+script = ExtResource("2_dkiyr")
+plug_socket_marker = NodePath("../Marker3D")
+plug_in_sound = ExtResource("3_00cg2")
+plug_out_sound = ExtResource("4_5a31k")
+
+[node name="Marker3D" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.38768378, 0, 0)

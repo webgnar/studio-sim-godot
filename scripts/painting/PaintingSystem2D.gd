@@ -59,8 +59,6 @@ func _ready():
 	# Load sticker library from folder
 	_load_sticker_library()
 
-	print("PaintingSystem2D ready. Loaded %d stickers." % sticker_library.size())
-
 func _setup_plane_material():
 	"""Assign SubViewport texture to the painting plane material"""
 	if not painting_plane or not canvas_viewport:
@@ -100,7 +98,6 @@ func _load_sticker_library():
 	# HTML5/WebGL builds can't scan directories dynamically
 	# Use a predefined list of sticker files
 	if OS.has_feature("web"):
-		print("HTML5: Using predefined sticker list (2D)")
 		file_names = [
 			"1.png", "2.png", "3.png", "4.png", "5.png",
 			"6.png", "7.png", "8.png", "9.png", "10.png"
@@ -280,12 +277,6 @@ func cycle_sticker(direction: int):
 	if selected_sticker_index < 0:
 		selected_sticker_index = sticker_library.size() - 1
 
-	print("Selected sticker: %s (%d/%d)" % [
-		sticker_library[selected_sticker_index].id,
-		selected_sticker_index + 1,
-		sticker_library.size()
-	])
-
 	# Notify UI that the equipped layer changed
 	layer_equipped.emit(selected_sticker_index)
 
@@ -325,7 +316,6 @@ func lower_layer_order(layer: PlacedLayer2D):
 func delete_selected_layer():
 	"""Delete the currently selected layer"""
 	if not selected_layer:
-		print("No layer selected to delete")
 		return
 
 	# Remove from scene
@@ -335,7 +325,6 @@ func delete_selected_layer():
 	# Remove from array
 	placed_layers.erase(selected_layer)
 
-	print("Deleted layer: %s" % selected_layer.id)
 	selected_layer = null
 
 func select_layer_by_index(index: int):
@@ -353,7 +342,6 @@ func clear_canvas():
 	placed_layers.clear()
 	next_order = 0
 	selected_layer = null
-	print("Canvas cleared")
 
 # Validation system
 func verify_painting(target: PaintingMission) -> ValidationResult:
@@ -454,12 +442,6 @@ func verify_painting(target: PaintingMission) -> ValidationResult:
 						var current_hist = VisualValidator.calculate_color_distribution(current_image)
 						var reference_hist = VisualValidator.calculate_color_distribution(reference_image)
 						color_distribution_percentage = VisualValidator.compare_color_distributions(current_hist, reference_hist)
-
-						print("VisualValidator: Coordinate: %.1f%%, Visual: %.1f%%, Color: %.1f%%" % [
-							coordinate_percentage,
-							visual_percentage,
-							color_distribution_percentage
-						])
 					else:
 						push_warning("PaintingSystem2D: Could not extract images for visual validation")
 				else:

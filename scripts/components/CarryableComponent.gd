@@ -55,21 +55,20 @@ func _ready() -> void:
 	
 	# Ensure audio player exists for our sounds (parent might not have created one)
 	_ensure_audio_player()
-	
+
 	# Enable contact monitoring for collision detection (required for body_entered/body_shape_entered signals)
 	parent_rigid_body.contact_monitor = true
 	parent_rigid_body.max_contacts_reported = 4  # Track up to 4 contact points (good balance)
-	
+
 	# Connect to collision signal for auto-drop on player collision
 	if parent_rigid_body.has_signal("body_entered"):
 		parent_rigid_body.body_entered.connect(_on_body_entered)
-	
+
 	# Connect to collision signal for impact sounds
 	if parent_rigid_body.has_signal("body_shape_entered"):
 		parent_rigid_body.body_shape_entered.connect(_on_body_shape_entered)
-	
+
 	interaction_text = "Pick Up"
-	print("✅ CarryableComponent ready: " + parent_object.name + " (mass: " + str(parent_rigid_body.mass) + "kg)")
 
 func _physics_process(_delta: float) -> void:
 	if not is_carried or not player_ref:
@@ -85,7 +84,6 @@ func _physics_process(_delta: float) -> void:
 	# Auto-drop if object gets too far away (prevents carrying through walls)
 	var distance = parent_rigid_body.global_position.distance_to(carry_target)
 	if distance >= drop_distance:
-		print("⚠️ Auto-dropping " + parent_object.name + " - too far from carry position")
 		drop()
 
 func _exit_tree() -> void:
@@ -121,11 +119,9 @@ func _handle_e_key_interaction(player_interaction: PlayerInteractionComponent) -
 	
 	# Emit signal for external systems
 	e_key_interacted.emit(player_interaction)
-	
+
 	# Call virtual method for subclass implementation
 	_on_e_key_interacted(player_interaction)
-	
-	print("✨ E-key interaction: " + parent_object.name)
 
 ## Virtual method - override in subclasses for custom E-key interaction behavior
 func _on_e_key_interacted(_player_interaction_component: PlayerInteractionComponent) -> void:
@@ -137,9 +133,8 @@ func _on_e_key_interacted(_player_interaction_component: PlayerInteractionCompon
 func pickup(player_interaction: PlayerInteractionComponent) -> void:
 	"""Pick up the object - called when player interacts"""
 	if is_carried:
-		print("⚠️ Already being carried!")
 		return
-	
+
 	player_ref = player_interaction
 	
 	# Disable CCD while carrying (not needed for smooth velocity-based movement)
@@ -173,8 +168,6 @@ func pickup(player_interaction: PlayerInteractionComponent) -> void:
 	is_carried = true
 	interaction_text = "Drop"
 	being_carried_changed.emit(true)
-	
-	print("🤲 Picked up: " + parent_object.name)
 
 func drop() -> void:
 	"""Drop the object gently - called when player releases or auto-drop triggers"""
@@ -212,8 +205,6 @@ func drop() -> void:
 	interaction_text = "Pick Up"
 	being_carried_changed.emit(false)
 	player_ref = null
-	
-	print("📦 Dropped: " + parent_object.name)
 
 func throw(power: float) -> void:
 	"""Throw the object with force - called by player input"""
@@ -239,11 +230,9 @@ func throw(power: float) -> void:
 	
 	# Emit signal for potential VFX/audio
 	thrown.emit(impulse)
-	
+
 	# Disable CCD after object comes to rest (check in physics process)
 	_monitor_throw_velocity()
-	
-	print("🎯 Threw: " + parent_object.name + " with power: " + str(power))
 
 func _monitor_throw_velocity() -> void:
 	"""Monitor velocity after throw and disable CCD when object settles"""
@@ -265,19 +254,16 @@ func _monitor_throw_velocity() -> void:
 		# If settled, disable CCD and stop monitoring
 		if speed < settle_threshold:
 			parent_rigid_body.continuous_cd = false
-			print("💤 " + parent_object.name + " settled, CCD disabled")
 			return
-	
+
 	# If still moving after check frames, keep CCD enabled but stop monitoring
 	# It will get disabled on next pickup/drop cycle
-	print("⚡ " + parent_object.name + " still moving fast, keeping CCD enabled")
 
 # --- COLLISION HANDLING ---
 
 func _on_body_entered(body: Node) -> void:
 	"""Auto-drop if carried object collides with player"""
 	if body.is_in_group("Player") and is_carried:
-		print("⚠️ Carried object hit player - auto-dropping")
 		drop()
 
 func _on_body_shape_entered(_body_rid: RID, body: Node, _body_shape_index: int, _local_shape_index: int) -> void:
@@ -296,7 +282,6 @@ func _on_body_shape_entered(_body_rid: RID, body: Node, _body_shape_index: int, 
 	
 	# Check if we have an impact sound assigned
 	if not impact_sound:
-		print("⚠️ No impact_sound assigned to " + parent_object.name)
 		return
 	
 	# Enforce cooldown to prevent sound spam
@@ -319,10 +304,8 @@ func _on_body_shape_entered(_body_rid: RID, body: Node, _body_shape_index: int, 
 		_audio_player.pitch_scale = randf_range(0.9, 1.1)  # ±0.1 pitch shift
 	
 	_play_sound(impact_sound, volume_db)
-	
+
 	last_impact_time = current_time
-	
-	print("💥 Impact: " + parent_object.name + " (velocity: " + str(impact_velocity) + ", volume: " + str(volume_db) + "db)")
 
 func _calculate_impact_volume(velocity: float) -> float:
 	"""Calculate volume based on impact velocity (louder = harder impact)"""
@@ -349,7 +332,6 @@ func _ensure_audio_player() -> void:
 		_audio_player.max_distance = 30.0  # Can hear impacts from farther away
 		_audio_player.attenuation_model = AudioStreamPlayer3D.ATTENUATION_INVERSE_DISTANCE
 		add_child(_audio_player)
-		print("🔊 Created audio player for " + parent_object.name)
 
 # --- PUBLIC METHODS ---
 

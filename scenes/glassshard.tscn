@@ -1,9 +1,0 @@
-[gd_scene load_steps=3 format=3 uid="uid://ck1xoi5iqb44n"]
-
-[ext_resource type="PackedScene" uid="uid://bmhvarfxgft1i" path="res://models/shard1.glb" id="1_hwb3v"]
-[ext_resource type="ArrayMesh" uid="uid://rmvygaicu8nx" path="res://models/new_array_mesh.tres" id="2_5u4h3"]
-
-[node name="default" instance=ExtResource("1_hwb3v")]
-
-[node name="shard1" parent="." index="0"]
-mesh = ExtResource("2_5u4h3")

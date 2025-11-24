@@ -14,7 +14,7 @@
 [ext_resource type="Material" uid="uid://re8gmfn1nbgt" path="res://materials/wall.tres" id="5_71j4m"]
 [ext_resource type="PackedScene" uid="uid://boyehvhrdbdi6" path="res://models/props/lights.glb" id="6_jhx03"]
 [ext_resource type="PackedScene" uid="uid://ygw6d51stbbw" path="res://scenes/human.tscn" id="6_qfnet"]
-[ext_resource type="PackedScene" uid="uid://cmkthatew8dv2" path="res://scenes/HUD.tscn" id="14_1jxku"]
+[ext_resource type="PackedScene" uid="uid://cmkthatew8dv2" path="res://scenes/UI/HUD.tscn" id="14_1jxku"]
 [ext_resource type="Texture2D" uid="uid://b3ty4ce0xhyow" path="res://sprites/hvac.jpg" id="14_o8fc1"]
 [ext_resource type="PackedScene" uid="uid://xeaph8bqk1j1" path="res://models/props/pipe_red.glb" id="16_oo54l"]
 [ext_resource type="PackedScene" uid="uid://fjppju80c5ic" path="res://models/props/pipe_yellow.glb" id="17_kpybi"]
@@ -25,46 +25,46 @@
 [ext_resource type="PackedScene" uid="uid://dfy02uk1jbflb" path="res://models/props/light_switch box.glb" id="21_ts3gi"]
 [ext_resource type="PackedScene" uid="uid://bp08vdgdcjkvv" path="res://models/interactables/light_switch.glb" id="22_0nbtd"]
 [ext_resource type="AudioStream" uid="uid://cfqmga8or17qn" path="res://sounds/lightswitchON.ogg" id="23_l8ah6"]
-[ext_resource type="Script" uid="uid://djltcowfnfdh7" path="res://scripts/mirror.gd" id="24_ctatt"]
+[ext_resource type="Script" uid="uid://djltcowfnfdh7" path="res://scripts/old stuff/mirror.gd" id="24_ctatt"]
 [ext_resource type="AudioStream" uid="uid://o3kakxscxwb1" path="res://sounds/lightswitchOFF.ogg" id="24_e75v4"]
-[ext_resource type="Script" uid="uid://dxwj5n7bxo3mk" path="res://scripts/MirrorInteraction.gd" id="24_mirror"]
+[ext_resource type="Script" uid="uid://dxwj5n7bxo3mk" path="res://scripts/old stuff/MirrorInteraction.gd" id="24_mirror"]
 [ext_resource type="Material" uid="uid://depuckvrgdvcl" path="res://materials/humanskin.tres" id="25_humanskin"]
 [ext_resource type="Material" uid="uid://bagboitufgv5v" path="res://materials/skeletonskin.tres" id="25_skeletonskin"]
 [ext_resource type="Shader" uid="uid://br4qh8mg5yosn" path="res://shaders/mirror.gdshader" id="25_xgqkh"]
 [ext_resource type="PackedScene" uid="uid://d0y6fk05wn5dc" path="res://models/interactables/cardboard box/box.glb" id="26_ts3gi"]
 [ext_resource type="PackedScene" uid="uid://tejn0hfpdhf7" path="res://models/interactables/cardboard box/box topL.glb" id="27_0nbtd"]
-[ext_resource type="Script" uid="uid://cftd54g3pgkr1" path="res://scripts/LightSwitchInteraction.gd" id="29_lightswitch_new"]
-[ext_resource type="Script" uid="uid://d5m48bcsj83f" path="res://scripts/BoxInteraction.gd" id="31_x28ej"]
-[ext_resource type="Script" uid="uid://cdcxs0jsffsfb" path="res://scripts/BoomboxInteraction.gd" id="36_boombox_new"]
+[ext_resource type="Script" uid="uid://cftd54g3pgkr1" path="res://scripts/old stuff/LightSwitchInteraction.gd" id="29_lightswitch_new"]
+[ext_resource type="Script" uid="uid://d5m48bcsj83f" path="res://scripts/old stuff/BoxInteraction.gd" id="31_x28ej"]
+[ext_resource type="Script" uid="uid://cdcxs0jsffsfb" path="res://scripts/old stuff/BoomboxInteraction.gd" id="36_boombox_new"]
 [ext_resource type="PackedScene" uid="uid://ddornft2ln8sq" path="res://models/interactables/boomBox.glb" id="41_rga7q"]
-[ext_resource type="PackedScene" uid="uid://bhsyl3tj8hblj" path="res://scenes/brute trash can.tscn" id="46_18clu"]
+[ext_resource type="PackedScene" uid="uid://bhsyl3tj8hblj" path="res://scenes/old stuff/brute trash can.tscn" id="46_18clu"]
 [ext_resource type="Script" uid="uid://cbwg344irqecy" path="res://scripts/components/CarryableComponent.gd" id="46_e68xj"]
 [ext_resource type="Script" uid="uid://dski42rg3yjwf" path="res://scripts/components/FanCarryableComponent.gd" id="46_fan_carry"]
 [ext_resource type="PackedScene" uid="uid://dxk1gusj3uuj7" path="res://models/interactables/fan/legs.glb" id="48_x28ej"]
 [ext_resource type="PackedScene" uid="uid://d334ujfwmx8lp" path="res://models/interactables/fan/cage.glb" id="49_1jxku"]
-[ext_resource type="Script" uid="uid://c63c2n2vhd5r6" path="res://scripts/FanController.gd" id="49_npbic"]
+[ext_resource type="Script" uid="uid://c63c2n2vhd5r6" path="res://scripts/old stuff/FanController.gd" id="49_npbic"]
 [ext_resource type="PackedScene" uid="uid://bsdobk5wd61u" path="res://models/interactables/fan/blade.glb" id="50_1dgkn"]
 [ext_resource type="Script" uid="uid://dpnghglurvaq0" path="res://scripts/consolelog.gd" id="51_1jxku"]
 [ext_resource type="Script" uid="uid://u01mbabuiguh" path="res://scripts/components/PoweredDeviceComponent.gd" id="51_iexy4"]
 [ext_resource type="Script" uid="uid://d1d8fhujnbpfy" path="res://scripts/components/PowerCordPlugComponent.gd" id="51_pf35h"]
-[ext_resource type="PackedScene" uid="uid://dtharqrj0cj5y" path="res://scenes/test_box.tscn" id="52_e68xj"]
+[ext_resource type="PackedScene" uid="uid://dtharqrj0cj5y" path="res://scenes/old stuff/test_box.tscn" id="52_e68xj"]
 [ext_resource type="Script" uid="uid://dqp07gb58nlbf" path="res://scripts/components/PowerCord.gd" id="52_iexy4"]
 [ext_resource type="PackedScene" uid="uid://ddoijgnx5221v" path="res://models/interactables/plug.glb" id="53_pf35h"]
 [ext_resource type="AudioStream" uid="uid://j4kw7ci2wx2j" path="res://sounds/bump2.ogg" id="57_8lgfd"]
 [ext_resource type="AudioStream" uid="uid://ut8y785jdo3t" path="res://sounds/drone.ogg" id="65_8lgfd"]
-[ext_resource type="PackedScene" uid="uid://kraxm2alr635" path="res://scenes/breakable_window.tscn" id="66_4kmvx"]
+[ext_resource type="PackedScene" uid="uid://kraxm2alr635" path="res://scenes/old stuff/breakable_window.tscn" id="66_4kmvx"]
 [ext_resource type="PackedScene" uid="uid://dfhlm4stso71r" path="res://models/outside/SfRoadFlat.gltf" id="66_5nedk"]
-[ext_resource type="PackedScene" uid="uid://clyqlnamf1d2w" path="res://scenes/wall_outlet.tscn" id="66_8lgfd"]
+[ext_resource type="PackedScene" uid="uid://clyqlnamf1d2w" path="res://scenes/old stuff/wall_outlet.tscn" id="66_8lgfd"]
 [ext_resource type="PackedScene" uid="uid://chnk8fr52q3yk" path="res://models/outside/sewerroad.gltf" id="68_5nedk"]
 [ext_resource type="PackedScene" uid="uid://drijdy8rlc67s" path="res://models/outside/treeSmallOak2.gltf" id="69_40xph"]
 [ext_resource type="PackedScene" uid="uid://cqwacwlbuqbe" path="res://models/outside/crazy2.gltf" id="70_8lgfd"]
-[ext_resource type="PackedScene" uid="uid://k5bi7w8gtday" path="res://scenes/CameraZone.tscn" id="71_dyafi"]
+[ext_resource type="PackedScene" uid="uid://k5bi7w8gtday" path="res://scenes/camera stuff/CameraZone.tscn" id="71_dyafi"]
 [ext_resource type="PackedScene" uid="uid://btuhdnbc2hjii" path="res://scenes/PaintingRoot.tscn" id="73_1m1ue"]
-[ext_resource type="PackedScene" uid="uid://bqbqfg2mfb0iw" path="res://scenes/PaintingUI.tscn" id="74_ntuqo"]
+[ext_resource type="PackedScene" uid="uid://bqbqfg2mfb0iw" path="res://scenes/UI/PaintingUI.tscn" id="74_ntuqo"]
 [ext_resource type="PackedScene" uid="uid://bshsrjrokypta" path="res://scenes/PaintingRoot2D.tscn" id="75_ca4ee"]
-[ext_resource type="PackedScene" uid="uid://c7vk8n8k7j8k8" path="res://scenes/MissionAuthoringUI.tscn" id="76_author"]
-[ext_resource type="PackedScene" path="res://scenes/MissionSelectionUI.tscn" id="77_select"]
-[ext_resource type="PackedScene" uid="uid://isbwb03yee7n" path="res://scenes/ValidationResultUI.tscn" id="78_result"]
+[ext_resource type="PackedScene" uid="uid://c7vk8n8k7j8k8" path="res://scenes/UI/MissionAuthoringUI.tscn" id="76_author"]
+[ext_resource type="PackedScene" uid="uid://ctv5r4f51ufg3" path="res://scenes/UI/MissionSelectionUI.tscn" id="77_select"]
+[ext_resource type="PackedScene" uid="uid://isbwb03yee7n" path="res://scenes/UI/ValidationResultUI.tscn" id="78_result"]
 [ext_resource type="AudioStream" uid="uid://84rjpuccue2i" path="res://sounds/boomboxSwitch.ogg" id="boombox_switch"]
 [ext_resource type="AudioStream" uid="uid://8so1mqtnfhkh" path="res://sounds/box open 1.ogg" id="box_open_1"]
 [ext_resource type="AudioStream" uid="uid://bkyiswhv5fuaf" path="res://sounds/box open 2.ogg" id="box_open_2"]
@@ -404,6 +404,22 @@ shadow_enabled = true
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_4wyf3")
+
+[node name="PaintingUI_Layer" type="CanvasLayer" parent="."]
+
+[node name="PaintingUi" parent="PaintingUI_Layer" node_paths=PackedStringArray("painting_system_3d", "painting_system_2d") instance=ExtResource("74_ntuqo")]
+painting_system_3d = NodePath("../../PaintingRoot")
+painting_system_2d = NodePath("../../PaintingRoot2d/CanvasViewport/CanvasRoot")
+
+[node name="GameplayUI_Layer" type="CanvasLayer" parent="."]
+
+[node name="MissionSelectionUi" parent="GameplayUI_Layer" instance=ExtResource("77_select")]
+
+[node name="ValidationResultUi" parent="GameplayUI_Layer" instance=ExtResource("78_result")]
+
+[node name="DevTools_Layer" type="CanvasLayer" parent="."]
+
+[node name="MissionAuthoringUi" parent="DevTools_Layer" instance=ExtResource("76_author")]
 
 [node name="background" type="Node3D" parent="."]
 visible = false
@@ -1175,20 +1191,6 @@ visible = false
 
 [node name="PaintingRoot" parent="." instance=ExtResource("73_1m1ue")]
 transform = Transform3D(-6.862688e-08, 0, 1.57, 0, 1.57, 0, -1.57, 0, -6.862688e-08, -3.6013913, 2.8738532, -1.7322651)
-
-[node name="CanvasLayer" type="CanvasLayer" parent="."]
-offset = Vector2(133.96, 269.07)
-transform = Transform2D(1, 0, 0, 1, 133.96, 269.07)
-
-[node name="PaintingUi" parent="CanvasLayer" node_paths=PackedStringArray("painting_system_3d", "painting_system_2d") instance=ExtResource("74_ntuqo")]
-painting_system_3d = NodePath("../../PaintingRoot")
-painting_system_2d = NodePath("../../PaintingRoot2d/CanvasViewport/CanvasRoot")
-
-[node name="MissionAuthoringUi" parent="CanvasLayer" instance=ExtResource("76_author")]
-
-[node name="MissionSelectionUi" parent="CanvasLayer" instance=ExtResource("77_select")]
-
-[node name="ValidationResultUi" parent="CanvasLayer" instance=ExtResource("78_result")]
 
 [node name="PaintingRoot2d" parent="." instance=ExtResource("75_ca4ee")]
 transform = Transform3D(-4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0, 1, -3.4057033, 1.5300002, 7)
