@@ -114,15 +114,15 @@ func _unhandled_input(event):
 	if not camera or not canvas_root or not input_enabled:
 		return
 
-	# Left click to place sticker only (no selection)
+	# Primary action (left click / RT / R2) to place sticker
 	# Using _unhandled_input ensures we don't place stickers when clicking on interactable objects
-	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+	if event.is_action_pressed("action_primary"):
 		var raycast_result = _raycast_from_mouse()
 		if raycast_result:
 			spawn_sticker(raycast_result.position, raycast_result.normal)
 
-	# Right click to undo last placed sticker
-	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT and event.pressed:
+	# Secondary action (right click / LT / L2) to undo last placed sticker
+	if event.is_action_pressed("action_secondary"):
 		undo_last_sticker()
 
 func _handle_mouse_click():
