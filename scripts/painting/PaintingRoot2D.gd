@@ -9,13 +9,14 @@ func _ready():
 	if not painting_system:
 		push_error("PaintingSystem2D not found!")
 
-	set_process_input(true)
+	set_process_unhandled_input(true)
 
-func _input(event):
+func _unhandled_input(event):
 	if not painting_system:
 		return
 
-	# Forward input to the painting system
-	painting_system._input(event)
+	# Forward unhandled input to the painting system
+	# This prevents sticker placement when clicking on interactable objects
+	painting_system._unhandled_input(event)
 
 # Note: Don't forward _process - Godot calls it automatically on the Node2D

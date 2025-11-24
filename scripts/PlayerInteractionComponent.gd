@@ -57,19 +57,22 @@ func _input(event: InputEvent) -> void:
 				if plug.is_near_outlet():
 					# Plug it in instead of throwing
 					plug.drop()  # This will auto-plug due to auto_plug_on_release
+					get_viewport().set_input_as_handled()  # Prevent sticker placement
 					return
-			
+
 			# Normal throw - use object's throw_power setting
 			var throw_force = carried_object.throw_power if carried_object else 15.0
 			throw_carried_object(throw_force)
+			get_viewport().set_input_as_handled()  # Prevent sticker placement
 			return
-		
+
 		# If not carrying, check if looking at a carryable object
 		if current_interactable:
 			var carryable = _find_carryable_component(current_interactable)
 			if carryable and not carryable.is_being_carried():
 				# Pickup the object (don't call interact())
 				carryable.pickup(self)
+				get_viewport().set_input_as_handled()  # Prevent sticker placement
 				return
 	
 	# RIGHT CLICK - Drop (gentle release)
@@ -87,22 +90,25 @@ func _input(event: InputEvent) -> void:
 			if carried_object.has_e_key_interaction and carried_object.can_interact_while_carried:
 				# Call the interaction on the carried object
 				carried_object._handle_e_key_interaction(self)
+				get_viewport().set_input_as_handled()
 				return
-			
+
 			# Special case: carrying a power plug near an outlet
 			if carried_object is PowerCordPlugComponent:
 				var plug = carried_object as PowerCordPlugComponent
 				if plug.nearby_outlet:
 					# Plug it in
 					plug.nearby_outlet.accept_plug(plug)
+					get_viewport().set_input_as_handled()
 					return
-			
+
 			# If no E-key interaction, do nothing (use right-click to drop)
 			return
-		
+
 		# Not carrying - interact with what we're looking at
 		if current_interactable:
 			_handle_interaction()
+			get_viewport().set_input_as_handled()
 
 # --- PRIVATE METHODS ---
 

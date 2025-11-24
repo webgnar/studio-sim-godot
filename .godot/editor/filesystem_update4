@@ -22,3 +22,4 @@ res://scripts/MissionManager.gd
 res://scripts/components/PowerCord.gd
 res://scripts/painting/PaintingModeManager.gd
 res://scripts/painting/PaintingSystem2D.gd
+res://scripts/painting/PaintingRoot2D.gd

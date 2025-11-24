@@ -171,11 +171,12 @@ func _process(delta):
 	if selected_layer and Input.is_action_just_pressed("ui_down"):
 		lower_layer_order(selected_layer)
 
-func _input(event):
+func _unhandled_input(event):
 	if not camera or not input_enabled:
 		return
 
 	# Left click to place sticker
+	# Using _unhandled_input ensures we don't place stickers when clicking on interactable objects
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 		var raycast_result = _raycast_from_mouse()
 		if raycast_result:
