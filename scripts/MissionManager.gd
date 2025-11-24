@@ -22,27 +22,39 @@ func _ready():
 	load_progression()
 
 func load_all_missions():
-	"""Load all mission .tres files from resources/missions/ folder"""
+	"""Load all mission .tres files using the missions manifest"""
 	available_missions.clear()
 
 	var missions_path = "res://resources/missions/"
-	var dir = DirAccess.open(missions_path)
+	var manifest_path = missions_path + "missions_manifest.json"
 
-	if not dir:
-		push_error("MissionManager: Failed to open missions folder: %s" % missions_path)
+	# Load the manifest file
+	if not FileAccess.file_exists(manifest_path):
+		push_error("MissionManager: Manifest file not found: %s" % manifest_path)
+		push_error("  Please run the mission_manifest_generator.gd script to create it.")
 		return
 
-	# Get all .tres files in the folder
-	var file_names: Array[String] = []
-	dir.list_dir_begin()
-	var file_name = dir.get_next()
+	var file = FileAccess.open(manifest_path, FileAccess.READ)
+	if not file:
+		push_error("MissionManager: Failed to open manifest: %s" % manifest_path)
+		return
 
-	while file_name != "":
-		if not dir.current_is_dir() and file_name.ends_with(".tres"):
-			file_names.append(file_name)
-		file_name = dir.get_next()
+	var json_string = file.get_as_text()
+	file.close()
 
-	dir.list_dir_end()
+	var json = JSON.new()
+	var error = json.parse(json_string)
+
+	if error != OK:
+		push_error("MissionManager: Failed to parse manifest JSON!")
+		return
+
+	var manifest = json.data
+	if not manifest.has("missions"):
+		push_error("MissionManager: Invalid manifest format - missing 'missions' key")
+		return
+
+	var file_names: Array = manifest["missions"]
 
 	# Load each mission resource
 	for filename in file_names:
@@ -56,6 +68,8 @@ func load_all_missions():
 
 	# Sort by difficulty (easiest first)
 	available_missions.sort_custom(func(a, b): return a.difficulty < b.difficulty)
+
+	print("MissionManager: Loaded %d missions from manifest" % available_missions.size())
 
 func start_mission(mission: PaintingMission):
 	"""Start a new mission"""

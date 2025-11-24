@@ -121,6 +121,10 @@ func _unhandled_input(event):
 		if raycast_result:
 			spawn_sticker(raycast_result.position, raycast_result.normal)
 
+	# Right click to undo last placed sticker
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT and event.pressed:
+		undo_last_sticker()
+
 func _handle_mouse_click():
 	"""Handle left mouse click - place new sticker or select existing one"""
 	var raycast_result = _raycast_from_mouse()
@@ -323,6 +327,36 @@ func delete_selected_layer():
 	placed_layers.erase(selected_layer)
 
 	selected_layer = null
+
+func undo_last_sticker():
+	"""Remove the most recently placed sticker (LIFO order)"""
+	if placed_layers.is_empty():
+		return
+
+	# Find the layer with the highest order value (most recently placed)
+	var last_layer: PlacedLayer = null
+	var max_order = -1
+
+	for layer in placed_layers:
+		if layer.order > max_order:
+			max_order = layer.order
+			last_layer = layer
+
+	if last_layer:
+		# Remove from scene
+		if last_layer.node:
+			last_layer.node.queue_free()
+
+		# Remove from array
+		placed_layers.erase(last_layer)
+
+		# Clear selection if this was the selected layer
+		if selected_layer == last_layer:
+			selected_layer = null
+
+		# Decrement next_order so it can be reused
+		if next_order > 0:
+			next_order -= 1
 
 func select_layer_by_index(index: int):
 	"""Select a placed layer by its index in the array"""

@@ -77,6 +77,10 @@ func save_mission(mission: PaintingMission, file_path: String) -> bool:
 		return false
 
 	print("MissionAuthoringTool: Saved mission '%s' to %s" % [mission.title, file_path])
+
+	# Update the manifest to include this new mission
+	_update_manifest(file_path)
+
 	mission_saved.emit(file_path)
 	return true
 
@@ -122,3 +126,43 @@ func create_and_save_mission(mission_id: String, title: String, description: Str
 		return false
 
 	return save_mission(mission, file_path)
+
+func _update_manifest(mission_file_path: String):
+	"""Update the missions manifest to include the new mission"""
+	var missions_path = "res://resources/missions/"
+	var manifest_path = missions_path + "missions_manifest.json"
+	var filename = mission_file_path.get_file()
+
+	# Load existing manifest or create new one
+	var missions: Array = []
+	var manifest = {}
+
+	if FileAccess.file_exists(manifest_path):
+		var file = FileAccess.open(manifest_path, FileAccess.READ)
+		if file:
+			var json_string = file.get_as_text()
+			file.close()
+
+			var json = JSON.new()
+			if json.parse(json_string) == OK:
+				manifest = json.data
+				if manifest.has("missions"):
+					missions = manifest["missions"]
+
+	# Add the new mission if not already in list
+	if not missions.has(filename):
+		missions.append(filename)
+		missions.sort()  # Keep alphabetically sorted
+
+	# Update manifest
+	manifest["missions"] = missions
+	manifest["generated_at"] = Time.get_datetime_string_from_system()
+
+	# Save manifest
+	var file = FileAccess.open(manifest_path, FileAccess.WRITE)
+	if file:
+		file.store_string(JSON.stringify(manifest, "\t"))
+		file.close()
+		print("MissionAuthoringTool: Updated manifest with %d missions" % missions.size())
+	else:
+		push_error("MissionAuthoringTool: Failed to update manifest!")
