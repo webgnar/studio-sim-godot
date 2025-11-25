@@ -158,7 +158,7 @@ func _load_sticker_library():
 		if texture:
 			var sticker_name = file_names[i].get_basename()  # Remove .png extension
 			var definition = PaintingLayerDefinition.new(sticker_name, texture, 0)
-			definition.unlocked = true  # All unlocked for testing
+			definition.unlocked = true
 			sticker_library.append(definition)
 		else:
 			push_error("Failed to load sticker texture: %s" % path)
@@ -382,11 +382,6 @@ func cycle_sticker(direction: int):
 
 	# Notify UI that the equipped layer changed
 	layer_equipped.emit(selected_sticker_index)
-
-# DEPRECATED: Rotation now only works on preview sprite before placement
-# func rotate_layer_90(layer: PlacedLayer2D, direction: int):
-# 	"""Rotate a layer by 90 degrees (snapping)"""
-# 	# This function is no longer used - stickers can only be rotated before placement
 
 func raise_layer_order(layer: PlacedLayer2D):
 	"""Increase layer's z-order (bring forward)"""
@@ -614,8 +609,6 @@ func start_mission(mission: PaintingMission):
 
 	# Clear the canvas
 	clear_canvas()
-
-	print("PaintingSystem2D: Mission '%s' loaded. Canvas cleared and ready." % mission.title)
 
 func submit_painting():
 	"""Submit the current painting for validation"""

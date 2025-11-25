@@ -75,9 +75,16 @@ func _initialize_lights_state() -> void:
 
 	if _animation_player and _animation_player.has_animation(toggle_animation_name):
 		if starts_on:
-			_animation_player.seek(_animation_player.get_animation(toggle_animation_name).length, true)
+			# Seek to end of animation (ON position)
+			var anim_length = _animation_player.get_animation(toggle_animation_name).length
+			_animation_player.play(toggle_animation_name)
+			_animation_player.seek(anim_length, true)
+			_animation_player.pause()
 		else:
+			# Seek to start of animation (OFF position)
+			_animation_player.play(toggle_animation_name)
 			_animation_player.seek(0.0, true)
+			_animation_player.pause()
 
 func _toggle_switch() -> void:
 	if _current_state == SwitchState.ANIMATING:

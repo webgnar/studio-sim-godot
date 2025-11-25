@@ -46,40 +46,35 @@ func _ready() -> void:
 	else:
 		# If no power cord, assume always powered (or never powered if required)
 		has_power = not requires_power
-	
+
 	_update_interaction_text()
-	
-	print("✅ PoweredDeviceComponent ready: " + parent_object.name + " (powered: " + str(has_power) + ")")
 
 # --- INTERACTION ---
 
 func interact(_interactor: Node3D) -> void:
 	"""Toggle device on/off (only if powered)"""
-	
+
 	if requires_power and not has_power:
-		print("⚠️ " + parent_object.name + " has no power!")
 		# Play "no power" sound
 		if no_power_sound:
 			_play_sound(no_power_sound)
 		return
-	
+
 	# Toggle state
 	is_on = !is_on
-	
+
 	# Update interaction text
 	_update_interaction_text()
-	
+
 	# Play appropriate sound and emit signals
 	if is_on:
 		if turn_on_sound:
 			_play_sound(turn_on_sound)
 		device_turned_on.emit()
-		print("✅ " + parent_object.name + " turned ON")
 	else:
 		if turn_off_sound:
 			_play_sound(turn_off_sound)
 		device_turned_off.emit()
-		print("✅ " + parent_object.name + " turned OFF")
 
 # --- POWER STATE ---
 
@@ -89,22 +84,19 @@ func _on_plugged_in(outlet: OutletComponent) -> void:
 	power_state_changed.emit(true)
 	powered_on.emit()
 	_update_interaction_text()
-	print("🔌 " + parent_object.name + " now has power")
 
 func _on_unplugged(outlet: OutletComponent) -> void:
 	"""Called when power cord is unplugged from outlet"""
 	has_power = false
 	power_state_changed.emit(false)
 	powered_off.emit()
-	
+
 	# Auto turn off if enabled
 	if auto_turn_off_on_unplug and is_on:
 		is_on = false
 		device_turned_off.emit()
-		print("✅ " + parent_object.name + " turned OFF (unplugged)")
-	
+
 	_update_interaction_text()
-	print("🔌 " + parent_object.name + " lost power")
 
 func _update_interaction_text() -> void:
 	"""Update the interaction text based on power and state"""

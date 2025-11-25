@@ -368,10 +368,3 @@ func drop_carried_object() -> void:
 
 	var drop_force = carried_object.drop_power if carried_object else 1.0
 	carried_object.throw(drop_force)
-
-## Show a hint to the player (for feedback)
-func show_hint(icon: Texture2D, text: String) -> void:
-	"""Show a temporary hint to the player"""
-	# This could be connected to HUD or notification system
-	# TODO: Implement visual hint in HUD
-	pass

@@ -198,19 +198,24 @@ func _find_mesh_instance_in_node(node: Node) -> MeshInstance3D:
 func _initialize_lights_state() -> void:
 	# Set the initial switch state
 	_current_state = SwitchState.ON if starts_on else SwitchState.OFF
-	
+
 	# Set lights to match the starting state
 	_toggle_controlled_lights(starts_on)
-	
+
 	# Position the switch animation to match the state
 	if _animation_player and _animation_player.has_animation(toggle_animation_name):
 		if starts_on:
 			# Switch starts UP (ON position)
-			_animation_player.seek(_animation_player.get_animation(toggle_animation_name).length, true)
+			var anim_length = _animation_player.get_animation(toggle_animation_name).length
+			_animation_player.play(toggle_animation_name)
+			_animation_player.seek(anim_length, true)
+			_animation_player.pause()
 		else:
-			# Switch starts DOWN (OFF position) 
+			# Switch starts DOWN (OFF position)
+			_animation_player.play(toggle_animation_name)
 			_animation_player.seek(0.0, true)
-	
+			_animation_player.pause()
+
 	print("💡 Switch " + switch_id + " initialized: " + ("ON" if starts_on else "OFF"))
 
 func _is_looking_at_switch() -> bool:

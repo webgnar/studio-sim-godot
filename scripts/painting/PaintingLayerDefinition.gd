@@ -7,7 +7,7 @@ class_name PaintingLayerDefinition
 @export var id: String = ""
 @export var texture: Texture2D = null
 @export var unlock_cost: int = 0
-@export var unlocked: bool = true  # Start unlocked for testing
+@export var unlocked: bool = false
 @export var rarity: String = "common"  # common, rare, epic, legendary
 
 func _init(p_id: String = "", p_texture: Texture2D = null, p_cost: int = 0):

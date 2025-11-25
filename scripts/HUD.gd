@@ -53,8 +53,6 @@ func _connect_to_player_interaction_component() -> void:
 	_player_interaction_component.interaction_prompt_changed.connect(_on_prompt_changed)
 	_player_interaction_component.interactive_object_detected.connect(_on_object_detected)
 	_player_interaction_component.nothing_detected.connect(_on_nothing_detected)
-	
-	print("✅ HUD connected to PlayerInteractionComponent")
 
 func _process(_delta: float) -> void:
 	# Update carry hint based on carrying state
@@ -74,12 +72,9 @@ func _on_prompt_changed(prompt_text: String) -> void:
 		interaction_label.show()
 
 func _on_object_detected(_interactable: Node3D) -> void:
-	# Optional: Add visual feedback when object is detected
-	# For example, change crosshair color
 	pass
 
 func _on_nothing_detected() -> void:
-	# Optional: Reset visual feedback
 	if interaction_label:
 		interaction_label.hide()
 

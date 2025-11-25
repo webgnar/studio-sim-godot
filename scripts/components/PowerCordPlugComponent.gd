@@ -60,8 +60,6 @@ func _ready() -> void:
 	# Note: parent_object already added to "interactable" group by InteractionComponent._ready()
 	# Just add to power_plugs group for easy finding
 	add_to_group("power_plugs")
-	
-	print("✅ PowerCordPlugComponent ready: " + parent_object.name)
 
 func _physics_process(delta: float) -> void:
 	super._physics_process(delta)
@@ -126,16 +124,13 @@ func _check_for_nearby_outlets() -> void:
 func plug_into(outlet: OutletComponent) -> bool:
 	"""Plug this cord into an outlet"""
 	if is_plugged:
-		print("⚠️ Already plugged into an outlet!")
 		return false
-	
+
 	if not outlet or outlet.is_occupied:
-		print("⚠️ Outlet is occupied or invalid!")
 		return false
-	
+
 	# Safety check
 	if not is_instance_valid(parent_rigid_body):
-		print("⚠️ Invalid parent RigidBody3D!")
 		return false
 	
 	# Drop from player's hands if being carried
@@ -166,19 +161,16 @@ func plug_into(outlet: OutletComponent) -> bool:
 	
 	# Emit signal
 	plugged_into.emit(outlet)
-	
-	print("🔌 Plugged into outlet: " + outlet.parent_object.name)
+
 	return true
 
 func unplug() -> bool:
 	"""Unplug this cord from its outlet"""
 	if not is_plugged:
-		print("⚠️ Not plugged in!")
 		return false
-	
+
 	# Safety check
 	if not is_instance_valid(parent_rigid_body):
-		print("⚠️ Invalid parent RigidBody3D!")
 		return false
 	
 	var outlet = current_outlet
@@ -208,13 +200,7 @@ func unplug() -> bool:
 	is_plugged = false
 	current_outlet = null
 	interaction_text = "Pick Up Plug"
-	
-	# Don't push the plug - just let it drop naturally
-	# This prevents it from flying away or getting lost
-	# if is_instance_valid(outlet):
-	# 	var push_dir = (parent_rigid_body.global_position - outlet.global_position).normalized()
-	# 	parent_rigid_body.apply_central_impulse(push_dir * 0.2)
-	
+
 	# Don't play sound here - outlet will play the plug out sound
 	
 	# Emit signal

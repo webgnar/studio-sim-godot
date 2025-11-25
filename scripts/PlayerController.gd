@@ -67,13 +67,12 @@ func _ready() -> void:
 	elif has_node("Camera"):
 		_camera = get_node("Camera")
 	else:
-		print("Camera not found! Please check scene structure.")
+		push_error("Camera not found! Please check scene structure.")
 		return
 
 	# Capture the mouse when the game starts.
 	# This hides the cursor and keeps it centered.
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-	print("Mouse captured, camera found at: " + str(_camera.get_path()))
 	
 	# Store the original camera position for head bob calculations
 	_original_camera_position = _camera.position
@@ -89,24 +88,12 @@ func _ready() -> void:
 	# Get reference to animation controller (try common paths)
 	if has_node("Model/PlayerAnimation"):
 		_player_animation = get_node("Model/PlayerAnimation")
-		print("Found PlayerAnimation at: Model/PlayerAnimation")
 	elif has_node("PlayerAnimation"):
 		_player_animation = get_node("PlayerAnimation")
-		print("Found PlayerAnimation at: PlayerAnimation")
 	elif has_node("human"):
 		_player_animation = get_node("human")
-		print("Found PlayerAnimation at: human")
 	elif has_node("AnimationController"):
 		_player_animation = get_node("AnimationController")
-		print("Found PlayerAnimation at: AnimationController")
-	
-	if _player_animation == null:
-		print("PlayerAnimation script not found - animations will be skipped")
-		print("Available child nodes:")
-		for child in get_children():
-			print("  - " + child.name + " (" + child.get_class() + ")")
-	else:
-		print("PlayerAnimation script found and connected!")
 	
 	# Setup interaction component
 	_setup_interaction_component()
@@ -116,16 +103,14 @@ func _setup_interaction_component() -> void:
 	for child in get_children():
 		if child is PlayerInteractionComponent:
 			_interaction_component = child
-			print("Found existing PlayerInteractionComponent")
 			_setup_carry_marker()
 			return
-	
+
 	# If not found, create one programmatically
 	_interaction_component = PlayerInteractionComponent.new()
 	_interaction_component.name = "PlayerInteractionComponent"
 	_interaction_component.interaction_distance = interaction_distance  # Set from PlayerController export
 	add_child(_interaction_component)
-	print("Created PlayerInteractionComponent programmatically")
 	
 	# Setup carry marker
 	_setup_carry_marker()
@@ -133,26 +118,21 @@ func _setup_interaction_component() -> void:
 func _setup_carry_marker() -> void:
 	"""Create or find the carry marker for the interaction component"""
 	if not _camera:
-		print("⚠️ Cannot setup carry marker - no camera found")
 		return
-	
+
 	# Check if CarryMarker already exists
 	var carry_marker = _camera.get_node_or_null("CarryMarker")
-	
+
 	if not carry_marker:
 		# Create it programmatically
 		carry_marker = Marker3D.new()
 		carry_marker.name = "CarryMarker"
 		_camera.add_child(carry_marker)
 		carry_marker.position = Vector3(0, 0, -2)  # 2 units in front of camera
-		print("✅ Created CarryMarker programmatically at position: " + str(carry_marker.position))
-	else:
-		print("✅ Found existing CarryMarker")
-	
+
 	# Assign to interaction component
 	if _interaction_component:
 		_interaction_component.carry_marker = carry_marker
-		print("✅ CarryMarker assigned to PlayerInteractionComponent")
 
 func _process(_delta) -> void:
 	# Update mirrors with camera transform
@@ -318,7 +298,6 @@ func _unhandled_input(event: InputEvent) -> void:
 			# If mouse is not captured, capture it (re-enter game mode)
 			if Input.mouse_mode == Input.MOUSE_MODE_VISIBLE:
 				Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-				print("Mouse captured by clicking")
 				return  # Don't process other interactions while recapturing
 
 	# You can also handle other inputs here, like pausing the game.
@@ -326,10 +305,8 @@ func _unhandled_input(event: InputEvent) -> void:
 		# Toggle mouse capture
 		if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-			print("Mouse released")
 		else:
 			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-			print("Mouse captured")
 
 func _exit_tree() -> void:
 	# Make sure to release the mouse when the player object is removed.

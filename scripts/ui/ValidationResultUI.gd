@@ -226,8 +226,6 @@ func _on_retry_mission():
 	painting_system_2d.start_mission(current_mission)
 	MissionManager.start_mission(current_mission)
 
-	print("ValidationResultUI: Retrying mission '%s'" % current_mission.title)
-
 func _on_back_to_missions():
 	"""Return to mission selection"""
 	_close_dialog()

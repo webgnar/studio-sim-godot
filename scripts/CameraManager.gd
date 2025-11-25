@@ -32,7 +32,6 @@ func register_player_camera(cam: Camera3D):
 	"""Call this from the player script to register the player's main camera"""
 	player_camera = cam
 	current_camera = cam
-	print("CameraManager: Registered player camera")
 
 func enter_camera_zone(zone: Node, blend_time: float = -1.0):
 	"""Called when player enters a camera zone"""
@@ -97,13 +96,8 @@ func switch_to_camera(new_cam: Camera3D, blend_time: float = 0.6):
 	
 	is_blending = true
 	set_process(true)
-	
+
 	emit_signal("camera_switched", from_camera, new_cam)
-	print("CameraManager: Switching from %s to %s over %.2fs" % [
-		from_camera.name if from_camera else "none",
-		new_cam.name,
-		blend_time
-	])
 
 func force_camera_immediate(cam: Camera3D):
 	"""Instantly switch to a camera without blending (for cutscenes)"""
@@ -141,12 +135,11 @@ func _process(delta):
 func _finish_blend(success: bool):
 	"""Complete the camera blend"""
 	is_blending = false
-	
+
 	if success and _target_camera:
 		_target_camera.make_current()
 		current_camera = _target_camera
-		print("CameraManager: Blend complete, now using %s" % current_camera.name)
-	
+
 	_target_camera = null
 	set_process(false)
 
@@ -174,4 +167,3 @@ func set_player_input(enabled: bool):
 	"""Enable or disable player input (used during cutscenes/camera transitions)"""
 	player_input_enabled = enabled
 	# The player script should check CameraManager.player_input_enabled
-	print("CameraManager: Player input %s" % ("enabled" if enabled else "disabled"))
