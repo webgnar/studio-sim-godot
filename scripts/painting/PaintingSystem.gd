@@ -110,31 +110,35 @@ func _process(delta):
 	if selected_layer and Input.is_action_just_pressed("ui_down"):
 		lower_layer_order(selected_layer)
 
-	# Controller trigger handling (use just_pressed to fire once per pull)
-	if Input.is_action_just_pressed("action_primary"):
-		var raycast_result = _raycast_from_mouse()
-		if raycast_result:
-			spawn_sticker(raycast_result.position, raycast_result.normal)
-
-	if Input.is_action_just_pressed("action_secondary"):
-		undo_last_sticker()
-
 func _unhandled_input(event):
 	if not camera or not canvas_root or not input_enabled:
 		return
 
-	# Only process mouse button events in _unhandled_input
-	# Controller triggers are handled in _process() to avoid spam
-	if event is InputEventMouseButton:
-		# Primary action (left click) to place sticker
-		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
-			var raycast_result = _raycast_from_mouse()
-			if raycast_result:
-				spawn_sticker(raycast_result.position, raycast_result.normal)
+	# Handle both mouse button and controller action
+	var should_place_sticker = false
+	var should_undo_sticker = false
 
-		# Secondary action (right click) to undo last placed sticker
-		if event.button_index == MOUSE_BUTTON_RIGHT and event.pressed:
-			undo_last_sticker()
+	if event is InputEventMouseButton:
+		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+			should_place_sticker = true
+		elif event.button_index == MOUSE_BUTTON_RIGHT and event.pressed:
+			should_undo_sticker = true
+	elif event.is_action_pressed("action_primary"):
+		# Controller trigger or other input mapped to action_primary
+		should_place_sticker = true
+	elif event.is_action_pressed("action_secondary"):
+		# Controller trigger or other input mapped to action_secondary
+		should_undo_sticker = true
+
+	# Primary action - place sticker (with interactable check)
+	if should_place_sticker:
+		var raycast_result = _raycast_from_mouse()
+		if raycast_result and not _is_raycast_hitting_interactable(raycast_result):
+			spawn_sticker(raycast_result.position, raycast_result.normal)
+
+	# Secondary action - undo last sticker
+	if should_undo_sticker:
+		undo_last_sticker()
 
 func _handle_mouse_click():
 	"""Handle left mouse click - place new sticker or select existing one"""
@@ -198,6 +202,33 @@ func _raycast_from_mouse() -> Dictionary:
 
 	var result = space_state.intersect_ray(query)
 	return result
+
+func _is_raycast_hitting_interactable(raycast_result: Dictionary) -> bool:
+	"""Check if raycast hit an interactable object (should block sticker placement)"""
+	if not raycast_result or not raycast_result.has("collider"):
+		return false
+
+	var hit_object = raycast_result.collider
+
+	# Walk up the node tree to find if this is part of an interactable
+	var current = hit_object
+	var max_depth = 10  # Prevent infinite loops
+	var depth = 0
+
+	while current and depth < max_depth:
+		# Check if node is in "interactable" group
+		if current.is_in_group("interactable"):
+			return true
+
+		# Check if node has CarryableComponent (pickupable objects)
+		for child in current.get_children():
+			if child is CarryableComponent:
+				return true
+
+		current = current.get_parent()
+		depth += 1
+
+	return false
 
 func _get_layer_at_position(world_position: Vector3) -> PlacedLayer:
 	"""Find if there's a placed layer near the clicked position (world-space)"""
