@@ -36,6 +36,9 @@ var input_enabled: bool = false  # Starts disabled (3D mode is default)
 var camera: Camera3D = null
 var viewport_size: Vector2
 
+# Preview sticker (shows where sticker will be placed before clicking)
+var preview_sprite: Sprite2D = null
+
 func _ready():
 	# Find camera from the painting plane's world (not from SubViewport)
 	if painting_plane:
@@ -58,6 +61,9 @@ func _ready():
 
 	# Load sticker library from folder
 	_load_sticker_library()
+
+	# Create preview sprite
+	_setup_preview_sprite()
 
 func _setup_plane_material():
 	"""Assign SubViewport texture to the painting plane material"""
@@ -89,6 +95,23 @@ func _setup_viewport_background():
 	background.z_index = -1000  # Behind all stickers
 	add_child(background)
 	move_child(background, 0)  # Make it first child
+
+func _setup_preview_sprite():
+	"""Create a semi-transparent preview sprite to show placement before clicking"""
+	preview_sprite = Sprite2D.new()
+	preview_sprite.centered = true
+	preview_sprite.z_index = 9999  # Always on top
+	preview_sprite.modulate = Color(1, 1, 1, 0.5)  # Semi-transparent
+	preview_sprite.visible = false  # Hidden by default
+
+	# Rotate to compensate for horizontal plane orientation (matches actual stickers)
+	preview_sprite.rotation_degrees = -90
+
+	add_child(preview_sprite)
+
+	# Set initial texture if sticker library is loaded
+	if not sticker_library.is_empty():
+		_update_preview_texture()
 
 func _load_sticker_library():
 	"""Load all sticker textures from the sprites/painting layers folder"""
@@ -143,6 +166,9 @@ func _load_sticker_library():
 func _process(delta):
 	if not camera or not input_enabled:
 		return
+
+	# Update preview sprite position based on raycast
+	_update_preview_position()
 
 	# F8 to submit painting for validation (only when mission is active)
 	if Input.is_key_pressed(KEY_F8) and MissionManager and MissionManager.current_mission:
@@ -254,6 +280,35 @@ func _world_to_viewport_coords(world_pos: Vector3) -> Vector2:
 
 	return viewport_pos
 
+func _update_preview_position():
+	"""Update preview sprite position based on raycast from mouse"""
+	if not preview_sprite:
+		return
+
+	var raycast_result = _raycast_from_mouse()
+
+	if raycast_result:
+		# Show preview at raycast position
+		var viewport_pos = _world_to_viewport_coords(raycast_result.position)
+		preview_sprite.position = viewport_pos
+		preview_sprite.visible = true
+	else:
+		# Hide preview when not hovering over canvas
+		preview_sprite.visible = false
+
+func _update_preview_texture():
+	"""Update the preview sprite's texture to match currently selected sticker"""
+	if not preview_sprite or sticker_library.is_empty():
+		return
+
+	var definition = sticker_library[selected_sticker_index]
+	preview_sprite.texture = definition.texture
+
+	# Update scale to match how stickers will actually be placed
+	var texture_size = definition.texture.get_size()
+	var scale_factor = sticker_scale * viewport_size.x / max(texture_size.x, texture_size.y)
+	preview_sprite.scale = Vector2(scale_factor, scale_factor)
+
 func spawn_sticker(world_position: Vector3):
 	"""Spawn a new sticker at the given world position"""
 	if sticker_library.is_empty():
@@ -301,6 +356,9 @@ func cycle_sticker(direction: int):
 	selected_sticker_index = (selected_sticker_index + direction) % sticker_library.size()
 	if selected_sticker_index < 0:
 		selected_sticker_index = sticker_library.size() - 1
+
+	# Update preview to show new sticker
+	_update_preview_texture()
 
 	# Notify UI that the equipped layer changed
 	layer_equipped.emit(selected_sticker_index)
@@ -534,6 +592,10 @@ func verify_painting(target: PaintingMission) -> ValidationResult:
 func set_input_enabled(enabled: bool):
 	"""Enable or disable input processing for this painting system"""
 	input_enabled = enabled
+
+	# Hide preview when mode is disabled
+	if preview_sprite:
+		preview_sprite.visible = false if not enabled else preview_sprite.visible
 
 # Mission system
 func start_mission(mission: PaintingMission):
