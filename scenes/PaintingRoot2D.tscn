@@ -33,6 +33,8 @@ mesh = SubResource("PlaneMesh_m05bo")
 surface_material_override/0 = SubResource("StandardMaterial3D_r7cr7")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="PaintingPlaneMesh"]
+collision_layer = 4
+collision_mask = 0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="PaintingPlaneMesh/StaticBody3D"]
 shape = SubResource("BoxShape3D_616st")

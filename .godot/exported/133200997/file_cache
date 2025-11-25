@@ -5,7 +5,7 @@ res://materials/skeletonskin.tres::388efc2498dae1806d0bc29c02af5e0e::1761713575:
 res://materials/wall.tres::95e96e06d68ff545b1c52073ec97f3a8::1761080715::res://.godot/exported/133200997/export-1c84afdd05f518f898d96b6833632398-wall.res
 res://materials/wood.tres::5f18c53c2621a7fc282482e6f8735e23::1761019173::res://.godot/exported/133200997/export-6bab30075bec6dca5efb9a8285be1fb5-wood.res
 res://scenes/human.tscn::69a111d5920c0beed20be7f22b41c616::1761713575::res://.godot/exported/133200997/export-eba661b9dcbe38bde83515c9e6eec66a-human.scn
-res://scenes/world.tscn::80ef36da255a27f306d219c629958ecc::1764037017::res://.godot/exported/133200997/export-6b9c1b1fd6ae6f795188dfdc89e222b0-world.scn
+res://scenes/world.tscn::e05cd61a4d7ce67607ec262f0c3ac491::1764057255::res://.godot/exported/133200997/export-6b9c1b1fd6ae6f795188dfdc89e222b0-world.scn
 res://materials/windowglass.tres::adf653174df4dbd39e95ec7b4e65fa10::1762148074::res://.godot/exported/133200997/export-9f29ef6ad686a14f33562fc30aac2334-windowglass.res
 res://materials/mirror.tres::0c8bcc20e8f23b169024b73a136da9fc::1761106682::res://.godot/exported/133200997/export-afb007463ebee55a4f65259bdc477898-mirror.res
 res://materials/alley.tres::11a59d6afbb1a76be50b601d327b6a8f::1761807134::res://.godot/exported/133200997/export-41a862069041f200415bdc5cdc28c79f-alley.res
@@ -17,7 +17,7 @@ res://resources/missions/many.tres::6e3e022be847fa9825ac7c1323a61525::1763881417
 res://resources/missions/mission_1763880834.tres::d4b8aa8b63324a4d5a55ba807c20d232::1763880845::res://.godot/exported/133200997/export-2bde1c02cc2b842658d4174d5a3296c8-mission_1763880834.res
 res://resources/missions/newtest.tres::d5caf5f069589232ea86ac3c336eaada::1763883655::res://.godot/exported/133200997/export-6e1d9b7c19006285c339f3237b1d483c-newtest.res
 res://resources/missions/simple.tres::5fb295439e8604b4d2f8a55914df6c2a::1763883827::res://.godot/exported/133200997/export-45d379adacd2fd1d5d0c7e2786becf41-simple.res
-res://scenes/PaintingRoot2D.tscn::46bd5812484daad434dae05846764bfb::1763877990::res://.godot/exported/133200997/export-c9422ff23df7d52dcdbaa5cb19c4dd5d-PaintingRoot2D.scn
+res://scenes/PaintingRoot2D.tscn::b5c49890548aa48bb58a212572bcafc4::1764057255::res://.godot/exported/133200997/export-c9422ff23df7d52dcdbaa5cb19c4dd5d-PaintingRoot2D.scn
 res://scenes/PaintingRoot.tscn::16a314f2db2544bc5d9d0dc50f08ba26::1764019379::res://.godot/exported/133200997/export-7698917d71931537be1d093dc2a1ded6-PaintingRoot.scn
 res://default.tscn::090a9f7ae85fa08e3c228d923d165168::1762583134::res://.godot/exported/133200997/export-ecadf3196f98fed7b5722fd2df0d4094-default.scn
 res://scenes/camera stuff/CameraZone.tscn::0c03a9cf1a34db73ade279122c18b488::1762549577::res://.godot/exported/133200997/export-13a86c072fe0281561605d9f8d548fb6-CameraZone.scn
@@ -34,7 +34,7 @@ res://scenes/old stuff/wall_outlet.tscn::eb6a10f917c2cb997d400500c5d7d1c7::17621
 res://scenes/UI/HUD.tscn::bb888f88a73943ea38668541791d048a::1762072388::res://.godot/exported/133200997/export-0813f3669fea0b1ce94ab703e892232f-HUD.scn
 res://scenes/UI/MissionAuthoringUI.tscn::99843f9ebbec9cdcc05526fc2ba3b687::1763748532::res://.godot/exported/133200997/export-c6521c9f78354baab0b2fd229380b481-MissionAuthoringUI.scn
 res://scenes/UI/MissionCard.tscn::6d0e64c630b348ee99b7ec5248548e66::1764016211::res://.godot/exported/133200997/export-fcf30175fa1ff2590c28e92723b94d58-MissionCard.scn
-res://scenes/UI/MissionSelectionUI.tscn::d553603acd0ad366e7d49a54a114db8e::1763966144::res://.godot/exported/133200997/export-f21238a75352907a26f529575b639735-MissionSelectionUI.scn
+res://scenes/UI/MissionSelectionUI.tscn::d553603acd0ad366e7d49a54a114db8e::1764057255::res://.godot/exported/133200997/export-f21238a75352907a26f529575b639735-MissionSelectionUI.scn
 res://scenes/UI/PaintingUI.tscn::fa19481ff61db84d2cf11102c9e1ebb1::1764018092::res://.godot/exported/133200997/export-197e15c0e662bbb56658e384e0a54c96-PaintingUI.scn
 res://scenes/UI/StickerSlot.tscn::769f726528c50717cffd1456413adc69::1764016211::res://.godot/exported/133200997/export-1fcf09436620f5c9e4d3b02c5aeb2538-StickerSlot.scn
-res://scenes/UI/ValidationResultUI.tscn::5f9a48561c72ce7b201e7d0a3d8e4da0::1763884163::res://.godot/exported/133200997/export-1a01ea4a9204e9999dc95b08c8cfe93a-ValidationResultUI.scn
+res://scenes/UI/ValidationResultUI.tscn::5f9a48561c72ce7b201e7d0a3d8e4da0::1764057255::res://.godot/exported/133200997/export-1a01ea4a9204e9999dc95b08c8cfe93a-ValidationResultUI.scn

@@ -1,11 +1,6 @@
-res://scenes/world.tscn
-res://scripts/PlayerController.gd
+res://scenes/PaintingRoot2D.tscn
 res://shaders/mirror.gdshader
 res://models/new_array_mesh.tres
 res://models/new_array_mesh2.tres
 res://models/new_array_mesh3.tres
 res://shaders/outline.gdshader
-res://scripts/painting/PaintingSystem2D.gd
-res://scripts/painting/PaintingSystem.gd
-res://scripts/CameraManager.gd
-res://scenes/PaintingRoot2D.tscn
