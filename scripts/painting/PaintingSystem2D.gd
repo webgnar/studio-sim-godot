@@ -160,9 +160,9 @@ func _process(delta):
 		delete_selected_layer()
 
 	# Handle rotation of selected layer (90 degree snapping)
-	if selected_layer and Input.is_action_just_pressed("ui_left"):
+	if selected_layer and Input.is_action_just_pressed("rotate_counter"):
 		rotate_layer_90(selected_layer, -1)  # Counter-clockwise
-	if selected_layer and Input.is_action_just_pressed("ui_right"):
+	if selected_layer and Input.is_action_just_pressed("rotate_clockwise"):
 		rotate_layer_90(selected_layer, 1)  # Clockwise
 
 	# Handle z-order adjustment

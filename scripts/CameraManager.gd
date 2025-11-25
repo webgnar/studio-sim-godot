@@ -17,6 +17,8 @@ var _blend_timer: float = 0.0
 var _blend_duration: float = 0.0
 var _start_transform: Transform3D
 var _end_transform: Transform3D
+var _start_fov: float = 75.0
+var _end_fov: float = 75.0
 var _target_camera: Camera3D = null
 var _transition_camera: Camera3D = null
 
@@ -85,10 +87,13 @@ func switch_to_camera(new_cam: Camera3D, blend_time: float = 0.6):
 	# Store start and end transforms
 	if current_camera:
 		_start_transform = current_camera.global_transform
+		_start_fov = current_camera.fov
 	else:
 		_start_transform = new_cam.global_transform
-	
+		_start_fov = new_cam.fov
+
 	_end_transform = new_cam.global_transform
+	_end_fov = new_cam.fov
 	
 	is_blending = true
 	set_process(true)
@@ -117,10 +122,13 @@ func _process(delta):
 	
 	# Smooth interpolation using ease-in-out
 	var smooth_t = _smooth_step(t)
-	
+
 	# Interpolate transform
 	var interp_transform = _start_transform.interpolate_with(_end_transform, smooth_t)
 	_transition_camera.global_transform = interp_transform
+
+	# Interpolate FOV
+	_transition_camera.fov = lerp(_start_fov, _end_fov, smooth_t)
 	
 	# Make transition camera active
 	if not _transition_camera.is_current():

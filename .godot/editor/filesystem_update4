@@ -7,3 +7,4 @@ res://models/new_array_mesh3.tres
 res://shaders/outline.gdshader
 res://scripts/painting/PaintingSystem2D.gd
 res://scripts/painting/PaintingSystem.gd
+res://scripts/CameraManager.gd
