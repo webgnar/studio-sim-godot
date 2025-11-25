@@ -13,6 +13,7 @@ extends CharacterBody3D
 
 @export_group("Camera Stats")
 @export var sensitivity: float = 0.003
+@export var joystick_sensitivity_multiplier: float = 100.0  # How much to scale joystick input
 
 @export_group("Head Bob")
 @export var bob_frequency: float = 2.0
@@ -206,6 +207,34 @@ func _physics_process(delta: float) -> void:
 			var new_horizontal := current_horizontal.lerp(target_horizontal, air_control * delta * 3.0)
 			velocity.x = new_horizontal.x
 			velocity.z = new_horizontal.z
+
+	# --- JOYSTICK CAMERA LOOK ---
+	# Handle camera rotation with right stick (axes 2 and 3)
+	if _camera:
+		var look_x = Input.get_joy_axis(0, JOY_AXIS_RIGHT_X)  # Axis 2
+		var look_y = Input.get_joy_axis(0, JOY_AXIS_RIGHT_Y)  # Axis 3
+
+		# Apply deadzone to avoid drift
+		var deadzone = 0.15
+		if abs(look_x) < deadzone:
+			look_x = 0.0
+		if abs(look_y) < deadzone:
+			look_y = 0.0
+
+		# Apply joystick camera rotation (scaled for smooth feel)
+		if look_x != 0.0 or look_y != 0.0:
+			var joystick_sens = sensitivity * joystick_sensitivity_multiplier
+
+			# Rotate player horizontally (yaw)
+			rotate_y(-look_x * joystick_sens * delta)
+
+			# Rotate camera vertically (pitch)
+			_camera.rotate_x(-look_y * joystick_sens * delta)
+
+			# Clamp vertical rotation
+			var cam_rotation := _camera.rotation
+			cam_rotation.x = clamp(cam_rotation.x, deg_to_rad(-80), deg_to_rad(80))
+			_camera.rotation = cam_rotation
 
 	# --- DYNAMIC FOV ---
 	# Adjust FOV based on movement speed for sense of speed
