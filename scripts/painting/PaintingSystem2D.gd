@@ -38,6 +38,7 @@ var viewport_size: Vector2
 
 # Preview sticker (shows where sticker will be placed before clicking)
 var preview_sprite: Sprite2D = null
+var preview_rotation: float = -90.0  # Rotation in degrees (starts at -90 to match plane orientation)
 
 func _ready():
 	# Find camera from the painting plane's world (not from SubViewport)
@@ -100,12 +101,11 @@ func _setup_preview_sprite():
 	"""Create a semi-transparent preview sprite to show placement before clicking"""
 	preview_sprite = Sprite2D.new()
 	preview_sprite.centered = true
-	preview_sprite.z_index = 9999  # Always on top
 	preview_sprite.modulate = Color(1, 1, 1, 0.5)  # Semi-transparent
 	preview_sprite.visible = false  # Hidden by default
 
 	# Rotate to compensate for horizontal plane orientation (matches actual stickers)
-	preview_sprite.rotation_degrees = -90
+	preview_sprite.rotation_degrees = preview_rotation
 
 	add_child(preview_sprite)
 
@@ -185,11 +185,11 @@ func _process(delta):
 	if Input.is_action_just_pressed("ui_text_delete"):
 		delete_selected_layer()
 
-	# Handle rotation of selected layer (90 degree snapping)
-	if selected_layer and Input.is_action_just_pressed("rotate_counter"):
-		rotate_layer_90(selected_layer, -1)  # Counter-clockwise
-	if selected_layer and Input.is_action_just_pressed("rotate_clockwise"):
-		rotate_layer_90(selected_layer, 1)  # Clockwise
+	# Handle rotation of preview sprite (90 degree snapping)
+	if Input.is_action_just_pressed("rotate_counter"):
+		rotate_preview(-1)  # Counter-clockwise
+	if Input.is_action_just_pressed("rotate_clockwise"):
+		rotate_preview(1)  # Clockwise
 
 	# Handle z-order adjustment
 	if selected_layer and Input.is_action_just_pressed("ui_up"):
@@ -292,6 +292,9 @@ func _update_preview_position():
 		var viewport_pos = _world_to_viewport_coords(raycast_result.position)
 		preview_sprite.position = viewport_pos
 		preview_sprite.visible = true
+
+		# Set z_index higher than all placed stickers to ensure it renders on top
+		preview_sprite.z_index = next_order + 100
 	else:
 		# Hide preview when not hovering over canvas
 		preview_sprite.visible = false
@@ -308,6 +311,23 @@ func _update_preview_texture():
 	var texture_size = definition.texture.get_size()
 	var scale_factor = sticker_scale * viewport_size.x / max(texture_size.x, texture_size.y)
 	preview_sprite.scale = Vector2(scale_factor, scale_factor)
+
+func rotate_preview(direction: int):
+	"""Rotate the preview sprite by 90 degrees"""
+	if not preview_sprite:
+		return
+
+	# Snap to 90-degree increments
+	var rotation_step = 90.0 * direction
+	preview_rotation += rotation_step
+
+	# Normalize to 0-360 range
+	preview_rotation = fmod(preview_rotation, 360.0)
+	if preview_rotation < 0:
+		preview_rotation += 360.0
+
+	# Apply rotation to preview sprite
+	preview_sprite.rotation_degrees = preview_rotation
 
 func spawn_sticker(world_position: Vector3):
 	"""Spawn a new sticker at the given world position"""
@@ -332,15 +352,15 @@ func spawn_sticker(world_position: Vector3):
 	var scale_factor = sticker_scale * viewport_size.x / max(texture_size.x, texture_size.y)
 	sprite.scale = Vector2(scale_factor, scale_factor)
 
-	# Rotate to compensate for horizontal plane orientation (matches 3D system behavior)
-	sprite.rotation_degrees = -90
+	# Apply rotation from preview sprite
+	sprite.rotation_degrees = preview_rotation
 
 	# Add to canvas (this Node2D is inside the SubViewport)
 	add_child(sprite)
 
 	# Create placed layer data
 	var placed = PlacedLayer2D.new(definition.id, sprite, next_order)
-	placed.rotation_deg = -90.0  # Track initial rotation offset
+	placed.rotation_deg = preview_rotation  # Track the rotation that was set in preview
 	placed_layers.append(placed)
 
 	next_order += 1
@@ -363,22 +383,10 @@ func cycle_sticker(direction: int):
 	# Notify UI that the equipped layer changed
 	layer_equipped.emit(selected_sticker_index)
 
-func rotate_layer_90(layer: PlacedLayer2D, direction: int):
-	"""Rotate a layer by 90 degrees (snapping)"""
-	if not layer or not layer.node:
-		return
-
-	# Snap to 90-degree increments
-	var rotation_step = 90.0 * direction
-	layer.rotation_deg += rotation_step
-
-	# Normalize to 0-360 range
-	layer.rotation_deg = fmod(layer.rotation_deg, 360.0)
-	if layer.rotation_deg < 0:
-		layer.rotation_deg += 360.0
-
-	# Apply rotation (Sprite2D uses rotation property directly)
-	layer.node.rotation_degrees += rotation_step
+# DEPRECATED: Rotation now only works on preview sprite before placement
+# func rotate_layer_90(layer: PlacedLayer2D, direction: int):
+# 	"""Rotate a layer by 90 degrees (snapping)"""
+# 	# This function is no longer used - stickers can only be rotated before placement
 
 func raise_layer_order(layer: PlacedLayer2D):
 	"""Increase layer's z-order (bring forward)"""

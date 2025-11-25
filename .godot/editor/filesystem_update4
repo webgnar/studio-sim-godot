@@ -8,3 +8,4 @@ res://shaders/outline.gdshader
 res://scripts/painting/PaintingSystem2D.gd
 res://scripts/painting/PaintingSystem.gd
 res://scripts/CameraManager.gd
+res://scenes/PaintingRoot2D.tscn

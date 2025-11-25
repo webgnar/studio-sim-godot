@@ -1195,7 +1195,7 @@ visible = false
 transform = Transform3D(-6.862688e-08, 0, 1.57, 0, 1.57, 0, -1.57, 0, -6.862688e-08, -3.6013913, 2.8738532, -1.7322651)
 
 [node name="PaintingRoot2d" parent="." instance=ExtResource("75_ca4ee")]
-transform = Transform3D(-4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0, 1, -3.4057033, 1.5300002, 7)
+transform = Transform3D(-4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0, 1, -3.4057033, 2.5300002, 7)
 
 [node name="Node3D" type="Node3D" parent="."]
 script = ExtResource("72_r5yoc")
