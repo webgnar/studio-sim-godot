@@ -171,20 +171,31 @@ func _process(delta):
 	if selected_layer and Input.is_action_just_pressed("ui_down"):
 		lower_layer_order(selected_layer)
 
-func _unhandled_input(event):
-	if not camera or not input_enabled:
-		return
-
-	# Primary action (left click / RT / R2) to place sticker
-	# Using _unhandled_input ensures we don't place stickers when clicking on interactable objects
-	if event.is_action_pressed("action_primary"):
+	# Controller trigger handling (use just_pressed to fire once per pull)
+	if Input.is_action_just_pressed("action_primary"):
 		var raycast_result = _raycast_from_mouse()
 		if raycast_result:
 			spawn_sticker(raycast_result.position)
 
-	# Secondary action (right click / LT / L2) to undo last placed sticker
-	if event.is_action_pressed("action_secondary"):
+	if Input.is_action_just_pressed("action_secondary"):
 		undo_last_sticker()
+
+func _unhandled_input(event):
+	if not camera or not input_enabled:
+		return
+
+	# Only process mouse button events in _unhandled_input
+	# Controller triggers are handled in _process() to avoid spam
+	if event is InputEventMouseButton:
+		# Primary action (left click) to place sticker
+		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+			var raycast_result = _raycast_from_mouse()
+			if raycast_result:
+				spawn_sticker(raycast_result.position)
+
+		# Secondary action (right click) to undo last placed sticker
+		if event.button_index == MOUSE_BUTTON_RIGHT and event.pressed:
+			undo_last_sticker()
 
 func _raycast_from_mouse() -> Dictionary:
 	"""Perform raycast from camera through mouse position"""

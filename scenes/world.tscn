@@ -640,6 +640,7 @@ walk_speed = 3.0
 sprint_speed = 6.0
 air_control = 0.7
 inertia = 7.0
+joystick_sensitivity_multiplier = 500.0
 bob_frequency = 9.0
 bob_amplitude = 0.07
 max_fov_increase = 10.0
