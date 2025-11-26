@@ -85,7 +85,7 @@ func _load_sticker_library():
 			push_error("Failed to load sticker texture: %s" % path)
 
 func _process(delta):
-	if not camera or not canvas_root or not input_enabled:
+	if not camera or not canvas_root:
 		return
 
 	# Cycle stickers with Q/E keys or mouse wheel
@@ -110,71 +110,15 @@ func _process(delta):
 	if selected_layer and Input.is_action_just_pressed("ui_down"):
 		lower_layer_order(selected_layer)
 
-func _unhandled_input(event):
-	if not camera or not canvas_root or not input_enabled:
-		return
+func handle_primary_action(raycast_result: Dictionary):
+	"""Called by PaintingModeManager when user clicks to place sticker"""
+	if raycast_result and raycast_result.has("position") and raycast_result.has("normal"):
+		spawn_sticker(raycast_result.position, raycast_result.normal)
 
-	# Handle both mouse button and controller action
-	var should_place_sticker = false
-	var should_undo_sticker = false
+func handle_secondary_action():
+	"""Called by PaintingModeManager when user right-clicks to undo"""
+	undo_last_sticker()
 
-	if event is InputEventMouseButton:
-		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
-			should_place_sticker = true
-		elif event.button_index == MOUSE_BUTTON_RIGHT and event.pressed:
-			should_undo_sticker = true
-	elif event.is_action_pressed("action_primary"):
-		# Controller trigger or other input mapped to action_primary
-		should_place_sticker = true
-	elif event.is_action_pressed("action_secondary"):
-		# Controller trigger or other input mapped to action_secondary
-		should_undo_sticker = true
-
-	# Primary action - place sticker (with interactable check)
-	if should_place_sticker:
-		var raycast_result = _raycast_from_mouse()
-		if raycast_result and not _is_raycast_hitting_interactable(raycast_result):
-			spawn_sticker(raycast_result.position, raycast_result.normal)
-
-	# Secondary action - undo last sticker
-	if should_undo_sticker:
-		undo_last_sticker()
-
-func _handle_mouse_click():
-	"""Handle left mouse click - place new sticker or select existing one"""
-	var raycast_result = _raycast_from_mouse()
-
-	if not raycast_result:
-		return
-
-	var hit_position = raycast_result.position
-	var hit_normal = raycast_result.normal
-
-	# Check if we clicked on an existing sticker (with better tolerance)
-	var clicked_layer = _get_layer_at_position(hit_position)
-
-	if clicked_layer:
-		# Select existing layer and prepare for dragging
-		selected_layer = clicked_layer
-		is_dragging = true
-	else:
-		# Only place new sticker if we're not currently dragging
-		if not is_dragging:
-			spawn_sticker(hit_position, hit_normal)
-
-func _handle_drag_motion():
-	"""Handle mouse motion while dragging a sticker (world-space)"""
-	var raycast_result = _raycast_from_mouse()
-
-	if raycast_result and selected_layer and selected_layer.node:
-		var hit_position = raycast_result.position
-		var hit_normal = raycast_result.normal
-
-		# Calculate z-offset to stay in front of surface
-		var z_offset = 0.001 + (selected_layer.order * 0.0001)
-
-		# Use world-space positioning
-		selected_layer.node.global_position = hit_position + (hit_normal * z_offset)
 
 func _raycast_from_mouse() -> Dictionary:
 	"""Perform raycast from camera through mouse position"""
@@ -203,32 +147,6 @@ func _raycast_from_mouse() -> Dictionary:
 	var result = space_state.intersect_ray(query)
 	return result
 
-func _is_raycast_hitting_interactable(raycast_result: Dictionary) -> bool:
-	"""Check if raycast hit an interactable object (should block sticker placement)"""
-	if not raycast_result or not raycast_result.has("collider"):
-		return false
-
-	var hit_object = raycast_result.collider
-
-	# Walk up the node tree to find if this is part of an interactable
-	var current = hit_object
-	var max_depth = 10  # Prevent infinite loops
-	var depth = 0
-
-	while current and depth < max_depth:
-		# Check if node is in "interactable" group
-		if current.is_in_group("interactable"):
-			return true
-
-		# Check if node has CarryableComponent (pickupable objects)
-		for child in current.get_children():
-			if child is CarryableComponent:
-				return true
-
-		current = current.get_parent()
-		depth += 1
-
-	return false
 
 func _get_layer_at_position(world_position: Vector3) -> PlacedLayer:
 	"""Find if there's a placed layer near the clicked position (world-space)"""
@@ -433,7 +351,7 @@ func verify_painting(target: PaintingMission) -> bool:
 
 	return true
 
-# Mode management
+# Mode management (deprecated - input always enabled now)
 func set_input_enabled(enabled: bool):
-	"""Enable or disable input processing for this painting system"""
-	input_enabled = enabled
+	"""Deprecated: Input is now always enabled. Routing handled by PaintingModeManager."""
+	pass  # No-op for backward compatibility

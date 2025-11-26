@@ -2,7 +2,6 @@ extends Control
 
 ## UI for creating missions from the current 2D painting canvas
 ## Keyboard-driven - press F6 to open dialog
-## Only functional in 2D mode
 
 @onready var dialog = $Dialog
 @onready var id_input = $Dialog/MarginContainer/VBoxContainer/IDInput
@@ -15,14 +14,8 @@ extends Control
 
 var authoring_tool: MissionAuthoringTool = null
 var painting_system_2d: PaintingSystem2D = null
-var is_2d_mode: bool = false
 
 func _ready():
-	# Connect to mode manager
-	if PaintingModeManager:
-		PaintingModeManager.mode_changed.connect(_on_mode_changed)
-		is_2d_mode = (PaintingModeManager.current_mode == PaintingModeManager.Mode.MODE_2D)
-
 	# Hide dialog initially
 	dialog.visible = false
 
@@ -34,19 +27,8 @@ func set_painting_system(system_2d: PaintingSystem2D):
 	painting_system_2d = system_2d
 	authoring_tool = MissionAuthoringTool.new(system_2d)
 
-func _on_mode_changed(new_mode):
-	"""Track current mode"""
-	is_2d_mode = (new_mode == PaintingModeManager.Mode.MODE_2D)
-
-	# Close dialog if switching away from 2D mode
-	if not is_2d_mode and dialog.visible:
-		_close_dialog()
-
 func _input(event):
 	"""Handle keyboard shortcuts"""
-	# Only process input in 2D mode
-	if not is_2d_mode:
-		return
 
 	# F6 to open mission authoring dialog
 	if event is InputEventKey and event.pressed and event.keycode == KEY_F6 and not dialog.visible:

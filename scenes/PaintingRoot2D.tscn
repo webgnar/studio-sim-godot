@@ -32,7 +32,7 @@ sticker_scale = 0.5
 mesh = SubResource("PlaneMesh_m05bo")
 surface_material_override/0 = SubResource("StandardMaterial3D_r7cr7")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="PaintingPlaneMesh"]
+[node name="StaticBody3D" type="StaticBody3D" parent="PaintingPlaneMesh" groups=["2d_painting_canvas"]]
 collision_layer = 4
 collision_mask = 0
 

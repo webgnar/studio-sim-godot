@@ -22,7 +22,7 @@ var placed_layers: Array[PlacedLayer2D] = []
 var selected_sticker_index: int = 0  # Which sticker is selected from library
 var selected_layer: PlacedLayer2D = null  # Currently selected placed layer
 var next_order: int = 0  # Next available z-index value
-var input_enabled: bool = false  # Starts disabled (3D mode is default)
+var input_enabled: bool = true  # Always enabled (routing handled by PaintingModeManager)
 
 # Input settings
 @export var raycast_distance: float = 10.0
@@ -164,7 +164,7 @@ func _load_sticker_library():
 			push_error("Failed to load sticker texture: %s" % path)
 
 func _process(delta):
-	if not camera or not input_enabled:
+	if not camera:
 		return
 
 	# Update preview sprite position based on raycast
@@ -197,31 +197,14 @@ func _process(delta):
 	if selected_layer and Input.is_action_just_pressed("ui_down"):
 		lower_layer_order(selected_layer)
 
-	# Controller trigger handling (use just_pressed to fire once per pull)
-	if Input.is_action_just_pressed("action_primary"):
-		var raycast_result = _raycast_from_mouse()
-		if raycast_result:
-			spawn_sticker(raycast_result.position)
+func handle_primary_action(raycast_result: Dictionary):
+	"""Called by PaintingModeManager when user clicks on canvas"""
+	if raycast_result and raycast_result.has("position"):
+		spawn_sticker(raycast_result.position)
 
-	if Input.is_action_just_pressed("action_secondary"):
-		undo_last_sticker()
-
-func _unhandled_input(event):
-	if not camera or not input_enabled:
-		return
-
-	# Only process mouse button events in _unhandled_input
-	# Controller triggers are handled in _process() to avoid spam
-	if event is InputEventMouseButton:
-		# Primary action (left click) to place sticker
-		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
-			var raycast_result = _raycast_from_mouse()
-			if raycast_result:
-				spawn_sticker(raycast_result.position)
-
-		# Secondary action (right click) to undo last placed sticker
-		if event.button_index == MOUSE_BUTTON_RIGHT and event.pressed:
-			undo_last_sticker()
+func handle_secondary_action():
+	"""Called by PaintingModeManager when user right-clicks"""
+	undo_last_sticker()
 
 func _raycast_from_mouse() -> Dictionary:
 	"""Perform raycast from camera through mouse position"""
@@ -591,14 +574,10 @@ func verify_painting(target: PaintingMission) -> ValidationResult:
 
 	return result
 
-# Mode management
+# Mode management (deprecated - input always enabled now)
 func set_input_enabled(enabled: bool):
-	"""Enable or disable input processing for this painting system"""
-	input_enabled = enabled
-
-	# Hide preview when mode is disabled
-	if preview_sprite:
-		preview_sprite.visible = false if not enabled else preview_sprite.visible
+	"""Deprecated: Input is now always enabled. Routing handled by PaintingModeManager."""
+	pass  # No-op for backward compatibility
 
 # Mission system
 func start_mission(mission: PaintingMission):

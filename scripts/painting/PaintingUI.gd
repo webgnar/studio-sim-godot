@@ -30,39 +30,15 @@ var current_scroll_offset: float = 0.0  # Current scroll position
 var target_scroll_offset: float = 0.0  # Target scroll position (for smooth animation)
 
 func _ready():
-	# Connect to mode manager to handle system switching
-	if PaintingModeManager:
-		PaintingModeManager.mode_changed.connect(_on_mode_changed)
+	# Use 2D system as primary reference (missions use 2D, sticker library identical)
+	active_system = painting_system_2d if painting_system_2d else painting_system_3d
 
-	# Set initial active system based on current mode
-	_set_active_system(PaintingModeManager.current_mode)
+	if active_system:
+		active_system.layer_equipped.connect(_on_layer_equipped)
 
 	# Build the UI once the painting system is ready
 	call_deferred("_build_carousel")
 
-func _set_active_system(mode):
-	"""Switch to the appropriate painting system based on mode"""
-	# Disconnect from old system if connected
-	if active_system and active_system.layer_equipped.is_connected(_on_layer_equipped):
-		active_system.layer_equipped.disconnect(_on_layer_equipped)
-
-	# Set new active system
-	if mode == PaintingModeManager.Mode.MODE_3D:
-		active_system = painting_system_3d
-	else:
-		active_system = painting_system_2d
-
-	# Connect to new system
-	if active_system:
-		active_system.layer_equipped.connect(_on_layer_equipped)
-	else:
-		push_error("PaintingUI: Active system is null for mode %d" % mode)
-
-func _on_mode_changed(new_mode):
-	"""Called when painting mode switches between 3D and 2D"""
-	_set_active_system(new_mode)
-	# Rebuild carousel for the new system
-	_build_carousel()
 
 func _build_carousel():
 	"""Create all the slot UI elements dynamically"""

@@ -54,12 +54,11 @@ func _search_for_painting_system(node: Node) -> PaintingSystem2D:
 	return null
 
 func _input(event):
-	# F7 to open mission selection dialog (only in 2D painting mode)
+	# F7 to open mission selection dialog
 	if event is InputEventKey and event.pressed and event.keycode == KEY_F7 and not dialog.visible:
-		if PaintingModeManager and PaintingModeManager.current_mode == PaintingModeManager.Mode.MODE_2D:
-			_open_dialog()
-			get_viewport().set_input_as_handled()
-			return
+		_open_dialog()
+		get_viewport().set_input_as_handled()
+		return
 
 	# When dialog is visible, handle input
 	if dialog.visible:

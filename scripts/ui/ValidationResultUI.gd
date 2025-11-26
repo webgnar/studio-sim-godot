@@ -235,11 +235,8 @@ func _on_back_to_missions():
 
 	# Open mission selection UI
 	if mission_selection_ui:
-		# The mission selection UI will handle opening itself
-		# We just need to make sure we're in 2D mode
-		if PaintingModeManager and PaintingModeManager.current_mode == PaintingModeManager.Mode.MODE_2D:
-			# Trigger F7 key press to open mission selection
-			var event = InputEventKey.new()
-			event.keycode = KEY_F7
-			event.pressed = true
-			Input.parse_input_event(event)
+		# Trigger F7 key press to open mission selection
+		var event = InputEventKey.new()
+		event.keycode = KEY_F7
+		event.pressed = true
+		Input.parse_input_event(event)
