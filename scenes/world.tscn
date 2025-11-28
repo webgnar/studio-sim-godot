@@ -1,4 +1,4 @@
-[gd_scene load_steps=119 format=3 uid="uid://cnmivki1rop3b"]
+[gd_scene load_steps=122 format=3 uid="uid://cnmivki1rop3b"]
 
 [ext_resource type="Material" uid="uid://wwlsotlotycw" path="res://materials/wood.tres" id="1_4mrxx"]
 [ext_resource type="Script" uid="uid://d4bxpnphvld1d" path="res://scripts/PlayerController.gd" id="1_4wyf3"]
@@ -58,7 +58,11 @@
 [ext_resource type="PackedScene" uid="uid://drijdy8rlc67s" path="res://models/outside/treeSmallOak2.gltf" id="69_40xph"]
 [ext_resource type="PackedScene" uid="uid://cqwacwlbuqbe" path="res://models/outside/crazy2.gltf" id="70_8lgfd"]
 [ext_resource type="PackedScene" uid="uid://k5bi7w8gtday" path="res://scenes/camera stuff/CameraZone.tscn" id="71_dyafi"]
+[ext_resource type="PackedScene" uid="uid://bsbvqf088sigr" path="res://models/props/woodPallet.gltf" id="71_r5yoc"]
 [ext_resource type="PackedScene" uid="uid://btuhdnbc2hjii" path="res://scenes/PaintingRoot.tscn" id="73_1m1ue"]
+[ext_resource type="PackedScene" uid="uid://d2y06butup31i" path="res://scenes/objects/table.tscn" id="73_ca4ee"]
+[ext_resource type="PackedScene" uid="uid://yp2r0ssmmrwa" path="res://models/props/computer.gltf" id="73_ntuqo"]
+[ext_resource type="PackedScene" uid="uid://itduhs107nac" path="res://models/props/water_cooler.gltf" id="74_ca4ee"]
 [ext_resource type="PackedScene" uid="uid://bqbqfg2mfb0iw" path="res://scenes/UI/PaintingUI.tscn" id="74_ntuqo"]
 [ext_resource type="PackedScene" uid="uid://bshsrjrokypta" path="res://scenes/PaintingRoot2D.tscn" id="75_ca4ee"]
 [ext_resource type="PackedScene" uid="uid://c7vk8n8k7j8k8" path="res://scenes/UI/MissionAuthoringUI.tscn" id="76_author"]
@@ -394,6 +398,9 @@ albedo_texture = SubResource("ViewportTexture_e68xj")
 [sub_resource type="BoxShape3D" id="BoxShape3D_r5yoc"]
 size = Vector3(6.555237, 4.649658, 3.814176)
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_dyafi"]
+size = Vector3(2.2, 0.21, 1.46)
+
 [node name="World" type="Node3D"]
 script = ExtResource("1_qaasp")
 
@@ -419,6 +426,12 @@ painting_system_2d = NodePath("../../PaintingRoot2d/CanvasViewport/CanvasRoot")
 [node name="DevTools_Layer" type="CanvasLayer" parent="."]
 
 [node name="MissionAuthoringUi" parent="DevTools_Layer" instance=ExtResource("76_author")]
+
+[node name="PaintingRoot" parent="." instance=ExtResource("73_1m1ue")]
+transform = Transform3D(-6.862688e-08, 0, 1.57, 0, 1.57, 0, -1.57, 0, -6.862688e-08, -3.6013913, 2.8738532, -1.7322651)
+
+[node name="PaintingRoot2d" parent="." instance=ExtResource("75_ca4ee")]
+transform = Transform3D(-4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0, 1, -3.4057033, 2.5300002, 7)
 
 [node name="background" type="Node3D" parent="."]
 visible = false
@@ -996,7 +1009,7 @@ size = Vector2i(256, 256)
 transform = Transform3D(1.2796953e-07, 0.21836469, 0.9758673, -2.8635068e-08, 0.9758673, -0.21836469, -1, 0, 1.3113417e-07, 4.2467685, 1.1345179, 6.6101465)
 
 [node name="cardboard box" parent="." instance=ExtResource("26_ts3gi")]
-transform = Transform3D(0.33, 0, 0, 0, 0.33, 0, 0, 0, 0.33, 0.23469448, 0.29857874, 11.047825)
+transform = Transform3D(0.33, 0, 0, 0, 0.33, 0, 0, 0, 0.33, 2.5710077, 0.29857874, 13.236617)
 
 [node name="BoxInteraction" type="Node3D" parent="cardboard box"]
 script = ExtResource("31_x28ej")
@@ -1189,13 +1202,30 @@ transform = Transform3D(1, -2.1855696e-08, -5.8562186e-09, 2.1855715e-08, 1.0000
 [node name="Label3D" parent="CameraZone3 inside" index="3"]
 visible = false
 
-[node name="PaintingRoot" parent="." instance=ExtResource("73_1m1ue")]
-transform = Transform3D(-6.862688e-08, 0, 1.57, 0, 1.57, 0, -1.57, 0, -6.862688e-08, -3.6013913, 2.8738532, -1.7322651)
+[node name="pallet" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.7369434, 1, 12.688065)
+collision_layer = 8
+collision_mask = 3
 
-[node name="PaintingRoot2d" parent="." instance=ExtResource("75_ca4ee")]
-transform = Transform3D(-4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0, 1, -3.4057033, 2.5300002, 7)
+[node name="model" parent="pallet" instance=ExtResource("71_r5yoc")]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
 
-[node name="Node3D" type="Node3D" parent="."]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="pallet"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.05, -0.07, -0.1)
+shape = SubResource("BoxShape3D_dyafi")
+
+[node name="CarryableComponent" type="Node3D" parent="pallet"]
+script = ExtResource("46_e68xj")
+metadata/_custom_type_script = "uid://cbwg344irqecy"
+
+[node name="computer" parent="." instance=ExtResource("73_ntuqo")]
+transform = Transform3D(9.835062e-09, 0, 0.074999996, 0, 0.074999996, 0, -0.074999996, 0, 9.835062e-09, 1.9934692, 1.41991, 8.751638)
+
+[node name="table" parent="." instance=ExtResource("73_ca4ee")]
+transform = Transform3D(0, 0, 0.099999994, 0, 0.1, 0, -0.099999994, 0, 0, 1.8911555, 0.70087993, 8.85083)
+
+[node name="default" parent="." instance=ExtResource("74_ca4ee")]
+transform = Transform3D(-6.5567085e-09, 0, 0.15, 0, 0.15, 0, -0.15, 0, -6.5567085e-09, 0.7842419, 1.6628616, 8.432643)
 
 [editable path="Styrofoam cube"]
 [editable path="CameraZone"]

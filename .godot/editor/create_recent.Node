@@ -1,8 +1,10 @@
+CarryableComponent
+CollisionShape3D
+RigidBody3D
 Node3D
 CanvasLayer
 Camera3D
 MeshInstance3D
-CollisionShape3D
 StaticBody3D
 Node2D
 SubViewport
@@ -10,6 +12,3 @@ VBoxContainer
 Container
 TextureRect
 PanelContainer
-Button
-Label
-HBoxContainer
