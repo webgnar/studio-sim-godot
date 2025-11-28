@@ -175,11 +175,7 @@ func _process(delta):
 		submit_painting()
 		return
 
-	# Cycle stickers with Q/E keys or mouse wheel
-	if Input.is_action_just_pressed("cycle_sticker_prev"):
-		cycle_sticker(-1)
-	if Input.is_action_just_pressed("cycle_sticker_next"):
-		cycle_sticker(1)
+	# Sticker cycling now handled by PaintingModeManager
 
 	# Delete selected sticker
 	if Input.is_action_just_pressed("ui_text_delete"):
@@ -352,7 +348,7 @@ func spawn_sticker(world_position: Vector3):
 	selected_layer = placed
 
 func cycle_sticker(direction: int):
-	"""Cycle through available stickers in library"""
+	"""Cycle through available stickers in library (deprecated - use PaintingModeManager)"""
 	if sticker_library.is_empty():
 		return
 
@@ -363,8 +359,8 @@ func cycle_sticker(direction: int):
 	# Update preview to show new sticker
 	_update_preview_texture()
 
-	# Notify UI that the equipped layer changed
-	layer_equipped.emit(selected_sticker_index)
+	# Note: Syncing and signal emission now handled by PaintingModeManager
+	# This function kept for backward compatibility
 
 func raise_layer_order(layer: PlacedLayer2D):
 	"""Increase layer's z-order (bring forward)"""

@@ -69,8 +69,12 @@ func _load_sticker_library():
 
 		dir.list_dir_end()
 
-		# Sort alphabetically so they're in consistent order
-		file_names.sort()
+		# Natural sort (1, 2, 3... 10 instead of 1, 10, 2...)
+		file_names.sort_custom(func(a, b):
+			var num_a = a.get_basename().to_int()
+			var num_b = b.get_basename().to_int()
+			return num_a < num_b
+		)
 
 	# Load each texture
 	for i in range(file_names.size()):
@@ -88,14 +92,10 @@ func _process(delta):
 	if not camera or not canvas_root:
 		return
 
-	# Cycle stickers with Q/E keys or mouse wheel
-	if Input.is_action_just_pressed("cycle_sticker_prev"):
-		cycle_sticker(-1)
-	if Input.is_action_just_pressed("cycle_sticker_next"):
-		cycle_sticker(1)
+	# Sticker cycling now handled by PaintingModeManager
 
-	# Number keys 1-5 to select placed stickers
-	if Input.is_action_just_pressed("ui_text_delete"):  # Delete selected sticker
+	# Delete selected sticker
+	if Input.is_action_just_pressed("ui_text_delete"):
 		delete_selected_layer()
 
 	# Handle rotation of selected layer (90 degree snapping)
@@ -229,7 +229,7 @@ func spawn_sticker(world_position: Vector3, normal: Vector3):
 	selected_layer = placed
 
 func cycle_sticker(direction: int):
-	"""Cycle through available stickers in library"""
+	"""Cycle through available stickers in library (deprecated - use PaintingModeManager)"""
 	if sticker_library.is_empty():
 		return
 
@@ -237,8 +237,8 @@ func cycle_sticker(direction: int):
 	if selected_sticker_index < 0:
 		selected_sticker_index = sticker_library.size() - 1
 
-	# Notify UI that the equipped layer changed
-	layer_equipped.emit(selected_sticker_index)
+	# Note: Syncing and signal emission now handled by PaintingModeManager
+	# This function kept for backward compatibility
 
 func rotate_layer_90(layer: PlacedLayer, direction: int):
 	"""Rotate a layer by 90 degrees (snapping)"""

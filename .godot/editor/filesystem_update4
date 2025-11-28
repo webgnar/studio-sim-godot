@@ -1,0 +1,4 @@
+res://scripts/painting/PaintingModeManager.gd
+res://scripts/painting/PaintingSystem2D.gd
+res://scripts/painting/PaintingSystem.gd
+res://scripts/painting/PaintingUI.gd

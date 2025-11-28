@@ -33,6 +33,7 @@ func _ready():
 	# Use 2D system as primary reference (missions use 2D, sticker library identical)
 	active_system = painting_system_2d if painting_system_2d else painting_system_3d
 
+	# Connect to active system only (PaintingModeManager handles syncing)
 	if active_system:
 		active_system.layer_equipped.connect(_on_layer_equipped)
 

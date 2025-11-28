@@ -19,6 +19,33 @@ var camera: Camera3D = null
 func _ready():
 	pass
 
+func _process(delta):
+	# Handle sticker cycling (unified for both systems)
+	if Input.is_action_just_pressed("cycle_sticker_prev"):
+		cycle_sticker(-1)
+	if Input.is_action_just_pressed("cycle_sticker_next"):
+		cycle_sticker(1)
+
+func cycle_sticker(direction: int):
+	"""Cycle through stickers and sync both systems"""
+	# Use whichever system is available to get library size
+	var system = painting_system_2d if painting_system_2d else painting_system_3d
+	if not system or system.sticker_library.is_empty():
+		return
+
+	# Calculate new index
+	var current_index = system.selected_sticker_index
+	var new_index = (current_index + direction) % system.sticker_library.size()
+	if new_index < 0:
+		new_index = system.sticker_library.size() - 1
+
+	# Sync to both systems
+	sync_sticker_selection(new_index)
+
+	# Emit signal from one system to update UI (avoid duplicate emissions)
+	if system:
+		system.layer_equipped.emit(new_index)
+
 func _unhandled_input(event):
 	"""Route painting input to appropriate system based on raycast target"""
 	var should_place = false
@@ -155,3 +182,5 @@ func sync_sticker_selection(index: int):
 
 	if painting_system_2d:
 		painting_system_2d.selected_sticker_index = index
+		# Update 2D preview to show the new sticker
+		painting_system_2d._update_preview_texture()
