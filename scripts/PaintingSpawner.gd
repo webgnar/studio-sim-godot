@@ -40,8 +40,22 @@ func replace_painting_with_carryable(world: Node3D) -> void:
 
 	# Spawn carryable painting with frozen texture
 	print("🔴 Spawning carryable painting...")
-	var carryable = _spawn_carryable_painting(baked_texture, wall_position, wall_rotation)
+	var carryable = carryable_painting_scene.instantiate()
 	world.add_child(carryable)
+	# Set transform AFTER adding to tree
+	carryable.global_position = wall_position
+	carryable.global_rotation = wall_rotation
+	# Apply texture
+	var mesh_instance = carryable.get_node("MeshInstance3D")
+	var material = mesh_instance.get_surface_override_material(0)
+	if not material:
+		material = StandardMaterial3D.new()
+		material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+		material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+		mesh_instance.set_surface_override_material(0, material)
+	material.albedo_texture = baked_texture
+	# Add small velocity to push away from wall
+	carryable.linear_velocity = Vector3(0, 0, -0.5)
 	print("🔴 Carryable added to world: " + str(carryable))
 
 	# Remove old painting
@@ -50,8 +64,11 @@ func replace_painting_with_carryable(world: Node3D) -> void:
 
 	# Spawn new blank painting
 	print("🔴 Spawning new blank painting...")
-	var new_painting = _spawn_blank_painting(wall_position, wall_rotation)
+	var new_painting = painting_root_2d_scene.instantiate()
 	world.add_child(new_painting)
+	# Set transform AFTER adding to tree
+	new_painting.global_position = wall_position
+	new_painting.global_rotation = wall_rotation
 	print("🔴 New painting added to world: " + str(new_painting))
 
 	# Re-register with PaintingModeManager
