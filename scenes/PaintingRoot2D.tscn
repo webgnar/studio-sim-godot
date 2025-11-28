@@ -1,14 +1,14 @@
-[gd_scene load_steps=6 format=3 uid="uid://bshsrjrokypta"]
+[gd_scene load_steps=7 format=3 uid="uid://bshsrjrokypta"]
 
 [ext_resource type="Script" uid="uid://ddu5r4f51ufg2" path="res://scripts/painting/PaintingRoot2D.gd" id="1_616st"]
 [ext_resource type="Script" uid="uid://cwv7q3pr2rgqg" path="res://scripts/painting/PaintingSystem2D.gd" id="1_r7cr7"]
+[ext_resource type="PackedScene" uid="uid://guuhi66wtyyp" path="res://models/stretcher.glb" id="3_5x4y3"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_m05bo"]
 size = Vector2(3, 3)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_r7cr7"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5x4y3"]
 transparency = 1
-shading_mode = 0
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_616st"]
 size = Vector3(4.5, 0.1, 4.5)
@@ -30,7 +30,7 @@ sticker_scale = 0.5
 
 [node name="PaintingPlaneMesh" type="MeshInstance3D" parent="."]
 mesh = SubResource("PlaneMesh_m05bo")
-surface_material_override/0 = SubResource("StandardMaterial3D_r7cr7")
+surface_material_override/0 = SubResource("StandardMaterial3D_5x4y3")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="PaintingPlaneMesh" groups=["2d_painting_canvas"]]
 collision_layer = 4
@@ -38,3 +38,6 @@ collision_mask = 0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="PaintingPlaneMesh/StaticBody3D"]
 shape = SubResource("BoxShape3D_616st")
+
+[node name="stretcher" parent="." instance=ExtResource("3_5x4y3")]
+transform = Transform3D(0.045, 0, 0, 0, -1.9670126e-09, -0.045, 0, 0.045, -1.9670126e-09, 0, -0.07518089, 0)

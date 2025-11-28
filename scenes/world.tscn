@@ -431,7 +431,7 @@ painting_system_2d = NodePath("../../PaintingRoot2d/CanvasViewport/CanvasRoot")
 transform = Transform3D(-6.862688e-08, 0, 1.57, 0, 1.57, 0, -1.57, 0, -6.862688e-08, -3.6013913, 2.8738532, -1.7322651)
 
 [node name="PaintingRoot2d" parent="." instance=ExtResource("75_ca4ee")]
-transform = Transform3D(-4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0, 1, -3.4057033, 2.5300002, 7)
+transform = Transform3D(-4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0, 1, -3.5714133, 2.5300002, 7)
 
 [node name="background" type="Node3D" parent="."]
 visible = false
@@ -1224,7 +1224,7 @@ transform = Transform3D(9.835062e-09, 0, 0.074999996, 0, 0.074999996, 0, -0.0749
 [node name="table" parent="." instance=ExtResource("73_ca4ee")]
 transform = Transform3D(0, 0, 0.099999994, 0, 0.1, 0, -0.099999994, 0, 0, 1.8911555, 0.70087993, 8.85083)
 
-[node name="default" parent="." instance=ExtResource("74_ca4ee")]
+[node name="water" parent="." instance=ExtResource("74_ca4ee")]
 transform = Transform3D(-6.5567085e-09, 0, 0.15, 0, 0.15, 0, -0.15, 0, -6.5567085e-09, 0.7842419, 1.6628616, 8.432643)
 
 [editable path="Styrofoam cube"]
