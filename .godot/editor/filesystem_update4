@@ -10,3 +10,8 @@ res://models/new_array_mesh3.tres
 res://shaders/outline.gdshader
 res://scenes/objects/table.tscn
 res://scenes/PaintingRoot2D.tscn
+res://scripts/HUD.gd
+res://scripts/MissionManager.gd
+res://scripts/ui/MissionSelectionUI.gd
+res://scripts/ui/ValidationResultUI.gd
+res://scripts/UIManager.gd

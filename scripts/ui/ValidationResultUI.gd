@@ -32,6 +32,10 @@ func _ready():
 	# Hide dialog initially
 	dialog.visible = false
 
+	# Register with UIManager
+	if UIManager:
+		UIManager.register_screen("validation", self)
+
 	# Find painting system and mission selection UI
 	_find_dependencies()
 
@@ -75,6 +79,30 @@ func _input(event):
 		get_viewport().set_input_as_handled()
 		return
 
+func show_screen():
+	"""Show the validation result screen (called by UIManager)"""
+	dialog.visible = true
+
+	# Disable painting input
+	if painting_system_2d:
+		painting_system_2d.set_input_enabled(false)
+
+	# Focus retry button
+	retry_button.grab_focus()
+
+func hide_screen():
+	"""Hide the validation result screen (called by UIManager)"""
+	dialog.visible = false
+
+	# Re-enable painting input
+	if painting_system_2d:
+		painting_system_2d.set_input_enabled(true)
+
+func calculate_payment(grade: String) -> int:
+	"""Calculate payment based on mission grade (placeholder - returns 0)"""
+	# TODO: Implement when grading system is refined
+	return 0
+
 func show_results(result: ValidationResult, mission: PaintingMission):
 	"""Display validation results"""
 	current_result = result
@@ -110,11 +138,14 @@ func show_results(result: ValidationResult, mission: PaintingMission):
 		status_label.text = "Failed"
 		status_label.modulate = Color(1.0, 0.4, 0.4)
 
-	# Show message
+	# Show message and payment
+	var payment = calculate_payment(grade)
+	var payment_text = "Payment: $%d (Coming Soon)" % payment
+
 	if result.errors.is_empty():
-		message_label.text = "Great work! Mission completed."
+		message_label.text = "Great work! Mission completed.\n%s" % payment_text
 	else:
-		message_label.text = "\n".join(result.errors)
+		message_label.text = "%s\n%s" % ["\n".join(result.errors), payment_text]
 
 	# Show image comparison
 	_display_comparison_images(mission)
@@ -147,16 +178,9 @@ func show_results(result: ValidationResult, mission: PaintingMission):
 		visual_label.visible = false
 		color_label.visible = false
 
-	# Show dialog
+	# Show results via UIManager (which will call show_screen())
+	# Note: Dialog visibility is now managed by UIManager
 	dialog.visible = true
-
-	# Disable painting input
-	if painting_system_2d:
-		painting_system_2d.set_input_enabled(false)
-
-	# Disable player input
-	if CameraManager:
-		CameraManager.set_player_input(false)
 
 	# Focus retry button
 	retry_button.grab_focus()
@@ -198,22 +222,8 @@ func _display_comparison_images(mission: PaintingMission):
 		if not reference_texture:
 			push_warning("ValidationResultUI: Could not load reference image from '%s'" % mission.reference_image_path)
 
-func _close_dialog():
-	"""Hide the results dialog"""
-	dialog.visible = false
-
-	# Re-enable painting input
-	if painting_system_2d:
-		painting_system_2d.set_input_enabled(true)
-
-	# Re-enable player input
-	if CameraManager:
-		CameraManager.set_player_input(true)
-
 func _on_retry_mission():
 	"""Retry the current mission"""
-	_close_dialog()
-
 	if not current_mission:
 		push_error("ValidationResultUI: No mission to retry!")
 		return
@@ -226,17 +236,13 @@ func _on_retry_mission():
 	painting_system_2d.start_mission(current_mission)
 	MissionManager.start_mission(current_mission)
 
+	# Note: MissionManager.start_mission() will call UIManager.change_state(IN_MISSION)
+
 func _on_back_to_missions():
 	"""Return to mission selection"""
-	_close_dialog()
-
 	# Clear current mission
 	MissionManager.current_mission = null
 
-	# Open mission selection UI
-	if mission_selection_ui:
-		# Trigger F7 key press to open mission selection
-		var event = InputEventKey.new()
-		event.keycode = KEY_F7
-		event.pressed = true
-		Input.parse_input_event(event)
+	# Return to mission selection via UIManager
+	if UIManager:
+		UIManager.change_state(UIManager.GameState.MISSION_SELECT)

@@ -69,6 +69,8 @@
 [ext_resource type="PackedScene" uid="uid://c7vk8n8k7j8k8" path="res://scenes/UI/MissionAuthoringUI.tscn" id="76_author"]
 [ext_resource type="PackedScene" uid="uid://ctv5r4f51ufg3" path="res://scenes/UI/MissionSelectionUI.tscn" id="77_select"]
 [ext_resource type="PackedScene" uid="uid://isbwb03yee7n" path="res://scenes/UI/ValidationResultUI.tscn" id="78_result"]
+[ext_resource type="PackedScene" uid="uid://b3vx8d2nc7kqm" path="res://scenes/UI/MainMenuHub.tscn" id="79_mainmenu"]
+[ext_resource type="PackedScene" uid="uid://dxe3m5p8yk1vq" path="res://scenes/UI/ShopUI.tscn" id="80_shop"]
 [ext_resource type="AudioStream" uid="uid://84rjpuccue2i" path="res://sounds/boomboxSwitch.ogg" id="boombox_switch"]
 [ext_resource type="AudioStream" uid="uid://8so1mqtnfhkh" path="res://sounds/box open 1.ogg" id="box_open_1"]
 [ext_resource type="AudioStream" uid="uid://bkyiswhv5fuaf" path="res://sounds/box open 2.ogg" id="box_open_2"]
@@ -423,6 +425,10 @@ painting_system_2d = NodePath("../../PaintingRoot2d/CanvasViewport/CanvasRoot")
 [node name="MissionSelectionUi" parent="GameplayUI_Layer" instance=ExtResource("77_select")]
 
 [node name="ValidationResultUi" parent="GameplayUI_Layer" instance=ExtResource("78_result")]
+
+[node name="MainMenuHub" parent="GameplayUI_Layer" instance=ExtResource("79_mainmenu")]
+
+[node name="ShopUi" parent="GameplayUI_Layer" instance=ExtResource("80_shop")]
 
 [node name="DevTools_Layer" type="CanvasLayer" parent="."]
 

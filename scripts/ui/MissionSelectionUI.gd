@@ -30,6 +30,10 @@ func _ready():
 	# Hide dialog initially
 	dialog.visible = false
 
+	# Register with UIManager
+	if UIManager:
+		UIManager.register_screen("mission_selection", self)
+
 	# Find painting system
 	_find_painting_system()
 
@@ -54,12 +58,6 @@ func _search_for_painting_system(node: Node) -> PaintingSystem2D:
 	return null
 
 func _input(event):
-	# F7 to open mission selection dialog
-	if event is InputEventKey and event.pressed and event.keycode == KEY_F7 and not dialog.visible:
-		_open_dialog()
-		get_viewport().set_input_as_handled()
-		return
-
 	# When dialog is visible, handle input
 	if dialog.visible:
 		# Escape to close
@@ -113,17 +111,22 @@ func _open_dialog():
 	# Focus start button
 	start_button.grab_focus()
 
-func _close_dialog():
-	"""Hide the dialog"""
+func show_screen():
+	"""Show the mission selection screen (called by UIManager)"""
+	_open_dialog()
+
+func hide_screen():
+	"""Hide the mission selection screen (called by UIManager)"""
 	dialog.visible = false
 
 	# Re-enable painting system input
 	if painting_system_2d:
 		painting_system_2d.set_input_enabled(true)
 
-	# Re-enable player input
-	if CameraManager:
-		CameraManager.set_player_input(true)
+func _close_dialog():
+	"""Hide the dialog and return to main menu"""
+	if UIManager:
+		UIManager.change_state(UIManager.GameState.MAIN_MENU)
 
 func _populate_mission_list():
 	"""Create mission cards for all available missions"""

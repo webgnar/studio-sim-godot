@@ -80,6 +80,10 @@ func start_mission(mission: PaintingMission):
 	current_mission = mission
 	mission_started.emit(mission)
 
+	# Transition to IN_MISSION state
+	if UIManager:
+		UIManager.change_state(UIManager.GameState.IN_MISSION)
+
 func complete_mission(result: ValidationResult):
 	"""Mark current mission as completed with the given result"""
 	if not current_mission:
@@ -113,6 +117,10 @@ func complete_mission(result: ValidationResult):
 		mission_failed.emit(current_mission, result)
 
 	save_progression()
+
+	# Transition to VALIDATION state
+	if UIManager:
+		UIManager.change_state(UIManager.GameState.VALIDATION)
 
 func get_mission_completion(mission_id: String) -> Dictionary:
 	"""Get completion data for a specific mission"""

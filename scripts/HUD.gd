@@ -17,19 +17,23 @@ var _player_interaction_component: PlayerInteractionComponent
 func _ready() -> void:
 	# Find the player
 	_player = get_parent()
-	
+
 	if not _player:
 		push_error("HUD: No player found as parent!")
 		return
-	
+
 	# Hide interaction prompt initially
 	if interaction_label:
 		interaction_label.hide()
-	
+
 	# Hide carry hint initially
 	if carry_hint:
 		carry_hint.hide()
-	
+
+	# Connect to UIManager state changes
+	if UIManager:
+		UIManager.state_changed.connect(_on_state_changed)
+
 	# Connect to player interaction component signals
 	_connect_to_player_interaction_component()
 
@@ -59,6 +63,17 @@ func _process(_delta: float) -> void:
 	_update_carry_hint()
 
 # --- SIGNAL HANDLERS ---
+
+func _on_state_changed(old_state, new_state) -> void:
+	"""Handle game state changes from UIManager"""
+	# Show HUD only in GAMEPLAY and IN_MISSION states
+	match new_state:
+		UIManager.GameState.GAMEPLAY, UIManager.GameState.IN_MISSION:
+			visible = true
+			set_crosshair_visible(true)
+		_:
+			# Hide HUD in menu states
+			visible = false
 
 func _on_prompt_changed(prompt_text: String) -> void:
 	if not interaction_label:

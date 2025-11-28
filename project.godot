@@ -20,6 +20,7 @@ config/icon="uid://cqiw0qxli55ih"
 CameraManager="*res://scripts/CameraManager.gd"
 PaintingModeManager="*res://scripts/painting/PaintingModeManager.gd"
 MissionManager="*res://scripts/MissionManager.gd"
+UIManager="*res://scripts/UIManager.gd"
 
 [display]
 
