@@ -1,27 +1,22 @@
-extends Node3D
+extends InteractionComponent
 class_name PaintingConvertButton
 
-## Standalone button component for converting paintings
-## Simpler than InteractionComponent - just handles button press
+## Button component for converting paintings to carryable objects
+## Extends InteractionComponent for proper HUD integration
 
 @export var button_cooldown: float = 1.0
-@export var interaction_text: String = "Convert Painting"
 
 var last_pressed: float = 0.0
 
-func _ready() -> void:
+func _on_ready() -> void:
 	print("🔵 PaintingConvertButton _ready() called")
-	# Add parent to interactable group
-	var parent = get_parent()
-	print("🔵 Parent: " + str(parent.name if parent else "NULL"))
-	if parent and not parent.is_in_group("interactable"):
-		parent.add_to_group("interactable")
-		print("✅ Added " + parent.name + " to 'interactable' group")
-	else:
-		print("🔵 Parent already in interactable group or parent is null")
+
+	# Set default interaction text if not set
+	if interaction_text.is_empty():
+		interaction_text = "New Painting"
 
 ## Called by PlayerInteractionComponent when player interacts
-func interact(player_interaction_component) -> void:
+func _on_interacted(player_interaction_component: PlayerInteractionComponent) -> void:
 	print("🟢 Button interact() called!")
 
 	# Cooldown check
@@ -38,11 +33,23 @@ func interact(player_interaction_component) -> void:
 
 	# Play animation if available
 	var anim_player = _find_animation_player()
-	if anim_player and anim_player.has_animation("press"):
-		print("🟢 Playing press animation")
-		anim_player.play("press")
+	if anim_player:
+		if anim_player.has_animation("press"):
+			print("🟢 Playing press animation")
+			anim_player.play("press")
+
+			# Queue release animation after press finishes
+			if anim_player.has_animation("release"):
+				anim_player.animation_finished.connect(_on_press_finished.bind(anim_player), CONNECT_ONE_SHOT)
+		else:
+			print("🟡 No 'press' animation found")
 	else:
-		print("🟡 No animation player found or no 'press' animation")
+		print("🟡 No animation player found")
+
+func _on_press_finished(_anim_name: String, anim_player: AnimationPlayer) -> void:
+	"""Called when press animation finishes, plays release animation"""
+	print("🟢 Playing release animation")
+	anim_player.play("release")
 
 func _find_animation_player() -> AnimationPlayer:
 	"""Recursively search for AnimationPlayer in parent hierarchy"""

@@ -42,9 +42,23 @@ func replace_painting_with_carryable(world: Node3D) -> void:
 	print("🔴 Spawning carryable painting...")
 	var carryable = carryable_painting_scene.instantiate()
 	world.add_child(carryable)
+
+	# Calculate spawn position in front of the wall
+	var spawn_offset = 1.0  # Distance in front of wall (adjustable)
+	var forward_direction = old_painting_root.global_transform.basis.x  # X axis is perpendicular to wall
+	var spawn_position = wall_position + (forward_direction * spawn_offset)
+
 	# Set transform AFTER adding to tree
-	carryable.global_position = wall_position
+	carryable.global_position = spawn_position
 	carryable.global_rotation = wall_rotation
+
+	print("🔴 Old painting basis.x: " + str(old_painting_root.global_transform.basis.x))
+	print("🔴 Old painting basis.y: " + str(old_painting_root.global_transform.basis.y))
+	print("🔴 Old painting basis.z: " + str(old_painting_root.global_transform.basis.z))
+	print("🔴 Forward direction: " + str(forward_direction))
+	print("🔴 Spawn offset position: " + str(spawn_position))
+	print("🔴 Wall rotation: " + str(wall_rotation))
+
 	# Apply texture
 	var mesh_instance = carryable.get_node("MeshInstance3D")
 	var material = mesh_instance.get_surface_override_material(0)
@@ -55,7 +69,7 @@ func replace_painting_with_carryable(world: Node3D) -> void:
 		mesh_instance.set_surface_override_material(0, material)
 	material.albedo_texture = baked_texture
 	# Add small velocity to push away from wall
-	carryable.linear_velocity = Vector3(0, 0, -0.5)
+	carryable.linear_velocity = forward_direction * 0.5
 	print("🔴 Carryable added to world: " + str(carryable))
 
 	# Remove old painting
