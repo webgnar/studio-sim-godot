@@ -5,5 +5,4 @@ extends Node
 
 func _input(event):
 	if event is InputEventKey and event.pressed and event.keycode == KEY_P:
-		print("🟣 DEBUG: P key pressed - converting painting!")
 		PaintingSpawner.replace_painting_with_carryable(get_tree().current_scene)

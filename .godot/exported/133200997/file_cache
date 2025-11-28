@@ -37,10 +37,10 @@ res://scenes/UI/PaintingUI.tscn::fa19481ff61db84d2cf11102c9e1ebb1::1764018092::r
 res://scenes/UI/ShopUI.tscn::801d1b5f69bcb3bbfb96289b44f0ed97::1764309143::res://.godot/exported/133200997/export-30a8f3993320d15d0ebcfb74a3a5de9e-ShopUI.scn
 res://scenes/UI/StickerSlot.tscn::769f726528c50717cffd1456413adc69::1764016211::res://.godot/exported/133200997/export-1fcf09436620f5c9e4d3b02c5aeb2538-StickerSlot.scn
 res://scenes/UI/ValidationResultUI.tscn::5f9a48561c72ce7b201e7d0a3d8e4da0::1764057255::res://.godot/exported/133200997/export-1a01ea4a9204e9999dc95b08c8cfe93a-ValidationResultUI.scn
-res://scenes/CarryablePainting.tscn::f884a92c4135509a5a2a17d4e09086f1::1764363365::res://.godot/exported/133200997/export-81d593dee0b8493f17619d82f2d4e622-CarryablePainting.scn
+res://scenes/CarryablePainting.tscn::e1fd82b99f3ddbb9ea44bae5bf94f86a::1764366597::res://.godot/exported/133200997/export-81d593dee0b8493f17619d82f2d4e622-CarryablePainting.scn
 res://scenes/human.tscn::69a111d5920c0beed20be7f22b41c616::1761713575::res://.godot/exported/133200997/export-eba661b9dcbe38bde83515c9e6eec66a-human.scn
-res://scenes/PaintingRoot2D.tscn::464592f1e275601ceadbf12610d27128::1764306355::res://.godot/exported/133200997/export-c9422ff23df7d52dcdbaa5cb19c4dd5d-PaintingRoot2D.scn
+res://scenes/PaintingRoot2D.tscn::37c94ae4bbc589376b636cff1f08f240::1764366786::res://.godot/exported/133200997/export-c9422ff23df7d52dcdbaa5cb19c4dd5d-PaintingRoot2D.scn
 res://scenes/PaintingRoot.tscn::16a314f2db2544bc5d9d0dc50f08ba26::1764019379::res://.godot/exported/133200997/export-7698917d71931537be1d093dc2a1ded6-PaintingRoot.scn
-res://scenes/world.tscn::d8c6de0d9772099009522b48bf1605a4::1764365243::res://.godot/exported/133200997/export-6b9c1b1fd6ae6f795188dfdc89e222b0-world.scn
+res://scenes/world.tscn::d9967f1e2860ed21e2734abca7e449ae::1764365367::res://.godot/exported/133200997/export-6b9c1b1fd6ae6f795188dfdc89e222b0-world.scn
 res://themes/ui_theme.tres::60ebfeb02f96e7eeefb30e839b184afb::1764307129::res://.godot/exported/133200997/export-6986a3918d5316243c91c225d09f5f65-ui_theme.res
 res://default.tscn::090a9f7ae85fa08e3c228d923d165168::1762583134::res://.godot/exported/133200997/export-ecadf3196f98fed7b5722fd2df0d4094-default.scn

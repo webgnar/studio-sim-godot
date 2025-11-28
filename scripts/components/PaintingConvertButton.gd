@@ -9,46 +9,33 @@ class_name PaintingConvertButton
 var last_pressed: float = 0.0
 
 func _on_ready() -> void:
-	print("🔵 PaintingConvertButton _ready() called")
-
 	# Set default interaction text if not set
 	if interaction_text.is_empty():
 		interaction_text = "New Painting"
 
 ## Called by PlayerInteractionComponent when player interacts
 func _on_interacted(player_interaction_component: PlayerInteractionComponent) -> void:
-	print("🟢 Button interact() called!")
-
 	# Cooldown check
 	var current_time = Time.get_ticks_msec() / 1000.0
 	if current_time - last_pressed < button_cooldown:
-		print("🟡 Button on cooldown, ignoring")
 		return
 
 	last_pressed = current_time
-	print("🟢 Triggering painting conversion!")
 
 	# Trigger conversion
 	PaintingSpawner.replace_painting_with_carryable(get_tree().current_scene)
 
 	# Play animation if available
 	var anim_player = _find_animation_player()
-	if anim_player:
-		if anim_player.has_animation("press"):
-			print("🟢 Playing press animation")
-			anim_player.play("press")
+	if anim_player and anim_player.has_animation("press"):
+		anim_player.play("press")
 
-			# Queue release animation after press finishes
-			if anim_player.has_animation("release"):
-				anim_player.animation_finished.connect(_on_press_finished.bind(anim_player), CONNECT_ONE_SHOT)
-		else:
-			print("🟡 No 'press' animation found")
-	else:
-		print("🟡 No animation player found")
+		# Queue release animation after press finishes
+		if anim_player.has_animation("release"):
+			anim_player.animation_finished.connect(_on_press_finished.bind(anim_player), CONNECT_ONE_SHOT)
 
 func _on_press_finished(_anim_name: String, anim_player: AnimationPlayer) -> void:
 	"""Called when press animation finishes, plays release animation"""
-	print("🟢 Playing release animation")
 	anim_player.play("release")
 
 func _find_animation_player() -> AnimationPlayer:

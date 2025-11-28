@@ -13,51 +13,32 @@ var painting_root_2d_scene = preload("res://scenes/PaintingRoot2D.tscn")
 
 func replace_painting_with_carryable(world: Node3D) -> void:
 	"""Convert current mission painting to carryable object and spawn new blank painting"""
-	print("🔴 replace_painting_with_carryable() called!")
-	print("🔴 World: " + str(world))
-
 	var old_painting_root = PaintingModeManager.painting_root_2d
 	var old_painting_system = PaintingModeManager.painting_system_2d
-
-	print("🔴 Old painting root: " + str(old_painting_root))
-	print("🔴 Old painting system: " + str(old_painting_system))
 
 	if not old_painting_root or not old_painting_system:
 		push_error("PaintingSpawner: No painting system found!")
 		return
 
-	print("🔴 Starting texture bake...")
-
 	# Bake texture from current painting
 	var baked_texture = await _bake_painting_texture(old_painting_system)
-	print("🔴 Texture baked: " + str(baked_texture))
 
 	# Store transform
 	var wall_position = old_painting_root.global_position
 	var wall_rotation = old_painting_root.global_rotation
-	print("🔴 Wall position: " + str(wall_position))
-	print("🔴 Wall rotation: " + str(wall_rotation))
 
 	# Spawn carryable painting with frozen texture
-	print("🔴 Spawning carryable painting...")
 	var carryable = carryable_painting_scene.instantiate()
 	world.add_child(carryable)
 
-	# Calculate spawn position in front of the wall
-	var spawn_offset = 1.0  # Distance in front of wall (adjustable)
-	var forward_direction = old_painting_root.global_transform.basis.x  # X axis is perpendicular to wall
-	var spawn_position = wall_position + (forward_direction * spawn_offset)
+	# Use spawn marker if available, otherwise use wall position
+	var spawn_marker = old_painting_root.get_node_or_null("SpawnMarker")
+	var spawn_position = spawn_marker.global_position if spawn_marker else wall_position
+	var spawn_rotation = spawn_marker.global_rotation if spawn_marker else wall_rotation
 
 	# Set transform AFTER adding to tree
 	carryable.global_position = spawn_position
-	carryable.global_rotation = wall_rotation
-
-	print("🔴 Old painting basis.x: " + str(old_painting_root.global_transform.basis.x))
-	print("🔴 Old painting basis.y: " + str(old_painting_root.global_transform.basis.y))
-	print("🔴 Old painting basis.z: " + str(old_painting_root.global_transform.basis.z))
-	print("🔴 Forward direction: " + str(forward_direction))
-	print("🔴 Spawn offset position: " + str(spawn_position))
-	print("🔴 Wall rotation: " + str(wall_rotation))
+	carryable.global_rotation = spawn_rotation
 
 	# Apply texture
 	var mesh_instance = carryable.get_node("MeshInstance3D")
@@ -68,58 +49,89 @@ func replace_painting_with_carryable(world: Node3D) -> void:
 		material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 		mesh_instance.set_surface_override_material(0, material)
 	material.albedo_texture = baked_texture
-	# Add small velocity to push away from wall
-	carryable.linear_velocity = forward_direction * 0.5
-	print("🔴 Carryable added to world: " + str(carryable))
+
+	# Add small velocity to push away from wall (use spawn marker's forward direction if available)
+	var push_direction = spawn_marker.global_transform.basis.x if spawn_marker else old_painting_root.global_transform.basis.x
+	carryable.linear_velocity = push_direction * 0.5
 
 	# Remove old painting
-	print("🔴 Removing old painting...")
 	old_painting_root.queue_free()
 
 	# Spawn new blank painting
-	print("🔴 Spawning new blank painting...")
 	var new_painting = painting_root_2d_scene.instantiate()
 	world.add_child(new_painting)
 	# Set transform AFTER adding to tree
 	new_painting.global_position = wall_position
 	new_painting.global_rotation = wall_rotation
-	print("🔴 New painting added to world: " + str(new_painting))
 
 	# Re-register with PaintingModeManager
-	print("🔴 Re-registering with PaintingModeManager...")
 	var new_system = new_painting.get_node("CanvasViewport/CanvasRoot")
 	PaintingModeManager.register_2d_system(new_system, new_painting)
-	print("🔴 Re-registration complete!")
+
+	# Reconnect PaintingUI to new system
+	_reconnect_painting_ui(new_system)
 
 	# Increment counter
 	paintings_created += 1
-	print("🔴 Counter incremented to: " + str(paintings_created))
 	painting_created.emit(paintings_created)
-	print("✅ Painting conversion complete!")
 
 func _bake_painting_texture(painting_system: PaintingSystem2D) -> ImageTexture:
 	"""Capture viewport texture and freeze it as static ImageTexture"""
-	# Hide preview sprite to avoid capturing it
-	var preview_was_visible = painting_system.preview_sprite.visible
-	painting_system.preview_sprite.visible = false
+	# Temporarily remove preview sprite from tree to prevent it from being re-shown
+	var preview_sprite = painting_system.preview_sprite
+	var preview_parent = preview_sprite.get_parent() if preview_sprite else null
 
-	# Wait for render to complete
+	if preview_sprite and preview_parent:
+		preview_parent.remove_child(preview_sprite)
+
+	# Wait for viewport to render without the preview sprite
 	await RenderingServer.frame_post_draw
+	await RenderingServer.frame_post_draw  # Extra frame to be safe
 
 	# Capture viewport texture
 	var viewport_texture = painting_system.canvas_viewport.get_texture()
 	var image = viewport_texture.get_image()
 
-	# Rotate 90° clockwise to match painting orientation (same as save_painting_image)
-	image.rotate_90(CLOCKWISE)
+	# Re-add preview sprite to tree
+	if preview_sprite and preview_parent:
+		preview_parent.add_child(preview_sprite)
+
+	# Don't rotate - keep original orientation
+	# (Note: save_painting_image rotates 90° clockwise, but we don't need that here)
 
 	# Create static ImageTexture
 	var static_texture = ImageTexture.create_from_image(image)
 
-	# Restore preview sprite
-	painting_system.preview_sprite.visible = preview_was_visible
-
 	return static_texture
+
+func _reconnect_painting_ui(new_system: PaintingSystem2D):
+	"""Reconnect PaintingUI to the new painting system"""
+	# Find PaintingUI in scene tree
+	var painting_ui = _find_painting_ui(get_tree().root)
+	if not painting_ui:
+		return
+
+	# Update active system reference
+	painting_ui.active_system = new_system
+	painting_ui.painting_system_2d = new_system
+
+	# Reconnect signal
+	new_system.layer_equipped.connect(painting_ui._on_layer_equipped)
+
+	# Rebuild carousel with new system
+	painting_ui._build_carousel()
+
+func _find_painting_ui(node: Node) -> PaintingUI:
+	"""Recursively find PaintingUI in scene tree"""
+	if node is PaintingUI:
+		return node
+
+	for child in node.get_children():
+		var result = _find_painting_ui(child)
+		if result:
+			return result
+
+	return null
 
 func _spawn_carryable_painting(texture: ImageTexture, pos: Vector3, rot: Vector3) -> RigidBody3D:
 	"""Create carryable painting instance with baked texture"""

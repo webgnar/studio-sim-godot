@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://guuhi66wtyyp" path="res://models/stretcher.glb" id="2_stretcher"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_carryable"]
-size = Vector3(3.2, 3.2, 0.2)
+size = Vector3(3.0893555, 3.1093383, 0.13564453)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_carryable"]
 size = Vector2(3, 3)
@@ -15,10 +15,10 @@ shading_mode = 0
 
 [node name="CarryablePainting" type="RigidBody3D"]
 collision_layer = 4
-collision_mask = 6
+collision_mask = 14
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0)
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0.004296899, -0.05982775, 0.005706668)
 shape = SubResource("BoxShape3D_carryable")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
