@@ -110,6 +110,12 @@ text = "Not completed"
 layout_mode = 2
 alignment = 1
 
+[node name="ViewResultsButton" type="Button" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ButtonContainer"]
+visible = false
+custom_minimum_size = Vector2(150, 40)
+layout_mode = 2
+text = "View Results"
+
 [node name="StartButton" type="Button" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ButtonContainer"]
 custom_minimum_size = Vector2(150, 40)
 layout_mode = 2

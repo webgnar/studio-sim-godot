@@ -14,16 +14,19 @@ const MissionCardScene = preload("res://scenes/UI/MissionCard.tscn")
 @onready var mission_description = $Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/DescriptionLabel
 @onready var difficulty_label = $Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/DifficultyLabel
 @onready var completion_label = $Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/CompletionLabel
+@onready var view_results_button = $Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ButtonContainer/ViewResultsButton
 @onready var start_button = $Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ButtonContainer/StartButton
 @onready var back_button = $Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ButtonContainer/BackButton
 
 var painting_system_2d: PaintingSystem2D = null
+var results_viewer = null  # MissionResultsViewer (dynamic typing to avoid circular dependency)
 var selected_mission: PaintingMission = null
 var selected_index: int = 0
 var mission_cards: Array[MissionCard] = []
 
 func _ready():
 	# Connect button signals
+	view_results_button.pressed.connect(_on_view_results)
 	start_button.pressed.connect(_on_start_mission)
 	back_button.pressed.connect(_close_dialog)
 
@@ -34,8 +37,9 @@ func _ready():
 	if UIManager:
 		UIManager.register_screen("mission_selection", self)
 
-	# Find painting system
+	# Find painting system and results viewer
 	_find_painting_system()
+	_find_results_viewer()
 
 func _find_painting_system():
 	"""Find the PaintingSystem2D in the scene tree"""
@@ -52,6 +56,26 @@ func _search_for_painting_system(node: Node) -> PaintingSystem2D:
 
 	for child in node.get_children():
 		var result = _search_for_painting_system(child)
+		if result:
+			return result
+
+	return null
+
+func _find_results_viewer():
+	"""Find the MissionResultsViewer in the scene tree"""
+	var root = get_tree().root
+	results_viewer = _search_for_results_viewer(root)
+
+	if not results_viewer:
+		push_error("MissionSelectionUI: Could not find MissionResultsViewer in scene!")
+
+func _search_for_results_viewer(node: Node):
+	"""Recursively search for MissionResultsViewer"""
+	if node.get_script() and node.get_script().get_global_name() == "MissionResultsViewer":
+		return node
+
+	for child in node.get_children():
+		var result = _search_for_results_viewer(child)
 		if result:
 			return result
 
@@ -199,7 +223,7 @@ func _update_preview_panel():
 	# Update difficulty
 	difficulty_label.text = "Difficulty: %d/10" % selected_mission.difficulty
 
-	# Update completion status
+	# Update completion status and buttons
 	var completion_data = MissionManager.get_mission_completion(selected_mission.mission_id)
 	if completion_data["completed"]:
 		completion_label.text = "Completed - Grade: %s (%.1f%%)" % [
@@ -208,10 +232,31 @@ func _update_preview_panel():
 		]
 		completion_label.modulate = Color(0.4, 1.0, 0.4)  # Green
 		completion_label.visible = true
+
+		# Update button text for completed missions
+		start_button.text = "Retry Mission"
+
+		# Show View Results button
+		view_results_button.visible = true
+
+		# Enable/disable View Results based on saved painting availability
+		var has_saved_painting = completion_data.get("latest_painting_path", "") != "" or completion_data.get("best_painting_path", "") != ""
+		view_results_button.disabled = not has_saved_painting
+
+		if not has_saved_painting:
+			view_results_button.tooltip_text = "No saved painting available"
+		else:
+			view_results_button.tooltip_text = ""
 	else:
 		completion_label.text = "Not completed"
 		completion_label.modulate = Color(0.8, 0.8, 0.8)
 		completion_label.visible = true
+
+		# Update button text for uncompleted missions
+		start_button.text = "Start Mission"
+
+		# Hide View Results button
+		view_results_button.visible = false
 
 	# Update preview image
 	if selected_mission.reference_image_path and selected_mission.reference_image_path != "":
@@ -241,3 +286,21 @@ func _on_start_mission():
 	_close_dialog()
 
 	print("MissionSelectionUI: Starting mission '%s'" % selected_mission.title)
+
+func _on_view_results():
+	"""Show results viewer for the selected mission"""
+	if not selected_mission:
+		push_error("MissionSelectionUI: No mission selected!")
+		return
+
+	if not results_viewer:
+		push_error("MissionSelectionUI: Results viewer not found!")
+		return
+
+	# Hide mission selection
+	dialog.visible = false
+
+	# Show results viewer
+	results_viewer.show_results_for_mission(selected_mission)
+
+	print("MissionSelectionUI: Viewing results for mission '%s'" % selected_mission.title)

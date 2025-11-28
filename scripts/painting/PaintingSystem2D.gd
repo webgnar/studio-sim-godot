@@ -581,16 +581,35 @@ func save_painting_image(mission_id: String, is_best: bool) -> String:
 		push_error("PaintingSystem2D: No canvas viewport to capture!")
 		return ""
 
+	# Hide preview sprite to avoid capturing it in the image
+	var preview_was_visible = false
+	if preview_sprite:
+		preview_was_visible = preview_sprite.visible
+		preview_sprite.visible = false
+
+	# Wait for viewport to render without the preview sprite
+	await RenderingServer.frame_post_draw
+
 	# Capture current viewport as image
 	var viewport_texture = canvas_viewport.get_texture()
 	if not viewport_texture:
 		push_error("PaintingSystem2D: Failed to get viewport texture!")
+		# Restore preview visibility
+		if preview_sprite:
+			preview_sprite.visible = preview_was_visible
 		return ""
 
 	var image = viewport_texture.get_image()
 	if not image:
 		push_error("PaintingSystem2D: Failed to get image from texture!")
+		# Restore preview visibility
+		if preview_sprite:
+			preview_sprite.visible = preview_was_visible
 		return ""
+
+	# Restore preview sprite visibility
+	if preview_sprite:
+		preview_sprite.visible = preview_was_visible
 
 	# Rotate to match reference orientation (references are rotated 90° clockwise)
 	image.rotate_90(CLOCKWISE)
@@ -630,8 +649,8 @@ func submit_painting():
 	# Validate the painting
 	var result = verify_painting(MissionManager.current_mission)
 
-	# Save paintings to disk
-	var latest_path = save_painting_image(mission_id, false)  # Always save latest
+	# Save paintings to disk (await to ensure preview sprite is hidden during capture)
+	var latest_path = await save_painting_image(mission_id, false)  # Always save latest
 
 	# Check if this is a new best score
 	var mission_data = MissionManager.get_mission_completion(mission_id)
@@ -639,7 +658,7 @@ func submit_painting():
 	var best_path = ""
 
 	if is_new_best:
-		best_path = save_painting_image(mission_id, true)  # Save as best too
+		best_path = await save_painting_image(mission_id, true)  # Save as best too
 		print("PaintingSystem2D: New best score! Saved best painting.")
 
 	# Save the result to mission manager with painting paths

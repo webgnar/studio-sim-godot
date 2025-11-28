@@ -5,7 +5,7 @@ res://materials/skeletonskin.tres::388efc2498dae1806d0bc29c02af5e0e::1761713575:
 res://materials/wall.tres::95e96e06d68ff545b1c52073ec97f3a8::1761080715::res://.godot/exported/133200997/export-1c84afdd05f518f898d96b6833632398-wall.res
 res://materials/wood.tres::5f18c53c2621a7fc282482e6f8735e23::1761019173::res://.godot/exported/133200997/export-6bab30075bec6dca5efb9a8285be1fb5-wood.res
 res://scenes/human.tscn::69a111d5920c0beed20be7f22b41c616::1761713575::res://.godot/exported/133200997/export-eba661b9dcbe38bde83515c9e6eec66a-human.scn
-res://scenes/world.tscn::815754b085a5c07ee4e3cb143d98a63f::1764311804::res://.godot/exported/133200997/export-6b9c1b1fd6ae6f795188dfdc89e222b0-world.scn
+res://scenes/world.tscn::a15318fe8855cdd7b1f2e042b7013ecb::1764314302::res://.godot/exported/133200997/export-6b9c1b1fd6ae6f795188dfdc89e222b0-world.scn
 res://materials/windowglass.tres::adf653174df4dbd39e95ec7b4e65fa10::1762148074::res://.godot/exported/133200997/export-9f29ef6ad686a14f33562fc30aac2334-windowglass.res
 res://materials/mirror.tres::0c8bcc20e8f23b169024b73a136da9fc::1761106682::res://.godot/exported/133200997/export-afb007463ebee55a4f65259bdc477898-mirror.res
 res://materials/alley.tres::11a59d6afbb1a76be50b601d327b6a8f::1761807134::res://.godot/exported/133200997/export-41a862069041f200415bdc5cdc28c79f-alley.res
@@ -34,7 +34,7 @@ res://scenes/old stuff/wall_outlet.tscn::eb6a10f917c2cb997d400500c5d7d1c7::17621
 res://scenes/UI/HUD.tscn::bb888f88a73943ea38668541791d048a::1762072388::res://.godot/exported/133200997/export-0813f3669fea0b1ce94ab703e892232f-HUD.scn
 res://scenes/UI/MissionAuthoringUI.tscn::99843f9ebbec9cdcc05526fc2ba3b687::1763748532::res://.godot/exported/133200997/export-c6521c9f78354baab0b2fd229380b481-MissionAuthoringUI.scn
 res://scenes/UI/MissionCard.tscn::6d0e64c630b348ee99b7ec5248548e66::1764016211::res://.godot/exported/133200997/export-fcf30175fa1ff2590c28e92723b94d58-MissionCard.scn
-res://scenes/UI/MissionSelectionUI.tscn::d553603acd0ad366e7d49a54a114db8e::1764057255::res://.godot/exported/133200997/export-f21238a75352907a26f529575b639735-MissionSelectionUI.scn
+res://scenes/UI/MissionSelectionUI.tscn::7eab56871f973466d93e23bd332adddf::1764314188::res://.godot/exported/133200997/export-f21238a75352907a26f529575b639735-MissionSelectionUI.scn
 res://scenes/UI/PaintingUI.tscn::fa19481ff61db84d2cf11102c9e1ebb1::1764018092::res://.godot/exported/133200997/export-197e15c0e662bbb56658e384e0a54c96-PaintingUI.scn
 res://scenes/UI/StickerSlot.tscn::769f726528c50717cffd1456413adc69::1764016211::res://.godot/exported/133200997/export-1fcf09436620f5c9e4d3b02c5aeb2538-StickerSlot.scn
 res://scenes/UI/ValidationResultUI.tscn::5f9a48561c72ce7b201e7d0a3d8e4da0::1764057255::res://.godot/exported/133200997/export-1a01ea4a9204e9999dc95b08c8cfe93a-ValidationResultUI.scn
@@ -42,3 +42,4 @@ res://scenes/objects/table.tscn::05ee8ba9c7fe5d0009d3a8e3da8ac5f2::1764301870::r
 res://scenes/UI/MainMenuHub.tscn::a284e40515860fb403c67a382e8224b3::1764309143::res://.godot/exported/133200997/export-b7021ae75186751c03f3838ac6014978-MainMenuHub.scn
 res://scenes/UI/ShopUI.tscn::801d1b5f69bcb3bbfb96289b44f0ed97::1764309143::res://.godot/exported/133200997/export-30a8f3993320d15d0ebcfb74a3a5de9e-ShopUI.scn
 res://themes/ui_theme.tres::60ebfeb02f96e7eeefb30e839b184afb::1764307129::res://.godot/exported/133200997/export-6986a3918d5316243c91c225d09f5f65-ui_theme.res
+res://scenes/UI/MissionResultsViewer.tscn::8834fb3d096f423fb2282e8063fa534c::1764314122::res://.godot/exported/133200997/export-901f57ec80721859af5af79c27c8b7aa-MissionResultsViewer.scn

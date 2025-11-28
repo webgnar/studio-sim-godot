@@ -1,0 +1,139 @@
+[gd_scene load_steps=2 format=3 uid="uid://results_viewer_001"]
+
+[ext_resource type="Script" path="res://scripts/ui/MissionResultsViewer.gd" id="1_results"]
+
+[node name="MissionResultsViewer" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_results")
+
+[node name="Dialog" type="PanelContainer" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -500.0
+offset_top = -400.0
+offset_right = 500.0
+offset_bottom = 400.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="Dialog"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Dialog/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="TitleLabel" type="Label" parent="Dialog/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Mission Results"
+horizontal_alignment = 1
+
+[node name="ScoreContainer" type="HBoxContainer" parent="Dialog/MarginContainer/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="GradeLabel" type="Label" parent="Dialog/MarginContainer/VBoxContainer/ScoreContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 60
+text = "A"
+horizontal_alignment = 1
+
+[node name="Spacer" type="Control" parent="Dialog/MarginContainer/VBoxContainer/ScoreContainer"]
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+
+[node name="BestScoreLabel" type="Label" parent="Dialog/MarginContainer/VBoxContainer/ScoreContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Best Score: 85.5%"
+vertical_alignment = 1
+
+[node name="ToggleContainer" type="HBoxContainer" parent="Dialog/MarginContainer/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="ShowLatestButton" type="Button" parent="Dialog/MarginContainer/VBoxContainer/ToggleContainer"]
+custom_minimum_size = Vector2(150, 35)
+layout_mode = 2
+text = "Show Latest"
+
+[node name="ShowBestButton" type="Button" parent="Dialog/MarginContainer/VBoxContainer/ToggleContainer"]
+custom_minimum_size = Vector2(150, 35)
+layout_mode = 2
+text = "Show Best"
+
+[node name="ImageComparison" type="HBoxContainer" parent="Dialog/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="PlayerPaintingPanel" type="PanelContainer" parent="Dialog/MarginContainer/VBoxContainer/ImageComparison"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Dialog/MarginContainer/VBoxContainer/ImageComparison/PlayerPaintingPanel"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Dialog/MarginContainer/VBoxContainer/ImageComparison/PlayerPaintingPanel/VBoxContainer"]
+layout_mode = 2
+text = "Your Painting"
+horizontal_alignment = 1
+
+[node name="PlayerImage" type="TextureRect" parent="Dialog/MarginContainer/VBoxContainer/ImageComparison/PlayerPaintingPanel/VBoxContainer"]
+custom_minimum_size = Vector2(300, 300)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="ScoreLabel" type="Label" parent="Dialog/MarginContainer/VBoxContainer/ImageComparison/PlayerPaintingPanel/VBoxContainer"]
+layout_mode = 2
+text = "Score: 85.5%"
+horizontal_alignment = 1
+
+[node name="TargetPaintingPanel" type="PanelContainer" parent="Dialog/MarginContainer/VBoxContainer/ImageComparison"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Dialog/MarginContainer/VBoxContainer/ImageComparison/TargetPaintingPanel"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Dialog/MarginContainer/VBoxContainer/ImageComparison/TargetPaintingPanel/VBoxContainer"]
+layout_mode = 2
+text = "Target"
+horizontal_alignment = 1
+
+[node name="TargetImage" type="TextureRect" parent="Dialog/MarginContainer/VBoxContainer/ImageComparison/TargetPaintingPanel/VBoxContainer"]
+custom_minimum_size = Vector2(300, 300)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="ButtonContainer" type="HBoxContainer" parent="Dialog/MarginContainer/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="RetryButton" type="Button" parent="Dialog/MarginContainer/VBoxContainer/ButtonContainer"]
+custom_minimum_size = Vector2(150, 40)
+layout_mode = 2
+text = "Retry Mission"
+
+[node name="BackButton" type="Button" parent="Dialog/MarginContainer/VBoxContainer/ButtonContainer"]
+custom_minimum_size = Vector2(150, 40)
+layout_mode = 2
+text = "Back to Missions"
