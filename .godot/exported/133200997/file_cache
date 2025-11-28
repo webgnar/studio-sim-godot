@@ -38,7 +38,7 @@ res://scenes/UI/MissionSelectionUI.tscn::d553603acd0ad366e7d49a54a114db8e::17640
 res://scenes/UI/PaintingUI.tscn::fa19481ff61db84d2cf11102c9e1ebb1::1764018092::res://.godot/exported/133200997/export-197e15c0e662bbb56658e384e0a54c96-PaintingUI.scn
 res://scenes/UI/StickerSlot.tscn::769f726528c50717cffd1456413adc69::1764016211::res://.godot/exported/133200997/export-1fcf09436620f5c9e4d3b02c5aeb2538-StickerSlot.scn
 res://scenes/UI/ValidationResultUI.tscn::5f9a48561c72ce7b201e7d0a3d8e4da0::1764057255::res://.godot/exported/133200997/export-1a01ea4a9204e9999dc95b08c8cfe93a-ValidationResultUI.scn
-res://resources/ui_theme.tres::60ebfeb02f96e7eeefb30e839b184afb::1764307129::res://.godot/exported/133200997/export-20ef74e818d3cb724f70e0bd3db25544-ui_theme.res
 res://scenes/objects/table.tscn::05ee8ba9c7fe5d0009d3a8e3da8ac5f2::1764301870::res://.godot/exported/133200997/export-7c777846fdf66166528d073ce9884b9c-table.scn
 res://scenes/UI/MainMenuHub.tscn::a284e40515860fb403c67a382e8224b3::1764309143::res://.godot/exported/133200997/export-b7021ae75186751c03f3838ac6014978-MainMenuHub.scn
 res://scenes/UI/ShopUI.tscn::801d1b5f69bcb3bbfb96289b44f0ed97::1764309143::res://.godot/exported/133200997/export-30a8f3993320d15d0ebcfb74a3a5de9e-ShopUI.scn
+res://themes/ui_theme.tres::60ebfeb02f96e7eeefb30e839b184afb::1764307129::res://.godot/exported/133200997/export-6986a3918d5316243c91c225d09f5f65-ui_theme.res

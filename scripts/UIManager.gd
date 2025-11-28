@@ -17,8 +17,8 @@ enum GameState {
 	SHOP            # Shop interface (placeholder)
 }
 
-# Current game state
-var current_state: GameState = GameState.MAIN_MENU
+# Current game state (start as null, will be set to MAIN_MENU in _ready)
+var current_state: GameState = -1  # Invalid state to force initial transition
 
 # Player currency data
 var player_money: int = 0
