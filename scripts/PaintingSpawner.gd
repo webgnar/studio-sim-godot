@@ -47,7 +47,11 @@ func replace_painting_with_carryable(world: Node3D) -> void:
 		material = StandardMaterial3D.new()
 		material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 		material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-		mesh_instance.set_surface_override_material(0, material)
+	else:
+		# Duplicate material to create unique instance (prevents sharing across all paintings)
+		material = material.duplicate()
+
+	mesh_instance.set_surface_override_material(0, material)
 	material.albedo_texture = baked_texture
 
 	# Add small velocity to push away from wall (use spawn marker's forward direction if available)
@@ -147,8 +151,11 @@ func _spawn_carryable_painting(texture: ImageTexture, pos: Vector3, rot: Vector3
 		material = StandardMaterial3D.new()
 		material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 		material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-		mesh_instance.set_surface_override_material(0, material)
+	else:
+		# Duplicate material to create unique instance (prevents sharing across all paintings)
+		material = material.duplicate()
 
+	mesh_instance.set_surface_override_material(0, material)
 	material.albedo_texture = texture
 
 	# Add small velocity to push away from wall (prevents clipping)

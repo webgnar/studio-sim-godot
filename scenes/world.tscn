@@ -1300,6 +1300,8 @@ libraries = {
 
 [node name="StaticBody3D" type="StaticBody3D" parent="buttonRed"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9999999, 0)
+collision_layer = 8
+collision_mask = 0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="buttonRed/StaticBody3D"]
 shape = SubResource("CylinderShape3D_kvmu4")
