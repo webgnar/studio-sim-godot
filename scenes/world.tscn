@@ -44,7 +44,6 @@
 [ext_resource type="PackedScene" uid="uid://d334ujfwmx8lp" path="res://models/interactables/fan/cage.glb" id="49_1jxku"]
 [ext_resource type="Script" uid="uid://c63c2n2vhd5r6" path="res://scripts/old stuff/FanController.gd" id="49_npbic"]
 [ext_resource type="PackedScene" uid="uid://bsdobk5wd61u" path="res://models/interactables/fan/blade.glb" id="50_1dgkn"]
-[ext_resource type="Script" path="res://scripts/consolelog.gd" id="51_1jxku"]
 [ext_resource type="Script" uid="uid://u01mbabuiguh" path="res://scripts/components/PoweredDeviceComponent.gd" id="51_iexy4"]
 [ext_resource type="Script" uid="uid://d1d8fhujnbpfy" path="res://scripts/components/PowerCordPlugComponent.gd" id="51_pf35h"]
 [ext_resource type="PackedScene" uid="uid://dtharqrj0cj5y" path="res://scenes/old stuff/test_box.tscn" id="52_e68xj"]
@@ -59,7 +58,6 @@
 [ext_resource type="PackedScene" uid="uid://drijdy8rlc67s" path="res://models/outside/treeSmallOak2.gltf" id="69_40xph"]
 [ext_resource type="PackedScene" uid="uid://cqwacwlbuqbe" path="res://models/outside/crazy2.gltf" id="70_8lgfd"]
 [ext_resource type="PackedScene" uid="uid://k5bi7w8gtday" path="res://scenes/camera stuff/CameraZone.tscn" id="71_dyafi"]
-[ext_resource type="Script" path="res://scripts/ControllerDebug.gd" id="72_r5yoc"]
 [ext_resource type="PackedScene" uid="uid://btuhdnbc2hjii" path="res://scenes/PaintingRoot.tscn" id="73_1m1ue"]
 [ext_resource type="PackedScene" uid="uid://bqbqfg2mfb0iw" path="res://scenes/UI/PaintingUI.tscn" id="74_ntuqo"]
 [ext_resource type="PackedScene" uid="uid://bshsrjrokypta" path="res://scenes/PaintingRoot2D.tscn" id="75_ca4ee"]
@@ -1153,7 +1151,6 @@ layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
-script = ExtResource("51_1jxku")
 
 [node name="Label" type="Label" parent="console log/SubViewport/Control"]
 layout_mode = 0
@@ -1199,7 +1196,6 @@ transform = Transform3D(-6.862688e-08, 0, 1.57, 0, 1.57, 0, -1.57, 0, -6.862688e
 transform = Transform3D(-4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0, 1, -3.4057033, 2.5300002, 7)
 
 [node name="Node3D" type="Node3D" parent="."]
-script = ExtResource("72_r5yoc")
 
 [editable path="Styrofoam cube"]
 [editable path="CameraZone"]

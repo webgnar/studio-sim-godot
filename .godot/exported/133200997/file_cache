@@ -17,7 +17,7 @@ res://resources/missions/many.tres::6e3e022be847fa9825ac7c1323a61525::1763881417
 res://resources/missions/mission_1763880834.tres::d4b8aa8b63324a4d5a55ba807c20d232::1763880845::res://.godot/exported/133200997/export-2bde1c02cc2b842658d4174d5a3296c8-mission_1763880834.res
 res://resources/missions/newtest.tres::d5caf5f069589232ea86ac3c336eaada::1763883655::res://.godot/exported/133200997/export-6e1d9b7c19006285c339f3237b1d483c-newtest.res
 res://resources/missions/simple.tres::5fb295439e8604b4d2f8a55914df6c2a::1763883827::res://.godot/exported/133200997/export-45d379adacd2fd1d5d0c7e2786becf41-simple.res
-res://scenes/PaintingRoot2D.tscn::19c3081c63eb413865550bf4f1a59967::1764058230::res://.godot/exported/133200997/export-c9422ff23df7d52dcdbaa5cb19c4dd5d-PaintingRoot2D.scn
+res://scenes/PaintingRoot2D.tscn::e78164e702af64b8c8154c1292efd916::1764113074::res://.godot/exported/133200997/export-c9422ff23df7d52dcdbaa5cb19c4dd5d-PaintingRoot2D.scn
 res://scenes/PaintingRoot.tscn::16a314f2db2544bc5d9d0dc50f08ba26::1764019379::res://.godot/exported/133200997/export-7698917d71931537be1d093dc2a1ded6-PaintingRoot.scn
 res://default.tscn::090a9f7ae85fa08e3c228d923d165168::1762583134::res://.godot/exported/133200997/export-ecadf3196f98fed7b5722fd2df0d4094-default.scn
 res://scenes/camera stuff/CameraZone.tscn::0c03a9cf1a34db73ade279122c18b488::1762549577::res://.godot/exported/133200997/export-13a86c072fe0281561605d9f8d548fb6-CameraZone.scn
