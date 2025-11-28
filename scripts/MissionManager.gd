@@ -18,8 +18,22 @@ var current_mission: PaintingMission = null
 var progression: Dictionary = {}
 
 func _ready():
+	ensure_paintings_directory()
 	load_all_missions()
 	load_progression()
+
+func ensure_paintings_directory():
+	"""Create mission_paintings directory if it doesn't exist"""
+	var dir = DirAccess.open("user://")
+	if dir:
+		if not dir.dir_exists("mission_paintings"):
+			var error = dir.make_dir("mission_paintings")
+			if error == OK:
+				print("MissionManager: Created mission_paintings directory")
+			else:
+				push_error("MissionManager: Failed to create mission_paintings directory!")
+	else:
+		push_error("MissionManager: Failed to access user directory!")
 
 func load_all_missions():
 	"""Load all mission .tres files using the missions manifest"""
@@ -84,7 +98,7 @@ func start_mission(mission: PaintingMission):
 	if UIManager:
 		UIManager.change_state(UIManager.GameState.IN_MISSION)
 
-func complete_mission(result: ValidationResult):
+func complete_mission(result: ValidationResult, latest_painting_path: String = "", best_painting_path: String = ""):
 	"""Mark current mission as completed with the given result"""
 	if not current_mission:
 		push_error("MissionManager: No active mission to complete!")
@@ -99,15 +113,24 @@ func complete_mission(result: ValidationResult):
 		progression[mission_id] = {
 			"completed": false,
 			"grade": "F",
-			"best_score": 0.0
+			"best_score": 0.0,
+			"latest_painting_path": "",
+			"best_painting_path": ""
 		}
 
 	var mission_data = progression[mission_id]
+
+	# Always update latest painting path
+	if latest_painting_path != "":
+		mission_data["latest_painting_path"] = latest_painting_path
 
 	# Update if this is a better score
 	if score > mission_data["best_score"]:
 		mission_data["best_score"] = score
 		mission_data["grade"] = grade
+		# Update best painting path only if this is the new best
+		if best_painting_path != "":
+			mission_data["best_painting_path"] = best_painting_path
 
 	# Mark as completed if passed
 	if result.success:
@@ -125,8 +148,20 @@ func complete_mission(result: ValidationResult):
 func get_mission_completion(mission_id: String) -> Dictionary:
 	"""Get completion data for a specific mission"""
 	if progression.has(mission_id):
-		return progression[mission_id]
-	return {"completed": false, "grade": "F", "best_score": 0.0}
+		var data = progression[mission_id]
+		# Ensure painting path fields exist (backward compatibility)
+		if not data.has("latest_painting_path"):
+			data["latest_painting_path"] = ""
+		if not data.has("best_painting_path"):
+			data["best_painting_path"] = ""
+		return data
+	return {
+		"completed": false,
+		"grade": "F",
+		"best_score": 0.0,
+		"latest_painting_path": "",
+		"best_painting_path": ""
+	}
 
 func is_mission_completed(mission_id: String) -> bool:
 	"""Check if a mission has been completed"""

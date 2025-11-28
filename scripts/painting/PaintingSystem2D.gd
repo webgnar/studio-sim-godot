@@ -575,6 +575,40 @@ func set_input_enabled(enabled: bool):
 	"""Deprecated: Input is now always enabled. Routing handled by PaintingModeManager."""
 	pass  # No-op for backward compatibility
 
+func save_painting_image(mission_id: String, is_best: bool) -> String:
+	"""Save current painting to disk as PNG (HTML5 compatible)"""
+	if not canvas_viewport:
+		push_error("PaintingSystem2D: No canvas viewport to capture!")
+		return ""
+
+	# Capture current viewport as image
+	var viewport_texture = canvas_viewport.get_texture()
+	if not viewport_texture:
+		push_error("PaintingSystem2D: Failed to get viewport texture!")
+		return ""
+
+	var image = viewport_texture.get_image()
+	if not image:
+		push_error("PaintingSystem2D: Failed to get image from texture!")
+		return ""
+
+	# Rotate to match reference orientation (references are rotated 90° clockwise)
+	image.rotate_90(CLOCKWISE)
+
+	# Determine filename (latest or best)
+	var filename = "%s_%s.png" % [mission_id, "best" if is_best else "latest"]
+	var path = "user://mission_paintings/%s" % filename
+
+	# Save image as PNG
+	var error = image.save_png(path)
+
+	if error == OK:
+		print("PaintingSystem2D: Saved painting to %s" % path)
+		return path
+	else:
+		push_error("PaintingSystem2D: Failed to save painting image! Error: %d" % error)
+		return ""
+
 # Mission system
 func start_mission(mission: PaintingMission):
 	"""Start a new mission by clearing the canvas and preparing for painting"""
@@ -591,11 +625,25 @@ func submit_painting():
 		push_error("PaintingSystem2D: No active mission to submit!")
 		return
 
+	var mission_id = MissionManager.current_mission.mission_id
+
 	# Validate the painting
 	var result = verify_painting(MissionManager.current_mission)
 
-	# Save the result to mission manager
-	MissionManager.complete_mission(result)
+	# Save paintings to disk
+	var latest_path = save_painting_image(mission_id, false)  # Always save latest
+
+	# Check if this is a new best score
+	var mission_data = MissionManager.get_mission_completion(mission_id)
+	var is_new_best = result.match_percentage > mission_data.get("best_score", 0.0)
+	var best_path = ""
+
+	if is_new_best:
+		best_path = save_painting_image(mission_id, true)  # Save as best too
+		print("PaintingSystem2D: New best score! Saved best painting.")
+
+	# Save the result to mission manager with painting paths
+	MissionManager.complete_mission(result, latest_path, best_path)
 
 	# Find and show the validation result UI
 	var validation_ui = _find_validation_ui()

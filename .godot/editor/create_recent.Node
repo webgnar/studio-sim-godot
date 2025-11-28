@@ -1,7 +1,9 @@
+AnimationPlayer
+AnimationTree
+Node3D
 CarryableComponent
 CollisionShape3D
 RigidBody3D
-Node3D
 CanvasLayer
 Camera3D
 MeshInstance3D
@@ -11,4 +13,3 @@ SubViewport
 VBoxContainer
 Container
 TextureRect
-PanelContainer

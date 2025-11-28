@@ -19,7 +19,7 @@ func _ready():
 	back_button.pressed.connect(_on_back_pressed)
 
 	# Load theme
-	theme = load("res://resources/ui_theme.tres")
+	theme = load("res://themes/ui_theme.tres")
 
 func show_screen():
 	"""Show the shop screen"""

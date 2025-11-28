@@ -27,7 +27,7 @@ func _ready():
 	quit_button.pressed.connect(_on_quit_pressed)
 
 	# Load theme
-	theme = load("res://resources/ui_theme.tres")
+	theme = load("res://themes/ui_theme.tres")
 
 	# Update displays
 	_update_money_display()

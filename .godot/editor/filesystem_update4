@@ -15,3 +15,5 @@ res://scripts/MissionManager.gd
 res://scripts/ui/MissionSelectionUI.gd
 res://scripts/ui/ValidationResultUI.gd
 res://scripts/UIManager.gd
+res://scripts/ui/MainMenuHub.gd
+res://scripts/ui/ShopUI.gd
