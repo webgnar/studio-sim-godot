@@ -8,6 +8,7 @@ class_name MainMenuHub
 @onready var money_label = $Dialog/MarginContainer/HBoxContainer/LeftPanel/MoneyDisplay/MoneyLabel
 @onready var completed_missions_label = $Dialog/MarginContainer/HBoxContainer/LeftPanel/StatsContainer/CompletedMissionsLabel
 @onready var total_earnings_label = $Dialog/MarginContainer/HBoxContainer/LeftPanel/StatsContainer/TotalEarningsLabel
+@onready var paintings_created_label = $Dialog/MarginContainer/HBoxContainer/LeftPanel/StatsContainer/PaintingsCreatedLabel
 @onready var missions_button = $Dialog/MarginContainer/HBoxContainer/RightPanel/MissionsButton
 @onready var shop_button = $Dialog/MarginContainer/HBoxContainer/RightPanel/ShopButton
 @onready var quit_button = $Dialog/MarginContainer/HBoxContainer/RightPanel/QuitButton
@@ -20,6 +21,10 @@ func _ready():
 	if UIManager:
 		UIManager.register_screen("main_menu", self)
 		UIManager.money_changed.connect(_on_money_changed)
+
+	# Connect to PaintingSpawner
+	if PaintingSpawner:
+		PaintingSpawner.painting_created.connect(_on_painting_created)
 
 	# Connect button signals
 	missions_button.pressed.connect(_on_missions_pressed)
@@ -48,6 +53,10 @@ func _on_money_changed(new_amount: int):
 	"""Update money display when currency changes"""
 	_update_money_display()
 
+func _on_painting_created(count: int):
+	"""Update stats display when a painting is created"""
+	_update_stats_display()
+
 func _update_money_display():
 	"""Update the money counter"""
 	if UIManager and money_label:
@@ -58,6 +67,9 @@ func _update_stats_display():
 	if UIManager and completed_missions_label and total_earnings_label:
 		completed_missions_label.text = "Missions Completed: %d" % UIManager.missions_completed
 		total_earnings_label.text = "Total Earnings: $%d" % UIManager.lifetime_earnings
+
+	if PaintingSpawner and paintings_created_label:
+		paintings_created_label.text = "Paintings Created: %d" % PaintingSpawner.paintings_created
 
 func _on_missions_pressed():
 	"""Open mission selection screen"""

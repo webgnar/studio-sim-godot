@@ -71,6 +71,10 @@ text = "Missions Completed: 0"
 layout_mode = 2
 text = "Total Earnings: $0"
 
+[node name="PaintingsCreatedLabel" type="Label" parent="Dialog/MarginContainer/HBoxContainer/LeftPanel/StatsContainer"]
+layout_mode = 2
+text = "Paintings Created: 0"
+
 [node name="Spacer" type="Control" parent="Dialog/MarginContainer/HBoxContainer/LeftPanel"]
 layout_mode = 2
 size_flags_vertical = 3
