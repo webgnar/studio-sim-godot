@@ -1,9 +1,11 @@
 {
+	"generated_at": "2025-11-29T14:24:30",
 	"missions": [
-		"many.tres",
-		"mission_1763880834.tres",
-		"newtest.tres",
-		"simple.tres"
-	],
-	"generated_at": "2025-11-24T00:00:00"
+		"mission 1.tres",
+		"mission_2.tres",
+		"mission_3.tres",
+		"mission_4.tres",
+		"mission_5.tres",
+		"mission_6.tres"
+	]
 }

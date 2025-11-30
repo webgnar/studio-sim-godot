@@ -1,0 +1,258 @@
+[gd_scene load_steps=18 format=3 uid="uid://da8jmxqyjt0xs"]
+
+[ext_resource type="Script" uid="uid://bn5a584271aim" path="res://scripts/TitleScreenController.gd" id="1_2ktle"]
+[ext_resource type="Material" uid="uid://wwlsotlotycw" path="res://materials/wood.tres" id="1_hjcsb"]
+[ext_resource type="Texture2D" uid="uid://cbn0d3riillev" path="res://sprites/wood.jpg" id="2_2ktle"]
+[ext_resource type="Texture2D" uid="uid://dyuvtxhp260rj" path="res://sprites/normals/wood_ambient.png" id="3_l7b4h"]
+[ext_resource type="Texture2D" uid="uid://3smflfln5x7y" path="res://sprites/normals/wood_specular.png" id="4_3mdse"]
+[ext_resource type="Texture2D" uid="uid://bifvpuur5heg3" path="res://sprites/normals/wood_normal.png" id="5_f48o8"]
+[ext_resource type="PackedScene" uid="uid://boyehvhrdbdi6" path="res://models/props/lights.glb" id="6_1bmgf"]
+[ext_resource type="Material" uid="uid://s7aanj1sph6l" path="res://materials/floor.tres" id="7_v0xar"]
+[ext_resource type="Material" uid="uid://re8gmfn1nbgt" path="res://materials/wall.tres" id="8_vq22d"]
+[ext_resource type="Material" uid="uid://48uded6h5otx" path="res://materials/brickwhite.tres" id="9_q7lne"]
+[ext_resource type="Texture2D" uid="uid://bke1xjp3mdreb" path="res://sprites/door.jpg" id="10_ijstc"]
+[ext_resource type="PackedScene" uid="uid://kraxm2alr635" path="res://scenes/old stuff/breakable_window.tscn" id="11_y4bqf"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_888yl"]
+sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+
+[sub_resource type="Sky" id="Sky_rwgxs"]
+sky_material = SubResource("ProceduralSkyMaterial_888yl")
+
+[sub_resource type="Environment" id="Environment_qyuap"]
+background_mode = 2
+sky = SubResource("Sky_rwgxs")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1nrh6"]
+albedo_texture = ExtResource("2_2ktle")
+metallic = 1.0
+metallic_texture = ExtResource("4_3mdse")
+normal_enabled = true
+normal_texture = ExtResource("5_f48o8")
+ao_enabled = true
+ao_texture = ExtResource("3_l7b4h")
+uv1_scale = Vector3(1.085, -1.798, 0.455)
+uv1_offset = Vector3(4.91, 0, 0)
+uv1_triplanar = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_08fpa"]
+albedo_texture = ExtResource("10_ijstc")
+
+[node name="TitleScreen" type="Node3D"]
+script = ExtResource("1_2ktle")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 11.110161, 0)
+shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_qyuap")
+
+[node name="StudioEnvironment" type="Node3D" parent="."]
+
+[node name="celing" type="CSGBox3D" parent="StudioEnvironment"]
+transform = Transform3D(-2.0107239e-08, 7.49, 0, -0.46, -3.2739828e-07, 0, 0, 0, 22.64, 0.057606697, 5.5446606, 4)
+use_collision = true
+collision_layer = 2
+material = ExtResource("1_hjcsb")
+
+[node name="strut" type="CSGBox3D" parent="StudioEnvironment/celing"]
+transform = Transform3D(-7.562069e-08, -7.117353e-07, -0.9843476, -4.644262e-09, 0.99999994, -2.642525e-09, 0.035150174, 1.4461054e-08, -8.742276e-10, 0.6765671, 4.656613e-10, -0.21965799)
+size = Vector3(0.7, 1, 1)
+material = SubResource("StandardMaterial3D_1nrh6")
+
+[node name="strut2" type="CSGBox3D" parent="StudioEnvironment/celing"]
+transform = Transform3D(-7.562069e-08, -7.117353e-07, -0.9843476, -4.644262e-09, 0.99999994, -2.642525e-09, 0.035150174, 1.4461054e-08, -8.742276e-10, 0.6765671, 4.656613e-10, 0.0851123)
+size = Vector3(0.7, 1, 1)
+material = SubResource("StandardMaterial3D_1nrh6")
+
+[node name="strut3" type="CSGBox3D" parent="StudioEnvironment/celing"]
+transform = Transform3D(-7.562069e-08, -7.117353e-07, -0.9843476, -4.644262e-09, 0.99999994, -2.642525e-09, 0.035150174, 1.4461054e-08, -8.742276e-10, 0.6765671, 4.656613e-10, 0.21762115)
+size = Vector3(0.7, 1, 1)
+material = SubResource("StandardMaterial3D_1nrh6")
+
+[node name="strut4" type="CSGBox3D" parent="StudioEnvironment/celing"]
+transform = Transform3D(-7.562069e-08, -7.117353e-07, -0.9843476, -4.644262e-09, 0.99999994, -2.642525e-09, 0.035150174, 1.4461054e-08, -8.742276e-10, 0.6765671, 4.656613e-10, 0.4384692)
+size = Vector3(0.7, 1, 1)
+material = SubResource("StandardMaterial3D_1nrh6")
+
+[node name="light1" parent="StudioEnvironment" instance=ExtResource("6_1bmgf")]
+transform = Transform3D(0.33, 0, 0, 0, 0.33, 0, 0, 0, 0.33, 0, 5.100599, -3)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="StudioEnvironment/light1"]
+transform = Transform3D(3.030303, 0, 0, 0, 3.030303, 0, 0, 0, 3.030303, 0, -0.71681786, 0)
+light_color = Color(0.7411765, 1, 1, 1)
+omni_range = 17.54
+omni_attenuation = 1.859
+
+[node name="light2" parent="StudioEnvironment" instance=ExtResource("6_1bmgf")]
+transform = Transform3D(0.33, 0, 0, 0, 0.33, 0, 0, 0, 0.33, 0, 5.100599, 2.250371)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="StudioEnvironment/light2"]
+transform = Transform3D(3.030303, 0, 0, 0, 3.030303, 0, 0, 0, 3.030303, 0, -0.5879202, 0)
+light_color = Color(0.7607843, 1, 1, 1)
+shadow_enabled = true
+shadow_opacity = 0.18
+omni_range = 11.027
+omni_attenuation = 1.491
+
+[node name="light3" parent="StudioEnvironment" instance=ExtResource("6_1bmgf")]
+transform = Transform3D(0.33, 0, 0, 0, 0.33, 0, 0, 0, 0.33, 0, 4.8278055, 9.223094)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="StudioEnvironment/light3"]
+transform = Transform3D(3.030303, 0, 0, 0, 3.030303, 0, 0, 0, 3.030303, 0, -0.80340767, 0)
+light_color = Color(0.6431373, 1, 1, 1)
+light_energy = 2.472
+omni_range = 13.874
+omni_attenuation = 1.429
+
+[node name="studio" type="CSGCombiner3D" parent="StudioEnvironment"]
+transform = Transform3D(0.46, 0, 0, 0, 7.49, 0, 0, 0, 22.64, -4.9423933, 3.544661, 4)
+use_collision = true
+collision_layer = 2
+collision_mask = 0
+
+[node name="floor" type="CSGBox3D" parent="StudioEnvironment/studio"]
+transform = Transform3D(22.413044, 0, 0, 0, 0.008010681, 0, 0, 0, 1.0114841, 10.744333, -0.47325248, 0)
+use_collision = true
+collision_mask = 0
+material = ExtResource("7_v0xar")
+
+[node name="wall" type="CSGBox3D" parent="StudioEnvironment/studio"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.173913, -0.099999994, 0)
+use_collision = true
+collision_mask = 0
+size = Vector3(1, 0.8, 1)
+material = ExtResource("8_vq22d")
+
+[node name="wall2" type="CSGBox3D" parent="StudioEnvironment/studio"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1.0247351, 19.533485, -0.099999994, 0)
+use_collision = true
+collision_mask = 0
+size = Vector3(1, 0.8, 1)
+material = ExtResource("8_vq22d")
+
+[node name="wall3" type="CSGBox3D" parent="StudioEnvironment/studio"]
+transform = Transform3D(-4.371139e-08, 0, 24.108696, 0, 1, 0, -0.020318022, 0, -2.1411632e-08, 10.837832, -0.099999994, 0.48586574)
+use_collision = true
+collision_mask = 0
+size = Vector3(1, 0.8, 1)
+material = ExtResource("8_vq22d")
+
+[node name="pillar" type="CSGBox3D" parent="StudioEnvironment/studio"]
+transform = Transform3D(2.13, 0, 0, 0, 0.88, 0, 0, 0, 0.030000001, 2.3920708, -0.13351133, 0)
+material = ExtResource("9_q7lne")
+
+[node name="pillar2" type="CSGBox3D" parent="StudioEnvironment/studio"]
+transform = Transform3D(2.13, 0, 0, 0, 0.88, 0, 0, 0, 0.03, 2.173913, -0.13351133, 0.3091873)
+material = ExtResource("9_q7lne")
+
+[node name="pillar3" type="CSGBox3D" parent="StudioEnvironment/studio"]
+transform = Transform3D(2.13, 0, 0, 0, 0.88, 0, 0, 0, 0.05, 2.7815914, -0.13351133, -0.48586574)
+material = ExtResource("9_q7lne")
+
+[node name="pillar8" type="CSGBox3D" parent="StudioEnvironment/studio"]
+transform = Transform3D(2.13, 0, 0, 0, 0.88, 0, 0, 0, 0.05, 18.876558, -0.13351133, -0.48586574)
+material = ExtResource("9_q7lne")
+
+[node name="pillar9" type="CSGBox3D" parent="StudioEnvironment/studio"]
+transform = Transform3D(2.13, 0, 0, 0, 0.88, 0, 0, 0, 0.05, 13.244867, -0.13351133, -0.47884685)
+size = Vector3(0.53, 0.88, 0.56)
+material = ExtResource("9_q7lne")
+
+[node name="pillar10" type="CSGBox3D" parent="StudioEnvironment/studio"]
+transform = Transform3D(2.13, 0, 0, 0, 0.88, 0, 0, 0, 0.05, 8.258, -0.13351133, -0.47884685)
+size = Vector3(0.45, 0.91, 0.56)
+material = ExtResource("9_q7lne")
+
+[node name="pillar4" type="CSGBox3D" parent="StudioEnvironment/studio"]
+transform = Transform3D(18.05, 0, 0, 0, 0.88, 0, 0, 0, 0.05, 10.869565, -0.7539825, -0.48586574)
+material = ExtResource("9_q7lne")
+
+[node name="pillar7" type="CSGBox3D" parent="StudioEnvironment/studio"]
+transform = Transform3D(18.05, 0, 0, 0, 0.88, 0, 0, 0, 0.05, 10.869565, 0.30330312, -0.46982357)
+size = Vector3(1, 0.17089844, 1)
+material = ExtResource("9_q7lne")
+
+[node name="pillar5" type="CSGBox3D" parent="StudioEnvironment/studio"]
+transform = Transform3D(2.13, 0, 0, 0, 0.88, 0, 0, 0, 0.030000001, 19.57027, -0.13351133, 0)
+material = ExtResource("9_q7lne")
+
+[node name="pillar6" type="CSGBox3D" parent="StudioEnvironment/studio"]
+transform = Transform3D(2.13, 0, 0, 0, 0.88, 0, 0, 0, 0.02, 19.969326, -0.13351133, 0.22372615)
+material = ExtResource("9_q7lne")
+
+[node name="door" type="CSGBox3D" parent="StudioEnvironment/studio"]
+transform = Transform3D(-1.0000001, -3.7729234e-07, -2.0582363e-06, 5.369091e-09, -4.779656e-08, -1.4459279, 1.2916772e-09, -0.12058302, 6.272892e-08, 19.293882, -0.26620448, -0.11051236)
+size = Vector3(1, 0.6, 0.3)
+material = SubResource("StandardMaterial3D_08fpa")
+
+[node name="WINDOWS" type="Node3D" parent="StudioEnvironment"]
+
+[node name="window2" parent="StudioEnvironment/WINDOWS" instance=ExtResource("11_y4bqf")]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -2.301294, 4.0959244, -6.759644)
+
+[node name="window3" parent="StudioEnvironment/WINDOWS" instance=ExtResource("11_y4bqf")]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -0.008910894, 2.467302, -6.661096)
+
+[node name="window7" parent="StudioEnvironment/WINDOWS" instance=ExtResource("11_y4bqf")]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -2.2844849, 2.467302, -6.661096)
+
+[node name="window4" parent="StudioEnvironment/WINDOWS" instance=ExtResource("11_y4bqf")]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -0.008910894, 4.0959244, -6.759644)
+
+[node name="window5" parent="StudioEnvironment/WINDOWS" instance=ExtResource("11_y4bqf")]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 2.3344998, 2.467302, -6.661096)
+
+[node name="window6" parent="StudioEnvironment/WINDOWS" instance=ExtResource("11_y4bqf")]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 2.3344998, 4.0959244, -6.759644)
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 11)
+current = true
+
+[node name="UI_Layer" type="CanvasLayer" parent="."]
+
+[node name="TitleScreenUI" type="Control" parent="UI_Layer"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TitleLabel" type="Label" parent="UI_Layer/TitleScreenUI"]
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -11.5
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "Studio Sim"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI_Layer/TitleScreenUI"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -40.0
+offset_right = 40.0
+grow_vertical = 0
+
+[node name="ContinueButton" type="Button" parent="UI_Layer/TitleScreenUI/VBoxContainer"]
+layout_mode = 2
+text = "Continue"
+
+[node name="NewGameButton" type="Button" parent="UI_Layer/TitleScreenUI/VBoxContainer"]
+layout_mode = 2
+text = "New Game"
+
+[node name="QuitButton" type="Button" parent="UI_Layer/TitleScreenUI/VBoxContainer"]
+layout_mode = 2
+text = "Quit Game"

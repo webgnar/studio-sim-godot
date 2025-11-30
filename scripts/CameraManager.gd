@@ -32,6 +32,8 @@ func register_player_camera(cam: Camera3D):
 	"""Call this from the player script to register the player's main camera"""
 	player_camera = cam
 	current_camera = cam
+	# Make the player camera active immediately
+	cam.make_current()
 
 func enter_camera_zone(zone: Node, blend_time: float = -1.0):
 	"""Called when player enters a camera zone"""

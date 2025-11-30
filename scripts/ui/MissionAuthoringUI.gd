@@ -105,7 +105,7 @@ func _save_mission():
 	var file_path = "res://resources/missions/%s.tres" % mission_id
 
 	# Save mission
-	var success = authoring_tool.create_and_save_mission(
+	var success = await authoring_tool.create_and_save_mission(
 		mission_id,
 		title,
 		description,

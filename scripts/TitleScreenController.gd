@@ -1,0 +1,88 @@
+extends Node3D
+
+## Title screen controller - handles save detection and scene transitions
+
+@onready var continue_button: Button = $UI_Layer/TitleScreenUI/VBoxContainer/ContinueButton
+@onready var new_game_button: Button = $UI_Layer/TitleScreenUI/VBoxContainer/NewGameButton
+@onready var quit_button: Button = $UI_Layer/TitleScreenUI/VBoxContainer/QuitButton
+
+func _ready():
+	# Set mouse mode to visible
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+
+	# Check if save exists and enable/disable Continue button
+	var has_save = _check_save_exists()
+	continue_button.disabled = !has_save
+
+	# Connect buttons
+	continue_button.pressed.connect(_on_continue_pressed)
+	new_game_button.pressed.connect(_on_new_game_pressed)
+	quit_button.pressed.connect(_on_quit_pressed)
+
+	# Focus first available button
+	if has_save:
+		continue_button.grab_focus()
+	else:
+		new_game_button.grab_focus()
+
+func _check_save_exists() -> bool:
+	"""Check if any save files exist"""
+	return (FileAccess.file_exists("user://player_data.json") or
+			FileAccess.file_exists("user://mission_progression.json"))
+
+func _on_continue_pressed():
+	"""Load the world scene - UIManager will load existing save data in its _ready()"""
+	get_tree().change_scene_to_file("res://scenes/world.tscn")
+
+func _on_new_game_pressed():
+	"""Wipe all save data before loading world scene"""
+	_wipe_save_data()
+	get_tree().change_scene_to_file("res://scenes/world.tscn")
+
+func _on_quit_pressed():
+	"""Quit the game"""
+	get_tree().quit()
+
+func _wipe_save_data():
+	"""Delete all save files and directories"""
+	# Delete player data JSON
+	if FileAccess.file_exists("user://player_data.json"):
+		DirAccess.remove_absolute("user://player_data.json")
+		print("TitleScreen: Deleted player_data.json")
+
+	# Delete mission progression JSON
+	if FileAccess.file_exists("user://mission_progression.json"):
+		DirAccess.remove_absolute("user://mission_progression.json")
+		print("TitleScreen: Deleted mission_progression.json")
+
+	# Delete mission_paintings directory
+	var dir = DirAccess.open("user://")
+	if dir and dir.dir_exists("mission_paintings"):
+		_delete_directory_recursive("user://mission_paintings")
+		print("TitleScreen: Deleted mission_paintings directory")
+
+func _delete_directory_recursive(path: String):
+	"""Recursively delete a directory and all its contents"""
+	var dir = DirAccess.open(path)
+	if not dir:
+		return
+
+	dir.list_dir_begin()
+	var file_name = dir.get_next()
+
+	while file_name != "":
+		var file_path = path + "/" + file_name
+
+		if dir.current_is_dir():
+			# Recursively delete subdirectory
+			_delete_directory_recursive(file_path)
+		else:
+			# Delete file
+			DirAccess.remove_absolute(file_path)
+
+		file_name = dir.get_next()
+
+	dir.list_dir_end()
+
+	# Remove the directory itself
+	DirAccess.remove_absolute(path)

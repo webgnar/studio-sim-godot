@@ -58,7 +58,7 @@ func _ready():
 	_setup_plane_material()
 
 	# Add visible background to SubViewport
-	_setup_viewport_background()
+	# _setup_viewport_background()  # Commented out for transparent background
 
 	# Load sticker library from folder
 	_load_sticker_library()
@@ -84,7 +84,7 @@ func _setup_plane_material():
 	# Assign viewport texture to material
 	if material is StandardMaterial3D:
 		material.albedo_texture = canvas_viewport.get_texture()
-		material.albedo_color = Color(1, 1, 1, 1)  # White background
+		material.albedo_color = Color(1, 1, 1, 1)  # Full opacity for texture (transparency comes from viewport)
 	else:
 		push_error("Material is not StandardMaterial3D! Type: " + str(material.get_class()))
 

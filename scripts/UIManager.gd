@@ -42,8 +42,8 @@ func _ready():
 	# Wait a frame for all UI screens to register
 	await get_tree().process_frame
 
-	# Start in main menu state
-	change_state(GameState.MAIN_MENU)
+	# Start in gameplay state (title screen handles initial menu)
+	change_state(GameState.GAMEPLAY)
 
 func _input(event):
 	# "start" button (backtick) toggles main menu

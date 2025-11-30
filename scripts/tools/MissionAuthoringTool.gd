@@ -66,7 +66,7 @@ func save_mission(mission: PaintingMission, file_path: String) -> bool:
 		dir.make_dir_recursive(folder)
 
 	# Generate and save screenshot
-	var screenshot_path = _generate_screenshot(file_path)
+	var screenshot_path = await _generate_screenshot(file_path)
 	if screenshot_path:
 		mission.reference_image_path = screenshot_path
 
@@ -90,16 +90,33 @@ func _generate_screenshot(mission_path: String) -> String:
 		push_error("MissionAuthoringTool: Cannot generate screenshot - no viewport!")
 		return ""
 
+	# Temporarily remove preview sprite from scene tree to avoid capturing it
+	var preview_sprite = painting_system_2d.preview_sprite
+	var preview_was_in_tree = false
+
+	if preview_sprite and preview_sprite.is_inside_tree():
+		preview_was_in_tree = true
+		painting_system_2d.remove_child(preview_sprite)
+
+	# Wait for viewport to render without the preview sprite
+	await RenderingServer.frame_post_draw
+
 	# Get the viewport texture
 	var viewport_texture = painting_system_2d.canvas_viewport.get_texture()
 	if not viewport_texture:
 		push_error("MissionAuthoringTool: Cannot get viewport texture!")
+		# Restore preview sprite to scene tree
+		if preview_sprite and preview_was_in_tree:
+			painting_system_2d.add_child(preview_sprite)
 		return ""
 
 	# Get the image from the texture
 	var image = viewport_texture.get_image()
 	if not image:
 		push_error("MissionAuthoringTool: Cannot get image from texture!")
+		# Restore preview sprite to scene tree
+		if preview_sprite and preview_was_in_tree:
+			painting_system_2d.add_child(preview_sprite)
 		return ""
 
 	# Rotate image 90 degrees clockwise to match in-game view
@@ -114,7 +131,14 @@ func _generate_screenshot(mission_path: String) -> String:
 	var error = image.save_png(screenshot_path)
 	if error != OK:
 		push_error("MissionAuthoringTool: Failed to save screenshot to %s (error: %d)" % [screenshot_path, error])
+		# Restore preview sprite to scene tree
+		if preview_sprite and preview_was_in_tree:
+			painting_system_2d.add_child(preview_sprite)
 		return ""
+
+	# Restore preview sprite to scene tree
+	if preview_sprite and preview_was_in_tree:
+		painting_system_2d.add_child(preview_sprite)
 
 	print("MissionAuthoringTool: Saved reference screenshot to %s" % screenshot_path)
 	return screenshot_path
@@ -125,7 +149,7 @@ func create_and_save_mission(mission_id: String, title: String, description: Str
 	if not mission:
 		return false
 
-	return save_mission(mission, file_path)
+	return await save_mission(mission, file_path)
 
 func _update_manifest(mission_file_path: String):
 	"""Update the missions manifest to include the new mission"""

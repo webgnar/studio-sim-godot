@@ -1,5 +1,11 @@
-Marker3D
+Button
+VBoxContainer
+Label
+Control
+CanvasLayer
+Camera3D
 Node3D
+Marker3D
 AnimationPlayer
 AnimationTree
 CollisionShape3D
