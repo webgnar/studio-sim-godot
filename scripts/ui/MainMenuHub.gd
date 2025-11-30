@@ -31,6 +31,9 @@ func _ready():
 	shop_button.pressed.connect(_on_shop_pressed)
 	quit_button.pressed.connect(_on_quit_pressed)
 
+	# Update quit button text
+	quit_button.text = "Quit (Main Menu)"
+
 	# Load theme
 	theme = load("res://themes/ui_theme.tres")
 
@@ -82,5 +85,5 @@ func _on_shop_pressed():
 		UIManager.change_state(UIManager.GameState.SHOP)
 
 func _on_quit_pressed():
-	"""Quit the game"""
-	get_tree().quit()
+	"""Return to title screen"""
+	get_tree().change_scene_to_file("res://scenes/TitleScreen.tscn")
