@@ -5,3 +5,5 @@ res://models/new_array_mesh3.tres
 res://scripts/UIManager.gd
 res://scripts/CameraManager.gd
 res://scripts/ui/MainMenuHub.gd
+res://scripts/TitleScreenCharacter.gd
+res://scripts/TitleScreenController.gd

@@ -19,6 +19,9 @@ func _ready():
 	new_game_button.pressed.connect(_on_new_game_pressed)
 	quit_button.pressed.connect(_on_quit_pressed)
 
+	# Set up controller/gamepad focus navigation
+	_setup_focus_navigation()
+
 	# Focus first available button
 	if has_save:
 		continue_button.grab_focus()
@@ -86,3 +89,29 @@ func _delete_directory_recursive(path: String):
 
 	# Remove the directory itself
 	DirAccess.remove_absolute(path)
+
+func _setup_focus_navigation():
+	"""Set up gamepad/keyboard focus navigation for menu buttons"""
+	# Enable focus mode for all buttons
+	continue_button.focus_mode = Control.FOCUS_ALL
+	new_game_button.focus_mode = Control.FOCUS_ALL
+	quit_button.focus_mode = Control.FOCUS_ALL
+
+	# Set up vertical navigation (up/down D-pad or analog stick)
+	# Continue -> New Game -> Quit (and loop back)
+	continue_button.focus_neighbor_top = quit_button.get_path()
+	continue_button.focus_neighbor_bottom = new_game_button.get_path()
+	continue_button.focus_next = new_game_button.get_path()
+	continue_button.focus_previous = quit_button.get_path()
+
+	new_game_button.focus_neighbor_top = continue_button.get_path()
+	new_game_button.focus_neighbor_bottom = quit_button.get_path()
+	new_game_button.focus_next = quit_button.get_path()
+	new_game_button.focus_previous = continue_button.get_path()
+
+	quit_button.focus_neighbor_top = new_game_button.get_path()
+	quit_button.focus_neighbor_bottom = continue_button.get_path()
+	quit_button.focus_next = continue_button.get_path()
+	quit_button.focus_previous = new_game_button.get_path()
+
+	print("TitleScreen: Controller navigation enabled")

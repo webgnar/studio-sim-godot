@@ -1,4 +1,4 @@
-[gd_scene load_steps=73 format=3 uid="uid://da8jmxqyjt0xs"]
+[gd_scene load_steps=74 format=3 uid="uid://da8jmxqyjt0xs"]
 
 [ext_resource type="Script" uid="uid://bn5a584271aim" path="res://scripts/TitleScreenController.gd" id="1_2ktle"]
 [ext_resource type="Material" uid="uid://wwlsotlotycw" path="res://materials/wood.tres" id="1_hjcsb"]
@@ -39,6 +39,7 @@
 [ext_resource type="PackedScene" uid="uid://bsbvqf088sigr" path="res://models/props/woodPallet.gltf" id="37_6ogcu"]
 [ext_resource type="PackedScene" uid="uid://bshsrjrokypta" path="res://scenes/PaintingRoot2D.tscn" id="38_cr31u"]
 [ext_resource type="PackedScene" uid="uid://c65tkba8onvwi" path="res://models/player/humanrig.glb" id="39_3yl86"]
+[ext_resource type="Script" uid="uid://b0yviy0qx7100" path="res://scripts/TitleScreenCharacter.gd" id="40_5h1vy"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_888yl"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -920,5 +921,6 @@ transform = Transform3D(-4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0, 1, -3.4
 
 [node name="humanrig" parent="." instance=ExtResource("39_3yl86")]
 transform = Transform3D(-0.3, 0, -4.5298744e-08, 0, 0.3, 0, 4.5298744e-08, 0, -0.3, 0, 0.029128194, 8.119281)
+script = ExtResource("40_5h1vy")
 
 [editable path="PaintingRoot2d"]
