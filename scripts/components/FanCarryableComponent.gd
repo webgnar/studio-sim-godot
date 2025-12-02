@@ -21,8 +21,6 @@ func _ready() -> void:
 		powered_device.device_turned_off.connect(_update_interaction_text)
 		powered_device.power_state_changed.connect(_on_power_changed)
 		_update_interaction_text()
-	
-	print("✅ FanCarryableComponent ready: " + parent_object.name)
 
 func _on_e_key_interacted(player_interaction: PlayerInteractionComponent) -> void:
 	"""E-key toggles the fan on/off via PoweredDeviceComponent"""

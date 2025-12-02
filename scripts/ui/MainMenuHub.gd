@@ -37,9 +37,79 @@ func _ready():
 	# Load theme
 	theme = load("res://themes/ui_theme.tres")
 
+	# Set up controller navigation
+	_setup_focus_navigation()
+
 	# Update displays
 	_update_money_display()
 	_update_stats_display()
+
+func _input(event):
+	# Only handle input when this menu is visible
+	if not dialog.visible:
+		return
+
+	var viewport = get_viewport()
+	if not viewport:
+		return
+
+	# Handle menu navigation with move_forward/move_back
+	if event.is_action_pressed("move_forward"):
+		_navigate_menu(-1)  # Move up
+		viewport.set_input_as_handled()
+	elif event.is_action_pressed("move_back"):
+		_navigate_menu(1)  # Move down
+		viewport.set_input_as_handled()
+	elif event.is_action_pressed("jump"):
+		# Confirm button selection with jump (A button)
+		var focused = viewport.gui_get_focus_owner()
+		if focused is Button and not focused.disabled:
+			focused.pressed.emit()
+			viewport.set_input_as_handled()
+
+func _navigate_menu(direction: int):
+	"""Navigate menu up (-1) or down (1)"""
+	var viewport = get_viewport()
+	if not viewport:
+		return
+
+	var focused = viewport.gui_get_focus_owner()
+
+	# Create button list (only enabled buttons)
+	var buttons = []
+	if not missions_button.disabled:
+		buttons.append(missions_button)
+	if not shop_button.disabled:
+		buttons.append(shop_button)
+	if not quit_button.disabled:
+		buttons.append(quit_button)
+
+	if buttons.is_empty():
+		return
+
+	# Find current index
+	var current_index = buttons.find(focused)
+	if current_index == -1:
+		# No button focused, focus first
+		buttons[0].grab_focus()
+		return
+
+	# Calculate new index with wrapping
+	var new_index = (current_index + direction) % buttons.size()
+	if new_index < 0:
+		new_index = buttons.size() - 1
+
+	buttons[new_index].grab_focus()
+
+func _setup_focus_navigation():
+	"""Set up gamepad/keyboard focus navigation for menu buttons"""
+	# Enable focus mode for all buttons
+	missions_button.focus_mode = Control.FOCUS_ALL
+	shop_button.focus_mode = Control.FOCUS_ALL
+	quit_button.focus_mode = Control.FOCUS_ALL
+
+	# Don't set up focus neighbors - we handle navigation manually
+	# This prevents unwanted keyboard navigation behavior
 
 func show_screen():
 	"""Show the main menu hub"""

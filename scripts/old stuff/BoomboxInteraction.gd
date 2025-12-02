@@ -49,14 +49,6 @@ func _ready() -> void:
 	_setup_radio_audio()
 	_setup_switch_audio()
 	_setup_animation()
-	
-	if audio_file:
-		print("Main audio file loaded: " + str(audio_file.resource_path))
-	if secret_audio_file:
-		print("🤫 Secret audio file loaded: " + str(secret_audio_file.resource_path))
-	
-	print("✅ BoomboxInteraction ready: " + parent_object.name + " (ID: " + boombox_id + ")")
-	print("🎵 Secret song system activated!")
 
 func _process(_delta: float) -> void:
 	if _current_state == BoomboxState.PLAYING:
@@ -75,7 +67,6 @@ func _setup_radio_audio() -> void:
 	_radio_audio_player.emission_angle_enabled = false
 	_radio_audio_player.panning_strength = 1.0
 	add_child(_radio_audio_player)
-	print("📻 Radio audio player created")
 
 func _setup_switch_audio() -> void:
 	if switch_sound:
@@ -84,22 +75,17 @@ func _setup_switch_audio() -> void:
 		_switch_audio_player.max_distance = 5.0
 		_switch_audio_player.volume_db = -10.0
 		add_child(_switch_audio_player)
-		print("🔊 Switch audio player created")
 
 func _setup_animation() -> void:
 	_animation_player = find_animation_player()
-	
+
 	if _animation_player:
-		print("✅ Found AnimationPlayer for boombox: " + _animation_player.name)
 		_animation_player.stop()
-	else:
-		print("⚠️ No AnimationPlayer found in boombox - animation features disabled")
 
 func _toggle_radio() -> void:
 	if switch_sound and _switch_audio_player:
 		_switch_audio_player.stream = switch_sound
 		_switch_audio_player.play()
-		print("🔊 Playing boombox switch sound")
 	
 	match _current_state:
 		BoomboxState.OFF:
@@ -120,85 +106,63 @@ func _start_audio() -> void:
 		song_to_play = secret_audio_file
 		song_name = "Halloween (Secret Song)"
 		_is_playing_secret_song = true
-		print("🤫 Starting SECRET SONG!")
 	elif audio_file:
 		song_to_play = audio_file
 		song_name = "Ministudio"
 		_is_playing_secret_song = false
-		print("🎵 Starting main song")
 	else:
-		print("❌ No audio files assigned to boombox!")
 		return
 	
 	_radio_audio_player.stream = song_to_play
 	_radio_audio_player.play()
 	_current_state = BoomboxState.PLAYING
 	# Don't change e_key_interaction_text - keep inspector value
-	
-	print("🎵 Audio stream set: " + str(song_to_play))
-	print("🎵 Audio player playing: " + str(_radio_audio_player.playing))
-	print("🎵 Audio player stream: " + str(_radio_audio_player.stream))
-	
+
 	if _animation_player and _animation_player.has_animation("default"):
 		_animation_player.play("default")
-		print("🎬 Started boombox animation")
 	elif _animation_player:
 		var anim_list = _animation_player.get_animation_list()
 		if anim_list.size() > 0:
 			_animation_player.play(anim_list[0])
-			print("🎬 Started boombox animation: " + str(anim_list[0]))
-	
+
 	audio_started.emit(song_name)
-	print("✅ Now playing: " + song_name)
 
 func _stop_audio() -> void:
 	if _radio_audio_player and _radio_audio_player.playing:
-		print("⏸️ Pausing audio (will resume from current position)")
 		_radio_audio_player.stream_paused = true
 		_current_state = BoomboxState.OFF
 		# Don't change e_key_interaction_text - keep inspector value
-		
+
 		if _animation_player and _animation_player.is_playing():
 			_animation_player.pause()
-			print("⏸️ Paused boombox animation")
-		
+
 		audio_stopped.emit()
-		print("📻 Audio paused")
 
 func _resume_audio() -> void:
 	if _radio_audio_player and _radio_audio_player.stream_paused:
-		print("▶️ Resuming audio from paused position")
 		_radio_audio_player.stream_paused = false
 		_current_state = BoomboxState.PLAYING
 		# Don't change e_key_interaction_text - keep inspector value
-		
+
 		if _animation_player and not _animation_player.is_playing():
 			_animation_player.play()
-			print("▶️ Resumed boombox animation")
-		
+
 		audio_started.emit("Audio Resumed")
-		print("✅ Audio resumed")
 
 func _check_if_audio_finished() -> void:
 	if _radio_audio_player and not _radio_audio_player.playing and not _radio_audio_player.stream_paused:
 		if _animation_player and _animation_player.is_playing():
 			_animation_player.stop()
-			print("🎬 Stopped boombox animation (song finished)")
-		
+
 		if _is_playing_secret_song:
-			print("🤫 Secret song (Halloween) finished playing")
 			_current_state = BoomboxState.OFF
 			# Don't change e_key_interaction_text - keep inspector value
 			audio_stopped.emit()
-			print("📻 Boombox turned off (secret song ended)")
 		else:
-			print("🎵 Main song (Ministudio) finished playing")
 			_main_song_has_played = true
 			_current_state = BoomboxState.OFF
 			# Don't change e_key_interaction_text - keep inspector value
 			audio_stopped.emit()
-			print("📻 Boombox turned off (main song ended)")
-			print("🤫 SECRET UNLOCKED! Next time you turn on the boombox, you'll hear a secret song!")
 
 func get_radio_state() -> BoomboxState:
 	return _current_state

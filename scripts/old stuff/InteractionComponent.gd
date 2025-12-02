@@ -32,7 +32,6 @@ func _ready() -> void:
 	# Automatically add parent to interactable group
 	if not parent_object.is_in_group("interactable"):
 		parent_object.add_to_group("interactable")
-		print("✅ Added " + parent_object.name + " to 'interactable' group")
 	
 	# Setup audio system
 	_setup_audio()
@@ -66,7 +65,6 @@ func _play_sound(sound: AudioStream, volume_db: float = 0.0) -> void:
 ## This is called when player presses interact button while looking at this object
 func interact(player_interaction_component: PlayerInteractionComponent) -> void:
 	if is_disabled:
-		print("⚠️ Interaction disabled for: " + parent_object.name)
 		return
 	
 	# Play interaction sound

@@ -28,6 +28,61 @@ func _ready():
 	else:
 		new_game_button.grab_focus()
 
+func _input(event):
+	var viewport = get_viewport()
+	if not viewport:
+		return  # Scene is transitioning, viewport is null
+
+	# Handle menu navigation with move_forward/move_back
+	if event.is_action_pressed("move_forward"):
+		_navigate_menu(-1)  # Move up
+		viewport.set_input_as_handled()
+	elif event.is_action_pressed("move_back"):
+		_navigate_menu(1)  # Move down
+		viewport.set_input_as_handled()
+	elif event.is_action_pressed("jump"):
+		# Confirm button selection with jump (A button)
+		var focused = viewport.gui_get_focus_owner()
+		if focused is Button and not focused.disabled:
+			focused.pressed.emit()
+			# Don't set_input_as_handled here - scene might transition immediately
+	elif event.is_action_pressed("start"):
+		# Start button quits the game on title screen
+		get_tree().quit()
+		# Don't set_input_as_handled here - app is quitting
+
+func _navigate_menu(direction: int):
+	"""Navigate menu up (-1) or down (1)"""
+	var viewport = get_viewport()
+	if not viewport:
+		return  # Scene is transitioning
+
+	var focused = viewport.gui_get_focus_owner()
+
+	# Create button list (only enabled buttons)
+	var buttons = []
+	if not continue_button.disabled:
+		buttons.append(continue_button)
+	buttons.append(new_game_button)
+	buttons.append(quit_button)
+
+	if buttons.is_empty():
+		return
+
+	# Find current index
+	var current_index = buttons.find(focused)
+	if current_index == -1:
+		# No button focused, focus first
+		buttons[0].grab_focus()
+		return
+
+	# Calculate new index with wrapping
+	var new_index = (current_index + direction) % buttons.size()
+	if new_index < 0:
+		new_index = buttons.size() - 1
+
+	buttons[new_index].grab_focus()
+
 func _check_save_exists() -> bool:
 	"""Check if any save files exist"""
 	return (FileAccess.file_exists("user://player_data.json") or
@@ -97,21 +152,5 @@ func _setup_focus_navigation():
 	new_game_button.focus_mode = Control.FOCUS_ALL
 	quit_button.focus_mode = Control.FOCUS_ALL
 
-	# Set up vertical navigation (up/down D-pad or analog stick)
-	# Continue -> New Game -> Quit (and loop back)
-	continue_button.focus_neighbor_top = quit_button.get_path()
-	continue_button.focus_neighbor_bottom = new_game_button.get_path()
-	continue_button.focus_next = new_game_button.get_path()
-	continue_button.focus_previous = quit_button.get_path()
-
-	new_game_button.focus_neighbor_top = continue_button.get_path()
-	new_game_button.focus_neighbor_bottom = quit_button.get_path()
-	new_game_button.focus_next = quit_button.get_path()
-	new_game_button.focus_previous = continue_button.get_path()
-
-	quit_button.focus_neighbor_top = new_game_button.get_path()
-	quit_button.focus_neighbor_bottom = continue_button.get_path()
-	quit_button.focus_next = continue_button.get_path()
-	quit_button.focus_previous = new_game_button.get_path()
-
-	print("TitleScreen: Controller navigation enabled")
+	# Don't set up focus neighbors - we handle navigation manually
+	# This prevents arrow keys from selecting disabled buttons

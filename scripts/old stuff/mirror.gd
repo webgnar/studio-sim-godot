@@ -19,16 +19,10 @@ func _ready():
 	set_layer_mask_value(2, true)   # Put mirror on layer 2
 	mirror_camera.cull_mask = 1     # Camera only sees layer 1 (not layer 2 = not the mirror)
 	
-	# Debug: Print if components are found
-	print("Mirror camera found: ", mirror_camera != null)
-	print("Player camera found: ", player_camera != null)
-	print("Viewport found: ", viewport != null)
-	
 	# Ensure the material is using the viewport texture
 	var material = get_surface_override_material(0)
 	if material:
 		material.albedo_texture = viewport.get_texture()
-		print("Material updated with viewport texture")
 
 func _process(_delta):
 	if player_camera:
@@ -58,12 +52,3 @@ func _process(_delta):
 		# Set the mirror camera to look at the reflected target
 		var look_target = reflected_pos + reflected_forward
 		mirror_camera.global_transform = mirror_camera.global_transform.looking_at(look_target, reflected_up)
-		
-		# Debug output (remove after testing)
-		if Input.is_action_just_pressed("ui_accept"):  # Press Enter/Space for debug
-			print("Mirror X-axis: ", global_transform.basis.x.normalized())
-			print("Mirror Y-axis: ", global_transform.basis.y.normalized())
-			print("Mirror Z-axis: ", global_transform.basis.z.normalized())
-			print("Current Normal: ", mirror_normal)
-			print("Player Pos: ", player_cam_pos)
-			print("Reflected Pos: ", reflected_pos)

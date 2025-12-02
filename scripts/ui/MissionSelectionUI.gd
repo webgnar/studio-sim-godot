@@ -82,30 +82,36 @@ func _search_for_results_viewer(node: Node):
 	return null
 
 func _input(event):
-	# When dialog is visible, handle input
-	if dialog.visible:
-		# Escape to close
-		if event.is_action_pressed("ui_cancel"):
-			_close_dialog()
-			get_viewport().set_input_as_handled()
-			return
+	# Only handle input when dialog is visible
+	if not dialog.visible:
+		return
 
-		# Arrow keys to navigate mission list
-		if event.is_action_pressed("ui_down"):
-			_select_next_mission()
-			get_viewport().set_input_as_handled()
-			return
+	var viewport = get_viewport()
+	if not viewport:
+		return
 
-		if event.is_action_pressed("ui_up"):
-			_select_previous_mission()
-			get_viewport().set_input_as_handled()
-			return
+	# Start button to close dialog
+	if event.is_action_pressed("start"):
+		_close_dialog()
+		viewport.set_input_as_handled()
+		return
 
-		# Enter to start mission
-		if event.is_action_pressed("ui_accept"):
-			_on_start_mission()
-			get_viewport().set_input_as_handled()
-			return
+	# WASD / stick to navigate mission list
+	if event.is_action_pressed("move_back"):
+		_select_next_mission()
+		viewport.set_input_as_handled()
+		return
+
+	if event.is_action_pressed("move_forward"):
+		_select_previous_mission()
+		viewport.set_input_as_handled()
+		return
+
+	# Jump (A button / Space) to start mission
+	if event.is_action_pressed("jump"):
+		_on_start_mission()
+		viewport.set_input_as_handled()
+		return
 
 func _open_dialog():
 	"""Show the mission selection dialog"""

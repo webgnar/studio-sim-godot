@@ -19,7 +19,6 @@ func _on_ready() -> void:
 	_ensure_audio_player()
 	_find_player()
 	_find_meshes()
-	print("✅ MirrorInteraction ready: " + parent_object.name)
 	
 	if not human_skin_material:
 		push_warning("⚠️ No human skin material set for mirror!")
@@ -33,14 +32,12 @@ func _ensure_audio_player() -> void:
 		_audio_player.max_distance = 10.0
 		_audio_player.attenuation_model = AudioStreamPlayer3D.ATTENUATION_INVERSE_DISTANCE
 		add_child(_audio_player)
-		print("Created audio player for mirror sounds")
 
 func _find_player() -> void:
 	# Find the player node from the "player" group
 	var players = get_tree().get_nodes_in_group("player")
 	if players.size() > 0:
 		_player_node = players[0]
-		print("🪞 Mirror found player: " + str(_player_node.get_path()))
 	else:
 		push_warning("⚠️ No player found for MirrorInteraction")
 
@@ -57,12 +54,6 @@ func _find_meshes() -> void:
 	
 	# Find all MeshInstance3D nodes in the human model
 	_player_meshes = _find_all_mesh_instances(human_node)
-	
-	print("🔍 Found " + str(_player_meshes.size()) + " mesh instances in player model:")
-	for mesh in _player_meshes:
-		if mesh.mesh:
-			var surface_count = mesh.mesh.get_surface_count()
-			print("  - " + mesh.name + " (" + str(surface_count) + " surfaces)")
 
 func _find_all_mesh_instances(node: Node) -> Array[MeshInstance3D]:
 	var meshes: Array[MeshInstance3D] = []
@@ -91,10 +82,7 @@ func _toggle_skin() -> void:
 	_is_skeleton = not _is_skeleton
 	
 	var target_material = skeleton_skin_material if _is_skeleton else human_skin_material
-	var skin_name = "skeleton" if _is_skeleton else "human"
-	
-	print("🎨 Changing all meshes to " + skin_name + " skin")
-	
+
 	# Apply the material to all player meshes
 	for mesh in _player_meshes:
 		_apply_material_to_mesh(mesh, target_material)
@@ -102,8 +90,7 @@ func _toggle_skin() -> void:
 	# Play sound
 	if toggle_sound:
 		_play_sound(toggle_sound)
-		print("🔊 Playing mirror toggle sound")
-	
+
 	skin_toggled.emit(_is_skeleton)
 
 func _apply_material_to_mesh(mesh: MeshInstance3D, material: Material) -> void:

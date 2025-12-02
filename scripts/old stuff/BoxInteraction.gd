@@ -37,7 +37,6 @@ func _on_ready() -> void:
 	_open_text = interaction_text if interaction_text != "" else "Open Box"
 	_close_text = "Close Box"  # Can be made @export if needed
 	_ensure_audio_player()
-	print("✅ BoxInteraction ready: " + parent_object.name)
 
 func _ensure_audio_player() -> void:
 	"""Make sure we have an audio player for box sounds"""
@@ -47,7 +46,6 @@ func _ensure_audio_player() -> void:
 		_audio_player.max_distance = 15.0
 		_audio_player.attenuation_model = AudioStreamPlayer3D.ATTENUATION_INVERSE_DISTANCE
 		add_child(_audio_player)
-		print("Created audio player for box sounds")
 
 func _on_interacted(_player_interaction_component: PlayerInteractionComponent) -> void:
 	_handle_box_interaction()
@@ -80,7 +78,6 @@ func _open_lid_pair_1() -> void:
 	
 	if flap_1_open_sound:
 		_play_sound(flap_1_open_sound)
-		print("🔊 Playing flap 1 open sound")
 	
 	_set_state(BoxState.OPENING_1)
 	_animate_lid_pair(["lid1", "lid2"])
@@ -98,7 +95,6 @@ func _open_lid_pair_2() -> void:
 	
 	if flap_2_open_sound:
 		_play_sound(flap_2_open_sound)
-		print("🔊 Playing flap 2 open sound")
 	
 	_set_state(BoxState.OPENING_2)
 	_animate_lid_pair(["lid3", "lid4"])
@@ -116,7 +112,6 @@ func _open_lid_pair_2_with_delay() -> void:
 	
 	if flap_2_open_sound:
 		_play_sound(flap_2_open_sound)
-		print("🔊 Playing flap 2 open sound (delayed)")
 	
 	_animate_lid_pair(["lid3", "lid4"])
 	
@@ -129,7 +124,6 @@ func _close_lid_pair_2() -> void:
 	
 	if flap_2_open_sound:
 		_play_sound(flap_2_open_sound)
-		print("🔊 Playing flap 2 close sound")
 	
 	_set_state(BoxState.CLOSING_1)
 	_animate_lid_pair_reverse(["lid3", "lid4"])
@@ -147,7 +141,6 @@ func _close_lid_pair_1() -> void:
 	
 	if flap_1_open_sound:
 		_play_sound(flap_1_open_sound)
-		print("🔊 Playing flap 1 close sound")
 	
 	_set_state(BoxState.CLOSING_2)
 	_animate_lid_pair_reverse(["lid1", "lid2"])
@@ -165,7 +158,6 @@ func _close_lid_pair_1_with_delay() -> void:
 	
 	if flap_1_open_sound:
 		_play_sound(flap_1_open_sound)
-		print("🔊 Playing flap 1 close sound (delayed)")
 	
 	_animate_lid_pair_reverse(["lid1", "lid2"])
 	
@@ -227,7 +219,6 @@ func _set_state(new_state: BoxState) -> void:
 	box_state_changed.emit(new_state)
 
 func _on_box_fully_opened() -> void:
-	print("🎉 BOX IS FULLY OPEN!")
 	interaction_text = _close_text
 	emit_state_change("OPEN")
 	
@@ -237,13 +228,11 @@ func _on_box_fully_opened() -> void:
 	box_opened.emit()
 
 func _on_box_fully_closed() -> void:
-	print("📦 BOX IS CLOSED!")
 	interaction_text = _open_text
 	emit_state_change("CLOSED")
-	
+
 	if box_close_sound:
 		_play_sound(box_close_sound)
-		print("🔊 Playing box close sound")
 	
 	if _spawned_object:
 		_remove_spawned_object()

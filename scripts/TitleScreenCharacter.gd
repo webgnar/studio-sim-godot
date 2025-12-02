@@ -6,21 +6,15 @@ extends Node3D
 @export var animation_name: String = "idle"
 
 func _ready():
-	print("TitleScreenCharacter: Starting animation search...")
-
 	# Find AnimationPlayer in children
 	var animation_player = _find_animation_player(self)
 
 	if animation_player:
-		print("TitleScreenCharacter: Found AnimationPlayer at: ", animation_player.get_path())
-		var available_anims = animation_player.get_animation_list()
-		print("TitleScreenCharacter: Available animations: ", available_anims)
-
 		# Play the idle animation
 		if animation_player.has_animation(animation_name):
 			animation_player.play(animation_name)
-			print("TitleScreenCharacter: Playing animation '%s'" % animation_name)
 		else:
+			var available_anims = animation_player.get_animation_list()
 			push_warning("TitleScreenCharacter: Animation '%s' not found!" % animation_name)
 			push_warning("TitleScreenCharacter: Available animations are: %s" % str(available_anims))
 	else:

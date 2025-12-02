@@ -38,8 +38,6 @@ func _ready() -> void:
 		animation_player.stop()
 		if _loop_player:
 			_loop_player.stop()
-	
-	print("✅ FanController ready")
 
 func _setup_audio() -> void:
 	"""Create audio player for fan loop sound"""
@@ -63,8 +61,7 @@ func _on_fan_turned_on() -> void:
 	"""Start spinning the fan with fade in"""
 	if animation_player:
 		animation_player.play(spin_animation_name)
-		print("🌀 Fan spinning")
-	
+
 	# Fade in the loop sound
 	if _loop_player:
 		_fade_in_sound()
@@ -73,8 +70,7 @@ func _on_fan_turned_off() -> void:
 	"""Stop spinning the fan with fade out"""
 	if animation_player:
 		animation_player.stop()
-		print("⏹️ Fan stopped")
-	
+
 	# Fade out the loop sound
 	if _loop_player:
 		_fade_out_sound()
@@ -92,14 +88,11 @@ func _fade_in_sound() -> void:
 	var target_volume: float = -5.0  # Normal running volume
 	var start_volume: float = -80.0  # Silent
 	_loop_player.volume_db = start_volume
-	
-	print("🔊 Fading in fan sound")
-	
+
 	var tween = create_tween()
 	tween.tween_property(_loop_player, "volume_db", target_volume, fade_duration)
-	tween.finished.connect(func(): 
+	tween.finished.connect(func():
 		_is_fading = false
-		print("🔊 Fan sound fade in complete")
 	)
 
 func _fade_out_sound() -> void:
@@ -108,15 +101,12 @@ func _fade_out_sound() -> void:
 		return
 	
 	_is_fading = true
-	
+
 	var target_volume: float = -80.0  # Silent
-	
-	print("� Fading out fan sound")
-	
+
 	var tween = create_tween()
 	tween.tween_property(_loop_player, "volume_db", target_volume, fade_duration)
-	tween.finished.connect(func(): 
+	tween.finished.connect(func():
 		_loop_player.stop()
 		_is_fading = false
-		print("🔇 Fan sound fade out complete")
 	)
