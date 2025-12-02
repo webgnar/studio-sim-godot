@@ -1,6 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://ctv5r4f51ufg3"]
+[gd_scene load_steps=4 format=3 uid="uid://ctv5r4f51ufg3"]
 
-[ext_resource type="Script" path="res://scripts/ui/MissionSelectionUI.gd" id="1_select"]
+[ext_resource type="Script" uid="uid://cv2b3i1u2t6le" path="res://scripts/ui/MissionSelectionUI.gd" id="1_select"]
+[ext_resource type="Texture2D" uid="uid://dor0d4yiulgi5" path="res://sprites/ui/arrow.png" id="2_arrow"]
+[ext_resource type="Texture2D" uid="uid://dgf58oxfs3km7" path="res://sprites/ui/startmission.png" id="3_startmission"]
 
 [node name="MissionSelectionUI" type="Control"]
 layout_mode = 3
@@ -13,17 +15,10 @@ mouse_filter = 2
 script = ExtResource("1_select")
 
 [node name="Dialog" type="PanelContainer" parent="."]
-visible = false
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -600.0
-offset_top = -350.0
-offset_right = 600.0
-offset_bottom = 350.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 1
@@ -110,6 +105,11 @@ text = "Not completed"
 layout_mode = 2
 alignment = 1
 
+[node name="BackButton" type="Button" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ButtonContainer"]
+custom_minimum_size = Vector2(50, 40)
+layout_mode = 2
+icon = ExtResource("2_arrow")
+
 [node name="ViewResultsButton" type="Button" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ButtonContainer"]
 visible = false
 custom_minimum_size = Vector2(150, 40)
@@ -119,12 +119,7 @@ text = "View Results"
 [node name="StartButton" type="Button" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ButtonContainer"]
 custom_minimum_size = Vector2(150, 40)
 layout_mode = 2
-text = "Start Mission"
-
-[node name="BackButton" type="Button" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ButtonContainer"]
-custom_minimum_size = Vector2(150, 40)
-layout_mode = 2
-text = "Back"
+icon = ExtResource("3_startmission")
 
 [node name="HelpLabel" type="Label" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer"]
 layout_mode = 2

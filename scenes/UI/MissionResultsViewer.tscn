@@ -1,6 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://results_viewer_001"]
+[gd_scene load_steps=2 format=3 uid="uid://cra27ims6pb5n"]
 
-[ext_resource type="Script" path="res://scripts/ui/MissionResultsViewer.gd" id="1_results"]
+[ext_resource type="Script" uid="uid://bt23ft5ot5o0p" path="res://scripts/ui/MissionResultsViewer.gd" id="1_results"]
 
 [node name="MissionResultsViewer" type="Control"]
 layout_mode = 3

@@ -1,4 +1,4 @@
-[gd_scene load_steps=74 format=3 uid="uid://da8jmxqyjt0xs"]
+[gd_scene load_steps=73 format=3 uid="uid://da8jmxqyjt0xs"]
 
 [ext_resource type="Script" uid="uid://bn5a584271aim" path="res://scripts/TitleScreenController.gd" id="1_2ktle"]
 [ext_resource type="Material" uid="uid://wwlsotlotycw" path="res://materials/wood.tres" id="1_hjcsb"]
@@ -37,7 +37,6 @@
 [ext_resource type="Script" uid="uid://c63c2n2vhd5r6" path="res://scripts/old stuff/FanController.gd" id="35_37bcn"]
 [ext_resource type="AudioStream" uid="uid://ut8y785jdo3t" path="res://sounds/drone.ogg" id="36_ureuc"]
 [ext_resource type="PackedScene" uid="uid://bsbvqf088sigr" path="res://models/props/woodPallet.gltf" id="37_6ogcu"]
-[ext_resource type="PackedScene" uid="uid://bshsrjrokypta" path="res://scenes/PaintingRoot2D.tscn" id="38_cr31u"]
 [ext_resource type="PackedScene" uid="uid://c65tkba8onvwi" path="res://models/player/humanrig.glb" id="39_3yl86"]
 [ext_resource type="Script" uid="uid://b0yviy0qx7100" path="res://scripts/TitleScreenCharacter.gd" id="40_5h1vy"]
 
@@ -472,7 +471,6 @@ transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 2.3344998, 4.0959244, -
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.9752845, 0.22095278, 0, -0.22095278, 0.9752845, 0, 1.8637362, 11)
-current = true
 
 [node name="UI_Layer" type="CanvasLayer" parent="."]
 
@@ -863,9 +861,8 @@ libraries = {
 &"": SubResource("AnimationLibrary_npbic")
 }
 
-[node name="PoweredDeviceComponent" type="Node3D" parent="FAN/fan legs" node_paths=PackedStringArray("power_cord_plug")]
+[node name="PoweredDeviceComponent" type="Node3D" parent="FAN/fan legs"]
 script = ExtResource("33_tuyt1")
-power_cord_plug = NodePath("")
 turn_on_sound = ExtResource("34_hkayi")
 turn_off_sound = ExtResource("34_hkayi")
 metadata/_custom_type_script = "uid://u01mbabuiguh"
@@ -916,11 +913,6 @@ transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.05, -0.07, -0.1)
 shape = SubResource("BoxShape3D_juc6n")
 
-[node name="PaintingRoot2d" parent="." instance=ExtResource("38_cr31u")]
-transform = Transform3D(-4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0, 1, -3.4620748, 2.5300002, 7)
-
 [node name="humanrig" parent="." instance=ExtResource("39_3yl86")]
 transform = Transform3D(-0.3, 0, -4.5298744e-08, 0, 0.3, 0, 4.5298744e-08, 0, -0.3, 0, 0.029128194, 8.119281)
 script = ExtResource("40_5h1vy")
-
-[editable path="PaintingRoot2d"]

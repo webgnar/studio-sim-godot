@@ -24,11 +24,20 @@ var selected_mission: PaintingMission = null
 var selected_index: int = 0
 var mission_cards: Array[MissionCard] = []
 
+# Navigation state
+enum NavMode { MISSION_LIST, PREVIEW_BUTTONS }
+var nav_mode: NavMode = NavMode.MISSION_LIST
+var preview_buttons: Array[Button] = []
+var preview_button_index: int = 0
+
 func _ready():
 	# Connect button signals
 	view_results_button.pressed.connect(_on_view_results)
 	start_button.pressed.connect(_on_start_mission)
-	back_button.pressed.connect(_close_dialog)
+	back_button.pressed.connect(_on_back_button)
+
+	# Setup preview button navigation array (Back, View Results, Start)
+	preview_buttons = [back_button, view_results_button, start_button]
 
 	# Hide dialog initially
 	dialog.visible = false
@@ -90,12 +99,23 @@ func _input(event):
 	if not viewport:
 		return
 
-	# Start button to close dialog
+	# Start button to close dialog (works in both modes)
 	if event.is_action_pressed("start"):
-		_close_dialog()
+		if nav_mode == NavMode.PREVIEW_BUTTONS:
+			_exit_preview_mode()
+		else:
+			_close_dialog()
 		viewport.set_input_as_handled()
 		return
 
+	# Handle input based on navigation mode
+	if nav_mode == NavMode.MISSION_LIST:
+		_handle_mission_list_input(event, viewport)
+	elif nav_mode == NavMode.PREVIEW_BUTTONS:
+		_handle_preview_buttons_input(event, viewport)
+
+func _handle_mission_list_input(event, viewport):
+	"""Handle input when navigating the mission list"""
 	# WASD / stick to navigate mission list
 	if event.is_action_pressed("move_back"):
 		_select_next_mission()
@@ -107,11 +127,122 @@ func _input(event):
 		viewport.set_input_as_handled()
 		return
 
-	# Jump (A button / Space) to start mission
-	if event.is_action_pressed("jump"):
-		_on_start_mission()
+	# Jump (A button / Space) or move_right to enter preview button mode
+	if event.is_action_pressed("jump") or event.is_action_pressed("move_right"):
+		_enter_preview_mode()
 		viewport.set_input_as_handled()
 		return
+
+func _handle_preview_buttons_input(event, viewport):
+	"""Handle input when navigating preview buttons"""
+	# Left to navigate buttons or exit to mission list
+	if event.is_action_pressed("move_left"):
+		# If at the first button, exit back to mission list
+		if _is_at_first_button():
+			_exit_preview_mode()
+		else:
+			_select_previous_button()
+		viewport.set_input_as_handled()
+		return
+
+	# Right to navigate buttons
+	if event.is_action_pressed("move_right"):
+		_select_next_button()
+		viewport.set_input_as_handled()
+		return
+
+	# Jump (A button / Space) to activate focused button
+	if event.is_action_pressed("jump"):
+		_activate_focused_button()
+		viewport.set_input_as_handled()
+		return
+
+func _enter_preview_mode():
+	"""Enter preview button navigation mode"""
+	nav_mode = NavMode.PREVIEW_BUTTONS
+	preview_button_index = 0
+	_update_button_focus()
+	print("MissionSelectionUI: Entered preview button mode")
+
+func _exit_preview_mode():
+	"""Exit preview button mode and return to mission list"""
+	nav_mode = NavMode.MISSION_LIST
+	_clear_button_focus()
+	print("MissionSelectionUI: Exited preview button mode")
+
+func _is_at_first_button() -> bool:
+	"""Check if we're at the first visible/enabled button"""
+	# Find the first visible enabled button
+	for i in range(preview_buttons.size()):
+		if preview_buttons[i].visible and not preview_buttons[i].disabled:
+			return preview_button_index == i
+	return true
+
+func _select_next_button():
+	"""Navigate to the next visible button"""
+	var start_index = preview_button_index
+	var attempts = 0
+
+	while attempts < preview_buttons.size():
+		preview_button_index = (preview_button_index + 1) % preview_buttons.size()
+
+		# Skip invisible or disabled buttons
+		if preview_buttons[preview_button_index].visible and not preview_buttons[preview_button_index].disabled:
+			_update_button_focus()
+			return
+
+		attempts += 1
+
+	# If no valid button found, stay on current
+	preview_button_index = start_index
+
+func _select_previous_button():
+	"""Navigate to the previous visible button"""
+	var start_index = preview_button_index
+	var attempts = 0
+
+	while attempts < preview_buttons.size():
+		preview_button_index = (preview_button_index - 1) % preview_buttons.size()
+		if preview_button_index < 0:
+			preview_button_index = preview_buttons.size() - 1
+
+		# Skip invisible or disabled buttons
+		if preview_buttons[preview_button_index].visible and not preview_buttons[preview_button_index].disabled:
+			_update_button_focus()
+			return
+
+		attempts += 1
+
+	# If no valid button found, stay on current
+	preview_button_index = start_index
+
+func _update_button_focus():
+	"""Update which button has focus highlight"""
+	# Find first visible enabled button if current is invalid
+	if preview_button_index >= preview_buttons.size() or \
+	   not preview_buttons[preview_button_index].visible or \
+	   preview_buttons[preview_button_index].disabled:
+		for i in range(preview_buttons.size()):
+			if preview_buttons[i].visible and not preview_buttons[i].disabled:
+				preview_button_index = i
+				break
+
+	# Focus the selected button
+	if preview_button_index < preview_buttons.size():
+		preview_buttons[preview_button_index].grab_focus()
+
+func _clear_button_focus():
+	"""Clear button focus when exiting preview mode"""
+	for button in preview_buttons:
+		button.release_focus()
+
+func _activate_focused_button():
+	"""Activate the currently focused button"""
+	if preview_button_index < preview_buttons.size():
+		var button = preview_buttons[preview_button_index]
+		if button.visible and not button.disabled:
+			button.pressed.emit()
+			print("MissionSelectionUI: Activated button: ", button.name)
 
 func _open_dialog():
 	"""Show the mission selection dialog"""
@@ -122,6 +253,10 @@ func _open_dialog():
 	# Disable painting system input while dialog is open
 	if painting_system_2d:
 		painting_system_2d.set_input_enabled(false)
+
+	# Reset navigation mode to mission list
+	nav_mode = NavMode.MISSION_LIST
+	_clear_button_focus()
 
 	# Populate mission list
 	_populate_mission_list()
@@ -138,9 +273,6 @@ func _open_dialog():
 		selected_index = 0
 		_update_selection()
 
-	# Focus start button
-	start_button.grab_focus()
-
 func show_screen():
 	"""Show the mission selection screen (called by UIManager)"""
 	_open_dialog()
@@ -155,6 +287,10 @@ func hide_screen():
 
 func _close_dialog():
 	"""Hide the dialog and return to main menu"""
+	# Reset navigation mode
+	nav_mode = NavMode.MISSION_LIST
+	_clear_button_focus()
+
 	if UIManager:
 		UIManager.change_state(UIManager.GameState.MAIN_MENU)
 
@@ -239,9 +375,6 @@ func _update_preview_panel():
 		completion_label.modulate = Color(0.4, 1.0, 0.4)  # Green
 		completion_label.visible = true
 
-		# Update button text for completed missions
-		start_button.text = "Retry Mission"
-
 		# Show View Results button
 		view_results_button.visible = true
 
@@ -257,9 +390,6 @@ func _update_preview_panel():
 		completion_label.text = "Not completed"
 		completion_label.modulate = Color(0.8, 0.8, 0.8)
 		completion_label.visible = true
-
-		# Update button text for uncompleted missions
-		start_button.text = "Start Mission"
 
 		# Hide View Results button
 		view_results_button.visible = false
@@ -288,10 +418,17 @@ func _on_start_mission():
 	MissionManager.start_mission(selected_mission)
 	painting_system_2d.start_mission(selected_mission)
 
-	# Close dialog
+	# Reset navigation mode and close dialog
+	nav_mode = NavMode.MISSION_LIST
+	_clear_button_focus()
 	_close_dialog()
 
 	print("MissionSelectionUI: Starting mission '%s'" % selected_mission.title)
+
+func _on_back_button():
+	"""Handle back button press - return to mission list navigation"""
+	_exit_preview_mode()
+	print("MissionSelectionUI: Back to mission list")
 
 func _on_view_results():
 	"""Show results viewer for the selected mission"""
@@ -302,6 +439,10 @@ func _on_view_results():
 	if not results_viewer:
 		push_error("MissionSelectionUI: Results viewer not found!")
 		return
+
+	# Reset navigation mode
+	nav_mode = NavMode.MISSION_LIST
+	_clear_button_focus()
 
 	# Hide mission selection
 	dialog.visible = false

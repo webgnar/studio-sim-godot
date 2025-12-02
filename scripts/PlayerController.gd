@@ -70,9 +70,9 @@ func _ready() -> void:
 		push_error("Camera not found! Please check scene structure.")
 		return
 
-	# Capture the mouse when the game starts.
+	# Capture the mouse when the game starts (deferred to ensure proper initialization)
 	# This hides the cursor and keeps it centered.
-	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	call_deferred("_set_mouse_captured")
 	
 	# Store the original camera position for head bob calculations
 	_original_camera_position = _camera.position
@@ -312,3 +312,7 @@ func _exit_tree() -> void:
 	# Make sure to release the mouse when the player object is removed.
 	# This is good practice for when changing scenes or quitting the game.
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+
+func _set_mouse_captured() -> void:
+	"""Capture the mouse - deferred to ensure it happens after scene load"""
+	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED

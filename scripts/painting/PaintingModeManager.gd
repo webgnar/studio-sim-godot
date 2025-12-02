@@ -102,13 +102,9 @@ func _perform_unified_raycast() -> Dictionary:
 			return {}
 
 	var viewport = camera.get_viewport()
-	var mouse_pos: Vector2
 
-	# Handle FPS mode (captured mouse)
-	if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
-		mouse_pos = viewport.get_visible_rect().size / 2.0
-	else:
-		mouse_pos = viewport.get_mouse_position()
+	# Always use center-screen for controller-first gameplay
+	var mouse_pos: Vector2 = viewport.get_visible_rect().size / 2.0
 
 	var from = camera.project_ray_origin(mouse_pos)
 	var to = from + camera.project_ray_normal(mouse_pos) * raycast_distance

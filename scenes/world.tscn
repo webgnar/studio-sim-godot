@@ -74,7 +74,7 @@
 [ext_resource type="PackedScene" uid="uid://d2hcs1m04uvg7" path="res://models/interactables/button.glb" id="80_oexs8"]
 [ext_resource type="PackedScene" uid="uid://dxe3m5p8yk1vq" path="res://scenes/UI/ShopUI.tscn" id="80_shop"]
 [ext_resource type="Script" uid="uid://byo8qed1v1rkt" path="res://scripts/components/PaintingConvertButton.gd" id="81_n78cu"]
-[ext_resource type="PackedScene" path="res://scenes/UI/MissionResultsViewer.tscn" id="81_results_viewer"]
+[ext_resource type="PackedScene" uid="uid://cra27ims6pb5n" path="res://scenes/UI/MissionResultsViewer.tscn" id="81_results_viewer"]
 [ext_resource type="AudioStream" uid="uid://84rjpuccue2i" path="res://sounds/boomboxSwitch.ogg" id="boombox_switch"]
 [ext_resource type="AudioStream" uid="uid://8so1mqtnfhkh" path="res://sounds/box open 1.ogg" id="box_open_1"]
 [ext_resource type="AudioStream" uid="uid://bkyiswhv5fuaf" path="res://sounds/box open 2.ogg" id="box_open_2"]
@@ -731,6 +731,7 @@ run_speed = 10.0
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.64091873, 0)
 
 [node name="Camera3D" type="Camera3D" parent="Player/Head"]
+current = true
 
 [node name="CarryMarker" type="Marker3D" parent="Player/Head/Camera3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2)
@@ -1248,7 +1249,7 @@ transform = Transform3D(0.8496623, -0.119170085, -0.5136851, -0.0009949702, 0.97
 visible = false
 
 [node name="CameraZone3 inside" parent="." instance=ExtResource("71_dyafi")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.28859258, 0.03000021, 11.812575)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.7114074, 0.03000021, 11.812575)
 
 [node name="CollisionShape3D" parent="CameraZone3 inside" index="0"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.20675659, 1.3248291, 2.4091783)

@@ -209,14 +209,10 @@ func _raycast_from_mouse() -> Dictionary:
 
 	# Get mouse position from the painting plane's viewport (not SubViewport)
 	var viewport = painting_plane.get_viewport()
-	var mouse_pos: Vector2
 
-	# When mouse is captured (FPS mode), always raycast from center of screen
-	# This fixes HTML5 bug where initial click position offsets the raycast
-	if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
-		mouse_pos = viewport.get_visible_rect().size / 2.0
-	else:
-		mouse_pos = viewport.get_mouse_position()
+	# Always raycast from center of screen (controller-first design)
+	# This ensures it works regardless of mouse capture state
+	var mouse_pos: Vector2 = viewport.get_visible_rect().size / 2.0
 
 	var from = camera.project_ray_origin(mouse_pos)
 	var to = from + camera.project_ray_normal(mouse_pos) * raycast_distance

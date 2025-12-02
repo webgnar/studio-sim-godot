@@ -1,11 +1,8 @@
-res://scripts/TitleScreenCharacter.gd
-res://scripts/TitleScreenController.gd
-res://scripts/components/FanCarryableComponent.gd
-res://scripts/old stuff/FanController.gd
-res://scripts/old stuff/MirrorInteraction.gd
-res://scripts/ui/MainMenuHub.gd
-res://scripts/ui/MissionSelectionUI.gd
-res://scripts/old stuff/BoomboxInteraction.gd
-res://scripts/old stuff/BoxInteraction.gd
-res://scripts/old stuff/InteractionComponent.gd
-res://scripts/old stuff/mirror.gd
+res://scripts/PlayerController.gd
+res://scripts/painting/PaintingModeManager.gd
+res://scripts/painting/PaintingSystem2D.gd
+res://scripts/painting/PaintingSystem.gd
+res://scenes/world.tscn
+res://models/new_array_mesh.tres
+res://models/new_array_mesh2.tres
+res://models/new_array_mesh3.tres
