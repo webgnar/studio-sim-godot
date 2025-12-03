@@ -73,8 +73,8 @@ func _input(event):
 		get_viewport().set_input_as_handled()
 		return
 
-	# Escape to go back to missions
-	if event.is_action_pressed("ui_cancel"):
+	# Back menu input or Escape to go back to missions
+	if event.is_action_pressed("back_menu") or event.is_action_pressed("ui_cancel"):
 		_on_back_to_missions()
 		get_viewport().set_input_as_handled()
 		return
@@ -97,11 +97,6 @@ func hide_screen():
 	# Re-enable painting input
 	if painting_system_2d:
 		painting_system_2d.set_input_enabled(true)
-
-func calculate_payment(grade: String) -> int:
-	"""Calculate payment based on mission grade (placeholder - returns 0)"""
-	# TODO: Implement when grading system is refined
-	return 0
 
 func show_results(result: ValidationResult, mission: PaintingMission):
 	"""Display validation results"""
@@ -138,14 +133,11 @@ func show_results(result: ValidationResult, mission: PaintingMission):
 		status_label.text = "Failed (%.0f%% required)" % result.pass_threshold
 		status_label.modulate = Color(1.0, 0.4, 0.4)
 
-	# Show message and payment
-	var payment = calculate_payment(grade)
-	var payment_text = "Payment: $%d (Coming Soon)" % payment
-
+	# Show message
 	if result.errors.is_empty():
-		message_label.text = "Great work! Mission completed.\n%s" % payment_text
+		message_label.text = "Great work! Mission completed."
 	else:
-		message_label.text = "%s\n%s" % ["\n".join(result.errors), payment_text]
+		message_label.text = "\n".join(result.errors)
 
 	# Show image comparison
 	_display_comparison_images(mission)
@@ -156,9 +148,9 @@ func show_results(result: ValidationResult, mission: PaintingMission):
 	visual_label.visible = true
 	color_label.visible = true
 
-	# Show Visual and Color scores with fixed weights (30% visual, 70% color)
-	visual_label.text = "Visual Similarity: %.1f%% (weight: 30%%)" % result.visual_match_percentage
-	color_label.text = "Color Distribution: %.1f%% (weight: 70%%)" % result.color_distribution_score
+	# Show Precision and Color Field scores with fixed weights (30% precision, 70% color field)
+	visual_label.text = "Precision: %.1f%% (weight: 30%%)" % result.visual_match_percentage
+	color_label.text = "Color Field: %.1f%% (weight: 70%%)" % result.color_distribution_score
 
 	# Show results via UIManager (which will call show_screen())
 	# Note: Dialog visibility is now managed by UIManager

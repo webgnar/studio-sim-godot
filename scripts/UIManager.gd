@@ -5,7 +5,6 @@ extends Node
 
 # Signals
 signal state_changed(old_state: GameState, new_state: GameState)
-signal money_changed(new_amount: int)
 
 # Game states
 enum GameState {
@@ -20,9 +19,7 @@ enum GameState {
 # Current game state (start as null, will be set to MAIN_MENU in _ready)
 var current_state: GameState = -1  # Invalid state to force initial transition
 
-# Player currency data
-var player_money: int = 0
-var lifetime_earnings: int = 0
+# Player data
 var missions_completed: int = 0
 
 # Registered UI screens
@@ -42,19 +39,19 @@ func _ready():
 	# Wait a frame for all UI screens to register
 	await get_tree().process_frame
 
-	# Start in gameplay state (title screen handles initial menu)
+	# Start in gameplay state so player can move immediately
 	change_state(GameState.GAMEPLAY)
 
 func _input(event):
-	# "start" button (backtick) toggles main menu
+	# "start" button (backtick) toggles mission selection menu
 	if event.is_action_pressed("start"):
 		match current_state:
 			GameState.GAMEPLAY:
-				change_state(GameState.MAIN_MENU)
-			GameState.MAIN_MENU:
+				change_state(GameState.MISSION_SELECT)
+			GameState.MISSION_SELECT:
 				change_state(GameState.GAMEPLAY)
 			_:
-				# In other states (missions, validation, shop), do nothing
+				# In other states (in_mission, validation, shop), do nothing
 				pass
 		get_viewport().set_input_as_handled()
 
@@ -151,19 +148,9 @@ func register_screen(screen_type: String, screen: Node):
 		_:
 			push_warning("UIManager: Unknown screen type '%s'" % screen_type)
 
-func add_money(amount: int):
-	"""Add money to player's balance and update lifetime earnings"""
-	player_money += amount
-	if amount > 0:
-		lifetime_earnings += amount
-	emit_signal("money_changed", player_money)
-	save_player_data()
-
 func save_player_data():
 	"""Save player data to disk"""
 	var data = {
-		"money": player_money,
-		"lifetime_earnings": lifetime_earnings,
 		"missions_completed": missions_completed
 	}
 
@@ -194,9 +181,7 @@ func load_player_data():
 
 	if error == OK:
 		var data = json.data
-		player_money = data.get("money", 0)
-		lifetime_earnings = data.get("lifetime_earnings", 0)
 		missions_completed = data.get("missions_completed", 0)
-		print("UIManager: Loaded player data - Money: $%d, Missions: %d" % [player_money, missions_completed])
+		print("UIManager: Loaded player data - Missions: %d" % missions_completed)
 	else:
 		push_error("UIManager: Failed to parse save file JSON!")

@@ -6,16 +6,14 @@ class_name MissionResultsViewer
 ## Allows retrying missions or returning to mission selection
 
 @onready var dialog = $Dialog
-@onready var title_label = $Dialog/MarginContainer/VBoxContainer/TitleLabel
 @onready var grade_label = $Dialog/MarginContainer/VBoxContainer/ScoreContainer/GradeLabel
 @onready var best_score_label = $Dialog/MarginContainer/VBoxContainer/ScoreContainer/BestScoreLabel
+@onready var back_button = $Dialog/MarginContainer/VBoxContainer/ToggleContainer/back
 @onready var show_latest_button = $Dialog/MarginContainer/VBoxContainer/ToggleContainer/ShowLatestButton
 @onready var show_best_button = $Dialog/MarginContainer/VBoxContainer/ToggleContainer/ShowBestButton
 @onready var player_image = $Dialog/MarginContainer/VBoxContainer/ImageComparison/PlayerPaintingPanel/VBoxContainer/PlayerImage
 @onready var player_score_label = $Dialog/MarginContainer/VBoxContainer/ImageComparison/PlayerPaintingPanel/VBoxContainer/ScoreLabel
 @onready var target_image = $Dialog/MarginContainer/VBoxContainer/ImageComparison/TargetPaintingPanel/VBoxContainer/TargetImage
-@onready var retry_button = $Dialog/MarginContainer/VBoxContainer/ButtonContainer/RetryButton
-@onready var back_button = $Dialog/MarginContainer/VBoxContainer/ButtonContainer/BackButton
 
 var current_mission: PaintingMission = null
 var showing_latest: bool = true
@@ -24,15 +22,21 @@ var showing_latest: bool = true
 var active_button_style: StyleBoxFlat
 var inactive_button_style: StyleBoxFlat
 
+# Navigation
+var buttons: Array[Button] = []
+var focused_button_index: int = 0
+
 func _ready():
 	# Hide dialog initially
 	dialog.visible = false
 
 	# Connect button signals
+	back_button.pressed.connect(_on_back_pressed)
 	show_latest_button.pressed.connect(_on_show_latest_pressed)
 	show_best_button.pressed.connect(_on_show_best_pressed)
-	retry_button.pressed.connect(_on_retry_pressed)
-	back_button.pressed.connect(_on_back_pressed)
+
+	# Setup navigation array (Back, Show Latest, Show Best)
+	buttons = [back_button, show_latest_button, show_best_button]
 
 	# Load theme
 	theme = load("res://themes/ui_theme.tres")
@@ -71,9 +75,6 @@ func show_results_for_mission(mission: PaintingMission):
 		push_error("MissionResultsViewer: Mission not completed, cannot show results!")
 		return
 
-	# Update title
-	title_label.text = "Mission Results - %s" % mission.title
-
 	# Update grade
 	grade_label.text = completion_data["grade"]
 	_set_grade_color(completion_data["grade"])
@@ -91,7 +92,10 @@ func show_results_for_mission(mission: PaintingMission):
 
 	# Show dialog
 	dialog.visible = true
-	back_button.grab_focus()
+
+	# Focus first button
+	focused_button_index = 0
+	_update_button_focus()
 
 func _set_grade_color(grade: String):
 	"""Set grade label color based on grade"""
@@ -243,8 +247,93 @@ func _search_for_painting_system(node: Node) -> PaintingSystem2D:
 
 func _input(event):
 	"""Handle input when dialog is visible"""
-	if dialog.visible:
-		# Escape to close
-		if event.is_action_pressed("ui_cancel"):
-			_on_back_pressed()
-			get_viewport().set_input_as_handled()
+	if not dialog.visible:
+		return
+
+	var viewport = get_viewport()
+	if not viewport:
+		return
+
+	# Back menu input or Escape to close
+	if event.is_action_pressed("back_menu") or event.is_action_pressed("ui_cancel"):
+		_on_back_pressed()
+		viewport.set_input_as_handled()
+		return
+
+	# Left/Right or A/D to navigate buttons
+	if event.is_action_pressed("move_left"):
+		_select_previous_button()
+		viewport.set_input_as_handled()
+		return
+
+	if event.is_action_pressed("move_right"):
+		_select_next_button()
+		viewport.set_input_as_handled()
+		return
+
+	# Jump (A button / Space) to activate focused button
+	if event.is_action_pressed("jump"):
+		_activate_focused_button()
+		viewport.set_input_as_handled()
+		return
+
+func _select_next_button():
+	"""Navigate to the next visible button"""
+	var start_index = focused_button_index
+	var attempts = 0
+
+	while attempts < buttons.size():
+		focused_button_index = (focused_button_index + 1) % buttons.size()
+
+		# Skip invisible or disabled buttons
+		if buttons[focused_button_index].visible and not buttons[focused_button_index].disabled:
+			_update_button_focus()
+			return
+
+		attempts += 1
+
+	# If no valid button found, stay on current
+	focused_button_index = start_index
+
+func _select_previous_button():
+	"""Navigate to the previous visible button"""
+	var start_index = focused_button_index
+	var attempts = 0
+
+	while attempts < buttons.size():
+		focused_button_index = (focused_button_index - 1) % buttons.size()
+		if focused_button_index < 0:
+			focused_button_index = buttons.size() - 1
+
+		# Skip invisible or disabled buttons
+		if buttons[focused_button_index].visible and not buttons[focused_button_index].disabled:
+			_update_button_focus()
+			return
+
+		attempts += 1
+
+	# If no valid button found, stay on current
+	focused_button_index = start_index
+
+func _update_button_focus():
+	"""Update which button has focus highlight"""
+	# Find first visible enabled button if current is invalid
+	if focused_button_index >= buttons.size() or \
+	   not buttons[focused_button_index].visible or \
+	   buttons[focused_button_index].disabled:
+		for i in range(buttons.size()):
+			if buttons[i].visible and not buttons[i].disabled:
+				focused_button_index = i
+				break
+
+	# Focus the selected button
+	if focused_button_index < buttons.size():
+		buttons[focused_button_index].grab_focus()
+
+func _activate_focused_button():
+	"""Activate the currently focused button"""
+	if focused_button_index < buttons.size():
+		var button = buttons[focused_button_index]
+		if button.visible and not button.disabled:
+			button.pressed.emit()
+			print("MissionResultsViewer: Activated button: ", button.name)

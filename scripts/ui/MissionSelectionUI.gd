@@ -17,6 +17,8 @@ const MissionCardScene = preload("res://scenes/UI/MissionCard.tscn")
 @onready var view_results_button = $Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ButtonContainer/ViewResultsButton
 @onready var start_button = $Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ButtonContainer/StartButton
 @onready var back_button = $Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ButtonContainer/BackButton
+@onready var completed_missions_label = $Dialog/MarginContainer/HBoxContainer/LeftPanel/StatsPanel/MarginContainer/VBoxContainer/CompletedMissionsLabel
+@onready var paintings_created_label = $Dialog/MarginContainer/HBoxContainer/LeftPanel/StatsPanel/MarginContainer/VBoxContainer/PaintingsCreatedLabel
 
 var painting_system_2d: PaintingSystem2D = null
 var results_viewer = null  # MissionResultsViewer (dynamic typing to avoid circular dependency)
@@ -46,9 +48,16 @@ func _ready():
 	if UIManager:
 		UIManager.register_screen("mission_selection", self)
 
+	# Connect to PaintingSpawner
+	if PaintingSpawner:
+		PaintingSpawner.painting_created.connect(_on_painting_created)
+
 	# Find painting system and results viewer
 	_find_painting_system()
 	_find_results_viewer()
+
+	# Update stats display
+	_update_stats_display()
 
 func _find_painting_system():
 	"""Find the PaintingSystem2D in the scene tree"""
@@ -99,8 +108,8 @@ func _input(event):
 	if not viewport:
 		return
 
-	# Start button to close dialog (works in both modes)
-	if event.is_action_pressed("start"):
+	# Start button or back_menu to close dialog (works in both modes)
+	if event.is_action_pressed("start") or event.is_action_pressed("back_menu"):
 		if nav_mode == NavMode.PREVIEW_BUTTONS:
 			_exit_preview_mode()
 		else:
@@ -276,6 +285,7 @@ func _open_dialog():
 func show_screen():
 	"""Show the mission selection screen (called by UIManager)"""
 	_open_dialog()
+	_update_stats_display()
 
 func hide_screen():
 	"""Hide the mission selection screen (called by UIManager)"""
@@ -286,13 +296,13 @@ func hide_screen():
 		painting_system_2d.set_input_enabled(true)
 
 func _close_dialog():
-	"""Hide the dialog and return to main menu"""
+	"""Hide the dialog and return to gameplay"""
 	# Reset navigation mode
 	nav_mode = NavMode.MISSION_LIST
 	_clear_button_focus()
 
 	if UIManager:
-		UIManager.change_state(UIManager.GameState.MAIN_MENU)
+		UIManager.change_state(UIManager.GameState.GAMEPLAY)
 
 func _populate_mission_list():
 	"""Create mission cards for all available missions"""
@@ -451,3 +461,15 @@ func _on_view_results():
 	results_viewer.show_results_for_mission(selected_mission)
 
 	print("MissionSelectionUI: Viewing results for mission '%s'" % selected_mission.title)
+
+func _on_painting_created(count: int):
+	"""Update stats display when a painting is created"""
+	_update_stats_display()
+
+func _update_stats_display():
+	"""Update mission completion statistics"""
+	if UIManager and completed_missions_label:
+		completed_missions_label.text = "Missions Completed: %d" % UIManager.missions_completed
+
+	if PaintingSpawner and paintings_created_label:
+		paintings_created_label.text = "Paintings Created: %d" % PaintingSpawner.paintings_created

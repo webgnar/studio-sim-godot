@@ -47,9 +47,9 @@ func _input(event):
 			focused.pressed.emit()
 			# Don't set_input_as_handled here - scene might transition immediately
 	elif event.is_action_pressed("start"):
-		# Start button quits the game on title screen
-		get_tree().quit()
-		# Don't set_input_as_handled here - app is quitting
+		# Start button goes directly to mission selection (same as new game)
+		_on_new_game_pressed()
+		# Don't set_input_as_handled here - scene is transitioning
 
 func _navigate_menu(direction: int):
 	"""Navigate menu up (-1) or down (1)"""

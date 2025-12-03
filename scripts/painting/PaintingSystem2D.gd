@@ -491,7 +491,7 @@ func verify_painting(target: PaintingMission) -> ValidationResult:
 			result.match_percentage,
 			result.pass_threshold
 		])
-		result.add_error("Breakdown - Visual: %.1f%%, Color: %.1f%%" % [
+		result.add_error("Breakdown - Precision: %.1f%%, Color Field: %.1f%%" % [
 			visual_percentage,
 			color_distribution_percentage
 		])

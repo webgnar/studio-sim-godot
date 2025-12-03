@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://cra27ims6pb5n"]
+[gd_scene load_steps=3 format=3 uid="uid://cra27ims6pb5n"]
 
 [ext_resource type="Script" uid="uid://bt23ft5ot5o0p" path="res://scripts/ui/MissionResultsViewer.gd" id="1_results"]
+[ext_resource type="Texture2D" uid="uid://dor0d4yiulgi5" path="res://sprites/ui/arrow.png" id="2_f72b2"]
 
 [node name="MissionResultsViewer" type="Control"]
 layout_mode = 3
@@ -38,13 +39,9 @@ theme_override_constants/margin_bottom = 20
 layout_mode = 2
 theme_override_constants/separation = 15
 
-[node name="TitleLabel" type="Label" parent="Dialog/MarginContainer/VBoxContainer"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 24
-text = "Mission Results"
-
 [node name="ScoreContainer" type="HBoxContainer" parent="Dialog/MarginContainer/VBoxContainer"]
 layout_mode = 2
+size_flags_horizontal = 4
 alignment = 1
 
 [node name="GradeLabel" type="Label" parent="Dialog/MarginContainer/VBoxContainer/ScoreContainer"]
@@ -67,6 +64,11 @@ vertical_alignment = 1
 layout_mode = 2
 alignment = 1
 
+[node name="back" type="Button" parent="Dialog/MarginContainer/VBoxContainer/ToggleContainer"]
+layout_mode = 2
+text = " back"
+icon = ExtResource("2_f72b2")
+
 [node name="ShowLatestButton" type="Button" parent="Dialog/MarginContainer/VBoxContainer/ToggleContainer"]
 custom_minimum_size = Vector2(150, 35)
 layout_mode = 2
@@ -85,6 +87,8 @@ alignment = 1
 
 [node name="PlayerPaintingPanel" type="PanelContainer" parent="Dialog/MarginContainer/VBoxContainer/ImageComparison"]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Dialog/MarginContainer/VBoxContainer/ImageComparison/PlayerPaintingPanel"]
 layout_mode = 2
@@ -107,6 +111,8 @@ horizontal_alignment = 1
 
 [node name="TargetPaintingPanel" type="PanelContainer" parent="Dialog/MarginContainer/VBoxContainer/ImageComparison"]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Dialog/MarginContainer/VBoxContainer/ImageComparison/TargetPaintingPanel"]
 layout_mode = 2
@@ -121,17 +127,3 @@ custom_minimum_size = Vector2(300, 300)
 layout_mode = 2
 expand_mode = 1
 stretch_mode = 5
-
-[node name="ButtonContainer" type="HBoxContainer" parent="Dialog/MarginContainer/VBoxContainer"]
-layout_mode = 2
-alignment = 1
-
-[node name="RetryButton" type="Button" parent="Dialog/MarginContainer/VBoxContainer/ButtonContainer"]
-custom_minimum_size = Vector2(150, 40)
-layout_mode = 2
-text = "Retry Mission"
-
-[node name="BackButton" type="Button" parent="Dialog/MarginContainer/VBoxContainer/ButtonContainer"]
-custom_minimum_size = Vector2(150, 40)
-layout_mode = 2
-text = "Back to Missions"

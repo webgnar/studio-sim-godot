@@ -6,3 +6,9 @@ res://scripts/ui/ValidationResultUI.gd
 res://scripts/PlayerInteractionComponent.gd
 res://scripts/old stuff/InteractionComponent.gd
 res://scenes/world.tscn
+res://scripts/painting/PaintingSystem2D.gd
+res://scenes/UI/MissionSelectionUI.tscn
+res://scripts/ui/MissionSelectionUI.gd
+res://scripts/TitleScreenController.gd
+res://scripts/UIManager.gd
+res://scripts/ui/MissionResultsViewer.gd
