@@ -25,7 +25,6 @@ const AbortMissionIcon = preload("res://sprites/ui/abortmission.png")
 @onready var paintings_created_label = $Dialog/MarginContainer/HBoxContainer/LeftPanel/StatsPanel/MarginContainer/VBoxContainer/PaintingsCreatedLabel
 @onready var confirmation_dialog = $ConfirmationDialog
 
-var painting_system_2d: PaintingSystem2D = null
 var results_viewer = null  # MissionResultsViewer (dynamic typing to avoid circular dependency)
 var selected_mission: PaintingMission = null
 var selected_index: int = 0
@@ -60,32 +59,11 @@ func _ready():
 	if PaintingSpawner:
 		PaintingSpawner.painting_created.connect(_on_painting_created)
 
-	# Find painting system and results viewer
-	_find_painting_system()
+	# Find results viewer
 	_find_results_viewer()
 
 	# Update stats display
 	_update_stats_display()
-
-func _find_painting_system():
-	"""Find the PaintingSystem2D in the scene tree"""
-	var root = get_tree().root
-	painting_system_2d = _search_for_painting_system(root)
-
-	if not painting_system_2d:
-		push_error("MissionSelectionUI: Could not find PaintingSystem2D in scene!")
-
-func _search_for_painting_system(node: Node) -> PaintingSystem2D:
-	"""Recursively search for PaintingSystem2D"""
-	if node is PaintingSystem2D:
-		return node
-
-	for child in node.get_children():
-		var result = _search_for_painting_system(child)
-		if result:
-			return result
-
-	return null
 
 func _find_results_viewer():
 	"""Find the MissionResultsViewer in the scene tree"""
@@ -268,8 +246,9 @@ func _open_dialog():
 		return
 
 	# Disable painting system input while dialog is open
-	if painting_system_2d:
-		painting_system_2d.set_input_enabled(false)
+	var painting_system = PaintingModeManager.painting_system_2d
+	if painting_system:
+		painting_system.set_input_enabled(false)
 
 	# Reset navigation mode to mission list
 	nav_mode = NavMode.MISSION_LIST
@@ -307,8 +286,9 @@ func hide_screen():
 	dialog.visible = false
 
 	# Re-enable painting system input
-	if painting_system_2d:
-		painting_system_2d.set_input_enabled(true)
+	var painting_system = PaintingModeManager.painting_system_2d
+	if painting_system:
+		painting_system.set_input_enabled(true)
 
 func _close_dialog():
 	"""Hide the dialog and return to gameplay"""
@@ -451,14 +431,15 @@ func _on_start_or_abort_mission():
 		confirmation_dialog.popup_centered()
 		return
 
-	# Start a new mission
-	if not painting_system_2d:
+	# Get the current painting system (always fresh reference)
+	var painting_system = PaintingModeManager.painting_system_2d
+	if not painting_system:
 		push_error("MissionSelectionUI: No painting system found!")
 		return
 
 	# Start the mission (MissionManager will set state to IN_MISSION)
 	MissionManager.start_mission(selected_mission)
-	painting_system_2d.start_mission(selected_mission)
+	painting_system.start_mission(selected_mission)
 
 	# Reset navigation mode and hide dialog
 	nav_mode = NavMode.MISSION_LIST
