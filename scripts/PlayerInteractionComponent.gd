@@ -22,6 +22,7 @@ signal interaction_prompt_changed(prompt_text: String)
 var _raycast: RayCast3D
 var _camera: Camera3D
 var current_interactable: Node3D = null
+var outline_manager: OutlineManager = null
 
 # --- CARRY STATE ---
 var carried_object: CarryableComponent = null
@@ -34,14 +35,18 @@ var is_carrying: bool:
 func _ready() -> void:
 	# Find the camera (should be sibling or child of player)
 	_camera = _find_camera()
-	
+
 	if not _camera:
 		push_error("PlayerInteractionComponent: No camera found! Interaction system disabled.")
 		set_process(false)
 		return
-	
+
 	# Create raycast as child of camera
 	_setup_raycast()
+
+	# Setup outline manager
+	outline_manager = OutlineManager.new()
+	add_child(outline_manager)
 
 func _process(_delta: float) -> void:
 	_update_interactable()
@@ -222,11 +227,19 @@ func _set_interactable(new_interactable: Node3D) -> void:
 	interactive_object_detected.emit(new_interactable)
 	_update_interaction_prompt()
 
+	# Show outline on new interactable
+	if outline_manager:
+		outline_manager.show_outline(new_interactable)
+
 func _clear_interactable() -> void:
 	if current_interactable:
 		current_interactable = null
 		nothing_detected.emit()
 		interaction_prompt_changed.emit("")
+
+		# Hide outline
+		if outline_manager:
+			outline_manager.hide_outline()
 
 func _update_interaction_prompt() -> void:
 	if not current_interactable:

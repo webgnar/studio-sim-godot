@@ -1,0 +1,9 @@
+res://scenes/world.tscn
+res://models/new_array_mesh.tres
+res://models/new_array_mesh2.tres
+res://models/new_array_mesh3.tres
+res://scripts/PlayerInteractionComponent.gd
+res://shaders/outline.tres
+res://shaders/outline.gdshader
+res://materials/hover_outline_material.tres
+res://scripts/OutlineManager.gd

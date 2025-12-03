@@ -1,0 +1,9 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://0q78h1jetf25"]
+
+[ext_resource type="Shader" uid="uid://bc2jv4vhrn4ga" path="res://shaders/hover_outline.gdshader" id="1"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1")
+shader_parameter/outline_color = Color(1, 0.8, 0, 1)
+shader_parameter/outline_thickness = 0.1
