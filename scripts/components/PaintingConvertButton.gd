@@ -9,9 +9,8 @@ class_name PaintingConvertButton
 var last_pressed: float = 0.0
 
 func _on_ready() -> void:
-	# Set default interaction text if not set
-	if interaction_text.is_empty():
-		interaction_text = "New Painting"
+	# Always set interaction text to support both abort and convert
+	interaction_text = "Abort / New Painting"
 
 ## Called by PlayerInteractionComponent when player interacts
 func _on_interacted(player_interaction_component: PlayerInteractionComponent) -> void:
@@ -22,7 +21,13 @@ func _on_interacted(player_interaction_component: PlayerInteractionComponent) ->
 
 	last_pressed = current_time
 
-	# Trigger conversion
+	# Check if mission is active
+	if MissionManager and MissionManager.current_mission:
+		# Abort the active mission
+		MissionManager.abort_mission()
+		print("Red button: Mission aborted")
+
+	# Convert painting to carryable (regardless of mission state)
 	PaintingSpawner.replace_painting_with_carryable(get_tree().current_scene)
 
 	# Play animation if available

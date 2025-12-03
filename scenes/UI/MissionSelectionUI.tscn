@@ -149,9 +149,10 @@ text = "F7: Open/Close (2D Mode Only) | Arrow Keys: Navigate | Enter: Start"
 horizontal_alignment = 1
 
 [node name="ConfirmationDialog" type="ConfirmationDialog" parent="."]
+oversampling_override = 1.0
 title = "Abort Mission?"
 initial_position = 2
-size = Vector2i(400, 150)
-dialog_text = "Abort this mission? Your canvas will be saved but the mission will not be completed."
+size = Vector2i(664, 150)
 ok_button_text = "Abort Mission"
+dialog_text = "Abort this mission? Your canvas will be saved but the mission will not be completed."
 cancel_button_text = "Continue Mission"

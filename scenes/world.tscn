@@ -470,9 +470,9 @@ painting_system_2d = NodePath("../../PaintingRoot2d/CanvasViewport/CanvasRoot")
 
 [node name="GameplayUI_Layer" type="CanvasLayer" parent="."]
 
-[node name="MissionSelectionUi" parent="GameplayUI_Layer" instance=ExtResource("77_select")]
+[node name="MissionSelectionUI" parent="GameplayUI_Layer" instance=ExtResource("77_select")]
 
-[node name="ValidationResultUi" parent="GameplayUI_Layer" instance=ExtResource("78_result")]
+[node name="ValidationResultUI" parent="GameplayUI_Layer" instance=ExtResource("78_result")]
 
 [node name="MissionResultsViewer" parent="GameplayUI_Layer" instance=ExtResource("81_results_viewer")]
 
@@ -1314,7 +1314,7 @@ interaction_text = "New Painting"
 custom_interaction_distance = 15.0
 
 [node name="buttonGreen" type="Node3D" parent="."]
-transform = Transform3D(-4.371139e-09, 0.1, 0, -0.1, -4.371139e-09, 0, 0, 0, 0.1, -3.4300182, 2.0035036, 3.9931483)
+transform = Transform3D(-4.371139e-09, 0.1, 0, -0.1, -4.371139e-09, 0, 0, 0, 0.1, -3.3422377, 2.0035036, 3.9931483)
 
 [node name="outletbox" parent="buttonGreen" instance=ExtResource("79_swu3i")]
 transform = Transform3D(-4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0, 1, 0, 0, 0)
