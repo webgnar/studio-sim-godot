@@ -13,3 +13,8 @@ res://scripts/painting/PaintingRoot2D.gd
 res://scripts/DebugPaintingConverter.gd
 res://scenes/CarryablePainting.tscn
 res://scenes/PaintingRoot2D.tscn
+res://scripts/painting/ValidationResult.gd
+res://scripts/painting/VisualValidator.gd
+res://scripts/ui/ValidationDebugOverlay.gd
+res://scenes/UI/ValidationResultUI.tscn
+res://scripts/ui/ValidationResultUI.gd

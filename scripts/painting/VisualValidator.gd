@@ -50,7 +50,7 @@ static func compare_images(current: Image, reference: Image, color_tolerance: fl
 				continue
 
 			# Calculate color distance (RGB only, ignore alpha)
-			var color_diff = _color_distance(current_color, reference_color)
+			var color_diff = color_distance(current_color, reference_color)
 
 			if color_diff <= color_tolerance:
 				matching_pixels += 1
@@ -132,7 +132,7 @@ static func compare_color_distributions(current_hist: Dictionary, reference_hist
 
 	return clamp(similarity, 0.0, 100.0)
 
-static func _color_distance(color1: Color, color2: Color) -> float:
+static func color_distance(color1: Color, color2: Color) -> float:
 	"""
 	Calculate Euclidean distance between two colors (RGB only)
 	Returns value in 0-255 range for easier tolerance comparison

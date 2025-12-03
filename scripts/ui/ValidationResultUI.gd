@@ -12,6 +12,13 @@ class_name ValidationResultUI
 @onready var comparison_container = $Dialog/MarginContainer/VBoxContainer/ComparisonContainer
 @onready var your_image = $Dialog/MarginContainer/VBoxContainer/ComparisonContainer/YourPaintingPanel/YourImage
 @onready var target_image = $Dialog/MarginContainer/VBoxContainer/ComparisonContainer/TargetPaintingPanel/TargetImage
+@onready var heatmap_panel = $Dialog/MarginContainer/VBoxContainer/HeatmapPanel
+@onready var heatmap_image = $Dialog/MarginContainer/VBoxContainer/HeatmapPanel/HeatmapImage
+@onready var histogram_panel = $Dialog/MarginContainer/VBoxContainer/HistogramPanel
+@onready var player_histogram_display = $Dialog/MarginContainer/VBoxContainer/HistogramPanel/HistogramComparison/PlayerHistPanel/PlayerHistogramDisplay
+@onready var player_swatch_display = $Dialog/MarginContainer/VBoxContainer/HistogramPanel/HistogramComparison/PlayerHistPanel/PlayerSwatchDisplay
+@onready var reference_histogram_display = $Dialog/MarginContainer/VBoxContainer/HistogramPanel/HistogramComparison/ReferenceHistPanel/ReferenceHistogramDisplay
+@onready var reference_swatch_display = $Dialog/MarginContainer/VBoxContainer/HistogramPanel/HistogramComparison/ReferenceHistPanel/ReferenceSwatchDisplay
 @onready var breakdown_label = $Dialog/MarginContainer/VBoxContainer/BreakdownLabel
 @onready var coordinate_label = $Dialog/MarginContainer/VBoxContainer/CoordinateLabel
 @onready var visual_label = $Dialog/MarginContainer/VBoxContainer/VisualLabel
@@ -142,6 +149,9 @@ func show_results(result: ValidationResult, mission: PaintingMission):
 	# Show image comparison
 	_display_comparison_images(mission)
 
+	# Show heatmap and histograms if debug data is available
+	_display_analysis_visualizations(result)
+
 	# Show score breakdown (simplified validation - Visual + Color only)
 	breakdown_label.visible = true
 	coordinate_label.visible = false  # No longer used
@@ -195,6 +205,38 @@ func _display_comparison_images(mission: PaintingMission):
 			push_warning("ValidationResultUI: Could not capture player's painting")
 		if not reference_texture:
 			push_warning("ValidationResultUI: Could not load reference image from '%s'" % mission.reference_image_path)
+
+func _display_analysis_visualizations(result: ValidationResult):
+	"""Display heatmap and histograms from debug data"""
+	if not result or not result.debug_enabled or result.debug_data.is_empty():
+		# Hide visualizations if no debug data
+		heatmap_panel.visible = false
+		histogram_panel.visible = false
+		return
+
+	var debug = result.debug_data
+
+	# Display heatmap
+	if debug.has("heatmap_data"):
+		heatmap_image.texture = ImageTexture.create_from_image(debug["heatmap_data"])
+		heatmap_panel.visible = true
+	else:
+		heatmap_panel.visible = false
+
+	# Display histograms
+	if debug.has("current_histogram") and debug.has("reference_histogram"):
+		var player_hist = debug["current_histogram"]
+		var ref_hist = debug["reference_histogram"]
+
+		player_histogram_display.texture = HistogramRenderer.create_histogram_texture(player_hist)
+		player_swatch_display.texture = HistogramRenderer.create_color_swatch(player_hist)
+
+		reference_histogram_display.texture = HistogramRenderer.create_histogram_texture(ref_hist)
+		reference_swatch_display.texture = HistogramRenderer.create_color_swatch(ref_hist)
+
+		histogram_panel.visible = true
+	else:
+		histogram_panel.visible = false
 
 func _on_retry_mission():
 	"""Retry the current mission"""

@@ -106,6 +106,87 @@ layout_mode = 2
 expand_mode = 1
 stretch_mode = 5
 
+[node name="HeatmapPanel" type="VBoxContainer" parent="Dialog/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="HeatmapTitle" type="Label" parent="Dialog/MarginContainer/VBoxContainer/HeatmapPanel"]
+layout_mode = 2
+text = "Pixel Matching Analysis"
+horizontal_alignment = 1
+
+[node name="HeatmapImage" type="TextureRect" parent="Dialog/MarginContainer/VBoxContainer/HeatmapPanel"]
+custom_minimum_size = Vector2(300, 300)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="HeatmapLegend" type="Label" parent="Dialog/MarginContainer/VBoxContainer/HeatmapPanel"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "Green = Matched | Red = Mismatched"
+horizontal_alignment = 1
+
+[node name="HistogramPanel" type="VBoxContainer" parent="Dialog/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="HistogramTitle" type="Label" parent="Dialog/MarginContainer/VBoxContainer/HistogramPanel"]
+layout_mode = 2
+text = "Color Distribution Comparison"
+horizontal_alignment = 1
+
+[node name="HistogramComparison" type="HBoxContainer" parent="Dialog/MarginContainer/VBoxContainer/HistogramPanel"]
+layout_mode = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="PlayerHistPanel" type="VBoxContainer" parent="Dialog/MarginContainer/VBoxContainer/HistogramPanel/HistogramComparison"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 5
+
+[node name="PlayerHistTitle" type="Label" parent="Dialog/MarginContainer/VBoxContainer/HistogramPanel/HistogramComparison/PlayerHistPanel"]
+layout_mode = 2
+text = "Your Colors"
+horizontal_alignment = 1
+
+[node name="PlayerHistogramDisplay" type="TextureRect" parent="Dialog/MarginContainer/VBoxContainer/HistogramPanel/HistogramComparison/PlayerHistPanel"]
+custom_minimum_size = Vector2(150, 75)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="PlayerSwatchDisplay" type="TextureRect" parent="Dialog/MarginContainer/VBoxContainer/HistogramPanel/HistogramComparison/PlayerHistPanel"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+size_flags_horizontal = 4
+expand_mode = 1
+stretch_mode = 5
+
+[node name="ReferenceHistPanel" type="VBoxContainer" parent="Dialog/MarginContainer/VBoxContainer/HistogramPanel/HistogramComparison"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 5
+
+[node name="ReferenceHistTitle" type="Label" parent="Dialog/MarginContainer/VBoxContainer/HistogramPanel/HistogramComparison/ReferenceHistPanel"]
+layout_mode = 2
+text = "Target Colors"
+horizontal_alignment = 1
+
+[node name="ReferenceHistogramDisplay" type="TextureRect" parent="Dialog/MarginContainer/VBoxContainer/HistogramPanel/HistogramComparison/ReferenceHistPanel"]
+custom_minimum_size = Vector2(150, 75)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="ReferenceSwatchDisplay" type="TextureRect" parent="Dialog/MarginContainer/VBoxContainer/HistogramPanel/HistogramComparison/ReferenceHistPanel"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+size_flags_horizontal = 4
+expand_mode = 1
+stretch_mode = 5
+
 [node name="BreakdownLabel" type="Label" parent="Dialog/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 14

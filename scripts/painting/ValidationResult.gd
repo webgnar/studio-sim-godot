@@ -20,6 +20,10 @@ var visual_match_percentage: float = 0.0  # Pixel-level visual similarity (0.0-1
 var color_distribution_score: float = 0.0  # Color histogram similarity (0.0-100.0)
 var validation_weights: Dictionary = {}  # Weights used for blending scores
 
+# Debug data (only populated when debug mode active)
+var debug_enabled: bool = false
+var debug_data: Dictionary = {}
+
 func _init(p_success: bool = false):
 	success = p_success
 

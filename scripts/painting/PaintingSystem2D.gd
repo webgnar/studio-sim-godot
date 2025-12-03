@@ -479,6 +479,9 @@ func verify_painting(target: PaintingMission) -> ValidationResult:
 	"""Check if current canvas matches the target painting using visual similarity"""
 	var result = ValidationResult.new()
 
+	# Always enable debug data capture for heatmap and histogram visualizations
+	result.debug_enabled = true
+
 	# Perform visual validation using pixel comparison and color distribution
 	var visual_percentage: float = 0.0
 	var color_distribution_percentage: float = 0.0
@@ -504,14 +507,29 @@ func verify_painting(target: PaintingMission) -> ValidationResult:
 						# Get color tolerance based on difficulty
 						var color_tolerance = target.get_color_tolerance()
 
+						# Store color tolerance
+						if result.debug_enabled:
+							result.debug_data["color_tolerance"] = color_tolerance
+
 						# Perform pixel-by-pixel comparison
 						var visual_result = VisualValidator.compare_images(current_image, reference_image, color_tolerance)
 						visual_percentage = visual_result["visual_score"]
+
+						# Generate and store heatmap for visualization
+						if result.debug_enabled:
+							result.debug_data["heatmap_data"] = _generate_heatmap_data(current_image, reference_image, color_tolerance)
+							result.debug_data["total_pixels"] = visual_result["total_pixels"]
+							result.debug_data["matching_pixels"] = visual_result["matching_pixels"]
 
 						# Compare color distributions
 						var current_hist = VisualValidator.calculate_color_distribution(current_image)
 						var reference_hist = VisualValidator.calculate_color_distribution(reference_image)
 						color_distribution_percentage = VisualValidator.compare_color_distributions(current_hist, reference_hist)
+
+						# Store histogram data for visualization
+						if result.debug_enabled:
+							result.debug_data["current_histogram"] = current_hist
+							result.debug_data["reference_histogram"] = reference_hist
 					else:
 						push_warning("PaintingSystem2D: Could not extract images for visual validation")
 				else:
@@ -522,8 +540,19 @@ func verify_painting(target: PaintingMission) -> ValidationResult:
 	# Get pass threshold based on difficulty
 	var pass_threshold = target.get_pass_threshold()
 
+	# Store all scores for visualization
+	if result.debug_enabled:
+		result.debug_data["visual_score"] = visual_percentage
+		result.debug_data["color_score"] = color_distribution_percentage
+		result.debug_data["pass_threshold"] = pass_threshold
+
 	# Set simple score (blends visual and color scores)
 	result.set_simple_score(visual_percentage, color_distribution_percentage, pass_threshold)
+
+	# Store final results for visualization
+	if result.debug_enabled:
+		result.debug_data["blended_score"] = result.match_percentage
+		result.debug_data["grade"] = result.get_grade()
 
 	# Add detailed feedback if not passing
 	if not result.success:
@@ -537,6 +566,58 @@ func verify_painting(target: PaintingMission) -> ValidationResult:
 		])
 
 	return result
+
+func _is_debug_mode_enabled() -> bool:
+	"""Check if debug overlay is active"""
+	# Check if autoload exists and is visible
+	return ValidationDebugOverlay and ValidationDebugOverlay.is_overlay_visible()
+
+func _generate_heatmap_data(current: Image, reference: Image, tolerance: float) -> Image:
+	"""
+	Generate heatmap showing pixel matching quality
+	Green = match (within tolerance)
+	Red = no match
+	Alpha indicates match quality
+	"""
+	var width = reference.get_size().x
+	var height = reference.get_size().y
+
+	# Optional downsampling for performance
+	var max_dim = 512
+	if width > max_dim or height > max_dim:
+		var scale = float(max_dim) / max(width, height)
+		current = current.duplicate()
+		reference = reference.duplicate()
+		current.resize(int(width * scale), int(height * scale), Image.INTERPOLATE_LANCZOS)
+		reference.resize(int(width * scale), int(height * scale), Image.INTERPOLATE_LANCZOS)
+		width = current.get_size().x
+		height = current.get_size().y
+
+	var heatmap = Image.create(width, height, false, Image.FORMAT_RGBA8)
+
+	for y in range(height):
+		for x in range(width):
+			var current_color = current.get_pixel(x, y)
+			var reference_color = reference.get_pixel(x, y)
+
+			# Skip fully transparent pixels in reference (background)
+			if reference_color.a < 0.1:
+				heatmap.set_pixel(x, y, Color(0, 0, 0, 0))
+				continue
+
+			# Calculate color distance using public method
+			var color_diff = VisualValidator.color_distance(current_color, reference_color)
+
+			if color_diff <= tolerance:
+				# Green for matching (brighter = closer match)
+				var quality = 1.0 - (color_diff / tolerance)
+				heatmap.set_pixel(x, y, Color(0, quality, 0, 0.7))
+			else:
+				# Red for mismatch (brighter = worse)
+				var severity = min((color_diff - tolerance) / tolerance, 1.0)
+				heatmap.set_pixel(x, y, Color(1.0, 0, 0, 0.5 + severity * 0.3))
+
+	return heatmap
 
 # Mode management (deprecated - input always enabled now)
 func set_input_enabled(enabled: bool):
@@ -616,6 +697,10 @@ func submit_painting():
 
 	# Validate the painting
 	var result = verify_painting(MissionManager.current_mission)
+
+	# Update debug overlay if active
+	if ValidationDebugOverlay and result.debug_enabled:
+		ValidationDebugOverlay.update_display(result)
 
 	# Save paintings to disk (await to ensure preview sprite is hidden during capture)
 	var latest_path = await save_painting_image(mission_id, false)  # Always save latest
