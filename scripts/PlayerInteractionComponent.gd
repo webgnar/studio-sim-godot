@@ -155,24 +155,51 @@ func _setup_raycast() -> void:
 	_raycast.enabled = true
 
 func _update_interactable() -> void:
+	# Temporarily extend raycast distance to check for objects with custom distances
+	var original_distance = interaction_distance
+	var max_check_distance = 20.0  # Maximum distance to check for custom interactions
+	_raycast.target_position = Vector3(0, 0, -max_check_distance)
+	_raycast.force_raycast_update()
+
 	if not _raycast.is_colliding():
+		_raycast.target_position = Vector3(0, 0, -original_distance)
 		_clear_interactable()
 		return
-	
+
 	var hit = _raycast.get_collider()
-	
+
 	if not hit:
+		_raycast.target_position = Vector3(0, 0, -original_distance)
 		_clear_interactable()
 		return
-	
+
 	# Find the root interactable (might be a parent of what we hit)
 	# The raycast might hit a child (like StaticBody3D), but the parent has the group
 	var interactable = _find_interactable_root(hit)
-	
+
 	if not interactable:
+		_raycast.target_position = Vector3(0, 0, -original_distance)
 		_clear_interactable()
 		return
-	
+
+	# Check if this interactable has a custom interaction distance
+	var interaction_comp = _find_interaction_component(interactable)
+	var effective_distance = original_distance
+
+	if interaction_comp and "custom_interaction_distance" in interaction_comp:
+		if interaction_comp.custom_interaction_distance > 0:
+			effective_distance = interaction_comp.custom_interaction_distance
+
+	# Check if we're within the effective interaction distance
+	var distance_to_object = _raycast.get_collision_point().distance_to(_camera.global_position)
+	if distance_to_object > effective_distance:
+		_raycast.target_position = Vector3(0, 0, -original_distance)
+		_clear_interactable()
+		return
+
+	# Restore original raycast distance
+	_raycast.target_position = Vector3(0, 0, -original_distance)
+
 	if interactable != current_interactable:
 		_set_interactable(interactable)
 

@@ -49,8 +49,21 @@ func set_placement_score(percentage: float, sticker_scores: Array[float]):
 	per_sticker_scores = sticker_scores
 	success = (match_percentage >= pass_threshold)
 
+func set_simple_score(visual_score: float, color_score: float, pass_threshold_override: float):
+	"""Set simplified validation score using visual and color distribution only"""
+	visual_match_percentage = clamp(visual_score, 0.0, 100.0)
+	color_distribution_score = clamp(color_score, 0.0, 100.0)
+
+	# Fixed weights: Color histogram (70%) + Visual pixel (30%)
+	match_percentage = (color_distribution_score * 0.7 + visual_match_percentage * 0.3)
+	match_percentage = clamp(match_percentage, 0.0, 100.0)
+
+	# Use difficulty-based pass threshold
+	pass_threshold = pass_threshold_override
+	success = (match_percentage >= pass_threshold)
+
 func set_hybrid_score(coord_score: float, visual_score: float, color_score: float, weights: Dictionary, sticker_scores: Array[float]):
-	"""Set hybrid validation score combining coordinate, visual, and color distribution"""
+	"""DEPRECATED: Use set_simple_score() instead. Kept for backward compatibility."""
 	coordinate_match_percentage = clamp(coord_score, 0.0, 100.0)
 	visual_match_percentage = clamp(visual_score, 0.0, 100.0)
 	color_distribution_score = clamp(color_score, 0.0, 100.0)

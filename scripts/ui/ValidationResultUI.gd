@@ -130,12 +130,12 @@ func show_results(result: ValidationResult, mission: PaintingMission):
 	# Show score
 	score_label.text = "Score: %.1f%%" % result.match_percentage
 
-	# Show pass/fail status
+	# Show pass/fail status with threshold
 	if result.success:
-		status_label.text = "PASSED!"
+		status_label.text = "PASSED! (%.0f%% required)" % result.pass_threshold
 		status_label.modulate = Color(0.4, 1.0, 0.4)
 	else:
-		status_label.text = "Failed"
+		status_label.text = "Failed (%.0f%% required)" % result.pass_threshold
 		status_label.modulate = Color(1.0, 0.4, 0.4)
 
 	# Show message and payment
@@ -150,33 +150,15 @@ func show_results(result: ValidationResult, mission: PaintingMission):
 	# Show image comparison
 	_display_comparison_images(mission)
 
-	# Show score breakdown (hybrid validation)
-	if result.coordinate_match_percentage > 0.0 or result.visual_match_percentage > 0.0:
-		# Hybrid validation was used - show breakdown
-		breakdown_label.visible = true
-		coordinate_label.visible = true
-		visual_label.visible = true
-		color_label.visible = true
+	# Show score breakdown (simplified validation - Visual + Color only)
+	breakdown_label.visible = true
+	coordinate_label.visible = false  # No longer used
+	visual_label.visible = true
+	color_label.visible = true
 
-		coordinate_label.text = "Placement: %.1f%%" % result.coordinate_match_percentage
-		visual_label.text = "Visual: %.1f%%" % result.visual_match_percentage
-		color_label.text = "Color: %.1f%%" % result.color_distribution_score
-
-		# Show weights if available
-		if not result.validation_weights.is_empty():
-			var coord_weight = result.validation_weights.get("coordinate", 0.0) * 100
-			var visual_weight = result.validation_weights.get("visual", 0.0) * 100
-			var color_weight = result.validation_weights.get("color", 0.0) * 100
-
-			coordinate_label.text = "Placement: %.1f%% (weight: %.0f%%)" % [result.coordinate_match_percentage, coord_weight]
-			visual_label.text = "Visual: %.1f%% (weight: %.0f%%)" % [result.visual_match_percentage, visual_weight]
-			color_label.text = "Color: %.1f%% (weight: %.0f%%)" % [result.color_distribution_score, color_weight]
-	else:
-		# Legacy coordinate-only validation - hide breakdown
-		breakdown_label.visible = false
-		coordinate_label.visible = false
-		visual_label.visible = false
-		color_label.visible = false
+	# Show Visual and Color scores with fixed weights (30% visual, 70% color)
+	visual_label.text = "Visual Similarity: %.1f%% (weight: 30%%)" % result.visual_match_percentage
+	color_label.text = "Color Distribution: %.1f%% (weight: 70%%)" % result.color_distribution_score
 
 	# Show results via UIManager (which will call show_screen())
 	# Note: Dialog visibility is now managed by UIManager

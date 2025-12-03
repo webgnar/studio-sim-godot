@@ -1,8 +1,8 @@
-res://scripts/PlayerController.gd
-res://scripts/painting/PaintingModeManager.gd
-res://scripts/painting/PaintingSystem2D.gd
-res://scripts/painting/PaintingSystem.gd
-res://scenes/world.tscn
+res://scenes/UI/MissionResultsViewer.tscn
 res://models/new_array_mesh.tres
 res://models/new_array_mesh2.tres
 res://models/new_array_mesh3.tres
+res://scripts/ui/ValidationResultUI.gd
+res://scripts/PlayerInteractionComponent.gd
+res://scripts/old stuff/InteractionComponent.gd
+res://scenes/world.tscn

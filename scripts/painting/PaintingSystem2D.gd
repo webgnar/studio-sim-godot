@@ -436,71 +436,10 @@ func clear_canvas():
 
 # Validation system
 func verify_painting(target: PaintingMission) -> ValidationResult:
-	"""Check if current canvas matches the target painting with placement-based scoring"""
+	"""Check if current canvas matches the target painting using visual similarity"""
 	var result = ValidationResult.new()
 
-	# Check layer count
-	if placed_layers.size() != target.target_stickers.size():
-		result.add_error("Wrong number of stickers: expected %d, got %d" % [
-			target.target_stickers.size(),
-			placed_layers.size()
-		])
-		result.set_placement_score(0.0, [])
-		return result
-
-	if target.target_stickers.is_empty():
-		result.add_error("Mission has no target stickers defined")
-		result.set_placement_score(0.0, [])
-		return result
-
-	# Get tolerance settings from mission difficulty
-	var tolerances = target.get_tolerance_settings()
-	var position_tolerance = tolerances["position"]
-	var rotation_tolerance = tolerances["rotation"]
-
-	# Convert placed layers to PlacedStickerData for comparison
-	var player_stickers: Array[PlacedStickerData] = []
-	for layer in placed_layers:
-		if not layer.node:
-			continue
-
-		var sticker_data = PlacedStickerData.new()
-		sticker_data.sticker_id = layer.id
-		sticker_data.position = layer.node.position
-		sticker_data.rotation_deg = layer.rotation_deg
-		sticker_data.scale = layer.node.scale.x
-		sticker_data.z_order = layer.order
-
-		player_stickers.append(sticker_data)
-
-	# Sort both arrays by z_order for comparison
-	var sorted_player = player_stickers.duplicate()
-	sorted_player.sort_custom(func(a, b): return a.z_order < b.z_order)
-
-	var sorted_target = target.target_stickers.duplicate()
-	sorted_target.sort_custom(func(a, b): return a.z_order < b.z_order)
-
-	# Compare each sticker and calculate individual scores
-	var sticker_scores: Array[float] = []
-	var total_score: float = 0.0
-
-	for i in range(sorted_target.size()):
-		if i >= sorted_player.size():
-			sticker_scores.append(0.0)
-			continue
-
-		var target_sticker = sorted_target[i]
-		var player_sticker = sorted_player[i]
-
-		# Calculate match score for this sticker
-		var match_score = player_sticker.matches(target_sticker, position_tolerance, rotation_tolerance)
-		sticker_scores.append(match_score)
-		total_score += match_score
-
-	# Calculate overall coordinate-based percentage
-	var coordinate_percentage = (total_score / float(sorted_target.size())) * 100.0
-
-	# Perform visual validation (hybrid approach)
+	# Perform visual validation using pixel comparison and color distribution
 	var visual_percentage: float = 0.0
 	var color_distribution_percentage: float = 0.0
 
@@ -538,19 +477,13 @@ func verify_painting(target: PaintingMission) -> ValidationResult:
 				else:
 					push_warning("PaintingSystem2D: Could not load reference image from '%s'" % target.reference_image_path)
 	else:
-		push_warning("PaintingSystem2D: No reference image path set, using coordinate-only validation")
+		push_warning("PaintingSystem2D: No reference image path set, validation may not work correctly")
 
-	# Get validation weights based on difficulty
-	var weights = target.get_validation_weights()
+	# Get pass threshold based on difficulty
+	var pass_threshold = target.get_pass_threshold()
 
-	# Set hybrid score (blends coordinate, visual, and color scores)
-	result.set_hybrid_score(
-		coordinate_percentage,
-		visual_percentage,
-		color_distribution_percentage,
-		weights,
-		sticker_scores
-	)
+	# Set simple score (blends visual and color scores)
+	result.set_simple_score(visual_percentage, color_distribution_percentage, pass_threshold)
 
 	# Add detailed feedback if not passing
 	if not result.success:
@@ -558,8 +491,7 @@ func verify_painting(target: PaintingMission) -> ValidationResult:
 			result.match_percentage,
 			result.pass_threshold
 		])
-		result.add_error("Breakdown - Coordinate: %.1f%%, Visual: %.1f%%, Color: %.1f%%" % [
-			coordinate_percentage,
+		result.add_error("Breakdown - Visual: %.1f%%, Color: %.1f%%" % [
 			visual_percentage,
 			color_distribution_percentage
 		])

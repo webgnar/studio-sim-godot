@@ -15,6 +15,7 @@ signal state_changed(new_state: String)
 @export_group("Interaction Settings")
 @export var interaction_text: String = "Interact"
 @export var is_disabled: bool = false
+@export var custom_interaction_distance: float = -1.0  ## Custom interaction distance for this object (-1 = use default)
 
 @export_group("Audio")
 @export var interaction_sound: AudioStream

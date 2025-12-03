@@ -13,7 +13,6 @@ mouse_filter = 2
 script = ExtResource("1_results")
 
 [node name="Dialog" type="PanelContainer" parent="."]
-visible = false
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -43,7 +42,6 @@ theme_override_constants/separation = 15
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "Mission Results"
-horizontal_alignment = 1
 
 [node name="ScoreContainer" type="HBoxContainer" parent="Dialog/MarginContainer/VBoxContainer"]
 layout_mode = 2

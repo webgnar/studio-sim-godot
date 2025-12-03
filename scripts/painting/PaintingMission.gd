@@ -19,51 +19,14 @@ func get_required_stickers() -> Array[String]:
 			sticker_ids.append(sticker_data.sticker_id)
 	return sticker_ids
 
-func get_tolerance_settings() -> Dictionary:
-	"""Calculate validation tolerances based on difficulty (1-10)"""
-	# Linear interpolation between easy (1) and hard (10)
-	# Difficulty 1: ±100px, ±100° (very forgiving)
-	# Difficulty 5: ±50px, ±50° (medium)
-	# Difficulty 10: ±5px, ±5° (pixel-perfect)
-	var position_tolerance = lerp(1000.0, 5.0, (difficulty - 1) / 9.0)
-	var rotation_tolerance = lerp(1000.0, 5.0, (difficulty - 1) / 9.0)
-
-	return {
-		"position": position_tolerance,
-		"rotation": rotation_tolerance
-	}
-
-func get_validation_weights() -> Dictionary:
-	"""Calculate validation score weights based on difficulty (1-10)"""
-	# Difficulty-based weight distribution for hybrid validation
-	# Easy difficulties: Emphasize visual similarity (more forgiving)
-	# Hard difficulties: Emphasize coordinate precision (stricter)
-
-	var coord_weight: float
-	var visual_weight: float
-	var color_weight: float
-
+func get_pass_threshold() -> float:
+	"""Get the pass threshold percentage based on difficulty level"""
 	if difficulty <= 3:
-		# Easy: Visual matters most (artistic mode)
-		coord_weight = 0.2
-		visual_weight = 0.7
-		color_weight = 0.1
+		return 60.0  # Easy: 60% to pass
 	elif difficulty <= 7:
-		# Medium: Balanced approach
-		coord_weight = 0.5
-		visual_weight = 0.4
-		color_weight = 0.1
+		return 80.0  # Medium: 80% to pass
 	else:
-		# Hard: Coordinate precision matters most
-		coord_weight = 0.7
-		visual_weight = 0.2
-		color_weight = 0.1
-
-	return {
-		"coordinate": coord_weight,
-		"visual": visual_weight,
-		"color": color_weight
-	}
+		return 95.0  # Hard: 95% to pass
 
 func get_color_tolerance() -> float:
 	"""Calculate color tolerance for pixel comparison based on difficulty"""
