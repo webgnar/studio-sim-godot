@@ -490,7 +490,8 @@ sticker_scale = 2.0
 
 [node name="PaintingRoot2d" parent="." instance=ExtResource("75_ca4ee")]
 transform = Transform3D(-4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0, 1, -3.4620748, 2.5300002, 7)
-sticker_scale = 1.25
+sticker_scale = 0.65
+preview_fade_delay = 1.0
 
 [node name="skyscraper" parent="." instance=ExtResource("75_qaasp")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, -62, 10)
@@ -745,47 +746,17 @@ visible = false
 script = ExtResource("21_r5yoc")
 
 [node name="spot" parent="." instance=ExtResource("20_munwf")]
-transform = Transform3D(0.1499385, 0.0042955433, 0, -0.0042955433, 0.1499385, 0, 0, 0, 0.14999999, -3.3168278, 4.545951, 6.8495445)
+transform = Transform3D(0.09073785, 0.11944308, 0, -0.11944308, 0.09073785, 0, 0, 0, 0.14999996, -2.1767974, 4.545951, 6.8495445)
 
 [node name="SpotLight3D" type="SpotLight3D" parent="spot"]
 transform = Transform3D(6.666666, 0, 0, 0, -2.9140926e-07, 6.666666, 0, -6.666666, -2.9140926e-07, 0, 1.25, 0)
 light_energy = 2.98
-spot_range = 4.437
-spot_attenuation = -1.82
-spot_angle = 33.33
+spot_range = 5.956
+spot_attenuation = -1.54
+spot_angle = 59.63
 spot_angle_attenuation = 36.758244
 
 [node name="OmniLight3D" type="OmniLight3D" parent="spot"]
-transform = Transform3D(6.666666, 0, 0, 0, 6.666666, 0, 0, 0, 6.666666, 0, -1.64, 0)
-omni_range = 0.249
-
-[node name="spot5" parent="." instance=ExtResource("20_munwf")]
-transform = Transform3D(0.1499385, 0.0042955433, 0, -0.0042955433, 0.1499385, 0, 0, 0, 0.14999999, -3.3168278, 4.545951, 7.881737)
-
-[node name="SpotLight3D" type="SpotLight3D" parent="spot5"]
-transform = Transform3D(6.666666, 0, 0, 0, -2.9140926e-07, 6.666666, 0, -6.666666, -2.9140926e-07, 0, 1.25, 0)
-light_energy = 2.98
-spot_range = 4.437
-spot_attenuation = -1.82
-spot_angle = 33.33
-spot_angle_attenuation = 36.758244
-
-[node name="OmniLight3D" type="OmniLight3D" parent="spot5"]
-transform = Transform3D(6.666666, 0, 0, 0, 6.666666, 0, 0, 0, 6.666666, 0, -1.64, 0)
-omni_range = 0.249
-
-[node name="spot6" parent="." instance=ExtResource("20_munwf")]
-transform = Transform3D(0.1499385, 0.0042955433, 0, -0.0042955433, 0.1499385, 0, 0, 0, 0.14999999, -3.3168278, 4.545951, 5.94066)
-
-[node name="SpotLight3D" type="SpotLight3D" parent="spot6"]
-transform = Transform3D(6.666666, 0, 0, 0, -2.9140926e-07, 6.666666, 0, -6.666666, -2.9140926e-07, 0, 1.25, 0)
-light_energy = 2.98
-spot_range = 4.437
-spot_attenuation = -1.82
-spot_angle = 33.33
-spot_angle_attenuation = 36.758244
-
-[node name="OmniLight3D" type="OmniLight3D" parent="spot6"]
 transform = Transform3D(6.666666, 0, 0, 0, 6.666666, 0, 0, 0, 6.666666, 0, -1.64, 0)
 omni_range = 0.249
 

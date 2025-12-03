@@ -40,6 +40,14 @@ var viewport_size: Vector2
 var preview_sprite: Sprite2D = null
 var preview_rotation: float = -90.0  # Rotation in degrees (starts at -90 to match plane orientation)
 
+# Preview fade-out settings
+@export var preview_fade_delay: float = 2.0  # Seconds of idle before fade starts
+@export var preview_fade_speed: float = 3.0  # How fast it fades (higher = faster)
+var preview_idle_time: float = 0.0
+var preview_last_position: Vector2 = Vector2.ZERO
+var preview_target_opacity: float = 0.5
+var preview_base_opacity: float = 0.5  # Set by PaintingRoot2D
+
 func _ready():
 	# Find camera from the painting plane's world (not from SubViewport)
 	if painting_plane:
@@ -175,6 +183,9 @@ func _process(delta):
 	# Update preview sprite position based on raycast
 	_update_preview_position()
 
+	# Handle preview fade-out
+	_update_preview_fade(delta)
+
 	# F8 to submit painting for validation (only when mission is active)
 	if Input.is_key_pressed(KEY_F8) and MissionManager and MissionManager.current_mission:
 		submit_painting()
@@ -270,7 +281,14 @@ func _update_preview_position():
 	if raycast_result:
 		# Show preview at raycast position
 		var viewport_pos = _world_to_viewport_coords(raycast_result.position)
+
+		# Detect movement - reset fade timer if position changed
+		if viewport_pos.distance_to(preview_last_position) > 0.1:  # Small threshold to avoid jitter
+			preview_idle_time = 0.0
+			preview_target_opacity = preview_base_opacity
+
 		preview_sprite.position = viewport_pos
+		preview_last_position = viewport_pos
 		preview_sprite.visible = true
 
 		# Set z_index higher than all placed stickers to ensure it renders on top
@@ -278,6 +296,23 @@ func _update_preview_position():
 	else:
 		# Hide preview when not hovering over canvas
 		preview_sprite.visible = false
+		preview_idle_time = 0.0  # Reset timer when not visible
+
+func _update_preview_fade(delta: float):
+	"""Handle fade-out effect for preview sprite when idle"""
+	if not preview_sprite or not preview_sprite.visible:
+		return
+
+	# Increment idle timer
+	preview_idle_time += delta
+
+	# After delay, start fading out
+	if preview_idle_time > preview_fade_delay:
+		preview_target_opacity = 0.0
+
+	# Smoothly interpolate current opacity toward target
+	var current_alpha = preview_sprite.modulate.a
+	preview_sprite.modulate.a = lerp(current_alpha, preview_target_opacity, delta * preview_fade_speed)
 
 func _update_preview_texture():
 	"""Update the preview sprite's texture to match currently selected sticker"""
