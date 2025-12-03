@@ -35,4 +35,7 @@ func _ready():
 	if painting_system.preview_sprite:
 		painting_system.preview_sprite.modulate.a = preview_opacity
 
+	# Refresh preview texture/scale after all settings are applied
+	painting_system._update_preview_texture()
+
 # Note: Input forwarding removed - PaintingModeManager now routes input directly

@@ -85,7 +85,7 @@ func _setup_plane_material():
 	if not material:
 		# Create new StandardMaterial3D if none exists
 		material = StandardMaterial3D.new()
-		material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+		material.shading_mode = BaseMaterial3D.SHADING_MODE_PER_PIXEL  # Use shaded mode for proper lighting
 		material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 		painting_plane.set_surface_override_material(0, material)
 

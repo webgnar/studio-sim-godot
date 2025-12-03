@@ -12,3 +12,4 @@ res://scripts/painting/PaintingSystem.gd
 res://scripts/painting/PaintingRoot2D.gd
 res://scripts/DebugPaintingConverter.gd
 res://scenes/CarryablePainting.tscn
+res://scenes/PaintingRoot2D.tscn

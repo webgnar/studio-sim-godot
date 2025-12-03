@@ -568,7 +568,7 @@ transform = Transform3D(3.030303, 0, 0, 0, 3.030303, 0, 0, 0, 3.030303, 0, -0.80
 light_color = Color(0.6431373, 1, 1, 1)
 light_energy = 2.472
 omni_range = 13.874
-omni_attenuation = 1.429
+omni_attenuation = 2.402
 
 [node name="studio" type="CSGCombiner3D" parent="."]
 transform = Transform3D(0.46, 0, 0, 0, 7.49, 0, 0, 0, 22.64, -4.9423933, 3.544661, 4)
@@ -746,14 +746,14 @@ visible = false
 script = ExtResource("21_r5yoc")
 
 [node name="spot" parent="." instance=ExtResource("20_munwf")]
-transform = Transform3D(0.09073785, 0.11944308, 0, -0.11944308, 0.09073785, 0, 0, 0, 0.14999996, -2.1767974, 4.545951, 6.8495445)
+transform = Transform3D(0.08940223, 0.12044604, 0, -0.12044604, 0.08940223, 0, 0, 0, 0.14999995, -0.30782902, 4.760989, 7.3739543)
 
 [node name="SpotLight3D" type="SpotLight3D" parent="spot"]
 transform = Transform3D(6.666666, 0, 0, 0, -2.9140926e-07, 6.666666, 0, -6.666666, -2.9140926e-07, 0, 1.25, 0)
 light_energy = 2.98
-spot_range = 5.956
-spot_attenuation = -1.54
-spot_angle = 59.63
+spot_range = 7.159
+spot_attenuation = -0.83
+spot_angle = 51.67
 spot_angle_attenuation = 36.758244
 
 [node name="OmniLight3D" type="OmniLight3D" parent="spot"]
