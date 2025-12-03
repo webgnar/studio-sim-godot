@@ -1,3 +1,4 @@
+AnimationPlayer
 Button
 VBoxContainer
 Label
@@ -6,7 +7,6 @@ CanvasLayer
 Camera3D
 Node3D
 Marker3D
-AnimationPlayer
 AnimationTree
 CollisionShape3D
 StaticBody3D

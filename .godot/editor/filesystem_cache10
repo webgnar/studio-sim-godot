@@ -58,15 +58,17 @@ cube_full_2.png::CompressedTexture2D::8020523631721481283::1761637710::176432074
 cube_full_3.png::CompressedTexture2D::5621435126292450646::1761637710::1764320741::1::::<><><>0<>0<>e1cc527a8927b89a163c7a2657e98a5f<>res://.godot/imported/cube_full_3.png-2dadf42060c3492a60d0c5266a32389f.s3tc.ctex::
 cube_full_4.png::CompressedTexture2D::5379237190578598070::1761637710::1764320742::1::::<><><>0<>0<>c846c181786631381bedfb3fb7e2d5a2<>res://.godot/imported/cube_full_4.png-2b2a8a8e334deb7c81ecb57ed6d99cff.s3tc.ctex::
 cube_full_5.png::CompressedTexture2D::8550743911448765214::1761637710::1764320742::1::::<><><>0<>0<>e06f3fb03e38d334fe8d0d86d1b1b42c<>res://.godot/imported/cube_full_5.png-124382756187ab7fea92e1468202b8e9.s3tc.ctex::
-::res://models/interactables/::1764320745
+::res://models/interactables/::1764747938
 boomBox.glb::PackedScene::7399785567958071216::1761808917::1764320745::1::::<><><>0<>0<>4e7ea4ba7d447187f54ba2befffbe1eb<>res://.godot/imported/boomBox.glb-55e6e2a4affa8cd3c8596b3a73ae1484.scn::uid://cgf3xh63fficl::::res://models/interactables/boomBox_0.png
 boomBox_0.png::CompressedTexture2D::5206037883873436199::1761726424::1764320742::1::::<><><>0<>0<>b7e012b20255b2ad7f4367a726b7fef2<>res://.godot/imported/boomBox_0.png-5d492f1340537e5cb5a40a3941343076.s3tc.ctex::
 button.glb::PackedScene::9068966437180623696::1764310355::1764320744::1::::<><><>0<>0<>bed14948fe9b19cbd45787fd9e4088df<>res://.godot/imported/button.glb-219d6e0ab42b4cd9f15a2d8d981bec9d.scn::uid://bs46uxnaof3c6::::res://models/interactables/button_0.png
+buttonGreen.glb::PackedScene::3629666743217033371::1764747938::1764747938::1::::<><><>0<>0<>c5b099ebda20933c81df78414423769f<>res://.godot/imported/buttonGreen.glb-5c58c0be5e6dec134f9824094f3d3cad.scn::uid://bd6svkdls6guq::::res://models/interactables/buttonGreen_0.png
 button_0.png::CompressedTexture2D::3711605994837724187::1764310356::1764320742::1::::<><><>0<>0<>3dcbd1d962e4c20816f6b2c0824271d7<>res://.godot/imported/button_0.png-3532599318f0539f63df9467d353b7c8.s3tc.ctex::
 light_switch.glb::PackedScene::3492904111526599247::1761094364::1764320744::1::::<><><>0<>0<>3da0b425c4be73b996fa1b23a0ca3449<>res://.godot/imported/light_switch.glb-923cb790240f242bd6e1a23b5e636bc2.scn::uid://ci1se556aoso1::::res://models/interactables/light_switch_0.png
 light_switch_0.png::CompressedTexture2D::5389127610595137806::1761094366::1764320742::1::::<><><>0<>0<>b9cafcbecd7dd4c01d11a2755a21b304<>res://.godot/imported/light_switch_0.png-3618fe5a22c5c81392a09984b62b914e.s3tc.ctex::
 plug.glb::PackedScene::7399232014946269389::1762139309::1764320744::1::::<><><>0<>0<>b04f50cf174bec8aa06793d71591aa7b<>res://.godot/imported/plug.glb-45823c2a8f2519a991324884d68c6507.scn::uid://dk3d81vpvkddr::::res://models/interactables/plug_0.png
 plug_0.png::CompressedTexture2D::7919195545508449219::1762062065::1764320742::1::::<><><>0<>0<>a7f0b565a7dd9e8a264220ff2fa6d578<>res://.godot/imported/plug_0.png-8c05f1bbdc7d9b03c5b32aea25fc85bc.s3tc.ctex::
+buttonGreen_0.png::CompressedTexture2D::2662113862917834888::1764747938::1764747938::1::::<><><>0<>0<>d3b3dd1049417cd1d81c02a949d443fa<>res://.godot/imported/buttonGreen_0.png-036729c7ffc9841cf0da6d9984fe670a.s3tc.ctex::
 ::res://models/interactables/cardboard box/::1764320745
 box topL.glb::PackedScene::1342416532539249102::1761532355::1764320745::1::::<><><>0<>0<>dfc4f31b827ec3044f39b19df7abd8f6<>res://.godot/imported/box topL.glb-608cc71e53d346959215768e6fa32fce.scn::uid://dd0mo6rqyuw5x::::res://models/interactables/cardboard box/box topL_0.png
 box topL_0.png::CompressedTexture2D::7422193286118141771::1761532367::1764320742::1::::<><><>0<>0<>eff4e5cbd5179d587bcc7421accebdb3<>res://.godot/imported/box topL_0.png-421a0c258d7e20ec5b91c6c8d38cb2c8.s3tc.ctex::
@@ -199,12 +201,12 @@ PaintingUI.tscn::PackedScene::3512487317911262242::1764018092::0::1::::<><><>0<>
 ShopUI.tscn::PackedScene::8783586071499042290::1764309143::0::1::::<><><>0<>0<><>::res://scripts/ui/ShopUI.gd
 StickerSlot.tscn::PackedScene::1113315780334931::1764016211::0::1::::<><><>0<>0<><>::res://scripts/ui/StickerSlot.gd
 ValidationResultUI.tscn::PackedScene::598769645583896637::1764057255::0::1::::<><><>0<>0<><>::res://scripts/ui/ValidationResultUI.gd
-::res://scripts/::1764747211
+::res://scripts/::1764747232
 CameraManager.gd::GDScript::5090965087567803578::1764536223::0::1::::<>Node<><>0<>0<><>::
 CameraZone.gd::GDScript::4337440007670042935::1764017871::0::1::::<>Area3D<><>0<>0<><>::
 DebugPaintingConverter.gd::GDScript::6359550447124289428::1764366181::0::1::::<>Node<><>0<>0<><>::
 HUD.gd::GDScript::9095262934336027845::1764307313::0::1::::<>CanvasLayer<><>0<>0<><>::
-MissionManager.gd::GDScript::3660156020748544969::1764747211::0::1::::<>Node<><>0<>0<><>::
+MissionManager.gd::GDScript::3660156020748544969::1764747232::0::1::::<>Node<><>0<>0<><>::
 PaintingSpawner.gd::GDScript::4348115639158510571::1764367440::0::1::::<>Node<><>0<>0<><>::
 PlayerAnimation.gd::GDScript::3994514209863087763::1762044269::0::1::::PlayerAnimation<>Node<><>0<>0<><>::
 PlayerController.gd::GDScript::9198226878400670027::1764700274::0::1::::<>CharacterBody3D<><>0<>0<><>::
@@ -261,13 +263,13 @@ VisualValidator.gd::GDScript::4169772428084211328::1763882325::0::1::::VisualVal
 ::res://scripts/tools/::1764404832
 create_power_cord.gd::GDScript::1820023332295702997::1762057172::0::1::::<>EditorScript<><>0<>1<><>::
 MissionAuthoringTool.gd::GDScript::6880012840404432544::1764404832::0::1::::MissionAuthoringTool<>Node<><>0<>0<><>::
-::res://scripts/ui/::1764747128
+::res://scripts/ui/::1764747895
 MainMenuHub.gd::GDScript::8302427656593457044::1764654462::0::1::::MainMenuHub<>Control<><>0<>0<><>::
 MissionAuthoringUI.gd::GDScript::1912430109288517738::1764404301::0::1::::<>Control<><>0<>0<><>::
 MissionCard.gd::GDScript::8737076011923695214::1764016736::0::1::::MissionCard<>PanelContainer<><>0<>0<><>::
-MissionHUD.gd::GDScript::3250195567258036849::1764745561::0::1::::MissionHUD<>Control<><>0<>0<><>::
+MissionHUD.gd::GDScript::3250195567258036849::1764747239::0::1::::MissionHUD<>Control<><>0<>0<><>::
 MissionResultsViewer.gd::GDScript::3777456961892783481::1764737607::0::1::::MissionResultsViewer<>Control<><>0<>0<><>::
-MissionSelectionUI.gd::GDScript::6302656463663888190::1764747078::0::1::::MissionSelectionUI<>Control<><>0<>0<><>::
+MissionSelectionUI.gd::GDScript::6302656463663888190::1764747895::0::1::::MissionSelectionUI<>Control<><>0<>0<><>::
 ShopUI.gd::GDScript::1614774455021807891::1764312247::0::1::::ShopUI<>Control<><>0<>0<><>::
 StickerSlot.gd::GDScript::8544986611926835371::1764016593::0::1::::StickerSlot<>PanelContainer<><>0<>0<><>::
 ValidationResultUI.gd::GDScript::5399031218292428263::1764737315::0::1::::ValidationResultUI<>Control<><>0<>0<><>::
@@ -341,7 +343,8 @@ wood_specular.png::CompressedTexture2D::2003184540319947284::1761018751::1764320
 Brute_Logo.png::CompressedTexture2D::6178808757222810128::1761802209::1764320742::1::::<><><>0<>0<>bc09da19648bb8b34dcbd36a48f3617a<>res://.godot/imported/Brute_Logo.png-831b44461856e34079ed047c063b5736.s3tc.ctex::
 TexturesCom_Plastic_PolypropyleneRough_1K_normal.png::CompressedTexture2D::6351666760769426::1761802358::1764320742::1::::<><><>0<>0<>5f29d34cbfa83a809603fee3c076aded<>res://.godot/imported/TexturesCom_Plastic_PolypropyleneRough_1K_normal.png-a5014a568e65abade0f2a8c562b3c48e.s3tc.ctex::
 TexturesCom_Plastic_PolypropyleneRough_1K_roughness.png::CompressedTexture2D::4919399928477311562::1761802358::1764320742::1::::<><><>0<>0<>b3178693ed7968bf986936008799dd6e<>res://.godot/imported/TexturesCom_Plastic_PolypropyleneRough_1K_roughness.png-eba77725611ece0e4578b3e50690eedd.s3tc.ctex::
-::res://sprites/ui/::1764658435
+::res://sprites/ui/::1764747434
+abortmission.png::CompressedTexture2D::4965024382454210391::1764747434::1764747434::1::::<><><>0<>0<>9af7fa233274b58361e436dcc00196ae<>res://.godot/imported/abortmission.png-1dd613540a8efc6f47fdb3216ea60060.ctex::
 arrow.png::CompressedTexture2D::8178525126674758878::1764657492::1764658431::1::::<><><>0<>0<>606c6642cc6d51db27f3e3a06f876e30<>res://.godot/imported/arrow.png-7da85c35d2703a58700340f54e830501.ctex::
 startmission.png::CompressedTexture2D::7592598213769399104::1764658386::1764658435::1::::<><><>0<>0<>34b966d8717686e0243efd29a914da06<>res://.godot/imported/startmission.png-cdb07e68c454499fec070158823506b0.ctex::
 ::res://textures/::1764320742

@@ -7,6 +7,10 @@ class_name MissionSelectionUI
 # Preload the mission card scene
 const MissionCardScene = preload("res://scenes/UI/MissionCard.tscn")
 
+# Preload button icons
+const StartMissionIcon = preload("res://sprites/ui/startmission.png")
+const AbortMissionIcon = preload("res://sprites/ui/abortmission.png")
+
 @onready var dialog = $Dialog
 @onready var mission_list_container = $Dialog/MarginContainer/HBoxContainer/LeftPanel/ScrollContainer/MissionList
 @onready var preview_image = $Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/PreviewImage
@@ -281,9 +285,16 @@ func _open_dialog():
 	if CameraManager:
 		CameraManager.set_player_input(false)
 
-	# Select first mission
+	# Select current mission if there is one, otherwise select first mission
 	if MissionManager.available_missions.size() > 0:
-		selected_index = 0
+		if MissionManager.current_mission:
+			# Find the index of the current mission
+			for i in range(MissionManager.available_missions.size()):
+				if MissionManager.available_missions[i] == MissionManager.current_mission:
+					selected_index = i
+					break
+		else:
+			selected_index = 0
 		_update_selection()
 
 func show_screen():
@@ -382,11 +393,12 @@ func _update_preview_panel():
 	# Check if this is the current mission
 	var is_current_mission = (MissionManager and MissionManager.current_mission == selected_mission)
 
-	# Update button text based on whether this is the current mission
+	# Update button icon based on whether this is the current mission
+	# (No text needed - icons have text baked in)
 	if is_current_mission:
-		start_button.text = "Abort Mission"
+		start_button.icon = AbortMissionIcon
 	else:
-		start_button.text = "Start Mission"
+		start_button.icon = StartMissionIcon
 
 	# Update completion status and buttons
 	var completion_data = MissionManager.get_mission_completion(selected_mission.mission_id)
