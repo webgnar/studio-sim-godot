@@ -19,6 +19,7 @@ const MissionCardScene = preload("res://scenes/UI/MissionCard.tscn")
 @onready var back_button = $Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ButtonContainer/BackButton
 @onready var completed_missions_label = $Dialog/MarginContainer/HBoxContainer/LeftPanel/StatsPanel/MarginContainer/VBoxContainer/CompletedMissionsLabel
 @onready var paintings_created_label = $Dialog/MarginContainer/HBoxContainer/LeftPanel/StatsPanel/MarginContainer/VBoxContainer/PaintingsCreatedLabel
+@onready var confirmation_dialog = $ConfirmationDialog
 
 var painting_system_2d: PaintingSystem2D = null
 var results_viewer = null  # MissionResultsViewer (dynamic typing to avoid circular dependency)
@@ -35,8 +36,11 @@ var preview_button_index: int = 0
 func _ready():
 	# Connect button signals
 	view_results_button.pressed.connect(_on_view_results)
-	start_button.pressed.connect(_on_start_mission)
+	start_button.pressed.connect(_on_start_or_abort_mission)
 	back_button.pressed.connect(_on_back_button)
+
+	# Connect confirmation dialog
+	confirmation_dialog.confirmed.connect(_on_abort_confirmed)
 
 	# Setup preview button navigation array (Back, View Results, Start)
 	preview_buttons = [back_button, view_results_button, start_button]
@@ -375,6 +379,15 @@ func _update_preview_panel():
 	# Update difficulty
 	difficulty_label.text = "Difficulty: %d/10" % selected_mission.difficulty
 
+	# Check if this is the current mission
+	var is_current_mission = (MissionManager and MissionManager.current_mission == selected_mission)
+
+	# Update button text based on whether this is the current mission
+	if is_current_mission:
+		start_button.text = "Abort Mission"
+	else:
+		start_button.text = "Start Mission"
+
 	# Update completion status and buttons
 	var completion_data = MissionManager.get_mission_completion(selected_mission.mission_id)
 	if completion_data["completed"]:
@@ -414,26 +427,49 @@ func _update_preview_panel():
 	else:
 		preview_image.texture = null
 
-func _on_start_mission():
-	"""Start the selected mission"""
+func _on_start_or_abort_mission():
+	"""Start the selected mission or abort if it's the current mission"""
 	if not selected_mission:
 		push_error("MissionSelectionUI: No mission selected!")
 		return
 
+	# Check if this is the current mission (abort case)
+	if MissionManager and MissionManager.current_mission == selected_mission:
+		# Show confirmation dialog
+		confirmation_dialog.popup_centered()
+		return
+
+	# Start a new mission
 	if not painting_system_2d:
 		push_error("MissionSelectionUI: No painting system found!")
 		return
 
-	# Start the mission
+	# Start the mission (MissionManager will set state to IN_MISSION)
 	MissionManager.start_mission(selected_mission)
 	painting_system_2d.start_mission(selected_mission)
+
+	# Reset navigation mode and hide dialog
+	nav_mode = NavMode.MISSION_LIST
+	_clear_button_focus()
+	dialog.visible = false
+
+	print("MissionSelectionUI: Starting mission '%s'" % selected_mission.title)
+
+func _on_abort_confirmed():
+	"""Abort the current mission after confirmation"""
+	if not MissionManager or not MissionManager.current_mission:
+		return
+
+	# Abort the mission (this will emit mission_aborted signal and clear current_mission)
+	MissionManager.abort_mission()
 
 	# Reset navigation mode and close dialog
 	nav_mode = NavMode.MISSION_LIST
 	_clear_button_focus()
-	_close_dialog()
 
-	print("MissionSelectionUI: Starting mission '%s'" % selected_mission.title)
+	# Return to GAMEPLAY state
+	if UIManager:
+		UIManager.change_state(UIManager.GameState.GAMEPLAY)
 
 func _on_back_button():
 	"""Handle back button press - return to mission list navigation"""

@@ -6,6 +6,7 @@ extends Node
 signal mission_started(mission: PaintingMission)
 signal mission_completed(mission: PaintingMission, result: ValidationResult)
 signal mission_failed(mission: PaintingMission, result: ValidationResult)
+signal mission_aborted(mission: PaintingMission)
 
 # All available missions loaded from resources/missions/
 var available_missions: Array[PaintingMission] = []
@@ -144,6 +145,18 @@ func complete_mission(result: ValidationResult, latest_painting_path: String = "
 	# Transition to VALIDATION state
 	if UIManager:
 		UIManager.change_state(UIManager.GameState.VALIDATION)
+
+func abort_mission():
+	"""Abort the current mission without saving progress"""
+	if not current_mission:
+		push_error("MissionManager: No active mission to abort!")
+		return
+
+	var aborted_mission = current_mission
+	mission_aborted.emit(aborted_mission)
+	current_mission = null
+
+	print("MissionManager: Mission '%s' aborted" % aborted_mission.title)
 
 func get_mission_completion(mission_id: String) -> Dictionary:
 	"""Get completion data for a specific mission"""

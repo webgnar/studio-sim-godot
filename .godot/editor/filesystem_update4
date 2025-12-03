@@ -1,14 +1,3 @@
-res://scenes/UI/MissionResultsViewer.tscn
-res://models/new_array_mesh.tres
-res://models/new_array_mesh2.tres
-res://models/new_array_mesh3.tres
-res://scripts/ui/ValidationResultUI.gd
-res://scripts/PlayerInteractionComponent.gd
-res://scripts/old stuff/InteractionComponent.gd
-res://scenes/world.tscn
-res://scripts/painting/PaintingSystem2D.gd
-res://scenes/UI/MissionSelectionUI.tscn
+res://scripts/MissionManager.gd
+res://scripts/ui/MissionHUD.gd
 res://scripts/ui/MissionSelectionUI.gd
-res://scripts/TitleScreenController.gd
-res://scripts/UIManager.gd
-res://scripts/ui/MissionResultsViewer.gd

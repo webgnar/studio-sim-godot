@@ -46,12 +46,16 @@ func _input(event):
 	# "start" button (backtick) toggles mission selection menu
 	if event.is_action_pressed("start"):
 		match current_state:
-			GameState.GAMEPLAY:
+			GameState.GAMEPLAY, GameState.IN_MISSION:
 				change_state(GameState.MISSION_SELECT)
 			GameState.MISSION_SELECT:
-				change_state(GameState.GAMEPLAY)
+				# Return to previous state (GAMEPLAY or IN_MISSION)
+				if MissionManager and MissionManager.current_mission:
+					change_state(GameState.IN_MISSION)
+				else:
+					change_state(GameState.GAMEPLAY)
 			_:
-				# In other states (in_mission, validation, shop), do nothing
+				# In other states (validation, shop), do nothing
 				pass
 		get_viewport().set_input_as_handled()
 

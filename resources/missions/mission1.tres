@@ -1,0 +1,83 @@
+[gd_resource type="Resource" script_class="PaintingMission" load_steps=12 format=3]
+
+[ext_resource type="Script" path="res://scripts/painting/PaintingMission.gd" id="1_akdd4"]
+[ext_resource type="Script" path="res://scripts/painting/PlacedStickerData.gd" id="2_om0rj"]
+
+[sub_resource type="Resource" id="Resource_1a0ho"]
+script = ExtResource("2_om0rj")
+sticker_id = "1"
+position = Vector2(110.51351, 748.1066)
+rotation_deg = -90.0
+scale = 0.47407407
+
+[sub_resource type="Resource" id="Resource_ik8mr"]
+script = ExtResource("2_om0rj")
+sticker_id = "1"
+position = Vector2(105.26807, 218.51416)
+rotation_deg = -90.0
+scale = 0.47407407
+z_order = 1
+
+[sub_resource type="Resource" id="Resource_w884t"]
+script = ExtResource("2_om0rj")
+sticker_id = "2"
+position = Vector2(469.2667, 809.71027)
+rotation_deg = -90.0
+scale = 0.47407407
+z_order = 2
+
+[sub_resource type="Resource" id="Resource_wwnid"]
+script = ExtResource("2_om0rj")
+sticker_id = "2"
+position = Vector2(473.12207, 365.042)
+rotation_deg = -90.0
+scale = 0.47407407
+z_order = 3
+
+[sub_resource type="Resource" id="Resource_dy72t"]
+script = ExtResource("2_om0rj")
+sticker_id = "2"
+position = Vector2(476.78165, -80.31559)
+rotation_deg = -90.0
+scale = 0.47407407
+z_order = 4
+
+[sub_resource type="Resource" id="Resource_3opq7"]
+script = ExtResource("2_om0rj")
+sticker_id = "3"
+position = Vector2(859.4655, 768.45087)
+rotation_deg = -90.0
+scale = 0.47407407
+z_order = 5
+
+[sub_resource type="Resource" id="Resource_3ne8p"]
+script = ExtResource("2_om0rj")
+sticker_id = "3"
+position = Vector2(859.3297, 245.76123)
+rotation_deg = -90.0
+scale = 0.47407407
+z_order = 6
+
+[sub_resource type="Resource" id="Resource_qdw4n"]
+script = ExtResource("2_om0rj")
+sticker_id = "4"
+position = Vector2(1047.8756, 768.451)
+rotation_deg = -90.0
+scale = 0.47407407
+z_order = 7
+
+[sub_resource type="Resource" id="Resource_3jutl"]
+script = ExtResource("2_om0rj")
+sticker_id = "4"
+position = Vector2(1047.1873, 245.7614)
+rotation_deg = -90.0
+scale = 0.47407407
+z_order = 8
+
+[resource]
+script = ExtResource("1_akdd4")
+mission_id = "mission1"
+title = "first"
+description = "					"
+target_stickers = Array[ExtResource("2_om0rj")]([SubResource("Resource_1a0ho"), SubResource("Resource_ik8mr"), SubResource("Resource_w884t"), SubResource("Resource_wwnid"), SubResource("Resource_dy72t"), SubResource("Resource_3opq7"), SubResource("Resource_3ne8p"), SubResource("Resource_qdw4n"), SubResource("Resource_3jutl")])
+reference_image_path = "res://resources/missions/mission1_ref.png"

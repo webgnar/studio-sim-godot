@@ -147,3 +147,11 @@ icon = ExtResource("3_startmission")
 layout_mode = 2
 text = "F7: Open/Close (2D Mode Only) | Arrow Keys: Navigate | Enter: Start"
 horizontal_alignment = 1
+
+[node name="ConfirmationDialog" type="ConfirmationDialog" parent="."]
+title = "Abort Mission?"
+initial_position = 2
+size = Vector2i(400, 150)
+dialog_text = "Abort this mission? Your canvas will be saved but the mission will not be completed."
+ok_button_text = "Abort Mission"
+cancel_button_text = "Continue Mission"

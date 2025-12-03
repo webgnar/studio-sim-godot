@@ -1,11 +1,8 @@
 {
-	"generated_at": "2025-11-29T14:24:30",
+	"generated_at": "2025-12-02T23:23:55",
 	"missions": [
-		"mission 1.tres",
-		"mission_2.tres",
-		"mission_3.tres",
-		"mission_4.tres",
-		"mission_5.tres",
-		"mission_6.tres"
+		"mission1.tres",
+		"mission2.tres",
+		"mission3.tres"
 	]
 }

@@ -27,8 +27,8 @@ res://scenes/UI/HUD.tscn::bb888f88a73943ea38668541791d048a::1762072388::res://.g
 res://scenes/UI/MainMenuHub.tscn::25426c7dd2ad951aafb47ef31dab60b4::1764659454::res://.godot/exported/133200997/export-b7021ae75186751c03f3838ac6014978-MainMenuHub.scn
 res://scenes/UI/MissionAuthoringUI.tscn::99843f9ebbec9cdcc05526fc2ba3b687::1763748532::res://.godot/exported/133200997/export-c6521c9f78354baab0b2fd229380b481-MissionAuthoringUI.scn
 res://scenes/UI/MissionCard.tscn::6d0e64c630b348ee99b7ec5248548e66::1764016211::res://.godot/exported/133200997/export-fcf30175fa1ff2590c28e92723b94d58-MissionCard.scn
-res://scenes/UI/MissionResultsViewer.tscn::62b312f1c70bda7bc10a1ba105710b29::1764734849::res://.godot/exported/133200997/export-901f57ec80721859af5af79c27c8b7aa-MissionResultsViewer.scn
-res://scenes/UI/MissionSelectionUI.tscn::acfb7340f4e13cfa33149ceca413615c::1764659338::res://.godot/exported/133200997/export-f21238a75352907a26f529575b639735-MissionSelectionUI.scn
+res://scenes/UI/MissionResultsViewer.tscn::3531244dfeaa2307e8f29ab18a7d5fbd::1764737664::res://.godot/exported/133200997/export-901f57ec80721859af5af79c27c8b7aa-MissionResultsViewer.scn
+res://scenes/UI/MissionSelectionUI.tscn::4e9bf1cc1049eb17df7cc7e0d16750e3::1764736366::res://.godot/exported/133200997/export-f21238a75352907a26f529575b639735-MissionSelectionUI.scn
 res://scenes/UI/PaintingUI.tscn::fa19481ff61db84d2cf11102c9e1ebb1::1764018092::res://.godot/exported/133200997/export-197e15c0e662bbb56658e384e0a54c96-PaintingUI.scn
 res://scenes/UI/ShopUI.tscn::801d1b5f69bcb3bbfb96289b44f0ed97::1764309143::res://.godot/exported/133200997/export-30a8f3993320d15d0ebcfb74a3a5de9e-ShopUI.scn
 res://scenes/UI/StickerSlot.tscn::769f726528c50717cffd1456413adc69::1764016211::res://.godot/exported/133200997/export-1fcf09436620f5c9e4d3b02c5aeb2538-StickerSlot.scn
@@ -37,13 +37,12 @@ res://scenes/CarryablePainting.tscn::e1fd82b99f3ddbb9ea44bae5bf94f86a::176440350
 res://scenes/human.tscn::69a111d5920c0beed20be7f22b41c616::1761713575::res://.godot/exported/133200997/export-eba661b9dcbe38bde83515c9e6eec66a-human.scn
 res://scenes/PaintingRoot2D.tscn::ce733aa10e60e33bba93a98a2751033b::1764402406::res://.godot/exported/133200997/export-c9422ff23df7d52dcdbaa5cb19c4dd5d-PaintingRoot2D.scn
 res://scenes/PaintingRoot.tscn::16a314f2db2544bc5d9d0dc50f08ba26::1764019379::res://.godot/exported/133200997/export-7698917d71931537be1d093dc2a1ded6-PaintingRoot.scn
-res://scenes/world.tscn::292bcb5c389a4baa488d418d7209a0b4::1764735091::res://.godot/exported/133200997/export-6b9c1b1fd6ae6f795188dfdc89e222b0-world.scn
+res://scenes/world.tscn::6c91e914f82a888aff321460a405bb98::1764745657::res://.godot/exported/133200997/export-6b9c1b1fd6ae6f795188dfdc89e222b0-world.scn
 res://themes/ui_theme.tres::60ebfeb02f96e7eeefb30e839b184afb::1764307129::res://.godot/exported/133200997/export-6986a3918d5316243c91c225d09f5f65-ui_theme.res
 res://default.tscn::090a9f7ae85fa08e3c228d923d165168::1762583134::res://.godot/exported/133200997/export-ecadf3196f98fed7b5722fd2df0d4094-default.scn
-res://resources/missions/mission 1.tres::e0a9de2ce0e97d380a865d617af35d68::1764447273::res://.godot/exported/133200997/export-26b2b0ca1c437497e7cbb9a95c25608a-mission 1.res
-res://resources/missions/mission_2.tres::4ae129a5f3771bc8f29c28aa8e878ee7::1764447361::res://.godot/exported/133200997/export-9551b05b8dfddad3a15e612ed45adb5e-mission_2.res
-res://resources/missions/mission_3.tres::ee76650967aa7117a4430e3fe50f3ece::1764447738::res://.godot/exported/133200997/export-a7ee1769d942519a9c26d315700b17c0-mission_3.res
-res://resources/missions/mission_4.tres::05ddd8db0ee670346bbe6fd6cde99bed::1764447797::res://.godot/exported/133200997/export-d6389fc717624f9f42d9f74977d1e1db-mission_4.res
-res://resources/missions/mission_5.tres::564700cd3623d7a9cb2a5bcd3b8d59c9::1764447870::res://.godot/exported/133200997/export-3393d34488ea04ced679a6d71a989133-mission_5.res
-res://resources/missions/mission_6.tres::9855372d30cfdae5fc1cb4d528e4a5ec::1764447660::res://.godot/exported/133200997/export-68c160a8a4b09f44d65a170f0bf1c047-mission_6.res
 res://scenes/TitleScreen.tscn::ff3465f0f46dd73cc65b8c9f648a523e::1764660454::res://.godot/exported/133200997/export-6fe91e769d056a639faff0a4dc2cf1e1-TitleScreen.scn
+res://resources/missions/mission1.tres::fa0eb2397342d83b270c3334e1e347d8::1764739071::res://.godot/exported/133200997/export-eb7dfb546b248bf9c049bfe473413efd-mission1.res
+res://resources/missions/mission2.tres::700791cf32e1a3e6f4fc718750e6c4c8::1764739295::res://.godot/exported/133200997/export-fcbb630ecc6bd6e9bd804ba776a24431-mission2.res
+res://resources/missions/mission3.tres::694cf68fc7165aeff859eb42700520bf::1764739435::res://.godot/exported/133200997/export-486501cd715ad0a5e5f40ef929b9981b-mission3.res
+res://scenes/UI/CurrentMissionUI.tscn::9a7a1f8a34aef4765ddf6aa9dbaae956::1764746484::res://.godot/exported/133200997/export-880357ef4ab13224d74babdfea26302f-CurrentMissionUI.scn
+res://scenes/UI/MissionHUD.tscn::5345fac861c24b966130fdfe90f0a178::1764746484::res://.godot/exported/133200997/export-4d2dd4287b6b807c214838dd5a3edc6e-MissionHUD.scn
