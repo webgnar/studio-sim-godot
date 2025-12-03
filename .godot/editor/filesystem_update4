@@ -7,3 +7,6 @@ res://shaders/outline.tres
 res://shaders/outline.gdshader
 res://materials/hover_outline_material.tres
 res://scripts/OutlineManager.gd
+res://scripts/painting/PaintingSystem2D.gd
+res://scripts/painting/PaintingSystem.gd
+res://scripts/painting/PaintingRoot2D.gd

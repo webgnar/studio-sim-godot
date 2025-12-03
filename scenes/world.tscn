@@ -485,9 +485,12 @@ painting_system_2d = NodePath("../../PaintingRoot2d/CanvasViewport/CanvasRoot")
 
 [node name="PaintingRoot" parent="." instance=ExtResource("73_1m1ue")]
 transform = Transform3D(-6.862688e-08, 0, 1.57, 0, 1.57, 0, -1.57, 0, -6.862688e-08, -3.6013913, 2.8738532, -1.7322651)
+raycast_distance = 20.0
+sticker_scale = 2.0
 
 [node name="PaintingRoot2d" parent="." instance=ExtResource("75_ca4ee")]
 transform = Transform3D(-4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0, 1, -3.4620748, 2.5300002, 7)
+sticker_scale = 1.25
 
 [node name="skyscraper" parent="." instance=ExtResource("75_qaasp")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, -62, 10)
@@ -1345,7 +1348,7 @@ interaction_text = "New Painting"
 custom_interaction_distance = 15.0
 
 [node name="buttonGreen" type="Node3D" parent="."]
-transform = Transform3D(-4.371139e-09, 0.1, 0, -0.1, -4.371139e-09, 0, 0, 0, 0.1, -3.3422377, 2.0035036, 3.9931483)
+transform = Transform3D(-4.371139e-09, 0.1, 0, -0.1, -4.371139e-09, 0, 0, 0, 0.1, -3.3180246, 2.0035036, 3.9931483)
 
 [node name="outletbox" parent="buttonGreen" instance=ExtResource("79_swu3i")]
 transform = Transform3D(-4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0, 1, 0, 0, 0)
