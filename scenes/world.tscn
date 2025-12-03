@@ -74,6 +74,7 @@
 [ext_resource type="Script" uid="uid://byo8qed1v1rkt" path="res://scripts/components/PaintingConvertButton.gd" id="81_n78cu"]
 [ext_resource type="PackedScene" uid="uid://cra27ims6pb5n" path="res://scenes/UI/MissionResultsViewer.tscn" id="81_results_viewer"]
 [ext_resource type="PackedScene" uid="uid://bryic0ubsrfjn" path="res://models/interactables/buttonGreen.glb" id="81_swu3i"]
+[ext_resource type="Script" path="res://scripts/components/PaintingSubmitButton.gd" id="82_submit"]
 [ext_resource type="PackedScene" uid="uid://c8mhk3sajq2fn" path="res://scenes/UI/MissionHUD.tscn" id="83_hud"]
 [ext_resource type="AudioStream" uid="uid://84rjpuccue2i" path="res://sounds/boomboxSwitch.ogg" id="boombox_switch"]
 [ext_resource type="AudioStream" uid="uid://8so1mqtnfhkh" path="res://sounds/box open 1.ogg" id="box_open_1"]
@@ -1334,6 +1335,11 @@ collision_mask = 0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="buttonGreen/StaticBody3D"]
 shape = SubResource("CylinderShape3D_kvmu4")
+
+[node name="Node3D" type="Node3D" parent="buttonGreen"]
+script = ExtResource("82_submit")
+interaction_text = "Submit Painting"
+custom_interaction_distance = 15.0
 
 [editable path="Styrofoam cube"]
 [editable path="CameraZone"]

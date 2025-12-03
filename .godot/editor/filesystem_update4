@@ -7,3 +7,4 @@ res://models/new_array_mesh2.tres
 res://models/new_array_mesh3.tres
 res://scripts/components/PaintingConvertButton.gd
 res://scenes/UI/MissionSelectionUI.tscn
+res://scripts/components/PaintingSubmitButton.gd
