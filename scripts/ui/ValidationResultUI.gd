@@ -5,26 +5,26 @@ class_name ValidationResultUI
 ## Shows grade, score, and allows retry or return to mission selection
 
 @onready var dialog = $Dialog
-@onready var grade_label = $Dialog/MarginContainer/VBoxContainer/GradeLabel
-@onready var score_label = $Dialog/MarginContainer/VBoxContainer/ScoreLabel
-@onready var status_label = $Dialog/MarginContainer/VBoxContainer/StatusLabel
-@onready var message_label = $Dialog/MarginContainer/VBoxContainer/MessageLabel
-@onready var comparison_container = $Dialog/MarginContainer/VBoxContainer/ComparisonContainer
-@onready var your_image = $Dialog/MarginContainer/VBoxContainer/ComparisonContainer/YourPaintingPanel/YourImage
-@onready var target_image = $Dialog/MarginContainer/VBoxContainer/ComparisonContainer/TargetPaintingPanel/TargetImage
-@onready var heatmap_panel = $Dialog/MarginContainer/VBoxContainer/HeatmapPanel
-@onready var heatmap_image = $Dialog/MarginContainer/VBoxContainer/HeatmapPanel/HeatmapImage
-@onready var histogram_panel = $Dialog/MarginContainer/VBoxContainer/HistogramPanel
-@onready var player_histogram_display = $Dialog/MarginContainer/VBoxContainer/HistogramPanel/HistogramComparison/PlayerHistPanel/PlayerHistogramDisplay
-@onready var player_swatch_display = $Dialog/MarginContainer/VBoxContainer/HistogramPanel/HistogramComparison/PlayerHistPanel/PlayerSwatchDisplay
-@onready var reference_histogram_display = $Dialog/MarginContainer/VBoxContainer/HistogramPanel/HistogramComparison/ReferenceHistPanel/ReferenceHistogramDisplay
-@onready var reference_swatch_display = $Dialog/MarginContainer/VBoxContainer/HistogramPanel/HistogramComparison/ReferenceHistPanel/ReferenceSwatchDisplay
-@onready var breakdown_label = $Dialog/MarginContainer/VBoxContainer/BreakdownLabel
-@onready var coordinate_label = $Dialog/MarginContainer/VBoxContainer/CoordinateLabel
-@onready var visual_label = $Dialog/MarginContainer/VBoxContainer/VisualLabel
-@onready var color_label = $Dialog/MarginContainer/VBoxContainer/ColorLabel
-@onready var retry_button = $Dialog/MarginContainer/VBoxContainer/ButtonContainer/RetryButton
-@onready var back_button = $Dialog/MarginContainer/VBoxContainer/ButtonContainer/BackButton
+@onready var grade_label = $Dialog/MarginContainer/ScrollContainer/VBoxContainer/GradeLabel
+@onready var score_label = $Dialog/MarginContainer/ScrollContainer/VBoxContainer/ScoreLabel
+@onready var status_label = $Dialog/MarginContainer/ScrollContainer/VBoxContainer/StatusLabel
+@onready var message_label = $Dialog/MarginContainer/ScrollContainer/VBoxContainer/MessageLabel
+@onready var comparison_container = $Dialog/MarginContainer/ScrollContainer/VBoxContainer/ComparisonContainer
+@onready var your_image = $Dialog/MarginContainer/ScrollContainer/VBoxContainer/ComparisonContainer/YourPaintingPanel/YourImage
+@onready var target_image = $Dialog/MarginContainer/ScrollContainer/VBoxContainer/ComparisonContainer/TargetPaintingPanel/TargetImage
+@onready var heatmap_panel = $Dialog/MarginContainer/ScrollContainer/VBoxContainer/HeatmapPanel
+@onready var heatmap_image = $Dialog/MarginContainer/ScrollContainer/VBoxContainer/HeatmapPanel/HeatmapImage
+@onready var histogram_panel = $Dialog/MarginContainer/ScrollContainer/VBoxContainer/HistogramPanel
+@onready var player_histogram_display = $Dialog/MarginContainer/ScrollContainer/VBoxContainer/HistogramPanel/HistogramComparison/PlayerHistPanel/PlayerHistogramDisplay
+@onready var player_swatch_display = $Dialog/MarginContainer/ScrollContainer/VBoxContainer/HistogramPanel/HistogramComparison/PlayerHistPanel/PlayerSwatchDisplay
+@onready var reference_histogram_display = $Dialog/MarginContainer/ScrollContainer/VBoxContainer/HistogramPanel/HistogramComparison/ReferenceHistPanel/ReferenceHistogramDisplay
+@onready var reference_swatch_display = $Dialog/MarginContainer/ScrollContainer/VBoxContainer/HistogramPanel/HistogramComparison/ReferenceHistPanel/ReferenceSwatchDisplay
+@onready var breakdown_label = $Dialog/MarginContainer/ScrollContainer/VBoxContainer/BreakdownLabel
+@onready var coordinate_label = $Dialog/MarginContainer/ScrollContainer/VBoxContainer/CoordinateLabel
+@onready var visual_label = $Dialog/MarginContainer/ScrollContainer/VBoxContainer/VisualLabel
+@onready var color_label = $Dialog/MarginContainer/ScrollContainer/VBoxContainer/ColorLabel
+@onready var retry_button = $Dialog/MarginContainer/ScrollContainer/VBoxContainer/ButtonContainer/RetryButton
+@onready var back_button = $Dialog/MarginContainer/ScrollContainer/VBoxContainer/ButtonContainer/BackButton
 
 var current_result: ValidationResult = null
 var current_mission: PaintingMission = null
