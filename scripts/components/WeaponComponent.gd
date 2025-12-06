@@ -12,7 +12,7 @@ enum State { WORLD, EQUIPPED }
 @export var fire_rate: float = 0.5  ## Seconds between shots
 @export var bullet_scene: PackedScene  ## Bullet.tscn scene
 @export var equipped_position: Vector3 = Vector3(0.5, -0.3, -0.5)  ## Local position when equipped (right, down, forward)
-@export var equipped_rotation: Vector3 = Vector3(0, 90, 0)  ## Local rotation degrees when equipped
+@export var equipped_rotation: Vector3 = Vector3(0, 0, 0)  ## Local rotation degrees when equipped
 
 @export_group("Audio")
 @export var shoot_sound: AudioStream
