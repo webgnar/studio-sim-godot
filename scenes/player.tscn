@@ -1,0 +1,57 @@
+[gd_scene load_steps=8 format=3 uid="uid://cugtdfp4dt78m"]
+
+[ext_resource type="Script" uid="uid://d4bxpnphvld1d" path="res://scripts/PlayerController.gd" id="1_qlg0r"]
+[ext_resource type="PackedScene" uid="uid://ygw6d51stbbw" path="res://scenes/human.tscn" id="2_tuyoq"]
+[ext_resource type="Script" uid="uid://bw58chvxj0io6" path="res://scripts/PlayerAnimation.gd" id="3_fjrip"]
+[ext_resource type="PackedScene" uid="uid://cmkthatew8dv2" path="res://scenes/UI/HUD.tscn" id="4_smehm"]
+[ext_resource type="Script" uid="uid://cmfquih6gna04" path="res://scripts/PlayerLaserBeam.gd" id="5_ur7pv"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_k0juu"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_71j4m"]
+points = PackedVector3Array(-0.12520654, -0.532801, -0.4805069, 0.022783129, 0.4760704, 0.49888408, 0.16971254, 0.5591441, 0.46417162, 0.23105091, -0.8035912, 0.32045516, 0.40741014, 0.651043, -0.24352328, -0.4827893, 0.59484255, 0.082213186, -0.3628679, -0.68231165, 0.2896967, 0.46904355, -0.65452886, -0.06627126, -0.12744367, 0.8427015, -0.33810276, -0.39343542, -0.6839421, -0.24471663, 0.43825462, 0.62330925, 0.20084947, 0.0841477, 0.977454, 0.11479468, -0.06820232, -0.9764576, -0.12927033, 0.20054972, -0.56312895, -0.4514544, -0.18552664, 0.59545326, -0.4534751, -0.27336287, 0.59226835, 0.40775412, -0.0069364863, -0.47682306, 0.49966025, 0.37582088, -0.5886136, 0.31695515, 0.111579016, 0.5630594, -0.48117727, -0.41725034, 0.5278656, -0.27049688, -0.48454633, -0.59697217, -0.06650971, -0.27974695, 0.90856135, 0.05333608, -0.25019687, -0.8807117, 0.20531891, 0.263647, -0.90277094, -0.1273943, 0.29336792, 0.8715263, -0.15719566, 0.3734115, -0.5263189, -0.32824618, 0.4996626, 0.47664148, -0.0068885577, 0.053105574, 0.8750009, 0.32470253, -0.15454252, -0.5908538, 0.4658794, -0.09727988, -0.7823577, -0.39818847, -0.3876489, -0.49817133, 0.31564978, -0.30067965, -0.58799505, -0.38890144)
+
+[node name="Player" type="CharacterBody3D"]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 0, 0)
+collision_mask = 11
+script = ExtResource("1_qlg0r")
+walk_speed = 3.0
+sprint_speed = 6.0
+air_control = 0.7
+inertia = 7.0
+joystick_sensitivity_multiplier = 500.0
+bob_frequency = 9.0
+bob_amplitude = 0.07
+max_fov_increase = 10.0
+interaction_distance = 2.0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+visible = false
+mesh = SubResource("CapsuleMesh_k0juu")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("ConvexPolygonShape3D_71j4m")
+
+[node name="human" parent="." instance=ExtResource("2_tuyoq")]
+transform = Transform3D(-4.371139e-09, 0, 0.1, 0, 0.1, 0, -0.1, 0, -4.371139e-09, 0, -0.94919425, 0.13251299)
+script = ExtResource("3_fjrip")
+walk_speed = 5.0
+run_speed = 10.0
+
+[node name="Head" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.64091873, 0)
+
+[node name="Camera3D" type="Camera3D" parent="Head"]
+current = true
+
+[node name="CarryMarker" type="Marker3D" parent="Head/Camera3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2)
+visible = false
+
+[node name="HUD" parent="." instance=ExtResource("4_smehm")]
+
+[node name="LaserBeamVisualizer" type="Node3D" parent="."]
+script = ExtResource("5_ur7pv")
+
+[node name="gun" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.20072627, 0.67071223, -0.6064383)

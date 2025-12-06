@@ -1,27 +1,22 @@
-[gd_scene load_steps=135 format=3 uid="uid://cnmivki1rop3b"]
+[gd_scene load_steps=130 format=3 uid="uid://cnmivki1rop3b"]
 
 [ext_resource type="Material" uid="uid://wwlsotlotycw" path="res://materials/wood.tres" id="1_4mrxx"]
-[ext_resource type="Script" uid="uid://d4bxpnphvld1d" path="res://scripts/PlayerController.gd" id="1_4wyf3"]
 [ext_resource type="Texture2D" uid="uid://bke1xjp3mdreb" path="res://sprites/door.jpg" id="1_i7141"]
 [ext_resource type="Material" uid="uid://s7aanj1sph6l" path="res://materials/floor.tres" id="1_k0juu"]
 [ext_resource type="Texture2D" uid="uid://cbn0d3riillev" path="res://sprites/wood.jpg" id="1_q5onr"]
 [ext_resource type="Script" uid="uid://cnfv5twd10d1u" path="res://scripts/WorldSetup.gd" id="1_qaasp"]
 [ext_resource type="Texture2D" uid="uid://dyuvtxhp260rj" path="res://sprites/normals/wood_ambient.png" id="2_jhx03"]
-[ext_resource type="Script" uid="uid://bw58chvxj0io6" path="res://scripts/PlayerAnimation.gd" id="3_k0juu"]
 [ext_resource type="Texture2D" uid="uid://3smflfln5x7y" path="res://sprites/normals/wood_specular.png" id="3_o8fc1"]
 [ext_resource type="Material" uid="uid://48uded6h5otx" path="res://materials/brickwhite.tres" id="3_qfnet"]
 [ext_resource type="Texture2D" uid="uid://bifvpuur5heg3" path="res://sprites/normals/wood_normal.png" id="4_xo05s"]
 [ext_resource type="Material" uid="uid://re8gmfn1nbgt" path="res://materials/wall.tres" id="5_71j4m"]
 [ext_resource type="PackedScene" uid="uid://boyehvhrdbdi6" path="res://models/props/lights.glb" id="6_jhx03"]
-[ext_resource type="PackedScene" uid="uid://ygw6d51stbbw" path="res://scenes/human.tscn" id="6_qfnet"]
-[ext_resource type="PackedScene" uid="uid://cmkthatew8dv2" path="res://scenes/UI/HUD.tscn" id="14_1jxku"]
 [ext_resource type="Texture2D" uid="uid://b3ty4ce0xhyow" path="res://sprites/hvac.jpg" id="14_o8fc1"]
 [ext_resource type="PackedScene" uid="uid://xeaph8bqk1j1" path="res://models/props/pipe_red.glb" id="16_oo54l"]
 [ext_resource type="PackedScene" uid="uid://fjppju80c5ic" path="res://models/props/pipe_yellow.glb" id="17_kpybi"]
 [ext_resource type="PackedScene" uid="uid://44g07prjgs5x" path="res://models/props/pipe_gray bent.glb" id="19_kpybi"]
 [ext_resource type="PackedScene" uid="uid://cmaavrflrf4d4" path="res://models/props/pipe_gray.glb" id="19_xgqkh"]
 [ext_resource type="PackedScene" uid="uid://c8duo4thyjdsv" path="res://models/props/spotlight.glb" id="20_munwf"]
-[ext_resource type="Script" uid="uid://cmfquih6gna04" path="res://scripts/PlayerLaserBeam.gd" id="21_r5yoc"]
 [ext_resource type="PackedScene" uid="uid://dfy02uk1jbflb" path="res://models/props/light_switch box.glb" id="21_ts3gi"]
 [ext_resource type="PackedScene" uid="uid://bp08vdgdcjkvv" path="res://models/interactables/light_switch.glb" id="22_0nbtd"]
 [ext_resource type="AudioStream" uid="uid://cfqmga8or17qn" path="res://sounds/lightswitchON.ogg" id="23_l8ah6"]
@@ -33,6 +28,7 @@
 [ext_resource type="Shader" uid="uid://br4qh8mg5yosn" path="res://shaders/mirror.gdshader" id="25_xgqkh"]
 [ext_resource type="PackedScene" uid="uid://d0y6fk05wn5dc" path="res://models/interactables/cardboard box/box.glb" id="26_ts3gi"]
 [ext_resource type="PackedScene" uid="uid://tejn0hfpdhf7" path="res://models/interactables/cardboard box/box topL.glb" id="27_0nbtd"]
+[ext_resource type="PackedScene" uid="uid://cugtdfp4dt78m" path="res://scenes/player.tscn" id="27_l137e"]
 [ext_resource type="Script" uid="uid://cftd54g3pgkr1" path="res://scripts/old stuff/LightSwitchInteraction.gd" id="29_lightswitch_new"]
 [ext_resource type="Script" uid="uid://d5m48bcsj83f" path="res://scripts/old stuff/BoxInteraction.gd" id="31_x28ej"]
 [ext_resource type="Script" uid="uid://cdcxs0jsffsfb" path="res://scripts/old stuff/BoomboxInteraction.gd" id="36_boombox_new"]
@@ -76,6 +72,7 @@
 [ext_resource type="PackedScene" uid="uid://bryic0ubsrfjn" path="res://models/interactables/buttonGreen.glb" id="81_swu3i"]
 [ext_resource type="Script" uid="uid://bsdnronq274dp" path="res://scripts/components/PaintingSubmitButton.gd" id="82_submit"]
 [ext_resource type="PackedScene" uid="uid://c8mhk3sajq2fn" path="res://scenes/UI/MissionHUD.tscn" id="83_hud"]
+[ext_resource type="PackedScene" uid="uid://6u7bns57r2hi" path="res://scenes/gun.tscn" id="83_n78cu"]
 [ext_resource type="AudioStream" uid="uid://84rjpuccue2i" path="res://sounds/boomboxSwitch.ogg" id="boombox_switch"]
 [ext_resource type="AudioStream" uid="uid://8so1mqtnfhkh" path="res://sounds/box open 1.ogg" id="box_open_1"]
 [ext_resource type="AudioStream" uid="uid://bkyiswhv5fuaf" path="res://sounds/box open 2.ogg" id="box_open_2"]
@@ -110,11 +107,6 @@ uv1_triplanar = true
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4mrxx"]
 albedo_texture = ExtResource("1_i7141")
-
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_k0juu"]
-
-[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_71j4m"]
-points = PackedVector3Array(-0.12520654, -0.532801, -0.4805069, 0.022783129, 0.4760704, 0.49888408, 0.16971254, 0.5591441, 0.46417162, 0.23105091, -0.8035912, 0.32045516, 0.40741014, 0.651043, -0.24352328, -0.4827893, 0.59484255, 0.082213186, -0.3628679, -0.68231165, 0.2896967, 0.46904355, -0.65452886, -0.06627126, -0.12744367, 0.8427015, -0.33810276, -0.39343542, -0.6839421, -0.24471663, 0.43825462, 0.62330925, 0.20084947, 0.0841477, 0.977454, 0.11479468, -0.06820232, -0.9764576, -0.12927033, 0.20054972, -0.56312895, -0.4514544, -0.18552664, 0.59545326, -0.4534751, -0.27336287, 0.59226835, 0.40775412, -0.0069364863, -0.47682306, 0.49966025, 0.37582088, -0.5886136, 0.31695515, 0.111579016, 0.5630594, -0.48117727, -0.41725034, 0.5278656, -0.27049688, -0.48454633, -0.59697217, -0.06650971, -0.27974695, 0.90856135, 0.05333608, -0.25019687, -0.8807117, 0.20531891, 0.263647, -0.90277094, -0.1273943, 0.29336792, 0.8715263, -0.15719566, 0.3734115, -0.5263189, -0.32824618, 0.4996626, 0.47664148, -0.0068885577, 0.053105574, 0.8750009, 0.32470253, -0.15454252, -0.5908538, 0.4658794, -0.09727988, -0.7823577, -0.39818847, -0.3876489, -0.49817133, 0.31564978, -0.30067965, -0.58799505, -0.38890144)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xo05s"]
 albedo_texture = ExtResource("14_o8fc1")
@@ -703,47 +695,8 @@ transform = Transform3D(-1.1175871e-08, 0, -0.14, 0, 0.14, 0, 0.14, 0, -1.117587
 [node name="wall outlet7" parent="outlets" instance=ExtResource("66_8lgfd")]
 transform = Transform3D(-6.119594e-09, 0, -0.14, 0, 0.14, 0, 0.14, 0, -6.119594e-09, -3.5728824, 1.6572046, 3.6067662)
 
-[node name="Player" type="CharacterBody3D" parent="."]
+[node name="Player" parent="." instance=ExtResource("27_l137e")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 2, 1.2067637, 2)
-collision_mask = 11
-script = ExtResource("1_4wyf3")
-walk_speed = 3.0
-sprint_speed = 6.0
-air_control = 0.7
-inertia = 7.0
-joystick_sensitivity_multiplier = 500.0
-bob_frequency = 9.0
-bob_amplitude = 0.07
-max_fov_increase = 10.0
-interaction_distance = 2.0
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Player"]
-visible = false
-mesh = SubResource("CapsuleMesh_k0juu")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Player"]
-shape = SubResource("ConvexPolygonShape3D_71j4m")
-
-[node name="human" parent="Player" instance=ExtResource("6_qfnet")]
-transform = Transform3D(-4.371139e-09, 0, 0.1, 0, 0.1, 0, -0.1, 0, -4.371139e-09, 0, -0.94919425, 0.13251299)
-script = ExtResource("3_k0juu")
-walk_speed = 5.0
-run_speed = 10.0
-
-[node name="Head" type="Node3D" parent="Player"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.64091873, 0)
-
-[node name="Camera3D" type="Camera3D" parent="Player/Head"]
-current = true
-
-[node name="CarryMarker" type="Marker3D" parent="Player/Head/Camera3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2)
-visible = false
-
-[node name="HUD" parent="Player" instance=ExtResource("14_1jxku")]
-
-[node name="LaserBeamVisualizer" type="Node3D" parent="Player"]
-script = ExtResource("21_r5yoc")
 
 [node name="spot" parent="." instance=ExtResource("20_munwf")]
 transform = Transform3D(0.08940223, 0.12044604, 0, -0.12044604, 0.08940223, 0, 0, 0, 0.14999995, -0.30782902, 4.760989, 7.3739543)
@@ -1344,6 +1297,9 @@ shape = SubResource("CylinderShape3D_kvmu4")
 script = ExtResource("82_submit")
 interaction_text = "Submit Painting"
 custom_interaction_distance = 15.0
+
+[node name="Gun" parent="." instance=ExtResource("83_n78cu")]
+transform = Transform3D(0.05, 0, 0, 0, 0.05, 0, 0, 0, 0.05, 0, 1.2773702, 0)
 
 [editable path="Styrofoam cube"]
 [editable path="CameraZone"]
