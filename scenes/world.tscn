@@ -983,7 +983,7 @@ transform = Transform3D(0.014088948, -0.019586174, -0.62915206, 0.47128618, 0.04
 [node name="pipegraybent2" parent="electrical conduit" instance=ExtResource("19_kpybi")]
 transform = Transform3D(0.013917993, 0.06352692, -0.6286893, 0.017449299, 1.3355626, 0.030572794, 0.47172707, -0.05127709, 0.01741816, 58.345383, 9.54422, -27.782818)
 
-[node name="mirror" type="MeshInstance3D" parent="."]
+[node name="mirror" type="MeshInstance3D" parent="." groups=["no_outline"]]
 transform = Transform3D(0.15967436, -0.98716974, 7.2844835e-22, 0.98716974, 0.15967436, 0, -1.3524944e-22, 8.361653e-22, 0.86, 3.5676813, 1.0085149, 4.4239473)
 mesh = SubResource("PlaneMesh_kpybi")
 surface_material_override/0 = SubResource("StandardMaterial3D_xgqkh")
@@ -1299,7 +1299,7 @@ interaction_text = "Submit Painting"
 custom_interaction_distance = 15.0
 
 [node name="Gun" parent="." instance=ExtResource("83_n78cu")]
-transform = Transform3D(0.05, 0, 0, 0, 0.05, 0, 0, 0, 0.05, 0, 1.2773702, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2773702, 0)
 
 [editable path="Styrofoam cube"]
 [editable path="CameraZone"]

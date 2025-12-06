@@ -30,6 +30,12 @@ var carried_object: CarryableComponent = null
 var is_carrying: bool:
 	get: return carried_object != null
 
+# --- WEAPON STATE ---
+var equipped_weapon: WeaponComponent = null
+
+var is_weapon_equipped: bool:
+	get: return equipped_weapon != null
+
 # --- GODOT METHODS ---
 
 func _ready() -> void:
@@ -52,6 +58,12 @@ func _process(_delta: float) -> void:
 	_update_interactable()
 
 func _input(event: InputEvent) -> void:
+	# WEAPON SHOOTING - Check first before other actions
+	if is_weapon_equipped and event.is_action_pressed("action_primary"):
+		equipped_weapon.shoot()
+		get_viewport().set_input_as_handled()
+		return
+
 	# LEFT CLICK - Pickup or Throw
 	if event.is_action_pressed("action_primary"):
 		# If carrying, throw the object
@@ -112,6 +124,13 @@ func _input(event: InputEvent) -> void:
 
 		# Not carrying - interact with what we're looking at
 		if current_interactable:
+			# Check if it's a weapon
+			var weapon_comp = _find_weapon_component(current_interactable)
+			if weapon_comp:
+				weapon_comp.interact(self)
+				get_viewport().set_input_as_handled()
+				return
+
 			_handle_interaction()
 			get_viewport().set_input_as_handled()
 
@@ -245,10 +264,21 @@ func _update_interaction_prompt() -> void:
 	if not current_interactable:
 		interaction_prompt_changed.emit("")
 		return
-	
+
+	# Show weapon controls when equipped
+	if is_weapon_equipped:
+		interaction_prompt_changed.emit("[Click] Shoot | [E] Drop Gun")
+		return
+
 	# Don't show interaction prompts while carrying (show carry controls instead)
 	if is_carrying:
 		interaction_prompt_changed.emit("")
+		return
+
+	# Check for weapon component first
+	var weapon_component = _find_weapon_component(current_interactable)
+	if weapon_component and weapon_component.state == 0:  # State.WORLD
+		interaction_prompt_changed.emit("[E] Pick Up Gun")
 		return
 	
 	# Check if object is carryable
@@ -408,3 +438,29 @@ func drop_carried_object() -> void:
 
 	var drop_force = carried_object.drop_power if carried_object else 1.0
 	carried_object.throw(drop_force)
+
+# --- WEAPON METHODS ---
+
+func equip_weapon(weapon: WeaponComponent) -> void:
+	"""Called by WeaponComponent when gun is equipped"""
+	equipped_weapon = weapon
+	_rebuild_interaction_prompts()
+
+func unequip_weapon() -> void:
+	"""Called by WeaponComponent when gun is dropped"""
+	equipped_weapon = null
+	_rebuild_interaction_prompts()
+
+func _find_weapon_component(node: Node) -> WeaponComponent:
+	"""Search for WeaponComponent in node hierarchy"""
+	if node is WeaponComponent:
+		return node
+
+	for child in node.get_children():
+		if child is WeaponComponent:
+			return child
+		var found = _find_weapon_component(child)
+		if found:
+			return found
+
+	return null
