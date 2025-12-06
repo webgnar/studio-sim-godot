@@ -13,13 +13,21 @@ class_name Bullet
 
 # --- PRIVATE VARIABLES ---
 var _lifetime_timer: float = 0.0
+var fire_direction: Vector3 = Vector3.FORWARD  ## Direction to fire (set by WeaponComponent)
 
 # --- GODOT METHODS ---
 
 func _ready() -> void:
-	# Apply impulse to shoot bullet forward (bullet's -Z axis)
-	var forward = -global_transform.basis.z
-	apply_central_impulse(forward * speed)
+	# Apply impulse in the fire_direction (passed from WeaponComponent)
+	var impulse = fire_direction * speed
+
+	print("=== BULLET _ready() DEBUG ===")
+	print("  Bullet position: ", global_position)
+	print("  Fire direction: ", fire_direction)
+	print("  Impulse (fire_direction * speed): ", impulse)
+	print("  Speed: ", speed)
+
+	apply_central_impulse(impulse)
 
 	# Connect collision signal
 	if has_signal("body_entered"):

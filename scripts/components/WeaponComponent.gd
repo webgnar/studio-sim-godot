@@ -242,27 +242,73 @@ func shoot() -> void:
 
 func _spawn_bullet() -> void:
 	"""Instantiate bullet at spawn marker and launch it"""
-	if not bullet_scene or not bullet_spawn_marker:
+	if not bullet_spawn_marker:
+		push_warning("WeaponComponent: No bullet spawn marker!")
 		return
 
-	# Instantiate bullet
+	if not bullet_scene:
+		push_warning("WeaponComponent: No bullet scene!")
+		return
+
+	# Get camera for aiming direction
+	var camera = player_ref.get_camera()
+	if not camera:
+		push_warning("WeaponComponent: No camera!")
+		return
+
+	# === STEP 1: Raycast from camera to find aim point ===
+	var camera_pos = camera.global_position
+	var camera_forward = -camera.global_transform.basis.z
+	var max_range = 1000.0  # Far distance for raycast
+
+	# Do raycast from camera forward
+	var space_state = get_world_3d().direct_space_state
+	var ray_query = PhysicsRayQueryParameters3D.create(
+		camera_pos,
+		camera_pos + camera_forward * max_range
+	)
+	# Don't hit the gun itself or player
+	ray_query.exclude = [parent_object]
+	ray_query.collision_mask = 2 + 4  # Static World + Interactables
+
+	var raycast_result = space_state.intersect_ray(ray_query)
+
+	# Determine aim point (either raycast hit or far point)
+	var aim_point: Vector3
+	if raycast_result:
+		aim_point = raycast_result.position
+	else:
+		# No hit, aim at far distance
+		aim_point = camera_pos + camera_forward * max_range
+
+	# === STEP 2: Calculate direction from gun barrel to aim point ===
+	var bullet_spawn_pos = bullet_spawn_marker.global_position
+	var fire_direction = (aim_point - bullet_spawn_pos).normalized()
+
+	# === STEP 3: Create bullet and set fire direction ===
 	var bullet = bullet_scene.instantiate()
 
-	# Add to world (not as child of gun)
+	# Set bullet position
+	bullet.global_position = bullet_spawn_pos
+
+	# Set fire direction directly (more reliable than look_at())
+	bullet.fire_direction = fire_direction
+
+	# Orient bullet visually to match fire direction
+	bullet.look_at(bullet_spawn_pos + fire_direction * 10.0, Vector3.UP)
+
+	# Add to world - _ready() will apply impulse using fire_direction
 	get_tree().root.add_child(bullet)
 
-	# Position bullet at spawn marker global position
-	bullet.global_position = bullet_spawn_marker.global_position
-
-	# Orient bullet to face camera forward (not gun's rotation)
-	var camera = player_ref.get_camera()
-	if camera:
-		var forward = -camera.global_transform.basis.z
-		bullet.look_at(bullet.global_position + forward, Vector3.UP)
-
-	print("Bullet spawned at: ", bullet.global_position, " facing direction: ", -bullet.global_transform.basis.z)
-
-	# Bullet.gd will apply impulse in its _ready()
+	print("=== BULLET SPAWN DEBUG ===")
+	print("  Camera pos: ", camera_pos)
+	print("  Camera forward: ", camera_forward)
+	print("  Bullet spawn: ", bullet_spawn_pos)
+	print("  Raycast hit: ", raycast_result.has("position"))
+	if raycast_result.has("position"):
+		print("  Hit object: ", raycast_result.collider.name if raycast_result.has("collider") else "unknown")
+	print("  Aim point: ", aim_point)
+	print("  Fire direction: ", fire_direction)
 
 func _play_shoot_animations() -> void:
 	"""Play slide and muzzle flash animations simultaneously"""
