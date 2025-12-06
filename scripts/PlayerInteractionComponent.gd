@@ -101,6 +101,12 @@ func _input(event: InputEvent) -> void:
 	
 	# E KEY - Interact (always interaction, never drop)
 	if event.is_action_pressed("interact"):
+		# If weapon is equipped, drop it
+		if is_weapon_equipped and is_instance_valid(equipped_weapon):
+			equipped_weapon.drop()
+			get_viewport().set_input_as_handled()
+			return
+
 		# If carrying an object with E-key interaction enabled, interact with it
 		if is_carrying and is_instance_valid(carried_object):
 			# Check if carried object has E-key interaction
