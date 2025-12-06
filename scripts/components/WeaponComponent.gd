@@ -288,17 +288,17 @@ func _spawn_bullet() -> void:
 	# === STEP 3: Create bullet and set fire direction ===
 	var bullet = bullet_scene.instantiate()
 
-	# Set bullet position
-	bullet.global_position = bullet_spawn_pos
-
 	# Set fire direction directly (more reliable than look_at())
 	bullet.fire_direction = fire_direction
 
-	# Orient bullet visually to match fire direction
-	bullet.look_at(bullet_spawn_pos + fire_direction * 10.0, Vector3.UP)
-
-	# Add to world - _ready() will apply impulse using fire_direction
+	# Add to world first (required for global_position and rotation to work correctly)
 	get_tree().root.add_child(bullet)
+
+	# Now set position and rotation
+	bullet.global_position = bullet_spawn_pos
+
+	# Orient bullet visually to match fire direction (look_at works correctly after adding to tree)
+	bullet.look_at(bullet_spawn_pos + fire_direction * 10.0, Vector3.UP)
 
 	print("=== BULLET SPAWN DEBUG ===")
 	print("  Camera pos: ", camera_pos)

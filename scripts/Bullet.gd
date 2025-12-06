@@ -10,6 +10,7 @@ class_name Bullet
 @export var lifetime: float = 10.0  ## Seconds before auto-despawn
 @export var damage: float = 25.0  ## Damage dealt to hit objects
 @export var impact_effect: PackedScene  ## Optional impact particle effect
+@export var visual_rotation_offset: Vector3 = Vector3(0, 90, 0)  ## Model rotation offset (degrees) to fix orientation
 
 # --- PRIVATE VARIABLES ---
 var _lifetime_timer: float = 0.0
@@ -18,6 +19,11 @@ var fire_direction: Vector3 = Vector3.FORWARD  ## Direction to fire (set by Weap
 # --- GODOT METHODS ---
 
 func _ready() -> void:
+	# Apply visual rotation offset to model
+	var model = get_node_or_null("model")
+	if model:
+		model.rotation_degrees = visual_rotation_offset
+
 	# Apply impulse in the fire_direction (passed from WeaponComponent)
 	var impulse = fire_direction * speed
 
