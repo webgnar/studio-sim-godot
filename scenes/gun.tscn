@@ -138,6 +138,7 @@ libraries = {
 [node name="Sprite3D" type="Sprite3D" parent="."]
 transform = Transform3D(-1.3113416e-07, 0, 3, 0, 3, 0, -3, 0, -1.3113416e-07, -0.29858685, 0.04936582, 0.0034592152)
 modulate = Color(1, 1, 1, 0)
+texture_filter = 0
 texture = ExtResource("2_gp1hk")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Sprite3D"]
