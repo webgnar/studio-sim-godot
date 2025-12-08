@@ -1,0 +1,1679 @@
+[gd_resource type="Resource" script_class="PaintingMission" load_steps=212 format=3]
+
+[ext_resource type="Script" path="res://scripts/painting/PaintingMission.gd" id="1_5er2t"]
+[ext_resource type="Script" path="res://scripts/painting/PlacedStickerData.gd" id="2_omm87"]
+
+[sub_resource type="Resource" id="Resource_3pl8f"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(260.66666, 543.8392)
+rotation_deg = -90.0
+scale = 0.65
+
+[sub_resource type="Resource" id="Resource_1qfpk"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(260.66666, 543.8392)
+rotation_deg = -90.0
+scale = 0.65
+z_order = 1
+
+[sub_resource type="Resource" id="Resource_6fdo6"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(291.86465, 543.8392)
+rotation_deg = -90.0
+scale = 0.65
+z_order = 2
+
+[sub_resource type="Resource" id="Resource_l7hcs"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(314.00333, 556.1406)
+rotation_deg = -90.0
+scale = 0.65
+z_order = 3
+
+[sub_resource type="Resource" id="Resource_xac1o"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(335.73868, 568.48114)
+rotation_deg = -90.0
+scale = 0.65
+z_order = 4
+
+[sub_resource type="Resource" id="Resource_qnt8t"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(342.75854, 574.6673)
+rotation_deg = -90.0
+scale = 0.65
+z_order = 5
+
+[sub_resource type="Resource" id="Resource_qkirx"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(349.73325, 580.86475)
+rotation_deg = -90.0
+scale = 0.65
+z_order = 6
+
+[sub_resource type="Resource" id="Resource_17xcl"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(364.0013, 587.0739)
+rotation_deg = -90.0
+scale = 0.65
+z_order = 7
+
+[sub_resource type="Resource" id="Resource_rlb77"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(385.7853, 587.0739)
+rotation_deg = -90.0
+scale = 0.65
+z_order = 8
+
+[sub_resource type="Resource" id="Resource_ankkt"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(399.71304, 593.2952)
+rotation_deg = -90.0
+scale = 0.65
+z_order = 9
+
+[sub_resource type="Resource" id="Resource_g5qhu"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(405.97998, 605.77637)
+rotation_deg = -90.0
+scale = 0.65
+z_order = 10
+
+[sub_resource type="Resource" id="Resource_una66"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(419.72275, 612.0373)
+rotation_deg = -90.0
+scale = 0.65
+z_order = 11
+
+[sub_resource type="Resource" id="Resource_teds3"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(426.3274, 618.3122)
+rotation_deg = -90.0
+scale = 0.65
+z_order = 12
+
+[sub_resource type="Resource" id="Resource_uidpv"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(446.87515, 624.60187)
+rotation_deg = -90.0
+scale = 0.65
+z_order = 13
+
+[sub_resource type="Resource" id="Resource_4ov8h"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(459.85376, 637.22705)
+rotation_deg = -90.0
+scale = 0.65
+z_order = 14
+
+[sub_resource type="Resource" id="Resource_k0cbt"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(492.80917, 656.2876)
+rotation_deg = -90.0
+scale = 0.65
+z_order = 15
+
+[sub_resource type="Resource" id="Resource_o51pk"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(512.26544, 669.0827)
+rotation_deg = -90.0
+scale = 0.65
+z_order = 16
+
+[sub_resource type="Resource" id="Resource_18ict"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(525.3018, 675.5081)
+rotation_deg = -90.0
+scale = 0.65
+z_order = 17
+
+[sub_resource type="Resource" id="Resource_j0j3b"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(551.19904, 688.41797)
+rotation_deg = -90.0
+scale = 0.65
+z_order = 18
+
+[sub_resource type="Resource" id="Resource_oub4s"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(564.07153, 694.90314)
+rotation_deg = -90.0
+scale = 0.65
+z_order = 19
+
+[sub_resource type="Resource" id="Resource_hl602"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(588.91437, 721.06104)
+rotation_deg = -90.0
+scale = 0.65
+z_order = 20
+
+[sub_resource type="Resource" id="Resource_51300"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(607.8973, 734.278)
+rotation_deg = -90.0
+scale = 0.65
+z_order = 21
+
+[sub_resource type="Resource" id="Resource_xdy23"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(645.8046, 761.0125)
+rotation_deg = -90.0
+scale = 0.65
+z_order = 22
+
+[sub_resource type="Resource" id="Resource_qs84d"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(664.7735, 774.54004)
+rotation_deg = -90.0
+scale = 0.65
+z_order = 23
+
+[sub_resource type="Resource" id="Resource_fskps"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(677.5371, 781.3462)
+rotation_deg = -90.0
+scale = 0.65
+z_order = 24
+
+[sub_resource type="Resource" id="Resource_m5l2t"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(696.5741, 795.0466)
+rotation_deg = -90.0
+scale = 0.65
+z_order = 25
+
+[sub_resource type="Resource" id="Resource_4eryq"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(728.54877, 815.8278)
+rotation_deg = -90.0
+scale = 0.65
+z_order = 26
+
+[sub_resource type="Resource" id="Resource_g45ln"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(754.37555, 829.84406)
+rotation_deg = -90.0
+scale = 0.65
+z_order = 27
+
+[sub_resource type="Resource" id="Resource_gri4n"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(780.45874, 836.903)
+rotation_deg = -90.0
+scale = 0.65
+z_order = 28
+
+[sub_resource type="Resource" id="Resource_2k15y"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(800.0701, 843.9969)
+rotation_deg = -90.0
+scale = 0.65
+z_order = 29
+
+[sub_resource type="Resource" id="Resource_8vqoi"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(826.4179, 865.4958)
+rotation_deg = -90.0
+scale = 0.65
+z_order = 30
+
+[sub_resource type="Resource" id="Resource_tjiv6"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(839.71686, 872.7373)
+rotation_deg = -90.0
+scale = 0.65
+z_order = 31
+
+[sub_resource type="Resource" id="Resource_8o87y"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(853.20557, 887.3376)
+rotation_deg = -90.0
+scale = 0.65
+z_order = 32
+
+[sub_resource type="Resource" id="Resource_ajd6e"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(880.3079, 902.1003)
+rotation_deg = -90.0
+scale = 0.65
+z_order = 33
+
+[sub_resource type="Resource" id="Resource_6ypon"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(900.7663, 909.5449)
+rotation_deg = -90.0
+scale = 0.65
+z_order = 34
+
+[sub_resource type="Resource" id="Resource_3hidg"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(907.8093, 917.03253)
+rotation_deg = -90.0
+scale = 0.65
+z_order = 35
+
+[sub_resource type="Resource" id="Resource_dl52h"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(929.25653, 939.76495)
+rotation_deg = -90.0
+scale = 0.65
+z_order = 36
+
+[sub_resource type="Resource" id="Resource_ohqv6"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(807.05963, 257.29688)
+rotation_deg = 180.0
+scale = 0.65
+z_order = 37
+
+[sub_resource type="Resource" id="Resource_0ljej"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(807.05963, 257.29688)
+rotation_deg = 180.0
+scale = 0.65
+z_order = 38
+
+[sub_resource type="Resource" id="Resource_1tg57"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(807.05963, 257.29688)
+rotation_deg = 180.0
+scale = 0.65
+z_order = 39
+
+[sub_resource type="Resource" id="Resource_okcbi"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(825.49976, 238.5944)
+rotation_deg = 180.0
+scale = 0.65
+z_order = 40
+
+[sub_resource type="Resource" id="Resource_6cnul"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(837.92474, 213.46419)
+rotation_deg = 180.0
+scale = 0.65
+z_order = 41
+
+[sub_resource type="Resource" id="Resource_3rlh8"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(837.95593, 207.14372)
+rotation_deg = 180.0
+scale = 0.65
+z_order = 42
+
+[sub_resource type="Resource" id="Resource_vvydm"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(850.49524, 188.08318)
+rotation_deg = 180.0
+scale = 0.65
+z_order = 43
+
+[sub_resource type="Resource" id="Resource_xeh8w"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(850.6021, 175.28809)
+rotation_deg = 180.0
+scale = 0.65
+z_order = 44
+
+[sub_resource type="Resource" id="Resource_7daae"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(869.6848, 149.46745)
+rotation_deg = 180.0
+scale = 0.65
+z_order = 45
+
+[sub_resource type="Resource" id="Resource_m6ueb"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(876.29315, 129.88281)
+rotation_deg = 180.0
+scale = 0.65
+z_order = 46
+
+[sub_resource type="Resource" id="Resource_jd6ac"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(882.9959, 110.09277)
+rotation_deg = 180.0
+scale = 0.65
+z_order = 47
+
+[sub_resource type="Resource" id="Resource_ln31i"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(889.8017, 90.081055)
+rotation_deg = 180.0
+scale = 0.65
+z_order = 48
+
+[sub_resource type="Resource" id="Resource_lprx3"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(909.83844, 63.02458)
+rotation_deg = 180.0
+scale = 0.65
+z_order = 49
+
+[sub_resource type="Resource" id="Resource_bkfc5"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(924.0425, 28.542969)
+rotation_deg = 180.0
+scale = 0.65
+z_order = 50
+
+[sub_resource type="Resource" id="Resource_nftsl"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(938.08856, 7.4677734)
+rotation_deg = 180.0
+scale = 0.65
+z_order = 51
+
+[sub_resource type="Resource" id="Resource_gvotq"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(952.7863, -21.125)
+rotation_deg = 180.0
+scale = 0.65
+z_order = 52
+
+[sub_resource type="Resource" id="Resource_d1mjk"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(968.8056, -65.17399)
+rotation_deg = 180.0
+scale = 0.65
+z_order = 53
+
+[sub_resource type="Resource" id="Resource_jkvdg"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(976.6229, -80.19369)
+rotation_deg = 180.0
+scale = 0.65
+z_order = 54
+
+[sub_resource type="Resource" id="Resource_85xt0"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(992.0893, -103.06445)
+rotation_deg = 180.0
+scale = 0.65
+z_order = 55
+
+[sub_resource type="Resource" id="Resource_ef5bd"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(1007.9601, -126.367836)
+rotation_deg = 180.0
+scale = 0.65
+z_order = 56
+
+[sub_resource type="Resource" id="Resource_ambkq"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(220.55957, 213.46436)
+rotation_deg = 90.0
+scale = 0.65
+z_order = 57
+
+[sub_resource type="Resource" id="Resource_vafak"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(220.55957, 213.46436)
+rotation_deg = 90.0
+scale = 0.65
+z_order = 58
+
+[sub_resource type="Resource" id="Resource_67k56"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(220.55957, 213.46436)
+rotation_deg = 90.0
+scale = 0.65
+z_order = 59
+
+[sub_resource type="Resource" id="Resource_ygar0"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(219.81233, 207.14388)
+rotation_deg = 90.0
+scale = 0.65
+z_order = 60
+
+[sub_resource type="Resource" id="Resource_phc4c"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(211.54639, 207.14388)
+rotation_deg = 90.0
+scale = 0.65
+z_order = 61
+
+[sub_resource type="Resource" id="Resource_w37ov"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(177.88933, 207.14388)
+rotation_deg = 90.0
+scale = 0.65
+z_order = 62
+
+[sub_resource type="Resource" id="Resource_5nagl"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(167.62297, 194.45378)
+rotation_deg = 90.0
+scale = 0.65
+z_order = 63
+
+[sub_resource type="Resource" id="Resource_sl0a4"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(149.33415, 188.08333)
+rotation_deg = 90.0
+scale = 0.65
+z_order = 64
+
+[sub_resource type="Resource" id="Resource_fqctq"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(122.722496, 188.08318)
+rotation_deg = 90.0
+scale = 0.65
+z_order = 65
+
+[sub_resource type="Resource" id="Resource_bvjto"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(112.72233, 181.69499)
+rotation_deg = 90.0
+scale = 0.65
+z_order = 66
+
+[sub_resource type="Resource" id="Resource_vnm7c"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(93.407875, 175.28825)
+rotation_deg = 90.0
+scale = 0.65
+z_order = 67
+
+[sub_resource type="Resource" id="Resource_sgiub"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(74.802574, 175.28825)
+rotation_deg = 90.0
+scale = 0.65
+z_order = 68
+
+[sub_resource type="Resource" id="Resource_ib322"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(43.975586, 162.41797)
+rotation_deg = 90.0
+scale = 0.65
+z_order = 69
+
+[sub_resource type="Resource" id="Resource_yftxi"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(33.05485, 155.95313)
+rotation_deg = 90.0
+scale = 0.65
+z_order = 70
+
+[sub_resource type="Resource" id="Resource_2dem4"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(21.983236, 149.46777)
+rotation_deg = 90.0
+scale = 0.65
+z_order = 71
+
+[sub_resource type="Resource" id="Resource_g16oy"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(-0.6263835, 136.43327)
+rotation_deg = 90.0
+scale = 0.65
+z_order = 72
+
+[sub_resource type="Resource" id="Resource_uwpa6"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(-13.624593, 123.3099)
+rotation_deg = 90.0
+scale = 0.65
+z_order = 73
+
+[sub_resource type="Resource" id="Resource_k5l6g"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(-25.390219, 116.71338)
+rotation_deg = 90.0
+scale = 0.65
+z_order = 74
+
+[sub_resource type="Resource" id="Resource_u3inn"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(-49.441326, 103.447754)
+rotation_deg = 90.0
+scale = 0.65
+z_order = 75
+
+[sub_resource type="Resource" id="Resource_rboa0"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(-74.215904, 90.081215)
+rotation_deg = 90.0
+scale = 0.65
+z_order = 76
+
+[sub_resource type="Resource" id="Resource_8xvci"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(-97.894615, 83.3584)
+rotation_deg = 90.0
+scale = 0.65
+z_order = 77
+
+[sub_resource type="Resource" id="Resource_t1tja"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(-135.50545, 69.830894)
+rotation_deg = 90.0
+scale = 0.65
+z_order = 78
+
+[sub_resource type="Resource" id="Resource_7dseh"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(-160.74226, 63.02474)
+rotation_deg = 90.0
+scale = 0.65
+z_order = 79
+
+[sub_resource type="Resource" id="Resource_xefa6"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(-174.67456, 56.189453)
+rotation_deg = 90.0
+scale = 0.65
+z_order = 80
+
+[sub_resource type="Resource" id="Resource_7wdy3"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(-230.32219, 35.501953)
+rotation_deg = 90.0
+scale = 0.65
+z_order = 81
+
+[sub_resource type="Resource" id="Resource_mlbx0"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(-230.32219, 35.501953)
+rotation_deg = 90.0
+scale = 0.65
+z_order = 82
+
+[sub_resource type="Resource" id="Resource_7jptf"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(280.97592, 257.29703)
+rotation_deg = 90.0
+scale = 0.65
+z_order = 83
+
+[sub_resource type="Resource" id="Resource_6yj6j"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(280.97592, 257.29703)
+rotation_deg = 90.0
+scale = 0.65
+z_order = 84
+
+[sub_resource type="Resource" id="Resource_iv26h"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(280.97592, 257.29703)
+rotation_deg = 90.0
+scale = 0.65
+z_order = 85
+
+[sub_resource type="Resource" id="Resource_hgb0r"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(264.73697, 251.07568)
+rotation_deg = 90.0
+scale = 0.65
+z_order = 86
+
+[sub_resource type="Resource" id="Resource_75muh"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(239.58398, 238.59456)
+rotation_deg = 90.0
+scale = 0.65
+z_order = 87
+
+[sub_resource type="Resource" id="Resource_my81d"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(239.58398, 238.59456)
+rotation_deg = 90.0
+scale = 0.65
+z_order = 88
+
+[sub_resource type="Resource" id="Resource_ak4xt"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(230.83235, 232.33366)
+rotation_deg = 90.0
+scale = 0.65
+z_order = 89
+
+[sub_resource type="Resource" id="Resource_ill1m"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(213.03792, 219.76904)
+rotation_deg = 90.0
+scale = 0.65
+z_order = 90
+
+[sub_resource type="Resource" id="Resource_k2ut7"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(195.61736, 213.46436)
+rotation_deg = 90.0
+scale = 0.65
+z_order = 91
+
+[sub_resource type="Resource" id="Resource_6nm0u"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(177.88933, 207.14388)
+rotation_deg = 90.0
+scale = 0.65
+z_order = 92
+
+[sub_resource type="Resource" id="Resource_bm6v5"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(158.96696, 194.45378)
+rotation_deg = 90.0
+scale = 0.65
+z_order = 93
+
+[sub_resource type="Resource" id="Resource_qxtsa"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(140.53279, 188.08333)
+rotation_deg = 90.0
+scale = 0.65
+z_order = 94
+
+[sub_resource type="Resource" id="Resource_1g0uu"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(111.706215, 175.28825)
+rotation_deg = 90.0
+scale = 0.65
+z_order = 95
+
+[sub_resource type="Resource" id="Resource_gol38"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(92.336266, 168.8628)
+rotation_deg = 90.0
+scale = 0.65
+z_order = 96
+
+[sub_resource type="Resource" id="Resource_fpp84"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(71.41504, 155.95313)
+rotation_deg = 90.0
+scale = 0.65
+z_order = 97
+
+[sub_resource type="Resource" id="Resource_aikwp"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(60.744953, 149.46777)
+rotation_deg = 90.0
+scale = 0.65
+z_order = 98
+
+[sub_resource type="Resource" id="Resource_415vb"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(40.268555, 142.96126)
+rotation_deg = 90.0
+scale = 0.65
+z_order = 99
+
+[sub_resource type="Resource" id="Resource_yl42w"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(29.20394, 136.43327)
+rotation_deg = 90.0
+scale = 0.65
+z_order = 100
+
+[sub_resource type="Resource" id="Resource_ud0ik"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(17.98519, 129.88313)
+rotation_deg = 90.0
+scale = 0.65
+z_order = 101
+
+[sub_resource type="Resource" id="Resource_yhspb"]
+script = ExtResource("2_omm87")
+sticker_id = "12"
+position = Vector2(6.608805, 123.3099)
+rotation_deg = 90.0
+scale = 0.65
+z_order = 102
+
+[sub_resource type="Resource" id="Resource_i1bi8"]
+script = ExtResource("2_omm87")
+sticker_id = "16"
+position = Vector2(22.503418, 1103.5677)
+rotation_deg = 90.0
+scale = 0.30814815
+z_order = 103
+
+[sub_resource type="Resource" id="Resource_ty88b"]
+script = ExtResource("2_omm87")
+sticker_id = "16"
+position = Vector2(28.803873, 1086.0795)
+rotation_deg = 90.0
+scale = 0.30814815
+z_order = 104
+
+[sub_resource type="Resource" id="Resource_wlfhh"]
+script = ExtResource("2_omm87")
+sticker_id = "16"
+position = Vector2(62.310223, 1077.4388)
+rotation_deg = 90.0
+scale = 0.30814815
+z_order = 105
+
+[sub_resource type="Resource" id="Resource_3ulgg"]
+script = ExtResource("2_omm87")
+sticker_id = "16"
+position = Vector2(72.30322, 1077.4385)
+rotation_deg = 90.0
+scale = 0.30814815
+z_order = 106
+
+[sub_resource type="Resource" id="Resource_o4a0c"]
+script = ExtResource("2_omm87")
+sticker_id = "16"
+position = Vector2(72.30322, 1077.4385)
+rotation_deg = 90.0
+scale = 0.30814815
+z_order = 107
+
+[sub_resource type="Resource" id="Resource_r4e0x"]
+script = ExtResource("2_omm87")
+sticker_id = "16"
+position = Vector2(85.046715, 1068.8652)
+rotation_deg = 90.0
+scale = 0.30814815
+z_order = 108
+
+[sub_resource type="Resource" id="Resource_ubo2h"]
+script = ExtResource("2_omm87")
+sticker_id = "16"
+position = Vector2(87.82308, 1060.3574)
+rotation_deg = 90.0
+scale = 0.30814815
+z_order = 109
+
+[sub_resource type="Resource" id="Resource_rusoa"]
+script = ExtResource("2_omm87")
+sticker_id = "16"
+position = Vector2(60.914227, 1051.9141)
+rotation_deg = 90.0
+scale = 0.30814815
+z_order = 110
+
+[sub_resource type="Resource" id="Resource_6jx54"]
+script = ExtResource("2_omm87")
+sticker_id = "16"
+position = Vector2(40.778484, 1051.9141)
+rotation_deg = 90.0
+scale = 0.30814815
+z_order = 111
+
+[sub_resource type="Resource" id="Resource_l7868"]
+script = ExtResource("2_omm87")
+sticker_id = "16"
+position = Vector2(30.592936, 1051.9141)
+rotation_deg = 90.0
+scale = 0.30814815
+z_order = 112
+
+[sub_resource type="Resource" id="Resource_p3euo"]
+script = ExtResource("2_omm87")
+sticker_id = "16"
+position = Vector2(20.32666, 1051.9137)
+rotation_deg = 90.0
+scale = 0.30814815
+z_order = 113
+
+[sub_resource type="Resource" id="Resource_ttv6m"]
+script = ExtResource("2_omm87")
+sticker_id = "16"
+position = Vector2(3.8578289, 1068.8652)
+rotation_deg = 90.0
+scale = 0.30814815
+z_order = 114
+
+[sub_resource type="Resource" id="Resource_8camt"]
+script = ExtResource("2_omm87")
+sticker_id = "16"
+position = Vector2(-9.83488, 1077.4388)
+rotation_deg = 90.0
+scale = 0.30814815
+z_order = 115
+
+[sub_resource type="Resource" id="Resource_nd16h"]
+script = ExtResource("2_omm87")
+sticker_id = "16"
+position = Vector2(-23.751383, 1086.0795)
+rotation_deg = 90.0
+scale = 0.30814815
+z_order = 116
+
+[sub_resource type="Resource" id="Resource_km8bw"]
+script = ExtResource("2_omm87")
+sticker_id = "16"
+position = Vector2(-23.751383, 1086.0795)
+rotation_deg = 90.0
+scale = 0.30814815
+z_order = 117
+
+[sub_resource type="Resource" id="Resource_7x1om"]
+script = ExtResource("2_omm87")
+sticker_id = "16"
+position = Vector2(-48.80379, 1094.7887)
+rotation_deg = 90.0
+scale = 0.30814815
+z_order = 118
+
+[sub_resource type="Resource" id="Resource_thi7d"]
+script = ExtResource("2_omm87")
+sticker_id = "16"
+position = Vector2(-63.32495, 1103.5677)
+rotation_deg = 90.0
+scale = 0.30814815
+z_order = 119
+
+[sub_resource type="Resource" id="Resource_vkbjo"]
+script = ExtResource("2_omm87")
+sticker_id = "16"
+position = Vector2(-78.53866, 1086.0795)
+rotation_deg = 90.0
+scale = 0.30814815
+z_order = 120
+
+[sub_resource type="Resource" id="Resource_dvfqn"]
+script = ExtResource("2_omm87")
+sticker_id = "16"
+position = Vector2(-6.6542153, 1068.8652)
+rotation_deg = 90.0
+scale = 0.30814815
+z_order = 121
+
+[sub_resource type="Resource" id="Resource_o18p4"]
+script = ExtResource("2_omm87")
+sticker_id = "16"
+position = Vector2(14.285808, 1068.8652)
+rotation_deg = 90.0
+scale = 0.30814815
+z_order = 122
+
+[sub_resource type="Resource" id="Resource_si2tm"]
+script = ExtResource("2_omm87")
+sticker_id = "16"
+position = Vector2(37.861492, 1060.3574)
+rotation_deg = 90.0
+scale = 0.30814815
+z_order = 123
+
+[sub_resource type="Resource" id="Resource_7smuo"]
+script = ExtResource("2_omm87")
+sticker_id = "16"
+position = Vector2(60.91455, 1051.9137)
+rotation_deg = 90.0
+scale = 0.30814815
+z_order = 124
+
+[sub_resource type="Resource" id="Resource_0h6ro"]
+script = ExtResource("2_omm87")
+sticker_id = "16"
+position = Vector2(70.867836, 1051.9137)
+rotation_deg = 90.0
+scale = 0.30814815
+z_order = 125
+
+[sub_resource type="Resource" id="Resource_eqlo5"]
+script = ExtResource("2_omm87")
+sticker_id = "16"
+position = Vector2(80.74674, 1051.9137)
+rotation_deg = 90.0
+scale = 0.30814815
+z_order = 126
+
+[sub_resource type="Resource" id="Resource_h5j1g"]
+script = ExtResource("2_omm87")
+sticker_id = "16"
+position = Vector2(80.74674, 1051.9137)
+rotation_deg = 90.0
+scale = 0.30814815
+z_order = 127
+
+[sub_resource type="Resource" id="Resource_5yhgq"]
+script = ExtResource("2_omm87")
+sticker_id = "16"
+position = Vector2(80.74674, 1051.9137)
+rotation_deg = 90.0
+scale = 0.30814815
+z_order = 128
+
+[sub_resource type="Resource" id="Resource_b4463"]
+script = ExtResource("2_omm87")
+sticker_id = "16"
+position = Vector2(95.87418, 1035.2145)
+rotation_deg = 90.0
+scale = 0.30814815
+z_order = 129
+
+[sub_resource type="Resource" id="Resource_t8w6a"]
+script = ExtResource("2_omm87")
+sticker_id = "16"
+position = Vector2(113.080894, 1010.61554)
+rotation_deg = 90.0
+scale = 0.30814815
+z_order = 130
+
+[sub_resource type="Resource" id="Resource_spdgt"]
+script = ExtResource("2_omm87")
+sticker_id = "16"
+position = Vector2(105.98242, 1002.53125)
+rotation_deg = 90.0
+scale = 0.30814815
+z_order = 131
+
+[sub_resource type="Resource" id="Resource_rwlsn"]
+script = ExtResource("2_omm87")
+sticker_id = "16"
+position = Vector2(103.61735, 978.6071)
+rotation_deg = 90.0
+scale = 0.30814815
+z_order = 132
+
+[sub_resource type="Resource" id="Resource_qskb3"]
+script = ExtResource("2_omm87")
+sticker_id = "16"
+position = Vector2(103.61735, 978.6071)
+rotation_deg = 90.0
+scale = 0.30814815
+z_order = 133
+
+[sub_resource type="Resource" id="Resource_pc0c7"]
+script = ExtResource("2_omm87")
+sticker_id = "16"
+position = Vector2(108.23177, 962.9209)
+rotation_deg = 90.0
+scale = 0.30814815
+z_order = 134
+
+[sub_resource type="Resource" id="Resource_efauw"]
+script = ExtResource("2_omm87")
+sticker_id = "16"
+position = Vector2(108.23177, 962.9209)
+rotation_deg = 90.0
+scale = 0.30814815
+z_order = 135
+
+[sub_resource type="Resource" id="Resource_q10i6"]
+script = ExtResource("2_omm87")
+sticker_id = "16"
+position = Vector2(94.046715, 978.6071)
+rotation_deg = 90.0
+scale = 0.30814815
+z_order = 136
+
+[sub_resource type="Resource" id="Resource_eucay"]
+script = ExtResource("2_omm87")
+sticker_id = "16"
+position = Vector2(89.203285, 994.50226)
+rotation_deg = 90.0
+scale = 0.30814815
+z_order = 137
+
+[sub_resource type="Resource" id="Resource_rvuoo"]
+script = ExtResource("2_omm87")
+sticker_id = "16"
+position = Vector2(86.71761, 1002.53125)
+rotation_deg = 90.0
+scale = 0.30814815
+z_order = 138
+
+[sub_resource type="Resource" id="Resource_0pbit"]
+script = ExtResource("2_omm87")
+sticker_id = "16"
+position = Vector2(84.18848, 1010.61554)
+rotation_deg = 90.0
+scale = 0.30814815
+z_order = 139
+
+[sub_resource type="Resource" id="Resource_i3ypa"]
+script = ExtResource("2_omm87")
+sticker_id = "16"
+position = Vector2(78.9974, 1026.9557)
+rotation_deg = 90.0
+scale = 0.30814815
+z_order = 140
+
+[sub_resource type="Resource" id="Resource_50syn"]
+script = ExtResource("2_omm87")
+sticker_id = "16"
+position = Vector2(66.45377, 1035.2145)
+rotation_deg = 90.0
+scale = 0.30814815
+z_order = 141
+
+[sub_resource type="Resource" id="Resource_amd8j"]
+script = ExtResource("2_omm87")
+sticker_id = "16"
+position = Vector2(63.708008, 1043.5332)
+rotation_deg = 90.0
+scale = 0.30814815
+z_order = 142
+
+[sub_resource type="Resource" id="Resource_ng6co"]
+script = ExtResource("2_omm87")
+sticker_id = "16"
+position = Vector2(40.778973, 1051.9137)
+rotation_deg = 90.0
+scale = 0.30814815
+z_order = 143
+
+[sub_resource type="Resource" id="Resource_t1cq3"]
+script = ExtResource("2_omm87")
+sticker_id = "16"
+position = Vector2(37.861492, 1060.3574)
+rotation_deg = 90.0
+scale = 0.30814815
+z_order = 144
+
+[sub_resource type="Resource" id="Resource_mxk8n"]
+script = ExtResource("2_omm87")
+sticker_id = "16"
+position = Vector2(27.637695, 1060.357)
+rotation_deg = 90.0
+scale = 0.30814815
+z_order = 145
+
+[sub_resource type="Resource" id="Resource_2v6cf"]
+script = ExtResource("2_omm87")
+sticker_id = "16"
+position = Vector2(17.33252, 1060.3574)
+rotation_deg = 90.0
+scale = 0.30814815
+z_order = 146
+
+[sub_resource type="Resource" id="Resource_o1xy2"]
+script = ExtResource("2_omm87")
+sticker_id = "16"
+position = Vector2(6.94458, 1060.3574)
+rotation_deg = 90.0
+scale = 0.30814815
+z_order = 147
+
+[sub_resource type="Resource" id="Resource_d0fbx"]
+script = ExtResource("2_omm87")
+sticker_id = "16"
+position = Vector2(6.94458, 1060.3574)
+rotation_deg = 90.0
+scale = 0.30814815
+z_order = 148
+
+[sub_resource type="Resource" id="Resource_yh3uj"]
+script = ExtResource("2_omm87")
+sticker_id = "16"
+position = Vector2(-3.527588, 1060.3574)
+rotation_deg = 90.0
+scale = 0.30814815
+z_order = 149
+
+[sub_resource type="Resource" id="Resource_tln5a"]
+script = ExtResource("2_omm87")
+sticker_id = "16"
+position = Vector2(-17.252848, 1068.8649)
+rotation_deg = 90.0
+scale = 0.30814815
+z_order = 150
+
+[sub_resource type="Resource" id="Resource_y638p"]
+script = ExtResource("2_omm87")
+sticker_id = "16"
+position = Vector2(-27.940512, 1068.8649)
+rotation_deg = 90.0
+scale = 0.30814815
+z_order = 151
+
+[sub_resource type="Resource" id="Resource_0hd6b"]
+script = ExtResource("2_omm87")
+sticker_id = "16"
+position = Vector2(-38.71867, 1068.8649)
+rotation_deg = 90.0
+scale = 0.30814815
+z_order = 152
+
+[sub_resource type="Resource" id="Resource_yvk8p"]
+script = ExtResource("2_omm87")
+sticker_id = "16"
+position = Vector2(-52.93579, 1077.4385)
+rotation_deg = 90.0
+scale = 0.30814815
+z_order = 153
+
+[sub_resource type="Resource" id="Resource_yd3ib"]
+script = ExtResource("2_omm87")
+sticker_id = "16"
+position = Vector2(-63.943115, 1077.4388)
+rotation_deg = 90.0
+scale = 0.30814815
+z_order = 154
+
+[sub_resource type="Resource" id="Resource_8g2kr"]
+script = ExtResource("2_omm87")
+sticker_id = "16"
+position = Vector2(-86.250244, 1077.4385)
+rotation_deg = 90.0
+scale = 0.30814815
+z_order = 155
+
+[sub_resource type="Resource" id="Resource_8oalj"]
+script = ExtResource("2_omm87")
+sticker_id = "16"
+position = Vector2(-86.250084, 1077.4385)
+rotation_deg = 90.0
+scale = 0.30814815
+z_order = 156
+
+[sub_resource type="Resource" id="Resource_qx76h"]
+script = ExtResource("2_omm87")
+sticker_id = "16"
+position = Vector2(-97.553795, 1077.4385)
+rotation_deg = 90.0
+scale = 0.30814815
+z_order = 157
+
+[sub_resource type="Resource" id="Resource_7s4kj"]
+script = ExtResource("2_omm87")
+sticker_id = "16"
+position = Vector2(-97.553795, 1077.4385)
+rotation_deg = 90.0
+scale = 0.30814815
+z_order = 158
+
+[sub_resource type="Resource" id="Resource_cfbwu"]
+script = ExtResource("2_omm87")
+sticker_id = "16"
+position = Vector2(98.72379, 962.9206)
+rotation_deg = 90.0
+scale = 0.30814815
+z_order = 159
+
+[sub_resource type="Resource" id="Resource_x1p54"]
+script = ExtResource("2_omm87")
+sticker_id = "16"
+position = Vector2(98.72379, 962.9206)
+rotation_deg = 90.0
+scale = 0.30814815
+z_order = 160
+
+[sub_resource type="Resource" id="Resource_hb86a"]
+script = ExtResource("2_omm87")
+sticker_id = "16"
+position = Vector2(96.40592, 970.7383)
+rotation_deg = 90.0
+scale = 0.30814815
+z_order = 161
+
+[sub_resource type="Resource" id="Resource_lvixf"]
+script = ExtResource("2_omm87")
+sticker_id = "16"
+position = Vector2(81.97168, 986.528)
+rotation_deg = 90.0
+scale = 0.30814815
+z_order = 162
+
+[sub_resource type="Resource" id="Resource_aj4f4"]
+script = ExtResource("2_omm87")
+sticker_id = "16"
+position = Vector2(49.923992, 994.50226)
+rotation_deg = 90.0
+scale = 0.30814815
+z_order = 163
+
+[sub_resource type="Resource" id="Resource_5daru"]
+script = ExtResource("2_omm87")
+sticker_id = "16"
+position = Vector2(37.256184, 1002.53125)
+rotation_deg = 90.0
+scale = 0.30814815
+z_order = 164
+
+[sub_resource type="Resource" id="Resource_krl1f"]
+script = ExtResource("2_omm87")
+sticker_id = "16"
+position = Vector2(24.391928, 1010.61554)
+rotation_deg = 90.0
+scale = 0.30814815
+z_order = 165
+
+[sub_resource type="Resource" id="Resource_8ovip"]
+script = ExtResource("2_omm87")
+sticker_id = "16"
+position = Vector2(24.391928, 1010.61554)
+rotation_deg = 90.0
+scale = 0.30814815
+z_order = 166
+
+[sub_resource type="Resource" id="Resource_ycgox"]
+script = ExtResource("2_omm87")
+sticker_id = "16"
+position = Vector2(-1.9476725, 1026.956)
+rotation_deg = 90.0
+scale = 0.30814815
+z_order = 167
+
+[sub_resource type="Resource" id="Resource_y11nx"]
+script = ExtResource("2_omm87")
+sticker_id = "16"
+position = Vector2(-23.01766, 1026.9557)
+rotation_deg = 90.0
+scale = 0.30814815
+z_order = 168
+
+[sub_resource type="Resource" id="Resource_6gvnw"]
+script = ExtResource("2_omm87")
+sticker_id = "19"
+position = Vector2(93.720055, 947.4349)
+rotation_deg = 90.0
+scale = 0.6162963
+z_order = 169
+
+[sub_resource type="Resource" id="Resource_nd1lt"]
+script = ExtResource("2_omm87")
+sticker_id = "19"
+position = Vector2(93.720055, 947.4349)
+rotation_deg = 90.0
+scale = 0.6162963
+z_order = 170
+
+[sub_resource type="Resource" id="Resource_q0hr8"]
+script = ExtResource("2_omm87")
+sticker_id = "19"
+position = Vector2(93.720055, 947.4349)
+rotation_deg = 90.0
+scale = 0.6162963
+z_order = 171
+
+[sub_resource type="Resource" id="Resource_wrlwl"]
+script = ExtResource("2_omm87")
+sticker_id = "19"
+position = Vector2(91.45264, 955.1533)
+rotation_deg = 90.0
+scale = 0.6162963
+z_order = 172
+
+[sub_resource type="Resource" id="Resource_r28lb"]
+script = ExtResource("2_omm87")
+sticker_id = "19"
+position = Vector2(77.11149, 970.7383)
+rotation_deg = 90.0
+scale = 0.6162963
+z_order = 173
+
+[sub_resource type="Resource" id="Resource_gv8ls"]
+script = ExtResource("2_omm87")
+sticker_id = "19"
+position = Vector2(77.11149, 970.7383)
+rotation_deg = 90.0
+scale = 0.6162963
+z_order = 174
+
+[sub_resource type="Resource" id="Resource_h1doc"]
+script = ExtResource("2_omm87")
+sticker_id = "19"
+position = Vector2(77.11149, 970.7383)
+rotation_deg = 90.0
+scale = 0.6162963
+z_order = 175
+
+[sub_resource type="Resource" id="Resource_uri8q"]
+script = ExtResource("2_omm87")
+sticker_id = "19"
+position = Vector2(77.11149, 970.7383)
+rotation_deg = 90.0
+scale = 0.6162963
+z_order = 176
+
+[sub_resource type="Resource" id="Resource_6b0fc"]
+script = ExtResource("2_omm87")
+sticker_id = "19"
+position = Vector2(86.79574, 970.7383)
+rotation_deg = 90.0
+scale = 0.6162963
+z_order = 177
+
+[sub_resource type="Resource" id="Resource_iaepn"]
+script = ExtResource("2_omm87")
+sticker_id = "19"
+position = Vector2(96.40641, 970.7383)
+rotation_deg = 90.0
+scale = 0.6162963
+z_order = 178
+
+[sub_resource type="Resource" id="Resource_5ji4s"]
+script = ExtResource("2_omm87")
+sticker_id = "19"
+position = Vector2(96.40641, 970.7383)
+rotation_deg = 90.0
+scale = 0.6162963
+z_order = 179
+
+[sub_resource type="Resource" id="Resource_qb63o"]
+script = ExtResource("2_omm87")
+sticker_id = "19"
+position = Vector2(94.04752, 978.6071)
+rotation_deg = 90.0
+scale = 0.6162963
+z_order = 180
+
+[sub_resource type="Resource" id="Resource_mcys6"]
+script = ExtResource("2_omm87")
+sticker_id = "19"
+position = Vector2(94.04752, 978.6071)
+rotation_deg = 90.0
+scale = 0.6162963
+z_order = 181
+
+[sub_resource type="Resource" id="Resource_us3k3"]
+script = ExtResource("2_omm87")
+sticker_id = "19"
+position = Vector2(101.24935, 986.528)
+rotation_deg = 90.0
+scale = 0.6162963
+z_order = 182
+
+[sub_resource type="Resource" id="Resource_i3u7p"]
+script = ExtResource("2_omm87")
+sticker_id = "19"
+position = Vector2(98.83903, 994.5026)
+rotation_deg = 90.0
+scale = 0.6162963
+z_order = 183
+
+[sub_resource type="Resource" id="Resource_wcw8t"]
+script = ExtResource("2_omm87")
+sticker_id = "19"
+position = Vector2(98.83903, 994.5026)
+rotation_deg = 90.0
+scale = 0.6162963
+z_order = 184
+
+[sub_resource type="Resource" id="Resource_d3j63"]
+script = ExtResource("2_omm87")
+sticker_id = "19"
+position = Vector2(98.83903, 994.5026)
+rotation_deg = 90.0
+scale = 0.6162963
+z_order = 185
+
+[sub_resource type="Resource" id="Resource_56lot"]
+script = ExtResource("2_omm87")
+sticker_id = "19"
+position = Vector2(91.64681, 986.528)
+rotation_deg = 90.0
+scale = 0.6162963
+z_order = 186
+
+[sub_resource type="Resource" id="Resource_a2j6q"]
+script = ExtResource("2_omm87")
+sticker_id = "19"
+position = Vector2(84.40511, 978.6071)
+rotation_deg = 90.0
+scale = 0.6162963
+z_order = 187
+
+[sub_resource type="Resource" id="Resource_381oy"]
+script = ExtResource("2_omm87")
+sticker_id = "19"
+position = Vector2(89.14469, 962.9206)
+rotation_deg = 90.0
+scale = 0.6162963
+z_order = 188
+
+[sub_resource type="Resource" id="Resource_h0ckj"]
+script = ExtResource("2_omm87")
+sticker_id = "19"
+position = Vector2(89.14469, 962.9206)
+rotation_deg = 90.0
+scale = 0.6162963
+z_order = 189
+
+[sub_resource type="Resource" id="Resource_px5g7"]
+script = ExtResource("2_omm87")
+sticker_id = "19"
+position = Vector2(91.45248, 955.1533)
+rotation_deg = 90.0
+scale = 0.6162963
+z_order = 190
+
+[sub_resource type="Resource" id="Resource_6sv05"]
+script = ExtResource("2_omm87")
+sticker_id = "19"
+position = Vector2(93.71989, 947.4349)
+rotation_deg = 90.0
+scale = 0.6162963
+z_order = 191
+
+[sub_resource type="Resource" id="Resource_0th3o"]
+script = ExtResource("2_omm87")
+sticker_id = "19"
+position = Vector2(93.71989, 947.4349)
+rotation_deg = 90.0
+scale = 0.6162963
+z_order = 192
+
+[sub_resource type="Resource" id="Resource_ooe60"]
+script = ExtResource("2_omm87")
+sticker_id = "19"
+position = Vector2(95.947426, 939.76465)
+rotation_deg = 90.0
+scale = 0.6162963
+z_order = 193
+
+[sub_resource type="Resource" id="Resource_xovth"]
+script = ExtResource("2_omm87")
+sticker_id = "19"
+position = Vector2(98.13558, 932.1416)
+rotation_deg = 90.0
+scale = 0.6162963
+z_order = 194
+
+[sub_resource type="Resource" id="Resource_oj81l"]
+script = ExtResource("2_omm87")
+sticker_id = "19"
+position = Vector2(702.40826, 633.4092)
+rotation_deg = 90.0
+scale = 0.6162963
+z_order = 195
+
+[sub_resource type="Resource" id="Resource_krcyy"]
+script = ExtResource("2_omm87")
+sticker_id = "19"
+position = Vector2(713.105, 638.67285)
+rotation_deg = 90.0
+scale = 0.6162963
+z_order = 196
+
+[sub_resource type="Resource" id="Resource_w0rdi"]
+script = ExtResource("2_omm87")
+sticker_id = "19"
+position = Vector2(713.1916, 649.18555)
+rotation_deg = 90.0
+scale = 0.6162963
+z_order = 197
+
+[sub_resource type="Resource" id="Resource_5pixt"]
+script = ExtResource("2_omm87")
+sticker_id = "19"
+position = Vector2(713.22943, 654.43555)
+rotation_deg = 90.0
+scale = 0.6162963
+z_order = 198
+
+[sub_resource type="Resource" id="Resource_1bl3n"]
+script = ExtResource("2_omm87")
+sticker_id = "19"
+position = Vector2(713.22943, 654.43555)
+rotation_deg = 90.0
+scale = 0.6162963
+z_order = 199
+
+[sub_resource type="Resource" id="Resource_e8vwc"]
+script = ExtResource("2_omm87")
+sticker_id = "19"
+position = Vector2(713.1501, 643.93146)
+rotation_deg = 90.0
+scale = 0.6162963
+z_order = 200
+
+[sub_resource type="Resource" id="Resource_ope8s"]
+script = ExtResource("2_omm87")
+sticker_id = "19"
+position = Vector2(713.105, 638.67285)
+rotation_deg = 90.0
+scale = 0.6162963
+z_order = 201
+
+[sub_resource type="Resource" id="Resource_0qsls"]
+script = ExtResource("2_omm87")
+sticker_id = "19"
+position = Vector2(76.270836, 246.40056)
+scale = 0.6162963
+z_order = 202
+
+[sub_resource type="Resource" id="Resource_2ylnu"]
+script = ExtResource("2_omm87")
+sticker_id = "19"
+position = Vector2(76.270836, 246.40056)
+scale = 0.6162963
+z_order = 203
+
+[sub_resource type="Resource" id="Resource_hetxj"]
+script = ExtResource("2_omm87")
+sticker_id = "19"
+position = Vector2(76.270836, 246.40056)
+scale = 0.6162963
+z_order = 204
+
+[sub_resource type="Resource" id="Resource_57l26"]
+script = ExtResource("2_omm87")
+sticker_id = "25"
+position = Vector2(766.8339, 30.400229)
+rotation_deg = 180.0
+scale = 0.6162963
+z_order = 205
+
+[sub_resource type="Resource" id="Resource_w640x"]
+script = ExtResource("2_omm87")
+sticker_id = "26"
+position = Vector2(707.68134, 628.14044)
+rotation_deg = 180.0
+scale = 0.6162963
+z_order = 206
+
+[sub_resource type="Resource" id="Resource_jm5mv"]
+script = ExtResource("2_omm87")
+sticker_id = "28"
+position = Vector2(143.94368, 654.43555)
+rotation_deg = 180.0
+scale = 0.3737226
+z_order = 207
+
+[sub_resource type="Resource" id="Resource_rkv71"]
+script = ExtResource("2_omm87")
+sticker_id = "29"
+position = Vector2(177.20752, -48.38737)
+rotation_deg = 180.0
+scale = 0.6162963
+z_order = 208
+
+[resource]
+script = ExtResource("1_5er2t")
+mission_id = "zack9"
+title = "zack9"
+target_stickers = Array[ExtResource("2_omm87")]([SubResource("Resource_3pl8f"), SubResource("Resource_1qfpk"), SubResource("Resource_6fdo6"), SubResource("Resource_l7hcs"), SubResource("Resource_xac1o"), SubResource("Resource_qnt8t"), SubResource("Resource_qkirx"), SubResource("Resource_17xcl"), SubResource("Resource_rlb77"), SubResource("Resource_ankkt"), SubResource("Resource_g5qhu"), SubResource("Resource_una66"), SubResource("Resource_teds3"), SubResource("Resource_uidpv"), SubResource("Resource_4ov8h"), SubResource("Resource_k0cbt"), SubResource("Resource_o51pk"), SubResource("Resource_18ict"), SubResource("Resource_j0j3b"), SubResource("Resource_oub4s"), SubResource("Resource_hl602"), SubResource("Resource_51300"), SubResource("Resource_xdy23"), SubResource("Resource_qs84d"), SubResource("Resource_fskps"), SubResource("Resource_m5l2t"), SubResource("Resource_4eryq"), SubResource("Resource_g45ln"), SubResource("Resource_gri4n"), SubResource("Resource_2k15y"), SubResource("Resource_8vqoi"), SubResource("Resource_tjiv6"), SubResource("Resource_8o87y"), SubResource("Resource_ajd6e"), SubResource("Resource_6ypon"), SubResource("Resource_3hidg"), SubResource("Resource_dl52h"), SubResource("Resource_ohqv6"), SubResource("Resource_0ljej"), SubResource("Resource_1tg57"), SubResource("Resource_okcbi"), SubResource("Resource_6cnul"), SubResource("Resource_3rlh8"), SubResource("Resource_vvydm"), SubResource("Resource_xeh8w"), SubResource("Resource_7daae"), SubResource("Resource_m6ueb"), SubResource("Resource_jd6ac"), SubResource("Resource_ln31i"), SubResource("Resource_lprx3"), SubResource("Resource_bkfc5"), SubResource("Resource_nftsl"), SubResource("Resource_gvotq"), SubResource("Resource_d1mjk"), SubResource("Resource_jkvdg"), SubResource("Resource_85xt0"), SubResource("Resource_ef5bd"), SubResource("Resource_ambkq"), SubResource("Resource_vafak"), SubResource("Resource_67k56"), SubResource("Resource_ygar0"), SubResource("Resource_phc4c"), SubResource("Resource_w37ov"), SubResource("Resource_5nagl"), SubResource("Resource_sl0a4"), SubResource("Resource_fqctq"), SubResource("Resource_bvjto"), SubResource("Resource_vnm7c"), SubResource("Resource_sgiub"), SubResource("Resource_ib322"), SubResource("Resource_yftxi"), SubResource("Resource_2dem4"), SubResource("Resource_g16oy"), SubResource("Resource_uwpa6"), SubResource("Resource_k5l6g"), SubResource("Resource_u3inn"), SubResource("Resource_rboa0"), SubResource("Resource_8xvci"), SubResource("Resource_t1tja"), SubResource("Resource_7dseh"), SubResource("Resource_xefa6"), SubResource("Resource_7wdy3"), SubResource("Resource_mlbx0"), SubResource("Resource_7jptf"), SubResource("Resource_6yj6j"), SubResource("Resource_iv26h"), SubResource("Resource_hgb0r"), SubResource("Resource_75muh"), SubResource("Resource_my81d"), SubResource("Resource_ak4xt"), SubResource("Resource_ill1m"), SubResource("Resource_k2ut7"), SubResource("Resource_6nm0u"), SubResource("Resource_bm6v5"), SubResource("Resource_qxtsa"), SubResource("Resource_1g0uu"), SubResource("Resource_gol38"), SubResource("Resource_fpp84"), SubResource("Resource_aikwp"), SubResource("Resource_415vb"), SubResource("Resource_yl42w"), SubResource("Resource_ud0ik"), SubResource("Resource_yhspb"), SubResource("Resource_i1bi8"), SubResource("Resource_ty88b"), SubResource("Resource_wlfhh"), SubResource("Resource_3ulgg"), SubResource("Resource_o4a0c"), SubResource("Resource_r4e0x"), SubResource("Resource_ubo2h"), SubResource("Resource_rusoa"), SubResource("Resource_6jx54"), SubResource("Resource_l7868"), SubResource("Resource_p3euo"), SubResource("Resource_ttv6m"), SubResource("Resource_8camt"), SubResource("Resource_nd16h"), SubResource("Resource_km8bw"), SubResource("Resource_7x1om"), SubResource("Resource_thi7d"), SubResource("Resource_vkbjo"), SubResource("Resource_dvfqn"), SubResource("Resource_o18p4"), SubResource("Resource_si2tm"), SubResource("Resource_7smuo"), SubResource("Resource_0h6ro"), SubResource("Resource_eqlo5"), SubResource("Resource_h5j1g"), SubResource("Resource_5yhgq"), SubResource("Resource_b4463"), SubResource("Resource_t8w6a"), SubResource("Resource_spdgt"), SubResource("Resource_rwlsn"), SubResource("Resource_qskb3"), SubResource("Resource_pc0c7"), SubResource("Resource_efauw"), SubResource("Resource_q10i6"), SubResource("Resource_eucay"), SubResource("Resource_rvuoo"), SubResource("Resource_0pbit"), SubResource("Resource_i3ypa"), SubResource("Resource_50syn"), SubResource("Resource_amd8j"), SubResource("Resource_ng6co"), SubResource("Resource_t1cq3"), SubResource("Resource_mxk8n"), SubResource("Resource_2v6cf"), SubResource("Resource_o1xy2"), SubResource("Resource_d0fbx"), SubResource("Resource_yh3uj"), SubResource("Resource_tln5a"), SubResource("Resource_y638p"), SubResource("Resource_0hd6b"), SubResource("Resource_yvk8p"), SubResource("Resource_yd3ib"), SubResource("Resource_8g2kr"), SubResource("Resource_8oalj"), SubResource("Resource_qx76h"), SubResource("Resource_7s4kj"), SubResource("Resource_cfbwu"), SubResource("Resource_x1p54"), SubResource("Resource_hb86a"), SubResource("Resource_lvixf"), SubResource("Resource_aj4f4"), SubResource("Resource_5daru"), SubResource("Resource_krl1f"), SubResource("Resource_8ovip"), SubResource("Resource_ycgox"), SubResource("Resource_y11nx"), SubResource("Resource_6gvnw"), SubResource("Resource_nd1lt"), SubResource("Resource_q0hr8"), SubResource("Resource_wrlwl"), SubResource("Resource_r28lb"), SubResource("Resource_gv8ls"), SubResource("Resource_h1doc"), SubResource("Resource_uri8q"), SubResource("Resource_6b0fc"), SubResource("Resource_iaepn"), SubResource("Resource_5ji4s"), SubResource("Resource_qb63o"), SubResource("Resource_mcys6"), SubResource("Resource_us3k3"), SubResource("Resource_i3u7p"), SubResource("Resource_wcw8t"), SubResource("Resource_d3j63"), SubResource("Resource_56lot"), SubResource("Resource_a2j6q"), SubResource("Resource_381oy"), SubResource("Resource_h0ckj"), SubResource("Resource_px5g7"), SubResource("Resource_6sv05"), SubResource("Resource_0th3o"), SubResource("Resource_ooe60"), SubResource("Resource_xovth"), SubResource("Resource_oj81l"), SubResource("Resource_krcyy"), SubResource("Resource_w0rdi"), SubResource("Resource_5pixt"), SubResource("Resource_1bl3n"), SubResource("Resource_e8vwc"), SubResource("Resource_ope8s"), SubResource("Resource_0qsls"), SubResource("Resource_2ylnu"), SubResource("Resource_hetxj"), SubResource("Resource_57l26"), SubResource("Resource_w640x"), SubResource("Resource_jm5mv"), SubResource("Resource_rkv71")])
+reference_image_path = "res://resources/missions/zack9_ref.png"

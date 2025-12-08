@@ -1,7 +1,8 @@
+AnimationPlayer
+MeshInstance3D
 CollisionShape3D
 RigidBody3D
 Marker3D
-AnimationPlayer
 Sprite3D
 Node3D
 Button
@@ -11,4 +12,3 @@ Control
 CanvasLayer
 Camera3D
 AnimationTree
-StaticBody3D
