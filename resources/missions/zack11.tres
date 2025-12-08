@@ -1,0 +1,449 @@
+[gd_resource type="Resource" script_class="PaintingMission" load_steps=58 format=3]
+
+[ext_resource type="Script" path="res://scripts/painting/PaintingMission.gd" id="1_1u68d"]
+[ext_resource type="Script" path="res://scripts/painting/PlacedStickerData.gd" id="2_gyitu"]
+
+[sub_resource type="Resource" id="Resource_1rs6e"]
+script = ExtResource("2_gyitu")
+sticker_id = "20"
+position = Vector2(268.2794, 724.65155)
+rotation_deg = -90.0
+scale = 0.6162963
+
+[sub_resource type="Resource" id="Resource_ouxw6"]
+script = ExtResource("2_gyitu")
+sticker_id = "20"
+position = Vector2(274.08878, 693.53156)
+rotation_deg = -90.0
+scale = 0.6162963
+z_order = 1
+
+[sub_resource type="Resource" id="Resource_f2fo5"]
+script = ExtResource("2_gyitu")
+sticker_id = "20"
+position = Vector2(277.87402, 646.44464)
+rotation_deg = -90.0
+scale = 0.6162963
+z_order = 2
+
+[sub_resource type="Resource" id="Resource_fud84"]
+script = ExtResource("2_gyitu")
+sticker_id = "20"
+position = Vector2(280.75815, 505.13867)
+rotation_deg = -90.0
+scale = 0.6162963
+z_order = 3
+
+[sub_resource type="Resource" id="Resource_p3c6m"]
+script = ExtResource("2_gyitu")
+sticker_id = "20"
+position = Vector2(280.63754, 465.0233)
+rotation_deg = -90.0
+scale = 0.6162963
+z_order = 4
+
+[sub_resource type="Resource" id="Resource_httay"]
+script = ExtResource("2_gyitu")
+sticker_id = "20"
+position = Vector2(265.25064, 362.1066)
+rotation_deg = -90.0
+scale = 0.6162963
+z_order = 5
+
+[sub_resource type="Resource" id="Resource_kdqv8"]
+script = ExtResource("2_gyitu")
+sticker_id = "20"
+position = Vector2(261.32388, 316.8903)
+rotation_deg = -90.0
+scale = 0.6162963
+z_order = 6
+
+[sub_resource type="Resource" id="Resource_4ta5m"]
+script = ExtResource("2_gyitu")
+sticker_id = "20"
+position = Vector2(254.20361, 262.68198)
+rotation_deg = -90.0
+scale = 0.6162963
+z_order = 7
+
+[sub_resource type="Resource" id="Resource_mnb43"]
+script = ExtResource("2_gyitu")
+sticker_id = "20"
+position = Vector2(288.98438, 510.78125)
+rotation_deg = -90.0
+scale = 0.6162963
+z_order = 8
+
+[sub_resource type="Resource" id="Resource_jah11"]
+script = ExtResource("2_gyitu")
+sticker_id = "20"
+position = Vector2(295.60522, 609.32245)
+rotation_deg = -90.0
+scale = 0.6162963
+z_order = 9
+
+[sub_resource type="Resource" id="Resource_5wm2h"]
+script = ExtResource("2_gyitu")
+sticker_id = "20"
+position = Vector2(297.08594, 734.99384)
+rotation_deg = -90.0
+scale = 0.6162963
+z_order = 10
+
+[sub_resource type="Resource" id="Resource_j78n8"]
+script = ExtResource("2_gyitu")
+sticker_id = "20"
+position = Vector2(297.5038, 781.44904)
+rotation_deg = -90.0
+scale = 0.6162963
+z_order = 11
+
+[sub_resource type="Resource" id="Resource_i60pl"]
+script = ExtResource("2_gyitu")
+sticker_id = "20"
+position = Vector2(296.9467, 812.43585)
+rotation_deg = -90.0
+scale = 0.6162963
+z_order = 12
+
+[sub_resource type="Resource" id="Resource_jqpao"]
+script = ExtResource("2_gyitu")
+sticker_id = "20"
+position = Vector2(353.7123, 522.0054)
+rotation_deg = -90.0
+scale = 0.6162963
+z_order = 13
+
+[sub_resource type="Resource" id="Resource_ca0v2"]
+script = ExtResource("2_gyitu")
+sticker_id = "20"
+position = Vector2(145.72102, -154.11589)
+rotation_deg = -90.0
+scale = 0.6162963
+z_order = 14
+
+[sub_resource type="Resource" id="Resource_snfh8"]
+script = ExtResource("2_gyitu")
+sticker_id = "20"
+position = Vector2(118.37012, -223.63525)
+rotation_deg = -90.0
+scale = 0.6162963
+z_order = 15
+
+[sub_resource type="Resource" id="Resource_2c4l6"]
+script = ExtResource("2_gyitu")
+sticker_id = "20"
+position = Vector2(311.1481, 103.77474)
+rotation_deg = -90.0
+scale = 0.6162963
+z_order = 16
+
+[sub_resource type="Resource" id="Resource_oihqi"]
+script = ExtResource("2_gyitu")
+sticker_id = "20"
+position = Vector2(416.29736, 262.6818)
+rotation_deg = -90.0
+scale = 0.6162963
+z_order = 17
+
+[sub_resource type="Resource" id="Resource_e611w"]
+script = ExtResource("2_gyitu")
+sticker_id = "20"
+position = Vector2(403.7653, 499.4751)
+rotation_deg = -90.0
+scale = 0.6162963
+z_order = 18
+
+[sub_resource type="Resource" id="Resource_odfuj"]
+script = ExtResource("2_gyitu")
+sticker_id = "20"
+position = Vector2(418.69385, 646.44464)
+rotation_deg = -90.0
+scale = 0.6162963
+z_order = 19
+
+[sub_resource type="Resource" id="Resource_peur2"]
+script = ExtResource("2_gyitu")
+sticker_id = "20"
+position = Vector2(419.02945, 890.55206)
+rotation_deg = -90.0
+scale = 0.6162963
+z_order = 20
+
+[sub_resource type="Resource" id="Resource_6xyx4"]
+script = ExtResource("2_gyitu")
+sticker_id = "20"
+position = Vector2(482.86703, 943.6462)
+rotation_deg = -90.0
+scale = 0.6162963
+z_order = 21
+
+[sub_resource type="Resource" id="Resource_f5wyn"]
+script = ExtResource("2_gyitu")
+sticker_id = "20"
+position = Vector2(585.02216, 688.32733)
+rotation_deg = -90.0
+scale = 0.6162963
+z_order = 22
+
+[sub_resource type="Resource" id="Resource_wmfvj"]
+script = ExtResource("2_gyitu")
+sticker_id = "20"
+position = Vector2(582.07153, 516.4033)
+rotation_deg = -90.0
+scale = 0.6162963
+z_order = 23
+
+[sub_resource type="Resource" id="Resource_vrtsa"]
+script = ExtResource("2_gyitu")
+sticker_id = "20"
+position = Vector2(591.37054, 417.6732)
+rotation_deg = -90.0
+scale = 0.6162963
+z_order = 24
+
+[sub_resource type="Resource" id="Resource_qa7nl"]
+script = ExtResource("2_gyitu")
+sticker_id = "20"
+position = Vector2(585.8716, 303.60727)
+rotation_deg = -90.0
+scale = 0.6162963
+z_order = 25
+
+[sub_resource type="Resource" id="Resource_agwyl"]
+script = ExtResource("2_gyitu")
+sticker_id = "20"
+position = Vector2(589.06573, 276.5109)
+rotation_deg = -90.0
+scale = 0.6162963
+z_order = 26
+
+[sub_resource type="Resource" id="Resource_tx30g"]
+script = ExtResource("2_gyitu")
+sticker_id = "20"
+position = Vector2(589.06573, 276.5109)
+rotation_deg = -90.0
+scale = 0.6162963
+z_order = 27
+
+[sub_resource type="Resource" id="Resource_8augk"]
+script = ExtResource("2_gyitu")
+sticker_id = "20"
+position = Vector2(654.1303, 16.95931)
+rotation_deg = -90.0
+scale = 0.6162963
+z_order = 28
+
+[sub_resource type="Resource" id="Resource_p6dca"]
+script = ExtResource("2_gyitu")
+sticker_id = "20"
+position = Vector2(667.6831, 175.25098)
+rotation_deg = -90.0
+scale = 0.6162963
+z_order = 29
+
+[sub_resource type="Resource" id="Resource_ckucr"]
+script = ExtResource("2_gyitu")
+sticker_id = "20"
+position = Vector2(724.3892, 869.583)
+rotation_deg = -90.0
+scale = 0.6162963
+z_order = 30
+
+[sub_resource type="Resource" id="Resource_ieorw"]
+script = ExtResource("2_gyitu")
+sticker_id = "20"
+position = Vector2(732.5936, 1003.5632)
+rotation_deg = -90.0
+scale = 0.6162963
+z_order = 31
+
+[sub_resource type="Resource" id="Resource_6a08j"]
+script = ExtResource("2_gyitu")
+sticker_id = "20"
+position = Vector2(749.3112, 970.6517)
+rotation_deg = -90.0
+scale = 0.6162963
+z_order = 32
+
+[sub_resource type="Resource" id="Resource_8bekj"]
+script = ExtResource("2_gyitu")
+sticker_id = "20"
+position = Vector2(849.24115, 843.5303)
+rotation_deg = -90.0
+scale = 0.6162963
+z_order = 33
+
+[sub_resource type="Resource" id="Resource_cis88"]
+script = ExtResource("2_gyitu")
+sticker_id = "20"
+position = Vector2(859.69855, 859.14325)
+rotation_deg = -90.0
+scale = 0.6162963
+z_order = 34
+
+[sub_resource type="Resource" id="Resource_ay7yj"]
+script = ExtResource("2_gyitu")
+sticker_id = "20"
+position = Vector2(890.6928, 435.6354)
+rotation_deg = -90.0
+scale = 0.6162963
+z_order = 35
+
+[sub_resource type="Resource" id="Resource_mg8f1"]
+script = ExtResource("2_gyitu")
+sticker_id = "20"
+position = Vector2(887.8555, 544.2246)
+rotation_deg = -90.0
+scale = 0.6162963
+z_order = 36
+
+[sub_resource type="Resource" id="Resource_hut0w"]
+script = ExtResource("2_gyitu")
+sticker_id = "20"
+position = Vector2(846.5439, 411.6273)
+rotation_deg = -90.0
+scale = 0.6162963
+z_order = 37
+
+[sub_resource type="Resource" id="Resource_ellij"]
+script = ExtResource("2_gyitu")
+sticker_id = "20"
+position = Vector2(880.6231, 672.6774)
+rotation_deg = -90.0
+scale = 0.6162963
+z_order = 38
+
+[sub_resource type="Resource" id="Resource_knnme"]
+script = ExtResource("2_gyitu")
+sticker_id = "20"
+position = Vector2(895.1203, 310.2705)
+rotation_deg = -90.0
+scale = 0.6162963
+z_order = 39
+
+[sub_resource type="Resource" id="Resource_pgt6w"]
+script = ExtResource("2_gyitu")
+sticker_id = "20"
+position = Vector2(849.2744, -79.51302)
+rotation_deg = -90.0
+scale = 0.6162963
+z_order = 40
+
+[sub_resource type="Resource" id="Resource_die4f"]
+script = ExtResource("2_gyitu")
+sticker_id = "20"
+position = Vector2(848.6451, -49.420734)
+rotation_deg = -90.0
+scale = 0.6162963
+z_order = 41
+
+[sub_resource type="Resource" id="Resource_iro61"]
+script = ExtResource("2_gyitu")
+sticker_id = "20"
+position = Vector2(873.2415, 61.442547)
+rotation_deg = -90.0
+scale = 0.6162963
+z_order = 42
+
+[sub_resource type="Resource" id="Resource_u45e4"]
+script = ExtResource("2_gyitu")
+sticker_id = "20"
+position = Vector2(889.73004, 144.18115)
+rotation_deg = -90.0
+scale = 0.6162963
+z_order = 43
+
+[sub_resource type="Resource" id="Resource_ciqf7"]
+script = ExtResource("2_gyitu")
+sticker_id = "21"
+position = Vector2(641.6165, 577.0386)
+rotation_deg = -90.0
+scale = 0.6162963
+z_order = 44
+
+[sub_resource type="Resource" id="Resource_fq8fl"]
+script = ExtResource("2_gyitu")
+sticker_id = "15"
+position = Vector2(358.70493, 781.4494)
+rotation_deg = -90.0
+scale = 0.65
+z_order = 45
+
+[sub_resource type="Resource" id="Resource_ifc5r"]
+script = ExtResource("2_gyitu")
+sticker_id = "15"
+position = Vector2(358.5472, 136.24446)
+rotation_deg = -90.0
+scale = 0.65
+z_order = 46
+
+[sub_resource type="Resource" id="Resource_cnuxj"]
+script = ExtResource("2_gyitu")
+sticker_id = "10"
+position = Vector2(758.3211, 26.039713)
+rotation_deg = 180.0
+scale = 0.6162963
+z_order = 47
+
+[sub_resource type="Resource" id="Resource_vdwd8"]
+script = ExtResource("2_gyitu")
+sticker_id = "8"
+position = Vector2(742.3604, 1048.4703)
+rotation_deg = 180.0
+scale = 0.6162963
+z_order = 48
+
+[sub_resource type="Resource" id="Resource_v4yx2"]
+script = ExtResource("2_gyitu")
+sticker_id = "1"
+position = Vector2(985.0639, 560.7039)
+rotation_deg = 90.0
+scale = 0.6162963
+z_order = 49
+
+[sub_resource type="Resource" id="Resource_dgo32"]
+script = ExtResource("2_gyitu")
+sticker_id = "2"
+position = Vector2(-9.053955, 719.4759)
+rotation_deg = 90.0
+scale = 0.6162963
+z_order = 50
+
+[sub_resource type="Resource" id="Resource_5w14w"]
+script = ExtResource("2_gyitu")
+sticker_id = "2"
+position = Vector2(-9.346924, 152.04932)
+rotation_deg = 90.0
+scale = 0.6162963
+z_order = 51
+
+[sub_resource type="Resource" id="Resource_77wxk"]
+script = ExtResource("2_gyitu")
+sticker_id = "31"
+position = Vector2(-8.771077, 724.65216)
+scale = 0.6162963
+z_order = 52
+
+[sub_resource type="Resource" id="Resource_8qxt8"]
+script = ExtResource("2_gyitu")
+sticker_id = "31"
+position = Vector2(-19.727945, 219.97673)
+rotation_deg = 180.0
+scale = 0.6162963
+z_order = 53
+
+[sub_resource type="Resource" id="Resource_fhc23"]
+script = ExtResource("2_gyitu")
+sticker_id = "2"
+position = Vector2(737.21075, -254.8221)
+rotation_deg = 90.0
+scale = 0.6162963
+z_order = 54
+
+[resource]
+script = ExtResource("1_1u68d")
+mission_id = "zack11"
+title = "zack11"
+target_stickers = Array[ExtResource("2_gyitu")]([SubResource("Resource_1rs6e"), SubResource("Resource_ouxw6"), SubResource("Resource_f2fo5"), SubResource("Resource_fud84"), SubResource("Resource_p3c6m"), SubResource("Resource_httay"), SubResource("Resource_kdqv8"), SubResource("Resource_4ta5m"), SubResource("Resource_mnb43"), SubResource("Resource_jah11"), SubResource("Resource_5wm2h"), SubResource("Resource_j78n8"), SubResource("Resource_i60pl"), SubResource("Resource_jqpao"), SubResource("Resource_ca0v2"), SubResource("Resource_snfh8"), SubResource("Resource_2c4l6"), SubResource("Resource_oihqi"), SubResource("Resource_e611w"), SubResource("Resource_odfuj"), SubResource("Resource_peur2"), SubResource("Resource_6xyx4"), SubResource("Resource_f5wyn"), SubResource("Resource_wmfvj"), SubResource("Resource_vrtsa"), SubResource("Resource_qa7nl"), SubResource("Resource_agwyl"), SubResource("Resource_tx30g"), SubResource("Resource_8augk"), SubResource("Resource_p6dca"), SubResource("Resource_ckucr"), SubResource("Resource_ieorw"), SubResource("Resource_6a08j"), SubResource("Resource_8bekj"), SubResource("Resource_cis88"), SubResource("Resource_ay7yj"), SubResource("Resource_mg8f1"), SubResource("Resource_hut0w"), SubResource("Resource_ellij"), SubResource("Resource_knnme"), SubResource("Resource_pgt6w"), SubResource("Resource_die4f"), SubResource("Resource_iro61"), SubResource("Resource_u45e4"), SubResource("Resource_ciqf7"), SubResource("Resource_fq8fl"), SubResource("Resource_ifc5r"), SubResource("Resource_cnuxj"), SubResource("Resource_vdwd8"), SubResource("Resource_v4yx2"), SubResource("Resource_dgo32"), SubResource("Resource_5w14w"), SubResource("Resource_77wxk"), SubResource("Resource_8qxt8"), SubResource("Resource_fhc23")])
+reference_image_path = "res://resources/missions/zack11_ref.png"

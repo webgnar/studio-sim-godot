@@ -5,6 +5,9 @@ extends Node3D
 @onready var continue_button: Button = $UI_Layer/TitleScreenUI/VBoxContainer/ContinueButton
 @onready var new_game_button: Button = $UI_Layer/TitleScreenUI/VBoxContainer/NewGameButton
 @onready var quit_button: Button = $UI_Layer/TitleScreenUI/VBoxContainer/QuitButton
+@onready var character = $humanrig
+
+var is_transitioning: bool = false
 
 func _ready():
 	# Set mouse mode to visible
@@ -90,12 +93,36 @@ func _check_save_exists() -> bool:
 
 func _on_continue_pressed():
 	"""Load the world scene - UIManager will load existing save data in its _ready()"""
-	get_tree().change_scene_to_file("res://scenes/world.tscn")
+	_transition_to_game("res://scenes/world.tscn", false)
 
 func _on_new_game_pressed():
 	"""Wipe all save data before loading world scene"""
-	_wipe_save_data()
-	get_tree().change_scene_to_file("res://scenes/world.tscn")
+	_transition_to_game("res://scenes/world.tscn", true)
+
+func _transition_to_game(scene_path: String, wipe_data: bool) -> void:
+	"""Handle transition to game with character animation and fade"""
+	if is_transitioning:
+		return  # Prevent multiple transitions
+
+	is_transitioning = true
+
+	# Disable input and buttons
+	set_process_input(false)
+	continue_button.disabled = true
+	new_game_button.disabled = true
+	quit_button.disabled = true
+
+	# Wipe save data if needed (before animation to ensure it completes)
+	if wipe_data:
+		_wipe_save_data()
+
+	# Play character exit animation if character exists
+	if character and character.has_method("play_exit_animation"):
+		character.play_exit_animation()
+		await character.exit_animation_completed
+
+	# Fade to scene using SceneTransition singleton
+	SceneTransition.fade_to_scene(scene_path)
 
 func _on_quit_pressed():
 	"""Quit the game"""

@@ -75,6 +75,21 @@ uv1_triplanar = true
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_08fpa"]
 albedo_texture = ExtResource("10_ijstc")
 
+[sub_resource type="Animation" id="Animation_37bcn"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(-0.22279128, 0, 0)]
+}
+
 [sub_resource type="Animation" id="Animation_hkayi"]
 resource_name = "pan"
 length = 30.0
@@ -90,21 +105,6 @@ tracks/0/keys = {
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1),
 "update": 0,
 "values": [Vector3(-0.22279128, 0, 0), Vector3(-0.22279125, 0.4210956, -9.530595e-10), Vector3(-0.22279128, 0, 0), Vector3(-0.22279127, -0.6363819, -1.1752935e-08), Vector3(-0.22279128, 0, 0)]
-}
-
-[sub_resource type="Animation" id="Animation_37bcn"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:rotation")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(-0.22279128, 0, 0)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_ureuc"]
@@ -972,7 +972,7 @@ shape = SubResource("BoxShape3D_juc6n")
 [node name="humanrig" parent="." instance=ExtResource("38_3yl86")]
 transform = Transform3D(-0.29999998, 0, 2.6226832e-08, 0, 0.29999998, 0, -2.6226832e-08, 0, -0.29999998, 0, 0, 8.204904)
 script = ExtResource("40_5h1vy")
-animation_name = "meditate"
+idle_duration = 2.0
 
 [node name="PaintingProp" parent="." instance=ExtResource("40_o51e6")]
 transform = Transform3D(-1.3113416e-09, 0, -0.03, 0, 0.03, 0, 0.03, 0, -1.3113416e-09, -3.6820433, 2, 1.9172513)

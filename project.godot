@@ -24,6 +24,7 @@ UIManager="*res://scripts/UIManager.gd"
 PaintingSpawner="*res://scripts/PaintingSpawner.gd"
 DebugPaintingConverter="*res://scripts/DebugPaintingConverter.gd"
 ValidationDebugOverlay="*res://scenes/UI/ValidationDebugOverlay.tscn"
+SceneTransition="*res://scripts/SceneTransition.gd"
 
 [display]
 
