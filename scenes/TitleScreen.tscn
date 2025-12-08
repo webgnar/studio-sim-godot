@@ -37,7 +37,7 @@
 [ext_resource type="Script" uid="uid://c63c2n2vhd5r6" path="res://scripts/old stuff/FanController.gd" id="35_37bcn"]
 [ext_resource type="AudioStream" uid="uid://ut8y785jdo3t" path="res://sounds/drone.ogg" id="36_ureuc"]
 [ext_resource type="PackedScene" uid="uid://bsbvqf088sigr" path="res://models/props/woodPallet.gltf" id="37_6ogcu"]
-[ext_resource type="PackedScene" uid="uid://c65tkba8onvwi" path="res://models/player/humanrig.glb" id="39_3yl86"]
+[ext_resource type="PackedScene" uid="uid://b4jc5oc0kffk" path="res://models/blender/humanrig.blend" id="38_3yl86"]
 [ext_resource type="Script" uid="uid://b0yviy0qx7100" path="res://scripts/TitleScreenCharacter.gd" id="40_5h1vy"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_888yl"]
@@ -470,7 +470,7 @@ transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 2.3344998, 2.467302, -6
 transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 2.3344998, 4.0959244, -6.759644)
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.9752845, 0.22095278, 0, -0.22095278, 0.9752845, 0, 1.8637362, 11)
+transform = Transform3D(1, 0, 0, 0, 0.9752845, 0.22095278, 0, -0.22095278, 0.9752845, 0, 1.1513119, 9.747228)
 
 [node name="UI_Layer" type="CanvasLayer" parent="."]
 
@@ -493,14 +493,19 @@ offset_bottom = 11.5
 grow_horizontal = 2
 grow_vertical = 2
 text = "Studio Sim"
+horizontal_alignment = 1
 
 [node name="VBoxContainer" type="VBoxContainer" parent="UI_Layer/TitleScreenUI"]
 layout_mode = 1
-anchors_preset = 2
+anchors_preset = 7
+anchor_left = 0.5
 anchor_top = 1.0
+anchor_right = 0.5
 anchor_bottom = 1.0
-offset_top = -40.0
-offset_right = 40.0
+offset_left = -46.5
+offset_top = -101.0
+offset_right = 46.5
+grow_horizontal = 2
 grow_vertical = 0
 
 [node name="ContinueButton" type="Button" parent="UI_Layer/TitleScreenUI/VBoxContainer"]
@@ -913,6 +918,7 @@ transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.05, -0.07, -0.1)
 shape = SubResource("BoxShape3D_juc6n")
 
-[node name="humanrig" parent="." instance=ExtResource("39_3yl86")]
-transform = Transform3D(-0.3, 0, -4.5298744e-08, 0, 0.3, 0, 4.5298744e-08, 0, -0.3, 0, 0.029128194, 8.119281)
+[node name="humanrig" parent="." instance=ExtResource("38_3yl86")]
+transform = Transform3D(-0.29999998, 0, 2.6226832e-08, 0, 0.29999998, 0, -2.6226832e-08, 0, -0.29999998, 0, 0, 8.204904)
 script = ExtResource("40_5h1vy")
+animation_name = "meditate"

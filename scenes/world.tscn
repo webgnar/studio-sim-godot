@@ -72,7 +72,7 @@
 [ext_resource type="PackedScene" uid="uid://bryic0ubsrfjn" path="res://models/interactables/buttonGreen.glb" id="81_swu3i"]
 [ext_resource type="Script" uid="uid://bsdnronq274dp" path="res://scripts/components/PaintingSubmitButton.gd" id="82_submit"]
 [ext_resource type="PackedScene" uid="uid://c8mhk3sajq2fn" path="res://scenes/UI/MissionHUD.tscn" id="83_hud"]
-[ext_resource type="PackedScene" uid="uid://6u7bns57r2hi" path="res://scenes/gun.tscn" id="83_n78cu"]
+[ext_resource type="PackedScene" uid="uid://6u7bns57r2hi" path="res://scenes/objects/gun.tscn" id="83_n78cu"]
 [ext_resource type="AudioStream" uid="uid://84rjpuccue2i" path="res://sounds/boomboxSwitch.ogg" id="boombox_switch"]
 [ext_resource type="AudioStream" uid="uid://8so1mqtnfhkh" path="res://sounds/box open 1.ogg" id="box_open_1"]
 [ext_resource type="AudioStream" uid="uid://bkyiswhv5fuaf" path="res://sounds/box open 2.ogg" id="box_open_2"]

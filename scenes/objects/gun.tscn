@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://d3xe7ak0wicts" path="res://sprites/muzzle.png" id="2_gp1hk"]
 [ext_resource type="Script" uid="uid://c8684i4bb34yr" path="res://scripts/components/WeaponComponent.gd" id="3_weapon"]
 [ext_resource type="Script" uid="uid://cbwg344irqecy" path="res://scripts/components/CarryableComponent.gd" id="4_carryable"]
-[ext_resource type="PackedScene" uid="uid://bxkss4pgguj5n" path="res://scenes/bullet.tscn" id="5_bullet"]
+[ext_resource type="PackedScene" uid="uid://bxkss4pgguj5n" path="res://scenes/objects/bullet.tscn" id="5_bullet"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_gun"]
 size = Vector3(0.21478271, 0.3873291, 0.5025635)
