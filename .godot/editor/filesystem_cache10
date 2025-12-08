@@ -15,7 +15,7 @@ mission_manifest_generator.gd::GDScript::128066778463115375::1764024214::0::1:::
 ::res://docs/::1763675314
 ::res://fonts/::1764320741
 vlad (1).ttf::FontFile::6949328113045925913::1762072340::1764320741::1::::<><><>0<>0<>870a26aa4e7954560cb02b03f23d7058<>res://.godot/imported/vlad (1).ttf-4c70419e7417731033c74bb206108e2b.fontdata::
-::res://materials/::1765174618
+::res://materials/::1765218738
 alley.tres::StandardMaterial3D::8419763837814347599::1761807134::0::1::::<><><>0<>0<><>::uid://b2ttptaroo824::::res://models/paintings/alley_Painting_Alley_12.jpg
 brickwhite.tres::StandardMaterial3D::2104820844770818005::1761081658::0::1::::<><><>0<>0<><>::uid://djd4xqb57hhr7::::res://sprites/brick_bump.jpg<>uid://dv58j61xl61oc::::res://sprites/brick_diffuse_ambient.png<>uid://bqkunprbwvn68::::res://sprites/brick_diffuse_normal.png
 floor.tres::StandardMaterial3D::1329459971527261149::1761079910::0::1::::<><><>0<>0<><>::uid://daneppyy5y8cp::::res://sprites/floor-cement-2.jpg<>uid://dcij21opo0juo::::res://sprites/normals/floor-cement-2_ambient.png<>uid://lcah2yte71x6::::res://sprites/normals/floor-cement-2_normal.png
@@ -29,6 +29,10 @@ painting4.tres::StandardMaterial3D::1765131188314702489::1765171638::0::1::::<><
 painting5.tres::StandardMaterial3D::864723577651051494::1765172616::0::1::::<><><>0<>0<><>::uid://bxoiuh056jvx7::::res://resources/missions/zack5_ref.png
 painting6.tres::StandardMaterial3D::8156228879209362733::1765172700::0::1::::<><><>0<>0<><>::uid://6wa7mlgsq3v1::::res://resources/missions/zack6_ref.png
 painting7.tres::StandardMaterial3D::5186701968574579374::1765174618::0::1::::<><><>0<>0<><>::uid://dwvganluhhce8::::res://resources/missions/zack7_ref.png
+painting8.tres::StandardMaterial3D::2233357859026416077::1765218576::0::1::::<><><>0<>0<><>::uid://bw5ieg2l0umui::::res://resources/missions/zack8_ref.png
+painting9.tres::StandardMaterial3D::9137164993124436125::1765218666::0::1::::<><><>0<>0<><>::uid://er002xlb33uo::::res://resources/missions/zack9_ref.png
+painting10.tres::StandardMaterial3D::9148297701994709749::1765218738::0::1::::<><><>0<>0<><>::uid://ugv3xmlcxj16::::res://resources/missions/zack10_ref.png
+painting11.tres::StandardMaterial3D::3043137849225113640::1765218738::0::1::::<><><>0<>0<><>::uid://ugv3xmlcxj16::::res://resources/missions/zack10_ref.png
 skeletonskin.tres::StandardMaterial3D::2398893118778631077::1761713575::0::1::::<><><>0<>0<><>::uid://bgjdwhnujebbp::::res://models/player/humanskeletonskin.png<>uid://bo86ppi867uwo::::res://sprites/normals/human skeleton rewrite_0_ambient.png<>uid://bgngbhxf10ne0::::res://sprites/normals/human skeleton rewrite_0_normal.png
 styrafoam.tres::StandardMaterial3D::357838594834801884::1762148276::0::1::::<><><>0<>0<><>::uid://xjei2i2hgmlp::::res://sprites/foam.png<>uid://cllrrouj62ony::::res://sprites/normals/foam_normal.png
 wall.tres::StandardMaterial3D::1203482867017653707::1761080715::0::1::::<><><>0<>0<><>::uid://fgkr11lem74k::::res://sprites/wall-new.jpg<>uid://bw6anp2m20wyf::::res://sprites/normals/wall-new_ambient.png<>uid://dhtvy1vi0gvek::::res://sprites/normals/wall-new_normal.png
@@ -178,7 +182,7 @@ window_3.png::CompressedTexture2D::8416963540277329472::1762243908::1764320742::
 woodPallet.gltf::PackedScene::3653188179263363965::1764300251::1764320746::1::::<><><>0<>0<>8ffa83969ca255bc0ca2c61f1efda530<>res://.godot/imported/woodPallet.gltf-a9ed822ab15b17360c05aaf1011e4617.scn::uid://duth3xxnuctow::::res://models/props/woodPallet_0.png
 woodPallet_0.png::CompressedTexture2D::8602738366530832110::1764300252::1764320742::1::::<><><>0<>0<>9e736cf0416b2a3a53983c7223357ace<>res://.godot/imported/woodPallet_0.png-7ead043ce9ce992d87cc72390329d570.s3tc.ctex::
 ::res://resources/::1764309761
-::res://resources/missions/::1765218033
+::res://resources/missions/::1765218249
 mission1.tres::Resource/PaintingMission::-1::1764739071::0::1::::<><><>0<>0<><>::
 mission1_ref.png::CompressedTexture2D::5529160157947433646::1764739071::1765169050::1::::<><><>0<>0<>76a5fb1518991ccb3a7549bd31c3cb14<>res://.godot/imported/mission1_ref.png-0c35a00f0a1b42cc7f8b86799aa71db9.s3tc.ctex::
 mission2.tres::Resource/PaintingMission::-1::1764739295::0::1::::<><><>0<>0<><>::
@@ -201,13 +205,13 @@ zack6_ref.png::CompressedTexture2D::2221328256343654516::1765172363::1765172673:
 zack7.tres::Resource/PaintingMission::-1::1765173852::0::1::::<><><>0<>0<><>::
 zack7_ref.png::CompressedTexture2D::8747133546622610585::1765173852::1765174536::1::::<><><>0<>0<>810471bfa0fa27a0b80facd3a1851c8e<>res://.godot/imported/zack7_ref.png-c69d87bb7196394de6632f40d3680f81.s3tc.ctex::
 zack8.tres::Resource/PaintingMission::-1::1765174023::0::1::::<><><>0<>0<><>::
-zack8_ref.png::CompressedTexture2D::3992999812853176880::1765174023::1765174040::1::::<><><>0<>0<>c0621687ef2be1d1d0b0db8a7e8fa047<>res://.godot/imported/zack8_ref.png-5a990fdeb45e4da6843f46e392a0fd29.ctex::
+zack8_ref.png::CompressedTexture2D::3992999812853176880::1765174023::1765218512::1::::<><><>0<>0<>a75999d0896b510329885b71feafe486<>res://.godot/imported/zack8_ref.png-5a990fdeb45e4da6843f46e392a0fd29.s3tc.ctex::
 zack9.tres::Resource/PaintingMission::-1::1765174263::0::1::::<><><>0<>0<><>::
-zack9_ref.png::CompressedTexture2D::317413820201144758::1765174263::1765174619::1::::<><><>0<>0<>3a4bde54769f52211980eba742f34aa4<>res://.godot/imported/zack9_ref.png-4eb83f06ac380dc968ab407a3f4be9fb.ctex::
+zack9_ref.png::CompressedTexture2D::317413820201144758::1765174263::1765218585::1::::<><><>0<>0<>7e08e7934ed50385482f0beb43a6c3c5<>res://.godot/imported/zack9_ref.png-4eb83f06ac380dc968ab407a3f4be9fb.s3tc.ctex::
 zack10.tres::Resource/PaintingMission::-1::1765217133::0::1::::<><><>0<>0<><>::
-zack10_ref.png::CompressedTexture2D::1417489425440523119::1765217133::1765217150::1::::<><><>0<>0<>6af5df14a3716f39ba01196b4ce8ba11<>res://.godot/imported/zack10_ref.png-5f9a6386500159b5fea3780ee3f1579a.ctex::
+zack10_ref.png::CompressedTexture2D::1417489425440523119::1765217133::1765218674::1::::<><><>0<>0<>def32621839a09e1e13346efff694af3<>res://.godot/imported/zack10_ref.png-5f9a6386500159b5fea3780ee3f1579a.s3tc.ctex::
 zack11.tres::Resource/PaintingMission::-1::1765218033::0::1::::<><><>0<>0<><>::
-zack11_ref.png::CompressedTexture2D::2601680885712539142::1765218032::1765218249::1::::<><><>0<>0<>0c5fc1cd68cd263fa1c4c8c47afb6089<>res://.godot/imported/zack11_ref.png-a92b7294d1ca56b651794d2030a62e7a.ctex::
+zack11_ref.png::CompressedTexture2D::2601680885712539142::1765218032::1765218746::1::::<><><>0<>0<>aef619c237e392a9492762dd61d42efa<>res://.godot/imported/zack11_ref.png-a92b7294d1ca56b651794d2030a62e7a.s3tc.ctex::
 ::res://scenes/::1765217672
 CarryablePainting.tscn::PackedScene::7123436180156521915::1764786807::0::1::::<><><>0<>0<><>::uid://cbwg344irqecy::::res://scripts/components/CarryableComponent.gd<>uid://guuhi66wtyyp::::res://models/stretcher.glb
 human.tscn::PackedScene::1698309852409355828::1761713575::0::1::::<><><>0<>0<><>::uid://sx0bao2oqis7::::res://models/player/human skeleton rewrite.glb
@@ -247,7 +251,7 @@ ShopUI.tscn::PackedScene::8783586071499042290::1764309143::0::1::::<><><>0<>0<><
 StickerSlot.tscn::PackedScene::1113315780334931::1764016211::0::1::::<><><>0<>0<><>::res://scripts/ui/StickerSlot.gd
 ValidationDebugOverlay.tscn::PackedScene::-1::1764791144::0::1::::<><><>0<>0<><>::res://scripts/ui/ValidationDebugOverlay.gd
 ValidationResultUI.tscn::PackedScene::598769645583896637::1764871829::0::1::::<><><>0<>0<><>::res://scripts/ui/ValidationResultUI.gd
-::res://scripts/::1765218220
+::res://scripts/::1765218378
 Bullet.gd::GDScript::4494185522286921364::1765049008::0::1::::Bullet<>RigidBody3D<><>0<>0<><>::
 CameraManager.gd::GDScript::5090965087567803578::1764536223::0::1::::<>Node<><>0<>0<><>::
 CameraZone.gd::GDScript::4337440007670042935::1764017871::0::1::::<>Area3D<><>0<>0<><>::
@@ -261,7 +265,7 @@ PlayerController.gd::GDScript::9198226878400670027::1764700274::0::1::::<>Charac
 PlayerInteractionComponent.gd::GDScript::7370778824892455188::1765050243::0::1::::PlayerInteractionComponent<>Node3D<><>0<>0<><>::
 PlayerLaserBeam.gd::GDScript::5626436999992710999::1762250067::0::1::::<>Node3D<><>0<>0<><>::
 SceneTransition.gd::GDScript::1910291983766664808::1765218220::0::1::::<>CanvasLayer<><>0<>0<><>::
-TitleScreenCharacter.gd::GDScript::4191977483880185219::1765217274::0::1::::<>Node3D<><>0<>0<><>::
+TitleScreenCharacter.gd::GDScript::4191977483880185219::1765218378::0::1::::<>Node3D<><>0<>0<><>::
 TitleScreenController.gd::GDScript::3360862336766886412::1765217308::0::1::::<>Node3D<><>0<>0<><>::
 UIManager.gd::GDScript::3514930045252719971::1764746961::0::1::::<>Node<><>0<>0<><>::
 WorldSetup.gd::GDScript::5696947886217552476::1764016591::0::1::::<>Node3D<><>0<>0<><>::

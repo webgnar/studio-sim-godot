@@ -1,4 +1,4 @@
-[gd_scene load_steps=83 format=3 uid="uid://da8jmxqyjt0xs"]
+[gd_scene load_steps=87 format=3 uid="uid://da8jmxqyjt0xs"]
 
 [ext_resource type="Script" uid="uid://bn5a584271aim" path="res://scripts/TitleScreenController.gd" id="1_2ktle"]
 [ext_resource type="Material" uid="uid://wwlsotlotycw" path="res://materials/wood.tres" id="1_hjcsb"]
@@ -46,6 +46,10 @@
 [ext_resource type="Material" uid="uid://mk44u4iickos" path="res://materials/painting5.tres" id="44_hkayi"]
 [ext_resource type="Material" uid="uid://dog65sdatf7px" path="res://materials/painting6.tres" id="45_37bcn"]
 [ext_resource type="Material" uid="uid://cf5qhur1stvis" path="res://materials/painting7.tres" id="46_37bcn"]
+[ext_resource type="Material" uid="uid://624cv0t17tb6" path="res://materials/painting8.tres" id="47_pe36d"]
+[ext_resource type="Material" uid="uid://d3gd1i8tfs2qr" path="res://materials/painting9.tres" id="48_q22b5"]
+[ext_resource type="Material" uid="uid://d3lrekkwqrp4x" path="res://materials/painting10.tres" id="49_u3ctg"]
+[ext_resource type="Material" uid="uid://bjmebhl4btt7u" path="res://materials/painting11.tres" id="50_juc6n"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_888yl"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -1019,9 +1023,41 @@ transform = Transform3D(-1.3113416e-09, 0, -0.03, 0, 0.03, 0, 0.03, 0, -1.311341
 transform = Transform3D(-33.500034, -2.9286643e-06, -2.9286653e-06, 2.928665e-06, 1.4643323e-06, -33.500034, 2.9286643e-06, -33.500034, -1.4643323e-06, 0, 0, -1.7421951)
 surface_material_override/0 = ExtResource("46_37bcn")
 
+[node name="PaintingProp8" parent="." instance=ExtResource("40_o51e6")]
+transform = Transform3D(-0.0024619843, 0.004608202, 0.029541548, 0.00038271947, 0.02964396, -0.0045922813, -0.029896356, 0, -0.002491554, 3.423449, 1.2509766, 5.1545067)
+
+[node name="MeshInstance3D" parent="PaintingProp8" index="1"]
+transform = Transform3D(-33.500034, -2.9286643e-06, -2.9286653e-06, 2.928665e-06, 1.4643323e-06, -33.500034, 2.9286643e-06, -33.500034, -1.4643323e-06, 0, 0, -1.7421951)
+surface_material_override/0 = ExtResource("47_pe36d")
+
+[node name="PaintingProp9" parent="." instance=ExtResource("40_o51e6")]
+transform = Transform3D(-0.016125498, 0.004075952, 0.02496707, 0.00038271945, 0.029643958, -0.0045922804, -0.025294697, -0.0021499149, -0.015986122, 3.1238892, 1.2509766, -0.9999409)
+
+[node name="MeshInstance3D" parent="PaintingProp9" index="1"]
+transform = Transform3D(-33.500034, -2.9286643e-06, -2.9286653e-06, 2.928665e-06, 1.4643323e-06, -33.500034, 2.9286643e-06, -33.500034, -1.4643323e-06, 0, 0, -1.7421951)
+surface_material_override/0 = ExtResource("48_q22b5")
+
+[node name="PaintingProp10" parent="." instance=ExtResource("40_o51e6")]
+transform = Transform3D(0.029999997, 0, 0, 0, 0.029999997, 0, 0, 0, 0.029999996, 2.2926242, 2.538917, 14.73918)
+
+[node name="MeshInstance3D" parent="PaintingProp10" index="1"]
+transform = Transform3D(-33.500034, -2.9286643e-06, -2.9286653e-06, 2.928665e-06, 1.4643323e-06, -33.500034, 2.9286643e-06, -33.500034, -1.4643323e-06, 0, 0, -1.7421951)
+surface_material_override/0 = ExtResource("49_u3ctg")
+
+[node name="PaintingProp11" parent="." instance=ExtResource("40_o51e6")]
+transform = Transform3D(0.029999997, 0, 0, 0, 0.029999997, 0, 0, 0, 0.029999996, -1.53525, 2.538917, 14.73918)
+
+[node name="MeshInstance3D" parent="PaintingProp11" index="1"]
+transform = Transform3D(-33.500034, -2.9286643e-06, -2.9286653e-06, 2.928665e-06, 1.4643323e-06, -33.500034, 2.9286643e-06, -33.500034, -1.4643323e-06, 0, 0, -1.7421951)
+surface_material_override/0 = ExtResource("50_juc6n")
+
 [editable path="PaintingProp2"]
 [editable path="PaintingProp3"]
 [editable path="PaintingProp4"]
 [editable path="PaintingProp5"]
 [editable path="PaintingProp6"]
 [editable path="PaintingProp7"]
+[editable path="PaintingProp8"]
+[editable path="PaintingProp9"]
+[editable path="PaintingProp10"]
+[editable path="PaintingProp11"]
