@@ -88,6 +88,8 @@ func play_exit_animation() -> void:
 		State.IDLE, State.EXITING:
 			# Already standing or exiting, just stay in idle
 			_play_animation("idle")
+			# Brief wait to ensure animation sequence timer can complete cleanly
+			await get_tree().create_timer(0.1).timeout
 
 	exit_animation_completed.emit()
 
