@@ -1,0 +1,5 @@
+[gd_scene load_steps=2 format=3 uid="uid://gv6172d2ngws"]
+
+[ext_resource type="PackedScene" uid="uid://b4jc5oc0kffk" path="res://models/blender/humanrig.blend" id="1_0ayjf"]
+
+[node name="humanrig" instance=ExtResource("1_0ayjf")]
