@@ -1,4 +1,4 @@
-[gd_scene load_steps=88 format=3 uid="uid://da8jmxqyjt0xs"]
+[gd_scene load_steps=89 format=3 uid="uid://da8jmxqyjt0xs"]
 
 [ext_resource type="Script" uid="uid://bn5a584271aim" path="res://scripts/TitleScreenController.gd" id="1_2ktle"]
 [ext_resource type="Material" uid="uid://wwlsotlotycw" path="res://materials/wood.tres" id="1_hjcsb"]
@@ -14,6 +14,7 @@
 [ext_resource type="PackedScene" uid="uid://kraxm2alr635" path="res://scenes/old stuff/breakable_window.tscn" id="11_y4bqf"]
 [ext_resource type="PackedScene" uid="uid://clyqlnamf1d2w" path="res://scenes/old stuff/wall_outlet.tscn" id="13_l7b4h"]
 [ext_resource type="Texture2D" uid="uid://ciyp25tao4x8l" path="res://sprites/ui/studio sim title.png" id="13_q22b5"]
+[ext_resource type="Theme" path="res://themes/ui_theme.tres" id="13_u3ctg"]
 [ext_resource type="PackedScene" uid="uid://c8duo4thyjdsv" path="res://models/props/spotlight.glb" id="14_q7lne"]
 [ext_resource type="PackedScene" uid="uid://xeaph8bqk1j1" path="res://models/props/pipe_red.glb" id="15_ijstc"]
 [ext_resource type="PackedScene" uid="uid://fjppju80c5ic" path="res://models/props/pipe_yellow.glb" id="16_y4bqf"]
@@ -557,6 +558,7 @@ text = "Continue"
 
 [node name="NewGameButton" type="Button" parent="UI_Layer/TitleScreenUI/VBoxContainer"]
 layout_mode = 2
+theme = ExtResource("13_u3ctg")
 text = "New Game"
 
 [node name="QuitButton" type="Button" parent="UI_Layer/TitleScreenUI/VBoxContainer"]

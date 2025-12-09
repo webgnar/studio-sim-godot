@@ -137,6 +137,15 @@ back_menu={
 3d_physics/layer_3="Moving Objects"
 3d_physics/layer_4="Interactables"
 
+[physics]
+
+3d/default_gravity=9.8
+3d/default_linear_damp=0.1
+3d/default_angular_damp=0.1
+3d/physics_ticks_per_second=60
+3d/solver/contact_max_allowed_penetration=0.001
+3d/solver/contact_recycle_radius=0.01
+
 [rendering]
 
 renderer/rendering_method="gl_compatibility"

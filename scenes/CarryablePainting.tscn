@@ -1,10 +1,13 @@
-[gd_scene load_steps=6 format=3 uid="uid://c8qv7n3hp2k4r"]
+[gd_scene load_steps=7 format=3 uid="uid://c8qv7n3hp2k4r"]
 
 [ext_resource type="Script" uid="uid://cbwg344irqecy" path="res://scripts/components/CarryableComponent.gd" id="1_carryable"]
 [ext_resource type="PackedScene" uid="uid://guuhi66wtyyp" path="res://models/stretcher.glb" id="2_stretcher"]
 
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_painting"]
+friction = 0.3
+
 [sub_resource type="BoxShape3D" id="BoxShape3D_carryable"]
-size = Vector3(3.0893555, 3.1093383, 0.13564453)
+size = Vector3(3.089, 3.109, 0.21)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_carryable"]
 size = Vector2(3, 3)
@@ -16,6 +19,13 @@ shading_mode = 0
 [node name="CarryablePainting" type="RigidBody3D" groups=["no_outline"]]
 collision_layer = 4
 collision_mask = 14
+mass = 5.0
+physics_material_override = SubResource("PhysicsMaterial_painting")
+continuous_cd = true
+contact_monitor = true
+max_contacts_reported = 8
+linear_damp = 1.5
+angular_damp = 2.0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0.004296899, -0.05982775, 0.005706668)

@@ -486,10 +486,10 @@ sticker_scale = 0.65
 preview_fade_delay = 1.0
 
 [node name="skyscraper" parent="." instance=ExtResource("75_qaasp")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, -62, 10)
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 1, -62.480858, 7.5424957)
 
 [node name="background" type="Node3D" parent="."]
-transform = Transform3D(2.17, 0, 0, 0, 2.17, 0, 0, 0, 2.17, 0, -111.63916, -6.685581)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -111.63916, -6.685581)
 
 [node name="sf road 1" parent="background" instance=ExtResource("66_5nedk")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -36.06504, -4.3903933, -14.761627)
@@ -504,6 +504,24 @@ transform = Transform3D(0.09742855, 0, -0.18603137, 0, 0.21, 0, 0.18603137, 0, 0
 transform = Transform3D(0.20413603, 0, -0.38978004, 0, 0.44, 0, 0.38978004, 0, 0.20413603, 1.9730511, -6.242266, -18.854856)
 
 [node name="condo thing2" parent="background" instance=ExtResource("70_8lgfd")]
+transform = Transform3D(3.8946845e-07, -2.97, -2.842171e-14, 2.97, 3.8946845e-07, -2.2698936e-14, 2.2698945e-14, -2.842171e-14, 2.97, 35.9851, -8.151672, -17.45153)
+
+[node name="background2" type="Node3D" parent="."]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, -23, -111.63916, -6.685581)
+
+[node name="sf road 1" parent="background2" instance=ExtResource("66_5nedk")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -36.06504, -4.3903933, -14.761627)
+
+[node name="swewer road 1" parent="background2" instance=ExtResource("68_5nedk")]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, -4.405945, 27.74163, -32.000565)
+
+[node name="tree" parent="background2" instance=ExtResource("69_40xph")]
+transform = Transform3D(0.09742855, 0, -0.18603137, 0, 0.21, 0, 0.18603137, 0, 0.09742855, -14.026949, -3.2422662, -16.854856)
+
+[node name="tree2" parent="background2" instance=ExtResource("69_40xph")]
+transform = Transform3D(0.20413603, 0, -0.38978004, 0, 0.44, 0, 0.38978004, 0, 0.20413603, 1.9730511, -6.242266, -18.854856)
+
+[node name="condo thing2" parent="background2" instance=ExtResource("70_8lgfd")]
 transform = Transform3D(3.8946845e-07, -2.97, -2.842171e-14, 2.97, 3.8946845e-07, -2.2698936e-14, 2.2698945e-14, -2.842171e-14, 2.97, 35.9851, -8.151672, -17.45153)
 
 [node name="celing" type="CSGBox3D" parent="."]
@@ -569,9 +587,10 @@ collision_layer = 2
 collision_mask = 0
 
 [node name="floor" type="CSGBox3D" parent="studio"]
-transform = Transform3D(22.413044, 0, 0, 0, 0.008010681, 0, 0, 0, 1.0114841, 10.744333, -0.47325248, 0)
+transform = Transform3D(22.413044, 0, 0, 0, 0.008010681, 0, 0, 0, 1.0114841, 10.744333, -0.5221257, 0)
 use_collision = true
 collision_mask = 0
+size = Vector3(1, 12.45, 1)
 material = ExtResource("1_k0juu")
 
 [node name="wall" type="CSGBox3D" parent="studio"]

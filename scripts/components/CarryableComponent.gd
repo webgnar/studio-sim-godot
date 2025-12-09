@@ -13,7 +13,7 @@ signal e_key_interacted(player_interaction_component: PlayerInteractionComponent
 @export_group("Carry Settings")
 @export var carry_distance_offset: float = 0.0 ## Offset from default carry position (negative = closer, positive = farther)
 @export var carry_smoothness: float = 10.0 ## Higher = snappier, lower = floatier (COGITO uses 10)
-@export var drop_distance: float = 1.5 ## Auto-drop if object gets this far from carry position
+@export var drop_distance: float = 1.2 ## Auto-drop if object gets this far from carry position
 @export var lock_rotation_when_carried: bool = true ## Prevents object from tumbling while held
 @export var gravity_while_carrying: float = 0.2 ## Gravity multiplier while carrying (0 = none, 1 = full, affects heavy objects)
 
@@ -21,6 +21,10 @@ signal e_key_interacted(player_interaction_component: PlayerInteractionComponent
 @export var throw_power: float = 15.0 ## Force applied when throwing
 @export var drop_power: float = 1.0 ## Force applied when gently dropping
 @export var impact_damage: float = 1.0 ## Damage dealt to breakable objects (0.5=light, 1.0=normal, 2.0=heavy)
+
+@export_group("Physics Constraints")
+@export var max_carry_linear_velocity: float = 10.0 ## Maximum speed while carried (prevents tunneling)
+@export var max_carry_angular_velocity: float = 6.0 ## Maximum rotation speed while carried (rad/s)
 
 @export_group("E-Key Interaction (Optional)")
 @export var has_e_key_interaction: bool = false ## Enable separate E-key interaction
@@ -41,6 +45,7 @@ var player_ref: PlayerInteractionComponent
 var is_carried: bool = false
 var carry_target: Vector3
 var last_impact_time: float = 0.0 ## Track last impact sound to enforce cooldown
+var original_collision_mask: int = 0 ## Store original collision mask to restore on drop
 
 # --- GODOT METHODS ---
 
@@ -76,11 +81,19 @@ func _physics_process(_delta: float) -> void:
 	
 	# Update carry target position
 	carry_target = player_ref.get_carry_position(carry_distance_offset)
-	
-	# Apply velocity toward target (smooth physics-based movement)
-	# This is THE KEY to COGITO's smooth carrying - use velocity, NOT position!
-	parent_rigid_body.linear_velocity = (carry_target - parent_rigid_body.global_position) * carry_smoothness
-	
+
+	# Calculate desired velocity toward target
+	var desired_velocity = (carry_target - parent_rigid_body.global_position) * carry_smoothness
+
+	# CRITICAL: Clamp velocity to prevent tunneling through walls
+	var clamped_velocity = desired_velocity.limit_length(max_carry_linear_velocity)
+	parent_rigid_body.linear_velocity = clamped_velocity
+
+	# CRITICAL: Clamp angular velocity to prevent spin exploits
+	var current_angular = parent_rigid_body.angular_velocity
+	if current_angular.length() > max_carry_angular_velocity:
+		parent_rigid_body.angular_velocity = current_angular.limit_length(max_carry_angular_velocity)
+
 	# Auto-drop if object gets too far away (prevents carrying through walls)
 	var distance = parent_rigid_body.global_position.distance_to(carry_target)
 	if distance >= drop_distance:
@@ -136,20 +149,23 @@ func pickup(player_interaction: PlayerInteractionComponent) -> void:
 		return
 
 	player_ref = player_interaction
-	
-	# Disable CCD while carrying (not needed for smooth velocity-based movement)
-	parent_rigid_body.continuous_cd = false
-	
+
+	# Store original collision mask so we can restore it on drop
+	original_collision_mask = parent_rigid_body.collision_mask
+
+	# Enable CCD while carrying to prevent tunneling through walls
+	parent_rigid_body.continuous_cd = true
+
 	# Reduce gravity while carrying (makes heavy objects feel weighty but manageable)
 	parent_rigid_body.gravity_scale = gravity_while_carrying
-	
+
 	# Configure physics state
 	if lock_rotation_when_carried:
 		parent_rigid_body.lock_rotation = true  # Prevents tumbling
-	
+
 	parent_rigid_body.freeze = false  # MUST be false to allow velocity movement
 	parent_rigid_body.angular_velocity = Vector3.ZERO  # Stop any spinning
-	
+
 	# Disable collision with player (layer 1) while carrying to prevent pushing
 	parent_rigid_body.collision_mask = parent_rigid_body.collision_mask & ~1  # Remove layer 1
 	
@@ -184,9 +200,9 @@ func drop() -> void:
 	
 	# Re-enable gravity
 	parent_rigid_body.gravity_scale = 1.0
-	
-	# Re-enable collision with player (layer 1)
-	parent_rigid_body.collision_mask = parent_rigid_body.collision_mask | 1  # Add layer 1 back
+
+	# Restore original collision mask (respects scene configuration)
+	parent_rigid_body.collision_mask = original_collision_mask
 	
 	# Tell player to stop carrying
 	if player_ref and is_instance_valid(player_ref):
@@ -251,13 +267,13 @@ func _monitor_throw_velocity() -> void:
 		
 		var speed = parent_rigid_body.linear_velocity.length()
 		
-		# If settled, disable CCD and stop monitoring
+		# If settled, stop monitoring (keep CCD enabled permanently to prevent tunneling)
 		if speed < settle_threshold:
-			parent_rigid_body.continuous_cd = false
+			# parent_rigid_body.continuous_cd = false  # CCD stays enabled
 			return
 
-	# If still moving after check frames, keep CCD enabled but stop monitoring
-	# It will get disabled on next pickup/drop cycle
+	# If still moving after check frames, keep CCD enabled and stop monitoring
+	# CCD remains permanently enabled to prevent tunneling
 
 # --- COLLISION HANDLING ---
 

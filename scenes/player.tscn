@@ -13,6 +13,7 @@ points = PackedVector3Array(-0.12520654, -0.532801, -0.4805069, 0.022783129, 0.4
 
 [node name="Player" type="CharacterBody3D"]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 0, 0)
+collision_layer = 1
 collision_mask = 11
 script = ExtResource("1_qlg0r")
 walk_speed = 3.0

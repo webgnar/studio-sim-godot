@@ -110,10 +110,9 @@ func _check_for_nearby_outlets() -> void:
 		if nearby_outlet:
 			near_outlet.emit(nearby_outlet)
 			was_near_outlet = true
-			
-			# Show hint to player
-			if is_instance_valid(player_ref):
-				player_ref.show_hint(null, "Press E to Plug In • Click to Throw")
+
+			# Hint is automatically shown through interaction_prompt_changed signal
+			# when PlayerInteractionComponent detects this carryable object
 	elif not closest_outlet and was_near_outlet:
 		left_outlet.emit()
 		was_near_outlet = false
