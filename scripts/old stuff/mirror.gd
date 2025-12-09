@@ -3,6 +3,9 @@ extends MeshInstance3D
 @onready var mirror_camera = $SubViewport/Camera3D
 @onready var player_camera = get_node("../Player/Head/Camera3D")  # Direct path to player camera
 
+@export var show_debug_logs: bool = false  # Toggle debug console output
+var debug_timer: float = 0.0  # Print debug every second, not every frame
+
 func _ready():
 	# Ensure the viewport is set up
 	var viewport = $SubViewport
@@ -44,11 +47,55 @@ func _process(_delta):
 		# Set the mirror camera's position
 		mirror_camera.global_transform.origin = reflected_pos
 		
-		# Calculate the reflected camera orientation
-		var player_forward = -player_camera.global_transform.basis.z.normalized()
-		var reflected_forward = player_forward - 2.0 * (player_forward.dot(mirror_normal)) * mirror_normal
-		var reflected_up = player_camera.global_transform.basis.x.normalized()
-		
-		# Set the mirror camera to look at the reflected target
-		var look_target = reflected_pos + reflected_forward
-		mirror_camera.global_transform = mirror_camera.global_transform.looking_at(look_target, reflected_up)
+		# Calculate the reflected camera orientation using quaternion-based basis reflection
+		# This avoids gimbal lock by reflecting all three basis vectors across the mirror plane
+		var player_basis = player_camera.global_transform.basis
+
+		# Reflect ALL three basis vectors across the mirror plane
+		var reflected_basis = Basis(
+			player_basis.x.reflect(mirror_normal),   # Right vector
+			player_basis.y.reflect(mirror_normal),   # Up vector
+			-player_basis.z.reflect(mirror_normal)   # Forward vector (negated to face mirror)
+		)
+
+		# Normalize to prevent floating point drift
+		reflected_basis = reflected_basis.orthonormalized()
+
+		# Create the complete reflected transform (absolute rotation, no gimbal lock)
+		var reflected_transform = Transform3D(reflected_basis, reflected_pos)
+		mirror_camera.global_transform = reflected_transform
+
+		# Mirror camera properties for accurate reflection
+		mirror_camera.fov = player_camera.fov
+
+		# Debug logging (prints once per second)
+		if show_debug_logs:
+			debug_timer += _delta
+			if debug_timer >= 1.0:
+				debug_timer = 0.0
+				_print_debug_info()
+
+func _print_debug_info():
+	print("\n=== MIRROR DEBUG ===")
+
+	var mirror_normal = global_transform.basis.y.normalized()
+	print("Mirror Normal (YELLOW): ", mirror_normal)
+
+	var player_basis = player_camera.global_transform.basis
+	print("\nPlayer Camera Basis:")
+	print("  Right (X/RED):    ", player_basis.x)
+	print("  Up (Y/GREEN):     ", player_basis.y)
+	print("  Forward (Z/BLUE): ", player_basis.z)
+
+	var mirror_basis = mirror_camera.global_transform.basis
+	print("\nMirror Camera Basis:")
+	print("  Right (X):   ", mirror_basis.x)
+	print("  Up (Y):      ", mirror_basis.y)
+	print("  Forward (Z): ", mirror_basis.z)
+
+	# Show what the reflection SHOULD be
+	print("\nExpected Reflections:")
+	print("  Right should be:   ", player_basis.x.reflect(mirror_normal))
+	print("  Up should be:      ", player_basis.y.reflect(mirror_normal))
+	print("  Forward should be: ", -player_basis.z.reflect(mirror_normal))
+	print("==================\n")

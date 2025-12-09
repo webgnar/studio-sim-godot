@@ -1,4 +1,4 @@
-[gd_scene load_steps=130 format=3 uid="uid://cnmivki1rop3b"]
+[gd_scene load_steps=125 format=3 uid="uid://cnmivki1rop3b"]
 
 [ext_resource type="Material" uid="uid://wwlsotlotycw" path="res://materials/wood.tres" id="1_4mrxx"]
 [ext_resource type="Texture2D" uid="uid://bke1xjp3mdreb" path="res://sprites/door.jpg" id="1_i7141"]
@@ -20,11 +20,7 @@
 [ext_resource type="PackedScene" uid="uid://dfy02uk1jbflb" path="res://models/props/light_switch box.glb" id="21_ts3gi"]
 [ext_resource type="PackedScene" uid="uid://bp08vdgdcjkvv" path="res://models/interactables/light_switch.glb" id="22_0nbtd"]
 [ext_resource type="AudioStream" uid="uid://cfqmga8or17qn" path="res://sounds/lightswitchON.ogg" id="23_l8ah6"]
-[ext_resource type="Script" uid="uid://djltcowfnfdh7" path="res://scripts/old stuff/mirror.gd" id="24_ctatt"]
 [ext_resource type="AudioStream" uid="uid://o3kakxscxwb1" path="res://sounds/lightswitchOFF.ogg" id="24_e75v4"]
-[ext_resource type="Script" uid="uid://dxwj5n7bxo3mk" path="res://scripts/old stuff/MirrorInteraction.gd" id="24_mirror"]
-[ext_resource type="Material" uid="uid://depuckvrgdvcl" path="res://materials/humanskin.tres" id="25_humanskin"]
-[ext_resource type="Material" uid="uid://bagboitufgv5v" path="res://materials/skeletonskin.tres" id="25_skeletonskin"]
 [ext_resource type="Shader" uid="uid://br4qh8mg5yosn" path="res://shaders/mirror.gdshader" id="25_xgqkh"]
 [ext_resource type="PackedScene" uid="uid://d0y6fk05wn5dc" path="res://models/interactables/cardboard box/box.glb" id="26_ts3gi"]
 [ext_resource type="PackedScene" uid="uid://tejn0hfpdhf7" path="res://models/interactables/cardboard box/box topL.glb" id="27_0nbtd"]
@@ -32,6 +28,7 @@
 [ext_resource type="Script" uid="uid://cftd54g3pgkr1" path="res://scripts/old stuff/LightSwitchInteraction.gd" id="29_lightswitch_new"]
 [ext_resource type="Script" uid="uid://d5m48bcsj83f" path="res://scripts/old stuff/BoxInteraction.gd" id="31_x28ej"]
 [ext_resource type="Script" uid="uid://cdcxs0jsffsfb" path="res://scripts/old stuff/BoomboxInteraction.gd" id="36_boombox_new"]
+[ext_resource type="PackedScene" uid="uid://bxi8jlwr1acc4" path="res://scenes/mirror.tscn" id="39_qaasp"]
 [ext_resource type="PackedScene" uid="uid://ddornft2ln8sq" path="res://models/interactables/boomBox.glb" id="41_rga7q"]
 [ext_resource type="PackedScene" uid="uid://bhsyl3tj8hblj" path="res://scenes/old stuff/brute trash can.tscn" id="46_18clu"]
 [ext_resource type="Script" uid="uid://cbwg344irqecy" path="res://scripts/components/CarryableComponent.gd" id="46_e68xj"]
@@ -156,22 +153,6 @@ _data = {
 [sub_resource type="BoxShape3D" id="BoxShape3D_l8ah6"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_e75v4"]
-
-[sub_resource type="PlaneMesh" id="PlaneMesh_kpybi"]
-resource_local_to_scene = true
-
-[sub_resource type="ViewportTexture" id="ViewportTexture_ctatt"]
-resource_name = "_albedo"
-viewport_path = NodePath("mirror/SubViewport")
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xgqkh"]
-resource_local_to_scene = true
-albedo_texture = SubResource("ViewportTexture_ctatt")
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_mirror"]
-size = Vector3(2, 2, 0.041088868)
-
-[sub_resource type="World3D" id="World3D_munwf"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_munwf"]
 
@@ -444,6 +425,18 @@ _data = {
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_kvmu4"]
 radius = 1.0
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_qaasp"]
+resource_local_to_scene = true
+size = Vector2(2.5, 3)
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_1v02h"]
+resource_name = "_albedo"
+viewport_path = NodePath("mirror/SubViewport")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_shehe"]
+resource_local_to_scene = true
+albedo_texture = SubResource("ViewportTexture_1v02h")
 
 [node name="World" type="Node3D"]
 script = ExtResource("1_qaasp")
@@ -1002,33 +995,9 @@ transform = Transform3D(0.014088948, -0.019586174, -0.62915206, 0.47128618, 0.04
 [node name="pipegraybent2" parent="electrical conduit" instance=ExtResource("19_kpybi")]
 transform = Transform3D(0.013917993, 0.06352692, -0.6286893, 0.017449299, 1.3355626, 0.030572794, 0.47172707, -0.05127709, 0.01741816, 58.345383, 9.54422, -27.782818)
 
-[node name="mirror" type="MeshInstance3D" parent="." groups=["no_outline"]]
-transform = Transform3D(0.15967436, -0.98716974, 7.2844835e-22, 0.98716974, 0.15967436, 0, -1.3524944e-22, 8.361653e-22, 0.86, 3.5676813, 1.0085149, 4.4239473)
-mesh = SubResource("PlaneMesh_kpybi")
-surface_material_override/0 = SubResource("StandardMaterial3D_xgqkh")
-script = ExtResource("24_ctatt")
-
-[node name="StaticBody3D" type="StaticBody3D" parent="mirror"]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="mirror/StaticBody3D"]
-transform = Transform3D(0.99995476, 0.0050280425, 0.008100539, -0.007948324, -0.029610021, 0.9995302, 0.005265377, -0.9995489, -0.029568743, 0.000238657, 0.029442072, -0.0008711815)
-shape = SubResource("BoxShape3D_mirror")
-
-[node name="MirrorInteraction" type="Node3D" parent="mirror"]
-script = ExtResource("24_mirror")
-human_skin_material = ExtResource("25_humanskin")
-skeleton_skin_material = ExtResource("25_skeletonskin")
-interaction_text = "Change"
-
-[node name="SubViewport" type="SubViewport" parent="mirror"]
-world_3d = SubResource("World3D_munwf")
-size = Vector2i(256, 256)
-
-[node name="Camera3D" type="Camera3D" parent="mirror/SubViewport"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8393148, 0)
-
 [node name="MirrorNew" type="MeshInstance3D" parent="."]
 transform = Transform3D(0.16199991, -0.9867908, 0, 0.9867908, 0.16199991, 0, 0, 0, 1, 3.6321473, 1.012416, 7)
+visible = false
 mesh = SubResource("PlaneMesh_munwf")
 surface_material_override/0 = SubResource("ShaderMaterial_ts3gi")
 
@@ -1319,6 +1288,11 @@ custom_interaction_distance = 15.0
 
 [node name="Gun" parent="." instance=ExtResource("83_n78cu")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2773702, 0)
+
+[node name="mirror" parent="." instance=ExtResource("39_qaasp")]
+transform = Transform3D(-5.1389563e-08, -0.9808397, 0.19481643, -3.4358173e-08, 0.19481643, 0.9808397, -1, 4.371139e-08, -4.371139e-08, 3.5101526, 1.4392705, 5.2320247)
+mesh = SubResource("PlaneMesh_qaasp")
+surface_material_override/0 = SubResource("StandardMaterial3D_shehe")
 
 [editable path="Styrofoam cube"]
 [editable path="CameraZone"]
