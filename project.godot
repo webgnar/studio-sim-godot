@@ -145,6 +145,9 @@ back_menu={
 3d/physics_ticks_per_second=60
 3d/solver/contact_max_allowed_penetration=0.001
 3d/solver/contact_recycle_radius=0.01
+3d/sleep_threshold_linear=0.1
+3d/sleep_threshold_angular=0.139626
+3d/time_before_sleep=0.2
 
 [rendering]
 

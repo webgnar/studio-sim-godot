@@ -4,7 +4,8 @@
 [ext_resource type="PackedScene" uid="uid://guuhi66wtyyp" path="res://models/stretcher.glb" id="2_stretcher"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_painting"]
-friction = 0.3
+friction = 0.8
+bounce = 0.0
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_carryable"]
 size = Vector3(3.089, 3.109, 0.21)
@@ -22,10 +23,8 @@ collision_mask = 14
 mass = 5.0
 physics_material_override = SubResource("PhysicsMaterial_painting")
 continuous_cd = true
-contact_monitor = true
-max_contacts_reported = 8
-linear_damp = 1.5
-angular_damp = 2.0
+linear_damp = 2.5
+angular_damp = 3.0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0.004296899, -0.05982775, 0.005706668)

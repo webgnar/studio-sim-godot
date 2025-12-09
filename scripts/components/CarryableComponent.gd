@@ -61,17 +61,16 @@ func _ready() -> void:
 	# Ensure audio player exists for our sounds (parent might not have created one)
 	_ensure_audio_player()
 
-	# Enable contact monitoring for collision detection (required for body_entered/body_shape_entered signals)
-	parent_rigid_body.contact_monitor = true
-	parent_rigid_body.max_contacts_reported = 4  # Track up to 4 contact points (good balance)
-
-	# Connect to collision signal for auto-drop on player collision
+	# Connect to collision signals (will enable contact monitoring only when needed)
 	if parent_rigid_body.has_signal("body_entered"):
 		parent_rigid_body.body_entered.connect(_on_body_entered)
 
-	# Connect to collision signal for impact sounds
 	if parent_rigid_body.has_signal("body_shape_entered"):
 		parent_rigid_body.body_shape_entered.connect(_on_body_shape_entered)
+
+	# Connect to sleeping_state_changed to manage contact monitoring efficiently
+	if parent_rigid_body.has_signal("sleeping_state_changed"):
+		parent_rigid_body.sleeping_state_changed.connect(_on_sleeping_state_changed)
 
 	interaction_text = "Pick Up"
 
@@ -152,6 +151,10 @@ func pickup(player_interaction: PlayerInteractionComponent) -> void:
 
 	# Store original collision mask so we can restore it on drop
 	original_collision_mask = parent_rigid_body.collision_mask
+
+	# Enable contact monitoring for collision detection while carrying
+	parent_rigid_body.contact_monitor = true
+	parent_rigid_body.max_contacts_reported = 10
 
 	# Enable CCD while carrying to prevent tunneling through walls
 	parent_rigid_body.continuous_cd = true
@@ -276,6 +279,16 @@ func _monitor_throw_velocity() -> void:
 	# CCD remains permanently enabled to prevent tunneling
 
 # --- COLLISION HANDLING ---
+
+func _on_sleeping_state_changed() -> void:
+	"""Manage contact monitoring based on sleep state for performance and stability"""
+	if parent_rigid_body.sleeping:
+		# Disable contact monitoring when sleeping to allow proper sleep and save CPU
+		parent_rigid_body.contact_monitor = false
+	else:
+		# Enable contact monitoring when awake for impact sounds and collision detection
+		parent_rigid_body.contact_monitor = true
+		parent_rigid_body.max_contacts_reported = 10
 
 func _on_body_entered(body: Node) -> void:
 	"""Auto-drop if carried object collides with player"""
