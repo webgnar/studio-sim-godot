@@ -8,3 +8,5 @@ res://themes/ui_theme.tres
 res://scripts/components/PowerCordPlugComponent.gd
 res://scenes/world.tscn
 res://scenes/CarryablePainting.tscn
+res://scripts/painting/PaintingSystem2D.gd
+res://scripts/painting/PlacedLayer2D.gd

@@ -5,7 +5,6 @@
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_painting"]
 friction = 0.8
-bounce = 0.0
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_carryable"]
 size = Vector3(3.089, 3.109, 0.21)

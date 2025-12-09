@@ -8,6 +8,7 @@ var id: String  # Sticker ID (matches library definition)
 var node: Sprite2D  # The actual Sprite2D node in the scene
 var order: int  # Z-index for layering
 var rotation_deg: float = 0.0  # Current rotation in degrees
+var scale_multiplier: float = 1.0  # Scale multiplier applied to this sticker
 
 func _init(p_id: String, p_node: Sprite2D, p_order: int):
 	id = p_id

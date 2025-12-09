@@ -39,10 +39,17 @@ var viewport_size: Vector2
 # Preview sticker (shows where sticker will be placed before clicking)
 var preview_sprite: Sprite2D = null
 var preview_rotation: float = -90.0  # Rotation in degrees (starts at -90 to match plane orientation)
+var preview_scale_multiplier: float = 1.0  # Scale multiplier (1.0 = default size)
 
 # Preview fade-out settings
 @export var preview_fade_delay: float = 2.0  # Seconds of idle before fade starts
 @export var preview_fade_speed: float = 3.0  # How fast it fades (higher = faster)
+
+# Preview scale settings
+@export var scale_speed: float = 0.5  # Scale change per second when button held
+@export var min_scale: float = 0.2  # Minimum scale (20% of original)
+@export var max_scale: float = 3.0  # Maximum scale (300% of original)
+
 var preview_idle_time: float = 0.0
 var preview_last_position: Vector2 = Vector2.ZERO
 var preview_target_opacity: float = 0.5
@@ -203,6 +210,12 @@ func _process(delta):
 	if Input.is_action_just_pressed("rotate_clockwise"):
 		rotate_preview(1)  # Clockwise
 
+	# Handle preview scaling (continuous while button held)
+	if Input.is_action_pressed("scale_sticker_up"):
+		scale_preview(delta, 1)  # Increase scale
+	elif Input.is_action_pressed("scale_sticker_down"):
+		scale_preview(delta, -1)  # Decrease scale
+
 	# Handle z-order adjustment
 	if selected_layer and Input.is_action_just_pressed("ui_up"):
 		raise_layer_order(selected_layer)
@@ -322,10 +335,8 @@ func _update_preview_texture():
 	var definition = sticker_library[selected_sticker_index]
 	preview_sprite.texture = definition.texture
 
-	# Update scale to match how stickers will actually be placed
-	var texture_size = definition.texture.get_size()
-	var scale_factor = sticker_scale * viewport_size.x / max(texture_size.x, texture_size.y)
-	preview_sprite.scale = Vector2(scale_factor, scale_factor)
+	# Update scale using the new function
+	_update_preview_scale()
 
 func rotate_preview(direction: int):
 	"""Rotate the preview sprite by 90 degrees"""
@@ -343,6 +354,34 @@ func rotate_preview(direction: int):
 
 	# Apply rotation to preview sprite
 	preview_sprite.rotation_degrees = preview_rotation
+
+func scale_preview(delta: float, direction: int):
+	"""Scale the preview sprite continuously while button is held"""
+	if not preview_sprite:
+		return
+
+	# Adjust scale multiplier based on delta time for smooth continuous scaling
+	preview_scale_multiplier += (direction * scale_speed * delta)
+
+	# Clamp to min/max range
+	preview_scale_multiplier = clamp(preview_scale_multiplier, min_scale, max_scale)
+
+	# Update preview sprite scale
+	_update_preview_scale()
+
+func _update_preview_scale():
+	"""Update preview sprite scale based on current multiplier"""
+	if not preview_sprite or sticker_library.is_empty():
+		return
+
+	var definition = sticker_library[selected_sticker_index]
+	var texture_size = definition.texture.get_size()
+
+	# Apply base scale calculation with multiplier
+	var base_scale = sticker_scale * viewport_size.x / max(texture_size.x, texture_size.y)
+	var final_scale = base_scale * preview_scale_multiplier
+
+	preview_sprite.scale = Vector2(final_scale, final_scale)
 
 func spawn_sticker(world_position: Vector3):
 	"""Spawn a new sticker at the given world position"""
@@ -362,10 +401,11 @@ func spawn_sticker(world_position: Vector3):
 	sprite.position = viewport_pos
 	sprite.z_index = next_order
 
-	# Scale sticker to fit canvas proportionally
+	# Scale sticker to fit canvas proportionally with user's scale multiplier
 	var texture_size = definition.texture.get_size()
-	var scale_factor = sticker_scale * viewport_size.x / max(texture_size.x, texture_size.y)
-	sprite.scale = Vector2(scale_factor, scale_factor)
+	var base_scale = sticker_scale * viewport_size.x / max(texture_size.x, texture_size.y)
+	var final_scale = base_scale * preview_scale_multiplier
+	sprite.scale = Vector2(final_scale, final_scale)
 
 	# Apply rotation from preview sprite
 	sprite.rotation_degrees = preview_rotation
@@ -376,6 +416,7 @@ func spawn_sticker(world_position: Vector3):
 	# Create placed layer data
 	var placed = PlacedLayer2D.new(definition.id, sprite, next_order)
 	placed.rotation_deg = preview_rotation  # Track the rotation that was set in preview
+	placed.scale_multiplier = preview_scale_multiplier  # Track the scale multiplier
 	placed_layers.append(placed)
 
 	next_order += 1
