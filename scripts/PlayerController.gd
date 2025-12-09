@@ -302,11 +302,9 @@ func _unhandled_input(event: InputEvent) -> void:
 
 	# You can also handle other inputs here, like pausing the game.
 	if Input.is_action_just_pressed("ui_cancel"): # ESC key
-		# Toggle mouse capture
+		# Only release mouse, never capture it (UIManager handles capture)
 		if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-		else:
-			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 func _exit_tree() -> void:
 	# Make sure to release the mouse when the player object is removed.

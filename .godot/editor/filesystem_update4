@@ -10,3 +10,8 @@ res://scenes/world.tscn
 res://scenes/CarryablePainting.tscn
 res://scripts/painting/PaintingSystem2D.gd
 res://scripts/painting/PlacedLayer2D.gd
+res://scripts/PlayerController.gd
+res://scripts/ui/MissionAuthoringUI.gd
+res://scripts/ui/MissionResultsViewer.gd
+res://scripts/ui/MissionSelectionUI.gd
+res://scripts/ui/ValidationResultUI.gd

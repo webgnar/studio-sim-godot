@@ -254,8 +254,8 @@ func _input(event):
 	if not viewport:
 		return
 
-	# Back menu input or Escape to close
-	if event.is_action_pressed("back_menu") or event.is_action_pressed("ui_cancel"):
+	# Go back to close
+	if event.is_action_pressed("go_back"):
 		_on_back_pressed()
 		viewport.set_input_as_handled()
 		return

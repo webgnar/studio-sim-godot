@@ -94,8 +94,8 @@ func _input(event):
 	if not viewport:
 		return
 
-	# Start button or back_menu to close dialog (works in both modes)
-	if event.is_action_pressed("start") or event.is_action_pressed("back_menu"):
+	# Start button or go_back to close dialog (works in both modes)
+	if event.is_action_pressed("start") or event.is_action_pressed("go_back"):
 		if nav_mode == NavMode.PREVIEW_BUTTONS:
 			_exit_preview_mode()
 		else:

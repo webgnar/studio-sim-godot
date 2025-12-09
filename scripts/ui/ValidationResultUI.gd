@@ -80,8 +80,8 @@ func _input(event):
 		get_viewport().set_input_as_handled()
 		return
 
-	# Back menu input or Escape to go back to missions
-	if event.is_action_pressed("back_menu") or event.is_action_pressed("ui_cancel"):
+	# Go back to missions
+	if event.is_action_pressed("go_back"):
 		_on_back_to_missions()
 		get_viewport().set_input_as_handled()
 		return

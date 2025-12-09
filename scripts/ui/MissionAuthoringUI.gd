@@ -45,8 +45,8 @@ func _input(event):
 				get_viewport().set_input_as_handled()
 				return
 
-		# Escape to close dialog
-		if event.is_action_pressed("ui_cancel"):
+		# Go back to close dialog
+		if event.is_action_pressed("go_back"):
 			_close_dialog()
 			get_viewport().set_input_as_handled()
 			return
