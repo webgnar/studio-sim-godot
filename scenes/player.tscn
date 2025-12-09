@@ -30,11 +30,13 @@ visible = false
 mesh = SubResource("CapsuleMesh_k0juu")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.697766e-09, 0, 0.22185904)
 shape = SubResource("ConvexPolygonShape3D_71j4m")
 
 [node name="human" parent="." instance=ExtResource("2_tuyoq")]
 transform = Transform3D(0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, -3.1932013e-09, -0.94919425, 0.20556492)
 script = ExtResource("3_fjrip")
+idle_speed = 3.0
 walk_speed = 3.0
 run_speed = 3.0
 

@@ -1,3 +1,4 @@
+TextureRect
 AnimationPlayer
 MeshInstance3D
 CollisionShape3D
