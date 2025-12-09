@@ -50,6 +50,9 @@ var preview_scale_multiplier: float = 1.0  # Scale multiplier (1.0 = default siz
 @export var min_scale: float = 0.2  # Minimum scale (20% of original)
 @export var max_scale: float = 3.0  # Maximum scale (300% of original)
 
+# Preview rotation settings
+@export var rotation_speed: float = 90.0  # Rotation degrees per second when button held
+
 var preview_idle_time: float = 0.0
 var preview_last_position: Vector2 = Vector2.ZERO
 var preview_target_opacity: float = 0.5
@@ -204,11 +207,11 @@ func _process(delta):
 	if Input.is_action_just_pressed("ui_text_delete"):
 		delete_selected_layer()
 
-	# Handle rotation of preview sprite (90 degree snapping)
-	if Input.is_action_just_pressed("rotate_counter"):
-		rotate_preview(-1)  # Counter-clockwise
-	if Input.is_action_just_pressed("rotate_clockwise"):
-		rotate_preview(1)  # Clockwise
+	# Handle rotation of preview sprite (continuous while button held)
+	if Input.is_action_pressed("rotate_counter"):
+		rotate_preview(delta, -1)  # Counter-clockwise
+	elif Input.is_action_pressed("rotate_clockwise"):
+		rotate_preview(delta, 1)  # Clockwise
 
 	# Handle preview scaling (continuous while button held)
 	if Input.is_action_pressed("scale_sticker_up"):
@@ -338,14 +341,13 @@ func _update_preview_texture():
 	# Update scale using the new function
 	_update_preview_scale()
 
-func rotate_preview(direction: int):
-	"""Rotate the preview sprite by 90 degrees"""
+func rotate_preview(delta: float, direction: int):
+	"""Rotate the preview sprite continuously while button is held"""
 	if not preview_sprite:
 		return
 
-	# Snap to 90-degree increments
-	var rotation_step = 90.0 * direction
-	preview_rotation += rotation_step
+	# Rotate smoothly based on delta time
+	preview_rotation += (direction * rotation_speed * delta)
 
 	# Normalize to 0-360 range
 	preview_rotation = fmod(preview_rotation, 360.0)
