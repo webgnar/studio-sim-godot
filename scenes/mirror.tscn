@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://bxi8jlwr1acc4"]
+[gd_scene load_steps=9 format=3 uid="uid://bxi8jlwr1acc4"]
 
 [ext_resource type="Script" uid="uid://djltcowfnfdh7" path="res://scripts/old stuff/mirror.gd" id="1_5823m"]
 [ext_resource type="Script" uid="uid://dxwj5n7bxo3mk" path="res://scripts/old stuff/MirrorInteraction.gd" id="2_0dm0a"]
@@ -19,8 +19,6 @@ albedo_texture = SubResource("ViewportTexture_ctatt")
 [sub_resource type="BoxShape3D" id="BoxShape3D_mirror"]
 size = Vector3(2, 2, 0.041088868)
 
-[sub_resource type="World3D" id="World3D_munwf"]
-
 [node name="mirror" type="MeshInstance3D" groups=["no_outline"]]
 transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0, 0)
 mesh = SubResource("PlaneMesh_kpybi")
@@ -31,7 +29,7 @@ show_debug_logs = true
 [node name="StaticBody3D" type="StaticBody3D" parent="."]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
-transform = Transform3D(0.99995476, 0.0050280425, 0.008100539, -0.007948324, -0.029610021, 0.9995302, 0.005265377, -0.9995489, -0.029568743, 0.000238657, 0.029442072, -0.0008711815)
+transform = Transform3D(0.9999528, 0.005110115, 0.008288447, -0.008129699, -0.030340433, 0.9995068, 0.005359085, -0.99952656, -0.030297458, 0.000238657, 0.02945286, -0.0008711815)
 shape = SubResource("BoxShape3D_mirror")
 
 [node name="MirrorInteraction" type="Node3D" parent="."]
@@ -41,7 +39,6 @@ skeleton_skin_material = ExtResource("4_ev2bd")
 interaction_text = "Change"
 
 [node name="SubViewport" type="SubViewport" parent="."]
-world_3d = SubResource("World3D_munwf")
 size = Vector2i(256, 256)
 
 [node name="Camera3D" type="Camera3D" parent="SubViewport"]

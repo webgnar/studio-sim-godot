@@ -18,9 +18,24 @@ func _ready():
 	
 	# Prevent the mirror camera from seeing the mirror itself (avoid infinite loop)
 	# Put the mirror on layer 2, keep everything else on layer 1
-	set_layer_mask_value(1, false)  # Remove from layer 1 
+	set_layer_mask_value(1, false)  # Remove from layer 1
 	set_layer_mask_value(2, true)   # Put mirror on layer 2
 	mirror_camera.cull_mask = 1     # Camera only sees layer 1 (not layer 2 = not the mirror)
+
+	# Prevent environment doubling - mirror uses same environment from world
+	# Setting these can prevent light/reflection doubling issues
+	# mirror_camera.environment = null  # Uncomment if lights still double
+
+	# Set near plane to prevent rendering walls directly behind mirror
+	mirror_camera.near = 0.1  # Don't render anything closer than 0.1 units
+
+	# Debug: Print mirror camera settings
+	if show_debug_logs:
+		print("Mirror Camera Setup:")
+		print("  Cull Mask: ", mirror_camera.cull_mask)
+		print("  Near Plane: ", mirror_camera.near)
+		print("  Environment: ", mirror_camera.environment)
+		print("  Attributes: ", mirror_camera.attributes)
 	
 	# Ensure the material is using the viewport texture
 	var material = get_surface_override_material(0)
@@ -38,11 +53,13 @@ func _process(_delta):
 		var distance_to_mirror = mirror_normal.dot(player_cam_pos - mirror_position)
 		var reflected_pos = player_cam_pos - 2.0 * distance_to_mirror * mirror_normal
 		
-		# Clamp the mirror camera to not go too far behind the mirror surface
-		var max_distance_behind = 0.2  # Adjust this value as needed
+		# Clamp the mirror camera to NEVER go behind the mirror surface
+		# This prevents the camera from clipping through walls behind the mirror
+		# which causes the sun (DirectionalLight) to render from the wrong side
 		var distance_behind_mirror = mirror_normal.dot(mirror_position - reflected_pos)
-		if distance_behind_mirror > max_distance_behind:
-			reflected_pos = mirror_position - mirror_normal * max_distance_behind
+		if distance_behind_mirror > 0:
+			# Keep camera exactly at the mirror surface, don't go behind at all
+			reflected_pos = mirror_position
 		
 		# Set the mirror camera's position
 		mirror_camera.global_transform.origin = reflected_pos
