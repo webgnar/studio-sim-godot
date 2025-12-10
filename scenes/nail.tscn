@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://6xndsxtt8l2d"]
+
+[ext_resource type="PackedScene" uid="uid://b3g0y1ku7myi3" path="res://models/interactables/nail.glb" id="1_gfhg5"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ao7l2"]
+size = Vector3(0.46624756, 0.07183838, 0.10083008)
+
+[node name="Nail" type="RigidBody3D"]
+
+[node name="default" parent="." instance=ExtResource("1_gfhg5")]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.056488037, -0.0018615723, 0.00012207031)
+shape = SubResource("BoxShape3D_ao7l2")

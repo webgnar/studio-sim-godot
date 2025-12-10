@@ -1,0 +1,28 @@
+[gd_scene load_steps=6 format=3 uid="uid://ctu3xtbhbgtub"]
+
+[ext_resource type="Script" uid="uid://e8axlibrd18j" path="res://scripts/components/NailGunComponent.gd" id="1_nailgun"]
+[ext_resource type="Script" uid="uid://cbwg344irqecy" path="res://scripts/components/CarryableComponent.gd" id="2_tih70"]
+[ext_resource type="PackedScene" uid="uid://cu7k34k6anyy3" path="res://models/interactables/nail_gun.glb" id="3_83it2"]
+[ext_resource type="PackedScene" uid="uid://bx3k8m7qwn2pd" path="res://scenes/WallNail.tscn" id="4_wallnail"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_7rh32"]
+size = Vector3(1.0625, 0.87390137, 0.25830078)
+
+[node name="NailGun" type="RigidBody3D"]
+collision_layer = 8
+collision_mask = 2
+
+[node name="NailGunComponent" type="Node3D" parent="."]
+script = ExtResource("1_nailgun")
+nail_scene = ExtResource("4_wallnail")
+
+[node name="CarryableComponent" type="Node3D" parent="."]
+script = ExtResource("2_tih70")
+metadata/_custom_type_script = "uid://cbwg344irqecy"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.03125, -0.06304932, -0.006591797)
+shape = SubResource("BoxShape3D_7rh32")
+
+[node name="model" parent="." instance=ExtResource("3_83it2")]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)

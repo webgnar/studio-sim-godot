@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://isbwb03yee7n"]
 
-[ext_resource type="Script" path="res://scripts/ui/ValidationResultUI.gd" id="1_result"]
+[ext_resource type="Script" uid="uid://ci6lixgsw804b" path="res://scripts/ui/ValidationResultUI.gd" id="1_result"]
 
 [node name="ValidationResultUI" type="Control"]
 layout_mode = 3
@@ -13,7 +13,6 @@ mouse_filter = 2
 script = ExtResource("1_result")
 
 [node name="Dialog" type="PanelContainer" parent="."]
-visible = false
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -228,8 +227,3 @@ text = "Retry (R)"
 custom_minimum_size = Vector2(150, 50)
 layout_mode = 2
 text = "Missions (Esc)"
-
-[node name="HelpLabel" type="Label" parent="Dialog/MarginContainer/ScrollContainer/VBoxContainer"]
-layout_mode = 2
-text = "R: Retry Mission | Esc: Back to Mission Selection"
-horizontal_alignment = 1

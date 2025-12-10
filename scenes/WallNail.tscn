@@ -1,0 +1,32 @@
+[gd_scene load_steps=5 format=3 uid="uid://bx3k8m7qwn2pd"]
+
+[ext_resource type="Script" uid="uid://b4jpkjxufcb2t" path="res://scripts/components/NailComponent.gd" id="1_nail_component"]
+[ext_resource type="PackedScene" uid="uid://b3g0y1ku7myi3" path="res://models/interactables/nail.glb" id="2_nail_model"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_nail_collision"]
+size = Vector3(0.1, 0.1, 0.5)
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_detection"]
+
+[node name="WallNail" type="StaticBody3D"]
+
+[node name="NailComponent" type="Node3D" parent="."]
+script = ExtResource("1_nail_component")
+painting_socket_marker = NodePath("../PaintingSocket")
+
+[node name="nail_model" parent="." instance=ExtResource("2_nail_model")]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
+
+[node name="PaintingSocket" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.15)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0, 0)
+shape = SubResource("BoxShape3D_nail_collision")
+
+[node name="DetectionArea" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="DetectionArea"]
+shape = SubResource("SphereShape3D_detection")
+
+[editable path="nail_model"]

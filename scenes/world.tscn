@@ -1,4 +1,4 @@
-[gd_scene load_steps=132 format=3 uid="uid://cnmivki1rop3b"]
+[gd_scene load_steps=133 format=3 uid="uid://cnmivki1rop3b"]
 
 [ext_resource type="Material" uid="uid://wwlsotlotycw" path="res://materials/wood.tres" id="1_4mrxx"]
 [ext_resource type="Texture2D" uid="uid://bke1xjp3mdreb" path="res://sprites/door.jpg" id="1_i7141"]
@@ -69,6 +69,7 @@
 [ext_resource type="PackedScene" uid="uid://db8764j2674fq" path="res://models/props/outlet_box.glb" id="79_swu3i"]
 [ext_resource type="PackedScene" uid="uid://d2hcs1m04uvg7" path="res://models/interactables/button.glb" id="80_oexs8"]
 [ext_resource type="Script" uid="uid://byo8qed1v1rkt" path="res://scripts/components/PaintingConvertButton.gd" id="81_n78cu"]
+[ext_resource type="PackedScene" uid="uid://ctu3xtbhbgtub" path="res://scenes/NailGun.tscn" id="81_oexs8"]
 [ext_resource type="PackedScene" uid="uid://cra27ims6pb5n" path="res://scenes/UI/MissionResultsViewer.tscn" id="81_results_viewer"]
 [ext_resource type="PackedScene" uid="uid://bryic0ubsrfjn" path="res://models/interactables/buttonGreen.glb" id="81_swu3i"]
 [ext_resource type="Script" uid="uid://bsdnronq274dp" path="res://scripts/components/PaintingSubmitButton.gd" id="82_submit"]
@@ -106,9 +107,6 @@ uv1_scale = Vector3(1.085, -1.798, 0.455)
 uv1_offset = Vector3(4.91, 0, 0)
 uv1_triplanar = true
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4mrxx"]
-albedo_texture = ExtResource("1_i7141")
-
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_oexs8"]
 albedo_texture = ExtResource("21_l137e")
 normal_enabled = true
@@ -119,6 +117,9 @@ ao_light_affect = 0.08
 ao_texture = ExtResource("22_ygn2i")
 uv1_scale = Vector3(9.53, 2.89, 2.89)
 uv1_offset = Vector3(0, -1, 0)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4mrxx"]
+albedo_texture = ExtResource("1_i7141")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xo05s"]
 albedo_texture = ExtResource("14_o8fc1")
@@ -478,7 +479,6 @@ painting_system_2d = NodePath("../../PaintingRoot2d/CanvasViewport/CanvasRoot")
 [node name="GameplayUI_Layer" type="CanvasLayer" parent="."]
 
 [node name="MissionSelectionUI" parent="GameplayUI_Layer" instance=ExtResource("77_select")]
-theme = ExtResource("4_ygn2i")
 
 [node name="ValidationResultUI" parent="GameplayUI_Layer" instance=ExtResource("78_result")]
 theme = ExtResource("4_ygn2i")
@@ -611,6 +611,13 @@ collision_mask = 0
 size = Vector3(0.77, 12.45, 1)
 material = ExtResource("1_k0juu")
 
+[node name="floor2" type="CSGBox3D" parent="studio"]
+transform = Transform3D(-9.797052e-07, 0, -49.782604, 0, 0.00801068, 0, 0.45538867, 0, -4.421337e-08, 10.744333, -0.5207041, -0.37418643)
+use_collision = true
+collision_mask = 0
+size = Vector3(1, 12.34, 1)
+material = SubResource("StandardMaterial3D_oexs8")
+
 [node name="wall" type="CSGBox3D" parent="studio"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.173913, -0.099999994, 0)
 use_collision = true
@@ -680,13 +687,6 @@ material = ExtResource("3_qfnet")
 transform = Transform3D(-1.0000001, -3.7729234e-07, -2.0582363e-06, 5.369091e-09, -4.779656e-08, -1.4459279, 1.2916772e-09, -0.12058302, 6.272892e-08, 19.293882, -0.26620448, -0.11051236)
 size = Vector3(1, 0.6, 0.3)
 material = SubResource("StandardMaterial3D_4mrxx")
-
-[node name="floor2" type="CSGBox3D" parent="studio"]
-transform = Transform3D(-9.797052e-07, 0, -49.782604, 0, 0.00801068, 0, 0.45538867, 0, -4.421337e-08, 10.744333, -0.5207041, -0.37418643)
-use_collision = true
-collision_mask = 0
-size = Vector3(1, 12.34, 1)
-material = SubResource("StandardMaterial3D_oexs8")
 
 [node name="WINDOWS" type="Node3D" parent="."]
 
@@ -1301,7 +1301,7 @@ interaction_text = "Submit Painting"
 custom_interaction_distance = 15.0
 
 [node name="Gun" parent="." instance=ExtResource("83_n78cu")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2773702, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0882328, 1.2773702, -4.697838)
 
 [node name="mirror" parent="." instance=ExtResource("39_qaasp")]
 transform = Transform3D(-4.7902194e-08, -0.99488777, 0.10098683, -3.9073655e-08, 0.10098683, 0.99488777, -1, 4.3711392e-08, -4.3711385e-08, 2.8, 1.497, 5.232)
@@ -1338,6 +1338,9 @@ transform = Transform3D(-0.024906214, 0.06936845, 0, -0.04335528, -0.039849952, 
 
 [node name="SaveComputer" parent="." instance=ExtResource("79_l137e")]
 transform = Transform3D(-0.047106393, 0, 0.99888986, 0, 1, 0, -0.99888986, 0, -0.047106393, 1.9871993, 1.5039661, 8.739948)
+
+[node name="NailGun" parent="." instance=ExtResource("81_oexs8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.917138, 0)
 
 [editable path="Styrofoam cube"]
 [editable path="CameraZone"]

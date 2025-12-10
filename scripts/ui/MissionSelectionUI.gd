@@ -169,7 +169,7 @@ func _is_at_first_button() -> bool:
 	"""Check if we're at the first visible/enabled button"""
 	# Find the first visible enabled button
 	for i in range(preview_buttons.size()):
-		if preview_buttons[i].visible and not preview_buttons[i].disabled:
+		if preview_buttons[i] and preview_buttons[i].visible and not preview_buttons[i].disabled:
 			return preview_button_index == i
 	return true
 
@@ -181,8 +181,9 @@ func _select_next_button():
 	while attempts < preview_buttons.size():
 		preview_button_index = (preview_button_index + 1) % preview_buttons.size()
 
-		# Skip invisible or disabled buttons
-		if preview_buttons[preview_button_index].visible and not preview_buttons[preview_button_index].disabled:
+		# Skip invisible, disabled, or null buttons
+		var button = preview_buttons[preview_button_index]
+		if button and button.visible and not button.disabled:
 			_update_button_focus()
 			return
 
@@ -201,8 +202,9 @@ func _select_previous_button():
 		if preview_button_index < 0:
 			preview_button_index = preview_buttons.size() - 1
 
-		# Skip invisible or disabled buttons
-		if preview_buttons[preview_button_index].visible and not preview_buttons[preview_button_index].disabled:
+		# Skip invisible, disabled, or null buttons
+		var button = preview_buttons[preview_button_index]
+		if button and button.visible and not button.disabled:
 			_update_button_focus()
 			return
 
@@ -214,17 +216,21 @@ func _select_previous_button():
 func _update_button_focus():
 	"""Update which button has focus highlight"""
 	# Find first visible enabled button if current is invalid
+	var current_button = preview_buttons[preview_button_index] if preview_button_index < preview_buttons.size() else null
 	if preview_button_index >= preview_buttons.size() or \
-	   not preview_buttons[preview_button_index].visible or \
-	   preview_buttons[preview_button_index].disabled:
+	   not current_button or \
+	   not current_button.visible or \
+	   current_button.disabled:
 		for i in range(preview_buttons.size()):
-			if preview_buttons[i].visible and not preview_buttons[i].disabled:
+			if preview_buttons[i] and preview_buttons[i].visible and not preview_buttons[i].disabled:
 				preview_button_index = i
 				break
 
 	# Focus the selected button
 	if preview_button_index < preview_buttons.size():
-		preview_buttons[preview_button_index].grab_focus()
+		var button = preview_buttons[preview_button_index]
+		if button:
+			button.grab_focus()
 
 func _clear_button_focus():
 	"""Clear button focus when exiting preview mode"""
@@ -236,7 +242,7 @@ func _activate_focused_button():
 	"""Activate the currently focused button"""
 	if preview_button_index < preview_buttons.size():
 		var button = preview_buttons[preview_button_index]
-		if button.visible and not button.disabled:
+		if button and button.visible and not button.disabled:
 			button.pressed.emit()
 			print("MissionSelectionUI: Activated button: ", button.name)
 

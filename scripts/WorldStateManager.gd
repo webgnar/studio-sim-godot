@@ -7,12 +7,17 @@ const SAVE_VERSION = 1
 const WORLD_STATE_PATH = "user://world_state.json"
 const TEXTURES_DIR = "user://world_paintings"
 
-# Preload carryable painting scene for instantiation
+# Preload scenes for instantiation
 var carryable_painting_scene = preload("res://scenes/CarryablePainting.tscn")
+var wall_nail_scene = preload("res://scenes/WallNail.tscn")
 
 # Dictionary mapping painting nodes to their metadata
 # Format: { painting_node: {"id": String, "texture_path": String} }
 var _registered_paintings: Dictionary = {}
+
+# Dictionary mapping nail nodes to their IDs
+# Format: { nail_node: nail_id }
+var _registered_nails: Dictionary = {}
 
 func _ready():
 	_ensure_directories()
@@ -37,6 +42,19 @@ func unregister_painting(painting: Node) -> void:
 	if painting in _registered_paintings:
 		_registered_paintings.erase(painting)
 
+func register_nail(nail: Node, nail_id: String) -> void:
+	"""Register a wall-mounted nail with the save system"""
+	if not nail:
+		push_warning("Attempted to register null nail")
+		return
+
+	_registered_nails[nail] = nail_id
+
+func unregister_nail(nail: Node) -> void:
+	"""Unregister a nail when it's removed from scene"""
+	if nail in _registered_nails:
+		_registered_nails.erase(nail)
+
 # ============================================================================
 # Save/Load
 # ============================================================================
@@ -56,11 +74,37 @@ func save_world_state() -> bool:
 	var save_data = {
 		"version": SAVE_VERSION,
 		"last_saved": _get_timestamp(),
-		"paintings": []
+		"paintings": [],
+		"nails": []
 	}
 
 	var valid_painting_ids = []
 
+	# Save nails
+	for nail in _registered_nails.keys():
+		if not is_instance_valid(nail):
+			continue
+
+		var nail_id = _registered_nails[nail]
+		var nail_component = _find_nail_component(nail)
+
+		var nail_data = {
+			"id": nail_id,
+			"position": {
+				"x": nail.global_position.x,
+				"y": nail.global_position.y,
+				"z": nail.global_position.z
+			},
+			"rotation": {
+				"x": nail.global_rotation.x,
+				"y": nail.global_rotation.y,
+				"z": nail.global_rotation.z
+			}
+		}
+
+		save_data["nails"].append(nail_data)
+
+	# Save paintings
 	for painting in _registered_paintings.keys():
 		if not is_instance_valid(painting):
 			continue
@@ -82,8 +126,17 @@ func save_world_state() -> bool:
 				"x": painting.global_rotation.x,
 				"y": painting.global_rotation.y,
 				"z": painting.global_rotation.z
-			}
+			},
+			"hung_on_nail": ""  # Will be filled if painting is hung
 		}
+
+		# Check if painting is hung on a nail
+		var hanging_comp = _find_hanging_component(painting)
+		if hanging_comp and hanging_comp.is_hung and hanging_comp.current_nail:
+			# Find the nail ID
+			var nail_node = hanging_comp.current_nail.get_parent()
+			if nail_node in _registered_nails:
+				painting_data["hung_on_nail"] = _registered_nails[nail_node]
 
 		save_data["paintings"].append(painting_data)
 		valid_painting_ids.append(painting_id)
@@ -101,7 +154,7 @@ func save_world_state() -> bool:
 	# Clean up orphaned texture files
 	_cleanup_orphaned_textures(valid_painting_ids)
 
-	print("World state saved: %d paintings" % save_data["paintings"].size())
+	print("World state saved: %d paintings, %d nails" % [save_data["paintings"].size(), save_data["nails"].size()])
 	return true
 
 func load_world_state(world_root: Node3D) -> void:
@@ -134,15 +187,26 @@ func load_world_state(world_root: Node3D) -> void:
 		push_warning("World state version mismatch, skipping load")
 		return
 
-	# Load paintings
+	# Load nails FIRST (before paintings)
+	var nails_array = save_data.get("nails", [])
+	var nail_id_map = {}  # Map nail_id -> nail_node for painting attachment
+	var nails_loaded = 0
+
+	for nail_data in nails_array:
+		var nail = _load_nail(world_root, nail_data)
+		if nail:
+			nail_id_map[nail_data["id"]] = nail
+			nails_loaded += 1
+
+	# Load paintings SECOND (after nails)
 	var paintings_array = save_data.get("paintings", [])
-	var loaded_count = 0
+	var paintings_loaded = 0
 
 	for painting_data in paintings_array:
-		if _load_painting(world_root, painting_data):
-			loaded_count += 1
+		if await _load_painting(world_root, painting_data, nail_id_map):
+			paintings_loaded += 1
 
-	print("World state loaded: %d/%d paintings" % [loaded_count, paintings_array.size()])
+	print("World state loaded: %d/%d nails, %d/%d paintings" % [nails_loaded, nails_array.size(), paintings_loaded, paintings_array.size()])
 
 func clear_world_state() -> void:
 	"""
@@ -157,8 +221,9 @@ func clear_world_state() -> void:
 	if DirAccess.dir_exists_absolute(TEXTURES_DIR):
 		_delete_directory_recursive(TEXTURES_DIR)
 
-	# Clear registered paintings (though scene should be reloading anyway)
+	# Clear registered paintings and nails (though scene should be reloading anyway)
 	_registered_paintings.clear()
+	_registered_nails.clear()
 
 	print("World state cleared")
 
@@ -211,10 +276,13 @@ func _force_drop_carried_paintings() -> void:
 		if not is_instance_valid(painting):
 			continue
 
-		# Find CarryableComponent
-		var carryable = painting.get_node_or_null("CarryableComponent")
-		if carryable and carryable.has_method("force_drop"):
-			carryable.force_drop()
+		# Find PaintingHangingComponent (or fallback to CarryableComponent for old paintings)
+		var hanging_comp = painting.get_node_or_null("PaintingHangingComponent")
+		if not hanging_comp:
+			hanging_comp = painting.get_node_or_null("CarryableComponent")
+
+		if hanging_comp and hanging_comp.has_method("drop") and hanging_comp.is_carried:
+			hanging_comp.drop()
 
 func _get_timestamp() -> String:
 	"""Get current timestamp as ISO 8601 string"""
@@ -224,7 +292,35 @@ func _get_timestamp() -> String:
 		time.hour, time.minute, time.second
 	]
 
-func _load_painting(world_root: Node3D, painting_data: Dictionary) -> bool:
+func _load_nail(world_root: Node3D, nail_data: Dictionary) -> Node:
+	"""
+	Load a single nail from save data
+	Returns nail node on success, null on failure
+	"""
+	var position_data = nail_data.get("position", {})
+	var rotation_data = nail_data.get("rotation", {})
+
+	# Instantiate nail
+	var nail = wall_nail_scene.instantiate()
+
+	# Add to world
+	world_root.add_child(nail)
+
+	# Set transform
+	nail.global_position = Vector3(
+		position_data.get("x", 0.0),
+		position_data.get("y", 0.0),
+		position_data.get("z", 0.0)
+	)
+	nail.global_rotation = Vector3(
+		rotation_data.get("x", 0.0),
+		rotation_data.get("y", 0.0),
+		rotation_data.get("z", 0.0)
+	)
+
+	return nail
+
+func _load_painting(world_root: Node3D, painting_data: Dictionary, nail_id_map: Dictionary = {}) -> bool:
 	"""
 	Load a single painting from save data
 	Returns true on success, false on failure
@@ -285,6 +381,17 @@ func _load_painting(world_root: Node3D, painting_data: Dictionary) -> bool:
 		material.albedo_texture = texture
 		mesh_instance.set_surface_override_material(0, material)
 
+	# Check if painting was hung on a nail
+	var hung_on_nail_id = painting_data.get("hung_on_nail", "")
+	if hung_on_nail_id != "" and hung_on_nail_id in nail_id_map:
+		var nail = nail_id_map[hung_on_nail_id]
+		var nail_component = _find_nail_component(nail)
+		if nail_component:
+			# Wait one frame for painting to finish setup
+			await get_tree().process_frame
+			# Attach painting to nail
+			nail_component.accept_painting(painting)
+
 	return true
 
 func _delete_directory_recursive(path: String) -> void:
@@ -308,3 +415,17 @@ func _delete_directory_recursive(path: String) -> void:
 
 	dir.list_dir_end()
 	DirAccess.remove_absolute(path)
+
+func _find_nail_component(nail: Node) -> Node:
+	"""Find NailComponent in nail node hierarchy"""
+	for child in nail.get_children():
+		if child.has_method("accept_painting"):
+			return child
+	return null
+
+func _find_hanging_component(painting: Node) -> Node:
+	"""Find PaintingHangingComponent in painting node hierarchy"""
+	for child in painting.get_children():
+		if child.has_method("hang_on_nail"):
+			return child
+	return null
