@@ -22,11 +22,11 @@ PaintingModeManager="*res://scripts/painting/PaintingModeManager.gd"
 MissionManager="*res://scripts/MissionManager.gd"
 UIManager="*res://scripts/UIManager.gd"
 PaintingSpawner="*res://scripts/PaintingSpawner.gd"
-WorldStateManager="*res://scripts/WorldStateManager.gd"
 DebugPaintingConverter="*res://scripts/DebugPaintingConverter.gd"
 ValidationDebugOverlay="*res://scenes/UI/ValidationDebugOverlay.tscn"
-ValidationLoadingOverlay="*res://scenes/UI/ValidationLoadingOverlay.tscn"
 SceneTransition="*res://scripts/SceneTransition.gd"
+WorldStateManager="*res://scripts/WorldStateManager.gd"
+ValidationLoadingOverlay="*res://scenes/UI/ValidationLoadingOverlay.tscn"
 
 [display]
 

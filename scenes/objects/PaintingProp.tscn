@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://bejpg13rkvvy7"]
 
-[ext_resource type="PackedScene" uid="uid://guuhi66wtyyp" path="res://models/stretcher.glb" id="1_ed6cg"]
+[ext_resource type="PackedScene" uid="uid://guuhi66wtyyp" path="res://models/paintings/stretcher.glb" id="1_ed6cg"]
 [ext_resource type="Material" uid="uid://rbahr5ddoikw" path="res://materials/painting1.tres" id="2_y60gd"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_18i5q"]

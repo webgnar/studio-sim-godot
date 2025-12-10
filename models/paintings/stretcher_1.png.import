@@ -2,20 +2,20 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c1pl0wynlpnsi"
-path.s3tc="res://.godot/imported/stretcher_0.png-4d17dc21a0302053e157e947a22ebc65.s3tc.ctex"
+uid="uid://be40ammn31yn"
+path.s3tc="res://.godot/imported/stretcher_1.png-a60b7d7f5a34d78530548b5ef3016c8c.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 generator_parameters={
-"md5": "9ee93825be45adb115430e7df7092aee"
+"md5": "52d16f7bab48a128144171c4207d2c06"
 }
 
 [deps]
 
-source_file="res://models/stretcher_0.png"
-dest_files=["res://.godot/imported/stretcher_0.png-4d17dc21a0302053e157e947a22ebc65.s3tc.ctex"]
+source_file="res://models/paintings/stretcher_1.png"
+dest_files=["res://.godot/imported/stretcher_1.png-a60b7d7f5a34d78530548b5ef3016c8c.s3tc.ctex"]
 
 [params]
 

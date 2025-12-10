@@ -44,10 +44,15 @@ static func compare_images(current: Image, reference: Image, color_tolerance: fl
 			var current_color = current.get_pixel(x, y)
 			var reference_color = reference.get_pixel(x, y)
 
-			# Skip fully transparent pixels in reference (background)
+			# Skip pixels where reference is transparent (background/outside painting area)
 			if reference_color.a < 0.1:
 				total_pixels -= 1
 				continue
+
+			# If reference has color but current is transparent, treat as maximum mismatch
+			if current_color.a < 0.1:
+				# Player didn't paint this area - counts as mismatch
+				continue  # matching_pixels not incremented
 
 			# Calculate color distance (RGB only, ignore alpha)
 			var color_diff = color_distance(current_color, reference_color)

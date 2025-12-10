@@ -774,23 +774,25 @@ func _generate_heatmap_data(current: Image, reference: Image, tolerance: float) 
 			var current_color = current.get_pixel(x, y)
 			var reference_color = reference.get_pixel(x, y)
 
-			# Skip fully transparent pixels in reference (background)
+			# Skip pixels where reference is transparent (background/outside painting area)
 			if reference_color.a < 0.1:
 				heatmap.set_pixel(x, y, Color(0, 0, 0, 0))
+				continue
+
+			# If reference has color but current is transparent, show as bright red (unpainted)
+			if current_color.a < 0.1:
+				heatmap.set_pixel(x, y, Color(1.0, 0, 0, 1.0))  # Bright red for missing paint
 				continue
 
 			# Calculate color distance using public method
 			var color_diff = VisualValidator.color_distance(current_color, reference_color)
 
 			if color_diff <= adjusted_tolerance:
-				# Green for matching (brighter = closer match)
-				var quality = 1.0 - (color_diff / adjusted_tolerance)
-				heatmap.set_pixel(x, y, Color(0, quality, 0, 0.7))
+				# Bright green for match
+				heatmap.set_pixel(x, y, Color(0, 1.0, 0, 1.0))
 			else:
-				# Red for mismatch (brighter = worse)
-				var severity = min((color_diff - adjusted_tolerance) / adjusted_tolerance, 1.0)
-				heatmap.set_pixel(x, y, Color(1.0, 0, 0, 0.5 + severity * 0.3))
-
+				# Bright red for mismatch
+				heatmap.set_pixel(x, y, Color(1.0, 0, 0, 1.0))
 	return heatmap
 
 # Mode management (deprecated - input always enabled now)

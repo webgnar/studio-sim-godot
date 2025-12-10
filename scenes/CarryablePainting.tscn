@@ -1,8 +1,8 @@
 [gd_scene load_steps=8 format=3 uid="uid://c8qv7n3hp2k4r"]
 
-[ext_resource type="Script" path="res://scripts/CarryablePainting.gd" id="1_painting"]
+[ext_resource type="Script" uid="uid://dvkl3cic5pjcq" path="res://scripts/CarryablePainting.gd" id="1_painting"]
 [ext_resource type="Script" uid="uid://cbwg344irqecy" path="res://scripts/components/CarryableComponent.gd" id="1_carryable"]
-[ext_resource type="PackedScene" uid="uid://guuhi66wtyyp" path="res://models/stretcher.glb" id="2_stretcher"]
+[ext_resource type="PackedScene" uid="uid://guuhi66wtyyp" path="res://models/paintings/stretcher.glb" id="2_stretcher"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_painting"]
 friction = 0.8

@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://bwte5apiu1n8b"
-path="res://.godot/imported/shard2.glb-9219f5e973b75e5f2431a0d64b8e7eec.scn"
+uid="uid://r77i37ju5du6"
+path="res://.godot/imported/gun.glb-b625e7ec55cd0cd370fb9b3aafd881f5.scn"
 
 [deps]
 
-source_file="res://models/shard2.glb"
-dest_files=["res://.godot/imported/shard2.glb-9219f5e973b75e5f2431a0d64b8e7eec.scn"]
+source_file="res://models/interactables/gun.glb"
+dest_files=["res://.godot/imported/gun.glb-b625e7ec55cd0cd370fb9b3aafd881f5.scn"]
 
 [params]
 

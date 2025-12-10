@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://ctv5r4f51ufg3"]
 
+[ext_resource type="Theme" uid="uid://cbtaxh5m7udor" path="res://themes/ui_theme.tres" id="1_3lj1f"]
 [ext_resource type="Script" uid="uid://cv2b3i1u2t6le" path="res://scripts/ui/MissionSelectionUI.gd" id="1_select"]
-[ext_resource type="Texture2D" uid="uid://dor0d4yiulgi5" path="res://sprites/ui/arrow.png" id="2_arrow"]
 [ext_resource type="Texture2D" uid="uid://dgf58oxfs3km7" path="res://sprites/ui/startmission.png" id="3_startmission"]
 
 [node name="MissionSelectionUI" type="Control"]
@@ -12,6 +12,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
+theme = ExtResource("1_3lj1f")
 script = ExtResource("1_select")
 
 [node name="Dialog" type="PanelContainer" parent="."]
@@ -40,12 +41,13 @@ layout_mode = 2
 
 [node name="TitleLabel" type="Label" parent="Dialog/MarginContainer/HBoxContainer/LeftPanel"]
 layout_mode = 2
-text = "Available Missions"
+text = "SELECT A COMMISION"
 horizontal_alignment = 1
 
 [node name="ScrollContainer" type="ScrollContainer" parent="Dialog/MarginContainer/HBoxContainer/LeftPanel"]
 layout_mode = 2
 size_flags_vertical = 3
+follow_focus = true
 
 [node name="MissionList" type="VBoxContainer" parent="Dialog/MarginContainer/HBoxContainer/LeftPanel/ScrollContainer"]
 layout_mode = 2
@@ -80,7 +82,7 @@ size_flags_horizontal = 3
 
 [node name="PreviewTitleLabel" type="Label" parent="Dialog/MarginContainer/HBoxContainer/RightPanel"]
 layout_mode = 2
-text = "Mission Preview"
+text = "COMISSION REQUEST"
 horizontal_alignment = 1
 
 [node name="PreviewPanel" type="PanelContainer" parent="Dialog/MarginContainer/HBoxContainer/RightPanel"]
@@ -100,7 +102,7 @@ theme_override_constants/separation = 10
 
 [node name="MissionTitle" type="Label" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
-text = "Select a mission"
+text = "Mission Name"
 horizontal_alignment = 1
 
 [node name="PreviewImage" type="TextureRect" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer"]
@@ -127,26 +129,15 @@ text = "Not completed"
 layout_mode = 2
 alignment = 1
 
-[node name="BackButton" type="Button" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ButtonContainer"]
-custom_minimum_size = Vector2(50, 40)
-layout_mode = 2
-icon = ExtResource("2_arrow")
-
 [node name="ViewResultsButton" type="Button" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ButtonContainer"]
-visible = false
 custom_minimum_size = Vector2(150, 40)
 layout_mode = 2
 text = "View Results"
 
 [node name="StartButton" type="Button" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ButtonContainer"]
-custom_minimum_size = Vector2(150, 40)
+custom_minimum_size = Vector2(130, 60)
 layout_mode = 2
 icon = ExtResource("3_startmission")
-
-[node name="HelpLabel" type="Label" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer"]
-layout_mode = 2
-text = "F7: Open/Close (2D Mode Only) | Arrow Keys: Navigate | Enter: Start"
-horizontal_alignment = 1
 
 [node name="ConfirmationDialog" type="ConfirmationDialog" parent="."]
 oversampling_override = 1.0

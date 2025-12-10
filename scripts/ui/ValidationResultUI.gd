@@ -15,9 +15,7 @@ class_name ValidationResultUI
 @onready var heatmap_panel = $Dialog/MarginContainer/ScrollContainer/VBoxContainer/HeatmapPanel
 @onready var heatmap_image = $Dialog/MarginContainer/ScrollContainer/VBoxContainer/HeatmapPanel/HeatmapImage
 @onready var histogram_panel = $Dialog/MarginContainer/ScrollContainer/VBoxContainer/HistogramPanel
-@onready var player_histogram_display = $Dialog/MarginContainer/ScrollContainer/VBoxContainer/HistogramPanel/HistogramComparison/PlayerHistPanel/PlayerHistogramDisplay
 @onready var player_swatch_display = $Dialog/MarginContainer/ScrollContainer/VBoxContainer/HistogramPanel/HistogramComparison/PlayerHistPanel/PlayerSwatchDisplay
-@onready var reference_histogram_display = $Dialog/MarginContainer/ScrollContainer/VBoxContainer/HistogramPanel/HistogramComparison/ReferenceHistPanel/ReferenceHistogramDisplay
 @onready var reference_swatch_display = $Dialog/MarginContainer/ScrollContainer/VBoxContainer/HistogramPanel/HistogramComparison/ReferenceHistPanel/ReferenceSwatchDisplay
 @onready var breakdown_label = $Dialog/MarginContainer/ScrollContainer/VBoxContainer/BreakdownLabel
 @onready var coordinate_label = $Dialog/MarginContainer/ScrollContainer/VBoxContainer/CoordinateLabel
@@ -223,16 +221,13 @@ func _display_analysis_visualizations(result: ValidationResult):
 	else:
 		heatmap_panel.visible = false
 
-	# Display histograms
+	# Display color swatches
 	if debug.has("current_histogram") and debug.has("reference_histogram"):
 		var player_hist = debug["current_histogram"]
 		var ref_hist = debug["reference_histogram"]
 
-		player_histogram_display.texture = HistogramRenderer.create_histogram_texture(player_hist)
-		player_swatch_display.texture = HistogramRenderer.create_top_colors_swatch(player_hist, Vector2i(250, 50))
-
-		reference_histogram_display.texture = HistogramRenderer.create_histogram_texture(ref_hist)
-		reference_swatch_display.texture = HistogramRenderer.create_top_colors_swatch(ref_hist, Vector2i(250, 50))
+		player_swatch_display.texture = HistogramRenderer.create_top_colors_swatch(player_hist, Vector2i(300, 80))
+		reference_swatch_display.texture = HistogramRenderer.create_top_colors_swatch(ref_hist, Vector2i(300, 80))
 
 		histogram_panel.visible = true
 	else:

@@ -1,7 +1,10 @@
-[gd_resource type="Theme" format=3 uid="uid://cbtaxh5m7udor"]
+[gd_resource type="Theme" load_steps=2 format=3 uid="uid://cbtaxh5m7udor"]
+
+[ext_resource type="FontFile" uid="uid://tmjyio0w6cu0" path="res://fonts/studio-sim.ttf" id="1_xxbg1"]
 
 [resource]
-default_font_size = 16
+default_font = ExtResource("1_xxbg1")
+default_font_size = 47
 Button/colors/font_color = Color(0.875, 0.875, 0.875, 1)
 Button/colors/font_disabled_color = Color(0.875, 0.875, 0.875, 0.5)
 Button/colors/font_hover_color = Color(0.95, 0.95, 0.95, 1)

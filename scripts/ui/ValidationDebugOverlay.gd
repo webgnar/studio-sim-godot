@@ -9,12 +9,10 @@ extends CanvasLayer
 @onready var heatmap_multiplier_slider = $PanelContainer/MarginContainer/ScrollContainer/VBoxContainer/HeatmapMultiplierContainer/HeatmapMultiplierSlider
 @onready var heatmap_multiplier_value = $PanelContainer/MarginContainer/ScrollContainer/VBoxContainer/HeatmapMultiplierContainer/HeatmapMultiplierValue
 
-# Histogram nodes
-@onready var player_histogram_display = $PanelContainer/MarginContainer/ScrollContainer/VBoxContainer/HistogramComparison/PlayerHistPanel/PlayerHistogramDisplay
+# Color swatch nodes
 @onready var player_swatch = $PanelContainer/MarginContainer/ScrollContainer/VBoxContainer/HistogramComparison/PlayerHistPanel/PlayerSwatchDisplay
 @onready var player_hist_text = $PanelContainer/MarginContainer/ScrollContainer/VBoxContainer/HistogramComparison/PlayerHistPanel/PlayerHistogramText
 
-@onready var reference_histogram_display = $PanelContainer/MarginContainer/ScrollContainer/VBoxContainer/HistogramComparison/ReferenceHistPanel/ReferenceHistogramDisplay
 @onready var reference_swatch = $PanelContainer/MarginContainer/ScrollContainer/VBoxContainer/HistogramComparison/ReferenceHistPanel/ReferenceSwatchDisplay
 @onready var reference_hist_text = $PanelContainer/MarginContainer/ScrollContainer/VBoxContainer/HistogramComparison/ReferenceHistPanel/ReferenceHistogramText
 
@@ -56,6 +54,25 @@ func toggle_debug_overlay():
 func is_overlay_visible() -> bool:
 	return is_debug_visible
 
+func _get_hex_colors_text(histogram: Dictionary) -> String:
+	"""Generate hex color values from top colors"""
+	if histogram.is_empty() or not histogram.has("top_colors"):
+		return "No color data"
+
+	var top_colors = histogram["top_colors"]
+	if top_colors.is_empty():
+		return "No color data"
+
+	var lines = []
+	for i in range(top_colors.size()):
+		var entry = top_colors[i]
+		var c = entry["color"]
+		# Convert to hex
+		var hex = "#%02X%02X%02X" % [int(c.r * 255), int(c.g * 255), int(c.b * 255)]
+		lines.append("%s (%.1f%%)" % [hex, entry["percentage"]])
+
+	return "\n".join(lines)
+
 func _generate_heatmap_with_tolerance(current: Image, reference: Image, tolerance: float) -> Image:
 	"""Generate heatmap showing pixel matching quality with custom tolerance"""
 	var width = reference.get_size().x
@@ -79,22 +96,25 @@ func _generate_heatmap_with_tolerance(current: Image, reference: Image, toleranc
 			var current_color = current.get_pixel(x, y)
 			var reference_color = reference.get_pixel(x, y)
 
-			# Skip fully transparent pixels in reference (background)
+			# Skip pixels where reference is transparent (background/outside painting area)
 			if reference_color.a < 0.1:
 				heatmap.set_pixel(x, y, Color(0, 0, 0, 0))
+				continue
+
+			# If reference has color but current is transparent, show as bright red (unpainted)
+			if current_color.a < 0.1:
+				heatmap.set_pixel(x, y, Color(1.0, 0, 0, 1.0))  # Bright red for missing paint
 				continue
 
 			# Calculate color distance using public method
 			var color_diff = VisualValidator.color_distance(current_color, reference_color)
 
 			if color_diff <= tolerance:
-				# Green for matching (brighter = closer match)
-				var quality = 1.0 - (color_diff / tolerance)
-				heatmap.set_pixel(x, y, Color(0, quality, 0, 0.7))
+				# Bright green for match
+				heatmap.set_pixel(x, y, Color(0, 1.0, 0, 1.0))
 			else:
-				# Red for mismatch (brighter = worse)
-				var severity = min((color_diff - tolerance) / tolerance, 1.0)
-				heatmap.set_pixel(x, y, Color(1.0, 0, 0, 0.5 + severity * 0.3))
+				# Bright red for mismatch
+				heatmap.set_pixel(x, y, Color(1.0, 0, 0, 1.0))
 
 	return heatmap
 
@@ -171,17 +191,15 @@ func update_display(result: ValidationResult):
 		var pct = (float(matching) / float(total)) * 100.0 if total > 0 else 0.0
 		pixel_stats.text = "Matching: %d / %d pixels (%.1f%%)" % [matching, total, pct]
 
-	# Display Histograms with Top 5 Diverse Colors
+	# Display Color Swatches with Top 5 Diverse Colors and Hex Values
 	if debug.has("current_histogram") and debug.has("reference_histogram"):
 		var player_hist = debug["current_histogram"]
-		player_histogram_display.texture = HistogramRenderer.create_histogram_texture(player_hist)
-		player_swatch.texture = HistogramRenderer.create_top_colors_swatch(player_hist, Vector2i(250, 50))
-		player_hist_text.text = HistogramRenderer.get_top_colors_text(player_hist)
+		player_swatch.texture = HistogramRenderer.create_top_colors_swatch(player_hist, Vector2i(300, 80))
+		player_hist_text.text = _get_hex_colors_text(player_hist)
 
 		var ref_hist = debug["reference_histogram"]
-		reference_histogram_display.texture = HistogramRenderer.create_histogram_texture(ref_hist)
-		reference_swatch.texture = HistogramRenderer.create_top_colors_swatch(ref_hist, Vector2i(250, 50))
-		reference_hist_text.text = HistogramRenderer.get_top_colors_text(ref_hist)
+		reference_swatch.texture = HistogramRenderer.create_top_colors_swatch(ref_hist, Vector2i(300, 80))
+		reference_hist_text.text = _get_hex_colors_text(ref_hist)
 
 	# Display Scores
 	visual_score_label.text = "%.1f%%" % debug.get("visual_score", 0.0)

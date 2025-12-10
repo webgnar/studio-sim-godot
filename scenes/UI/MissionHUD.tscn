@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://c8mhk3sajq2fn"]
 
-[ext_resource type="Script" path="res://scripts/ui/MissionHUD.gd" id="1_hud"]
+[ext_resource type="Script" uid="uid://bmkoimsaxok4p" path="res://scripts/ui/MissionHUD.gd" id="1_hud"]
 
 [node name="MissionHUD" type="Control"]
 layout_mode = 3
@@ -24,7 +24,7 @@ layout_mode = 2
 theme_override_constants/separation = 10
 
 [node name="ThumbnailRect" type="TextureRect" parent="PanelContainer/MarginContainer/HBoxContainer"]
-custom_minimum_size = Vector2(50, 50)
+custom_minimum_size = Vector2(120, 120)
 layout_mode = 2
 expand_mode = 1
 stretch_mode = 5

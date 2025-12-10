@@ -12,6 +12,7 @@ const StartMissionIcon = preload("res://sprites/ui/startmission.png")
 const AbortMissionIcon = preload("res://sprites/ui/abortmission.png")
 
 @onready var dialog = $Dialog
+@onready var scroll_container = $Dialog/MarginContainer/HBoxContainer/LeftPanel/ScrollContainer
 @onready var mission_list_container = $Dialog/MarginContainer/HBoxContainer/LeftPanel/ScrollContainer/MissionList
 @onready var preview_image = $Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/PreviewImage
 @onready var mission_title = $Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/MissionTitle
@@ -20,7 +21,6 @@ const AbortMissionIcon = preload("res://sprites/ui/abortmission.png")
 @onready var completion_label = $Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/CompletionLabel
 @onready var view_results_button = $Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ButtonContainer/ViewResultsButton
 @onready var start_button = $Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ButtonContainer/StartButton
-@onready var back_button = $Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ButtonContainer/BackButton
 @onready var completed_missions_label = $Dialog/MarginContainer/HBoxContainer/LeftPanel/StatsPanel/MarginContainer/VBoxContainer/CompletedMissionsLabel
 @onready var paintings_created_label = $Dialog/MarginContainer/HBoxContainer/LeftPanel/StatsPanel/MarginContainer/VBoxContainer/PaintingsCreatedLabel
 @onready var confirmation_dialog = $ConfirmationDialog
@@ -40,13 +40,13 @@ func _ready():
 	# Connect button signals
 	view_results_button.pressed.connect(_on_view_results)
 	start_button.pressed.connect(_on_start_or_abort_mission)
-	back_button.pressed.connect(_on_back_button)
+
 
 	# Connect confirmation dialog
 	confirmation_dialog.confirmed.connect(_on_abort_confirmed)
 
-	# Setup preview button navigation array (Back, View Results, Start)
-	preview_buttons = [back_button, view_results_button, start_button]
+	# Setup preview button navigation array (View Results, Start)
+	preview_buttons = [view_results_button, start_button]
 
 	# Hide dialog initially
 	dialog.visible = false
@@ -229,7 +229,8 @@ func _update_button_focus():
 func _clear_button_focus():
 	"""Clear button focus when exiting preview mode"""
 	for button in preview_buttons:
-		button.release_focus()
+		if button:
+			button.release_focus()
 
 func _activate_focused_button():
 	"""Activate the currently focused button"""
@@ -352,9 +353,38 @@ func _update_selection():
 	for i in range(mission_cards.size()):
 		mission_cards[i].set_selected(i == selected_index)
 
+	# Scroll to the selected card
+	_scroll_to_selected_card()
+
 	# Update preview panel
 	selected_mission = MissionManager.available_missions[selected_index]
 	_update_preview_panel()
+
+func _scroll_to_selected_card():
+	"""Scroll the ScrollContainer to make the selected card visible"""
+	if not scroll_container or selected_index >= mission_cards.size():
+		return
+	
+	var selected_card = mission_cards[selected_index]
+	if not selected_card:
+		return
+	
+	# Get the card's position and size
+	var card_top = selected_card.position.y
+	var card_bottom = card_top + selected_card.size.y
+	
+	# Get the visible area of the scroll container
+	var scroll_pos = scroll_container.scroll_vertical
+	var viewport_height = scroll_container.size.y
+	var visible_top = scroll_pos
+	var visible_bottom = scroll_pos + viewport_height
+	
+	# Check if card is above visible area
+	if card_top < visible_top:
+		scroll_container.scroll_vertical = int(card_top)
+	# Check if card is below visible area
+	elif card_bottom > visible_bottom:
+		scroll_container.scroll_vertical = int(card_bottom - viewport_height)
 
 func _update_preview_panel():
 	"""Update the right-side preview panel with selected mission details"""
@@ -463,11 +493,6 @@ func _on_abort_confirmed():
 	# Return to GAMEPLAY state
 	if UIManager:
 		UIManager.change_state(UIManager.GameState.GAMEPLAY)
-
-func _on_back_button():
-	"""Handle back button press - return to mission list navigation"""
-	_exit_preview_mode()
-	print("MissionSelectionUI: Back to mission list")
 
 func _on_view_results():
 	"""Show results viewer for the selected mission"""

@@ -1,4 +1,4 @@
-[gd_scene load_steps=131 format=3 uid="uid://cnmivki1rop3b"]
+[gd_scene load_steps=132 format=3 uid="uid://cnmivki1rop3b"]
 
 [ext_resource type="Material" uid="uid://wwlsotlotycw" path="res://materials/wood.tres" id="1_4mrxx"]
 [ext_resource type="Texture2D" uid="uid://bke1xjp3mdreb" path="res://sprites/door.jpg" id="1_i7141"]
@@ -9,6 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://3smflfln5x7y" path="res://sprites/normals/wood_specular.png" id="3_o8fc1"]
 [ext_resource type="Material" uid="uid://48uded6h5otx" path="res://materials/brickwhite.tres" id="3_qfnet"]
 [ext_resource type="Texture2D" uid="uid://bifvpuur5heg3" path="res://sprites/normals/wood_normal.png" id="4_xo05s"]
+[ext_resource type="Theme" uid="uid://cbtaxh5m7udor" path="res://themes/ui_theme.tres" id="4_ygn2i"]
 [ext_resource type="Material" uid="uid://re8gmfn1nbgt" path="res://materials/wall.tres" id="5_71j4m"]
 [ext_resource type="PackedScene" uid="uid://boyehvhrdbdi6" path="res://models/props/lights.glb" id="6_jhx03"]
 [ext_resource type="Texture2D" uid="uid://b3ty4ce0xhyow" path="res://sprites/hvac.jpg" id="14_o8fc1"]
@@ -477,12 +478,16 @@ painting_system_2d = NodePath("../../PaintingRoot2d/CanvasViewport/CanvasRoot")
 [node name="GameplayUI_Layer" type="CanvasLayer" parent="."]
 
 [node name="MissionSelectionUI" parent="GameplayUI_Layer" instance=ExtResource("77_select")]
+theme = ExtResource("4_ygn2i")
 
 [node name="ValidationResultUI" parent="GameplayUI_Layer" instance=ExtResource("78_result")]
+theme = ExtResource("4_ygn2i")
 
 [node name="MissionResultsViewer" parent="GameplayUI_Layer" instance=ExtResource("81_results_viewer")]
+theme = ExtResource("4_ygn2i")
 
 [node name="MissionHUD" parent="GameplayUI_Layer" instance=ExtResource("83_hud")]
+theme = ExtResource("4_ygn2i")
 
 [node name="DevTools_Layer" type="CanvasLayer" parent="."]
 

@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://guuhi66wtyyp"
-path="res://.godot/imported/stretcher.glb-7f8a75d71f5a00bf14a8d54d6acf1eaa.scn"
+uid="uid://bmhvarfxgft1i"
+path="res://.godot/imported/shard1.glb-338a70cf248f08762a2def4fe590c77f.scn"
 
 [deps]
 
-source_file="res://models/stretcher.glb"
-dest_files=["res://.godot/imported/stretcher.glb-7f8a75d71f5a00bf14a8d54d6acf1eaa.scn"]
+source_file="res://models/particles/shard1.glb"
+dest_files=["res://.godot/imported/shard1.glb-338a70cf248f08762a2def4fe590c77f.scn"]
 
 [params]
 

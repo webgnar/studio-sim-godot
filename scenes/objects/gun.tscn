@@ -1,6 +1,6 @@
 [gd_scene load_steps=13 format=3 uid="uid://6u7bns57r2hi"]
 
-[ext_resource type="PackedScene" uid="uid://r77i37ju5du6" path="res://models/gun.glb" id="1_og67c"]
+[ext_resource type="PackedScene" uid="uid://r77i37ju5du6" path="res://models/interactables/gun.glb" id="1_og67c"]
 [ext_resource type="Texture2D" uid="uid://d3xe7ak0wicts" path="res://sprites/muzzle.png" id="2_gp1hk"]
 [ext_resource type="Script" uid="uid://c8684i4bb34yr" path="res://scripts/components/WeaponComponent.gd" id="3_weapon"]
 [ext_resource type="Script" uid="uid://cbwg344irqecy" path="res://scripts/components/CarryableComponent.gd" id="4_carryable"]

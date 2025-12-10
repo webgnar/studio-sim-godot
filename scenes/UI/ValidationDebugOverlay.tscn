@@ -96,14 +96,8 @@ layout_mode = 2
 text = "Your Painting"
 horizontal_alignment = 1
 
-[node name="PlayerHistogramDisplay" type="TextureRect" parent="PanelContainer/MarginContainer/ScrollContainer/VBoxContainer/HistogramComparison/PlayerHistPanel"]
-custom_minimum_size = Vector2(128, 50)
-layout_mode = 2
-expand_mode = 1
-stretch_mode = 5
-
 [node name="PlayerSwatchDisplay" type="TextureRect" parent="PanelContainer/MarginContainer/ScrollContainer/VBoxContainer/HistogramComparison/PlayerHistPanel"]
-custom_minimum_size = Vector2(50, 50)
+custom_minimum_size = Vector2(300, 80)
 layout_mode = 2
 expand_mode = 1
 stretch_mode = 5
@@ -122,14 +116,8 @@ layout_mode = 2
 text = "Target"
 horizontal_alignment = 1
 
-[node name="ReferenceHistogramDisplay" type="TextureRect" parent="PanelContainer/MarginContainer/ScrollContainer/VBoxContainer/HistogramComparison/ReferenceHistPanel"]
-custom_minimum_size = Vector2(128, 50)
-layout_mode = 2
-expand_mode = 1
-stretch_mode = 5
-
 [node name="ReferenceSwatchDisplay" type="TextureRect" parent="PanelContainer/MarginContainer/ScrollContainer/VBoxContainer/HistogramComparison/ReferenceHistPanel"]
-custom_minimum_size = Vector2(50, 50)
+custom_minimum_size = Vector2(300, 80)
 layout_mode = 2
 expand_mode = 1
 stretch_mode = 5

@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://f7blfv2cy1ph"
-path="res://.godot/imported/shardcube.glb-aa007b578c1a252a56f2641190366afc.scn"
+path="res://.godot/imported/shardcube.glb-d718a6386426809e74732ed5374b19de.scn"
 
 [deps]
 
-source_file="res://models/shardcube.glb"
-dest_files=["res://.godot/imported/shardcube.glb-aa007b578c1a252a56f2641190366afc.scn"]
+source_file="res://models/particles/shardcube.glb"
+dest_files=["res://.godot/imported/shardcube.glb-d718a6386426809e74732ed5374b19de.scn"]
 
 [params]
 

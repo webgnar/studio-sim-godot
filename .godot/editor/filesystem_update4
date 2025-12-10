@@ -15,3 +15,8 @@ res://scripts/painting/PaintingSystem2D.gd
 res://scripts/painting/VisualValidator.gd
 res://scripts/ui/ValidationDebugOverlay.gd
 res://scripts/ui/ValidationResultUI.gd
+res://themes/ui_theme.tres
+res://scenes/UI/MissionSelectionUI.tscn
+res://scenes/UI/MissionCard.tscn
+res://scenes/UI/MissionHUD.tscn
+res://scripts/ui/MissionSelectionUI.gd

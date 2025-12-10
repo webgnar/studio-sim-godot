@@ -2,20 +2,20 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://djmadkiv3il0d"
-path.s3tc="res://.godot/imported/bullet_0.png-ad6b1e795f0f3512fcf6a9d0e7cc1c26.s3tc.ctex"
+uid="uid://c80jrnw02elen"
+path.s3tc="res://.godot/imported/shard2_0.png-ed1208c760f0c171528a3e2b5b209338.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 generator_parameters={
-"md5": "15129a960a894ff728e14640a33ce4bb"
+"md5": "16a0c7b4bcb7927b21521901c270905c"
 }
 
 [deps]
 
-source_file="res://models/bullet_0.png"
-dest_files=["res://.godot/imported/bullet_0.png-ad6b1e795f0f3512fcf6a9d0e7cc1c26.s3tc.ctex"]
+source_file="res://models/particles/shard2_0.png"
+dest_files=["res://.godot/imported/shard2_0.png-ed1208c760f0c171528a3e2b5b209338.s3tc.ctex"]
 
 [params]
 

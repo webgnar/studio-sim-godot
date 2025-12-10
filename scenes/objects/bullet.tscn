@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://bxkss4pgguj5n"]
 
-[ext_resource type="PackedScene" uid="uid://cxf45mrj3bb3e" path="res://models/bullet.glb" id="1_mkf8s"]
-[ext_resource type="Script" path="res://scripts/Bullet.gd" id="2_bullet"]
+[ext_resource type="PackedScene" uid="uid://cxf45mrj3bb3e" path="res://models/interactables/bullet.glb" id="1_mkf8s"]
+[ext_resource type="Script" uid="uid://b5batxi13jneq" path="res://scripts/Bullet.gd" id="2_bullet"]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_y25gk"]
 height = 0.113708496
