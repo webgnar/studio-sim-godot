@@ -229,10 +229,10 @@ func _display_analysis_visualizations(result: ValidationResult):
 		var ref_hist = debug["reference_histogram"]
 
 		player_histogram_display.texture = HistogramRenderer.create_histogram_texture(player_hist)
-		player_swatch_display.texture = HistogramRenderer.create_color_swatch(player_hist)
+		player_swatch_display.texture = HistogramRenderer.create_top_colors_swatch(player_hist)
 
 		reference_histogram_display.texture = HistogramRenderer.create_histogram_texture(ref_hist)
-		reference_swatch_display.texture = HistogramRenderer.create_color_swatch(ref_hist)
+		reference_swatch_display.texture = HistogramRenderer.create_top_colors_swatch(ref_hist)
 
 		histogram_panel.visible = true
 	else:

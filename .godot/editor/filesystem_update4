@@ -10,3 +10,8 @@ res://scripts/TitleScreenController.gd
 res://scripts/WorldSetup.gd
 res://scenes/objects/SaveComputer.tscn
 res://scripts/SaveComputerInteraction.gd
+res://scripts/painting/HistogramRenderer.gd
+res://scripts/painting/PaintingSystem2D.gd
+res://scripts/painting/VisualValidator.gd
+res://scripts/ui/ValidationDebugOverlay.gd
+res://scripts/ui/ValidationResultUI.gd

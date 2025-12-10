@@ -61,3 +61,59 @@ static func get_histogram_text(histogram: Dictionary) -> String:
 		histogram.get("blue", 0.0),
 		histogram.get("pixel_count", 0)
 	]
+
+static func create_top_colors_swatch(histogram: Dictionary, size: Vector2i = Vector2i(150, 50)) -> ImageTexture:
+	"""Create 3-panel color swatch showing top 3 colors"""
+	if histogram.is_empty() or not histogram.has("top_colors"):
+		return create_color_swatch(histogram, size)  # Fallback to average
+
+	var top_colors = histogram["top_colors"]
+	if top_colors.is_empty():
+		return create_color_swatch(histogram, size)
+
+	var image = Image.create(size.x, size.y, false, Image.FORMAT_RGBA8)
+
+	# Divide into 3 vertical sections
+	var section_width = size.x / 3
+
+	for i in range(min(3, top_colors.size())):
+		var x_start = int(i * section_width)
+		var x_end = int((i + 1) * section_width) if i < 2 else size.x
+		var color = top_colors[i]["color"]
+
+		# Fill section
+		for y in range(size.y):
+			for x in range(x_start, x_end):
+				image.set_pixel(x, y, color)
+
+	# If fewer than 3 colors, fill remaining with black
+	if top_colors.size() < 3:
+		for i in range(top_colors.size(), 3):
+			var x_start = int(i * section_width)
+			var x_end = int((i + 1) * section_width) if i < 2 else size.x
+			for y in range(size.y):
+				for x in range(x_start, x_end):
+					image.set_pixel(x, y, Color.BLACK)
+
+	return ImageTexture.create_from_image(image)
+
+static func get_top_colors_text(histogram: Dictionary) -> String:
+	"""Format top 3 colors as readable text"""
+	if histogram.is_empty() or not histogram.has("top_colors"):
+		return get_histogram_text(histogram)  # Fallback
+
+	var top_colors = histogram["top_colors"]
+	if top_colors.is_empty():
+		return "No color data"
+
+	var lines = []
+	for i in range(top_colors.size()):
+		var entry = top_colors[i]
+		var c = entry["color"]
+		lines.append("#%d: RGB(%.0f,%.0f,%.0f) - %.1f%%" % [
+			i + 1,
+			c.r * 255, c.g * 255, c.b * 255,
+			entry["percentage"]
+		])
+
+	return "\n".join(lines)

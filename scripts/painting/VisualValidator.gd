@@ -68,25 +68,31 @@ static func compare_images(current: Image, reference: Image, color_tolerance: fl
 
 static func calculate_color_distribution(image: Image) -> Dictionary:
 	"""
-	Analyze color distribution in an image
+	Analyze color distribution and extract top 3 most frequent colors
 
 	Returns:
-		Dictionary with color histogram data (simplified buckets)
+		Dictionary with:
+			- red, green, blue, alpha: Average color (backward compatibility)
+			- pixel_count: Total non-transparent pixels
+			- top_colors: Array of top 3 {color: Color, count: int, percentage: float}
 	"""
 
 	if not image:
 		return {}
 
 	var size = image.get_size()
-	var histogram = {
-		"red": 0.0,
-		"green": 0.0,
-		"blue": 0.0,
-		"alpha": 0.0,
-		"pixel_count": 0
-	}
 
-	# Sample every pixel and accumulate color values
+	# Build color frequency map (bucketed to reduce unique colors)
+	var color_buckets = {}  # Quantized color -> count
+	var total_pixels = 0
+	var sum_r = 0.0
+	var sum_g = 0.0
+	var sum_b = 0.0
+
+	# Bucket size: 16 RGB steps (256/16 = 16 buckets per channel)
+	# This reduces color space from 16M colors to ~4K buckets
+	var bucket_size = 16
+
 	for y in range(size.y):
 		for x in range(size.x):
 			var color = image.get_pixel(x, y)
@@ -95,21 +101,60 @@ static func calculate_color_distribution(image: Image) -> Dictionary:
 			if color.a < 0.1:
 				continue
 
-			histogram["red"] += color.r
-			histogram["green"] += color.g
-			histogram["blue"] += color.b
-			histogram["alpha"] += color.a
-			histogram["pixel_count"] += 1
+			# Quantize color to bucket (reduces near-identical colors)
+			var r_bucket = int((color.r * 255) / bucket_size) * bucket_size
+			var g_bucket = int((color.g * 255) / bucket_size) * bucket_size
+			var b_bucket = int((color.b * 255) / bucket_size) * bucket_size
+			var bucket_key = "%d,%d,%d" % [r_bucket, g_bucket, b_bucket]
 
-	# Average the values
-	if histogram["pixel_count"] > 0:
-		var count = float(histogram["pixel_count"])
-		histogram["red"] /= count
-		histogram["green"] /= count
-		histogram["blue"] /= count
-		histogram["alpha"] /= count
+			# Increment bucket count
+			color_buckets[bucket_key] = color_buckets.get(bucket_key, 0) + 1
 
-	return histogram
+			# Accumulate for average
+			sum_r += color.r
+			sum_g += color.g
+			sum_b += color.b
+			total_pixels += 1
+
+	if total_pixels == 0:
+		return {}
+
+	# Sort buckets by frequency and get top 3
+	var sorted_buckets = []
+	for bucket_key in color_buckets:
+		var parts = bucket_key.split(",")
+		var bucket_color = Color(
+			int(parts[0]) / 255.0,
+			int(parts[1]) / 255.0,
+			int(parts[2]) / 255.0,
+			1.0
+		)
+		sorted_buckets.append({
+			"color": bucket_color,
+			"count": color_buckets[bucket_key]
+		})
+
+	sorted_buckets.sort_custom(func(a, b): return a["count"] > b["count"])
+
+	# Extract top 3 with percentages
+	var top_colors = []
+	for i in range(min(3, sorted_buckets.size())):
+		var bucket = sorted_buckets[i]
+		top_colors.append({
+			"color": bucket["color"],
+			"count": bucket["count"],
+			"percentage": (float(bucket["count"]) / total_pixels) * 100.0
+		})
+
+	# Return both old format (backward compat) and new top colors
+	return {
+		"red": sum_r / total_pixels,
+		"green": sum_g / total_pixels,
+		"blue": sum_b / total_pixels,
+		"alpha": 1.0,
+		"pixel_count": total_pixels,
+		"top_colors": top_colors
+	}
 
 static func compare_color_distributions(current_hist: Dictionary, reference_hist: Dictionary) -> float:
 	"""

@@ -542,10 +542,21 @@ func verify_painting(target: PaintingMission) -> ValidationResult:
 				if reference_texture:
 					var reference_image = reference_texture.get_image()
 
+					# Decompress images if needed (required for get_pixel() calls)
+					if current_image and current_image.is_compressed():
+						current_image.decompress()
+					if reference_image and reference_image.is_compressed():
+						reference_image.decompress()
+
 					if current_image and reference_image:
 						# Rotate current image to match reference orientation
 						# (Reference images are rotated 90° clockwise during capture)
 						current_image.rotate_90(CLOCKWISE)
+
+						# Store images for heatmap regeneration
+						if result.debug_enabled:
+							result.debug_data["current_image"] = current_image.duplicate()
+							result.debug_data["reference_image"] = reference_image.duplicate()
 
 						# Get color tolerance based on difficulty
 						var color_tolerance = target.get_color_tolerance()
@@ -622,6 +633,11 @@ func _generate_heatmap_data(current: Image, reference: Image, tolerance: float) 
 	Red = no match
 	Alpha indicates match quality
 	"""
+	# Apply multiplier if debug overlay is available
+	var adjusted_tolerance = tolerance
+	if ValidationDebugOverlay:
+		adjusted_tolerance = tolerance * ValidationDebugOverlay.heatmap_tolerance_multiplier
+
 	var width = reference.get_size().x
 	var height = reference.get_size().y
 
@@ -651,13 +667,13 @@ func _generate_heatmap_data(current: Image, reference: Image, tolerance: float) 
 			# Calculate color distance using public method
 			var color_diff = VisualValidator.color_distance(current_color, reference_color)
 
-			if color_diff <= tolerance:
+			if color_diff <= adjusted_tolerance:
 				# Green for matching (brighter = closer match)
-				var quality = 1.0 - (color_diff / tolerance)
+				var quality = 1.0 - (color_diff / adjusted_tolerance)
 				heatmap.set_pixel(x, y, Color(0, quality, 0, 0.7))
 			else:
 				# Red for mismatch (brighter = worse)
-				var severity = min((color_diff - tolerance) / tolerance, 1.0)
+				var severity = min((color_diff - adjusted_tolerance) / adjusted_tolerance, 1.0)
 				heatmap.set_pixel(x, y, Color(1.0, 0, 0, 0.5 + severity * 0.3))
 
 	return heatmap

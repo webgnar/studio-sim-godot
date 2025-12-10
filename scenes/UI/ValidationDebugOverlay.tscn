@@ -55,6 +55,27 @@ layout_mode = 2
 text = "Matching: 0 / 0 (0.0%)"
 horizontal_alignment = 1
 
+[node name="HeatmapTuningLabel" type="Label" parent="PanelContainer/MarginContainer/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+text = "Heatmap Tolerance Multiplier"
+
+[node name="HeatmapMultiplierContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="HeatmapMultiplierSlider" type="HSlider" parent="PanelContainer/MarginContainer/ScrollContainer/VBoxContainer/HeatmapMultiplierContainer"]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 1.0
+max_value = 10.0
+step = 0.1
+value = 5.0
+
+[node name="HeatmapMultiplierValue" type="Label" parent="PanelContainer/MarginContainer/ScrollContainer/VBoxContainer/HeatmapMultiplierContainer"]
+layout_mode = 2
+text = "5.0x"
+
 [node name="HSeparator5" type="HSeparator" parent="PanelContainer/MarginContainer/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 
