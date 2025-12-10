@@ -161,11 +161,16 @@ func _on_interacted(player_interaction: PlayerInteractionComponent) -> void:
 	"""Override interaction based on hung state"""
 
 	if is_hung:
+		# Store nail reference before unhang() clears it
+		var nail_to_remove = current_nail
+
 		# If hung, unhang it AND pick it up in one action
 		unhang()
+
 		# Remove the nail (nail will delete itself when painting removed)
-		if current_nail:
-			current_nail.remove_painting()
+		if nail_to_remove and is_instance_valid(nail_to_remove):
+			nail_to_remove.remove_painting()
+
 		# Then pick up
 		pickup(player_interaction)
 	elif is_carried and nearby_nail:

@@ -1,3 +1,4 @@
+Marker3D
 CollisionShape3D
 RigidBody3D
 CarryableComponent
@@ -10,5 +11,4 @@ InteractionComponent
 MeshInstance3D
 TextureRect
 AnimationPlayer
-Marker3D
 Sprite3D

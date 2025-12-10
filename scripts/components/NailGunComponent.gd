@@ -85,10 +85,10 @@ func _spawn_bullet() -> void:
 
 func _calculate_nail_rotation(surface_normal: Vector3) -> Vector3:
 	"""Calculate rotation to make nail stick perpendicular to surface"""
-	# Nail model points forward along -Z axis
-	# We want it to point along surface_normal (outward from wall)
+	# Nail model's length runs along X axis:
+	# - Head (positive X) should point OUT from wall (along surface_normal)
+	# - Point (negative X) should point INTO wall (along -surface_normal)
 
-	# Create a basis where Z points along surface normal
 	var up = Vector3.UP
 
 	# Handle edge case: surface is perfectly vertical (normal perpendicular to up)
@@ -96,10 +96,11 @@ func _calculate_nail_rotation(surface_normal: Vector3) -> Vector3:
 		up = Vector3.RIGHT
 
 	# Build orthonormal basis
+	# We want surface_normal to be the nail's X axis (head points out)
 	var right = surface_normal.cross(up).normalized()
 	up = right.cross(surface_normal).normalized()
 
-	# Basis: right=X, up=Y, -surface_normal=Z (nail points OUT from wall)
-	var basis = Basis(right, up, -surface_normal)
+	# Basis: X=surface_normal (head out), Y=up, Z=right
+	var basis = Basis(surface_normal, up, right)
 
 	return basis.get_euler()

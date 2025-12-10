@@ -9,3 +9,5 @@ res://scenes/NailGun.tscn
 res://scenes/CarryablePainting.tscn
 res://scripts/WorldStateManager.gd
 res://scenes/WallNail.tscn
+res://scripts/components/PaintingHangingComponent.gd
+res://scripts/components/NailGunComponent.gd
