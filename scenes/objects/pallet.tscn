@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=3 uid="uid://cfex2jji0jxay"]
+
+[ext_resource type="PackedScene" uid="uid://bsbvqf088sigr" path="res://models/props/woodPallet.gltf" id="1_lvhhd"]
+[ext_resource type="Script" uid="uid://cbwg344irqecy" path="res://scripts/components/CarryableComponent.gd" id="2_tuxx3"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_dyafi"]
+size = Vector3(2.2, 0.21, 1.46)
+
+[node name="pallet" type="RigidBody3D"]
+collision_layer = 8
+collision_mask = 2
+
+[node name="model" parent="." instance=ExtResource("1_lvhhd")]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.05, -0.07, -0.1)
+shape = SubResource("BoxShape3D_dyafi")
+
+[node name="CarryableComponent" type="Node3D" parent="."]
+script = ExtResource("2_tuxx3")
+metadata/_custom_type_script = "uid://cbwg344irqecy"

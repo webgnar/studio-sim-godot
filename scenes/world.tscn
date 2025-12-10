@@ -1,4 +1,4 @@
-[gd_scene load_steps=132 format=3 uid="uid://cnmivki1rop3b"]
+[gd_scene load_steps=131 format=3 uid="uid://cnmivki1rop3b"]
 
 [ext_resource type="Material" uid="uid://wwlsotlotycw" path="res://materials/wood.tres" id="1_4mrxx"]
 [ext_resource type="Texture2D" uid="uid://bke1xjp3mdreb" path="res://sprites/door.jpg" id="1_i7141"]
@@ -392,9 +392,6 @@ albedo_texture = SubResource("ViewportTexture_e68xj")
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_r5yoc"]
 size = Vector3(6.555237, 4.649658, 3.814176)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_dyafi"]
-size = Vector3(2.2, 0.21, 1.46)
 
 [sub_resource type="Animation" id="Animation_c15v2"]
 length = 0.001
@@ -1237,22 +1234,6 @@ transform = Transform3D(1, -2.1855696e-08, -5.8562186e-09, 2.1855715e-08, 1.0000
 
 [node name="Label3D" parent="CameraZone3 inside" index="3"]
 visible = false
-
-[node name="pallet" type="RigidBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.7369434, 1, 12.688065)
-collision_layer = 8
-collision_mask = 2
-
-[node name="model" parent="pallet" instance=ExtResource("71_r5yoc")]
-transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="pallet"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.05, -0.07, -0.1)
-shape = SubResource("BoxShape3D_dyafi")
-
-[node name="CarryableComponent" type="Node3D" parent="pallet"]
-script = ExtResource("46_e68xj")
-metadata/_custom_type_script = "uid://cbwg344irqecy"
 
 [node name="table" parent="." instance=ExtResource("73_ca4ee")]
 transform = Transform3D(0, 0, 0.099999994, 0, 0.1, 0, -0.099999994, 0, 0, 1.8911555, 0.70087993, 8.85083)

@@ -621,6 +621,121 @@ func verify_painting(target: PaintingMission) -> ValidationResult:
 
 	return result
 
+func verify_painting_async(target: PaintingMission, loading_overlay) -> ValidationResult:
+	"""Async version of verify_painting() with loading overlay progress updates"""
+	var result = ValidationResult.new()
+
+	# Always enable debug data capture for heatmap and histogram visualizations
+	result.debug_enabled = true
+
+	# Perform visual validation using pixel comparison and color distribution
+	var visual_percentage: float = 0.0
+	var color_distribution_percentage: float = 0.0
+
+	# Get reference image and compare with current canvas
+	if target.reference_image_path and target.reference_image_path != "":
+		# Capture current viewport as image
+		if canvas_viewport:
+			var current_texture = canvas_viewport.get_texture()
+			if current_texture:
+				var current_image = current_texture.get_image()
+
+				# Load reference image
+				var reference_texture = load(target.reference_image_path) as Texture2D
+				if reference_texture:
+					var reference_image = reference_texture.get_image()
+
+					# Decompress images if needed (required for get_pixel() calls)
+					if current_image and current_image.is_compressed():
+						current_image.decompress()
+					if reference_image and reference_image.is_compressed():
+						reference_image.decompress()
+
+					if current_image and reference_image:
+						# Rotate current image to match reference orientation
+						# (Reference images are rotated 90° clockwise during capture)
+						current_image.rotate_90(CLOCKWISE)
+
+						# Store images for heatmap regeneration
+						if result.debug_enabled:
+							result.debug_data["current_image"] = current_image.duplicate()
+							result.debug_data["reference_image"] = reference_image.duplicate()
+
+						# Get color tolerance based on difficulty
+						var color_tolerance = target.get_color_tolerance()
+
+						# Store color tolerance
+						if result.debug_enabled:
+							result.debug_data["color_tolerance"] = color_tolerance
+
+						# Step 1: Perform pixel-by-pixel comparison
+						if loading_overlay:
+							loading_overlay.update_step(2, 5, "Comparing pixels...")
+							await get_tree().process_frame
+
+						var visual_result = VisualValidator.compare_images(current_image, reference_image, color_tolerance)
+						visual_percentage = visual_result["visual_score"]
+
+						# Step 2: Generate and store heatmap for visualization
+						if loading_overlay:
+							loading_overlay.update_step(3, 5, "Generating heatmap...")
+							await get_tree().process_frame
+
+						if result.debug_enabled:
+							result.debug_data["heatmap_data"] = _generate_heatmap_data(current_image, reference_image, color_tolerance)
+							result.debug_data["total_pixels"] = visual_result["total_pixels"]
+							result.debug_data["matching_pixels"] = visual_result["matching_pixels"]
+
+						# Step 3: Compare color distributions
+						if loading_overlay:
+							loading_overlay.update_step(4, 5, "Analyzing colors...")
+							await get_tree().process_frame
+
+						var current_hist = VisualValidator.calculate_color_distribution(current_image)
+						var reference_hist = VisualValidator.calculate_color_distribution(reference_image)
+						color_distribution_percentage = VisualValidator.compare_color_distributions(current_hist, reference_hist)
+
+						# Store histogram data for visualization
+						if result.debug_enabled:
+							result.debug_data["current_histogram"] = current_hist
+							result.debug_data["reference_histogram"] = reference_hist
+					else:
+						push_warning("PaintingSystem2D: Could not extract images for visual validation")
+				else:
+					push_warning("PaintingSystem2D: Could not load reference image from '%s'" % target.reference_image_path)
+	else:
+		push_warning("PaintingSystem2D: No reference image path set, validation may not work correctly")
+
+	# Get pass threshold based on difficulty
+	var pass_threshold = target.get_pass_threshold()
+
+	# Store all scores for visualization
+	if result.debug_enabled:
+		result.debug_data["visual_score"] = visual_percentage
+		result.debug_data["color_score"] = color_distribution_percentage
+		result.debug_data["pass_threshold"] = pass_threshold
+
+	# Set simple score (blends visual and color scores)
+	result.set_simple_score(visual_percentage, color_distribution_percentage, pass_threshold)
+
+	# Store final results for visualization
+	if result.debug_enabled:
+		result.debug_data["blended_score"] = result.match_percentage
+		result.debug_data["grade"] = result.get_grade()
+
+	# Add detailed feedback if not passing
+	if not result.success:
+		result.add_error("Match score: %.1f%% (need %.1f%% to pass)" % [
+			result.match_percentage,
+			result.pass_threshold
+		])
+		result.add_error("Breakdown - Precision: %.1f%%, Color Field: %.1f%%" % [
+			visual_percentage,
+			color_distribution_percentage
+		])
+
+	return result
+
 func _is_debug_mode_enabled() -> bool:
 	"""Check if debug overlay is active"""
 	# Check if autoload exists and is visible
@@ -754,14 +869,24 @@ func submit_painting():
 
 	var mission_id = MissionManager.current_mission.mission_id
 
-	# Validate the painting
-	var result = verify_painting(MissionManager.current_mission)
+	# Show loading overlay
+	if ValidationLoadingOverlay:
+		ValidationLoadingOverlay.show_loading()
+		ValidationLoadingOverlay.update_step(1, 5, "Preparing validation...")
+		await get_tree().process_frame
+
+	# Validate the painting with async progress updates
+	var result = await verify_painting_async(MissionManager.current_mission, ValidationLoadingOverlay)
 
 	# Update debug overlay if active
 	if ValidationDebugOverlay and result.debug_enabled:
 		ValidationDebugOverlay.update_display(result)
 
 	# Save paintings to disk (await to ensure preview sprite is hidden during capture)
+	if ValidationLoadingOverlay:
+		ValidationLoadingOverlay.update_step(5, 5, "Saving painting...")
+		await get_tree().process_frame
+
 	var latest_path = await save_painting_image(mission_id, false)  # Always save latest
 
 	# Check if this is a new best score
@@ -772,6 +897,10 @@ func submit_painting():
 	if is_new_best:
 		best_path = await save_painting_image(mission_id, true)  # Save as best too
 		print("PaintingSystem2D: New best score! Saved best painting.")
+
+	# Hide loading overlay
+	if ValidationLoadingOverlay:
+		ValidationLoadingOverlay.hide_loading()
 
 	# Save the result to mission manager with painting paths
 	MissionManager.complete_mission(result, latest_path, best_path)

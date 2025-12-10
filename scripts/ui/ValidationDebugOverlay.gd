@@ -171,16 +171,16 @@ func update_display(result: ValidationResult):
 		var pct = (float(matching) / float(total)) * 100.0 if total > 0 else 0.0
 		pixel_stats.text = "Matching: %d / %d pixels (%.1f%%)" % [matching, total, pct]
 
-	# Display Histograms with Top 3 Colors
+	# Display Histograms with Top 5 Diverse Colors
 	if debug.has("current_histogram") and debug.has("reference_histogram"):
 		var player_hist = debug["current_histogram"]
 		player_histogram_display.texture = HistogramRenderer.create_histogram_texture(player_hist)
-		player_swatch.texture = HistogramRenderer.create_top_colors_swatch(player_hist)
+		player_swatch.texture = HistogramRenderer.create_top_colors_swatch(player_hist, Vector2i(250, 50))
 		player_hist_text.text = HistogramRenderer.get_top_colors_text(player_hist)
 
 		var ref_hist = debug["reference_histogram"]
 		reference_histogram_display.texture = HistogramRenderer.create_histogram_texture(ref_hist)
-		reference_swatch.texture = HistogramRenderer.create_top_colors_swatch(ref_hist)
+		reference_swatch.texture = HistogramRenderer.create_top_colors_swatch(ref_hist, Vector2i(250, 50))
 		reference_hist_text.text = HistogramRenderer.get_top_colors_text(ref_hist)
 
 	# Display Scores

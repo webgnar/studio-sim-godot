@@ -46,7 +46,7 @@ res://resources/missions/mission2.tres::700791cf32e1a3e6f4fc718750e6c4c8::176473
 res://resources/missions/mission3.tres::694cf68fc7165aeff859eb42700520bf::1764739435::res://.godot/exported/133200997/export-486501cd715ad0a5e5f40ef929b9981b-mission3.res
 res://scenes/UI/MissionHUD.tscn::5345fac861c24b966130fdfe90f0a178::1764746484::res://.godot/exported/133200997/export-4d2dd4287b6b807c214838dd5a3edc6e-MissionHUD.scn
 res://materials/hover_outline_material.tres::853f0ca418095539c9364fab16f5a17d::1764784996::res://.godot/exported/133200997/export-345b0279f9b23c77a8a640208f63399e-hover_outline_material.res
-res://scenes/UI/ValidationDebugOverlay.tscn::4a8995de879b636ea9ce3054fd03075c::1765338323::res://.godot/exported/133200997/export-64bbf215860598da7f6a84327bfaa756-ValidationDebugOverlay.scn
+res://scenes/UI/ValidationDebugOverlay.tscn::3c372de21af8f14dca98ee048bc56394::1765342840::res://.godot/exported/133200997/export-64bbf215860598da7f6a84327bfaa756-ValidationDebugOverlay.scn
 res://scenes/player.tscn::7d04957d32ce7d61c955fe293bc5c0e1::1765262806::res://.godot/exported/133200997/export-234fb6894ec6226e856ab7f825500d3d-player.scn
 res://materials/painting1.tres::0595474fed80dfdef8bc7dfe253daba3::1765169442::res://.godot/exported/133200997/export-de347c3ab4848e07d0a0b6354c0c036d-painting1.res
 res://materials/painting2.tres::d4630bb2ff1000d2d5353bdbe720439c::1765170218::res://.godot/exported/133200997/export-3d8d4669cae41167f82867ef7d6c5dc2-painting2.res

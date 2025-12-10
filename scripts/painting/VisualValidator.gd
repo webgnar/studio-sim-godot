@@ -136,15 +136,29 @@ static func calculate_color_distribution(image: Image) -> Dictionary:
 
 	sorted_buckets.sort_custom(func(a, b): return a["count"] > b["count"])
 
-	# Extract top 3 with percentages
+	# Extract top 5 with diversity filtering
+	# Ensure colors are visually distinct to show both dominant and accent colors
 	var top_colors = []
-	for i in range(min(3, sorted_buckets.size())):
-		var bucket = sorted_buckets[i]
-		top_colors.append({
-			"color": bucket["color"],
-			"count": bucket["count"],
-			"percentage": (float(bucket["count"]) / total_pixels) * 100.0
-		})
+	var min_distance = 100.0  # Minimum Euclidean RGB distance for diversity
+
+	for bucket in sorted_buckets:
+		if top_colors.size() >= 5:
+			break
+
+		# Check if this color is distinct from all selected colors
+		var is_distinct = true
+		for selected in top_colors:
+			var dist = color_distance(bucket["color"], selected["color"])
+			if dist < min_distance:
+				is_distinct = false
+				break
+
+		if is_distinct:
+			top_colors.append({
+				"color": bucket["color"],
+				"count": bucket["count"],
+				"percentage": (float(bucket["count"]) / total_pixels) * 100.0
+			})
 
 	# Return both old format (backward compat) and new top colors
 	return {
