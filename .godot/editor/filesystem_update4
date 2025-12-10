@@ -4,3 +4,9 @@ res://models/new_array_mesh2.tres
 res://models/new_array_mesh3.tres
 res://scenes/world.tscn
 res://materials/floor.tres
+res://scenes/CarryablePainting.tscn
+res://scripts/PaintingSpawner.gd
+res://scripts/TitleScreenController.gd
+res://scripts/WorldSetup.gd
+res://scenes/objects/SaveComputer.tscn
+res://scripts/SaveComputerInteraction.gd

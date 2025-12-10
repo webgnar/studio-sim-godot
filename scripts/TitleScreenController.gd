@@ -89,7 +89,8 @@ func _navigate_menu(direction: int):
 func _check_save_exists() -> bool:
 	"""Check if any save files exist"""
 	return (FileAccess.file_exists("user://player_data.json") or
-			FileAccess.file_exists("user://mission_progression.json"))
+			FileAccess.file_exists("user://mission_progression.json") or
+			FileAccess.file_exists("user://world_state.json"))
 
 func _on_continue_pressed():
 	"""Load the world scene - UIManager will load existing save data in its _ready()"""
@@ -145,6 +146,11 @@ func _wipe_save_data():
 	if dir and dir.dir_exists("mission_paintings"):
 		_delete_directory_recursive("user://mission_paintings")
 		print("TitleScreen: Deleted mission_paintings directory")
+
+	# Delete world state (carryable paintings)
+	if WorldStateManager:
+		WorldStateManager.clear_world_state()
+		print("TitleScreen: Cleared world state")
 
 func _delete_directory_recursive(path: String):
 	"""Recursively delete a directory and all its contents"""

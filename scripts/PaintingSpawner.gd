@@ -23,12 +23,21 @@ func replace_painting_with_carryable(world: Node3D) -> void:
 	# Bake texture from current painting
 	var baked_texture = await _bake_painting_texture(old_painting_system)
 
+	# Generate unique painting ID and save texture to disk
+	var painting_id = "world_painting_%d_%d" % [Time.get_ticks_msec(), paintings_created]
+	var texture_path = _save_painting_texture(baked_texture, painting_id)
+
 	# Store transform
 	var wall_position = old_painting_root.global_position
 	var wall_rotation = old_painting_root.global_rotation
 
 	# Spawn carryable painting with frozen texture
 	var carryable = carryable_painting_scene.instantiate()
+
+	# Set metadata BEFORE adding to tree (so _ready can register)
+	carryable.painting_id = painting_id
+	carryable.texture_path = texture_path
+
 	world.add_child(carryable)
 
 	# Use spawn marker if available, otherwise use wall position
@@ -136,6 +145,25 @@ func _find_painting_ui(node: Node) -> PaintingUI:
 			return result
 
 	return null
+
+func _save_painting_texture(baked_texture: ImageTexture, painting_id: String) -> String:
+	"""Save baked painting texture to disk and return file path"""
+	# Ensure world_paintings directory exists
+	WorldStateManager._ensure_directories()
+
+	# Generate filename from painting_id
+	var filename = painting_id + ".png"
+	var full_path = "user://world_paintings/" + filename
+
+	# Save texture Image to PNG
+	var image = baked_texture.get_image()
+	var error = image.save_png(full_path)
+
+	if error != OK:
+		push_error("Failed to save painting texture: " + str(error))
+		return ""
+
+	return full_path
 
 func _spawn_carryable_painting(texture: ImageTexture, pos: Vector3, rot: Vector3) -> RigidBody3D:
 	"""Create carryable painting instance with baked texture"""

@@ -13,3 +13,10 @@ func _ready():
 	var painting_system_2d = painting_root_2d.get_node("CanvasViewport/CanvasRoot")
 	if mission_authoring_ui and painting_system_2d:
 		mission_authoring_ui.set_painting_system(painting_system_2d)
+
+	# Wait one frame for scene tree to fully initialize
+	await get_tree().process_frame
+
+	# Load saved world state (spawn saved carryable paintings)
+	if WorldStateManager:
+		WorldStateManager.load_world_state(self)

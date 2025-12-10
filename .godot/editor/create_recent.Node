@@ -1,6 +1,7 @@
-CollisionShape3D
 StaticBody3D
 Node3D
+InteractionComponent
+CollisionShape3D
 MeshInstance3D
 TextureRect
 AnimationPlayer
@@ -11,4 +12,3 @@ Button
 VBoxContainer
 Label
 Control
-CanvasLayer

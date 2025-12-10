@@ -57,7 +57,6 @@
 [ext_resource type="PackedScene" uid="uid://bsbvqf088sigr" path="res://models/props/woodPallet.gltf" id="71_r5yoc"]
 [ext_resource type="PackedScene" uid="uid://btuhdnbc2hjii" path="res://scenes/PaintingRoot.tscn" id="73_1m1ue"]
 [ext_resource type="PackedScene" uid="uid://d2y06butup31i" path="res://scenes/objects/table.tscn" id="73_ca4ee"]
-[ext_resource type="PackedScene" uid="uid://yp2r0ssmmrwa" path="res://models/props/computer.gltf" id="73_ntuqo"]
 [ext_resource type="PackedScene" uid="uid://itduhs107nac" path="res://models/props/water_cooler.gltf" id="74_ca4ee"]
 [ext_resource type="PackedScene" uid="uid://bqbqfg2mfb0iw" path="res://scenes/UI/PaintingUI.tscn" id="74_ntuqo"]
 [ext_resource type="PackedScene" uid="uid://bshsrjrokypta" path="res://scenes/PaintingRoot2D.tscn" id="75_ca4ee"]
@@ -65,6 +64,7 @@
 [ext_resource type="PackedScene" uid="uid://c7vk8n8k7j8k8" path="res://scenes/UI/MissionAuthoringUI.tscn" id="76_author"]
 [ext_resource type="PackedScene" uid="uid://ctv5r4f51ufg3" path="res://scenes/UI/MissionSelectionUI.tscn" id="77_select"]
 [ext_resource type="PackedScene" uid="uid://isbwb03yee7n" path="res://scenes/UI/ValidationResultUI.tscn" id="78_result"]
+[ext_resource type="PackedScene" uid="uid://bv4237ec57bk2" path="res://scenes/objects/SaveComputer.tscn" id="79_l137e"]
 [ext_resource type="PackedScene" uid="uid://db8764j2674fq" path="res://models/props/outlet_box.glb" id="79_swu3i"]
 [ext_resource type="PackedScene" uid="uid://d2hcs1m04uvg7" path="res://models/interactables/button.glb" id="80_oexs8"]
 [ext_resource type="Script" uid="uid://byo8qed1v1rkt" path="res://scripts/components/PaintingConvertButton.gd" id="81_n78cu"]
@@ -1254,9 +1254,6 @@ shape = SubResource("BoxShape3D_dyafi")
 script = ExtResource("46_e68xj")
 metadata/_custom_type_script = "uid://cbwg344irqecy"
 
-[node name="computer" parent="." instance=ExtResource("73_ntuqo")]
-transform = Transform3D(9.835062e-09, 0, 0.074999996, 0, 0.074999996, 0, -0.074999996, 0, 9.835062e-09, 1.9934692, 1.41991, 8.751638)
-
 [node name="table" parent="." instance=ExtResource("73_ca4ee")]
 transform = Transform3D(0, 0, 0.099999994, 0, 0.1, 0, -0.099999994, 0, 0, 1.8911555, 0.70087993, 8.85083)
 
@@ -1324,6 +1321,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2773702, 0)
 transform = Transform3D(-4.7902194e-08, -0.99488777, 0.10098683, -3.9073655e-08, 0.10098683, 0.99488777, -1, 4.3711392e-08, -4.3711385e-08, 2.8, 1.497, 5.232)
 mesh = SubResource("PlaneMesh_qaasp")
 surface_material_override/0 = SubResource("StandardMaterial3D_shehe")
+show_debug_logs = false
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="mirror"]
 transform = Transform3D(-1, 8.723369e-08, -9.650767e-08, -8.6664585e-08, -0.99998266, -0.0058816895, -9.701908e-08, -0.0058816895, 0.99998266, 0, -0.016898632, 0.0017153025)
@@ -1351,6 +1349,9 @@ transform = Transform3D(0.059995737, -0.0011920407, 0, 0.00071522593, 0.0999929,
 
 [node name="default4" parent="pallete stack" instance=ExtResource("71_r5yoc")]
 transform = Transform3D(-0.024906214, 0.06936845, 0, -0.04335528, -0.039849952, 0, 0, 0, 0.079999976, 1.4378908, 0.36619115, 0)
+
+[node name="SaveComputer" parent="." instance=ExtResource("79_l137e")]
+transform = Transform3D(-0.047106393, 0, 0.99888986, 0, 1, 0, -0.99888986, 0, -0.047106393, 1.9871993, 1.5039661, 8.739948)
 
 [editable path="Styrofoam cube"]
 [editable path="CameraZone"]
