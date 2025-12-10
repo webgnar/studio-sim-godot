@@ -1,4 +1,4 @@
-[gd_scene load_steps=128 format=3 uid="uid://cnmivki1rop3b"]
+[gd_scene load_steps=132 format=3 uid="uid://cnmivki1rop3b"]
 
 [ext_resource type="Material" uid="uid://wwlsotlotycw" path="res://materials/wood.tres" id="1_4mrxx"]
 [ext_resource type="Texture2D" uid="uid://bke1xjp3mdreb" path="res://sprites/door.jpg" id="1_i7141"]
@@ -17,9 +17,12 @@
 [ext_resource type="PackedScene" uid="uid://44g07prjgs5x" path="res://models/props/pipe_gray bent.glb" id="19_kpybi"]
 [ext_resource type="PackedScene" uid="uid://cmaavrflrf4d4" path="res://models/props/pipe_gray.glb" id="19_xgqkh"]
 [ext_resource type="PackedScene" uid="uid://c8duo4thyjdsv" path="res://models/props/spotlight.glb" id="20_munwf"]
+[ext_resource type="Texture2D" uid="uid://dc88fbkg3vc5p" path="res://sprites/textures/floorboards.png" id="21_l137e"]
 [ext_resource type="PackedScene" uid="uid://dfy02uk1jbflb" path="res://models/props/light_switch box.glb" id="21_ts3gi"]
 [ext_resource type="PackedScene" uid="uid://bp08vdgdcjkvv" path="res://models/interactables/light_switch.glb" id="22_0nbtd"]
+[ext_resource type="Texture2D" uid="uid://dcij21opo0juo" path="res://sprites/normals/floor-cement-2_ambient.png" id="22_ygn2i"]
 [ext_resource type="AudioStream" uid="uid://cfqmga8or17qn" path="res://sounds/lightswitchON.ogg" id="23_l8ah6"]
+[ext_resource type="Texture2D" uid="uid://lcah2yte71x6" path="res://sprites/normals/floor-cement-2_normal.png" id="23_swu3i"]
 [ext_resource type="AudioStream" uid="uid://o3kakxscxwb1" path="res://sounds/lightswitchOFF.ogg" id="24_e75v4"]
 [ext_resource type="Shader" uid="uid://br4qh8mg5yosn" path="res://shaders/mirror.gdshader" id="25_xgqkh"]
 [ext_resource type="PackedScene" uid="uid://d0y6fk05wn5dc" path="res://models/interactables/cardboard box/box.glb" id="26_ts3gi"]
@@ -104,6 +107,17 @@ uv1_triplanar = true
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4mrxx"]
 albedo_texture = ExtResource("1_i7141")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_oexs8"]
+albedo_texture = ExtResource("21_l137e")
+normal_enabled = true
+normal_scale = 0.24
+normal_texture = ExtResource("23_swu3i")
+ao_enabled = true
+ao_light_affect = 0.08
+ao_texture = ExtResource("22_ygn2i")
+uv1_scale = Vector3(9.53, 2.89, 2.89)
+uv1_offset = Vector3(0, -1, 0)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xo05s"]
 albedo_texture = ExtResource("14_o8fc1")
@@ -589,10 +603,10 @@ collision_layer = 2
 collision_mask = 0
 
 [node name="floor" type="CSGBox3D" parent="studio"]
-transform = Transform3D(22.413044, 0, 0, 0, 0.008010681, 0, 0, 0, 1.0114841, 10.744333, -0.5221257, 0)
+transform = Transform3D(22.413044, 0, 0, 0, 0.008010681, 0, 0, 0, 1.0114841, 10.744333, -0.5221257, 0.33286813)
 use_collision = true
 collision_mask = 0
-size = Vector3(1, 12.45, 1)
+size = Vector3(0.77, 12.45, 1)
 material = ExtResource("1_k0juu")
 
 [node name="wall" type="CSGBox3D" parent="studio"]
@@ -664,6 +678,13 @@ material = ExtResource("3_qfnet")
 transform = Transform3D(-1.0000001, -3.7729234e-07, -2.0582363e-06, 5.369091e-09, -4.779656e-08, -1.4459279, 1.2916772e-09, -0.12058302, 6.272892e-08, 19.293882, -0.26620448, -0.11051236)
 size = Vector3(1, 0.6, 0.3)
 material = SubResource("StandardMaterial3D_4mrxx")
+
+[node name="floor2" type="CSGBox3D" parent="studio"]
+transform = Transform3D(-9.797052e-07, 0, -49.782604, 0, 0.00801068, 0, 0.45538867, 0, -4.421337e-08, 10.744333, -0.5207041, -0.37418643)
+use_collision = true
+collision_mask = 0
+size = Vector3(1, 12.34, 1)
+material = SubResource("StandardMaterial3D_oexs8")
 
 [node name="WINDOWS" type="Node3D" parent="."]
 
