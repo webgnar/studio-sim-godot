@@ -6,7 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://bx3k8m7qwn2pd" path="res://scenes/WallNail.tscn" id="4_wallnail"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_7rh32"]
-size = Vector3(1.0625, 0.87390137, 0.25830078)
+size = Vector3(1.0625, 0.87390137, 0.46032715)
 
 [node name="NailGun" type="RigidBody3D"]
 collision_layer = 8
@@ -25,7 +25,7 @@ script = ExtResource("2_tih70")
 metadata/_custom_type_script = "uid://cbwg344irqecy"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.03125, -0.06304932, -0.006591797)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.03125, -0.06304932, -0.012268066)
 shape = SubResource("BoxShape3D_7rh32")
 
 [node name="model" parent="." instance=ExtResource("3_83it2")]
