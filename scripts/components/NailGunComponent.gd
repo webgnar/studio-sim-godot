@@ -8,7 +8,11 @@ class_name NailGunComponent
 # --- EXPORTED VARIABLES ---
 @export_group("Nailgun Settings")
 @export var nail_scene: PackedScene  ## WallNail.tscn scene
+@export var projectile_nail_scene: PackedScene  ## ProjectileNail.tscn scene
 @export var max_nail_range: float = 20.0  ## Maximum distance for placing nails
+
+# --- PRIVATE VARIABLES ---
+var nail_spawn_marker: Marker3D
 
 # --- GODOT METHODS ---
 
@@ -17,71 +21,89 @@ func _ready() -> void:
 	# Override bullet_scene to use nail_scene
 	bullet_scene = nail_scene
 
+	# Find nail spawn marker
+	nail_spawn_marker = parent_object.get_node_or_null("nail_spawn")
+	if not nail_spawn_marker:
+		push_error("NailGunComponent: No 'nail_spawn' Marker3D found!")
+
 # --- OVERRIDDEN METHODS ---
 
 func _spawn_bullet() -> void:
-	"""Override to spawn nail at raycast hit point instead of physics bullet"""
-	if not nail_scene:
-		push_warning("NailGunComponent: No nail scene!")
+	"""Spawn projectile nail that flies through air"""
+	if not projectile_nail_scene:
+		push_warning("NailGunComponent: No projectile nail scene!")
 		return
 
-	# Get camera for aiming direction
+	if not nail_spawn_marker:
+		push_warning("NailGunComponent: No nail spawn marker!")
+		return
+
+	# Get camera for aiming
 	var camera = player_ref.get_camera()
 	if not camera:
 		push_warning("NailGunComponent: No camera!")
 		return
 
-	# === STEP 1: Raycast from camera to find wall hit ===
+	# === STEP 1: Raycast from camera to find wall hit (THE CLEAN WAY) ===
 	var camera_pos = camera.global_position
 	var camera_forward = -camera.global_transform.basis.z
 
-	# Do raycast from camera forward
 	var space_state = get_world_3d().direct_space_state
 	var ray_query = PhysicsRayQueryParameters3D.create(
 		camera_pos,
 		camera_pos + camera_forward * max_nail_range
 	)
-	# Don't hit the gun itself or player
 	ray_query.exclude = [parent_object]
-	ray_query.collision_mask = 2  # Only Static World layer
+	ray_query.collision_mask = 2  # Static World layer
 
 	var raycast_result = space_state.intersect_ray(ray_query)
 
 	if not raycast_result:
 		print("NailGun: No surface hit")
-		return  # No hit, no nail
+		return  # No hit, don't fire
 
 	# === STEP 2: Validate surface (reject floors) ===
 	var surface_normal = raycast_result.normal
 	var hit_position = raycast_result.position
 
-	# Check if surface is floor (normal pointing up)
-	# If dot product > 0.7, it's too horizontal (floor)
 	var up_alignment = surface_normal.dot(Vector3.UP)
 	if up_alignment > 0.7:
 		print("NailGun: Cannot place nail on floor! (alignment: ", up_alignment, ")")
-		return
+		return  # Don't fire at floors
 
-	# === STEP 3: Calculate nail rotation (perpendicular to wall) ===
-	var nail_rotation = _calculate_nail_rotation(surface_normal)
+	# === STEP 3: Calculate fire direction from nail spawn to hit point ===
+	var nail_spawn_pos = nail_spawn_marker.global_position
+	var fire_direction = (hit_position - nail_spawn_pos).normalized()
 
-	# === STEP 4: Spawn nail at hit point ===
-	var nail = nail_scene.instantiate()
+	# === STEP 4: Create and launch projectile nail ===
+	var projectile_nail = projectile_nail_scene.instantiate()
 
-	# Add to world first
-	get_tree().root.add_child(nail)
+	# Set fire direction
+	projectile_nail.fire_direction = fire_direction
 
-	# Set position slightly into wall to avoid floating
-	nail.global_position = hit_position + surface_normal * 0.01
+	# Pass WallNail scene to projectile
+	projectile_nail.wall_nail_scene = nail_scene
 
-	# Set rotation to stick perpendicular to surface
-	nail.global_rotation = nail_rotation
+	# Pass pre-calculated hit info (from the clean raycast!)
+	projectile_nail.target_hit_position = hit_position
+	projectile_nail.target_hit_normal = surface_normal
+	projectile_nail.has_target = true
 
-	print("=== NAIL PLACED ===")
-	print("  Position: ", nail.global_position)
+	# Add to world first (required for global transforms)
+	get_tree().root.add_child(projectile_nail)
+
+	# Set position and rotation AFTER adding to tree
+	projectile_nail.global_position = nail_spawn_pos
+	projectile_nail.look_at(nail_spawn_pos + fire_direction * 10.0, Vector3.UP)
+
+	# Launch the nail AFTER position is set
+	projectile_nail.launch()
+
+	print("=== PROJECTILE NAIL SPAWNED ===")
+	print("  Spawn pos: ", nail_spawn_pos)
+	print("  Target hit pos: ", hit_position)
 	print("  Surface normal: ", surface_normal)
-	print("  Up alignment: ", up_alignment)
-	print("  Hit object: ", raycast_result.collider.name if raycast_result.has("collider") else "unknown")
+	print("  Fire direction: ", fire_direction)
 
 func _calculate_nail_rotation(surface_normal: Vector3) -> Vector3:
 	"""Calculate rotation to make nail stick perpendicular to surface"""

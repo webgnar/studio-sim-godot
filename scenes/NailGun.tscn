@@ -1,9 +1,10 @@
-[gd_scene load_steps=6 format=3 uid="uid://ctu3xtbhbgtub"]
+[gd_scene load_steps=7 format=3 uid="uid://ctu3xtbhbgtub"]
 
 [ext_resource type="Script" uid="uid://e8axlibrd18j" path="res://scripts/components/NailGunComponent.gd" id="1_nailgun"]
 [ext_resource type="Script" uid="uid://cbwg344irqecy" path="res://scripts/components/CarryableComponent.gd" id="2_tih70"]
 [ext_resource type="PackedScene" uid="uid://cu7k34k6anyy3" path="res://models/interactables/nail_gun.glb" id="3_83it2"]
 [ext_resource type="PackedScene" uid="uid://bx3k8m7qwn2pd" path="res://scenes/WallNail.tscn" id="4_wallnail"]
+[ext_resource type="PackedScene" uid="uid://projectile_nail_scene" path="res://scenes/objects/ProjectileNail.tscn" id="5_projectilenail"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_7rh32"]
 size = Vector3(1.0625, 0.87390137, 0.46032715)
@@ -19,6 +20,7 @@ max_contacts_reported = 4
 [node name="NailGunComponent" type="Node3D" parent="."]
 script = ExtResource("1_nailgun")
 nail_scene = ExtResource("4_wallnail")
+projectile_nail_scene = ExtResource("5_projectilenail")
 
 [node name="CarryableComponent" type="Node3D" parent="."]
 script = ExtResource("2_tih70")
@@ -30,3 +32,6 @@ shape = SubResource("BoxShape3D_7rh32")
 
 [node name="model" parent="." instance=ExtResource("3_83it2")]
 transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
+
+[node name="nail_spawn" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3, 0.05, 0)
