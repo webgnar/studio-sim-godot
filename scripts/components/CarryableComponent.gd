@@ -16,6 +16,8 @@ signal e_key_interacted(player_interaction_component: PlayerInteractionComponent
 @export var drop_distance: float = 1.2 ## Auto-drop if object gets this far from carry position
 @export var lock_rotation_when_carried: bool = true ## Prevents object from tumbling while held
 @export var gravity_while_carrying: float = 0.2 ## Gravity multiplier while carrying (0 = none, 1 = full, affects heavy objects)
+@export var enable_rotation_while_carried: bool = false ## Allow rotating object with T/R/Z/X keys while carrying
+@export var rotation_speed_deg_per_sec: float = 90.0 ## Rotation speed in degrees per second (matches 2D painting system)
 
 @export_group("Throw Settings")
 @export var throw_power: float = 15.0 ## Force applied when throwing
@@ -97,6 +99,42 @@ func _physics_process(_delta: float) -> void:
 	var distance = parent_rigid_body.global_position.distance_to(carry_target)
 	if distance >= drop_distance:
 		drop()
+
+	# Handle rotation controls if enabled (R/T for Y-axis, Z/X for X-axis)
+	if enable_rotation_while_carried:
+		var y_axis_rotation: float = 0.0
+		var x_axis_rotation: float = 0.0
+
+		# Y-axis rotation (vertical - spin left/right)
+		if Input.is_action_pressed("rotate_clockwise"):
+			y_axis_rotation = 1.0
+		elif Input.is_action_pressed("rotate_counter"):
+			y_axis_rotation = -1.0
+
+		# X-axis rotation (horizontal - tilt to hang on perpendicular walls)
+		if Input.is_action_pressed("scale_sticker_up"):
+			x_axis_rotation = 1.0
+		elif Input.is_action_pressed("scale_sticker_down"):
+			x_axis_rotation = -1.0
+
+		# Apply rotations if any input detected
+		if y_axis_rotation != 0.0 or x_axis_rotation != 0.0:
+			# Temporarily unlock rotation to allow manual rotation
+			var was_locked = parent_rigid_body.lock_rotation
+			parent_rigid_body.lock_rotation = false
+
+			# Apply Y-axis rotation (vertical spin)
+			if y_axis_rotation != 0.0:
+				var y_rotation_delta = deg_to_rad(y_axis_rotation * rotation_speed_deg_per_sec * _delta)
+				parent_rigid_body.rotate_y(y_rotation_delta)
+
+			# Apply X-axis rotation (horizontal tilt)
+			if x_axis_rotation != 0.0:
+				var x_rotation_delta = deg_to_rad(x_axis_rotation * rotation_speed_deg_per_sec * _delta)
+				parent_rigid_body.rotate_x(x_rotation_delta)
+
+			# Restore lock state
+			parent_rigid_body.lock_rotation = was_locked
 
 func _exit_tree() -> void:
 	# Clean up if object is removed while being carried

@@ -1,13 +1,2 @@
-res://scripts/ui/MissionSelectionUI.gd
-res://scenes/world.tscn
-res://models/particles/new_array_mesh.tres
-res://models/particles/new_array_mesh2.tres
-res://models/particles/new_array_mesh3.tres
-res://scenes/UI/ValidationResultUI.tscn
-res://scenes/nail.tscn
-res://scenes/NailGun.tscn
 res://scenes/CarryablePainting.tscn
-res://scripts/WorldStateManager.gd
-res://scenes/WallNail.tscn
-res://scripts/components/PaintingHangingComponent.gd
-res://scripts/components/NailGunComponent.gd
+res://scripts/components/CarryableComponent.gd
