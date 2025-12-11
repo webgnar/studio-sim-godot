@@ -7,6 +7,7 @@ class_name PlayerAnimation
 @export var idle_speed: float = 1.0
 @export var walk_speed: float = 1.5
 @export var run_speed: float = 2.0
+@export var jump_speed: float = 1.0
 
 var _is_moving: bool = false
 var _is_sprinting: bool = false
@@ -37,7 +38,7 @@ func update_animation_state(velocity: Vector3, is_on_floor: bool, is_sprinting: 
 	if not is_on_floor:
 		if not _is_jumping:
 			# Try jump animation, fall back to idle if not available
-			if not play_animation("jump", idle_speed):
+			if not play_animation("jump", jump_speed):
 				play_animation("idle", idle_speed)
 			_is_jumping = true
 	else:

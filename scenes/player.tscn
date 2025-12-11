@@ -13,7 +13,6 @@ points = PackedVector3Array(-0.12520654, -0.532801, -0.4805069, 0.022783129, 0.4
 
 [node name="Player" type="CharacterBody3D"]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 0, 0)
-collision_layer = 1
 collision_mask = 11
 script = ExtResource("1_qlg0r")
 walk_speed = 3.0
@@ -35,11 +34,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.697766e-09, 0, 0.22185904)
 shape = SubResource("ConvexPolygonShape3D_71j4m")
 
 [node name="human" parent="." instance=ExtResource("2_tuyoq")]
-transform = Transform3D(0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, -3.1932013e-09, -0.94919425, 0.20556492)
+transform = Transform3D(0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, -4.858423e-09, -0.94919425, 0.24366075)
 script = ExtResource("3_fjrip")
 idle_speed = 3.0
 walk_speed = 3.0
 run_speed = 3.0
+jump_speed = 2.0
 
 [node name="Head" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.64091873, 0)
@@ -48,8 +48,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.64091873, 0)
 current = true
 
 [node name="CarryMarker" type="Marker3D" parent="Head/Camera3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2)
-visible = false
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.1372799e-08, 0, -1.5110474)
 
 [node name="GunMarker" type="Marker3D" parent="Head/Camera3D"]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0.24126537, -0.27371883, -0.71358347)
