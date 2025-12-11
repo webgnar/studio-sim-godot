@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://ctu3xtbhbgtub"]
+[gd_scene load_steps=10 format=3 uid="uid://ctu3xtbhbgtub"]
 
 [ext_resource type="Script" uid="uid://e8axlibrd18j" path="res://scripts/components/NailGunComponent.gd" id="1_nailgun"]
 [ext_resource type="Script" uid="uid://cbwg344irqecy" path="res://scripts/components/CarryableComponent.gd" id="2_tih70"]
@@ -8,6 +8,67 @@
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_7rh32"]
 size = Vector3(1.0625, 0.87390137, 0.46032715)
+
+[sub_resource type="Animation" id="Animation_83it2"]
+resource_name = "pickup"
+length = 2.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.48, 1.12, 2),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(-0.29149622, 0.054559022, 0), Vector3(-0.29149622, -0.089241594, 0), Vector3(0, 0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.48, 1.12, 2),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, 0.8909033, 0), Vector3(-0.32215187, -0.3290451, -0.86371666), Vector3(0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_7rh32"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_sgy3n"]
+_data = {
+&"RESET": SubResource("Animation_7rh32"),
+&"pickup": SubResource("Animation_83it2")
+}
 
 [node name="NailGun" type="RigidBody3D"]
 collision_layer = 8
@@ -33,7 +94,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.03125, -0.06304932, -0.0122
 shape = SubResource("BoxShape3D_7rh32")
 
 [node name="model" parent="." instance=ExtResource("3_83it2")]
-transform = Transform3D(0.08, 0, 0, 0, 0.08, 0, 0, 0, 0.08, 0, 0, 0)
+transform = Transform3D(0.08000001, 0, 0, 0, 0.08, 0, 0, 0, 0.08000001, 0, 0, 0)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="model"]
+libraries = {
+&"": SubResource("AnimationLibrary_sgy3n")
+}
 
 [node name="nail_spawn" type="Marker3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3648618, 0.18065749, -0.087259084)

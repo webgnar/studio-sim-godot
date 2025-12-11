@@ -25,6 +25,7 @@ var player_ref: PlayerInteractionComponent = null
 # --- COMPONENT REFERENCES ---
 var slide_animator: AnimationPlayer = null
 var flash_animator: AnimationPlayer = null
+var pickup_animator: AnimationPlayer = null
 var bullet_spawn_marker: Marker3D = null
 var carryable_component: CarryableComponent = null
 var original_parent: Node3D = null
@@ -54,13 +55,16 @@ func _ready() -> void:
 	interaction_text = "Pick Up Gun"
 
 func _find_animators() -> void:
-	"""Search for slide and flash AnimationPlayers in the gun hierarchy"""
+	"""Search for slide, flash, and pickup AnimationPlayers in the gun hierarchy"""
 	# Look for slide animator in model/top/AnimationPlayer
 	var model = parent_object.get_node_or_null("model")
 	if model:
 		var top = model.get_node_or_null("top")
 		if top:
 			slide_animator = top.get_node_or_null("AnimationPlayer")
+
+		# Look for pickup animator in model/AnimationPlayer
+		pickup_animator = model.get_node_or_null("AnimationPlayer")
 
 	# Look for flash animator in Sprite3D/AnimationPlayer
 	var sprite3d = parent_object.get_node_or_null("Sprite3D")
@@ -72,6 +76,8 @@ func _find_animators() -> void:
 		push_warning("WeaponComponent: Slide AnimationPlayer not found")
 	if not flash_animator:
 		push_warning("WeaponComponent: Flash AnimationPlayer not found")
+	if not pickup_animator:
+		push_warning("WeaponComponent: Pickup AnimationPlayer not found - weapon won't have pickup animation")
 
 func _find_carryable_component(node: Node) -> CarryableComponent:
 	"""Search for CarryableComponent in node hierarchy"""
@@ -172,6 +178,13 @@ func pickup(player: PlayerInteractionComponent) -> void:
 	# Play pickup sound
 	if pickup_sound:
 		_play_sound(pickup_sound)
+
+	# Play pickup animation
+	if pickup_animator and pickup_animator.has_animation("pickup"):
+		pickup_animator.play("pickup")
+		print("WeaponComponent: Playing pickup animation")
+	elif pickup_animator:
+		push_warning("WeaponComponent: AnimationPlayer found but no 'pickup' animation!")
 
 	# Update interaction text
 	interaction_text = "Drop Gun"
