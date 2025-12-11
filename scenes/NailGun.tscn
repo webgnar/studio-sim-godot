@@ -11,6 +11,10 @@ size = Vector3(1.0625, 0.87390137, 0.25830078)
 [node name="NailGun" type="RigidBody3D"]
 collision_layer = 8
 collision_mask = 2
+mass = 2.0
+continuous_cd = true
+contact_monitor = true
+max_contacts_reported = 4
 
 [node name="NailGunComponent" type="Node3D" parent="."]
 script = ExtResource("1_nailgun")
