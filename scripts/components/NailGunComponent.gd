@@ -92,9 +92,23 @@ func _spawn_bullet() -> void:
 	# Add to world first (required for global transforms)
 	get_tree().root.add_child(projectile_nail)
 
-	# Set position and rotation AFTER adding to tree
+	# Set position AFTER adding to tree
 	projectile_nail.global_position = nail_spawn_pos
-	projectile_nail.look_at(nail_spawn_pos + fire_direction * 10.0, Vector3.UP)
+
+	# Orient nail so sharp point (at negative X) faces forward in fire_direction
+	# We want: -X axis aligned with fire_direction
+	# So: +X axis aligned with -fire_direction
+	var up = Vector3.UP
+	if abs(fire_direction.dot(up)) > 0.99:
+		up = Vector3.RIGHT
+
+	# Build basis with X pointing backward (so -X points forward)
+	var nail_right = up.cross(fire_direction).normalized()  # Z axis
+	var nail_up = fire_direction.cross(nail_right).normalized()  # Y axis
+
+	# X axis should point opposite to fire direction (so -X points in fire_direction)
+	var basis = Basis(-fire_direction, nail_up, nail_right)
+	projectile_nail.global_transform.basis = basis
 
 	# Launch the nail AFTER position is set
 	projectile_nail.launch()

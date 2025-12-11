@@ -1,7 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://projectile_nail_scene"]
+[gd_scene load_steps=4 format=3 uid="uid://dnbul2rmvqtyp"]
 
 [ext_resource type="PackedScene" uid="uid://b3g0y1ku7myi3" path="res://models/interactables/nail.glb" id="1_nail_model"]
-[ext_resource type="Script" path="res://scripts/ProjectileNail.gd" id="2_projectile_nail"]
+[ext_resource type="Script" uid="uid://cbn0ybdwxylh2" path="res://scripts/ProjectileNail.gd" id="2_projectile_nail"]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_projectile"]
 height = 0.5
@@ -21,5 +21,11 @@ script = ExtResource("2_projectile_nail")
 transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0, 0)
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, -0.0833624, 0, 0)
 shape = SubResource("CylinderShape3D_projectile")
+
+[node name="head" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.1519036, 0, 0)
+
+[node name="sharp point" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3883186, 0, 0)

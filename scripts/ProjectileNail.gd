@@ -23,10 +23,10 @@ var has_target: bool = false
 # --- GODOT METHODS ---
 
 func _ready() -> void:
-	# Apply visual rotation offset to model
-	var model = get_node_or_null("nail_model")
-	if model:
-		model.rotation_degrees = visual_rotation_offset
+	# Don't apply visual rotation - orientation is set by NailGunComponent
+	# var model = get_node_or_null("nail_model")
+	# if model:
+	# 	model.rotation_degrees = visual_rotation_offset
 
 	print("=== PROJECTILE NAIL _ready() DEBUG ===")
 	print("  Nail position: ", global_position)

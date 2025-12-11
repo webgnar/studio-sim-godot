@@ -1,2 +1,6 @@
 res://scripts/ProjectileNail.gd
 res://scenes/objects/ProjectileNail.tscn
+res://scripts/components/NailGunComponent.gd
+res://models/particles/new_array_mesh.tres
+res://models/particles/new_array_mesh2.tres
+res://models/particles/new_array_mesh3.tres
