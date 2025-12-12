@@ -32,6 +32,7 @@ var original_parent: Node3D = null
 
 # --- SHOOTING VARIABLES ---
 var last_shot_time: float = 0.0
+var is_pickup_animation_playing: bool = false
 
 # --- GODOT METHODS ---
 
@@ -55,7 +56,7 @@ func _ready() -> void:
 	interaction_text = "Pick Up Gun"
 
 func _find_animators() -> void:
-	"""Search for recoil, flash, and pickup AnimationPlayers in the gun hierarchy"""
+	"""Search for slide, recoil, flash, and pickup AnimationPlayers in the gun hierarchy"""
 	var model = parent_object.get_node_or_null("model")
 	if model:
 		var model_animator = model.get_node_or_null("AnimationPlayer")
@@ -64,8 +65,9 @@ func _find_animators() -> void:
 		if model_animator:
 			pickup_animator = model_animator
 
-			# If it has recoil animation, use it for slide_animator
-			if model_animator.has_animation("recoil"):
+			# If it has shoot, slide, or recoil animations, use it for slide_animator
+			# (slide_animator is used for shoot/slide/recoil animations)
+			if model_animator.has_animation("shoot") or model_animator.has_animation("slide") or model_animator.has_animation("recoil"):
 				slide_animator = model_animator
 
 			# If it has flash animation, use it for flash_animator
@@ -86,7 +88,7 @@ func _find_animators() -> void:
 
 	# Debug warnings
 	if not slide_animator:
-		push_warning("WeaponComponent: Recoil AnimationPlayer not found")
+		push_warning("WeaponComponent: Slide/Recoil AnimationPlayer not found")
 	if not flash_animator:
 		push_warning("WeaponComponent: Flash AnimationPlayer not found")
 	if not pickup_animator:
@@ -194,7 +196,13 @@ func pickup(player: PlayerInteractionComponent) -> void:
 
 	# Play pickup animation
 	if pickup_animator and pickup_animator.has_animation("pickup"):
+		is_pickup_animation_playing = true
 		pickup_animator.play("pickup")
+
+		# Connect to animation_finished signal to clear the flag
+		if not pickup_animator.animation_finished.is_connected(_on_pickup_animation_finished):
+			pickup_animator.animation_finished.connect(_on_pickup_animation_finished)
+
 		print("WeaponComponent: Playing pickup animation")
 	elif pickup_animator:
 		push_warning("WeaponComponent: AnimationPlayer found but no 'pickup' animation!")
@@ -208,6 +216,11 @@ func drop() -> void:
 		return
 
 	state = State.WORLD
+
+	# Stop pickup animation if still playing
+	if is_pickup_animation_playing and pickup_animator:
+		pickup_animator.stop()
+		is_pickup_animation_playing = false
 
 	# Get parent RigidBody3D
 	var parent_rb = parent_object as RigidBody3D
@@ -255,6 +268,12 @@ func shoot() -> void:
 		return  # Too soon to shoot again
 
 	last_shot_time = current_time
+
+	# Cancel pickup animation if it's still playing
+	if is_pickup_animation_playing and pickup_animator:
+		pickup_animator.stop()
+		is_pickup_animation_playing = false
+		print("WeaponComponent: Pickup animation canceled by shooting")
 
 	# Spawn bullet
 	_spawn_bullet()
@@ -337,9 +356,33 @@ func _spawn_bullet() -> void:
 	print("  Fire direction: ", fire_direction)
 
 func _play_shoot_animations() -> void:
-	"""Play recoil and muzzle flash animations simultaneously"""
-	if slide_animator and slide_animator.has_animation("recoil"):
-		slide_animator.play("recoil")
+	"""Play shoot animations"""
+	# If slide_animator and flash_animator are the same (consolidated setup),
+	# we need to play a combined animation that has all the tracks
+	if slide_animator == flash_animator and slide_animator:
+		# Same AnimationPlayer - check for combined "shoot" animation first
+		if slide_animator.has_animation("shoot"):
+			slide_animator.play("shoot")
+		# Otherwise play slide (which should include recoil tracks in consolidated setup)
+		elif slide_animator.has_animation("slide"):
+			slide_animator.play("slide")
+		elif slide_animator.has_animation("recoil"):
+			slide_animator.play("recoil")
+	else:
+		# Separate AnimationPlayers - play them independently
+		if slide_animator:
+			if slide_animator.has_animation("shoot"):
+				slide_animator.play("shoot")
+			elif slide_animator.has_animation("slide"):
+				slide_animator.play("slide")
+			elif slide_animator.has_animation("recoil"):
+				slide_animator.play("recoil")
 
-	if flash_animator and flash_animator.has_animation("flash"):
-		flash_animator.play("flash")
+		if flash_animator and flash_animator.has_animation("flash"):
+			flash_animator.play("flash")
+
+func _on_pickup_animation_finished(anim_name: String) -> void:
+	"""Called when any animation finishes on the pickup animator"""
+	if anim_name == "pickup":
+		is_pickup_animation_playing = false
+		print("WeaponComponent: Pickup animation finished")

@@ -65,7 +65,7 @@ tracks/1/keys = {
 }
 
 [sub_resource type="Animation" id="Animation_sgy3n"]
-resource_name = "recoil"
+resource_name = "shoot"
 length = 0.2
 tracks/0/type = "value"
 tracks/0/imported = false
@@ -84,7 +84,7 @@ tracks/0/keys = {
 _data = {
 &"RESET": SubResource("Animation_7rh32"),
 &"pickup": SubResource("Animation_83it2"),
-&"recoil": SubResource("Animation_sgy3n")
+&"shoot": SubResource("Animation_sgy3n")
 }
 
 [node name="NailGun" type="RigidBody3D"]
