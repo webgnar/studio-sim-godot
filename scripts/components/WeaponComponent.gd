@@ -55,25 +55,38 @@ func _ready() -> void:
 	interaction_text = "Pick Up Gun"
 
 func _find_animators() -> void:
-	"""Search for slide, flash, and pickup AnimationPlayers in the gun hierarchy"""
-	# Look for slide animator in model/top/AnimationPlayer
+	"""Search for recoil, flash, and pickup AnimationPlayers in the gun hierarchy"""
 	var model = parent_object.get_node_or_null("model")
 	if model:
-		var top = model.get_node_or_null("top")
-		if top:
-			slide_animator = top.get_node_or_null("AnimationPlayer")
+		var model_animator = model.get_node_or_null("AnimationPlayer")
 
-		# Look for pickup animator in model/AnimationPlayer
-		pickup_animator = model.get_node_or_null("AnimationPlayer")
+		# Check if model/AnimationPlayer has all animations (consolidated approach)
+		if model_animator:
+			pickup_animator = model_animator
 
-	# Look for flash animator in Sprite3D/AnimationPlayer
-	var sprite3d = parent_object.get_node_or_null("Sprite3D")
-	if sprite3d:
-		flash_animator = sprite3d.get_node_or_null("AnimationPlayer")
+			# If it has recoil animation, use it for slide_animator
+			if model_animator.has_animation("recoil"):
+				slide_animator = model_animator
+
+			# If it has flash animation, use it for flash_animator
+			if model_animator.has_animation("flash"):
+				flash_animator = model_animator
+
+		# Fallback: Look for slide animator in model/top/AnimationPlayer (old structure)
+		if not slide_animator:
+			var top = model.get_node_or_null("top")
+			if top:
+				slide_animator = top.get_node_or_null("AnimationPlayer")
+
+	# Fallback: Look for flash animator in Sprite3D/AnimationPlayer (old structure)
+	if not flash_animator:
+		var sprite3d = parent_object.get_node_or_null("Sprite3D")
+		if sprite3d:
+			flash_animator = sprite3d.get_node_or_null("AnimationPlayer")
 
 	# Debug warnings
 	if not slide_animator:
-		push_warning("WeaponComponent: Slide AnimationPlayer not found")
+		push_warning("WeaponComponent: Recoil AnimationPlayer not found")
 	if not flash_animator:
 		push_warning("WeaponComponent: Flash AnimationPlayer not found")
 	if not pickup_animator:
@@ -324,9 +337,9 @@ func _spawn_bullet() -> void:
 	print("  Fire direction: ", fire_direction)
 
 func _play_shoot_animations() -> void:
-	"""Play slide and muzzle flash animations simultaneously"""
-	if slide_animator and slide_animator.has_animation("slide"):
-		slide_animator.play("slide")
+	"""Play recoil and muzzle flash animations simultaneously"""
+	if slide_animator and slide_animator.has_animation("recoil"):
+		slide_animator.play("recoil")
 
 	if flash_animator and flash_animator.has_animation("flash"):
 		flash_animator.play("flash")

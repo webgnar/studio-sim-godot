@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://6u7bns57r2hi"]
+[gd_scene load_steps=12 format=3 uid="uid://6u7bns57r2hi"]
 
 [ext_resource type="PackedScene" uid="uid://r77i37ju5du6" path="res://models/interactables/gun.glb" id="1_og67c"]
 [ext_resource type="Texture2D" uid="uid://d3xe7ak0wicts" path="res://sprites/muzzle.png" id="2_gp1hk"]
@@ -8,43 +8,6 @@
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_gun"]
 size = Vector3(0.21478271, 0.3873291, 0.5025635)
-
-[sub_resource type="Animation" id="Animation_6b133"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:position")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(-0.72265625, 1.3046875, 0.03125)]
-}
-
-[sub_resource type="Animation" id="Animation_qd4js"]
-resource_name = "slide"
-length = 0.25
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:position")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.1, 0.25),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 0,
-"values": [Vector3(-0.72265625, 1.3046875, 0.03125), Vector3(0.2958262, 1.3046875, 0.03125), Vector3(-0.72265625, 1.3046875, 0.03125)]
-}
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_haq8l"]
-_data = {
-&"RESET": SubResource("Animation_6b133"),
-&"slide": SubResource("Animation_qd4js")
-}
 
 [sub_resource type="Animation" id="Animation_r0qan"]
 resource_name = "pickup"
@@ -100,59 +63,62 @@ tracks/1/keys = {
 "update": 0,
 "values": [Vector3(0, 0, 0)]
 }
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_nf4lu"]
-_data = {
-&"RESET": SubResource("Animation_p4t50"),
-&"pickup": SubResource("Animation_r0qan")
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("top:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(-0.72265625, 1.3046875, 0.03125)]
 }
-
-[sub_resource type="Animation" id="Animation_6oi81"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:scale")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Sprite3D:scale")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
 "values": [Vector3(3, 3, 3)]
 }
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath(".:modulate")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Sprite3D:modulate")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
 "values": [Color(1, 1, 1, 0)]
 }
 
-[sub_resource type="Animation" id="Animation_bmp1f"]
+[sub_resource type="Animation" id="Animation_nf4lu"]
 resource_name = "flash"
 length = 0.15
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath(".:scale")
+tracks/0/path = NodePath("Sprite3D:scale")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.06728805),
+"times": PackedFloat32Array(0, 0.06684561),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector3(0.1, 0.1, 0.1), Vector3(0.5, 0.5, 0.5)]
+"values": [Vector3(0.1, 0.1, 0.1), Vector3(3.72, 3.72, 3.72)]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath(".:modulate")
+tracks/1/path = NodePath("Sprite3D:modulate")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -162,10 +128,28 @@ tracks/1/keys = {
 "values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
 }
 
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_5lyo6"]
+[sub_resource type="Animation" id="Animation_l2g68"]
+resource_name = "recoil"
+length = 0.2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("top:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(-0.72265625, 1.3046875, 0.03125), Vector3(0.2958262, 1.3046875, 0.03125), Vector3(-0.72265625, 1.3046875, 0.03125)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_nf4lu"]
 _data = {
-&"RESET": SubResource("Animation_6oi81"),
-&"flash": SubResource("Animation_bmp1f")
+&"RESET": SubResource("Animation_p4t50"),
+&"flash": SubResource("Animation_nf4lu"),
+&"pickup": SubResource("Animation_r0qan"),
+&"recoil": SubResource("Animation_l2g68")
 }
 
 [node name="Gun" type="RigidBody3D"]
@@ -193,25 +177,15 @@ shape = SubResource("BoxShape3D_gun")
 [node name="model" parent="." instance=ExtResource("1_og67c")]
 transform = Transform3D(0.07, 0, 0, 0, 0.07, 0, 0, 0, 0.07, 0, 0, 0)
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="model/top" index="0"]
-libraries = {
-&"": SubResource("AnimationLibrary_haq8l")
-}
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="model"]
-libraries = {
-&"": SubResource("AnimationLibrary_nf4lu")
-}
-
-[node name="Sprite3D" type="Sprite3D" parent="."]
-transform = Transform3D(-1.3113416e-07, 0, 3, 0, 3, 0, -3, 0, -1.3113416e-07, -0.29858685, 0.04936582, 0.0034592152)
+[node name="Sprite3D" type="Sprite3D" parent="model"]
+transform = Transform3D(-1.3113416e-07, 0, 3, 0, 3, 0, -3, 0, -1.3113416e-07, -4.2655263, 0.70522594, 0.049417358)
 modulate = Color(1, 1, 1, 0)
 texture_filter = 0
 texture = ExtResource("2_gp1hk")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Sprite3D"]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="model"]
 libraries = {
-&"": SubResource("AnimationLibrary_5lyo6")
+&"": SubResource("AnimationLibrary_nf4lu")
 }
 
 [node name="bullet" type="Marker3D" parent="."]
