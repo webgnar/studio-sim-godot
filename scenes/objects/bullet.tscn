@@ -14,6 +14,7 @@ mass = 0.1
 gravity_scale = 0.0
 continuous_cd = true
 script = ExtResource("2_bullet")
+speed = 15.0
 
 [node name="model" parent="." instance=ExtResource("1_mkf8s")]
 transform = Transform3D(0.07, 0, 0, 0, 0.07, 0, 0, 0, 0.07, 0, 0, 0)

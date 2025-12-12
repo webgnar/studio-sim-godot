@@ -7,3 +7,4 @@ res://models/particles/new_array_mesh3.tres
 res://scenes/NailGun.tscn
 res://scenes/objects/gun.tscn
 res://scripts/components/WeaponComponent.gd
+res://scenes/objects/bullet.tscn

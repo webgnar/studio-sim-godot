@@ -8,6 +8,7 @@ class_name ProjectileNail
 @export_group("Projectile Nail Settings")
 @export var speed: float = 20.0  ## Nail flight speed
 @export var lifetime: float = 5.0  ## Seconds before auto-despawn
+@export var damage: float = 25.0  ## Damage dealt to hit objects
 @export var wall_nail_scene: PackedScene  ## WallNail.tscn scene to spawn on impact
 @export var visual_rotation_offset: Vector3 = Vector3(0, 90, 0)  ## Model rotation offset (degrees)
 
@@ -76,6 +77,9 @@ func _on_body_entered(body: Node) -> void:
 	print("  Has target: ", has_target)
 	print("  Projectile pos: ", global_position)
 
+	# Try to apply damage to the hit object
+	_try_apply_damage(body)
+
 	# Use pre-calculated hit info from the clean raycast (done when gun fired)
 	if not has_target:
 		print("  ERROR: No target hit info available!")
@@ -138,3 +142,25 @@ func _calculate_nail_rotation(surface_normal: Vector3) -> Vector3:
 	var basis = Basis(surface_normal, up, right)
 
 	return basis.get_euler()
+
+func _try_apply_damage(body: Node) -> void:
+	"""Attempt to apply damage to the hit object"""
+	# Check if body has a damage method (common patterns)
+	if body.has_method("take_damage"):
+		body.take_damage(damage)
+	elif body.has_method("damage"):
+		body.damage(damage)
+
+	# Check for BreakableComponent
+	var breakable = _find_breakable_component(body)
+	if breakable and breakable.has_method("take_damage"):
+		breakable.take_damage(damage)
+
+func _find_breakable_component(node: Node) -> Node:
+	"""Search for BreakableComponent in node hierarchy"""
+	# Check children
+	for child in node.get_children():
+		if child.get_class() == "BreakableComponent" or child.name.contains("Breakable"):
+			return child
+
+	return null
