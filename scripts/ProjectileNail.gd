@@ -82,8 +82,8 @@ func _on_body_entered(body: Node) -> void:
 
 	# Use pre-calculated hit info from the clean raycast (done when gun fired)
 	if not has_target:
-		print("  ERROR: No target hit info available!")
-		queue_free()
+		print("  No valid target - nail will continue as physics object")
+		# Don't despawn - let the nail bounce/collide and despawn naturally after lifetime
 		return
 
 	# Use the pre-calculated values from the original raycast

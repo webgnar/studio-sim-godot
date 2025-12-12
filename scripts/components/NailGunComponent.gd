@@ -58,24 +58,38 @@ func _spawn_bullet() -> void:
 
 	var raycast_result = space_state.intersect_ray(ray_query)
 
-	if not raycast_result:
-		print("NailGun: No surface hit")
-		return  # No hit, don't fire
-
-	# === STEP 2: Validate surface (reject floors) ===
-	var surface_normal = raycast_result.normal
-	var hit_position = raycast_result.position
-
-	var up_alignment = surface_normal.dot(Vector3.UP)
-	if up_alignment > 0.7:
-		print("NailGun: Cannot place nail on floor! (alignment: ", up_alignment, ")")
-		return  # Don't fire at floors
-
-	# === STEP 3: Calculate fire direction from nail spawn to hit point ===
+	# === STEP 2: Determine target info based on raycast result ===
+	var has_valid_target = false
+	var target_position = Vector3.ZERO
+	var target_normal = Vector3.UP
+	var fire_direction = camera_forward
 	var nail_spawn_pos = nail_spawn_marker.global_position
-	var fire_direction = (hit_position - nail_spawn_pos).normalized()
 
-	# === STEP 4: Create and launch projectile nail ===
+	if raycast_result:
+		var surface_normal = raycast_result.normal
+		var hit_position = raycast_result.position
+
+		# Check if surface is floor (validation for WallNail spawning, not firing)
+		var up_alignment = surface_normal.dot(Vector3.UP)
+		if up_alignment > 0.7:
+			print("NailGun: Floor detected - nail will bounce off")
+			# has_valid_target stays false
+		else:
+			# Valid wall hit
+			has_valid_target = true
+			target_position = hit_position
+			target_normal = surface_normal
+			print("NailGun: Valid wall hit at ", hit_position)
+
+		# Calculate fire direction to hit point
+		fire_direction = (hit_position - nail_spawn_pos).normalized()
+	else:
+		# No hit - aim at max range (same pattern as regular bullets)
+		print("NailGun: No surface hit - nail will fly into distance")
+		var far_point = camera_pos + camera_forward * max_nail_range
+		fire_direction = (far_point - nail_spawn_pos).normalized()
+
+	# === STEP 3: ALWAYS create and launch projectile nail ===
 	var projectile_nail = projectile_nail_scene.instantiate()
 
 	# Set fire direction
@@ -84,10 +98,10 @@ func _spawn_bullet() -> void:
 	# Pass WallNail scene to projectile
 	projectile_nail.wall_nail_scene = nail_scene
 
-	# Pass pre-calculated hit info (from the clean raycast!)
-	projectile_nail.target_hit_position = hit_position
-	projectile_nail.target_hit_normal = surface_normal
-	projectile_nail.has_target = true
+	# Pass target info (may be invalid - ProjectileNail will handle it)
+	projectile_nail.target_hit_position = target_position
+	projectile_nail.target_hit_normal = target_normal
+	projectile_nail.has_target = has_valid_target  # Only true for valid walls
 
 	# Add to world first (required for global transforms)
 	get_tree().root.add_child(projectile_nail)
@@ -115,8 +129,12 @@ func _spawn_bullet() -> void:
 
 	print("=== PROJECTILE NAIL SPAWNED ===")
 	print("  Spawn pos: ", nail_spawn_pos)
-	print("  Target hit pos: ", hit_position)
-	print("  Surface normal: ", surface_normal)
+	print("  Has valid target: ", has_valid_target)
+	if has_valid_target:
+		print("  Target hit pos: ", target_position)
+		print("  Surface normal: ", target_normal)
+	else:
+		print("  Aiming at invalid target - will despawn naturally")
 	print("  Fire direction: ", fire_direction)
 
 func _calculate_nail_rotation(surface_normal: Vector3) -> Vector3:
