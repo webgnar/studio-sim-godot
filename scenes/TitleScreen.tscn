@@ -1,4 +1,4 @@
-[gd_scene load_steps=89 format=3 uid="uid://da8jmxqyjt0xs"]
+[gd_scene load_steps=92 format=3 uid="uid://da8jmxqyjt0xs"]
 
 [ext_resource type="Script" uid="uid://bn5a584271aim" path="res://scripts/TitleScreenController.gd" id="1_2ktle"]
 [ext_resource type="Material" uid="uid://wwlsotlotycw" path="res://materials/wood.tres" id="1_hjcsb"]
@@ -52,6 +52,9 @@
 [ext_resource type="Material" uid="uid://d3gd1i8tfs2qr" path="res://materials/painting9.tres" id="48_q22b5"]
 [ext_resource type="Material" uid="uid://d3lrekkwqrp4x" path="res://materials/painting10.tres" id="49_u3ctg"]
 [ext_resource type="Material" uid="uid://bjmebhl4btt7u" path="res://materials/painting11.tres" id="50_juc6n"]
+[ext_resource type="AudioStream" uid="uid://ddn5s1tg3jt8p" path="res://sounds/picotron/ambient.ogg" id="51_ffc86"]
+[ext_resource type="AudioStream" uid="uid://ht7rkfvqubdm" path="res://sounds/picotron/buttonnav.ogg" id="52_08dc8"]
+[ext_resource type="AudioStream" uid="uid://dgbcn8tq2wrkt" path="res://sounds/picotron/gamestart.ogg" id="53_bb24d"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_888yl"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -107,10 +110,10 @@ tracks/0/path = NodePath(".:rotation")
 tracks/0/interp = 2
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 7.766667, 16.033333, 23.8, 30),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"times": PackedFloat32Array(0, 15.035671, 30),
+"transitions": PackedFloat32Array(1, 1, 1),
 "update": 0,
-"values": [Vector3(-0.22279128, 0, 0), Vector3(-0.22279125, 0.4210956, -9.530595e-10), Vector3(-0.22279128, 0, 0), Vector3(-0.22279127, -0.6363819, -1.1752935e-08), Vector3(-0.22279128, 0, 0)]
+"values": [Vector3(-0.22279128, 0.52178365, 0), Vector3(-0.22279133, -0.56642926, 0), Vector3(-0.22279128, 0.52178365, 0)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_ureuc"]
@@ -521,7 +524,7 @@ transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 2.3344998, 2.467302, -6
 transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 2.3344998, 4.0959244, -6.759644)
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.97528446, 0.22095275, 0, -0.22095276, 0.9752844, 0, 1.1513119, 9.747228)
+transform = Transform3D(1, 0, 0, 0, 0.9752845, 0.22095281, 0, -0.22095278, 0.97528464, 0, 1.1513119, 9.747228)
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Camera3D"]
 libraries = {
@@ -576,6 +579,16 @@ offset_right = 400.0
 offset_bottom = 188.0
 grow_horizontal = 2
 texture = ExtResource("13_q22b5")
+
+[node name="BackgroundMusic" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("51_ffc86")
+autoplay = true
+
+[node name="ButtonNavSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("52_08dc8")
+
+[node name="GameStartSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("53_bb24d")
 
 [node name="outlets" type="Node3D" parent="."]
 

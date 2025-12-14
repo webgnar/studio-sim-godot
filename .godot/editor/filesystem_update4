@@ -1,10 +1,11 @@
-res://scripts/ProjectileNail.gd
-res://scenes/objects/ProjectileNail.tscn
-res://scripts/components/NailGunComponent.gd
+res://scripts/old stuff/BoomboxInteraction.gd
+res://scenes/world.tscn
 res://models/particles/new_array_mesh.tres
 res://models/particles/new_array_mesh2.tres
 res://models/particles/new_array_mesh3.tres
+res://scripts/TitleScreenController.gd
+res://scenes/TitleScreen.tscn
+res://scripts/ui/MissionSelectionUI.gd
 res://scenes/NailGun.tscn
-res://scenes/objects/gun.tscn
+res://scenes/WallNail.tscn
 res://scripts/components/WeaponComponent.gd
-res://scenes/objects/bullet.tscn

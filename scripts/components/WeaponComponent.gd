@@ -39,6 +39,9 @@ var is_pickup_animation_playing: bool = false
 func _ready() -> void:
 	super._ready()  # Call InteractionComponent._ready()
 
+	# Setup audio for weapon-specific sounds (shoot_sound, pickup_sound)
+	_setup_weapon_audio()
+
 	# Find animation players
 	_find_animators()
 
@@ -54,6 +57,19 @@ func _ready() -> void:
 
 	# Set initial interaction text
 	interaction_text = "Pick Up Gun"
+
+func _setup_weapon_audio() -> void:
+	"""Setup audio player for weapon sounds (shoot_sound, pickup_sound)"""
+	# Check if we need an audio player for weapon sounds
+	if shoot_sound or pickup_sound:
+		# Check if InteractionComponent already created one
+		if not _audio_player:
+			_audio_player = AudioStreamPlayer3D.new()
+			_audio_player.name = "WeaponAudio"
+			_audio_player.max_distance = 20.0  # Louder range for gunshots
+			_audio_player.attenuation_model = AudioStreamPlayer3D.ATTENUATION_INVERSE_DISTANCE
+			add_child(_audio_player)
+			print("WeaponComponent: Created audio player for weapon sounds")
 
 func _find_animators() -> void:
 	"""Search for slide, recoil, flash, and pickup AnimationPlayers in the gun hierarchy"""

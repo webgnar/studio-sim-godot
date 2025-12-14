@@ -6,6 +6,9 @@ extends Node3D
 @onready var new_game_button: Button = $UI_Layer/TitleScreenUI/VBoxContainer/NewGameButton
 @onready var quit_button: Button = $UI_Layer/TitleScreenUI/VBoxContainer/QuitButton
 @onready var character = $humanrig
+@onready var button_nav_sound: AudioStreamPlayer = $ButtonNavSound
+@onready var game_start_sound: AudioStreamPlayer = $GameStartSound
+@onready var background_music: AudioStreamPlayer = $BackgroundMusic
 
 var is_transitioning: bool = false
 
@@ -21,6 +24,10 @@ func _ready():
 	continue_button.pressed.connect(_on_continue_pressed)
 	new_game_button.pressed.connect(_on_new_game_pressed)
 	quit_button.pressed.connect(_on_quit_pressed)
+
+	# Connect background music to loop
+	if background_music:
+		background_music.finished.connect(_on_background_music_finished)
 
 	# Set up controller/gamepad focus navigation
 	_setup_focus_navigation()
@@ -86,6 +93,10 @@ func _navigate_menu(direction: int):
 
 	buttons[new_index].grab_focus()
 
+	# Play navigation sound
+	if button_nav_sound:
+		button_nav_sound.play()
+
 func _check_save_exists() -> bool:
 	"""Check if any save files exist"""
 	return (FileAccess.file_exists("user://player_data.json") or
@@ -94,10 +105,16 @@ func _check_save_exists() -> bool:
 
 func _on_continue_pressed():
 	"""Load the world scene - UIManager will load existing save data in its _ready()"""
+	# Play game start sound
+	if game_start_sound:
+		game_start_sound.play()
 	_transition_to_game("res://scenes/world.tscn", false)
 
 func _on_new_game_pressed():
 	"""Wipe all save data before loading world scene"""
+	# Play game start sound
+	if game_start_sound:
+		game_start_sound.play()
 	_transition_to_game("res://scenes/world.tscn", true)
 
 func _transition_to_game(scene_path: String, wipe_data: bool) -> void:
@@ -177,6 +194,11 @@ func _delete_directory_recursive(path: String):
 
 	# Remove the directory itself
 	DirAccess.remove_absolute(path)
+
+func _on_background_music_finished():
+	"""Loop background music when it finishes"""
+	if background_music:
+		background_music.play()
 
 func _setup_focus_navigation():
 	"""Set up gamepad/keyboard focus navigation for menu buttons"""

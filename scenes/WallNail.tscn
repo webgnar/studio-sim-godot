@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://bx3k8m7qwn2pd"]
+[gd_scene load_steps=6 format=3 uid="uid://bx3k8m7qwn2pd"]
 
 [ext_resource type="Script" uid="uid://b4jpkjxufcb2t" path="res://scripts/components/NailComponent.gd" id="1_nail_component"]
 [ext_resource type="PackedScene" uid="uid://b3g0y1ku7myi3" path="res://models/interactables/nail.glb" id="2_nail_model"]
+[ext_resource type="AudioStream" path="res://sounds/picotron/nailstick.ogg" id="3_nailstick"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_nail_collision"]
 size = Vector3(0.1, 0.1, 0.5)
@@ -33,5 +34,10 @@ shape = SubResource("BoxShape3D_nail_collision")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="DetectionArea"]
 shape = SubResource("SphereShape3D_detection")
+
+[node name="StickSound" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("3_nailstick")
+autoplay = true
+max_distance = 15.0
 
 [editable path="nail_model"]

@@ -24,6 +24,10 @@ const AbortMissionIcon = preload("res://sprites/ui/abortmission.png")
 @onready var completed_missions_label = $Dialog/MarginContainer/HBoxContainer/LeftPanel/StatsPanel/MarginContainer/VBoxContainer/CompletedMissionsLabel
 @onready var paintings_created_label = $Dialog/MarginContainer/HBoxContainer/LeftPanel/StatsPanel/MarginContainer/VBoxContainer/PaintingsCreatedLabel
 @onready var confirmation_dialog = $ConfirmationDialog
+@onready var open_menu_sound = $OpenMenuSound
+@onready var close_menu_sound = $CloseMenuSound
+@onready var button_nav_sound = $ButtonNavSound
+@onready var button_hit_sound = $ButtonHitSound
 
 var results_viewer = null  # MissionResultsViewer (dynamic typing to avoid circular dependency)
 var selected_mission: PaintingMission = null
@@ -185,6 +189,10 @@ func _select_next_button():
 		var button = preview_buttons[preview_button_index]
 		if button and button.visible and not button.disabled:
 			_update_button_focus()
+
+			# Play navigation sound
+			if button_nav_sound:
+				button_nav_sound.play()
 			return
 
 		attempts += 1
@@ -206,6 +214,10 @@ func _select_previous_button():
 		var button = preview_buttons[preview_button_index]
 		if button and button.visible and not button.disabled:
 			_update_button_focus()
+
+			# Play navigation sound
+			if button_nav_sound:
+				button_nav_sound.play()
 			return
 
 		attempts += 1
@@ -243,6 +255,10 @@ func _activate_focused_button():
 	if preview_button_index < preview_buttons.size():
 		var button = preview_buttons[preview_button_index]
 		if button and button.visible and not button.disabled:
+			# Play button hit sound
+			if button_hit_sound:
+				button_hit_sound.play()
+
 			button.pressed.emit()
 			print("MissionSelectionUI: Activated button: ", button.name)
 
@@ -266,6 +282,10 @@ func _open_dialog():
 
 	# Show dialog
 	dialog.visible = true
+
+	# Play menu open sound
+	if open_menu_sound:
+		open_menu_sound.play()
 
 	# Disable player input
 	if CameraManager:
@@ -299,6 +319,10 @@ func hide_screen():
 
 func _close_dialog():
 	"""Hide the dialog and return to gameplay"""
+	# Play menu close sound
+	if close_menu_sound:
+		close_menu_sound.play()
+
 	# Reset navigation mode
 	nav_mode = NavMode.MISSION_LIST
 	_clear_button_focus()
@@ -340,6 +364,10 @@ func _select_next_mission():
 	selected_index = (selected_index + 1) % MissionManager.available_missions.size()
 	_update_selection()
 
+	# Play navigation sound
+	if button_nav_sound:
+		button_nav_sound.play()
+
 func _select_previous_mission():
 	"""Select the previous mission in the list"""
 	if MissionManager.available_missions.size() == 0:
@@ -349,6 +377,10 @@ func _select_previous_mission():
 	if selected_index < 0:
 		selected_index = MissionManager.available_missions.size() - 1
 	_update_selection()
+
+	# Play navigation sound
+	if button_nav_sound:
+		button_nav_sound.play()
 
 func _update_selection():
 	"""Update UI to show currently selected mission"""

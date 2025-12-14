@@ -43,6 +43,7 @@
 [ext_resource type="PackedScene" uid="uid://bsdobk5wd61u" path="res://models/interactables/fan/blade.glb" id="50_1dgkn"]
 [ext_resource type="Script" uid="uid://u01mbabuiguh" path="res://scripts/components/PoweredDeviceComponent.gd" id="51_iexy4"]
 [ext_resource type="Script" uid="uid://d1d8fhujnbpfy" path="res://scripts/components/PowerCordPlugComponent.gd" id="51_pf35h"]
+[ext_resource type="AudioStream" uid="uid://dyxboi83gw4vk" path="res://sounds/picotron/song.ogg" id="51_swu3i"]
 [ext_resource type="PackedScene" uid="uid://dtharqrj0cj5y" path="res://scenes/old stuff/test_box.tscn" id="52_e68xj"]
 [ext_resource type="Script" uid="uid://dqp07gb58nlbf" path="res://scripts/components/PowerCord.gd" id="52_iexy4"]
 [ext_resource type="PackedScene" uid="uid://ddoijgnx5221v" path="res://models/interactables/plug.glb" id="53_pf35h"]
@@ -79,7 +80,6 @@
 [ext_resource type="AudioStream" uid="uid://8so1mqtnfhkh" path="res://sounds/box open 1.ogg" id="box_open_1"]
 [ext_resource type="AudioStream" uid="uid://bkyiswhv5fuaf" path="res://sounds/box open 2.ogg" id="box_open_2"]
 [ext_resource type="AudioStream" uid="uid://bukro42figtah" path="res://sounds/fan switch.ogg" id="fan_switch"]
-[ext_resource type="AudioStream" uid="uid://cemldiwrdj70h" path="res://sounds/halloween.ogg" id="halloween_audio"]
 [ext_resource type="AudioStream" uid="uid://bw0ig22tombxc" path="res://sounds/ministudio.ogg" id="ministudio_audio"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_nnsk1"]
@@ -1085,7 +1085,7 @@ libraries = {
 }
 
 [node name="BOOMbox" type="RigidBody3D" parent="."]
-transform = Transform3D(0.7866657, 0, 0.6173793, 0, 1, 0, -0.6173793, 0, 0.7866657, 1.8297244, 0.3116727, -3.198355)
+transform = Transform3D(-0.9796208, 0, 0.20085552, 0, 1, 0, -0.20085552, 0, -0.9796208, -2.6843157, 0.3116727, 1.8697941)
 collision_layer = 8
 collision_mask = 11
 mass = 2.0
@@ -1099,9 +1099,13 @@ transform = Transform3D(0.17, 0, 0, 0, 0.17, 0, 0, 0, 0.17, 0, 0, 0)
 
 [node name="BoomboxInteraction" type="Node3D" parent="BOOMbox"]
 script = ExtResource("36_boombox_new")
-audio_file = ExtResource("halloween_audio")
-secret_audio_file = ExtResource("ministudio_audio")
+auto_play_on_start = true
+song_1 = ExtResource("51_swu3i")
+song_2 = ExtResource("ministudio_audio")
 switch_sound = ExtResource("boombox_switch")
+default_volume = 1.0
+max_hearing_distance = 45.0
+min_distance = 15.0
 has_e_key_interaction = true
 e_key_interaction_text = "Play Tape"
 can_interact_while_carried = true
