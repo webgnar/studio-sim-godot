@@ -16,8 +16,15 @@ var camera: Camera3D = null
 # Raycast settings
 @export var raycast_distance: float = 10.0
 
+# Audio
+var tick_sound: AudioStreamPlayer
+
 func _ready():
-	pass
+	# Setup tick sound for sticker cycling
+	tick_sound = AudioStreamPlayer.new()
+	tick_sound.stream = load("res://sounds/picotron/tick.ogg")
+	tick_sound.volume_db = -5.0
+	add_child(tick_sound)
 
 func _process(delta):
 	# Handle sticker cycling (unified for both systems)
@@ -41,6 +48,10 @@ func cycle_sticker(direction: int):
 
 	# Sync to both systems
 	sync_sticker_selection(new_index)
+
+	# Play tick sound
+	if tick_sound:
+		tick_sound.play()
 
 	# Emit signal from one system to update UI (avoid duplicate emissions)
 	if system:

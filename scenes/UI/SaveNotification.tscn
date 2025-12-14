@@ -1,7 +1,9 @@
-[gd_scene load_steps=3 format=3 uid="uid://cpuv8jn4hm5gn"]
+[gd_scene load_steps=4 format=3 uid="uid://cpuv8jn4hm5gn"]
 
 [ext_resource type="Script" uid="uid://cob1q5vivnssv" path="res://scripts/ui/SaveNotification.gd" id="1_save_notification"]
 [ext_resource type="Texture2D" uid="uid://dry0785qgvpe" path="res://sprites/ui/gamesaved.png" id="2_g2d5j"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_g2d5j"]
 
 [node name="SaveNotification" type="Control"]
 layout_mode = 3
@@ -24,6 +26,7 @@ offset_right = 200.0
 offset_bottom = 200.0
 grow_horizontal = 2
 mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_g2d5j")
 
 [node name="MarginContainer" type="MarginContainer" parent="Panel"]
 layout_mode = 2
@@ -36,7 +39,6 @@ theme_override_constants/margin_bottom = 20
 custom_minimum_size = Vector2(360, 60)
 layout_mode = 2
 texture = ExtResource("2_g2d5j")
-expand_mode = 1
 stretch_mode = 5
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]

@@ -64,7 +64,6 @@ var preview_idle_time: float = 0.0
 var preview_last_position: Vector2 = Vector2.ZERO
 var preview_target_opacity: float = 0.5
 var preview_base_opacity: float = 0.5  # Set by PaintingRoot2D
-var _audio_player: AudioStreamPlayer3D
 
 func _ready():
 	# Find camera from the painting plane's world (not from SubViewport)
@@ -91,18 +90,6 @@ func _ready():
 
 	# Create preview sprite
 	_setup_preview_sprite()
-	
-	# Initialize audio player
-	_ensure_audio_player()
-
-func _ensure_audio_player() -> void:
-	"""Create AudioStreamPlayer3D for sticker sounds if any sounds are assigned"""
-	if not _audio_player and (sticker_sound_1 or sticker_sound_2 or sticker_sound_3 or sticker_sound_4 or sticker_sound_5):
-		_audio_player = AudioStreamPlayer3D.new()
-		_audio_player.name = "PaintingAudio"
-		_audio_player.max_distance = 15.0
-		_audio_player.attenuation_model = AudioStreamPlayer3D.ATTENUATION_INVERSE_DISTANCE
-		add_child(_audio_player)
 
 func _setup_plane_material():
 	"""Assign SubViewport texture to the painting plane material"""

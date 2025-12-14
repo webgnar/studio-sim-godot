@@ -11,6 +11,15 @@ var paintings_created: int = 0
 var carryable_painting_scene = preload("res://scenes/CarryablePainting.tscn")
 var painting_root_2d_scene = preload("res://scenes/PaintingRoot2D.tscn")
 
+# Sound effect
+@onready var spawn_sound: AudioStreamPlayer = AudioStreamPlayer.new()
+
+func _ready() -> void:
+	# Setup audio player
+	add_child(spawn_sound)
+	spawn_sound.stream = load("res://sounds/picotron/release2.ogg")
+	spawn_sound.volume_db = 0.0
+
 func replace_painting_with_carryable(world: Node3D) -> void:
 	"""Convert current mission painting to carryable object and spawn new blank painting"""
 	var old_painting_root = PaintingModeManager.painting_root_2d
@@ -87,6 +96,10 @@ func replace_painting_with_carryable(world: Node3D) -> void:
 	# Increment counter
 	paintings_created += 1
 	painting_created.emit(paintings_created)
+
+	# Play spawn sound
+	if spawn_sound:
+		spawn_sound.play()
 
 func _bake_painting_texture(painting_system: PaintingSystem2D) -> ImageTexture:
 	"""Capture viewport texture and freeze it as static ImageTexture"""

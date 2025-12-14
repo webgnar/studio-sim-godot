@@ -17,3 +17,6 @@ res://scripts/components/BreakableComponent.gd
 res://scenes/old stuff/breakable_window.tscn
 res://scripts/painting/PaintingSystem2D.gd
 res://scenes/PaintingRoot2D.tscn
+res://scripts/PaintingSpawner.gd
+res://scripts/painting/PaintingModeManager.gd
+res://scripts/ui/StickerSlot.gd

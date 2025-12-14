@@ -11,7 +11,7 @@ var is_equipped: bool = false
 
 # Visual styling
 var default_border_color = Color("#555555")
-var equipped_border_color = Color("#3399FF")
+var equipped_border_color = Color("efc0cbff")
 var default_bg_color = Color("#333333", 0.7)
 
 var default_style: StyleBoxFlat
