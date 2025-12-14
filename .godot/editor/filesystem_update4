@@ -20,3 +20,4 @@ res://scenes/PaintingRoot2D.tscn
 res://scripts/PaintingSpawner.gd
 res://scripts/painting/PaintingModeManager.gd
 res://scripts/ui/StickerSlot.gd
+res://scripts/ui/MissionSelectionUI.gd

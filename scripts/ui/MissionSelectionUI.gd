@@ -45,10 +45,6 @@ func _ready():
 	view_results_button.pressed.connect(_on_view_results)
 	start_button.pressed.connect(_on_start_or_abort_mission)
 
-
-	# Connect confirmation dialog
-	confirmation_dialog.confirmed.connect(_on_abort_confirmed)
-
 	# Setup preview button navigation array (View Results, Start)
 	preview_buttons = [view_results_button, start_button]
 
@@ -261,6 +257,8 @@ func _activate_focused_button():
 
 			button.pressed.emit()
 			print("MissionSelectionUI: Activated button: ", button.name)
+
+
 
 func _open_dialog():
 	"""Show the mission selection dialog"""
@@ -495,8 +493,8 @@ func _on_start_or_abort_mission():
 
 	# Check if this is the current mission (abort case)
 	if MissionManager and MissionManager.current_mission == selected_mission:
-		# Show confirmation dialog
-		confirmation_dialog.popup_centered()
+		# Abort the mission immediately
+		_abort_mission_immediate()
 		return
 
 	# Get the current painting system (always fresh reference)
@@ -516,8 +514,8 @@ func _on_start_or_abort_mission():
 
 	print("MissionSelectionUI: Starting mission '%s'" % selected_mission.title)
 
-func _on_abort_confirmed():
-	"""Abort the current mission after confirmation"""
+func _abort_mission_immediate():
+	"""Abort the current mission immediately without confirmation"""
 	if not MissionManager or not MissionManager.current_mission:
 		return
 
@@ -531,6 +529,8 @@ func _on_abort_confirmed():
 	# Return to GAMEPLAY state
 	if UIManager:
 		UIManager.change_state(UIManager.GameState.GAMEPLAY)
+	
+	print("MissionSelectionUI: Mission aborted")
 
 func _on_view_results():
 	"""Show results viewer for the selected mission"""
