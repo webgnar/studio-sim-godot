@@ -9,12 +9,17 @@ extends Node3D
 @onready var button_nav_sound: AudioStreamPlayer = $ButtonNavSound
 @onready var game_start_sound: AudioStreamPlayer = $GameStartSound
 @onready var background_music: AudioStreamPlayer = $BackgroundMusic
+@onready var fan_animation_player: AnimationPlayer = $"FAN/fan legs/cage/blade/AnimationPlayer"
 
 var is_transitioning: bool = false
 
 func _ready():
 	# Set mouse mode to visible
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+
+	# Start fan animation
+	if fan_animation_player:
+		fan_animation_player.play("spin")
 
 	# Check if save exists and enable/disable Continue button
 	var has_save = _check_save_exists()

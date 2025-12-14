@@ -10,3 +10,6 @@ res://scripts/components/WeaponComponent.gd
 res://scenes/objects/SaveComputer.tscn
 res://scenes/UI/SaveNotification.tscn
 res://scripts/SaveComputerInteraction.gd
+res://scenes/CarryablePainting.tscn
+res://scripts/TitleScreenController.gd
+res://scenes/TitleScreen.tscn
