@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://bv4237ec57bk2"]
+[gd_scene load_steps=5 format=3 uid="uid://bv4237ec57bk2"]
 
 [ext_resource type="PackedScene" uid="uid://yp2r0ssmmrwa" path="res://models/props/computer.gltf" id="1_uw6nw"]
 [ext_resource type="Script" uid="uid://8wsci4swmcpr" path="res://scripts/SaveComputerInteraction.gd" id="2_wvr1c"]
+[ext_resource type="AudioStream" uid="uid://dgbcn8tq2wrkt" path="res://sounds/picotron/gamestart.ogg" id="3_wvr1c"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_wvr1c"]
 size = Vector3(0.15930176, 0.47503662, 1.454956)
@@ -17,3 +18,4 @@ transform = Transform3D(0.08, 0, 0, 0, 0.08, 0, 0, 0, 0.08, 0, 0, 0)
 
 [node name="SaveComputerInteraction" type="Node3D" parent="."]
 script = ExtResource("2_wvr1c")
+interaction_sound = ExtResource("3_wvr1c")

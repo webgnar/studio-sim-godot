@@ -7,3 +7,6 @@ res://scenes/NailGun.tscn
 res://scripts/PlayerInteractionComponent.gd
 res://scripts/components/CarryableComponent.gd
 res://scripts/components/WeaponComponent.gd
+res://scenes/objects/SaveComputer.tscn
+res://scenes/UI/SaveNotification.tscn
+res://scripts/SaveComputerInteraction.gd

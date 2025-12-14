@@ -18,9 +18,11 @@ func _on_interacted(player_interaction: PlayerInteractionComponent):
 
 	if success:
 		print("Game saved successfully!")
-		# Optional: Show UI feedback
-		# UIManager.show_notification("Game Saved")
+		# Show save notification
+		var save_notification = get_tree().root.get_node_or_null("World/GameplayUI_Layer/SaveNotification")
+		if save_notification and save_notification.has_method("show_notification"):
+			save_notification.show_notification()
+		else:
+			push_warning("SaveComputerInteraction: SaveNotification not found in scene tree")
 	else:
 		print("Failed to save game")
-		# Optional: Show error feedback
-		# UIManager.show_notification("Save Failed")
