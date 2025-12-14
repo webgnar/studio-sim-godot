@@ -53,10 +53,18 @@ var preview_scale_multiplier: float = 1.0  # Scale multiplier (1.0 = default siz
 # Preview rotation settings
 @export var rotation_speed: float = 90.0  # Rotation degrees per second when button held
 
+# Sticker sound effects
+@export var sticker_sound_1: AudioStream
+@export var sticker_sound_2: AudioStream
+@export var sticker_sound_3: AudioStream
+@export var sticker_sound_4: AudioStream
+@export var sticker_sound_5: AudioStream
+
 var preview_idle_time: float = 0.0
 var preview_last_position: Vector2 = Vector2.ZERO
 var preview_target_opacity: float = 0.5
 var preview_base_opacity: float = 0.5  # Set by PaintingRoot2D
+var _audio_player: AudioStreamPlayer3D
 
 func _ready():
 	# Find camera from the painting plane's world (not from SubViewport)
@@ -83,6 +91,18 @@ func _ready():
 
 	# Create preview sprite
 	_setup_preview_sprite()
+	
+	# Initialize audio player
+	_ensure_audio_player()
+
+func _ensure_audio_player() -> void:
+	"""Create AudioStreamPlayer3D for sticker sounds if any sounds are assigned"""
+	if not _audio_player and (sticker_sound_1 or sticker_sound_2 or sticker_sound_3 or sticker_sound_4 or sticker_sound_5):
+		_audio_player = AudioStreamPlayer3D.new()
+		_audio_player.name = "PaintingAudio"
+		_audio_player.max_distance = 15.0
+		_audio_player.attenuation_model = AudioStreamPlayer3D.ATTENUATION_INVERSE_DISTANCE
+		add_child(_audio_player)
 
 func _setup_plane_material():
 	"""Assign SubViewport texture to the painting plane material"""
@@ -425,6 +445,21 @@ func spawn_sticker(world_position: Vector3):
 
 	# Select the newly placed sticker
 	selected_layer = placed
+	
+	# Play random sticker sound (create new player for each sound to allow overlap)
+	var sounds = [sticker_sound_1, sticker_sound_2, sticker_sound_3, sticker_sound_4, sticker_sound_5]
+	var available_sounds = sounds.filter(func(s): return s != null)
+	if not available_sounds.is_empty():
+		var random_sound = available_sounds[randi() % available_sounds.size()]
+		var audio_player = AudioStreamPlayer3D.new()
+		audio_player.name = "StickerSound"
+		audio_player.stream = random_sound
+		audio_player.max_distance = 15.0
+		audio_player.attenuation_model = AudioStreamPlayer3D.ATTENUATION_INVERSE_DISTANCE
+		add_child(audio_player)
+		audio_player.play()
+		# Auto-cleanup when sound finishes
+		audio_player.finished.connect(func(): audio_player.queue_free())
 
 func cycle_sticker(direction: int):
 	"""Cycle through available stickers in library (deprecated - use PaintingModeManager)"""

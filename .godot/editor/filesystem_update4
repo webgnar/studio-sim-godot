@@ -15,3 +15,5 @@ res://scripts/TitleScreenController.gd
 res://scenes/TitleScreen.tscn
 res://scripts/components/BreakableComponent.gd
 res://scenes/old stuff/breakable_window.tscn
+res://scripts/painting/PaintingSystem2D.gd
+res://scenes/PaintingRoot2D.tscn
