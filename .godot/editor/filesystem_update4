@@ -13,3 +13,5 @@ res://scripts/SaveComputerInteraction.gd
 res://scenes/CarryablePainting.tscn
 res://scripts/TitleScreenController.gd
 res://scenes/TitleScreen.tscn
+res://scripts/components/BreakableComponent.gd
+res://scenes/old stuff/breakable_window.tscn

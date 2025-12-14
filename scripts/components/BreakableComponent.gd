@@ -26,6 +26,10 @@ signal broken()
 @export var break_particle_scene: PackedScene = null  # Glass shatter particles
 @export var damage_particle_scene: PackedScene = null  # Dust puff particles
 
+@export_group("Sound Effects")
+@export var damage_sound: AudioStream = null  # Sound when damaged but not broken
+@export var break_sound: AudioStream = null  # Sound when completely broken
+
 var parent_object: Node3D
 var detection_area: Area3D
 var mesh_instance: MeshInstance3D
@@ -119,20 +123,22 @@ func take_damage(amount: float = 1.0):
 	"""Apply damage to the object"""
 	current_health -= amount
 	current_health = max(0.0, current_health)
-	
+
 	damaged.emit(current_health)
-	
+
 	if current_health <= 0:
 		break_object()
 	else:
 		update_visual_state()
 		spawn_damage_particles()
+		play_sound(damage_sound)
 
 func break_object():
 	"""Destroy the object"""
 	broken.emit()
 
 	spawn_break_particles()
+	play_sound(break_sound)
 
 	# Wait for particles to spawn
 	await get_tree().create_timer(0.1).timeout
@@ -218,3 +224,18 @@ func _find_gpu_particles(node: Node) -> GPUParticles3D:
 		if result:
 			return result
 	return null
+
+func play_sound(sound: AudioStream):
+	"""Play a sound effect at the object's position"""
+	if not sound:
+		return
+
+	var audio_player = AudioStreamPlayer3D.new()
+	audio_player.stream = sound
+	audio_player.autoplay = true
+	parent_object.get_parent().add_child(audio_player)
+	audio_player.global_position = parent_object.global_position
+
+	# Clean up after sound finishes
+	await get_tree().create_timer(sound.get_length() + 0.1).timeout
+	audio_player.queue_free()

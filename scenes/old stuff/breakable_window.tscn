@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://kraxm2alr635"]
+[gd_scene load_steps=12 format=3 uid="uid://kraxm2alr635"]
 
 [ext_resource type="PackedScene" uid="uid://chnkextlwxa7d" path="res://models/props/window.glb" id="1_2wyxf"]
 [ext_resource type="Script" uid="uid://dioncdl2j75r1" path="res://scripts/components/BreakableComponent.gd" id="2_breakable"]
@@ -7,6 +7,8 @@
 [ext_resource type="Texture2D" uid="uid://cqmp06etflq7n" path="res://models/props/window_0.png" id="5_intact"]
 [ext_resource type="Texture2D" uid="uid://bu0yxkjqsevky" path="res://models/props/window_2.png" id="6_cracked"]
 [ext_resource type="Texture2D" uid="uid://dr6ifox1s5hto" path="res://models/props/window_3.png" id="7_verycracked"]
+[ext_resource type="AudioStream" uid="uid://bfy43rxm5wxu3" path="res://sounds/glass-impact.ogg" id="8_fv8xu"]
+[ext_resource type="AudioStream" uid="uid://c8uq1j18j8m76" path="res://sounds/glassbreak.ogg" id="9_ughsr"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_2wyxf"]
 size = Vector3(18.67, 25.2, 1)
@@ -37,3 +39,5 @@ material_name = "windowglass"
 damage_textures = Array[Texture2D]([ExtResource("5_intact"), ExtResource("6_cracked"), ExtResource("7_verycracked")])
 break_particle_scene = ExtResource("3_glass")
 damage_particle_scene = ExtResource("4_dust")
+damage_sound = ExtResource("8_fv8xu")
+break_sound = ExtResource("9_ughsr")
