@@ -106,6 +106,8 @@ shoot_sound = ExtResource("4_7rh32")
 
 [node name="CarryableComponent" type="Node3D" parent="."]
 script = ExtResource("2_tih70")
+throw_power = 5.0
+drop_power = 0.5
 metadata/_custom_type_script = "uid://cbwg344irqecy"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]

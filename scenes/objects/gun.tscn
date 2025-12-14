@@ -1,41 +1,14 @@
-[gd_scene load_steps=14 format=3 uid="uid://6u7bns57r2hi"]
+[gd_scene load_steps=15 format=3 uid="uid://6u7bns57r2hi"]
 
 [ext_resource type="PackedScene" uid="uid://r77i37ju5du6" path="res://models/interactables/gun.glb" id="1_og67c"]
 [ext_resource type="Texture2D" uid="uid://d3xe7ak0wicts" path="res://sprites/muzzle.png" id="2_gp1hk"]
+[ext_resource type="AudioStream" uid="uid://b2b2pykjckdb2" path="res://sounds/picotron/nailshoot.ogg" id="3_p4t50"]
 [ext_resource type="Script" uid="uid://c8684i4bb34yr" path="res://scripts/components/WeaponComponent.gd" id="3_weapon"]
 [ext_resource type="Script" uid="uid://cbwg344irqecy" path="res://scripts/components/CarryableComponent.gd" id="4_carryable"]
 [ext_resource type="PackedScene" uid="uid://bxkss4pgguj5n" path="res://scenes/objects/bullet.tscn" id="5_bullet"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_gun"]
 size = Vector3(0.21478271, 0.3873291, 0.5025635)
-
-[sub_resource type="Animation" id="Animation_r0qan"]
-resource_name = "pickup"
-length = 2.0
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:position")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.71, 1.04, 2),
-"transitions": PackedFloat32Array(1, 1, 1, 1),
-"update": 0,
-"values": [Vector3(0, 0, 0), Vector3(0, 0.19093236, 0.13287798), Vector3(0, 0.19093236, 0.19755873), Vector3(0, 0, 0)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath(".:rotation")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.71, 1.04, 2),
-"transitions": PackedFloat32Array(1, 1, 1, 1),
-"update": 0,
-"values": [Vector3(0, 0, 0), Vector3(-0.53214014, 0.72811836, -0.42480287), Vector3(-0.5321402, 1.180019, -0.4248028), Vector3(0, 0, 0)]
-}
 
 [sub_resource type="Animation" id="Animation_p4t50"]
 length = 0.001
@@ -128,20 +101,32 @@ tracks/1/keys = {
 "values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
 }
 
-[sub_resource type="Animation" id="Animation_l2g68"]
-resource_name = "slide"
-length = 0.2
+[sub_resource type="Animation" id="Animation_r0qan"]
+resource_name = "pickup"
+length = 2.0
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("top:position")
+tracks/0/path = NodePath(".:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.033333335, 0.2),
-"transitions": PackedFloat32Array(1, 1, 1),
+"times": PackedFloat32Array(0, 0.71, 1.04, 2),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
 "update": 0,
-"values": [Vector3(-0.72265625, 1.3046875, 0.03125), Vector3(1.5211953, 1.3046875, 0.03125), Vector3(-0.72265625, 1.3046875, 0.03125)]
+"values": [Vector3(0, 0, 0), Vector3(0, 0.19093236, 0.13287798), Vector3(0, 0.19093236, 0.19755873), Vector3(0, 0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.71, 1.04, 2),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(-0.53214014, 0.72811836, -0.42480287), Vector3(-0.5321402, 1.180019, -0.4248028), Vector3(0, 0, 0)]
 }
 
 [sub_resource type="Animation" id="Animation_arss2"]
@@ -212,6 +197,22 @@ tracks/3/keys = {
 "values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
 }
 
+[sub_resource type="Animation" id="Animation_l2g68"]
+resource_name = "slide"
+length = 0.2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("top:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.033333335, 0.2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(-0.72265625, 1.3046875, 0.03125), Vector3(1.5211953, 1.3046875, 0.03125), Vector3(-0.72265625, 1.3046875, 0.03125)]
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_nf4lu"]
 _data = {
 &"RESET": SubResource("Animation_p4t50"),
@@ -236,6 +237,7 @@ fire_rate = 0.1
 bullet_scene = ExtResource("5_bullet")
 equipped_position = Vector3(0, -0.05, 0)
 equipped_rotation = Vector3(0, 5, 0)
+shoot_sound = ExtResource("3_p4t50")
 
 [node name="CarryableComponent" type="Node3D" parent="."]
 script = ExtResource("4_carryable")
