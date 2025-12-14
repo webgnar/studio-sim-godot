@@ -136,6 +136,10 @@ func pickup(player: PlayerInteractionComponent) -> void:
 	if state == State.EQUIPPED:
 		return
 
+	# Cannot equip weapon while carrying an object
+	if player.is_carrying:
+		return
+
 	print("WeaponComponent: Picking up gun")
 	player_ref = player
 	state = State.EQUIPPED
@@ -243,9 +247,12 @@ func drop() -> void:
 	if not parent_rb:
 		return
 
-	# Get drop position (in front of player)
+	# Drop gun from near player's head (like dropping from hands)
+	# Use horizontal look direction, but drop downward from head height
 	var camera = player_ref.get_camera()
-	var drop_pos = camera.global_position + player_ref.get_look_direction() * 2.0
+	var look_dir = player_ref.get_look_direction()
+	var forward_offset = Vector3(look_dir.x, 0, look_dir.z).normalized() * 1.0
+	var drop_pos = camera.global_position + forward_offset + Vector3(0, -0.3, 0)
 
 	# Reparent back to original parent (or world root)
 	var target_parent = original_parent if original_parent and is_instance_valid(original_parent) else get_tree().root

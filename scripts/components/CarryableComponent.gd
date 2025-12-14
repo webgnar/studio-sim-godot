@@ -185,6 +185,10 @@ func pickup(player_interaction: PlayerInteractionComponent) -> void:
 	if is_carried:
 		return
 
+	# Cannot pick up while weapon is equipped
+	if player_interaction.is_weapon_equipped:
+		return
+
 	player_ref = player_interaction
 
 	# Store original collision mask so we can restore it on drop

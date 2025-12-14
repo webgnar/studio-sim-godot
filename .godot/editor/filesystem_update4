@@ -4,3 +4,6 @@ res://models/particles/new_array_mesh2.tres
 res://models/particles/new_array_mesh3.tres
 res://scenes/WallNail.tscn
 res://scenes/NailGun.tscn
+res://scripts/PlayerInteractionComponent.gd
+res://scripts/components/CarryableComponent.gd
+res://scripts/components/WeaponComponent.gd

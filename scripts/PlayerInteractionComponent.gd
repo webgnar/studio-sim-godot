@@ -231,6 +231,13 @@ func _update_interactable() -> void:
 	_raycast.target_position = Vector3(0, 0, -original_distance)
 
 	if interactable != current_interactable:
+		# Don't set ANY interactable (except weapons) when weapon is equipped
+		if is_weapon_equipped:
+			var weapon_comp = _find_weapon_component(interactable)
+			# Only allow weapon interactions, block everything else
+			if not weapon_comp:
+				_clear_interactable()
+				return
 		_set_interactable(interactable)
 
 func _find_interactable_root(node: Node) -> Node3D:
@@ -284,15 +291,24 @@ func _update_interaction_prompt() -> void:
 	# Check for weapon component first
 	var weapon_component = _find_weapon_component(current_interactable)
 	if weapon_component and weapon_component.state == 0:  # State.WORLD
+		# Don't show weapon prompt if carrying
+		if is_carrying:
+			interaction_prompt_changed.emit("")
+			return
 		interaction_prompt_changed.emit("[E] Pick Up Gun")
 		return
 	
 	# Check if object is carryable
 	var carryable_component = _find_carryable_component(current_interactable)
 	var interaction_component = _find_interaction_component(current_interactable)
-	
+
+	# Don't show carryable prompts if weapon is equipped
+	if carryable_component and is_weapon_equipped:
+		interaction_prompt_changed.emit("")
+		return
+
 	var prompt_text = ""
-	
+
 	# If it's carryable with E-key interaction enabled, show both prompts
 	if carryable_component and carryable_component.has_e_key_interaction:
 		prompt_text = "[Click] Pick Up | [E] " + carryable_component.e_key_interaction_text
