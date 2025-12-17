@@ -18,13 +18,27 @@ var camera: Camera3D = null
 
 # Audio
 var tick_sound: AudioStreamPlayer
+var tick_sound_layer2: AudioStreamPlayer
+var tick_sound_layer3: AudioStreamPlayer
 
 func _ready():
 	# Setup tick sound for sticker cycling
 	tick_sound = AudioStreamPlayer.new()
-	tick_sound.stream = load("res://sounds/picotron/tick.ogg")
+	tick_sound.stream = load("res://sounds/picotron/sine.ogg")
 	tick_sound.volume_db = -5.0
 	add_child(tick_sound)
+
+	# Second layer for chord effect
+	tick_sound_layer2 = AudioStreamPlayer.new()
+	tick_sound_layer2.stream = load("res://sounds/picotron/sine.ogg")
+	tick_sound_layer2.volume_db = -5.0
+	add_child(tick_sound_layer2)
+
+	# Third layer for lower octave
+	tick_sound_layer3 = AudioStreamPlayer.new()
+	tick_sound_layer3.stream = load("res://sounds/picotron/sine.ogg")
+	tick_sound_layer3.volume_db = -5.0
+	add_child(tick_sound_layer3)
 
 func _process(delta):
 	# Handle sticker cycling (unified for both systems)
@@ -49,9 +63,26 @@ func cycle_sticker(direction: int):
 	# Sync to both systems
 	sync_sticker_selection(new_index)
 
-	# Play tick sound
+	# Play tick sound with chord effect
 	if tick_sound:
+		var base_pitch = 1.0
+		tick_sound.pitch_scale = base_pitch
 		tick_sound.play()
+
+		# Play second layer with a perfect fifth interval (1.5x) for chord effect
+		if tick_sound_layer2:
+			tick_sound_layer2.pitch_scale = base_pitch * 1.5
+			tick_sound_layer2.play()
+
+		# 1/3 of the time: play third layer one octave higher (2x)
+		# 2/3 of the time: play third layer one octave lower (0.5x)
+		if tick_sound_layer3:
+			var use_high_variant = randf() < 0.33
+			if use_high_variant:
+				tick_sound_layer3.pitch_scale = base_pitch * 2.0
+			else:
+				tick_sound_layer3.pitch_scale = base_pitch * 0.5
+			tick_sound_layer3.play()
 
 	# Emit signal from one system to update UI (avoid duplicate emissions)
 	if system:

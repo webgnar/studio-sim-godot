@@ -1,4 +1,4 @@
-[gd_scene load_steps=133 format=3 uid="uid://cnmivki1rop3b"]
+[gd_scene load_steps=134 format=3 uid="uid://cnmivki1rop3b"]
 
 [ext_resource type="Material" uid="uid://wwlsotlotycw" path="res://materials/wood.tres" id="1_4mrxx"]
 [ext_resource type="Texture2D" uid="uid://bke1xjp3mdreb" path="res://sprites/door.jpg" id="1_i7141"]
@@ -575,31 +575,35 @@ material = SubResource("StandardMaterial3D_dss4m")
 transform = Transform3D(0.33, 0, 0, 0, 0.33, 0, 0, 0, 0.33, 0, 5.100599, -3)
 
 [node name="OmniLight3D" type="OmniLight3D" parent="light1"]
-transform = Transform3D(3.030303, 0, 0, 0, 3.030303, 0, 0, 0, 3.030303, 0, -0.71681786, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.71681786, 0)
 light_color = Color(0.7411765, 1, 1, 1)
-omni_range = 17.54
-omni_attenuation = 1.859
+light_energy = 9.0
+light_indirect_energy = 0.0
+shadow_enabled = true
+omni_range = 10.0
+omni_attenuation = 2.0
 
 [node name="light2" parent="." instance=ExtResource("6_jhx03")]
 transform = Transform3D(0.33, 0, 0, 0, 0.33, 0, 0, 0, 0.33, 0, 5.100599, 2.250371)
 
 [node name="OmniLight3D" type="OmniLight3D" parent="light2"]
-transform = Transform3D(3.030303, 0, 0, 0, 3.030303, 0, 0, 0, 3.030303, 0, -0.5879202, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5879202, 0)
 light_color = Color(0.7607843, 1, 1, 1)
+light_energy = 9.0
 shadow_enabled = true
-shadow_opacity = 0.18
-omni_range = 11.027
-omni_attenuation = 1.491
+omni_range = 10.0
+omni_attenuation = 2.0
 
 [node name="light3" parent="." instance=ExtResource("6_jhx03")]
 transform = Transform3D(0.33, 0, 0, 0, 0.33, 0, 0, 0, 0.33, 0, 4.8278055, 9.223094)
 
 [node name="OmniLight3D" type="OmniLight3D" parent="light3"]
-transform = Transform3D(3.030303, 0, 0, 0, 3.030303, 0, 0, 0, 3.030303, 0, -0.80340767, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.80340767, 0)
 light_color = Color(0.6431373, 1, 1, 1)
-light_energy = 2.472
-omni_range = 13.874
-omni_attenuation = 2.402
+light_energy = 9.0
+shadow_enabled = true
+omni_range = 10.0
+omni_attenuation = 2.0
 
 [node name="studio" type="CSGCombiner3D" parent="."]
 transform = Transform3D(0.46, 0, 0, 0, 7.49, 0, 0, 0, 22.64, -4.9423933, 3.544661, 4)
@@ -747,18 +751,17 @@ transform = Transform3D(-6.119594e-09, 0, -0.14, 0, 0.14, 0, 0.14, 0, -6.119594e
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 2, 1.2067637, 2)
 
 [node name="spot" parent="." instance=ExtResource("20_munwf")]
-transform = Transform3D(0.08940223, 0.12044604, 0, -0.12044604, 0.08940223, 0, 0, 0, 0.14999995, -0.30782902, 4.760989, 7.3739543)
+transform = Transform3D(0.09255541, 0.118040286, 0, -0.118040286, 0.09255541, 0, 0, 0, 0.14999995, -1.1756444, 4.760989, 6.691671)
 
 [node name="SpotLight3D" type="SpotLight3D" parent="spot"]
-transform = Transform3D(6.666666, 0, 0, 0, -2.9140926e-07, 6.666666, 0, -6.666666, -2.9140926e-07, 0, 1.25, 0)
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0)
 light_energy = 2.98
-spot_range = 7.159
-spot_attenuation = -0.83
-spot_angle = 51.67
-spot_angle_attenuation = 36.758244
+spot_range = 6.7
+spot_attenuation = 2.11
+spot_angle = 46.65
 
 [node name="OmniLight3D" type="OmniLight3D" parent="spot"]
-transform = Transform3D(6.666666, 0, 0, 0, 6.666666, 0, 0, 0, 6.666666, 0, -1.64, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.64, 0)
 omni_range = 0.249
 
 [node name="spot4" parent="." instance=ExtResource("20_munwf")]

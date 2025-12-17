@@ -28,6 +28,18 @@ var input_enabled: bool = true  # Can be disabled when not active mode
 @export var sticker_scale: float = 1  # Scale stickers to fit canvas better
 @export var enable_dragging: bool = false  # Disable dragging for now
 
+# Sticker placement settings (rotation and scale applied when placing)
+var current_rotation: float = 0.0  # Rotation in degrees around surface normal
+var current_scale_multiplier: float = 1.0  # Scale multiplier (1.0 = default size)
+
+# Rotation settings
+@export var rotation_speed: float = 90.0  # Rotation degrees per second when button held
+
+# Scale settings
+@export var scale_speed: float = 0.5  # Scale change per second when button held
+@export var min_scale: float = 0.2  # Minimum scale (20% of original)
+@export var max_scale: float = 3.0  # Maximum scale (300% of original)
+
 # References
 var camera: Camera3D = null
 
@@ -103,17 +115,49 @@ func _process(delta):
 	if Input.is_action_just_pressed("ui_text_delete"):
 		delete_selected_layer()
 
-	# Handle rotation of selected layer (90 degree snapping)
-	if selected_layer and Input.is_action_just_pressed("rotate_counter"):
-		rotate_layer_90(selected_layer, -1)  # Counter-clockwise
-	if selected_layer and Input.is_action_just_pressed("rotate_clockwise"):
-		rotate_layer_90(selected_layer, 1)  # Clockwise
+	# If no layer is selected, handle rotation and scaling adjustments for next placement
+	if not selected_layer:
+		# Handle rotation adjustment (continuous while button held)
+		if Input.is_action_pressed("rotate_counter"):
+			adjust_rotation(delta, -1)  # Counter-clockwise
+		elif Input.is_action_pressed("rotate_clockwise"):
+			adjust_rotation(delta, 1)  # Clockwise
 
-	# Handle z-order adjustment
-	if selected_layer and Input.is_action_just_pressed("ui_up"):
-		raise_layer_order(selected_layer)
-	if selected_layer and Input.is_action_just_pressed("ui_down"):
-		lower_layer_order(selected_layer)
+		# Handle scale adjustment (continuous while button held)
+		if Input.is_action_pressed("scale_sticker_up"):
+			adjust_scale(delta, 1)  # Increase scale
+		elif Input.is_action_pressed("scale_sticker_down"):
+			adjust_scale(delta, -1)  # Decrease scale
+	else:
+		# If a layer is selected, handle rotation of selected layer (90 degree snapping)
+		if Input.is_action_just_pressed("rotate_counter"):
+			rotate_layer_90(selected_layer, -1)  # Counter-clockwise
+		if Input.is_action_just_pressed("rotate_clockwise"):
+			rotate_layer_90(selected_layer, 1)  # Clockwise
+
+		# Handle z-order adjustment
+		if Input.is_action_just_pressed("ui_up"):
+			raise_layer_order(selected_layer)
+		if Input.is_action_just_pressed("ui_down"):
+			lower_layer_order(selected_layer)
+
+func adjust_rotation(delta: float, direction: int):
+	"""Adjust rotation for next sticker placement"""
+	# Rotate smoothly based on delta time
+	current_rotation += (direction * rotation_speed * delta)
+
+	# Normalize to 0-360 range
+	current_rotation = fmod(current_rotation, 360.0)
+	if current_rotation < 0:
+		current_rotation += 360.0
+
+func adjust_scale(delta: float, direction: int):
+	"""Adjust scale for next sticker placement"""
+	# Adjust scale multiplier based on delta time for smooth continuous scaling
+	current_scale_multiplier += (direction * scale_speed * delta)
+
+	# Clamp to min/max range
+	current_scale_multiplier = clamp(current_scale_multiplier, min_scale, max_scale)
 
 func handle_primary_action(raycast_result: Dictionary):
 	"""Called by PaintingModeManager when user clicks to place sticker"""
@@ -185,14 +229,16 @@ func spawn_sticker(world_position: Vector3, normal: Vector3):
 	sprite.centered = true  # Center the sprite at its origin point
 	sprite.top_level = true  # Ignore parent transform (use world-space positioning)
 	sprite.billboard = BaseMaterial3D.BILLBOARD_DISABLED
-	sprite.shaded = false  # Unshaded material
-	sprite.alpha_cut = SpriteBase3D.ALPHA_CUT_DISABLED
-	sprite.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	# Use LINEAR filter instead of LINEAR_WITH_MIPMAPS for HTML5/WebGL compatibility
-	# Mipmaps require power-of-2 textures which may not always be available
-	sprite.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR
 	sprite.no_depth_test = false
-	# Note: render_priority doesn't work reliably in WebGL, using z-offset instead
+
+	# Create a StandardMaterial3D for Forward+ renderer compatibility
+	var material = StandardMaterial3D.new()
+	material.albedo_texture = definition.texture
+	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED  # Unshaded for consistent appearance
+	material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR
+	material.cull_mode = BaseMaterial3D.CULL_DISABLED  # Visible from both sides
+	sprite.material_override = material
 
 	# Calculate pixel size based on texture dimensions and canvas size
 	# Goal: Make stickers fit proportionally on the canvas
@@ -201,7 +247,9 @@ func spawn_sticker(world_position: Vector3, normal: Vector3):
 
 	# Base pixel size to fit canvas (3x2 wall)
 	# This makes the sticker take up roughly 1/4 of the canvas by default
-	sprite.pixel_size = sticker_scale / max(texture_size.x, texture_size.y)
+	# Apply current scale multiplier
+	var base_pixel_size = sticker_scale / max(texture_size.x, texture_size.y)
+	sprite.pixel_size = base_pixel_size * current_scale_multiplier
 
 	# Add to canvas_root for organization (but use world-space positioning)
 	canvas_root.add_child(sprite)
@@ -220,14 +268,19 @@ func spawn_sticker(world_position: Vector3, normal: Vector3):
 	var look_target = world_position - normal
 	sprite.look_at(look_target, Vector3.UP)
 
+	# Apply current rotation (rotate around surface normal)
+	var rotation_radians = deg_to_rad(current_rotation)
+	sprite.rotate_object_local(Vector3(0, 0, 1), rotation_radians)
+
 	# Create placed layer data
 	var placed = PlacedLayer.new(definition.id, sprite, next_order)
+	placed.rotation_deg = current_rotation  # Store the rotation
 	placed_layers.append(placed)
 
 	next_order += 1
 
-	# Select the newly placed sticker
-	selected_layer = placed
+	# Don't select the newly placed sticker - keep rotation/scale active for continuous placement
+	# User can click on placed stickers later to select them if needed
 
 func cycle_sticker(direction: int):
 	"""Cycle through available stickers in library (deprecated - use PaintingModeManager)"""

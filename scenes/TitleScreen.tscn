@@ -1,4 +1,4 @@
-[gd_scene load_steps=95 format=3 uid="uid://da8jmxqyjt0xs"]
+[gd_scene load_steps=84 format=3 uid="uid://da8jmxqyjt0xs"]
 
 [ext_resource type="Script" uid="uid://bn5a584271aim" path="res://scripts/TitleScreenController.gd" id="1_2ktle"]
 [ext_resource type="Material" uid="uid://wwlsotlotycw" path="res://materials/wood.tres" id="1_hjcsb"]
@@ -21,10 +21,6 @@
 [ext_resource type="PackedScene" uid="uid://cmaavrflrf4d4" path="res://models/props/pipe_gray.glb" id="17_1nrh6"]
 [ext_resource type="Texture2D" uid="uid://b3ty4ce0xhyow" path="res://sprites/hvac.jpg" id="18_08fpa"]
 [ext_resource type="PackedScene" uid="uid://44g07prjgs5x" path="res://models/props/pipe_gray bent.glb" id="19_bdpe2"]
-[ext_resource type="Script" uid="uid://djltcowfnfdh7" path="res://scripts/old stuff/mirror.gd" id="20_08fpa"]
-[ext_resource type="Script" uid="uid://dxwj5n7bxo3mk" path="res://scripts/old stuff/MirrorInteraction.gd" id="21_bdpe2"]
-[ext_resource type="Material" uid="uid://depuckvrgdvcl" path="res://materials/humanskin.tres" id="22_0d6if"]
-[ext_resource type="Material" uid="uid://bagboitufgv5v" path="res://materials/skeletonskin.tres" id="23_hvy54"]
 [ext_resource type="Shader" uid="uid://br4qh8mg5yosn" path="res://shaders/mirror.gdshader" id="24_bdpe2"]
 [ext_resource type="PackedScene" uid="uid://d0y6fk05wn5dc" path="res://models/interactables/cardboard box/box.glb" id="25_hvy54"]
 [ext_resource type="PackedScene" uid="uid://tejn0hfpdhf7" path="res://models/interactables/cardboard box/box topL.glb" id="26_dchwh"]
@@ -38,7 +34,6 @@
 [ext_resource type="AudioStream" uid="uid://bukro42figtah" path="res://sounds/fan switch.ogg" id="34_hkayi"]
 [ext_resource type="Script" uid="uid://c63c2n2vhd5r6" path="res://scripts/old stuff/FanController.gd" id="35_37bcn"]
 [ext_resource type="AudioStream" uid="uid://ut8y785jdo3t" path="res://sounds/drone.ogg" id="36_ureuc"]
-[ext_resource type="PackedScene" uid="uid://bsbvqf088sigr" path="res://models/props/woodPallet.gltf" id="37_6ogcu"]
 [ext_resource type="PackedScene" uid="uid://b4jc5oc0kffk" path="res://models/blender/humanrig.blend" id="38_3yl86"]
 [ext_resource type="Script" uid="uid://b0yviy0qx7100" path="res://scripts/TitleScreenCharacter.gd" id="40_5h1vy"]
 [ext_resource type="PackedScene" uid="uid://bejpg13rkvvy7" path="res://scenes/objects/PaintingProp.tscn" id="40_o51e6"]
@@ -122,6 +117,21 @@ _data = {
 &"pan": SubResource("Animation_hkayi")
 }
 
+[sub_resource type="Animation" id="Animation_mp5hy"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1, 1)]
+}
+
 [sub_resource type="Animation" id="Animation_sn2o6"]
 resource_name = "scale"
 length = 15.0
@@ -139,21 +149,6 @@ tracks/0/keys = {
 "values": [Vector2(1, 1), Vector2(1.2, 1.2), Vector2(1, 1)]
 }
 
-[sub_resource type="Animation" id="Animation_mp5hy"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:scale")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(1, 1)]
-}
-
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_bhnaj"]
 _data = {
 &"RESET": SubResource("Animation_mp5hy"),
@@ -163,22 +158,6 @@ _data = {
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0d6if"]
 albedo_texture = ExtResource("18_08fpa")
 metallic = 1.0
-
-[sub_resource type="PlaneMesh" id="PlaneMesh_dchwh"]
-resource_local_to_scene = true
-
-[sub_resource type="ViewportTexture" id="ViewportTexture_ctatt"]
-resource_name = "_albedo"
-viewport_path = NodePath("mirror/SubViewport")
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_jk6fi"]
-resource_local_to_scene = true
-albedo_texture = SubResource("ViewportTexture_ctatt")
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_2n7uf"]
-size = Vector3(2, 2, 0.041088868)
-
-[sub_resource type="World3D" id="World3D_gyoo8"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_0d6if"]
 
@@ -389,9 +368,6 @@ _data = {
 [sub_resource type="BoxShape3D" id="BoxShape3D_u3ctg"]
 size = Vector3(9.757992, 11.056286, 4.682035)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_juc6n"]
-size = Vector3(2.2, 0.21, 1.46)
-
 [node name="TitleScreen" type="Node3D"]
 script = ExtResource("1_2ktle")
 
@@ -434,31 +410,37 @@ material = SubResource("StandardMaterial3D_1nrh6")
 transform = Transform3D(0.33, 0, 0, 0, 0.33, 0, 0, 0, 0.33, 0, 5.100599, -3)
 
 [node name="OmniLight3D" type="OmniLight3D" parent="StudioEnvironment/light1"]
-transform = Transform3D(3.030303, 0, 0, 0, 3.030303, 0, 0, 0, 3.030303, 0, -0.71681786, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.71681786, 0)
 light_color = Color(0.7411765, 1, 1, 1)
-omni_range = 17.54
-omni_attenuation = 1.859
+light_energy = 9.0
+light_indirect_energy = 0.0
+shadow_enabled = true
+omni_range = 10.0
+omni_attenuation = 2.0
 
 [node name="light2" parent="StudioEnvironment" instance=ExtResource("6_1bmgf")]
 transform = Transform3D(0.33, 0, 0, 0, 0.33, 0, 0, 0, 0.33, 0, 5.100599, 2.250371)
 
-[node name="OmniLight3D" type="OmniLight3D" parent="StudioEnvironment/light2"]
-transform = Transform3D(3.030303, 0, 0, 0, 3.030303, 0, 0, 0, 3.030303, 0, -0.5879202, 0)
-light_color = Color(0.7607843, 1, 1, 1)
+[node name="OmniLight3D2" type="OmniLight3D" parent="StudioEnvironment/light2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.71681786, 0)
+light_color = Color(0.7411765, 1, 1, 1)
+light_energy = 9.0
+light_indirect_energy = 0.0
 shadow_enabled = true
-shadow_opacity = 0.18
-omni_range = 11.027
-omni_attenuation = 1.491
+omni_range = 10.0
+omni_attenuation = 2.0
 
 [node name="light3" parent="StudioEnvironment" instance=ExtResource("6_1bmgf")]
 transform = Transform3D(0.33, 0, 0, 0, 0.33, 0, 0, 0, 0.33, 0, 4.8278055, 9.223094)
 
 [node name="OmniLight3D" type="OmniLight3D" parent="StudioEnvironment/light3"]
-transform = Transform3D(3.030303, 0, 0, 0, 3.030303, 0, 0, 0, 3.030303, 0, -0.80340767, 0)
-light_color = Color(0.6431373, 1, 1, 1)
-light_energy = 2.472
-omni_range = 13.874
-omni_attenuation = 1.429
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.71681786, 0)
+light_color = Color(0.7411765, 1, 1, 1)
+light_energy = 9.0
+light_indirect_energy = 0.0
+shadow_enabled = true
+omni_range = 10.0
+omni_attenuation = 2.0
 
 [node name="studio" type="CSGCombiner3D" parent="StudioEnvironment"]
 transform = Transform3D(0.46, 0, 0, 0, 7.49, 0, 0, 0, 22.64, -4.9423933, 3.544661, 4)
@@ -859,31 +841,6 @@ transform = Transform3D(0.014088948, -0.019586174, -0.62915206, 0.47128618, 0.04
 [node name="pipegraybent2" parent="electrical conduit" instance=ExtResource("19_bdpe2")]
 transform = Transform3D(0.013917993, 0.06352692, -0.6286893, 0.017449299, 1.3355626, 0.030572794, 0.47172707, -0.05127709, 0.01741816, 58.345383, 9.54422, -27.782818)
 
-[node name="mirror" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.15967436, -0.98716974, 7.2844835e-22, 0.98716974, 0.15967436, 0, -1.3524944e-22, 8.361653e-22, 0.86, 3.5676813, 1.0085149, 5.4377017)
-mesh = SubResource("PlaneMesh_dchwh")
-surface_material_override/0 = SubResource("StandardMaterial3D_jk6fi")
-script = ExtResource("20_08fpa")
-
-[node name="StaticBody3D" type="StaticBody3D" parent="mirror"]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="mirror/StaticBody3D"]
-transform = Transform3D(0.99995476, 0.0050280425, 0.008100539, -0.007948324, -0.029610021, 0.9995302, 0.005265377, -0.9995489, -0.029568743, 0.000238657, 0.029442072, -0.0008711815)
-shape = SubResource("BoxShape3D_2n7uf")
-
-[node name="MirrorInteraction" type="Node3D" parent="mirror"]
-script = ExtResource("21_bdpe2")
-human_skin_material = ExtResource("22_0d6if")
-skeleton_skin_material = ExtResource("23_hvy54")
-interaction_text = "Change"
-
-[node name="SubViewport" type="SubViewport" parent="mirror"]
-world_3d = SubResource("World3D_gyoo8")
-size = Vector2i(256, 256)
-
-[node name="Camera3D" type="Camera3D" parent="mirror/SubViewport"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8393148, 0)
-
 [node name="MirrorNew" type="MeshInstance3D" parent="."]
 transform = Transform3D(0.16199991, -0.9867908, 0, 0.9867908, 0.16199991, 0, 0, 0, 1, 3.6321473, 1.012416, 7.6384497)
 mesh = SubResource("PlaneMesh_0d6if")
@@ -996,42 +953,6 @@ running_loop_sound = ExtResource("36_ureuc")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="FAN"]
 transform = Transform3D(-0.06961743, 0, 0.0073084896, 0, 0.07000696, 0, -0.0073084896, 0, -0.06961743, -0.0011628214, 0.32277358, -0.061239004)
 shape = SubResource("BoxShape3D_u3ctg")
-
-[node name="pallet" type="RigidBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.6628271, 0.20787787, 11.426752)
-collision_layer = 8
-collision_mask = 2
-
-[node name="model" parent="pallet" instance=ExtResource("37_6ogcu")]
-transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="pallet"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.05, -0.07, -0.1)
-shape = SubResource("BoxShape3D_juc6n")
-
-[node name="pallet3" type="RigidBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.6628271, 0.66109884, 11.426752)
-collision_layer = 8
-collision_mask = 2
-
-[node name="model" parent="pallet3" instance=ExtResource("37_6ogcu")]
-transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="pallet3"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.05, -0.07, -0.1)
-shape = SubResource("BoxShape3D_juc6n")
-
-[node name="pallet2" type="RigidBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.6628271, 0.42698503, 11.426752)
-collision_layer = 8
-collision_mask = 2
-
-[node name="model" parent="pallet2" instance=ExtResource("37_6ogcu")]
-transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="pallet2"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.05, -0.07, -0.1)
-shape = SubResource("BoxShape3D_juc6n")
 
 [node name="humanrig" parent="." instance=ExtResource("38_3yl86")]
 transform = Transform3D(-0.29999998, 0, 2.6226832e-08, 0, 0.29999998, 0, -2.6226832e-08, 0, -0.29999998, 0, 0, 8.204904)

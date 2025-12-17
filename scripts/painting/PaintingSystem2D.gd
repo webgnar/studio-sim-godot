@@ -364,6 +364,10 @@ func rotate_preview(delta: float, direction: int):
 	# Apply rotation to preview sprite
 	preview_sprite.rotation_degrees = preview_rotation
 
+	# Reset fade timer to keep preview visible while rotating
+	preview_idle_time = 0.0
+	preview_target_opacity = preview_base_opacity
+
 func scale_preview(delta: float, direction: int):
 	"""Scale the preview sprite continuously while button is held"""
 	if not preview_sprite:
@@ -377,6 +381,10 @@ func scale_preview(delta: float, direction: int):
 
 	# Update preview sprite scale
 	_update_preview_scale()
+
+	# Reset fade timer to keep preview visible while scaling
+	preview_idle_time = 0.0
+	preview_target_opacity = preview_base_opacity
 
 func _update_preview_scale():
 	"""Update preview sprite scale based on current multiplier"""

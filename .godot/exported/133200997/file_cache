@@ -32,7 +32,7 @@ res://scenes/UI/StickerSlot.tscn::769f726528c50717cffd1456413adc69::1764016211::
 res://scenes/UI/ValidationResultUI.tscn::c4344269b0475983043459e981662aef::1765387305::res://.godot/exported/133200997/export-1a01ea4a9204e9999dc95b08c8cfe93a-ValidationResultUI.scn
 res://scenes/CarryablePainting.tscn::d88715b23f7ad6a0f57d2ce2c2670393::1765729113::res://.godot/exported/133200997/export-81d593dee0b8493f17619d82f2d4e622-CarryablePainting.scn
 res://scenes/human.tscn::69a111d5920c0beed20be7f22b41c616::1761713575::res://.godot/exported/133200997/export-eba661b9dcbe38bde83515c9e6eec66a-human.scn
-res://scenes/PaintingRoot2D.tscn::e208a909000873bb6a7c7fc8c9ad4945::1765352114::res://.godot/exported/133200997/export-c9422ff23df7d52dcdbaa5cb19c4dd5d-PaintingRoot2D.scn
+res://scenes/PaintingRoot2D.tscn::df9d5710e65220fccd383649e79fce56::1765735608::res://.godot/exported/133200997/export-c9422ff23df7d52dcdbaa5cb19c4dd5d-PaintingRoot2D.scn
 res://scenes/PaintingRoot.tscn::16a314f2db2544bc5d9d0dc50f08ba26::1764019379::res://.godot/exported/133200997/export-7698917d71931537be1d093dc2a1ded6-PaintingRoot.scn
 res://scenes/world.tscn::da8301320056f915e6164506a6fbd848::1765728645::res://.godot/exported/133200997/export-6b9c1b1fd6ae6f795188dfdc89e222b0-world.scn
 res://themes/ui_theme.tres::cf13b8f4d37214e24c470aea1b33d043::1765350537::res://.godot/exported/133200997/export-6986a3918d5316243c91c225d09f5f65-ui_theme.res
@@ -83,4 +83,4 @@ res://scenes/objects/ProjectileNail.tscn::357cf862601c707d66f17e503afec071::1765
 res://scenes/nail.tscn::3c20e2b794c7c54a5f77b7931d87b3e0::1765431355::res://.godot/exported/133200997/export-e9ce0ca225808e8853fda82c7cef96f6-nail.scn
 res://scenes/NailGun.tscn::e7aa28ff67d9ff589fe24b5278955a7b::1765692002::res://.godot/exported/133200997/export-845845948b3f8b5db8ee3dd8a28d092e-NailGun.scn
 res://scenes/WallNail.tscn::0759692906edcde4d969bb4ee9808571::1765691884::res://.godot/exported/133200997/export-5b4e65f22488c6a710319a0e3ec80e7f-WallNail.scn
-res://scenes/UI/SaveNotification.tscn::187d01a706b5c3608f12d4e57d7145b5::1765728748::res://.godot/exported/133200997/export-a59d10a624cf3c79bcc5c833794fb92c-SaveNotification.scn
+res://scenes/UI/SaveNotification.tscn::01f6e63d0540ea117c160e6fce17e939::1765737548::res://.godot/exported/133200997/export-a59d10a624cf3c79bcc5c833794fb92c-SaveNotification.scn
