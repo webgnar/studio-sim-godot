@@ -9,6 +9,10 @@ func _ready():
 	PaintingModeManager.register_3d_system(painting_root_3d, painting_root_3d)
 	PaintingModeManager.register_2d_system(painting_root_2d.get_node("CanvasViewport/CanvasRoot"), painting_root_2d)
 
+	# Register 3D painting system with WorldStateManager for persistence
+	if WorldStateManager and painting_root_3d:
+		WorldStateManager.register_painting_system_3d(painting_root_3d)
+
 	# Connect mission authoring UI to 2D system
 	var painting_system_2d = painting_root_2d.get_node("CanvasViewport/CanvasRoot")
 	if mission_authoring_ui and painting_system_2d:

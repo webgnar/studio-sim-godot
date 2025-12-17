@@ -133,7 +133,7 @@ func _unhandled_input(event):
 		else:
 			# Undo from 3D system
 			if painting_system_3d:
-				painting_system_3d.handle_secondary_action()
+				painting_system_3d.handle_secondary_action(raycast_result)
 				get_viewport().set_input_as_handled()
 
 func _perform_unified_raycast() -> Dictionary:

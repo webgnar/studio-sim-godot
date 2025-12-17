@@ -7,3 +7,4 @@ res://scripts/painting/PaintingSystem2D.gd
 res://scripts/WorldSetup.gd
 res://scripts/painting/PaintingSystem.gd
 res://scenes/TitleScreen.tscn
+res://scripts/WorldStateManager.gd

@@ -164,9 +164,10 @@ func handle_primary_action(raycast_result: Dictionary):
 	if raycast_result and raycast_result.has("position") and raycast_result.has("normal"):
 		spawn_sticker(raycast_result.position, raycast_result.normal)
 
-func handle_secondary_action():
-	"""Called by PaintingModeManager when user right-clicks to undo"""
-	undo_last_sticker()
+func handle_secondary_action(raycast_result: Dictionary):
+	"""Called by PaintingModeManager when user right-clicks to remove sticker"""
+	if raycast_result and raycast_result.has("position"):
+		remove_sticker_at_position(raycast_result.position)
 
 
 func _raycast_from_mouse() -> Dictionary:
@@ -371,6 +372,26 @@ func undo_last_sticker():
 		# Decrement next_order so it can be reused
 		if next_order > 0:
 			next_order -= 1
+
+func remove_sticker_at_position(world_position: Vector3):
+	"""Remove the sticker at the raycast hit position"""
+	var layer_to_remove = _get_layer_at_position(world_position)
+
+	if layer_to_remove:
+		# Remove from scene
+		if layer_to_remove.node:
+			layer_to_remove.node.queue_free()
+
+		# Remove from array
+		placed_layers.erase(layer_to_remove)
+
+		# Clear selection if this was the selected layer
+		if selected_layer == layer_to_remove:
+			selected_layer = null
+
+		print("Removed sticker at position: ", world_position)
+	else:
+		print("No sticker found at raycast position")
 
 func select_layer_by_index(index: int):
 	"""Select a placed layer by its index in the array"""

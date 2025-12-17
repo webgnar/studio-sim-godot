@@ -3,7 +3,7 @@ extends Node
 # WorldStateManager - Singleton for managing persistent world state (carryable paintings)
 # Handles saving/loading painting positions, rotations, and textures to disk
 
-const SAVE_VERSION = 1
+const SAVE_VERSION = 2
 const WORLD_STATE_PATH = "user://world_state.json"
 const TEXTURES_DIR = "user://world_paintings"
 
@@ -18,6 +18,9 @@ var _registered_paintings: Dictionary = {}
 # Dictionary mapping nail nodes to their IDs
 # Format: { nail_node: nail_id }
 var _registered_nails: Dictionary = {}
+
+# Reference to 3D painting system for saving stickers
+var _painting_system_3d: PaintingSystem = null
 
 func _ready():
 	_ensure_directories()
@@ -55,6 +58,15 @@ func unregister_nail(nail: Node) -> void:
 	if nail in _registered_nails:
 		_registered_nails.erase(nail)
 
+func register_painting_system_3d(system: PaintingSystem) -> void:
+	"""Register the 3D painting system for sticker persistence"""
+	if not system:
+		push_warning("Attempted to register null painting system")
+		return
+
+	_painting_system_3d = system
+	print("PaintingSystem registered for persistence")
+
 # ============================================================================
 # Save/Load
 # ============================================================================
@@ -75,7 +87,8 @@ func save_world_state() -> bool:
 		"version": SAVE_VERSION,
 		"last_saved": _get_timestamp(),
 		"paintings": [],
-		"nails": []
+		"nails": [],
+		"stickers_3d": []
 	}
 
 	var valid_painting_ids = []
@@ -141,6 +154,31 @@ func save_world_state() -> bool:
 		save_data["paintings"].append(painting_data)
 		valid_painting_ids.append(painting_id)
 
+	# Save 3D stickers
+	if _painting_system_3d:
+		for placed_layer in _painting_system_3d.placed_layers:
+			if not is_instance_valid(placed_layer.node):
+				continue
+
+			var sticker_data = {
+				"id": placed_layer.id,
+				"position": {
+					"x": placed_layer.node.global_position.x,
+					"y": placed_layer.node.global_position.y,
+					"z": placed_layer.node.global_position.z
+				},
+				"rotation": {
+					"x": placed_layer.node.global_rotation.x,
+					"y": placed_layer.node.global_rotation.y,
+					"z": placed_layer.node.global_rotation.z
+				},
+				"pixel_size": placed_layer.node.pixel_size,
+				"order": placed_layer.order,
+				"rotation_deg": placed_layer.rotation_deg
+			}
+
+			save_data["stickers_3d"].append(sticker_data)
+
 	# Write to file
 	var file = FileAccess.open(WORLD_STATE_PATH, FileAccess.WRITE)
 	if not file:
@@ -154,7 +192,7 @@ func save_world_state() -> bool:
 	# Clean up orphaned texture files
 	_cleanup_orphaned_textures(valid_painting_ids)
 
-	print("World state saved: %d paintings, %d nails" % [save_data["paintings"].size(), save_data["nails"].size()])
+	print("World state saved: %d paintings, %d nails, %d 3D stickers" % [save_data["paintings"].size(), save_data["nails"].size(), save_data["stickers_3d"].size()])
 	return true
 
 func load_world_state(world_root: Node3D) -> void:
@@ -206,7 +244,18 @@ func load_world_state(world_root: Node3D) -> void:
 		if await _load_painting(world_root, painting_data, nail_id_map):
 			paintings_loaded += 1
 
-	print("World state loaded: %d/%d nails, %d/%d paintings" % [nails_loaded, nails_array.size(), paintings_loaded, paintings_array.size()])
+	# Load 3D stickers THIRD (after nails and paintings)
+	var stickers_array = save_data.get("stickers_3d", [])
+	var stickers_loaded = 0
+
+	if _painting_system_3d:
+		for sticker_data in stickers_array:
+			if _load_sticker_3d(sticker_data):
+				stickers_loaded += 1
+	else:
+		push_warning("PaintingSystem not registered, skipping 3D sticker load")
+
+	print("World state loaded: %d/%d nails, %d/%d paintings, %d/%d stickers" % [nails_loaded, nails_array.size(), paintings_loaded, paintings_array.size(), stickers_loaded, stickers_array.size()])
 
 func clear_world_state() -> void:
 	"""
@@ -224,6 +273,10 @@ func clear_world_state() -> void:
 	# Clear registered paintings and nails (though scene should be reloading anyway)
 	_registered_paintings.clear()
 	_registered_nails.clear()
+
+	# Clear 3D stickers
+	if _painting_system_3d:
+		_painting_system_3d.clear_canvas()
 
 	print("World state cleared")
 
@@ -391,6 +444,81 @@ func _load_painting(world_root: Node3D, painting_data: Dictionary, nail_id_map: 
 			await get_tree().process_frame
 			# Attach painting to nail
 			nail_component.accept_painting(painting)
+
+	return true
+
+func _load_sticker_3d(sticker_data: Dictionary) -> bool:
+	"""
+	Load a single 3D sticker from save data
+	Returns true on success, false on failure
+	"""
+	if not _painting_system_3d:
+		return false
+
+	var sticker_id = sticker_data.get("id", "")
+	var position_data = sticker_data.get("position", {})
+	var rotation_data = sticker_data.get("rotation", {})
+	var pixel_size = sticker_data.get("pixel_size", 0.001)
+	var order = sticker_data.get("order", 0)
+	var rotation_deg = sticker_data.get("rotation_deg", 0.0)
+
+	# Validate data
+	if sticker_id == "":
+		push_warning("Invalid sticker data: missing id")
+		return false
+
+	# Find sticker definition in library
+	var definition: PaintingLayerDefinition = null
+	for def in _painting_system_3d.sticker_library:
+		if def.id == sticker_id:
+			definition = def
+			break
+
+	if not definition:
+		push_warning("Sticker definition not found for id: " + sticker_id + " (library may have changed)")
+		return false
+
+	# Recreate Sprite3D node
+	var sprite = Sprite3D.new()
+	sprite.texture = definition.texture
+	sprite.centered = true
+	sprite.top_level = true
+	sprite.billboard = BaseMaterial3D.BILLBOARD_DISABLED
+	sprite.no_depth_test = false
+	sprite.pixel_size = pixel_size
+
+	# Create StandardMaterial3D (same as spawn_sticker)
+	var material = StandardMaterial3D.new()
+	material.albedo_texture = definition.texture
+	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR
+	material.cull_mode = BaseMaterial3D.CULL_DISABLED
+	sprite.material_override = material
+
+	# Add to canvas root
+	_painting_system_3d.canvas_root.add_child(sprite)
+
+	# Set transform
+	sprite.global_position = Vector3(
+		position_data.get("x", 0.0),
+		position_data.get("y", 0.0),
+		position_data.get("z", 0.0)
+	)
+	sprite.global_rotation = Vector3(
+		rotation_data.get("x", 0.0),
+		rotation_data.get("y", 0.0),
+		rotation_data.get("z", 0.0)
+	)
+
+	# Create PlacedLayer tracking structure
+	var placed = PlacedLayer.new(sticker_id, sprite, order)
+	placed.rotation_deg = rotation_deg
+	_painting_system_3d.placed_layers.append(placed)
+
+	# Update next_order to prevent conflicts
+	if order >= _painting_system_3d.next_order:
+		_painting_system_3d.next_order = order + 1
 
 	return true
 
