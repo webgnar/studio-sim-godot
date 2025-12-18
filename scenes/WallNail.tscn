@@ -31,14 +31,8 @@ stream = ExtResource("3_nailstick")
 autoplay = true
 max_distance = 10.0
 
-[node name="NailPeg" type="StaticBody3D" parent="."]
+[node name="NailPeg" type="Node3D" parent="."]
 transform = Transform3D(-4.371139e-08, 1, 4.37114e-08, 0, -4.37114e-08, 1, 1, 4.371139e-08, 1.9106859e-15, 0.12, 0, 0)
-collision_layer = 32
-collision_mask = 4
-physics_material_override = SubResource("PhysicsMaterial_nail_peg")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="NailPeg"]
-shape = SubResource("CylinderShape3D_nail_peg")
 
 [node name="DetectionArea" type="Area3D" parent="NailPeg"]
 collision_layer = 32

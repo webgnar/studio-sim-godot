@@ -25,7 +25,7 @@ func _ready() -> void:
 	WorldStateManager.register_nail(self, nail_id)
 
 	# Connect to detection area signals for tracking
-	var peg = get_node_or_null("NailPeg")
+	var peg = get_node_or_null("../NailPeg")
 	if peg:
 		var detection_area = peg.get_node_or_null("DetectionArea")
 		if detection_area and detection_area is Area3D:

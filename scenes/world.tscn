@@ -1220,10 +1220,7 @@ mesh = SubResource("PlaneMesh_1dgkn")
 surface_material_override/0 = SubResource("StandardMaterial3D_5hglh")
 
 [node name="Styrofoam cube" parent="." groups=["no_outline"] instance=ExtResource("52_e68xj")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 1, -3)
-
-[node name="MeshInstance3D" parent="Styrofoam cube" index="1"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.981051, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 1, -3)
 
 [node name="Node3D" parent="Styrofoam cube" index="2"]
 impact_damage = 1.0
