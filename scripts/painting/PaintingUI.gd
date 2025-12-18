@@ -67,10 +67,12 @@ func _build_carousel():
 	# Wait for slot _ready() functions to complete and UI layout to be finalized
 	await get_tree().process_frame
 
-	# Manually initialize the first slot as equipped
-	if not slot_nodes.is_empty():
-		slot_nodes[0].set_equipped(true)
-		slot_nodes[0].set_slot_scale(center_scale)
+	# Manually initialize the correct slot as equipped (based on active_system's current selection)
+	if not slot_nodes.is_empty() and active_system:
+		var equipped_index = active_system.selected_sticker_index
+		if equipped_index < slot_nodes.size():
+			slot_nodes[equipped_index].set_equipped(true)
+			slot_nodes[equipped_index].set_slot_scale(center_scale)
 
 	# Wait one more frame for layout
 	await get_tree().process_frame

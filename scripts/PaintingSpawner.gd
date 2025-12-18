@@ -90,6 +90,11 @@ func replace_painting_with_carryable(world: Node3D) -> void:
 	var new_system = new_painting.get_node("CanvasViewport/CanvasRoot")
 	PaintingModeManager.register_2d_system(new_system, new_painting)
 
+	# Sync new 2D system to match 3D system's current selection
+	if PaintingModeManager.painting_system_3d:
+		var current_index = PaintingModeManager.painting_system_3d.selected_sticker_index
+		PaintingModeManager.sync_sticker_selection(current_index)
+
 	# Reconnect PaintingUI to new system
 	_reconnect_painting_ui(new_system)
 
@@ -137,6 +142,12 @@ func _reconnect_painting_ui(new_system: PaintingSystem2D):
 	if not painting_ui:
 		return
 
+	# Disconnect from old system if it exists and is still valid
+	var old_system = painting_ui.active_system
+	if old_system and is_instance_valid(old_system):
+		if old_system.layer_equipped.is_connected(painting_ui._on_layer_equipped):
+			old_system.layer_equipped.disconnect(painting_ui._on_layer_equipped)
+
 	# Update active system reference
 	painting_ui.active_system = new_system
 	painting_ui.painting_system_2d = new_system
@@ -144,8 +155,8 @@ func _reconnect_painting_ui(new_system: PaintingSystem2D):
 	# Reconnect signal
 	new_system.layer_equipped.connect(painting_ui._on_layer_equipped)
 
-	# Rebuild carousel with new system
-	painting_ui._build_carousel()
+	# Update carousel visuals to reflect current selection (no need to rebuild)
+	painting_ui._update_carousel_position(true)
 
 func _find_painting_ui(node: Node) -> PaintingUI:
 	"""Recursively find PaintingUI in scene tree"""
