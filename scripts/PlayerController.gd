@@ -14,6 +14,7 @@ extends CharacterBody3D
 @export_group("Camera Stats")
 @export var sensitivity: float = 0.003
 @export var joystick_sensitivity_multiplier: float = 100.0  # How much to scale joystick input
+@export var damping: float = 12.0  # Camera smoothing strength (higher = faster response)
 
 @export_group("Head Bob")
 @export var bob_frequency: float = 2.0
@@ -31,6 +32,10 @@ extends CharacterBody3D
 
 # We get a reference to the camera in _ready().
 var _camera: Camera3D
+
+# Camera rotation smoothing variables
+var _target_rot: Vector2 = Vector2.ZERO  # Target rotation (pitch, yaw)
+var _current_rot: Vector2 = Vector2.ZERO  # Current smoothed rotation
 
 # Animation controller reference
 var _player_animation: PlayerAnimation
@@ -80,7 +85,11 @@ func _ready() -> void:
 	# Initialize FOV
 	_camera.fov = base_fov
 	_current_fov = base_fov
-	
+
+	# Initialize camera rotation tracking
+	_current_rot = Vector2(_camera.rotation.x, rotation.y)
+	_target_rot = _current_rot
+
 	# Register player camera with CameraManager
 	if _camera:
 		CameraManager.register_player_camera(_camera)
@@ -189,7 +198,7 @@ func _physics_process(delta: float) -> void:
 			velocity.z = new_horizontal.z
 
 	# --- JOYSTICK CAMERA LOOK ---
-	# Handle camera rotation with right stick (axes 2 and 3)
+	# Handle camera rotation with right stick (accumulate into target rotation)
 	if _camera:
 		var look_x = Input.get_joy_axis(0, JOY_AXIS_RIGHT_X)  # Axis 2
 		var look_y = Input.get_joy_axis(0, JOY_AXIS_RIGHT_Y)  # Axis 3
@@ -201,20 +210,25 @@ func _physics_process(delta: float) -> void:
 		if abs(look_y) < deadzone:
 			look_y = 0.0
 
-		# Apply joystick camera rotation (scaled for smooth feel)
+		# Accumulate joystick input into target rotation
 		if look_x != 0.0 or look_y != 0.0:
 			var joystick_sens = sensitivity * joystick_sensitivity_multiplier
 
-			# Rotate player horizontally (yaw)
-			rotate_y(-look_x * joystick_sens * delta)
+			# Accumulate into target rotation
+			_target_rot.y -= look_x * joystick_sens * delta  # Yaw (horizontal)
+			_target_rot.x -= look_y * joystick_sens * delta  # Pitch (vertical)
 
-			# Rotate camera vertically (pitch)
-			_camera.rotate_x(-look_y * joystick_sens * delta)
+			# Clamp the target pitch to prevent flipping
+			_target_rot.x = clamp(_target_rot.x, deg_to_rad(-80), deg_to_rad(80))
 
-			# Clamp vertical rotation
-			var cam_rotation := _camera.rotation
-			cam_rotation.x = clamp(cam_rotation.x, deg_to_rad(-80), deg_to_rad(80))
-			_camera.rotation = cam_rotation
+	# --- CAMERA SMOOTHING ---
+	# Interpolate current rotation toward target rotation using exponential decay
+	# This creates smooth, frame-rate independent camera movement
+	_current_rot = _current_rot.lerp(_target_rot, 1.0 - exp(-damping * delta))
+
+	# Apply the smoothed rotation to camera (pitch) and player (yaw)
+	_camera.rotation.x = _current_rot.x
+	rotation.y = _current_rot.y
 
 	# --- DYNAMIC FOV ---
 	# Adjust FOV based on movement speed for sense of speed
@@ -272,23 +286,17 @@ func _unhandled_input(event: InputEvent) -> void:
 		return
 	
 	# --- MOUSE LOOK ---
-	# This function handles mouse rotation for the camera.
+	# Accumulate mouse input into target rotation (smoothing applied in _physics_process)
 	if event is InputEventMouseMotion and _camera != null:
 		var mouse_motion := event as InputEventMouseMotion
 		# Only process mouse look if mouse is captured
 		if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
-			# Rotate the player horizontally (Yaw).
-			# We rotate the entire CharacterBody3D node.
-			rotate_y(-mouse_motion.relative.x * sensitivity)
+			# Accumulate input into target rotation
+			_target_rot.x -= mouse_motion.relative.y * sensitivity  # Pitch (vertical)
+			_target_rot.y -= mouse_motion.relative.x * sensitivity  # Yaw (horizontal)
 
-			# Rotate the camera vertically (Pitch).
-			# We rotate the Camera3D node itself.
-			_camera.rotate_x(-mouse_motion.relative.y * sensitivity)
-
-			# Clamp the vertical rotation to prevent the camera from flipping over.
-			var cam_rotation := _camera.rotation
-			cam_rotation.x = clamp(cam_rotation.x, deg_to_rad(-80), deg_to_rad(80))
-			_camera.rotation = cam_rotation
+			# Clamp the target pitch to prevent flipping
+			_target_rot.x = clamp(_target_rot.x, deg_to_rad(-80), deg_to_rad(80))
 
 	# --- MOUSE CLICK HANDLING ---
 	# Handle mouse clicks to recapture mouse or interact with objects
