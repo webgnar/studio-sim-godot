@@ -10,6 +10,7 @@ const StickerSlotScene = preload("res://scenes/UI/StickerSlot.tscn")
 
 @export var painting_system_3d: PaintingSystem
 @export var painting_system_2d: PaintingSystem2D
+@export var sticker_slot_theme: Theme  # Theme for sticker slot styling
 
 # Active system reference (changes based on mode)
 var active_system = null
@@ -59,6 +60,11 @@ func _build_carousel():
 		# Instantiate slot from scene
 		var slot = StickerSlotScene.instantiate() as StickerSlot
 		slot.custom_minimum_size = slot_size
+
+		# Assign theme to slot for variation support
+		if sticker_slot_theme:
+			slot.theme = sticker_slot_theme
+
 		slot.setup(sticker.texture, i)
 
 		slots_container.add_child(slot)

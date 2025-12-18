@@ -13,3 +13,4 @@ res://scenes/UI/PaintingUI.tscn
 res://scripts/ui/StickerSlot.gd
 res://scripts/painting/PaintingUI.gd
 res://scripts/PaintingSpawner.gd
+res://scenes/NailGun.tscn

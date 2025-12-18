@@ -8,7 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://dnbul2rmvqtyp" path="res://scenes/objects/ProjectileNail.tscn" id="5_projectilenail"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_7rh32"]
-size = Vector3(1.0625, 0.87390137, 0.46032715)
+size = Vector3(1.0625, 0.67160034, 0.46032715)
 
 [sub_resource type="Animation" id="Animation_7rh32"]
 length = 0.001
@@ -111,7 +111,7 @@ drop_power = 0.5
 metadata/_custom_type_script = "uid://cbwg344irqecy"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.03125, -0.06304932, -0.012268066)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.03125, -0.040725708, -0.012268066)
 shape = SubResource("BoxShape3D_7rh32")
 
 [node name="model" parent="." instance=ExtResource("3_83it2")]
