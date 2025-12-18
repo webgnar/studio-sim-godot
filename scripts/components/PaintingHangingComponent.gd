@@ -1,31 +1,23 @@
 extends CarryableComponent
 class_name PaintingHangingComponent
 
-## Painting hanging component - extends CarryableComponent with auto-snap to nails
-## Pattern based on PowerCordPlugComponent
-## Allows paintings to be hung on wall-mounted nails and taken down with E key
+## Painting hanging component - physics-based hanging via stretcher bar collision
+## Paintings rest on nails via gravity and can fall off if bumped
 
 # --- CONSTANTS ---
-const UNHANG_OFFSET: float = 0.3  ## Distance to push painting away from wall when unhanging
+const RESTING_VELOCITY_THRESHOLD: float = 0.5  ## Consider "resting" below this speed
+const RESTING_CONTACT_TIME: float = 0.2  ## Must be in contact this long to consider hung
+const NAIL_PEG_LAYER_BIT: int = 5  ## Layer 6 is bit 5 (zero-indexed)
 
 # --- SIGNALS ---
 signal hung_on_nail(nail: NailComponent)
 signal unhanged_from_nail(nail: NailComponent)
-signal near_nail(nail: NailComponent)
-signal left_nail()
-
-# --- EXPORTED VARIABLES ---
-@export_group("Hanging Settings")
-@export var snap_distance: float = 0.5  ## How close to nail before auto-snap
-@export var auto_hang_on_release: bool = true  ## Automatically hang when releasing near nail
 
 # --- PRIVATE VARIABLES ---
 var current_nail: NailComponent = null
-var nearby_nail: NailComponent = null
-var is_hung: bool = false
-var was_near_nail: bool = false
-var nail_check_timer: float = 0.0
-var nail_check_interval: float = 0.1  ## Only check every 0.1 seconds to avoid performance issues
+var is_resting_on_nail: bool = false
+var contact_nail_count: int = 0
+var resting_check_timer: float = 0.0
 
 # --- GODOT METHODS ---
 
@@ -33,167 +25,116 @@ func _ready() -> void:
 	super._ready()
 	interaction_text = "Pick Up Painting"
 
+	# Connect to stretcher bar collision signals (they're Area3D children)
+	if parent_rigid_body:
+		var stretcher_bars_container = parent_rigid_body.get_node_or_null("StretcherBarsPhysics")
+		if stretcher_bars_container:
+			# Connect all 4 stretcher bars (Area3D nodes detect other Area3D)
+			for bar_name in ["TopBar", "BottomBar", "LeftBar", "RightBar"]:
+				var bar = stretcher_bars_container.get_node_or_null(bar_name)
+				if bar and bar is Area3D:
+					bar.area_entered.connect(_on_stretcher_bar_hit)
+					bar.area_exited.connect(_on_stretcher_bar_left)
+					print("✓ Connected stretcher bar: ", bar_name)
+
 func _physics_process(delta: float) -> void:
 	super._physics_process(delta)
 
-	# Only check for nails when being carried
-	if is_carried and not is_hung:
-		nail_check_timer += delta
-		if nail_check_timer >= nail_check_interval:
-			nail_check_timer = 0.0
-			_check_for_nearby_nails()
+	# Check for resting state when in contact with nail
+	if contact_nail_count > 0:
+		var velocity = parent_rigid_body.linear_velocity.length()
+		if velocity < RESTING_VELOCITY_THRESHOLD:
+			resting_check_timer += delta
+			if resting_check_timer >= RESTING_CONTACT_TIME and not is_resting_on_nail:
+				# Became hung - need to find nail and snap to it
+				var nail = _find_nearby_nail()
+				if nail:
+					# Move painting up slightly to rest ON the nail, not through it
+					var nail_peg = nail.get_node_or_null("NailPeg")
+					if nail_peg:
+						# Position painting so it hangs from the nail (slightly below peg center)
+						var hang_offset = Vector3(0, -0.1, 0)  # 10cm below nail peg
+						parent_rigid_body.global_position = nail_peg.global_position + hang_offset
 
-# --- NAIL DETECTION ---
+					is_resting_on_nail = true
+					current_nail = nail
+					interaction_text = "Take Down Painting"
+					parent_rigid_body.freeze = true  # Lock in place
+					hung_on_nail.emit(nail)
+					print("🎨 PAINTING HUNG! Position adjusted to nail at: ", parent_rigid_body.global_position)
+		else:
+			resting_check_timer = 0.0
+			if not is_carried:  # Only print if not being carried
+				print("⚡ Moving too fast: ", velocity)
+	else:
+		# No contact with nail
+		if is_resting_on_nail:
+			# Fell off
+			is_resting_on_nail = false
+			interaction_text = "Pick Up Painting"
+			parent_rigid_body.freeze = false  # Unfreeze
+			parent_rigid_body.angular_damp = 3.0  # Restore normal damping
+			parent_rigid_body.linear_damp = 2.5  # Restore normal damping
+			unhanged_from_nail.emit(current_nail)
+			current_nail = null
+			print("💥 Painting fell off!")
+		else:
+			# Not in contact and not hung - restore normal damping
+			parent_rigid_body.linear_damp = 2.5
+			parent_rigid_body.angular_damp = 3.0
+		resting_check_timer = 0.0
 
-func _check_for_nearby_nails() -> void:
-	"""Check if we're near any nails while being carried (like power cord)"""
-	if not is_instance_valid(parent_rigid_body) or not get_tree():
-		return
+# --- CONTACT DETECTION ---
 
-	var closest_nail: NailComponent = null
-	var closest_distance: float = snap_distance
+func _on_stretcher_bar_hit(area: Area3D) -> void:
+	"""Called when any stretcher bar Area3D overlaps with nail detection area"""
+	print("Stretcher bar overlap - Area: ", area.name if area else "null", " Layer: ", area.collision_layer)
+
+	# Check if this is the nail's detection area (layer 6 = bit 5)
+	if area and (area.collision_layer & (1 << NAIL_PEG_LAYER_BIT)) != 0:
+		contact_nail_count += 1
+		print("✓ Nail peg contact! Count: ", contact_nail_count)
+
+		# Immediately slow down the painting when contact detected
+		if parent_rigid_body:
+			parent_rigid_body.linear_damp = 10.0  # Heavy damping to stop quickly
+			parent_rigid_body.angular_damp = 10.0
+
+func _on_stretcher_bar_left(area: Area3D) -> void:
+	"""Called when any stretcher bar Area3D stops overlapping"""
+	if area and (area.collision_layer & (1 << NAIL_PEG_LAYER_BIT)) != 0:
+		contact_nail_count = max(0, contact_nail_count - 1)
+		print("✗ Nail peg contact lost. Count: ", contact_nail_count)
+
+# --- HELPER METHODS ---
+
+func _find_nearby_nail() -> NailComponent:
+	"""Find the nail we're overlapping with"""
+	if not get_tree():
+		return null
 
 	var nails = get_tree().get_nodes_in_group("nails")
-	if nails == null:
-		return
-
 	for nail in nails:
-		if not is_instance_valid(nail):
-			continue
-
-		if nail is NailComponent and not nail.is_occupied:
-			var distance = parent_rigid_body.global_position.distance_to(nail.painting_socket_position)
-
-			if distance < closest_distance:
-				closest_distance = distance
-				closest_nail = nail
-
-	# Update nearby nail state
-	if closest_nail != nearby_nail:
-		if nearby_nail:
-			left_nail.emit()
-			was_near_nail = false
-
-		nearby_nail = closest_nail
-
-		if nearby_nail:
-			near_nail.emit(nearby_nail)
-			was_near_nail = true
-	elif not closest_nail and was_near_nail:
-		left_nail.emit()
-		was_near_nail = false
-		nearby_nail = null
-
-# --- HANG/UNHANG METHODS ---
-
-func hang_on_nail(nail: NailComponent) -> bool:
-	"""Hang this painting on a nail. Returns true if successful."""
-	if is_hung:
-		return false
-
-	if not nail or nail.is_occupied:
-		return false
-
-	if not is_instance_valid(parent_rigid_body):
-		return false
-
-	# Drop from player's hands if being carried
-	if is_carried and is_instance_valid(player_ref):
-		is_carried = false
-		if player_ref:
-			player_ref.carried_object = null
-			player_ref.is_carrying = false
-
-	# Snap to nail position and rotation
-	parent_rigid_body.global_position = nail.painting_socket_position
-	parent_rigid_body.global_rotation = nail.painting_socket_rotation
-	parent_rigid_body.freeze = true  # Lock in place
-
-	# Update state
-	is_hung = true
-	current_nail = nail
-	interaction_text = "Take Down Painting"
-
-	# Clear nearby nail
-	nearby_nail = null
-	was_near_nail = false
-
-	# Emit signal
-	hung_on_nail.emit(nail)
-
-	return true
-
-func unhang() -> bool:
-	"""Remove painting from nail (nail will be deleted). Returns true if successful."""
-	if not is_hung:
-		return false
-
-	if not is_instance_valid(parent_rigid_body):
-		return false
-
-	var nail = current_nail
-
-	# Move painting slightly away from wall
-	if is_instance_valid(nail):
-		var push_dir = (parent_rigid_body.global_position - nail.global_position).normalized()
-		parent_rigid_body.global_position += push_dir * UNHANG_OFFSET
-
-	# Restore physics
-	parent_rigid_body.freeze = false
-
-	# Give small velocity to prevent sleeping
-	parent_rigid_body.linear_velocity = Vector3(0, -0.1, 0)
-	parent_rigid_body.angular_velocity = Vector3.ZERO
-
-	# Update state
-	is_hung = false
-	current_nail = null
-	interaction_text = "Pick Up Painting"
-
-	# Emit signal
-	unhanged_from_nail.emit(nail)
-
-	return true
+		if nail is NailComponent:
+			var nail_peg = nail.get_node_or_null("NailPeg")
+			if nail_peg and parent_rigid_body:
+				var distance = parent_rigid_body.global_position.distance_to(nail_peg.global_position)
+				if distance < 0.5:  # Within 50cm
+					return nail
+	return null
 
 # --- OVERRIDE INTERACTION ---
 
 func _on_interacted(player_interaction: PlayerInteractionComponent) -> void:
-	"""Override interaction based on hung state"""
+	"""Override interaction - reset resting state when picked up"""
 
-	if is_hung:
-		# Store nail reference before unhang() clears it
-		var nail_to_remove = current_nail
+	# If painting is resting on nail, unfreeze and restore damping
+	if is_resting_on_nail:
+		is_resting_on_nail = false
+		parent_rigid_body.freeze = false  # Unfreeze
+		parent_rigid_body.angular_damp = 3.0
+		parent_rigid_body.linear_damp = 2.5
+		interaction_text = "Pick Up Painting"
 
-		# If hung, unhang it AND pick it up in one action
-		unhang()
-
-		# Remove the nail (nail will delete itself when painting removed)
-		if nail_to_remove and is_instance_valid(nail_to_remove):
-			nail_to_remove.remove_painting()
-
-		# Then pick up
-		pickup(player_interaction)
-	elif is_carried and nearby_nail:
-		# If carrying near nail, hang it
-		if nearby_nail.accept_painting(parent_rigid_body):
-			pass  # Nail will call our hang_on_nail() method
-	else:
-		# Normal pickup/drop behavior
-		super._on_interacted(player_interaction)
-
-# --- OVERRIDE DROP ---
-
-func drop() -> void:
-	"""Override drop to check for auto-hang"""
-
-	# Check if we should auto-hang
-	if auto_hang_on_release and nearby_nail and not is_hung:
-		if nearby_nail.accept_painting(parent_rigid_body):
-			# Successfully hung, don't drop
-			return
-
-	# Normal drop behavior
-	super.drop()
-
-	nearby_nail = null
-	was_near_nail = false
+	# Normal pickup/drop behavior - physics handles everything
+	super._on_interacted(player_interaction)

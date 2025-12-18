@@ -1136,7 +1136,7 @@ shape = SubResource("CylinderShape3D_q57r8")
 debug_color = Color(0.9490196, 0, 0.58431375, 0.8117647)
 
 [node name="FAN" type="RigidBody3D" parent="."]
-transform = Transform3D(0.70710677, 0, -0.70710677, 0, 1, 0, 0.70710677, 0, 0.70710677, -1.5079603, 0.17234671, -0.74469566)
+transform = Transform3D(0.70710677, 0, -0.70710677, 0, 1, 0, 0.70710677, 0, 0.70710677, 2.4920397, 0.17234671, -0.74469566)
 collision_layer = 8
 collision_mask = 3
 
@@ -1176,7 +1176,7 @@ transform = Transform3D(-0.06961743, 0, 0.0073084896, 0, 0.07000696, 0, -0.00730
 shape = SubResource("BoxShape3D_iexy4")
 
 [node name="plug" type="RigidBody3D" parent="."]
-transform = Transform3D(-0.10440699, 0, -0.9945347, 0, 1, 0, 0.9945347, 0, -0.10440699, -2.6690016, 0.37396324, -1.8511305)
+transform = Transform3D(-0.10440699, 0, -0.9945347, 0, 1, 0, 0.9945347, 0, -0.10440699, 1.3309984, 0.37396324, -0.8511305)
 collision_layer = 8
 collision_mask = 3
 continuous_cd = true
@@ -1221,6 +1221,9 @@ surface_material_override/0 = SubResource("StandardMaterial3D_5hglh")
 
 [node name="Styrofoam cube" parent="." groups=["no_outline"] instance=ExtResource("52_e68xj")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 1, -3)
+
+[node name="MeshInstance3D" parent="Styrofoam cube" index="1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.981051, 0, 0)
 
 [node name="Node3D" parent="Styrofoam cube" index="2"]
 impact_damage = 1.0

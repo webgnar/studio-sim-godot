@@ -15,3 +15,7 @@ res://scripts/painting/PaintingUI.gd
 res://scripts/PaintingSpawner.gd
 res://scenes/NailGun.tscn
 res://scripts/PlayerController.gd
+res://scenes/CarryablePainting.tscn
+res://scenes/WallNail.tscn
+res://scripts/components/NailComponent.gd
+res://scripts/components/PaintingHangingComponent.gd

@@ -1,11 +1,11 @@
-[gd_scene load_steps=8 format=3 uid="uid://c8qv7n3hp2k4r"]
+[gd_scene load_steps=13 format=3 uid="uid://c8qv7n3hp2k4r"]
 
 [ext_resource type="Script" uid="uid://do8vkeu1l02i1" path="res://scripts/components/PaintingHangingComponent.gd" id="1_hanging"]
 [ext_resource type="Script" uid="uid://dvkl3cic5pjcq" path="res://scripts/CarryablePainting.gd" id="1_painting"]
 [ext_resource type="PackedScene" uid="uid://guuhi66wtyyp" path="res://models/paintings/stretcher.glb" id="2_stretcher"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_painting"]
-friction = 0.8
+friction = 1.5
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_carryable"]
 size = Vector3(3.089, 3.109, 0.21)
@@ -17,12 +17,30 @@ size = Vector2(3, 3)
 transparency = 1
 shading_mode = 0
 
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_stretcher_bars"]
+friction = 1.0
+bounce = 0.0
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_top_bar"]
+size = Vector3(3.089, 0.2, 0.2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_bottom_bar"]
+size = Vector3(3.089, 0.2, 0.2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_left_bar"]
+size = Vector3(0.2, 3.109, 0.2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_right_bar"]
+size = Vector3(0.2, 3.109, 0.2)
+
 [node name="CarryablePainting" type="RigidBody3D" groups=["no_outline"]]
 collision_layer = 4
 collision_mask = 14
 mass = 5.0
 physics_material_override = SubResource("PhysicsMaterial_painting")
 continuous_cd = true
+contact_monitor = true
+max_contacts_reported = 10
 linear_damp = 2.5
 angular_damp = 3.0
 script = ExtResource("1_painting")
@@ -44,3 +62,46 @@ carry_distance_offset = 0.5
 gravity_while_carrying = 0.3
 enable_rotation_while_carried = true
 throw_power = 30.0
+
+[node name="StretcherBarsPhysics" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0.012642026, 0)
+
+[node name="TopBar" type="Area3D" parent="StretcherBarsPhysics"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5545, -0.075)
+collision_layer = 16
+collision_mask = 32
+monitorable = true
+monitoring = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StretcherBarsPhysics/TopBar"]
+shape = SubResource("BoxShape3D_top_bar")
+
+[node name="BottomBar" type="Area3D" parent="StretcherBarsPhysics"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.5545, -0.075)
+collision_layer = 16
+collision_mask = 32
+monitorable = true
+monitoring = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StretcherBarsPhysics/BottomBar"]
+shape = SubResource("BoxShape3D_bottom_bar")
+
+[node name="LeftBar" type="Area3D" parent="StretcherBarsPhysics"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5445, 0, -0.075)
+collision_layer = 16
+collision_mask = 32
+monitorable = true
+monitoring = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StretcherBarsPhysics/LeftBar"]
+shape = SubResource("BoxShape3D_left_bar")
+
+[node name="RightBar" type="Area3D" parent="StretcherBarsPhysics"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5445, 0, -0.075)
+collision_layer = 16
+collision_mask = 32
+monitorable = true
+monitoring = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StretcherBarsPhysics/RightBar"]
+shape = SubResource("BoxShape3D_right_bar")
