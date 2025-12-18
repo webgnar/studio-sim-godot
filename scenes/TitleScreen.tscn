@@ -570,9 +570,9 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -46.5
-offset_top = -101.0
-offset_right = 46.5
+offset_left = -89.5
+offset_top = -212.0
+offset_right = 89.5
 grow_horizontal = 2
 grow_vertical = 0
 
@@ -586,7 +586,7 @@ text = "New Game"
 
 [node name="QuitButton" type="Button" parent="UI_Layer/TitleScreenUI/VBoxContainer"]
 layout_mode = 2
-text = "Quit Game"
+text = "Quit"
 
 [node name="TextureRect" type="TextureRect" parent="UI_Layer/TitleScreenUI"]
 layout_mode = 1

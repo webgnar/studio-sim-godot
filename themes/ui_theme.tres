@@ -1,11 +1,37 @@
-[gd_resource type="Theme" load_steps=2 format=3 uid="uid://cbtaxh5m7udor"]
+[gd_resource type="Theme" load_steps=4 format=3 uid="uid://cbtaxh5m7udor"]
 
 [ext_resource type="FontFile" uid="uid://tmjyio0w6cu0" path="res://fonts/studio-sim.ttf" id="1_xxbg1"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xxbg1"]
+bg_color = Color(1, 0.22015908, 0.7032731, 1)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(0.5228773, 0.9999997, 0.54834634, 1)
+expand_margin_left = 10.0
+expand_margin_right = 10.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qa7hf"]
+bg_color = Color(0.883255, 0.84437096, 0.7086742, 1)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(0.37602845, 0.37602854, 0.37602824, 1)
+expand_margin_left = 10.0
+expand_margin_right = 10.0
+shadow_size = 10
+shadow_offset = Vector2(1.62, 5.74)
 
 [resource]
 default_font = ExtResource("1_xxbg1")
 default_font_size = 47
 Button/colors/font_color = Color(0.875, 0.875, 0.875, 1)
 Button/colors/font_disabled_color = Color(0.875, 0.875, 0.875, 0.5)
+Button/colors/font_focus_color = Color(2.887845e-06, 0.9824384, 0.7705699, 1)
 Button/colors/font_hover_color = Color(0.95, 0.95, 0.95, 1)
 Button/colors/font_outline_color = Color(0, 0, 0, 1)
+Button/constants/outline_size = 20
+Button/styles/focus = SubResource("StyleBoxFlat_xxbg1")
+Button/styles/normal = SubResource("StyleBoxFlat_qa7hf")

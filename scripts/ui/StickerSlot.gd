@@ -58,8 +58,10 @@ func set_equipped(equipped: bool):
 	is_equipped = equipped
 	if equipped:
 		add_theme_stylebox_override("panel", equipped_style)
+		z_index = 1  # Bring selected sticker to top
 	else:
 		add_theme_stylebox_override("panel", default_style)
+		z_index = 0  # Reset to default layer
 
 func set_fade(fade_amount: float):
 	"""Set opacity for fade effect (0.0 - 1.0)"""

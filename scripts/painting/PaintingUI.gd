@@ -64,7 +64,18 @@ func _build_carousel():
 		slots_container.add_child(slot)
 		slot_nodes.append(slot)
 
-	# Set initial scroll position to center the first item
+	# Wait for slot _ready() functions to complete and UI layout to be finalized
+	await get_tree().process_frame
+
+	# Manually initialize the first slot as equipped
+	if not slot_nodes.is_empty():
+		slot_nodes[0].set_equipped(true)
+		slot_nodes[0].set_slot_scale(center_scale)
+
+	# Wait one more frame for layout
+	await get_tree().process_frame
+
+	# Set initial scroll position and visuals
 	_update_carousel_position(true)
 
 func _process(delta):
