@@ -25,10 +25,22 @@ var active_system = null
 @export var side_scale: float = 0.8  # Scale multiplier for side items
 @export var scroll_speed: float = 0.15  # Animation speed (lower = smoother)
 
+# Auto-hide animation settings
+@export var auto_hide_delay: float = 3.0  # Seconds of inactivity before hiding
+@export var animation_duration: float = 0.3  # Duration of show/hide animation
+@export var hidden_scale: float = 0.7  # Scale when hidden
+
 # State
 var slot_nodes: Array[StickerSlot] = []  # All slot UI elements
 var current_scroll_offset: float = 0.0  # Current scroll position
 var target_scroll_offset: float = 0.0  # Target scroll position (for smooth animation)
+
+# Auto-hide state
+var ui_idle_time: float = 0.0  # Time since last activity
+var is_ui_visible: bool = false  # Current visibility state
+var visible_position_x: float = 0.0  # X position when visible
+var hidden_position_x: float = 0.0  # X position when hidden (off-screen)
+var animation_tween: Tween = null  # Active animation tween
 
 func _ready():
 	# Use 2D system as primary reference (missions use 2D, sticker library identical)
@@ -40,6 +52,15 @@ func _ready():
 
 	# Build the UI once the painting system is ready
 	call_deferred("_build_carousel")
+	
+	# Initialize auto-hide positions
+	visible_position_x = position.x
+	hidden_position_x = -(size.x + 50)  # Fully off-screen to the left
+	
+	# Start hidden
+	position.x = hidden_position_x
+	scale = Vector2(hidden_scale, hidden_scale)
+	is_ui_visible = false
 
 
 func _build_carousel():
@@ -94,9 +115,17 @@ func _process(delta):
 		_update_slot_visuals()
 	else:
 		current_scroll_offset = target_scroll_offset
+	
+	# Auto-hide tracking
+	if is_ui_visible:
+		ui_idle_time += delta
+		if ui_idle_time > auto_hide_delay:
+			_hide_ui()
 
 func _on_layer_equipped(index: int):
 	"""Called when Q/E or mouse wheel changes the equipped sticker"""
+	ui_idle_time = 0.0  # Reset idle timer
+	_show_ui()  # Show UI when cycling stickers
 	_update_carousel_position(false)
 
 func _update_carousel_position(instant: bool):
@@ -157,3 +186,45 @@ func _update_slot_visuals():
 		# Update fade based on distance from center
 		var fade = clamp(1.0 - (distance_from_center / 200.0), 0.3, 1.0)
 		slot.set_fade(fade)
+
+func _show_ui():
+	"""Animate UI into view from the left with scale"""
+	if is_ui_visible:
+		return  # Already visible
+	
+	is_ui_visible = true
+	
+	# Kill existing tween if any
+	if animation_tween:
+		animation_tween.kill()
+	
+	# Create new tween
+	animation_tween = create_tween()
+	animation_tween.set_parallel(true)  # Run position and scale animations simultaneously
+	animation_tween.set_trans(Tween.TRANS_SINE)
+	animation_tween.set_ease(Tween.EASE_OUT)
+	
+	# Animate position and scale
+	animation_tween.tween_property(self, "position:x", visible_position_x, animation_duration)
+	animation_tween.tween_property(self, "scale", Vector2.ONE, animation_duration)
+
+func _hide_ui():
+	"""Animate UI off-screen to the left with scale"""
+	if not is_ui_visible:
+		return  # Already hidden
+	
+	is_ui_visible = false
+	
+	# Kill existing tween if any
+	if animation_tween:
+		animation_tween.kill()
+	
+	# Create new tween
+	animation_tween = create_tween()
+	animation_tween.set_parallel(true)  # Run position and scale animations simultaneously
+	animation_tween.set_trans(Tween.TRANS_SINE)
+	animation_tween.set_ease(Tween.EASE_OUT)
+	
+	# Animate position and scale
+	animation_tween.tween_property(self, "position:x", hidden_position_x, animation_duration)
+	animation_tween.tween_property(self, "scale", Vector2(hidden_scale, hidden_scale), animation_duration)
