@@ -4,6 +4,7 @@ extends Node3D
 
 @onready var continue_button: Button = $UI_Layer/TitleScreenUI/VBoxContainer/ContinueButton
 @onready var new_game_button: Button = $UI_Layer/TitleScreenUI/VBoxContainer/NewGameButton
+@onready var options_button: Button = $UI_Layer/TitleScreenUI/VBoxContainer/OptionsButton
 @onready var quit_button: Button = $UI_Layer/TitleScreenUI/VBoxContainer/QuitButton
 @onready var character = $humanrig
 @onready var button_nav_sound: AudioStreamPlayer = $ButtonNavSound
@@ -12,6 +13,8 @@ extends Node3D
 @onready var fan_animation_player: AnimationPlayer = $"FAN/fan legs/cage/blade/AnimationPlayer"
 
 var is_transitioning: bool = false
+var options_menu: Control = null
+const OPTIONS_MENU_SCENE = preload("res://scenes/UI/OptionsMenu.tscn")
 
 func _ready():
 	# Set mouse mode to visible
@@ -28,7 +31,13 @@ func _ready():
 	# Connect buttons
 	continue_button.pressed.connect(_on_continue_pressed)
 	new_game_button.pressed.connect(_on_new_game_pressed)
+	options_button.pressed.connect(_on_options_pressed)
 	quit_button.pressed.connect(_on_quit_pressed)
+	
+	# Instantiate options menu
+	options_menu = OPTIONS_MENU_SCENE.instantiate()
+	options_menu.closed.connect(_on_options_closed)
+	add_child(options_menu)
 
 	# Connect background music to loop
 	if background_music:
@@ -79,6 +88,7 @@ func _navigate_menu(direction: int):
 	if not continue_button.disabled:
 		buttons.append(continue_button)
 	buttons.append(new_game_button)
+	buttons.append(options_button)
 	buttons.append(quit_button)
 
 	if buttons.is_empty():
@@ -121,6 +131,20 @@ func _on_new_game_pressed():
 	if game_start_sound:
 		game_start_sound.play()
 	_transition_to_game("res://scenes/world.tscn", true)
+
+func _on_options_pressed():
+	"""Open the options menu"""
+	if options_menu:
+		options_menu.show_menu()
+		# Disable title screen input while options is open
+		set_process_input(false)
+
+func _on_options_closed():
+	"""Handle options menu closing"""
+	# Re-enable title screen input
+	set_process_input(true)
+	# Return focus to Options button
+	options_button.grab_focus()
 
 func _transition_to_game(scene_path: String, wipe_data: bool) -> void:
 	"""Handle transition to game with character animation and fade"""
@@ -210,6 +234,7 @@ func _setup_focus_navigation():
 	# Enable focus mode for all buttons
 	continue_button.focus_mode = Control.FOCUS_ALL
 	new_game_button.focus_mode = Control.FOCUS_ALL
+	options_button.focus_mode = Control.FOCUS_ALL
 	quit_button.focus_mode = Control.FOCUS_ALL
 
 	# Don't set up focus neighbors - we handle navigation manually

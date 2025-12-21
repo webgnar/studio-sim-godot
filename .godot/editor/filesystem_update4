@@ -5,3 +5,9 @@ res://models/particles/new_array_mesh.tres
 res://models/particles/new_array_mesh2.tres
 res://models/particles/new_array_mesh3.tres
 res://scenes/CarryablePainting.tscn
+res://scripts/TitleScreenController.gd
+res://scenes/UI/OptionsMenu.tscn
+res://default_bus_layout.tres
+res://scenes/TitleScreen.tscn
+res://scripts/OptionsMenu.gd
+res://scripts/AudioManager.gd

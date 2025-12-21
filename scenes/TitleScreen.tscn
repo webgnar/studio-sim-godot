@@ -584,6 +584,10 @@ text = "Continue"
 layout_mode = 2
 text = "New Game"
 
+[node name="OptionsButton" type="Button" parent="UI_Layer/TitleScreenUI/VBoxContainer"]
+layout_mode = 2
+text = "Options"
+
 [node name="QuitButton" type="Button" parent="UI_Layer/TitleScreenUI/VBoxContainer"]
 layout_mode = 2
 text = "Quit"
@@ -610,12 +614,15 @@ autoplay = "scale"
 [node name="BackgroundMusic" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("51_ffc86")
 autoplay = true
+bus = &"Music"
 
 [node name="ButtonNavSound" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("52_08dc8")
+bus = &"SFX"
 
 [node name="GameStartSound" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("53_bb24d")
+bus = &"SFX"
 
 [node name="outlets" type="Node3D" parent="."]
 
