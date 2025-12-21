@@ -1,8 +1,1 @@
-res://scripts/components/PaintingHangingComponent.gd
-res://scenes/WallNail.tscn
-res://scripts/components/NailComponent.gd
-res://scenes/world.tscn
 res://themes/ui_theme.tres
-res://models/particles/new_array_mesh.tres
-res://models/particles/new_array_mesh2.tres
-res://models/particles/new_array_mesh3.tres

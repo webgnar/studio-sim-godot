@@ -11,6 +11,8 @@ border_width_bottom = 5
 border_color = Color(0.5228773, 0.9999997, 0.54834634, 1)
 expand_margin_left = 10.0
 expand_margin_right = 10.0
+shadow_size = 10
+shadow_offset = Vector2(1.5, 5.75)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qa7hf"]
 bg_color = Color(0.883255, 0.84437096, 0.7086742, 1)
@@ -22,7 +24,7 @@ border_color = Color(0.37602845, 0.37602854, 0.37602824, 1)
 expand_margin_left = 10.0
 expand_margin_right = 10.0
 shadow_size = 10
-shadow_offset = Vector2(1.62, 5.74)
+shadow_offset = Vector2(1.5, 5.75)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gfhtu"]
 bg_color = Color(0.6, 0.6, 0.6, 0.38039216)
