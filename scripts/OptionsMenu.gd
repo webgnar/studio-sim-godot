@@ -23,6 +23,8 @@ var slider_hold_delay: float = 0.3  # Initial delay before repeating
 var slider_repeat_rate: float = 0.05  # Time between repeats
 var is_holding_slider: bool = false
 var slider_direction: int = 0  # -1 for left, 1 for right
+var input_cooldown: float = 0.0
+var input_cooldown_time: float = 0.15  # Cooldown between navigation inputs
 
 func _ready():
 	# Hide by default
@@ -52,7 +54,14 @@ func _ready():
 	_setup_focus_navigation()
 
 func _process(delta):
-	if not visible or not is_holding_slider:
+	if not visible:
+		return
+	
+	# Update input cooldown
+	if input_cooldown > 0:
+		input_cooldown -= delta
+	
+	if not is_holding_slider:
 		return
 	
 	slider_hold_timer += delta
@@ -82,48 +91,57 @@ func _input(event):
 	
 	if is_in_tab_mode:
 		# Tab mode: left/right switches tabs, down enters content
-		if event.is_action_pressed("move_left") or event.is_action_pressed("rotate_counter") or event.is_action_pressed("ui_page_up") or event.is_action_pressed("rotate_left"):
-			_switch_tab(-1)
+		if Input.is_action_just_pressed("ui_left"):
+			if input_cooldown <= 0:
+				_switch_tab(-1)
+				input_cooldown = input_cooldown_time
 			get_viewport().set_input_as_handled()
-		elif event.is_action_pressed("move_right") or event.is_action_pressed("rotate_clockwise") or event.is_action_pressed("ui_page_down") or event.is_action_pressed("rotate_right"):
-			_switch_tab(1)
+		elif Input.is_action_just_pressed("ui_right"):
+			if input_cooldown <= 0:
+				_switch_tab(1)
+				input_cooldown = input_cooldown_time
 			get_viewport().set_input_as_handled()
-		elif event.is_action_pressed("move_back") or event.is_action_pressed("scale_sticker_down"):
-			# Enter content mode
-			is_in_tab_mode = false
-			_focus_first_content_item()
+		elif Input.is_action_just_pressed("ui_down"):
+			if input_cooldown <= 0:
+				# Enter content mode
+				is_in_tab_mode = false
+				_focus_first_content_item()
+				input_cooldown = input_cooldown_time
 			get_viewport().set_input_as_handled()
 	else:
 		# Content mode: navigate within content, up returns to tabs
-		if event.is_action_pressed("move_forward") or event.is_action_pressed("scale_sticker_up"):
-			var focused = get_viewport().gui_get_focus_owner()
-			# Check if we're at the first item, if so return to tab mode
-			if focused == sfx_slider or focused == hue_slider:
-				is_in_tab_mode = true
-				get_viewport().set_input_as_handled()
-			else:
-				_navigate_focus(-1)
-				get_viewport().set_input_as_handled()
-		elif event.is_action_pressed("move_back") or event.is_action_pressed("scale_sticker_down"):
-			_navigate_focus(1)
+		if Input.is_action_just_pressed("ui_up"):
+			if input_cooldown <= 0:
+				var focused = get_viewport().gui_get_focus_owner()
+				# Check if we're at the first item, if so return to tab mode
+				if focused == sfx_slider or focused == hue_slider:
+					is_in_tab_mode = true
+				else:
+					_navigate_focus(-1)
+				input_cooldown = input_cooldown_time
+			get_viewport().set_input_as_handled()
+		elif Input.is_action_just_pressed("ui_down"):
+			if input_cooldown <= 0:
+				_navigate_focus(1)
+				input_cooldown = input_cooldown_time
 			get_viewport().set_input_as_handled()
 		
 		# Handle slider adjustment with left/right in content mode
 		var focused = get_viewport().gui_get_focus_owner()
 		if focused is HSlider:
-			if event.is_action_pressed("move_left") or event.is_action_pressed("rotate_counter"):
+			if Input.is_action_just_pressed("ui_left"):
 				focused.value -= focused.step
 				is_holding_slider = true
 				slider_direction = -1
 				slider_hold_timer = 0.0
 				get_viewport().set_input_as_handled()
-			elif event.is_action_pressed("move_right") or event.is_action_pressed("rotate_clockwise"):
+			elif Input.is_action_just_pressed("ui_right"):
 				focused.value += focused.step
 				is_holding_slider = true
 				slider_direction = 1
 				slider_hold_timer = 0.0
 				get_viewport().set_input_as_handled()
-			elif event.is_action_released("move_left") or event.is_action_released("rotate_counter") or event.is_action_released("move_right") or event.is_action_released("rotate_clockwise"):
+			elif event.is_action_released("ui_left") or event.is_action_released("ui_right"):
 				is_holding_slider = false
 				slider_hold_timer = 0.0
 				get_viewport().set_input_as_handled()
@@ -137,6 +155,9 @@ func show_menu():
 	
 	# Start in tab mode
 	is_in_tab_mode = true
+	
+	# Reset input cooldown
+	input_cooldown = 0.0
 	
 	# Set mouse mode to visible
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE

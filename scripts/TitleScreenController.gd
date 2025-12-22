@@ -14,6 +14,8 @@ extends Node3D
 
 var is_transitioning: bool = false
 var options_menu: Control = null
+var input_cooldown: float = 0.0
+var input_cooldown_time: float = 0.15  # Cooldown between navigation inputs
 const OPTIONS_MENU_SCENE = preload("res://scenes/UI/OptionsMenu.tscn")
 
 func _ready():
@@ -52,25 +54,34 @@ func _ready():
 	else:
 		new_game_button.grab_focus()
 
+func _process(delta):
+	# Update input cooldown
+	if input_cooldown > 0:
+		input_cooldown -= delta
+
 func _input(event):
 	var viewport = get_viewport()
 	if not viewport:
 		return  # Scene is transitioning, viewport is null
 
-	# Handle menu navigation with move_forward/move_back
-	if event.is_action_pressed("move_forward"):
-		_navigate_menu(-1)  # Move up
+	# Handle menu navigation with ui_up/ui_down
+	if Input.is_action_just_pressed("ui_up"):
+		if input_cooldown <= 0:
+			_navigate_menu(-1)  # Move up
+			input_cooldown = input_cooldown_time
 		viewport.set_input_as_handled()
-	elif event.is_action_pressed("move_back"):
-		_navigate_menu(1)  # Move down
+	elif Input.is_action_just_pressed("ui_down"):
+		if input_cooldown <= 0:
+			_navigate_menu(1)  # Move down
+			input_cooldown = input_cooldown_time
 		viewport.set_input_as_handled()
-	elif event.is_action_pressed("jump"):
+	elif Input.is_action_just_pressed("jump"):
 		# Confirm button selection with jump (A button)
 		var focused = viewport.gui_get_focus_owner()
 		if focused is Button and not focused.disabled:
 			focused.pressed.emit()
 			# Don't set_input_as_handled here - scene might transition immediately
-	elif event.is_action_pressed("start"):
+	elif Input.is_action_just_pressed("start"):
 		# Start button goes directly to mission selection (same as new game)
 		_on_new_game_pressed()
 		# Don't set_input_as_handled here - scene is transitioning
