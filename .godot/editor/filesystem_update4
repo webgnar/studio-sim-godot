@@ -8,3 +8,4 @@ res://models/particles/new_array_mesh3.tres
 res://scenes/UI/MissionHUD.tscn
 res://scenes/UI/MissionResultsViewer.tscn
 res://scenes/UI/MissionAuthoringUI.tscn
+res://scripts/ui/MissionSelectionUI.gd

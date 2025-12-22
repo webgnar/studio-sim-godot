@@ -39,6 +39,8 @@ enum NavMode { MISSION_LIST, PREVIEW_BUTTONS }
 var nav_mode: NavMode = NavMode.MISSION_LIST
 var preview_buttons: Array[Button] = []
 var preview_button_index: int = 0
+var input_cooldown: float = 0.0
+var input_cooldown_time: float = 0.15  # Cooldown between navigation inputs
 
 func _ready():
 	# Connect button signals
@@ -62,6 +64,9 @@ func _ready():
 	# Find results viewer
 	_find_results_viewer()
 
+	# Set up focus navigation
+	_setup_focus_navigation()
+
 	# Update stats display
 	_update_stats_display()
 
@@ -84,6 +89,14 @@ func _search_for_results_viewer(node: Node):
 			return result
 
 	return null
+
+func _process(delta):
+	if not dialog.visible:
+		return
+
+	# Update input cooldown
+	if input_cooldown > 0:
+		input_cooldown -= delta
 
 func _input(event):
 	# Only handle input when dialog is visible
@@ -111,44 +124,59 @@ func _input(event):
 
 func _handle_mission_list_input(event, viewport):
 	"""Handle input when navigating the mission list"""
-	# WASD / stick to navigate mission list
-	if event.is_action_pressed("move_back"):
-		_select_next_mission()
+	# WASD / stick / D-pad to navigate mission list
+	if event.is_action_pressed("move_back") or event.is_action_pressed("ui_down"):
+		if input_cooldown <= 0:
+			_select_next_mission()
+			input_cooldown = input_cooldown_time
 		viewport.set_input_as_handled()
 		return
 
-	if event.is_action_pressed("move_forward"):
-		_select_previous_mission()
+	if event.is_action_pressed("move_forward") or event.is_action_pressed("ui_up"):
+		if input_cooldown <= 0:
+			_select_previous_mission()
+			input_cooldown = input_cooldown_time
 		viewport.set_input_as_handled()
 		return
 
-	# Jump (A button / Space) or move_right to enter preview button mode
-	if event.is_action_pressed("jump") or event.is_action_pressed("move_right"):
-		_enter_preview_mode()
+	# Jump (A button / Space) or move_right or ui_right or ui_accept to enter preview button mode
+	if event.is_action_pressed("jump") or event.is_action_pressed("move_right") or event.is_action_pressed("ui_right") or event.is_action_pressed("ui_accept"):
+		if input_cooldown <= 0:
+			_enter_preview_mode()
+			input_cooldown = input_cooldown_time
 		viewport.set_input_as_handled()
 		return
 
 func _handle_preview_buttons_input(event, viewport):
 	"""Handle input when navigating preview buttons"""
-	# Left to navigate buttons or exit to mission list
-	if event.is_action_pressed("move_left"):
-		# If at the first button, exit back to mission list
-		if _is_at_first_button():
-			_exit_preview_mode()
-		else:
-			_select_previous_button()
+	# Left / D-pad left to navigate buttons or exit to mission list
+	if event.is_action_pressed("move_left") or event.is_action_pressed("ui_left"):
+		if input_cooldown <= 0:
+			# If at the first button, exit back to mission list
+			if _is_at_first_button():
+				_exit_preview_mode()
+				# Play navigation sound when exiting
+				if button_nav_sound:
+					button_nav_sound.play()
+			else:
+				_select_previous_button()
+			input_cooldown = input_cooldown_time
 		viewport.set_input_as_handled()
 		return
 
-	# Right to navigate buttons
-	if event.is_action_pressed("move_right"):
-		_select_next_button()
+	# Right / D-pad right to navigate buttons
+	if event.is_action_pressed("move_right") or event.is_action_pressed("ui_right"):
+		if input_cooldown <= 0:
+			_select_next_button()
+			input_cooldown = input_cooldown_time
 		viewport.set_input_as_handled()
 		return
 
-	# Jump (A button / Space) to activate focused button
-	if event.is_action_pressed("jump"):
-		_activate_focused_button()
+	# Jump (A button / Space) or ui_accept to activate focused button
+	if event.is_action_pressed("jump") or event.is_action_pressed("ui_accept"):
+		if input_cooldown <= 0:
+			_activate_focused_button()
+			input_cooldown = input_cooldown_time
 		viewport.set_input_as_handled()
 		return
 
@@ -157,6 +185,11 @@ func _enter_preview_mode():
 	nav_mode = NavMode.PREVIEW_BUTTONS
 	preview_button_index = 0
 	_update_button_focus()
+
+	# Play navigation sound when entering preview mode
+	if button_nav_sound:
+		button_nav_sound.play()
+
 	print("MissionSelectionUI: Entered preview button mode")
 
 func _exit_preview_mode():
@@ -258,7 +291,18 @@ func _activate_focused_button():
 			button.pressed.emit()
 			print("MissionSelectionUI: Activated button: ", button.name)
 
+func _setup_focus_navigation():
+	"""Set up gamepad/keyboard focus navigation for buttons"""
+	# Enable focus mode for all buttons
+	view_results_button.focus_mode = Control.FOCUS_ALL
+	start_button.focus_mode = Control.FOCUS_ALL
 
+	# Set up focus neighbors (horizontal navigation)
+	view_results_button.focus_neighbor_right = view_results_button.get_path_to(start_button)
+	view_results_button.focus_next = view_results_button.get_path_to(start_button)
+
+	start_button.focus_neighbor_left = start_button.get_path_to(view_results_button)
+	start_button.focus_previous = start_button.get_path_to(view_results_button)
 
 func _open_dialog():
 	"""Show the mission selection dialog"""
@@ -274,6 +318,9 @@ func _open_dialog():
 	# Reset navigation mode to mission list
 	nav_mode = NavMode.MISSION_LIST
 	_clear_button_focus()
+
+	# Reset input cooldown
+	input_cooldown = 0.0
 
 	# Populate mission list
 	_populate_mission_list()
