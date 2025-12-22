@@ -11,17 +11,21 @@ signal closed
 @onready var music_value_label: Label = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Audio/AudioSettings/MusicHeader/MusicValue
 @onready var hue_slider: HSlider = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/VisualSettings/HueSlider
 @onready var hue_value_label: Label = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/VisualSettings/HueHeader/HueValue
+@onready var saturation_slider: HSlider = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/VisualSettings/SaturationSlider
+@onready var saturation_value_label: Label = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/VisualSettings/SaturationHeader/SaturationValue
 @onready var close_button: Button = $PanelContainer/MarginContainer/VBoxContainer/CloseButton
 @onready var panel_container: PanelContainer = $PanelContainer
 @onready var button_nav_sound: AudioStreamPlayer = $ButtonNavSound
 @onready var open_menu_sound: AudioStreamPlayer = $OpenMenuSound
 @onready var close_menu_sound: AudioStreamPlayer = $CloseMenuSound
 @onready var tick_sound: AudioStreamPlayer = $TickSound
+@onready var button_hit_sound: AudioStreamPlayer = $ButtonHitSound
 
 var theme_panel_style: StyleBoxFlat = null
 var current_bg_color: Color = Color(0.2, 0.2, 0.2, 0.9)  # Default from theme
 var is_in_tab_mode: bool = true  # true = navigating tabs, false = navigating content
 var current_hue: float = 0.0  # Hue value 0-360
+var current_saturation: float = 0.3  # Saturation value 0.0-1.0
 var slider_hold_timer: float = 0.0
 var slider_hold_delay: float = 0.3  # Initial delay before repeating
 var slider_repeat_rate: float = 0.05  # Time between repeats
@@ -44,9 +48,11 @@ func _ready():
 	sfx_slider.value_changed.connect(_on_sfx_slider_changed)
 	music_slider.value_changed.connect(_on_music_slider_changed)
 	
-	# Only connect hue slider if it exists
+	# Only connect hue and saturation sliders if they exist
 	if hue_slider:
 		hue_slider.value_changed.connect(_on_hue_slider_changed)
+	if saturation_slider:
+		saturation_slider.value_changed.connect(_on_saturation_slider_changed)
 	
 	close_button.pressed.connect(_on_close_pressed)
 	
@@ -127,7 +133,7 @@ func _input(event):
 		if Input.is_action_just_pressed("ui_up"):
 			if input_cooldown <= 0:
 				var focused = get_viewport().gui_get_focus_owner()
-				# Check if we're at the first slider, if so return to tab mode
+				# Check if we're at the first slider in current tab, if so return to tab mode
 				if focused == sfx_slider or focused == hue_slider:
 					is_in_tab_mode = true
 					_update_tab_mode_visual()
@@ -234,8 +240,26 @@ func _on_hue_slider_changed(value: float):
 	current_hue = value
 	hue_value_label.text = "%d°" % int(value)
 
-	# Convert hue to color (using HSV with full saturation and value)
-	current_bg_color = Color.from_hsv(value / 360.0, 0.3, 0.3, 0.9)
+	# Convert hue to color (using HSV with current saturation and fixed value)
+	current_bg_color = Color.from_hsv(value / 360.0, current_saturation, 0.3, 0.9)
+
+	# Update the theme panel style
+	if theme_panel_style:
+		theme_panel_style.bg_color = current_bg_color
+
+	# Play tick sound (but don't play for initial load)
+	if tick_sound and is_node_ready():
+		tick_sound.play()
+
+	save_settings()
+
+func _on_saturation_slider_changed(value: float):
+	"""Handle saturation slider change"""
+	current_saturation = value
+	saturation_value_label.text = "%.0f%%" % (value * 100)
+
+	# Update color with new saturation
+	current_bg_color = Color.from_hsv(current_hue / 360.0, current_saturation, 0.3, 0.9)
 
 	# Update the theme panel style
 	if theme_panel_style:
@@ -249,6 +273,10 @@ func _on_hue_slider_changed(value: float):
 
 func _on_close_pressed():
 	"""Close the options menu"""
+	# Play button hit sound first
+	if button_hit_sound:
+		button_hit_sound.play()
+
 	hide()
 
 	# Play close menu sound
@@ -257,10 +285,10 @@ func _on_close_pressed():
 
 	# Reset z-index
 	z_index = 0
-	
+
 	# Disable processing when hidden so _input isn't called
 	process_mode = Node.PROCESS_MODE_DISABLED
-	
+
 	closed.emit()
 
 func save_settings():
@@ -282,9 +310,10 @@ func save_settings():
 			if json.parse(json_string) == OK:
 				settings = json.data
 	
-	# Update visual settings - save hue instead of RGBA
+	# Update visual settings - save hue and saturation
 	settings["bg_hue"] = current_hue
-	
+	settings["bg_saturation"] = current_saturation
+
 	# Also save audio settings (in case AudioManager.save_settings() wasn't called)
 	settings["sfx_volume"] = AudioManager.sfx_volume
 	settings["music_volume"] = AudioManager.music_volume
@@ -304,19 +333,23 @@ func load_settings():
 	music_value_label.text = "%d%%" % int(AudioManager.music_volume)
 	
 	# Load visual settings only if hue slider exists
-	if not hue_slider:
+	if not hue_slider or not saturation_slider:
 		return
 	
 	# Load visual settings
 	if not FileAccess.file_exists("user://settings.json"):
 		hue_slider.value = current_hue
 		hue_value_label.text = "%d°" % int(current_hue)
+		saturation_slider.value = current_saturation
+		saturation_value_label.text = "%.0f%%" % (current_saturation * 100)
 		return
 	
 	var file = FileAccess.open("user://settings.json", FileAccess.READ)
 	if not file:
 		hue_slider.value = current_hue
 		hue_value_label.text = "%d°" % int(current_hue)
+		saturation_slider.value = current_saturation
+		saturation_value_label.text = "%.0f%%" % (current_saturation * 100)
 		return
 	
 	var json_string = file.get_as_text()
@@ -326,12 +359,16 @@ func load_settings():
 	if json.parse(json_string) != OK:
 		hue_slider.value = current_hue
 		hue_value_label.text = "%d°" % int(current_hue)
+		saturation_slider.value = current_saturation
+		saturation_value_label.text = "%.0f%%" % (current_saturation * 100)
 		return
-	
+
 	var settings = json.data
 	if typeof(settings) != TYPE_DICTIONARY:
 		hue_slider.value = current_hue
 		hue_value_label.text = "%d°" % int(current_hue)
+		saturation_slider.value = current_saturation
+		saturation_value_label.text = "%.0f%%" % (current_saturation * 100)
 		return
 	
 	# Load hue value
@@ -339,13 +376,19 @@ func load_settings():
 		current_hue = float(settings.bg_hue)
 		hue_slider.value = current_hue
 		hue_value_label.text = "%d°" % int(current_hue)
-		
-		# Convert hue to color
-		current_bg_color = Color.from_hsv(current_hue / 360.0, 0.3, 0.3, 0.9)
-		
-		# Apply to theme
-		if theme_panel_style:
-			theme_panel_style.bg_color = current_bg_color
+
+	# Load saturation value
+	if settings.has("bg_saturation"):
+		current_saturation = float(settings.bg_saturation)
+		saturation_slider.value = current_saturation
+		saturation_value_label.text = "%.0f%%" % (current_saturation * 100)
+
+	# Convert hue and saturation to color
+	current_bg_color = Color.from_hsv(current_hue / 360.0, current_saturation, 0.3, 0.9)
+
+	# Apply to theme
+	if theme_panel_style:
+		theme_panel_style.bg_color = current_bg_color
 
 func _navigate_focus(direction: int):
 	"""Navigate focus up/down through controls"""
@@ -399,8 +442,8 @@ func _update_close_button_focus():
 	"""Update close button focus navigation based on current tab"""
 	if tab_container.current_tab == 0:  # Audio tab
 		close_button.focus_previous = close_button.get_path_to(music_slider)
-	elif tab_container.current_tab == 1 and hue_slider:  # Visual tab
-		close_button.focus_previous = close_button.get_path_to(hue_slider)
+	elif tab_container.current_tab == 1 and saturation_slider:  # Visual tab
+		close_button.focus_previous = close_button.get_path_to(saturation_slider)
 
 func _setup_focus_navigation():
 	"""Set up focus navigation for controls"""
@@ -419,11 +462,17 @@ func _setup_focus_navigation():
 	music_slider.focus_previous = music_slider.get_path_to(sfx_slider)
 	music_slider.focus_next = music_slider.get_path_to(close_button)
 	
-	# Set up focus for Visual tab only if hue slider exists
-	if hue_slider:
+	# Set up focus for Visual tab only if sliders exist
+	if hue_slider and saturation_slider:
 		hue_slider.focus_mode = Control.FOCUS_ALL
-		hue_slider.focus_neighbor_bottom = hue_slider.get_path_to(close_button)
-		hue_slider.focus_next = hue_slider.get_path_to(close_button)
+		hue_slider.focus_neighbor_bottom = hue_slider.get_path_to(saturation_slider)
+		hue_slider.focus_next = hue_slider.get_path_to(saturation_slider)
+
+		saturation_slider.focus_mode = Control.FOCUS_ALL
+		saturation_slider.focus_neighbor_top = saturation_slider.get_path_to(hue_slider)
+		saturation_slider.focus_neighbor_bottom = saturation_slider.get_path_to(close_button)
+		saturation_slider.focus_previous = saturation_slider.get_path_to(hue_slider)
+		saturation_slider.focus_next = saturation_slider.get_path_to(close_button)
 	
 	# Close button navigation (will be updated per tab)
 	close_button.focus_neighbor_top = close_button.get_path_to(music_slider)

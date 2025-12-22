@@ -1,6 +1,9 @@
-[gd_resource type="Theme" load_steps=10 format=3 uid="uid://cbtaxh5m7udor"]
+[gd_resource type="Theme" load_steps=14 format=3 uid="uid://cbtaxh5m7udor"]
 
+[ext_resource type="Texture2D" uid="uid://sb7vac4222ai" path="res://sprites/ui/slider button.png" id="1_jkgan"]
 [ext_resource type="FontFile" uid="uid://tmjyio0w6cu0" path="res://fonts/studio-sim.ttf" id="1_xxbg1"]
+[ext_resource type="Texture2D" uid="uid://cqd8ayvnhrj6w" path="res://sprites/ui/slider buttondisabled.png" id="2_ep62g"]
+[ext_resource type="Texture2D" uid="uid://d4m1wkmejf136" path="res://sprites/ui/tick.png" id="3_to61q"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xxbg1"]
 bg_color = Color(1, 0.22015908, 0.7032731, 1)
@@ -25,6 +28,11 @@ expand_margin_left = 10.0
 expand_margin_right = 10.0
 shadow_size = 10
 shadow_offset = Vector2(1.5, 5.75)
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_l5g8p"]
+grow_begin = 0.0
+grow_end = 0.0
+thickness = 7
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
 bg_color = Color(0.25664788, 0.18905699, 0.011071853, 0.9019608)
@@ -88,13 +96,13 @@ Button/colors/icon_disabled_color = Color(1, 1, 1, 0.4)
 Button/constants/outline_size = 20
 Button/styles/focus = SubResource("StyleBoxFlat_xxbg1")
 Button/styles/normal = SubResource("StyleBoxFlat_qa7hf")
-HSlider/icons/grabber = null
-HSlider/icons/grabber_disabled = null
-HSlider/icons/grabber_highlight = null
-HSlider/icons/tick = null
+HSlider/icons/grabber = ExtResource("2_ep62g")
+HSlider/icons/grabber_disabled = ExtResource("2_ep62g")
+HSlider/icons/grabber_highlight = ExtResource("1_jkgan")
+HSlider/icons/tick = ExtResource("3_to61q")
 HSlider/styles/grabber_area = null
 HSlider/styles/grabber_area_highlight = null
-HSlider/styles/slider = null
+HSlider/styles/slider = SubResource("StyleBoxLine_l5g8p")
 Label/colors/font_color = Color(0.37254903, 1, 0.99215686, 1)
 PanelContainer/styles/panel = SubResource("StyleBoxFlat_panel")
 StickerSlotDefault/styles/panel = SubResource("StyleBoxFlat_gfhtu")

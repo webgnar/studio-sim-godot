@@ -6,7 +6,6 @@ class_name MissionCard
 
 var thumbnail: TextureRect
 var title_label: Label
-var difficulty_label: Label
 var completion_label: Label
 
 var mission: PaintingMission = null
@@ -23,24 +22,36 @@ func _ready():
 	# Get child nodes
 	thumbnail = $MarginContainer/HBoxContainer/Thumbnail
 	title_label = $MarginContainer/HBoxContainer/InfoContainer/TitleLabel
-	difficulty_label = $MarginContainer/HBoxContainer/InfoContainer/DifficultyLabel
 	completion_label = $MarginContainer/HBoxContainer/InfoContainer/CompletionLabel
 
-	# Initialize default styles
-	default_style = StyleBoxFlat.new()
-	default_style.bg_color = Color(0.2, 0.2, 0.2, 0.9)
-	default_style.border_color = Color(0.4, 0.4, 0.4)
-	default_style.set_border_width_all(2)
-	default_style.set_corner_radius_all(4)
+	# Check if there's already a theme stylebox override (from scene file)
+	# If not, create default styles
+	var existing_panel = get_theme_stylebox("panel")
+	if existing_panel:
+		# Clone the existing style for default and selected states
+		default_style = existing_panel.duplicate() as StyleBoxFlat
+		selected_style = existing_panel.duplicate() as StyleBoxFlat
 
-	selected_style = StyleBoxFlat.new()
-	selected_style.bg_color = Color(0.2, 0.3, 0.4, 0.9)
-	selected_style.border_color = Color(0.2, 0.6, 1.0)  # Bright blue
-	selected_style.set_border_width_all(3)
-	selected_style.set_corner_radius_all(4)
+		# Modify selected style to have blue border
+		if selected_style is StyleBoxFlat:
+			selected_style.border_color = Color(0.2, 0.6, 1.0)  # Bright blue
+			selected_style.set_border_width_all(3)
+	else:
+		# No theme override, create default styles
+		default_style = StyleBoxFlat.new()
+		default_style.bg_color = Color(0.2, 0.2, 0.2, 0.9)
+		default_style.border_color = Color(0.4, 0.4, 0.4)
+		default_style.set_border_width_all(2)
+		default_style.set_corner_radius_all(4)
 
-	# Set initial style
-	add_theme_stylebox_override("panel", default_style)
+		selected_style = StyleBoxFlat.new()
+		selected_style.bg_color = Color(0.2, 0.3, 0.4, 0.9)
+		selected_style.border_color = Color(0.2, 0.6, 1.0)  # Bright blue
+		selected_style.set_border_width_all(3)
+		selected_style.set_corner_radius_all(4)
+
+		# Set initial style
+		add_theme_stylebox_override("panel", default_style)
 
 	# Connect click event
 	gui_input.connect(_on_gui_input)
@@ -51,7 +62,6 @@ func setup(mission_data: PaintingMission, index: int):
 	if not title_label:
 		thumbnail = $MarginContainer/HBoxContainer/Thumbnail
 		title_label = $MarginContainer/HBoxContainer/InfoContainer/TitleLabel
-		difficulty_label = $MarginContainer/HBoxContainer/InfoContainer/DifficultyLabel
 		completion_label = $MarginContainer/HBoxContainer/InfoContainer/CompletionLabel
 
 	mission = mission_data
@@ -59,9 +69,6 @@ func setup(mission_data: PaintingMission, index: int):
 
 	# Set title
 	title_label.text = mission.title
-
-	# Set difficulty
-	difficulty_label.text = "Difficulty: %d/10" % mission.difficulty
 
 	# Load thumbnail if available
 	if mission.reference_image_path and mission.reference_image_path != "":

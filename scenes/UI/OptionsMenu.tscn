@@ -1,8 +1,9 @@
-[gd_scene load_steps=7 format=3 uid="uid://bw6qndm8f0bap"]
+[gd_scene load_steps=8 format=3 uid="uid://bw6qndm8f0bap"]
 
 [ext_resource type="Script" uid="uid://c8va3jufkln28" path="res://scripts/OptionsMenu.gd" id="1_options"]
 [ext_resource type="Theme" uid="uid://cbtaxh5m7udor" path="res://themes/ui_theme.tres" id="2_theme"]
 [ext_resource type="AudioStream" uid="uid://ht7rkfvqubdm" path="res://sounds/picotron/buttonnav.ogg" id="3_nav_sound"]
+[ext_resource type="Texture2D" uid="uid://dor0d4yiulgi5" path="res://sprites/ui/arrow.png" id="3_vlbhp"]
 [ext_resource type="AudioStream" uid="uid://cobqa7fyriw4h" path="res://sounds/picotron/openmenu.ogg" id="4_open_sound"]
 [ext_resource type="AudioStream" uid="uid://cyvlgci21yq6s" path="res://sounds/picotron/closemenu.ogg" id="5_close_sound"]
 [ext_resource type="AudioStream" uid="uid://cakrgermhdo0f" path="res://sounds/picotron/tick.ogg" id="6_tick_sound"]
@@ -121,18 +122,52 @@ layout_mode = 2
 
 [node name="HueLabel" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/VisualSettings/HueHeader"]
 layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 32
 text = "Hue"
 
 [node name="HueValue" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/VisualSettings/HueHeader"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 28
 horizontal_alignment = 2
 
 [node name="HueSlider" type="HSlider" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/VisualSettings"]
 layout_mode = 2
+size_flags_vertical = 1
+max_value = 360.0
+tick_count = 11
+ticks_on_borders = true
+ticks_position = 2
+
+[node name="SaturationHeader" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/VisualSettings"]
+layout_mode = 2
+
+[node name="SaturationLabel" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/VisualSettings/SaturationHeader"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 32
+text = "Saturation"
+
+[node name="SaturationValue" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/VisualSettings/SaturationHeader"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+horizontal_alignment = 2
+
+[node name="SaturationSlider" type="HSlider" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/VisualSettings"]
+layout_mode = 2
+size_flags_vertical = 1
+max_value = 1.0
+step = 0.01
+value = 0.3
+tick_count = 11
+ticks_on_borders = true
+ticks_position = 2
 
 [node name="CloseButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 text = "Back"
+icon = ExtResource("3_vlbhp")
+expand_icon = true
 
 [node name="ButtonNavSound" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("3_nav_sound")

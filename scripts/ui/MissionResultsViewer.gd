@@ -14,6 +14,8 @@ class_name MissionResultsViewer
 @onready var player_image = $Dialog/MarginContainer/VBoxContainer/ImageComparison/PlayerPaintingPanel/VBoxContainer/PlayerImage
 @onready var player_score_label = $Dialog/MarginContainer/VBoxContainer/ImageComparison/PlayerPaintingPanel/VBoxContainer/ScoreLabel
 @onready var target_image = $Dialog/MarginContainer/VBoxContainer/ImageComparison/TargetPaintingPanel/VBoxContainer/TargetImage
+@onready var button_nav_sound = $ButtonNavSound
+@onready var button_hit_sound = $ButtonHitSound
 
 var current_mission: PaintingMission = null
 var showing_latest: bool = true
@@ -25,6 +27,8 @@ var inactive_button_style: StyleBoxFlat
 # Navigation
 var buttons: Array[Button] = []
 var focused_button_index: int = 0
+var input_cooldown: float = 0.0
+var input_cooldown_time: float = 0.15  # Cooldown between navigation inputs
 
 func _ready():
 	# Hide dialog initially
@@ -37,6 +41,9 @@ func _ready():
 
 	# Setup navigation array (Back, Show Latest, Show Best)
 	buttons = [back_button, show_latest_button, show_best_button]
+
+	# Set up focus navigation
+	_setup_focus_navigation()
 
 	# Load theme
 	theme = load("res://themes/ui_theme.tres")
@@ -60,6 +67,33 @@ func _create_toggle_styles():
 	inactive_button_style.border_color = Color(0.4, 0.4, 0.4)
 	inactive_button_style.set_border_width_all(1)
 	inactive_button_style.set_corner_radius_all(4)
+
+func _setup_focus_navigation():
+	"""Set up gamepad/keyboard focus navigation for buttons"""
+	# Enable focus mode for all buttons
+	back_button.focus_mode = Control.FOCUS_ALL
+	show_latest_button.focus_mode = Control.FOCUS_ALL
+	show_best_button.focus_mode = Control.FOCUS_ALL
+
+	# Set up focus neighbors (horizontal navigation)
+	back_button.focus_neighbor_right = back_button.get_path_to(show_latest_button)
+	back_button.focus_next = back_button.get_path_to(show_latest_button)
+
+	show_latest_button.focus_neighbor_left = show_latest_button.get_path_to(back_button)
+	show_latest_button.focus_neighbor_right = show_latest_button.get_path_to(show_best_button)
+	show_latest_button.focus_previous = show_latest_button.get_path_to(back_button)
+	show_latest_button.focus_next = show_latest_button.get_path_to(show_best_button)
+
+	show_best_button.focus_neighbor_left = show_best_button.get_path_to(show_latest_button)
+	show_best_button.focus_previous = show_best_button.get_path_to(show_latest_button)
+
+func _process(delta):
+	if not dialog.visible:
+		return
+
+	# Update input cooldown
+	if input_cooldown > 0:
+		input_cooldown -= delta
 
 func show_results_for_mission(mission: PaintingMission):
 	"""Display results for the specified mission"""
@@ -92,6 +126,9 @@ func show_results_for_mission(mission: PaintingMission):
 
 	# Show dialog
 	dialog.visible = true
+
+	# Reset input cooldown
+	input_cooldown = 0.0
 
 	# Focus first button
 	focused_button_index = 0
@@ -254,26 +291,32 @@ func _input(event):
 	if not viewport:
 		return
 
-	# Go back to close
-	if event.is_action_pressed("go_back"):
+	# Go back to close (B button or ESC)
+	if event.is_action_pressed("go_back") or event.is_action_pressed("ui_cancel"):
 		_on_back_pressed()
 		viewport.set_input_as_handled()
 		return
 
-	# Left/Right or A/D to navigate buttons
-	if event.is_action_pressed("move_left"):
-		_select_previous_button()
+	# Left/Right or A/D or D-pad to navigate buttons
+	if event.is_action_pressed("move_left") or event.is_action_pressed("ui_left"):
+		if input_cooldown <= 0:
+			_select_previous_button()
+			input_cooldown = input_cooldown_time
 		viewport.set_input_as_handled()
 		return
 
-	if event.is_action_pressed("move_right"):
-		_select_next_button()
+	if event.is_action_pressed("move_right") or event.is_action_pressed("ui_right"):
+		if input_cooldown <= 0:
+			_select_next_button()
+			input_cooldown = input_cooldown_time
 		viewport.set_input_as_handled()
 		return
 
-	# Jump (A button / Space) to activate focused button
-	if event.is_action_pressed("jump"):
-		_activate_focused_button()
+	# Jump (A button / Space) or ui_accept to activate focused button
+	if event.is_action_pressed("jump") or event.is_action_pressed("ui_accept"):
+		if input_cooldown <= 0:
+			_activate_focused_button()
+			input_cooldown = input_cooldown_time
 		viewport.set_input_as_handled()
 		return
 
@@ -288,6 +331,10 @@ func _select_next_button():
 		# Skip invisible or disabled buttons
 		if buttons[focused_button_index].visible and not buttons[focused_button_index].disabled:
 			_update_button_focus()
+
+			# Play navigation sound
+			if button_nav_sound:
+				button_nav_sound.play()
 			return
 
 		attempts += 1
@@ -308,6 +355,10 @@ func _select_previous_button():
 		# Skip invisible or disabled buttons
 		if buttons[focused_button_index].visible and not buttons[focused_button_index].disabled:
 			_update_button_focus()
+
+			# Play navigation sound
+			if button_nav_sound:
+				button_nav_sound.play()
 			return
 
 		attempts += 1
@@ -335,5 +386,9 @@ func _activate_focused_button():
 	if focused_button_index < buttons.size():
 		var button = buttons[focused_button_index]
 		if button.visible and not button.disabled:
+			# Play button hit sound
+			if button_hit_sound:
+				button_hit_sound.play()
+
 			button.pressed.emit()
 			print("MissionResultsViewer: Activated button: ", button.name)

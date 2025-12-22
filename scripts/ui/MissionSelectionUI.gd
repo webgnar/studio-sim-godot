@@ -377,9 +377,9 @@ func _close_dialog():
 
 func _populate_mission_list():
 	"""Create mission cards for all available missions"""
-	# Clear existing cards
-	for card in mission_cards:
-		card.queue_free()
+	# Clear existing cards (including any placeholder cards from the editor)
+	for child in mission_list_container.get_children():
+		child.queue_free()
 	mission_cards.clear()
 
 	# Create a card for each mission

@@ -17,10 +17,9 @@ theme_override_constants/margin_bottom = 10
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
 layout_mode = 2
-theme_override_constants/separation = 10
 
 [node name="Thumbnail" type="TextureRect" parent="MarginContainer/HBoxContainer"]
-custom_minimum_size = Vector2(120, 120)
+custom_minimum_size = Vector2(80, 80)
 layout_mode = 2
 expand_mode = 1
 stretch_mode = 5
@@ -31,18 +30,11 @@ size_flags_horizontal = 3
 
 [node name="TitleLabel" type="Label" parent="MarginContainer/HBoxContainer/InfoContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 24
 text = "Mission Title"
 
-[node name="DifficultyLabel" type="Label" parent="MarginContainer/HBoxContainer/InfoContainer"]
-modulate = Color(0.8, 0.8, 0.8, 1)
-layout_mode = 2
-theme_override_font_sizes/font_size = 12
-text = "Difficulty: 5/10"
-
 [node name="CompletionLabel" type="Label" parent="MarginContainer/HBoxContainer/InfoContainer"]
-visible = false
 modulate = Color(0.4, 1, 0.4, 1)
 layout_mode = 2
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 18
 text = "Completed - Grade: A"
