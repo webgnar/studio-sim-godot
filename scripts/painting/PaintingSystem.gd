@@ -196,20 +196,31 @@ func _raycast_from_mouse() -> Dictionary:
 
 func _get_layer_at_position(world_position: Vector3) -> PlacedLayer:
 	"""Find if there's a placed layer near the clicked position (world-space)"""
-	var min_distance = 0.5  # Tolerance for click detection in world units
 	var closest_layer: PlacedLayer = null
-	var closest_dist = min_distance
+	var closest_dist = INF
 
 	# Check in reverse order (top layers first - higher z-order)
 	var reversed_layers = placed_layers.duplicate()
 	reversed_layers.reverse()
 
 	for layer in reversed_layers:
-		if layer.node:
+		if layer.node and layer.node.texture:
+			# Calculate the actual size of this sticker based on its texture and scale
+			var texture_size = layer.node.texture.get_size()
+			var max_dimension = max(texture_size.x, texture_size.y)
+
+			# Calculate the world-space size of the sticker
+			# pixel_size * texture dimension = world units
+			var world_size = layer.node.pixel_size * max_dimension
+
+			# Use half the diagonal as the detection radius (generous hit area)
+			# This ensures clicking anywhere on the sticker will detect it
+			var detection_radius = world_size * 0.707  # sqrt(2)/2 for diagonal
+
 			# Compare in world space (3D distance)
 			var dist = layer.node.global_position.distance_to(world_position)
 
-			if dist < closest_dist:
+			if dist < detection_radius and dist < closest_dist:
 				closest_dist = dist
 				closest_layer = layer
 				break  # Return first hit (topmost layer)
@@ -274,7 +285,7 @@ func spawn_sticker(world_position: Vector3, normal: Vector3):
 	sprite.rotate_object_local(Vector3(0, 0, 1), rotation_radians)
 
 	# Create placed layer data
-	var placed = PlacedLayer.new(definition.id, sprite, next_order)
+	var placed = PlacedLayer.new(definition.id, sprite, next_order, current_scale_multiplier)
 	placed.rotation_deg = current_rotation  # Store the rotation
 	placed_layers.append(placed)
 
