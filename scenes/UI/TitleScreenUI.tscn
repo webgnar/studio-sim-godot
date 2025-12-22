@@ -1,0 +1,101 @@
+[gd_scene load_steps=5 format=3 uid="uid://cd3ehqy3x4v4w"]
+
+[ext_resource type="Theme" uid="uid://cbtaxh5m7udor" path="res://themes/ui_theme.tres" id="1_theme"]
+[ext_resource type="Texture2D" uid="uid://ciyp25tao4x8l" path="res://sprites/ui/studio sim title.png" id="2_logo"]
+
+[sub_resource type="Animation" id="Animation_mp5hy"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_sn2o6"]
+resource_name = "scale"
+length = 15.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 7.5, 15.066667),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(1, 1), Vector2(1.2, 1.2), Vector2(1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_bhnaj"]
+_data = {
+&"RESET": SubResource("Animation_mp5hy"),
+&"scale": SubResource("Animation_sn2o6")
+}
+
+[node name="UI_Layer" type="CanvasLayer"]
+
+[node name="TitleScreenUI" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_theme")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TitleScreenUI"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -89.5
+offset_top = -212.0
+offset_right = 89.5
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="ContinueButton" type="Button" parent="TitleScreenUI/VBoxContainer"]
+layout_mode = 2
+text = "Continue"
+
+[node name="NewGameButton" type="Button" parent="TitleScreenUI/VBoxContainer"]
+layout_mode = 2
+text = "New Game"
+
+[node name="OptionsButton" type="Button" parent="TitleScreenUI/VBoxContainer"]
+layout_mode = 2
+text = "Options"
+
+[node name="QuitButton" type="Button" parent="TitleScreenUI/VBoxContainer"]
+layout_mode = 2
+text = "Quit"
+
+[node name="TextureRect" type="TextureRect" parent="TitleScreenUI"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -400.0
+offset_top = 48.0
+offset_right = 400.0
+offset_bottom = 198.0
+grow_horizontal = 2
+pivot_offset = Vector2(400, 75)
+texture = ExtResource("2_logo")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="TitleScreenUI/TextureRect"]
+libraries = {
+&"": SubResource("AnimationLibrary_bhnaj")
+}
+autoplay = "scale"

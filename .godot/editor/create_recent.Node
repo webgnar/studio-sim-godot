@@ -1,5 +1,6 @@
-HSlider
+HBoxContainer
 Label
+HSlider
 AnimationPlayer
 Marker3D
 CollisionShape3D

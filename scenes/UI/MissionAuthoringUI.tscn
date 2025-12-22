@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://c7vk8n8k7j8k8"]
 
-[ext_resource type="Script" path="res://scripts/ui/MissionAuthoringUI.gd" id="1_author"]
+[ext_resource type="Script" uid="uid://2inpd3it5ava" path="res://scripts/ui/MissionAuthoringUI.gd" id="1_author"]
 
 [node name="MissionAuthoringUI" type="Control"]
 layout_mode = 3
@@ -81,8 +81,8 @@ text = "Reward:"
 layout_mode = 2
 min_value = 10.0
 max_value = 10000.0
-value = 100.0
 step = 10.0
+value = 100.0
 
 [node name="DifficultyLabel" type="Label" parent="Dialog/MarginContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2

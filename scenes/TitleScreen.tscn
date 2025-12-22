@@ -1,6 +1,7 @@
 [gd_scene load_steps=84 format=3 uid="uid://da8jmxqyjt0xs"]
 
 [ext_resource type="Script" uid="uid://bn5a584271aim" path="res://scripts/TitleScreenController.gd" id="1_2ktle"]
+[ext_resource type="PackedScene" uid="uid://cd3ehqy3x4v4w" path="res://scenes/UI/TitleScreenUI.tscn" id="1_ui_layer"]
 [ext_resource type="Material" uid="uid://wwlsotlotycw" path="res://materials/wood.tres" id="1_hjcsb"]
 [ext_resource type="Texture2D" uid="uid://cbn0d3riillev" path="res://sprites/wood.jpg" id="2_2ktle"]
 [ext_resource type="Texture2D" uid="uid://dyuvtxhp260rj" path="res://sprites/normals/wood_ambient.png" id="3_l7b4h"]
@@ -552,64 +553,7 @@ libraries = {
 }
 autoplay = "pan"
 
-[node name="UI_Layer" type="CanvasLayer" parent="."]
-
-[node name="TitleScreenUI" type="Control" parent="UI_Layer"]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme = ExtResource("13_u3ctg")
-
-[node name="VBoxContainer" type="VBoxContainer" parent="UI_Layer/TitleScreenUI"]
-layout_mode = 1
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -89.5
-offset_top = -212.0
-offset_right = 89.5
-grow_horizontal = 2
-grow_vertical = 0
-
-[node name="ContinueButton" type="Button" parent="UI_Layer/TitleScreenUI/VBoxContainer"]
-layout_mode = 2
-text = "Continue"
-
-[node name="NewGameButton" type="Button" parent="UI_Layer/TitleScreenUI/VBoxContainer"]
-layout_mode = 2
-text = "New Game"
-
-[node name="OptionsButton" type="Button" parent="UI_Layer/TitleScreenUI/VBoxContainer"]
-layout_mode = 2
-text = "Options"
-
-[node name="QuitButton" type="Button" parent="UI_Layer/TitleScreenUI/VBoxContainer"]
-layout_mode = 2
-text = "Quit"
-
-[node name="TextureRect" type="TextureRect" parent="UI_Layer/TitleScreenUI"]
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -400.0
-offset_top = 48.0
-offset_right = 400.0
-offset_bottom = 198.0
-grow_horizontal = 2
-pivot_offset = Vector2(400, 75)
-texture = ExtResource("13_q22b5")
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="UI_Layer/TitleScreenUI/TextureRect"]
-libraries = {
-&"": SubResource("AnimationLibrary_bhnaj")
-}
-autoplay = "scale"
+[node name="UI_Layer" parent="." instance=ExtResource("1_ui_layer")]
 
 [node name="BackgroundMusic" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("51_ffc86")

@@ -1,7 +1,11 @@
-[gd_scene load_steps=3 format=3 uid="uid://bw6qndm8f0bap"]
+[gd_scene load_steps=7 format=3 uid="uid://bw6qndm8f0bap"]
 
 [ext_resource type="Script" uid="uid://c8va3jufkln28" path="res://scripts/OptionsMenu.gd" id="1_options"]
 [ext_resource type="Theme" uid="uid://cbtaxh5m7udor" path="res://themes/ui_theme.tres" id="2_theme"]
+[ext_resource type="AudioStream" uid="uid://ht7rkfvqubdm" path="res://sounds/picotron/buttonnav.ogg" id="3_nav_sound"]
+[ext_resource type="AudioStream" uid="uid://cobqa7fyriw4h" path="res://sounds/picotron/openmenu.ogg" id="4_open_sound"]
+[ext_resource type="AudioStream" uid="uid://cyvlgci21yq6s" path="res://sounds/picotron/closemenu.ogg" id="5_close_sound"]
+[ext_resource type="AudioStream" uid="uid://cakrgermhdo0f" path="res://sounds/picotron/tick.ogg" id="6_tick_sound"]
 
 [node name="OptionsMenu" type="Control"]
 layout_mode = 3
@@ -22,7 +26,7 @@ anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = -300.0
-offset_top = -676.0
+offset_top = -434.0
 grow_horizontal = 0
 grow_vertical = 0
 
@@ -45,21 +49,32 @@ horizontal_alignment = 1
 [node name="TabContainer" type="TabContainer" parent="PanelContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
-current_tab = 0
+current_tab = 1
 
 [node name="Audio" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer"]
+visible = false
 layout_mode = 2
 metadata/_tab_index = 0
 
 [node name="AudioSettings" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Audio"]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_constants/separation = 30
+theme_override_constants/separation = 10
 
-[node name="SFXLabel" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Audio/AudioSettings"]
+[node name="SFXHeader" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Audio/AudioSettings"]
 layout_mode = 2
+
+[node name="SFXLabel" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Audio/AudioSettings/SFXHeader"]
+layout_mode = 2
+size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 32
 text = "SFX Volume"
+
+[node name="SFXValue" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Audio/AudioSettings/SFXHeader"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "100%"
+horizontal_alignment = 2
 
 [node name="SFXSlider" type="HSlider" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Audio/AudioSettings"]
 layout_mode = 2
@@ -67,21 +82,22 @@ size_flags_vertical = 1
 value = 100.0
 tick_count = 11
 ticks_on_borders = true
+ticks_position = 2
 
-[node name="SFXValue" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Audio/AudioSettings"]
+[node name="MusicHeader" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Audio/AudioSettings"]
+layout_mode = 2
+
+[node name="MusicLabel" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Audio/AudioSettings/MusicHeader"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 32
+text = "Music Volume"
+
+[node name="MusicValue" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Audio/AudioSettings/MusicHeader"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 28
 text = "100%"
-horizontal_alignment = 1
-
-[node name="Spacer1" type="Control" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Audio/AudioSettings"]
-custom_minimum_size = Vector2(0, 20)
-layout_mode = 2
-
-[node name="MusicLabel" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Audio/AudioSettings"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 32
-text = "Music Volume"
+horizontal_alignment = 2
 
 [node name="MusicSlider" type="HSlider" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Audio/AudioSettings"]
 layout_mode = 2
@@ -89,15 +105,9 @@ size_flags_vertical = 1
 value = 100.0
 tick_count = 11
 ticks_on_borders = true
-
-[node name="MusicValue" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Audio/AudioSettings"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 28
-text = "100%"
-horizontal_alignment = 1
+ticks_position = 2
 
 [node name="Visual" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer"]
-visible = false
 layout_mode = 2
 metadata/_tab_index = 1
 
@@ -106,12 +116,36 @@ layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 15
 
-[node name="HueSlider" type="HSlider" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/VisualSettings"]
+[node name="HueHeader" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/VisualSettings"]
 layout_mode = 2
 
-[node name="HueValue" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/VisualSettings"]
+[node name="HueLabel" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/VisualSettings/HueHeader"]
+layout_mode = 2
+text = "Hue"
+
+[node name="HueValue" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/VisualSettings/HueHeader"]
+layout_mode = 2
+horizontal_alignment = 2
+
+[node name="HueSlider" type="HSlider" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/VisualSettings"]
 layout_mode = 2
 
 [node name="CloseButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
-text = "Close"
+text = "Back"
+
+[node name="ButtonNavSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_nav_sound")
+bus = &"SFX"
+
+[node name="OpenMenuSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_open_sound")
+bus = &"SFX"
+
+[node name="CloseMenuSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("5_close_sound")
+bus = &"SFX"
+
+[node name="TickSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("6_tick_sound")
+bus = &"SFX"

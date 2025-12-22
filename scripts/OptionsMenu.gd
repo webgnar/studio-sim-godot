@@ -7,12 +7,16 @@ signal closed
 @onready var tab_container: TabContainer = $PanelContainer/MarginContainer/VBoxContainer/TabContainer
 @onready var sfx_slider: HSlider = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Audio/AudioSettings/SFXSlider
 @onready var music_slider: HSlider = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Audio/AudioSettings/MusicSlider
-@onready var sfx_value_label: Label = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Audio/AudioSettings/SFXValue
-@onready var music_value_label: Label = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Audio/AudioSettings/MusicValue
+@onready var sfx_value_label: Label = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Audio/AudioSettings/SFXHeader/SFXValue
+@onready var music_value_label: Label = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Audio/AudioSettings/MusicHeader/MusicValue
 @onready var hue_slider: HSlider = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/VisualSettings/HueSlider
-@onready var hue_value_label: Label = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/VisualSettings/HueValue
+@onready var hue_value_label: Label = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/VisualSettings/HueHeader/HueValue
 @onready var close_button: Button = $PanelContainer/MarginContainer/VBoxContainer/CloseButton
 @onready var panel_container: PanelContainer = $PanelContainer
+@onready var button_nav_sound: AudioStreamPlayer = $ButtonNavSound
+@onready var open_menu_sound: AudioStreamPlayer = $OpenMenuSound
+@onready var close_menu_sound: AudioStreamPlayer = $CloseMenuSound
+@onready var tick_sound: AudioStreamPlayer = $TickSound
 
 var theme_panel_style: StyleBoxFlat = null
 var current_bg_color: Color = Color(0.2, 0.2, 0.2, 0.9)  # Default from theme
@@ -29,7 +33,13 @@ var input_cooldown_time: float = 0.15  # Cooldown between navigation inputs
 func _ready():
 	# Hide by default
 	hide()
-	
+
+	# Disable processing when hidden so _input isn't called
+	process_mode = Node.PROCESS_MODE_DISABLED
+
+	# Initialize tab container to Audio tab (tab 0)
+	tab_container.current_tab = 0
+
 	# Connect signals
 	sfx_slider.value_changed.connect(_on_sfx_slider_changed)
 	music_slider.value_changed.connect(_on_music_slider_changed)
@@ -105,24 +115,45 @@ func _input(event):
 			if input_cooldown <= 0:
 				# Enter content mode
 				is_in_tab_mode = false
+				_update_tab_mode_visual()
 				_focus_first_content_item()
 				input_cooldown = input_cooldown_time
 			get_viewport().set_input_as_handled()
+		elif Input.is_action_just_pressed("ui_up"):
+			# In tab mode, up does nothing (stay at tabs, no looping)
+			get_viewport().set_input_as_handled()
 	else:
-		# Content mode: navigate within content, up returns to tabs
+		# Content mode: navigate within content, up from first slider returns to tabs
 		if Input.is_action_just_pressed("ui_up"):
 			if input_cooldown <= 0:
 				var focused = get_viewport().gui_get_focus_owner()
-				# Check if we're at the first item, if so return to tab mode
+				# Check if we're at the first slider, if so return to tab mode
 				if focused == sfx_slider or focused == hue_slider:
 					is_in_tab_mode = true
+					_update_tab_mode_visual()
+					# Play navigation sound
+					if button_nav_sound:
+						button_nav_sound.play()
 				else:
+					# Navigate up (from music slider, hue slider, or Back button)
 					_navigate_focus(-1)
+					# Play navigation sound
+					if button_nav_sound:
+						button_nav_sound.play()
 				input_cooldown = input_cooldown_time
 			get_viewport().set_input_as_handled()
 		elif Input.is_action_just_pressed("ui_down"):
 			if input_cooldown <= 0:
-				_navigate_focus(1)
+				var focused = get_viewport().gui_get_focus_owner()
+				# Navigate from sliders to Back button, but stop at Back button
+				if focused == close_button:
+					# Already at Back button, don't navigate further
+					pass
+				else:
+					_navigate_focus(1)
+					# Play navigation sound
+					if button_nav_sound:
+						button_nav_sound.play()
 				input_cooldown = input_cooldown_time
 			get_viewport().set_input_as_handled()
 		
@@ -149,51 +180,86 @@ func _input(event):
 func show_menu():
 	"""Show the options menu"""
 	show()
-	
+
+	# Play open menu sound
+	if open_menu_sound:
+		open_menu_sound.play()
+
 	# Ensure menu is above other UI layers
 	z_index = 100
-	
+
+	# Always start on Audio tab (tab 0)
+	tab_container.current_tab = 0
+
+	# Update close button focus for current tab
+	_update_close_button_focus()
+
 	# Start in tab mode
 	is_in_tab_mode = true
-	
+	_update_tab_mode_visual()
+
 	# Reset input cooldown
 	input_cooldown = 0.0
-	
+
 	# Set mouse mode to visible
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+
+	# Enable processing so _input gets called
+	process_mode = Node.PROCESS_MODE_INHERIT
 
 func _on_sfx_slider_changed(value: float):
 	"""Handle SFX volume slider change"""
 	AudioManager.set_sfx_volume(value)
 	sfx_value_label.text = "%d%%" % int(value)
+
+	# Play tick sound (but don't play for initial load)
+	if tick_sound and is_node_ready():
+		tick_sound.play()
+
 	save_settings()
 
 func _on_music_slider_changed(value: float):
 	"""Handle Music volume slider change"""
 	AudioManager.set_music_volume(value)
 	music_value_label.text = "%d%%" % int(value)
+
+	# Play tick sound (but don't play for initial load)
+	if tick_sound and is_node_ready():
+		tick_sound.play()
+
 	save_settings()
 
 func _on_hue_slider_changed(value: float):
 	"""Handle hue slider change"""
 	current_hue = value
 	hue_value_label.text = "%d°" % int(value)
-	
+
 	# Convert hue to color (using HSV with full saturation and value)
 	current_bg_color = Color.from_hsv(value / 360.0, 0.3, 0.3, 0.9)
-	
+
 	# Update the theme panel style
 	if theme_panel_style:
 		theme_panel_style.bg_color = current_bg_color
-	
+
+	# Play tick sound (but don't play for initial load)
+	if tick_sound and is_node_ready():
+		tick_sound.play()
+
 	save_settings()
 
 func _on_close_pressed():
 	"""Close the options menu"""
 	hide()
-	
+
+	# Play close menu sound
+	if close_menu_sound:
+		close_menu_sound.play()
+
 	# Reset z-index
 	z_index = 0
+	
+	# Disable processing when hidden so _input isn't called
+	process_mode = Node.PROCESS_MODE_DISABLED
 	
 	closed.emit()
 
@@ -304,13 +370,37 @@ func _focus_first_content_item():
 			hue_slider.grab_focus()
 
 func _switch_tab(direction: int):
-	"""Switch between tabs (Audio/Visual)"""
+	"""Switch between tabs (Audio/Visual) - no looping"""
 	var current_tab = tab_container.current_tab
-	var new_tab = (current_tab + direction) % tab_container.get_tab_count()
-	if new_tab < 0:
-		new_tab = tab_container.get_tab_count() - 1
-	
-	tab_container.current_tab = new_tab
+	var new_tab = current_tab + direction
+
+	# Clamp to valid tab range (no wrapping)
+	new_tab = clamp(new_tab, 0, tab_container.get_tab_count() - 1)
+
+	# Only change tab and play sound if we actually moved
+	if new_tab != current_tab:
+		tab_container.current_tab = new_tab
+		# Update close button focus for new tab
+		_update_close_button_focus()
+		# Play navigation sound
+		if button_nav_sound:
+			button_nav_sound.play()
+
+func _update_tab_mode_visual():
+	"""Update visual indicator for tab mode"""
+	if is_in_tab_mode:
+		# Highlight tab container with subtle cyan tint when in tab mode
+		tab_container.modulate = Color(0.7, 1.0, 1.0, 1.0)
+	else:
+		# Normal white (no tint) when in content mode
+		tab_container.modulate = Color(1.0, 1.0, 1.0, 1.0)
+
+func _update_close_button_focus():
+	"""Update close button focus navigation based on current tab"""
+	if tab_container.current_tab == 0:  # Audio tab
+		close_button.focus_previous = close_button.get_path_to(music_slider)
+	elif tab_container.current_tab == 1 and hue_slider:  # Visual tab
+		close_button.focus_previous = close_button.get_path_to(hue_slider)
 
 func _setup_focus_navigation():
 	"""Set up focus navigation for controls"""
@@ -335,7 +425,10 @@ func _setup_focus_navigation():
 		hue_slider.focus_neighbor_bottom = hue_slider.get_path_to(close_button)
 		hue_slider.focus_next = hue_slider.get_path_to(close_button)
 	
-	# Close button navigation
+	# Close button navigation (will be updated per tab)
 	close_button.focus_neighbor_top = close_button.get_path_to(music_slider)
 	close_button.focus_neighbor_bottom = close_button.get_path_to(sfx_slider)
 	close_button.focus_previous = close_button.get_path_to(music_slider)
+
+	# Update close button focus for current tab
+	_update_close_button_focus()

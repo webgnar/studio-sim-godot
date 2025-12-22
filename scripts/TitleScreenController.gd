@@ -81,10 +81,6 @@ func _input(event):
 		if focused is Button and not focused.disabled:
 			focused.pressed.emit()
 			# Don't set_input_as_handled here - scene might transition immediately
-	elif Input.is_action_just_pressed("start"):
-		# Start button goes directly to mission selection (same as new game)
-		_on_new_game_pressed()
-		# Don't set_input_as_handled here - scene is transitioning
 
 func _navigate_menu(direction: int):
 	"""Navigate menu up (-1) or down (1)"""

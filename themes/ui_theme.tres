@@ -27,16 +27,12 @@ shadow_size = 10
 shadow_offset = Vector2(1.5, 5.75)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
-bg_color = Color(0.2, 0.2, 0.2, 0.9)
+bg_color = Color(0.25664788, 0.18905699, 0.011071853, 0.9019608)
 border_width_left = 3
 border_width_top = 3
 border_width_right = 3
 border_width_bottom = 3
-border_color = Color(0.5, 0.5, 0.5, 1)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
+border_color = Color(0.701188, 0.43148756, 0.07110313, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gfhtu"]
 bg_color = Color(0.6, 0.6, 0.6, 0.38039216)
@@ -56,12 +52,11 @@ border_color = Color(0.8036736, 0.76578987, 0.990732, 1)
 shadow_size = 15
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tab_panel"]
-bg_color = Color(0.25, 0.25, 0.25, 0.95)
+bg_color = Color(1, 0.78039217, 0.72156864, 0.3764706)
 border_width_left = 3
-border_width_top = 3
 border_width_right = 3
 border_width_bottom = 3
-border_color = Color(0.5, 0.5, 0.5, 1)
+border_color = Color(0.32164988, 0.5622579, 0.43069953, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tab_selected"]
 bg_color = Color(1, 0.22015908, 0.7032731, 1)
@@ -73,7 +68,7 @@ corner_radius_top_left = 5
 corner_radius_top_right = 5
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tab_unselected"]
-bg_color = Color(0.4, 0.4, 0.4, 0.8)
+bg_color = Color(0.48846984, 0.2349635, 0.7670144, 0.8)
 border_width_left = 3
 border_width_top = 3
 border_width_right = 3
@@ -89,6 +84,7 @@ Button/colors/font_disabled_color = Color(0.875, 0.875, 0.875, 0.5)
 Button/colors/font_focus_color = Color(2.887845e-06, 0.9824384, 0.7705699, 1)
 Button/colors/font_hover_color = Color(0.95, 0.95, 0.95, 1)
 Button/colors/font_outline_color = Color(0, 0, 0, 1)
+Button/colors/icon_disabled_color = Color(1, 1, 1, 0.4)
 Button/constants/outline_size = 20
 Button/styles/focus = SubResource("StyleBoxFlat_xxbg1")
 Button/styles/normal = SubResource("StyleBoxFlat_qa7hf")
@@ -99,11 +95,13 @@ HSlider/icons/tick = null
 HSlider/styles/grabber_area = null
 HSlider/styles/grabber_area_highlight = null
 HSlider/styles/slider = null
+Label/colors/font_color = Color(0.37254903, 1, 0.99215686, 1)
 PanelContainer/styles/panel = SubResource("StyleBoxFlat_panel")
 StickerSlotDefault/styles/panel = SubResource("StyleBoxFlat_gfhtu")
 StickerSlotEquipped/styles/panel = SubResource("StyleBoxFlat_jkgan")
 TabContainer/colors/font_selected_color = Color(2.887845e-06, 0.9824384, 0.7705699, 1)
-TabContainer/colors/font_unselected_color = Color(0.875, 0.875, 0.875, 1)
+TabContainer/colors/font_unselected_color = Color(0.8745098, 0.8745098, 0.3137255, 1)
 TabContainer/styles/panel = SubResource("StyleBoxFlat_tab_panel")
+TabContainer/styles/tab_focus = null
 TabContainer/styles/tab_selected = SubResource("StyleBoxFlat_tab_selected")
 TabContainer/styles/tab_unselected = SubResource("StyleBoxFlat_tab_unselected")
