@@ -52,6 +52,7 @@ func _setup_audio() -> void:
 		_audio_player.name = "InteractionAudio"
 		_audio_player.max_distance = 10.0
 		_audio_player.attenuation_model = AudioStreamPlayer3D.ATTENUATION_INVERSE_DISTANCE
+		_audio_player.bus = "SFX"
 		add_child(_audio_player)
 
 func _play_sound(sound: AudioStream, volume_db: float = 0.0) -> void:

@@ -74,6 +74,7 @@ func _setup_radio_audio() -> void:
 	_radio_audio_player.unit_size = min_distance
 	_radio_audio_player.emission_angle_enabled = false
 	_radio_audio_player.panning_strength = 1.0
+	_radio_audio_player.bus = "Music"
 	add_child(_radio_audio_player)
 
 func _setup_switch_audio() -> void:
@@ -82,6 +83,7 @@ func _setup_switch_audio() -> void:
 		_switch_audio_player.name = "SwitchPlayer"
 		_switch_audio_player.max_distance = 5.0
 		_switch_audio_player.volume_db = -10.0
+		_switch_audio_player.bus = "SFX"
 		add_child(_switch_audio_player)
 
 func _setup_animation() -> void:

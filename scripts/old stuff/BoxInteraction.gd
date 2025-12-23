@@ -45,6 +45,7 @@ func _ensure_audio_player() -> void:
 		_audio_player.name = "BoxAudio"
 		_audio_player.max_distance = 15.0
 		_audio_player.attenuation_model = AudioStreamPlayer3D.ATTENUATION_INVERSE_DISTANCE
+		_audio_player.bus = "SFX"
 		add_child(_audio_player)
 
 func _on_interacted(_player_interaction_component: PlayerInteractionComponent) -> void:

@@ -14,3 +14,14 @@ res://scenes/UI/MissionCard.tscn
 res://scripts/ui/MissionCard.gd
 res://scripts/painting/PaintingSystem.gd
 res://scripts/painting/PlacedLayer.gd
+res://scripts/components/BreakableComponent.gd
+res://scripts/components/CarryableComponent.gd
+res://scripts/components/WeaponComponent.gd
+res://scripts/old stuff/BoomboxInteraction.gd
+res://scripts/old stuff/BoxInteraction.gd
+res://scripts/old stuff/FanController.gd
+res://scripts/old stuff/InteractionComponent.gd
+res://scripts/old stuff/LightSwitchInteraction.gd
+res://scripts/painting/PaintingSystem2D.gd
+res://scenes/UI/HUD.tscn
+res://scripts/PaintingSpawner.gd

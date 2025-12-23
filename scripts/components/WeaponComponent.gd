@@ -68,6 +68,7 @@ func _setup_weapon_audio() -> void:
 			_audio_player.name = "WeaponAudio"
 			_audio_player.max_distance = 20.0  # Louder range for gunshots
 			_audio_player.attenuation_model = AudioStreamPlayer3D.ATTENUATION_INVERSE_DISTANCE
+			_audio_player.bus = "SFX"
 			add_child(_audio_player)
 			print("WeaponComponent: Created audio player for weapon sounds")
 

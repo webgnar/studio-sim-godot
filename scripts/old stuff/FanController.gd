@@ -44,17 +44,18 @@ func _setup_audio() -> void:
 	if running_loop_sound:
 		_loop_player = AudioStreamPlayer3D.new()
 		_loop_player.name = "FanLoopAudio"
-		
+
 		# Ensure the stream is set to loop
 		if running_loop_sound is AudioStreamOggVorbis:
 			running_loop_sound.loop = true
 		elif running_loop_sound is AudioStreamWAV:
 			running_loop_sound.loop_mode = AudioStreamWAV.LOOP_FORWARD
-		
+
 		_loop_player.stream = running_loop_sound
 		_loop_player.max_distance = 15.0
 		_loop_player.attenuation_model = AudioStreamPlayer3D.ATTENUATION_INVERSE_DISTANCE
 		_loop_player.volume_db = -80.0  # Start silent for fade in
+		_loop_player.bus = "SFX"
 		add_child(_loop_player)
 
 func _on_fan_turned_on() -> void:

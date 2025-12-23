@@ -233,6 +233,7 @@ func play_sound(sound: AudioStream):
 	var audio_player = AudioStreamPlayer3D.new()
 	audio_player.stream = sound
 	audio_player.autoplay = true
+	audio_player.bus = "SFX"
 	parent_object.get_parent().add_child(audio_player)
 	audio_player.global_position = parent_object.global_position
 

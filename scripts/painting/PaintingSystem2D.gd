@@ -451,6 +451,7 @@ func spawn_sticker(world_position: Vector3):
 		audio_player.stream = random_sound
 		audio_player.max_distance = 15.0
 		audio_player.attenuation_model = AudioStreamPlayer3D.ATTENUATION_INVERSE_DISTANCE
+		audio_player.bus = "SFX"
 		add_child(audio_player)
 		audio_player.play()
 		# Auto-cleanup when sound finishes

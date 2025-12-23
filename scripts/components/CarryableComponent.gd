@@ -402,6 +402,7 @@ func _ensure_audio_player() -> void:
 		_audio_player.name = "CarryableAudio"
 		_audio_player.max_distance = 30.0  # Can hear impacts from farther away
 		_audio_player.attenuation_model = AudioStreamPlayer3D.ATTENUATION_INVERSE_DISTANCE
+		_audio_player.bus = "SFX"
 		add_child(_audio_player)
 
 # --- PUBLIC METHODS ---

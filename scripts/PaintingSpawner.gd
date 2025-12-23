@@ -19,6 +19,7 @@ func _ready() -> void:
 	add_child(spawn_sound)
 	spawn_sound.stream = load("res://sounds/picotron/release2.ogg")
 	spawn_sound.volume_db = 0.0
+	spawn_sound.bus = "SFX"
 
 func replace_painting_with_carryable(world: Node3D) -> void:
 	"""Convert current mission painting to carryable object and spawn new blank painting"""
