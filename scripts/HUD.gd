@@ -34,6 +34,10 @@ func _ready() -> void:
 	if UIManager:
 		UIManager.state_changed.connect(_on_state_changed)
 
+	# Connect to input device changes for carry hint updates
+	if InputDeviceManager:
+		InputDeviceManager.device_changed.connect(_on_input_device_changed)
+
 	# Connect to player interaction component signals
 	_connect_to_player_interaction_component()
 
@@ -75,6 +79,10 @@ func _on_state_changed(old_state, new_state) -> void:
 			# Hide HUD in menu states
 			visible = false
 
+func _on_input_device_changed(_new_device) -> void:
+	"""Refresh carry hint when input device changes"""
+	_update_carry_hint()
+
 func _on_prompt_changed(prompt_text: String) -> void:
 	if not interaction_label:
 		return
@@ -102,9 +110,14 @@ func _update_carry_hint() -> void:
 		# Check if carried object has E-key interaction
 		var carried = _player_interaction_component.carried_object
 		if carried and carried.has_e_key_interaction and carried.can_interact_while_carried:
-			carry_hint.text = "[E] " + carried.e_key_interaction_text + "  |  [Right Click] Drop  |  [Left Click] Throw"
+			var interact_glyph = InputDeviceManager.get_formatted_prompt("interact")
+			var drop_glyph = InputDeviceManager.get_formatted_prompt("action_secondary")
+			var throw_glyph = InputDeviceManager.get_formatted_prompt("action_primary")
+			carry_hint.text = "%s %s  |  %s Drop  |  %s Throw" % [interact_glyph, carried.e_key_interaction_text, drop_glyph, throw_glyph]
 		else:
-			carry_hint.text = "[Right Click] Drop  |  [Left Click] Throw"
+			var drop_glyph = InputDeviceManager.get_formatted_prompt("action_secondary")
+			var throw_glyph = InputDeviceManager.get_formatted_prompt("action_primary")
+			carry_hint.text = "%s Drop  |  %s Throw" % [drop_glyph, throw_glyph]
 		carry_hint.show()
 		
 		# Hide normal interaction prompt while carrying

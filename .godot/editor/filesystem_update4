@@ -25,3 +25,7 @@ res://scripts/old stuff/LightSwitchInteraction.gd
 res://scripts/painting/PaintingSystem2D.gd
 res://scenes/UI/HUD.tscn
 res://scripts/PaintingSpawner.gd
+res://scenes/CarryablePainting.tscn
+res://scripts/PlayerInteractionComponent.gd
+res://scenes/world.tscn
+res://scripts/HUD.gd

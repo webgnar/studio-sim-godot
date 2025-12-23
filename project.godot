@@ -41,6 +41,7 @@ SceneTransition="*res://scripts/SceneTransition.gd"
 WorldStateManager="*res://scripts/WorldStateManager.gd"
 ValidationLoadingOverlay="*res://scenes/UI/ValidationLoadingOverlay.tscn"
 AudioManager="*res://scripts/AudioManager.gd"
+InputDeviceManager="*res://scripts/InputDeviceManager.gd"
 
 [display]
 

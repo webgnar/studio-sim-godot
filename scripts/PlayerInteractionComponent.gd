@@ -54,6 +54,10 @@ func _ready() -> void:
 	outline_manager = OutlineManager.new()
 	add_child(outline_manager)
 
+	# Connect to input device changes to refresh prompts
+	if InputDeviceManager:
+		InputDeviceManager.device_changed.connect(_on_input_device_changed)
+
 func _process(_delta: float) -> void:
 	_update_interactable()
 
@@ -87,6 +91,9 @@ func _input(event: InputEvent) -> void:
 		if current_interactable:
 			var carryable = _find_carryable_component(current_interactable)
 			if carryable and not carryable.is_being_carried():
+				# Skip primary action pickup if object uses interact key for pickup
+				if carryable.use_interact_key_for_pickup:
+					return
 				# Pickup the object (don't call interact())
 				carryable.pickup(self)
 				get_viewport().set_input_as_handled()  # Prevent sticker placement
@@ -280,7 +287,9 @@ func _update_interaction_prompt() -> void:
 
 	# Show weapon controls when equipped
 	if is_weapon_equipped:
-		interaction_prompt_changed.emit("[Click] Shoot | [E] Drop Gun")
+		var shoot_glyph = InputDeviceManager.get_formatted_prompt("action_primary")
+		var drop_glyph = InputDeviceManager.get_formatted_prompt("interact")
+		interaction_prompt_changed.emit("%s Shoot | %s Drop Gun" % [shoot_glyph, drop_glyph])
 		return
 
 	# Don't show interaction prompts while carrying (show carry controls instead)
@@ -295,7 +304,7 @@ func _update_interaction_prompt() -> void:
 		if is_carrying:
 			interaction_prompt_changed.emit("")
 			return
-		interaction_prompt_changed.emit("[E] Pick Up Gun")
+		interaction_prompt_changed.emit("%s Pick Up Gun" % InputDeviceManager.get_formatted_prompt("interact"))
 		return
 	
 	# Check if object is carryable
@@ -311,23 +320,37 @@ func _update_interaction_prompt() -> void:
 
 	# If it's carryable with E-key interaction enabled, show both prompts
 	if carryable_component and carryable_component.has_e_key_interaction:
-		prompt_text = "[Click] Pick Up | [E] " + carryable_component.e_key_interaction_text
+		# Check if uses interact key for pickup
+		if carryable_component.use_interact_key_for_pickup:
+			prompt_text = "%s Pick Up | " % InputDeviceManager.get_formatted_prompt("interact") + carryable_component.e_key_interaction_text
+		else:
+			var pickup_glyph = InputDeviceManager.get_formatted_prompt("action_primary")
+			var interact_glyph = InputDeviceManager.get_formatted_prompt("interact")
+			prompt_text = "%s Pick Up | %s " % [pickup_glyph, interact_glyph] + carryable_component.e_key_interaction_text
 	# If it's only carryable (no E-key interaction), show pickup prompt
 	elif carryable_component:
-		prompt_text = "[Click] Pick Up"
+		# Check if uses interact key for pickup
+		if carryable_component.use_interact_key_for_pickup:
+			prompt_text = "%s " % InputDeviceManager.get_formatted_prompt("interact") + carryable_component.interaction_text
+		else:
+			prompt_text = "%s Pick Up" % InputDeviceManager.get_formatted_prompt("action_primary")
 	# If it has an interaction component (but not carryable), show E-key prompt
 	elif interaction_component and "interaction_text" in interaction_component:
-		prompt_text = "[E] " + interaction_component.interaction_text
+		prompt_text = "%s " % InputDeviceManager.get_formatted_prompt("interact") + interaction_component.interaction_text
 	elif "interaction_text" in current_interactable:
-		prompt_text = "[E] " + current_interactable.interaction_text
+		prompt_text = "%s " % InputDeviceManager.get_formatted_prompt("interact") + current_interactable.interaction_text
 	else:
 		# Default fallback
-		prompt_text = "[E] Interact"
-	
+		prompt_text = "%s Interact" % InputDeviceManager.get_formatted_prompt("interact")
+
 	interaction_prompt_changed.emit(prompt_text)
 
 func _rebuild_interaction_prompts() -> void:
 	"""Rebuild/update interaction prompts - called when carry state changes"""
+	_update_interaction_prompt()
+
+func _on_input_device_changed(_new_device) -> void:
+	"""Refresh interaction prompts when input device changes"""
 	_update_interaction_prompt()
 
 func _handle_interaction() -> void:

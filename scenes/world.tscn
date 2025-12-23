@@ -83,12 +83,13 @@
 [ext_resource type="AudioStream" uid="uid://bukro42figtah" path="res://sounds/fan switch.ogg" id="fan_switch"]
 [ext_resource type="AudioStream" uid="uid://bw0ig22tombxc" path="res://sounds/ministudio.ogg" id="ministudio_audio"]
 
-[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_nnsk1"]
-sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
-ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_n78cu"]
+sky_top_color = Color(0.19215687, 0.6117647, 1, 1)
+sky_horizon_color = Color(0.88278586, 0.79607755, 0.7517986, 1)
+sky_curve = 0.037500024
 
 [sub_resource type="Sky" id="Sky_rwgxs"]
-sky_material = SubResource("ProceduralSkyMaterial_nnsk1")
+sky_material = SubResource("ProceduralSkyMaterial_n78cu")
 
 [sub_resource type="Environment" id="Environment_4wyf3"]
 background_mode = 2
@@ -485,10 +486,8 @@ painting_system_2d = NodePath("../../PaintingRoot2d/CanvasViewport/CanvasRoot")
 theme = ExtResource("4_ygn2i")
 
 [node name="MissionResultsViewer" parent="GameplayUI_Layer" instance=ExtResource("81_results_viewer")]
-theme = ExtResource("4_ygn2i")
 
 [node name="MissionHUD" parent="GameplayUI_Layer" instance=ExtResource("83_hud")]
-theme = ExtResource("4_ygn2i")
 
 [node name="SaveNotification" parent="GameplayUI_Layer" instance=ExtResource("78_save_notif")]
 

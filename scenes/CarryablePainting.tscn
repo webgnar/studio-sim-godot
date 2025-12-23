@@ -57,6 +57,7 @@ script = ExtResource("1_hanging")
 carry_distance_offset = 0.1
 gravity_while_carrying = 0.3
 enable_rotation_while_carried = true
+use_interact_key_for_pickup = true
 throw_power = 20.0
 
 [node name="StretcherBarsPhysics" type="Node3D" parent="."]

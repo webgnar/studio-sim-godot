@@ -219,8 +219,8 @@ zack10.tres::Resource/PaintingMission::-1::1765217133::0::1::::<><><>0<>0<><>::
 zack10_ref.png::CompressedTexture2D::1417489425440523119::1765217133::1765218674::1::::<><><>0<>0<>def32621839a09e1e13346efff694af3<>res://.godot/imported/zack10_ref.png-5f9a6386500159b5fea3780ee3f1579a.s3tc.ctex::
 zack11.tres::Resource/PaintingMission::-1::1765218033::0::1::::<><><>0<>0<><>::
 zack11_ref.png::CompressedTexture2D::2601680885712539142::1765218032::1765218746::1::::<><><>0<>0<>aef619c237e392a9492762dd61d42efa<>res://.godot/imported/zack11_ref.png-a92b7294d1ca56b651794d2030a62e7a.s3tc.ctex::
-::res://scenes/::1766434959
-CarryablePainting.tscn::PackedScene::7123436180156521915::1766348203::0::1::::<><><>0<>0<><>::uid://do8vkeu1l02i1::::res://scripts/components/PaintingHangingComponent.gd<>uid://dvkl3cic5pjcq::::res://scripts/CarryablePainting.gd<>uid://guuhi66wtyyp::::res://models/paintings/stretcher.glb
+::res://scenes/::1766450217
+CarryablePainting.tscn::PackedScene::7123436180156521915::1766450217::0::1::::<><><>0<>0<><>::uid://do8vkeu1l02i1::::res://scripts/components/PaintingHangingComponent.gd<>uid://dvkl3cic5pjcq::::res://scripts/CarryablePainting.gd<>uid://guuhi66wtyyp::::res://models/paintings/stretcher.glb
 human.tscn::PackedScene::1698309852409355828::1761713575::0::1::::<><><>0<>0<><>::uid://sx0bao2oqis7::::res://models/player/human skeleton rewrite.glb
 humanrig_blender.tscn::PackedScene::466415374710567118::1765219016::0::1::::<><><>0<>0<><>::uid://b4jc5oc0kffk::::res://models/blender/humanrig.blend
 mirror.tscn::PackedScene::4019299454856459561::1765319481::0::1::::<><><>0<>0<><>::uid://djltcowfnfdh7::::res://scripts/old stuff/mirror.gd<>uid://dxwj5n7bxo3mk::::res://scripts/old stuff/MirrorInteraction.gd<>uid://depuckvrgdvcl::::res://materials/humanskin.tres<>uid://bagboitufgv5v::::res://materials/skeletonskin.tres
@@ -253,14 +253,14 @@ glass_shard_particle.tscn::PackedScene::7212571221998723431::1765352157::0::1:::
 power_cord.tscn::PackedScene::1842388826387152175::1762059710::0::1::::<><><>0<>0<><>::uid://dqp07gb58nlbf::::res://scripts/components/PowerCord.gd<>uid://d1d8fhujnbpfy::::res://scripts/components/PowerCordPlugComponent.gd
 test_box.tscn::PackedScene::8507331950054414776::1762244667::0::1::::<><><>0<>0<><>::uid://fdlsxcxabv2k::::res://materials/styrafoam.tres<>uid://cbwg344irqecy::::res://scripts/components/CarryableComponent.gd
 wall_outlet.tscn::PackedScene::5595455512475695192::1762144610::0::1::::<><><>0<>0<><>::uid://db8764j2674fq::::res://models/props/outlet_box.glb<>uid://dlksqcf0lda80::::res://scripts/components/OutletComponent.gd<>uid://b01s70tsty74h::::res://sounds/plugIn.ogg<>uid://8wuf6nkvi1wl::::res://sounds/plugOut.ogg
-::res://scenes/UI/::1766439165
-HUD.tscn::PackedScene::5636917421566811801::1765396540::0::1::::<><><>0<>0<><>::uid://d2t2wfmgd2wmn::::res://scripts/HUD.gd<>uid://cbtaxh5m7udor::::res://themes/ui_theme.tres
+::res://scenes/UI/::1766450045
+HUD.tscn::PackedScene::5636917421566811801::1766450045::0::1::::<><><>0<>0<><>::uid://d2t2wfmgd2wmn::::res://scripts/HUD.gd<>uid://cbtaxh5m7udor::::res://themes/ui_theme.tres
 MissionAuthoringUI.tscn::PackedScene::7062903132044626753::1766436798::0::1::::<><><>0<>0<><>::uid://2inpd3it5ava::::res://scripts/ui/MissionAuthoringUI.gd
-MissionCard.tscn::PackedScene::122332735435807::1765351231::0::1::::<><><>0<>0<><>::uid://cbtaxh5m7udor::::res://themes/ui_theme.tres<>uid://dwqkmoohl71o1::::res://scripts/ui/MissionCard.gd
+MissionCard.tscn::PackedScene::122332735435807::1766440245::0::1::::<><><>0<>0<><>::uid://cbtaxh5m7udor::::res://themes/ui_theme.tres<>uid://dwqkmoohl71o1::::res://scripts/ui/MissionCard.gd
 MissionHUD.tscn::PackedScene::7114290115851373107::1766436798::0::1::::<><><>0<>0<><>::uid://bmkoimsaxok4p::::res://scripts/ui/MissionHUD.gd<>uid://cbtaxh5m7udor::::res://themes/ui_theme.tres
 MissionResultsViewer.tscn::PackedScene::5967748653026713781::1766438350::0::1::::<><><>0<>0<><>::uid://cbtaxh5m7udor::::res://themes/ui_theme.tres<>uid://bt23ft5ot5o0p::::res://scripts/ui/MissionResultsViewer.gd<>uid://dor0d4yiulgi5::::res://sprites/ui/arrow.png
-MissionSelectionUI.tscn::PackedScene::6151634729923225660::1766439165::0::1::::<><><>0<>0<><>::uid://cbtaxh5m7udor::::res://themes/ui_theme.tres<>uid://cv2b3i1u2t6le::::res://scripts/ui/MissionSelectionUI.gd<>uid://dgf58oxfs3km7::::res://sprites/ui/startmission.png
-OptionsMenu.tscn::PackedScene::3995565818925431499::1766436569::0::1::::<><><>0<>0<><>::uid://c8va3jufkln28::::res://scripts/OptionsMenu.gd<>uid://cbtaxh5m7udor::::res://themes/ui_theme.tres<>uid://ht7rkfvqubdm::::res://sounds/picotron/buttonnav.ogg<>uid://cobqa7fyriw4h::::res://sounds/picotron/openmenu.ogg<>uid://cyvlgci21yq6s::::res://sounds/picotron/closemenu.ogg<>uid://cakrgermhdo0f::::res://sounds/picotron/tick.ogg
+MissionSelectionUI.tscn::PackedScene::6151634729923225660::1766440112::0::1::::<><><>0<>0<><>::uid://cbtaxh5m7udor::::res://themes/ui_theme.tres<>uid://cv2b3i1u2t6le::::res://scripts/ui/MissionSelectionUI.gd<>uid://dgf58oxfs3km7::::res://sprites/ui/startmission.png
+OptionsMenu.tscn::PackedScene::3995565818925431499::1766441085::0::1::::<><><>0<>0<><>::uid://c8va3jufkln28::::res://scripts/OptionsMenu.gd<>uid://cbtaxh5m7udor::::res://themes/ui_theme.tres<>uid://ht7rkfvqubdm::::res://sounds/picotron/buttonnav.ogg<>uid://dor0d4yiulgi5::::res://sprites/ui/arrow.png<>uid://cobqa7fyriw4h::::res://sounds/picotron/openmenu.ogg<>uid://cyvlgci21yq6s::::res://sounds/picotron/closemenu.ogg<>uid://cakrgermhdo0f::::res://sounds/picotron/tick.ogg
 PaintingUI.tscn::PackedScene::3512487317911262242::1766346333::0::1::::<><><>0<>0<><>::uid://phrbgxs6gg70::::res://scripts/painting/PaintingUI.gd<>uid://cbtaxh5m7udor::::res://themes/ui_theme.tres
 MainMenuHub.tscn::PackedScene::1235198034266647916::1766436874::0::1::::<><><>0<>0<><>::uid://dqj01gx5srst5::::res://scripts/ui/MainMenuHub.gd
 SaveNotification.tscn::PackedScene::5868296059204937601::1765737548::0::1::::<><><>0<>0<><>::uid://cob1q5vivnssv::::res://scripts/ui/SaveNotification.gd<>uid://dry0785qgvpe::::res://sprites/ui/gamesaved.png
@@ -270,7 +270,7 @@ TitleScreenUI.tscn::PackedScene::-1::1766435093::0::1::::<><><>0<>0<><>::
 ValidationDebugOverlay.tscn::PackedScene::-1::1765350053::0::1::::<><><>0<>0<><>::res://scripts/ui/ValidationDebugOverlay.gd
 ValidationLoadingOverlay.tscn::PackedScene::-1::1765349139::0::1::::<><><>0<>0<><>::res://scripts/ui/ValidationLoadingOverlay.gd
 ValidationResultUI.tscn::PackedScene::598769645583896637::1765387305::0::1::::<><><>0<>0<><>::uid://ci6lixgsw804b::::res://scripts/ui/ValidationResultUI.gd
-::res://scripts/::1766436722
+::res://scripts/::1766450207
 AudioManager.gd::GDScript::1683297059755285547::1766349912::0::1::::<>Node<><>0<>0<><>::
 Bullet.gd::GDScript::4494185522286921364::1765049008::0::1::::Bullet<>RigidBody3D<><>0<>0<><>::
 CameraManager.gd::GDScript::5090965087567803578::1764536223::0::1::::<>Node<><>0<>0<><>::
@@ -279,12 +279,12 @@ CarryablePainting.gd::GDScript::8654589551705045776::1765325295::0::1::::Carryab
 DebugPaintingConverter.gd::GDScript::6359550447124289428::1764786410::0::1::::<>Node<><>0<>0<><>::
 HUD.gd::GDScript::9095262934336027845::1764307313::0::1::::<>CanvasLayer<><>0<>0<><>::
 MissionManager.gd::GDScript::3660156020748544969::1764747232::0::1::::<>Node<><>0<>0<><>::
-OptionsMenu.gd::GDScript::7132475646353091587::1766436722::0::1::::<>Control<><>0<>0<><>::
+OptionsMenu.gd::GDScript::7132475646353091587::1766440768::0::1::::<>Control<><>0<>0<><>::
 OutlineManager.gd::GDScript::1775829841741582502::1764784877::0::1::::OutlineManager<>Node<><>0<>0<><>::
-PaintingSpawner.gd::GDScript::4348115639158510571::1766017078::0::1::::<>Node<><>0<>0<><>::
+PaintingSpawner.gd::GDScript::4348115639158510571::1766449609::0::1::::<>Node<><>0<>0<><>::
 PlayerAnimation.gd::GDScript::3994514209863087763::1765431866::0::1::::PlayerAnimation<>Node<><>0<>0<><>::
 PlayerController.gd::GDScript::9198226878400670027::1766033495::0::1::::<>CharacterBody3D<><>0<>0<><>::
-PlayerInteractionComponent.gd::GDScript::7370778824892455188::1765727172::0::1::::PlayerInteractionComponent<>Node3D<><>0<>0<><>::
+PlayerInteractionComponent.gd::GDScript::7370778824892455188::1766450207::0::1::::PlayerInteractionComponent<>Node3D<><>0<>0<><>::
 PlayerLaserBeam.gd::GDScript::5626436999992710999::1762250067::0::1::::<>Node3D<><>0<>0<><>::
 ProjectileNail.gd::GDScript::4871427963888925413::1765503809::0::1::::ProjectileNail<>RigidBody3D<><>0<>0<><>::
 SaveComputerInteraction.gd::GDScript::2362745093935830615::1765728664::0::1::::<>InteractionComponent<><>0<>0<><>::
@@ -295,10 +295,10 @@ UIManager.gd::GDScript::3514930045252719971::1765686447::0::1::::<>Node<><>0<>0<
 WorldSetup.gd::GDScript::5696947886217552476::1766007267::0::1::::<>Node3D<><>0<>0<><>::
 WorldStateManager.gd::GDScript::6399081172495642325::1766007702::0::1::::<>Node<><>0<>0<><>::
 ::res://scripts/autoload/::1763966144
-::res://scripts/components/::1766072700
-BreakableComponent.gd::GDScript::7750467157037148420::1765729744::0::1::::BreakableComponent<>Node<><>0<>0<><>::
+::res://scripts/components/::1766450185
+BreakableComponent.gd::GDScript::7750467157037148420::1766442263::0::1::::BreakableComponent<>Node<><>0<>0<><>::
 ButtonInteractionComponent.gd::GDScript::2347783508189598798::1764319320::0::1::::ButtonInteractionComponent<>InteractionComponent<><>0<>0<><>::
-CarryableComponent.gd::GDScript::4888862394162802364::1765724696::0::1::::CarryableComponent<>InteractionComponent<><>0<>0<><>::
+CarryableComponent.gd::GDScript::4888862394162802364::1766450185::0::1::::CarryableComponent<>InteractionComponent<><>0<>0<><>::
 FanCarryableComponent.gd::GDScript::8443843982772970901::1764652853::0::1::::FanCarryableComponent<>CarryableComponent<><>0<>0<><>::
 NailComponent.gd::GDScript::4441405670969247821::1766071589::0::1::::NailComponent<>Node3D<><>0<>0<><>::
 NailGunComponent.gd::GDScript::348921503879503899::1765503607::0::1::::NailGunComponent<>WeaponComponent<><>0<>0<><>::
@@ -309,48 +309,48 @@ PaintingSubmitButton.gd::GDScript::3656833438015909209::1764751840::0::1::::Pain
 PowerCord.gd::GDScript::8314824603915427019::1764017870::0::1::::PowerCord<>Node3D<><>0<>0<><>::
 PowerCordPlugComponent.gd::GDScript::8992378107647029622::1765260927::0::1::::PowerCordPlugComponent<>CarryableComponent<><>0<>0<><>::
 PoweredDeviceComponent.gd::GDScript::1456986440546763239::1764108774::0::1::::PoweredDeviceComponent<>InteractionComponent<><>0<>0<><>::
-WeaponComponent.gd::GDScript::7155124831635694981::1765727191::0::1::::WeaponComponent<>InteractionComponent<><>0<>0<><>::
+WeaponComponent.gd::GDScript::7155124831635694981::1766442196::0::1::::WeaponComponent<>InteractionComponent<><>0<>0<><>::
 ::res://scripts/examples/::1762127939
 RadioCarryable.gd::GDScript::4525922979392504025::1762128919::0::1::::<>CarryableComponent<><>0<>0<><>::
-::res://scripts/old stuff/::1765688360
+::res://scripts/old stuff/::1766442157
 ArtboxInteraction.gd::GDScript::4557307963735547696::1762156121::0::1::::ArtboxInteraction<>InteractionComponent<><>0<>0<><>::
-BoomboxInteraction.gd::GDScript::4988966616744065771::1765688360::0::1::::BoomboxInteraction<>CarryableComponent<><>0<>0<><>::
-BoxInteraction.gd::GDScript::273279990403006889::1764655455::0::1::::BoxInteraction<>InteractionComponent<><>0<>0<><>::
+BoomboxInteraction.gd::GDScript::4988966616744065771::1766442103::0::1::::BoomboxInteraction<>CarryableComponent<><>0<>0<><>::
+BoxInteraction.gd::GDScript::273279990403006889::1766442127::0::1::::BoxInteraction<>InteractionComponent<><>0<>0<><>::
 BoxInteractionManager.gd::GDScript::7387510967602913199::1761798196::0::1::::<>Node3D<><>0<>0<><>::
 BreakableWindow.gd::GDScript::3004887878576599296::1762241265::0::1::::<>StaticBody3D<><>0<>0<><>::
 ClickableArtbox.gd::GDScript::460695635899977091::1761708414::0::1::::ClickableArtbox<>Node3D<><>0<>0<><>::
 ClickableBoombox.gd::GDScript::1188790335038169318::1762044269::0::1::::ClickableBoombox<>Node3D<><>0<>0<><>::
 ClickableBox.gd::GDScript::6874669803522600303::1761728346::0::1::::ClickableBox<>Node3D<><>0<>0<><>::
 ClickableLightSwitch.gd::GDScript::3116256717129241458::1764109174::0::1::::ClickableLightSwitch<>Node3D<><>0<>0<><>::
-FanController.gd::GDScript::7006668473176767425::1764652870::0::1::::<>Node3D<><>0<>0<><>::
-InteractionComponent.gd::GDScript::3026879056774981478::1764735010::0::1::::InteractionComponent<>Node3D<><>0<>0<><>::
-LightSwitchInteraction.gd::GDScript::5163246021437411620::1764109173::0::1::::LightSwitchInteraction<>InteractionComponent<><>0<>0<><>::
+FanController.gd::GDScript::7006668473176767425::1766442145::0::1::::<>Node3D<><>0<>0<><>::
+InteractionComponent.gd::GDScript::3026879056774981478::1766442157::0::1::::InteractionComponent<>Node3D<><>0<>0<><>::
+LightSwitchInteraction.gd::GDScript::5163246021437411620::1766442116::0::1::::LightSwitchInteraction<>InteractionComponent<><>0<>0<><>::
 mirror.gd::GDScript::7814827763123973682::1765318265::0::1::::<>MeshInstance3D<><>0<>0<><>::
 MirrorInteraction.gd::GDScript::8819622524409455506::1764652852::0::1::::MirrorInteraction<>InteractionComponent<><>0<>0<><>::
 mirror_2.gd::GDScript::1296850971002468943::1761113793::0::1::::<>MeshInstance3D<><>0<>0<><>::
 mirror_new.gd::GDScript::3779223385012197752::1761119308::0::1::::<>MeshInstance3D<><>0<>0<><>::
 SimpleInteraction.gd::GDScript::8571012623619763262::1762043942::0::1::::SimpleInteraction<>InteractionComponent<><>0<>0<><>::
-::res://scripts/painting/::1766019899
+::res://scripts/painting/::1766442237
 HistogramRenderer.gd::GDScript::8096184577495570444::1765347978::0::1::::HistogramRenderer<>RefCounted<><>0<>0<><>::
 PaintingLayerDefinition.gd::GDScript::4323075456140053493::1764108643::0::1::::PaintingLayerDefinition<>Resource<><>0<>0<><>::
 PaintingMission.gd::GDScript::4772593952741219278::1764733803::0::1::::PaintingMission<>Resource<><>0<>0<><>::
 PaintingModeManager.gd::GDScript::7917640498477300897::1766007303::0::1::::<>Node<><>0<>0<><>::
 PaintingRoot2D.gd::GDScript::7412969537653748795::1764787511::0::1::::<>Node3D<><>0<>0<><>::
-PaintingSystem2D.gd::GDScript::6362320871364204246::1766004083::0::1::::PaintingSystem2D<>Node2D<><>0<>0<><>::
-PaintingSystem.gd::GDScript::7827893091696522952::1766007291::0::1::::PaintingSystem<>Node3D<><>0<>0<><>::
+PaintingSystem2D.gd::GDScript::6362320871364204246::1766442237::0::1::::PaintingSystem2D<>Node2D<><>0<>0<><>::
+PaintingSystem.gd::GDScript::7827893091696522952::1766441323::0::1::::PaintingSystem<>Node3D<><>0<>0<><>::
 PaintingUI.gd::GDScript::1068317625049949329::1766346329::0::1::::PaintingUI<>Control<><>0<>0<><>::
 PlacedLayer2D.gd::GDScript::4414825213457623402::1765265438::0::1::::PlacedLayer2D<>RefCounted<><>0<>0<><>::
-PlacedLayer.gd::GDScript::1047604470423822422::1763675314::0::1::::PlacedLayer<>RefCounted<><>0<>0<><>::
+PlacedLayer.gd::GDScript::1047604470423822422::1766441294::0::1::::PlacedLayer<>RefCounted<><>0<>0<><>::
 PlacedStickerData.gd::GDScript::6921697289510411432::1764733927::0::1::::PlacedStickerData<>Resource<><>0<>0<><>::
 ValidationResult.gd::GDScript::4996310058925922904::1764790052::0::1::::ValidationResult<>RefCounted<><>0<>0<><>::
 VisualValidator.gd::GDScript::4169772428084211328::1765350335::0::1::::VisualValidator<>RefCounted<><>0<>0<><>::
 ::res://scripts/tools/::1764404832
 create_power_cord.gd::GDScript::1820023332295702997::1762057172::0::1::::<>EditorScript<><>0<>1<><>::
 MissionAuthoringTool.gd::GDScript::6880012840404432544::1764404832::0::1::::MissionAuthoringTool<>Node<><>0<>0<><>::
-::res://scripts/ui/::1766439179
+::res://scripts/ui/::1766440315
 MainMenuHub.gd::GDScript::8302427656593457044::1765686447::0::1::::MainMenuHub<>Control<><>0<>0<><>::
 MissionAuthoringUI.gd::GDScript::1912430109288517738::1765268352::0::1::::<>Control<><>0<>0<><>::
-MissionCard.gd::GDScript::8737076011923695214::1764016736::0::1::::MissionCard<>PanelContainer<><>0<>0<><>::
+MissionCard.gd::GDScript::8737076011923695214::1766440315::0::1::::MissionCard<>PanelContainer<><>0<>0<><>::
 MissionHUD.gd::GDScript::3250195567258036849::1764747239::0::1::::MissionHUD<>Control<><>0<>0<><>::
 MissionResultsViewer.gd::GDScript::3777456961892783481::1766438289::0::1::::MissionResultsViewer<>Control<><>0<>0<><>::
 MissionSelectionUI.gd::GDScript::6302656463663888190::1766439179::0::1::::MissionSelectionUI<>Control<><>0<>0<><>::
@@ -401,7 +401,7 @@ sticker3.ogg::AudioStreamOggVorbis::7830857524279957236::1765735412::1765735412:
 sticker4.ogg::AudioStreamOggVorbis::1152824999652457875::1765735412::1765735412::1::::<><><>0<>0<>430f2112c055550adfa4deda173bb791<>res://.godot/imported/sticker4.ogg-e2eaec452fbe5475830d86accc55be55.oggvorbisstr::
 sticker5.ogg::AudioStreamOggVorbis::2784672444781205456::1765735412::1765735412::1::::<><><>0<>0<>169386aa8d569e310dbc37b84edbc485<>res://.godot/imported/sticker5.ogg-519633cea0d4e197076cbc26056f1d9b.oggvorbisstr::
 tick.ogg::AudioStreamOggVorbis::4794528285477049175::1765691700::1765691704::1::::<><><>0<>0<>998e50cba754501e6027e111b58f74dc<>res://.godot/imported/tick.ogg-ac1bc737f7bc244a3eabe98ac51b871c.oggvorbisstr::
-::res://sprites/::1765324611
+::res://sprites/::1766450633
 brickswhite.jpg::CompressedTexture2D::602923287757623317::1761017159::1764320742::1::::<><><>0<>0<>bcf847059ba83faef0511159f5eaf65a<>res://.godot/imported/brickswhite.jpg-2ef5dd5939b6d64fae0101b6da7744e6.s3tc.ctex::
 brick_bump.jpg::CompressedTexture2D::7798957486458330038::1761081225::1764320742::1::::<><><>0<>0<>a76eebbb65fcb20d3ea63625ab7b230e<>res://.godot/imported/brick_bump.jpg-e109f37b2b87e2f26ecda5f0e9cff7ff.s3tc.ctex::
 brick_diffuse.jpg::CompressedTexture2D::5115407613002048939::1761081225::1764320742::1::::<><><>0<>0<>69007223d83760cffa25078f91be5558<>res://.godot/imported/brick_diffuse.jpg-bab9fb7c0b6137326e8893ff33801de5.s3tc.ctex::
@@ -417,6 +417,7 @@ foam.png::CompressedTexture2D::1633181389508837941::1762068455::1764320742::1:::
 hvac.jpg::CompressedTexture2D::4392440591127623322::1761088993::1764320742::1::::<><><>0<>0<>bcc1cbaa8b6ca079d5afc326d7f9a3f9<>res://.godot/imported/hvac.jpg-baab1f859a495efe5bc536520cea0c0a.s3tc.ctex::
 icon.png::CompressedTexture2D::5913759182731481375::1762040805::1764320742::1::::<><><>0<>0<>8e673ffbe00fa94e9209060e08700cac<>res://.godot/imported/icon.png-82ea131e750a89467e27b5ff9b11ce77.ctex::
 muzzle.png::CompressedTexture2D::9172330391277253856::1765005132::1765005163::1::::<><><>0<>0<>a65bee3af62ad1ccd680d8ff01f09b4b<>res://.godot/imported/muzzle.png-6442cae21bb0613904ee9befa56842c1.s3tc.ctex::
+sky.jpg::CompressedTexture2D::7001201669118757673::1766450633::1766450652::1::::<><><>0<>0<>f2fe7e080fdb3b746836fe3c3933667b<>res://.godot/imported/sky.jpg-005f2015eaf36db57333e08017d197cc.s3tc.ctex::
 wall-new.jpg::CompressedTexture2D::363969419416231652::1761080624::1764320742::1::::<><><>0<>0<>60350e38965b2c5ef7fee413f58bcb3d<>res://.godot/imported/wall-new.jpg-518fc2c0ee7b90866fe430ebb1bf4a02.s3tc.ctex::
 wall.jpg::CompressedTexture2D::3576362921534608400::1761017159::1764320742::1::::<><><>0<>0<>e01e93ce466a798dbd19afbe03d21013<>res://.godot/imported/wall.jpg-406628462c90f45281003b1ed7b7c9b4.s3tc.ctex::
 wood.jpg::CompressedTexture2D::4871391901317986273::1761017159::1764320742::1::::<><><>0<>0<>91368d915d38b9400277a807314b8b56<>res://.godot/imported/wood.jpg-01240e422271cfa6bf6b21d4165d0295.s3tc.ctex::
@@ -472,7 +473,7 @@ floorboards.png::CompressedTexture2D::7369776862252411323::1765324618::176532497
 Brute_Logo.png::CompressedTexture2D::6178808757222810128::1761802209::1764320742::1::::<><><>0<>0<>bc09da19648bb8b34dcbd36a48f3617a<>res://.godot/imported/Brute_Logo.png-831b44461856e34079ed047c063b5736.s3tc.ctex::
 TexturesCom_Plastic_PolypropyleneRough_1K_normal.png::CompressedTexture2D::6351666760769426::1761802358::1764320742::1::::<><><>0<>0<>5f29d34cbfa83a809603fee3c076aded<>res://.godot/imported/TexturesCom_Plastic_PolypropyleneRough_1K_normal.png-a5014a568e65abade0f2a8c562b3c48e.s3tc.ctex::
 TexturesCom_Plastic_PolypropyleneRough_1K_roughness.png::CompressedTexture2D::4919399928477311562::1761802358::1764320742::1::::<><><>0<>0<>b3178693ed7968bf986936008799dd6e<>res://.godot/imported/TexturesCom_Plastic_PolypropyleneRough_1K_roughness.png-eba77725611ece0e4578b3e50690eedd.s3tc.ctex::
-::res://sprites/ui/::1766439521
+::res://sprites/ui/::1766439522
 abortmission.png::CompressedTexture2D::4965024382454210391::1764747434::1764747434::1::::<><><>0<>0<>9af7fa233274b58361e436dcc00196ae<>res://.godot/imported/abortmission.png-1dd613540a8efc6f47fdb3216ea60060.ctex::
 arrow.png::CompressedTexture2D::8178525126674758878::1764657492::1764658431::1::::<><><>0<>0<>606c6642cc6d51db27f3e3a06f876e30<>res://.godot/imported/arrow.png-7da85c35d2703a58700340f54e830501.ctex::
 gamesaved.png::CompressedTexture2D::247164538517585926::1765728557::1765728614::1::::<><><>0<>0<>24eca9278c00c2b5f43e1878f1c19c86<>res://.godot/imported/gamesaved.png-165949572f2bb113909f74e0ae67830d.ctex::
@@ -541,6 +542,6 @@ texture_7_albedo.png::CompressedTexture2D::8502316676920590848::1762070414::1764
 texture_8_albedo.png::CompressedTexture2D::3729404504844806188::1762070414::1764320742::1::::<><><>0<>0<>7c0cebb71e692e15af649d0ab1dd630c<>res://.godot/imported/texture_8_albedo.png-4bbe4b7702c3ee1beb468c5de480c948.s3tc.ctex::
 texture_hvac_albedo.png::CompressedTexture2D::5143359380379924727::1762070414::1764320742::1::::<><><>0<>0<>f937f77e5781acfc7920698f0fc00a60<>res://.godot/imported/texture_hvac_albedo.png-03bc70a78c0b447455249ca3d474fd93.s3tc.ctex::
 texture_texture_1_albedo.png::CompressedTexture2D::3824769149247691282::1762070414::1764320742::1::::<><><>0<>0<>f5d360df0fdb2ff6e54fa14736f8033c<>res://.godot/imported/texture_texture_1_albedo.png-d6811323a7c6fb5600d040b1ee91ccec.s3tc.ctex::
-::res://themes/::1766436569
-ui_theme.tres::Theme::4882294876207544217::1766436569::0::1::::<><><>0<>0<><>::uid://tmjyio0w6cu0::::res://fonts/studio-sim.ttf
+::res://themes/::1766439779
+ui_theme.tres::Theme::4882294876207544217::1766439779::0::1::::<><><>0<>0<><>::uid://sb7vac4222ai::::res://sprites/ui/slider button.png<>uid://tmjyio0w6cu0::::res://fonts/studio-sim.ttf<>uid://cqd8ayvnhrj6w::::res://sprites/ui/slider buttondisabled.png<>uid://d4m1wkmejf136::::res://sprites/ui/tick.png
 ::res://web exports/::1765344154

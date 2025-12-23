@@ -18,6 +18,7 @@ signal e_key_interacted(player_interaction_component: PlayerInteractionComponent
 @export var gravity_while_carrying: float = 0.2 ## Gravity multiplier while carrying (0 = none, 1 = full, affects heavy objects)
 @export var enable_rotation_while_carried: bool = false ## Allow rotating object with T/R/Z/X keys while carrying
 @export var rotation_speed_deg_per_sec: float = 90.0 ## Rotation speed in degrees per second (matches 2D painting system)
+@export var use_interact_key_for_pickup: bool = false ## If true, use E/Interact key instead of click/primary action for pickup
 
 @export_group("Throw Settings")
 @export var throw_power: float = 15.0 ## Force applied when throwing
