@@ -438,6 +438,12 @@ func spawn_sticker(world_position: Vector3):
 
 	next_order += 1
 
+	# Track sticker placement in Steam
+	if SteamManager:
+		SteamManager.increment_stat("STAT_STICKERS_PLACED")
+		if SteamManager.get_stat("STAT_STICKERS_PLACED") >= 1000:
+			SteamManager.unlock_achievement("ACH_PAINTER")
+
 	# Select the newly placed sticker
 	selected_layer = placed
 	

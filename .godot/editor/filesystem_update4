@@ -1,31 +1,15 @@
-res://scripts/OptionsMenu.gd
-res://scripts/TitleScreenController.gd
-res://scenes/UI/OptionsMenu.tscn
+res://scripts/HUD.gd
+res://scripts/MissionManager.gd
+res://scripts/UIManager.gd
+res://scripts/painting/PaintingSystem2D.gd
+res://scripts/painting/PaintingSystem.gd
+res://scenes/UI/HUD.tscn
+res://scripts/InputDeviceManager.gd
+res://scripts/SteamManager.gd
 res://themes/ui_theme.tres
 res://models/particles/new_array_mesh.tres
 res://models/particles/new_array_mesh2.tres
 res://models/particles/new_array_mesh3.tres
-res://scenes/UI/MissionHUD.tscn
-res://scenes/UI/MissionResultsViewer.tscn
-res://scenes/UI/MissionAuthoringUI.tscn
-res://scripts/ui/MissionSelectionUI.gd
-res://scripts/ui/MissionResultsViewer.gd
-res://scenes/UI/MissionCard.tscn
-res://scripts/ui/MissionCard.gd
-res://scripts/painting/PaintingSystem.gd
-res://scripts/painting/PlacedLayer.gd
-res://scripts/components/BreakableComponent.gd
-res://scripts/components/CarryableComponent.gd
 res://scripts/components/WeaponComponent.gd
-res://scripts/old stuff/BoomboxInteraction.gd
-res://scripts/old stuff/BoxInteraction.gd
-res://scripts/old stuff/FanController.gd
-res://scripts/old stuff/InteractionComponent.gd
-res://scripts/old stuff/LightSwitchInteraction.gd
-res://scripts/painting/PaintingSystem2D.gd
-res://scenes/UI/HUD.tscn
-res://scripts/PaintingSpawner.gd
-res://scenes/CarryablePainting.tscn
+res://scenes/NailGun.tscn
 res://scripts/PlayerInteractionComponent.gd
-res://scenes/world.tscn
-res://scripts/HUD.gd

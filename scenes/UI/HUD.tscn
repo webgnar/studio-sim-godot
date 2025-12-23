@@ -1,7 +1,14 @@
-[gd_scene load_steps=3 format=3 uid="uid://cmkthatew8dv2"]
+[gd_scene load_steps=10 format=3 uid="uid://cmkthatew8dv2"]
 
 [ext_resource type="Script" uid="uid://d2t2wfmgd2wmn" path="res://scripts/HUD.gd" id="1"]
 [ext_resource type="Theme" uid="uid://cbtaxh5m7udor" path="res://themes/ui_theme.tres" id="2"]
+[ext_resource type="Texture2D" uid="uid://bnb0x8h7n08xg" path="res://sprites/ui/leftright.png" id="3_a0qax"]
+[ext_resource type="Texture2D" uid="uid://uq3w6yycu034" path="res://sprites/ui/x.png" id="3_gawfp"]
+[ext_resource type="Texture2D" uid="uid://domflkr6l2qs" path="res://sprites/ui/updown.png" id="4_gawfp"]
+[ext_resource type="Texture2D" uid="uid://dc06s6fukhq2a" path="res://sprites/ui/lb.png" id="5_tohwf"]
+[ext_resource type="Texture2D" uid="uid://g4asi3np5tvu" path="res://sprites/ui/rb.png" id="6_e8ns6"]
+[ext_resource type="Texture2D" uid="uid://canne3e2geuxw" path="res://sprites/ui/rt.png" id="7_m51yh"]
+[ext_resource type="Texture2D" uid="uid://bkayr38ljn01r" path="res://sprites/ui/lt.png" id="8_8d6le"]
 
 [node name="HUD" type="CanvasLayer"]
 script = ExtResource("1")
@@ -14,16 +21,17 @@ offset_left = -203.0
 offset_bottom = 100.0
 grow_horizontal = 0
 
-[node name="InteractionPrompt" type="Label" parent="CenterContainer"]
+[node name="InteractionPrompt" type="HBoxContainer" parent="CenterContainer"]
 layout_mode = 2
 theme = ExtResource("2")
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-theme_override_constants/shadow_offset_x = 2
-theme_override_constants/shadow_offset_y = 2
-text = "[E] Interact"
-horizontal_alignment = 1
-vertical_alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="CenterContainer/InteractionPrompt"]
+layout_mode = 2
+texture = ExtResource("3_gawfp")
+
+[node name="Label" type="Label" parent="CenterContainer/InteractionPrompt"]
+layout_mode = 2
+text = "Interact"
 
 [node name="Crosshair" type="Control" parent="."]
 layout_mode = 3
@@ -113,3 +121,228 @@ offset_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(1, 1, 1, 0.8)
+
+[node name="PaintingHint" type="VBoxContainer" parent="."]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -400.0
+offset_top = 20.0
+offset_right = -20.0
+offset_bottom = 200.0
+grow_horizontal = 0
+theme_override_constants/separation = 4
+
+[node name="RotateLine" type="HBoxContainer" parent="PaintingHint"]
+layout_mode = 2
+alignment = 2
+
+[node name="RotateRightIcon" type="TextureRect" parent="PaintingHint/RotateLine"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+texture = ExtResource("3_a0qax")
+stretch_mode = 5
+
+[node name="RotateLabel" type="Label" parent="PaintingHint/RotateLine"]
+layout_mode = 2
+theme = ExtResource("2")
+text = " Rotate"
+
+[node name="ScaleLine" type="HBoxContainer" parent="PaintingHint"]
+layout_mode = 2
+alignment = 2
+
+[node name="ScaleDownIcon" type="TextureRect" parent="PaintingHint/ScaleLine"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+texture = ExtResource("4_gawfp")
+stretch_mode = 5
+
+[node name="ScaleLabel" type="Label" parent="PaintingHint/ScaleLine"]
+layout_mode = 2
+theme = ExtResource("2")
+text = " Scale"
+
+[node name="CycleLine" type="HBoxContainer" parent="PaintingHint"]
+layout_mode = 2
+alignment = 2
+
+[node name="CyclePrevIcon" type="TextureRect" parent="PaintingHint/CycleLine"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+texture = ExtResource("5_tohwf")
+stretch_mode = 5
+
+[node name="CycleLabel" type="Label" parent="PaintingHint/CycleLine"]
+layout_mode = 2
+theme = ExtResource("2")
+text = " Cycle"
+
+[node name="CycleNextIcon" type="TextureRect" parent="PaintingHint/CycleLine"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+texture = ExtResource("6_e8ns6")
+stretch_mode = 5
+
+[node name="PlaceUndoLine" type="HBoxContainer" parent="PaintingHint"]
+layout_mode = 2
+alignment = 2
+
+[node name="PlaceIcon" type="TextureRect" parent="PaintingHint/PlaceUndoLine"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+texture = ExtResource("7_m51yh")
+stretch_mode = 5
+
+[node name="PlaceText" type="Label" parent="PaintingHint/PlaceUndoLine"]
+layout_mode = 2
+theme = ExtResource("2")
+text = " Place"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PaintingHint"]
+layout_mode = 2
+alignment = 2
+
+[node name="UndoIcon" type="TextureRect" parent="PaintingHint/HBoxContainer"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+texture = ExtResource("8_8d6le")
+stretch_mode = 5
+
+[node name="UndoText" type="Label" parent="PaintingHint/HBoxContainer"]
+layout_mode = 2
+theme = ExtResource("2")
+text = " Undo"
+
+[node name="CarryHint" type="VBoxContainer" parent="."]
+visible = false
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -400.0
+offset_top = 20.0
+offset_right = -20.0
+offset_bottom = 200.0
+grow_horizontal = 0
+theme_override_constants/separation = 4
+
+[node name="RotateYLine" type="HBoxContainer" parent="CarryHint"]
+layout_mode = 2
+alignment = 2
+
+[node name="RotateYLeftIcon" type="TextureRect" parent="CarryHint/RotateYLine"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+stretch_mode = 5
+
+[node name="RotateYLeftLabel" type="Label" parent="CarryHint/RotateYLine"]
+layout_mode = 2
+theme = ExtResource("2")
+text = "[R]"
+
+[node name="Slash1" type="Label" parent="CarryHint/RotateYLine"]
+layout_mode = 2
+theme = ExtResource("2")
+text = " / "
+
+[node name="RotateYRightIcon" type="TextureRect" parent="CarryHint/RotateYLine"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+stretch_mode = 5
+
+[node name="RotateYRightLabel" type="Label" parent="CarryHint/RotateYLine"]
+layout_mode = 2
+theme = ExtResource("2")
+text = "[T]"
+
+[node name="RotateYLabel" type="Label" parent="CarryHint/RotateYLine"]
+layout_mode = 2
+theme = ExtResource("2")
+text = " Rotate Y"
+
+[node name="RotateXLine" type="HBoxContainer" parent="CarryHint"]
+layout_mode = 2
+alignment = 2
+
+[node name="RotateXDownIcon" type="TextureRect" parent="CarryHint/RotateXLine"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+stretch_mode = 5
+
+[node name="RotateXDownLabel" type="Label" parent="CarryHint/RotateXLine"]
+layout_mode = 2
+theme = ExtResource("2")
+text = "[X]"
+
+[node name="Slash2" type="Label" parent="CarryHint/RotateXLine"]
+layout_mode = 2
+theme = ExtResource("2")
+text = " / "
+
+[node name="RotateXUpIcon" type="TextureRect" parent="CarryHint/RotateXLine"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+stretch_mode = 5
+
+[node name="RotateXUpLabel" type="Label" parent="CarryHint/RotateXLine"]
+layout_mode = 2
+theme = ExtResource("2")
+text = "[Z]"
+
+[node name="RotateXLabel" type="Label" parent="CarryHint/RotateXLine"]
+layout_mode = 2
+theme = ExtResource("2")
+text = " Rotate X"
+
+[node name="InteractLine" type="HBoxContainer" parent="CarryHint"]
+layout_mode = 2
+alignment = 2
+
+[node name="InteractLabel" type="Label" parent="CarryHint/InteractLine"]
+layout_mode = 2
+theme = ExtResource("2")
+text = "[E]"
+
+[node name="InteractText" type="Label" parent="CarryHint/InteractLine"]
+layout_mode = 2
+theme = ExtResource("2")
+text = " Place"
+
+[node name="DropThrowLine" type="HBoxContainer" parent="CarryHint"]
+layout_mode = 2
+alignment = 2
+
+[node name="DropIcon" type="TextureRect" parent="CarryHint/DropThrowLine"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+stretch_mode = 5
+
+[node name="DropLabel" type="Label" parent="CarryHint/DropThrowLine"]
+layout_mode = 2
+theme = ExtResource("2")
+text = "[Right Click]"
+
+[node name="DropText" type="Label" parent="CarryHint/DropThrowLine"]
+layout_mode = 2
+theme = ExtResource("2")
+text = " Drop"
+
+[node name="Separator" type="Label" parent="CarryHint/DropThrowLine"]
+layout_mode = 2
+theme = ExtResource("2")
+text = "  |  "
+
+[node name="ThrowIcon" type="TextureRect" parent="CarryHint/DropThrowLine"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+stretch_mode = 5
+
+[node name="ThrowLabel" type="Label" parent="CarryHint/DropThrowLine"]
+layout_mode = 2
+theme = ExtResource("2")
+text = "[Left Click]"
+
+[node name="ThrowText" type="Label" parent="CarryHint/DropThrowLine"]
+layout_mode = 2
+theme = ExtResource("2")
+text = " Throw"

@@ -1,5 +1,6 @@
-HBoxContainer
 Label
+TextureRect
+HBoxContainer
 HSlider
 AnimationPlayer
 Marker3D
@@ -11,5 +12,3 @@ WeaponComponent
 CSGPolygon3D
 StaticBody3D
 Node3D
-InteractionComponent
-MeshInstance3D

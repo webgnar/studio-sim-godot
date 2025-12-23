@@ -18,6 +18,9 @@ var current_mission: PaintingMission = null
 # Format: {"mission_id": {"completed": true, "grade": "A", "best_score": 85.5}}
 var progression: Dictionary = {}
 
+# Mission timing for Steam achievements
+var mission_start_time: int = 0
+
 func _ready():
 	ensure_paintings_directory()
 	load_all_missions()
@@ -93,6 +96,7 @@ func start_mission(mission: PaintingMission):
 		return
 
 	current_mission = mission
+	mission_start_time = Time.get_ticks_msec()  # Track mission start for Steam achievements
 	mission_started.emit(mission)
 
 	# Transition to IN_MISSION state
@@ -120,6 +124,7 @@ func complete_mission(result: ValidationResult, latest_painting_path: String = "
 		}
 
 	var mission_data = progression[mission_id]
+	var was_completed_before = mission_data["completed"]  # Track for Steam achievements
 
 	# Always update latest painting path
 	if latest_painting_path != "":
@@ -137,8 +142,24 @@ func complete_mission(result: ValidationResult, latest_painting_path: String = "
 	if result.success:
 		mission_data["completed"] = true
 		mission_completed.emit(current_mission, result)
+
+		# Calculate mission duration for Steam
+		var mission_duration_sec: float = 0.0
+		if mission_start_time > 0:
+			mission_duration_sec = (Time.get_ticks_msec() - mission_start_time) / 1000.0
+
+		# Update Steam achievements and stats
+		if SteamManager:
+			_update_steam_on_mission_complete(
+				current_mission, result, score, grade,
+				mission_duration_sec, was_completed_before
+			)
 	else:
 		mission_failed.emit(current_mission, result)
+
+		# Track failed attempts in Steam
+		if SteamManager:
+			SteamManager.increment_stat("STAT_MISSIONS_FAILED")
 
 	save_progression()
 
@@ -214,3 +235,73 @@ func load_progression():
 			push_error("MissionManager: Failed to parse progression JSON!")
 	else:
 		push_error("MissionManager: Failed to open progression file!")
+
+func _update_steam_on_mission_complete(mission: PaintingMission, result: ValidationResult, score: float, grade: String, duration_sec: float, was_completed_before: bool):
+	"""Handle all Steam achievement/stat updates for mission completion"""
+
+	# Update statistics
+	if not was_completed_before:
+		SteamManager.increment_stat("STAT_MISSIONS_COMPLETED")
+
+	# Track perfect missions
+	if result.is_perfect():
+		SteamManager.increment_stat("STAT_MISSIONS_PERFECT")
+
+	# Track S-rank missions
+	if grade == "S":
+		SteamManager.increment_stat("STAT_MISSIONS_S_RANK")
+
+	# Update best score
+	var current_best = SteamManager.get_stat("STAT_BEST_SCORE")
+	if int(score) > current_best:
+		SteamManager.set_stat_int("STAT_BEST_SCORE", int(score))
+
+	# Update total score
+	SteamManager.increment_stat("STAT_TOTAL_SCORE", int(score))
+
+	# Achievement: First mission
+	if SteamManager.get_stat("STAT_MISSIONS_COMPLETED") >= 1:
+		SteamManager.unlock_achievement("ACH_FIRST_MISSION")
+
+	# Achievement: First perfect
+	if result.is_perfect():
+		SteamManager.unlock_achievement("ACH_FIRST_PERFECT")
+
+	# Achievement: 5 missions
+	if SteamManager.get_stat("STAT_MISSIONS_COMPLETED") >= 5:
+		SteamManager.unlock_achievement("ACH_MISSIONS_5")
+
+	# Achievement: 10 missions
+	if SteamManager.get_stat("STAT_MISSIONS_COMPLETED") >= 10:
+		SteamManager.unlock_achievement("ACH_MISSIONS_10")
+
+	# Achievement: All missions (14 total based on manifest)
+	if SteamManager.get_stat("STAT_MISSIONS_COMPLETED") >= 14:
+		SteamManager.unlock_achievement("ACH_MISSIONS_ALL")
+
+	# Achievement: First S rank
+	if grade == "S":
+		SteamManager.unlock_achievement("ACH_GRADE_S")
+
+	# Achievement: 5 S ranks
+	if SteamManager.get_stat("STAT_MISSIONS_S_RANK") >= 5:
+		SteamManager.unlock_achievement("ACH_GRADE_S_5")
+
+	# Achievement: All missions S rank (14 total)
+	if SteamManager.get_stat("STAT_MISSIONS_S_RANK") >= 14:
+		SteamManager.unlock_achievement("ACH_PERFECTIONIST")
+
+	# Achievement: Complete hard mission (difficulty 8+)
+	if mission.difficulty >= 8:
+		SteamManager.unlock_achievement("ACH_HARD_MISSION")
+
+		# Achievement: S rank on hard mission
+		if grade == "S":
+			SteamManager.unlock_achievement("ACH_HARD_PERFECT")
+
+	# Achievement: Speedrunner (under 60 seconds)
+	if duration_sec > 0.0 and duration_sec < 60.0:
+		SteamManager.unlock_achievement("ACH_SPEEDRUNNER")
+
+	# Store all changes to Steam
+	SteamManager.store_steam_data()

@@ -48,23 +48,29 @@ func _input(event: InputEvent) -> void:
 
 func _initialize_glyph_map() -> void:
 	"""Initialize the mapping of input actions to display glyphs"""
+	# Icon paths for gamepad glyphs
+	var icon_path = "res://sprites/ui/"
+
 	glyph_map = {
 		# Primary interaction key
 		"interact": {
 			"keyboard": "E",
-			"gamepad": "X"  # Button 2 on Xbox = X
+			"gamepad": "X",
+			"gamepad_icon": icon_path + "x.png"
 		},
 
 		# Primary action (shoot/throw/pick up)
 		"action_primary": {
 			"keyboard": "Left Click",
-			"gamepad": "RT"  # Right Trigger (axis 5)
+			"gamepad": "RT",
+			"gamepad_icon": icon_path + "rt.png"
 		},
 
 		# Secondary action (drop)
 		"action_secondary": {
 			"keyboard": "Right Click",
-			"gamepad": "LT"  # Left Trigger (axis 4)
+			"gamepad": "LT",
+			"gamepad_icon": icon_path + "lt.png"
 		},
 
 		# Jump
@@ -85,14 +91,40 @@ func _initialize_glyph_map() -> void:
 			"gamepad": "B"  # Button 1 on Xbox = B
 		},
 
+		# Rotation controls (used for both 2D painting and 3D carryable rotation)
+		"rotate_clockwise": {
+			"keyboard": "T",
+			"gamepad": "D-Pad Right",
+			"gamepad_icon": icon_path + "leftright.png"
+		},
+		"rotate_counter": {
+			"keyboard": "R",
+			"gamepad": "D-Pad Left",
+			"gamepad_icon": icon_path + "leftright.png"
+		},
+
+		# Scale controls (2D painting size, also used for X-axis rotation on carryables)
+		"scale_sticker_up": {
+			"keyboard": "Z",
+			"gamepad": "D-Pad Up",
+			"gamepad_icon": icon_path + "updown.png"
+		},
+		"scale_sticker_down": {
+			"keyboard": "X",
+			"gamepad": "D-Pad Down",
+			"gamepad_icon": icon_path + "updown.png"
+		},
+
 		# Sticker cycling
 		"cycle_sticker_next": {
-			"keyboard": "Mouse Wheel Down",
-			"gamepad": "RB"  # Right Bumper (button 10)
+			"keyboard": "2",
+			"gamepad": "RB",
+			"gamepad_icon": icon_path + "rb.png"
 		},
 		"cycle_sticker_prev": {
-			"keyboard": "Mouse Wheel Up",
-			"gamepad": "LB"  # Left Bumper (button 9)
+			"keyboard": "1",
+			"gamepad": "LB",
+			"gamepad_icon": icon_path + "lb.png"
 		},
 
 		# Pause/start
@@ -134,3 +166,30 @@ func get_formatted_prompt(action_name: String, label: String = "") -> String:
 		return "[%s]" % glyph
 	else:
 		return "[%s] %s" % [glyph, label]
+
+func get_bbcode_glyph(action_name: String) -> String:
+	"""
+	Get a BBCode-formatted glyph for RichTextLabel
+	For keyboard: returns text in brackets like "[T]"
+	For gamepad: returns inline image like "[img=20]res://sprites/ui/leftright.png[/img]"
+	"""
+	if not glyph_map.has(action_name):
+		push_warning("InputDeviceManager: Unknown action '%s'" % action_name)
+		return "[?]"
+
+	var action_glyphs = glyph_map[action_name]
+
+	match current_device:
+		DeviceType.KEYBOARD_MOUSE:
+			var text = action_glyphs.get("keyboard", "?")
+			return "[%s]" % text
+		DeviceType.GAMEPAD:
+			var icon_path = action_glyphs.get("gamepad_icon", "")
+			if icon_path != "":
+				return "[img=20]%s[/img]" % icon_path
+			else:
+				# Fallback to text if no icon
+				var text = action_glyphs.get("gamepad", "?")
+				return "[%s]" % text
+		_:
+			return "[?]"

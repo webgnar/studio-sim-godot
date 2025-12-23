@@ -4,9 +4,12 @@ extends CanvasLayer
 ## Automatically connects to PlayerInteractionComponent signals
 
 # --- NODE REFERENCES ---
-@onready var interaction_label: Label = $CenterContainer/InteractionPrompt
+@onready var interaction_prompt: HBoxContainer = $CenterContainer/InteractionPrompt
+@onready var interaction_label: Label = $CenterContainer/InteractionPrompt/InteractionLabel
+@onready var interaction_icon: TextureRect = $CenterContainer/InteractionPrompt/InteractionIcon
 @onready var crosshair: Control = $Crosshair
-@onready var carry_hint: Label = $CarryHint  # Will show carry controls when holding object
+@onready var carry_hint: VBoxContainer = $CarryHint  # Will show carry controls when holding object
+@onready var painting_hint: VBoxContainer = $PaintingHint  # Will show painting controls when in 2D painting mode
 
 # --- PRIVATE VARIABLES ---
 var _player: CharacterBody3D
@@ -23,12 +26,16 @@ func _ready() -> void:
 		return
 
 	# Hide interaction prompt initially
-	if interaction_label:
-		interaction_label.hide()
+	if interaction_prompt:
+		interaction_prompt.hide()
 
 	# Hide carry hint initially
 	if carry_hint:
 		carry_hint.hide()
+
+	# Hide painting hint initially
+	if painting_hint:
+		painting_hint.hide()
 
 	# Connect to UIManager state changes
 	if UIManager:
@@ -66,6 +73,9 @@ func _process(_delta: float) -> void:
 	# Update carry hint based on carrying state
 	_update_carry_hint()
 
+	# Update painting hint based on painting mode
+	_update_painting_hint()
+
 # --- SIGNAL HANDLERS ---
 
 func _on_state_changed(old_state, new_state) -> void:
@@ -80,65 +90,224 @@ func _on_state_changed(old_state, new_state) -> void:
 			visible = false
 
 func _on_input_device_changed(_new_device) -> void:
-	"""Refresh carry hint when input device changes"""
+	"""Refresh all hints when input device changes"""
 	_update_carry_hint()
+	_update_painting_hint()
 
 func _on_prompt_changed(prompt_text: String) -> void:
-	if not interaction_label:
+	if not interaction_label or not interaction_prompt:
 		return
-	
+
+	# Don't show interaction prompt if painting or carrying
+	if _is_2d_painting_active() or (_player_interaction_component and _player_interaction_component.is_carrying):
+		interaction_prompt.hide()
+		return
+
 	if prompt_text == "":
-		interaction_label.hide()
+		interaction_prompt.hide()
 	else:
 		# Display the prompt directly (already formatted by PlayerInteractionComponent)
 		interaction_label.text = prompt_text
-		interaction_label.show()
+		interaction_prompt.show()
 
 func _on_object_detected(_interactable: Node3D) -> void:
 	pass
 
 func _on_nothing_detected() -> void:
-	if interaction_label:
-		interaction_label.hide()
+	if interaction_prompt:
+		interaction_prompt.hide()
 
 func _update_carry_hint() -> void:
 	"""Update the carry controls hint based on whether player is carrying something"""
 	if not _player_interaction_component or not carry_hint:
 		return
-	
+
 	if _player_interaction_component.is_carrying:
-		# Check if carried object has E-key interaction
 		var carried = _player_interaction_component.carried_object
-		if carried and carried.has_e_key_interaction and carried.can_interact_while_carried:
-			var interact_glyph = InputDeviceManager.get_formatted_prompt("interact")
-			var drop_glyph = InputDeviceManager.get_formatted_prompt("action_secondary")
-			var throw_glyph = InputDeviceManager.get_formatted_prompt("action_primary")
-			carry_hint.text = "%s %s  |  %s Drop  |  %s Throw" % [interact_glyph, carried.e_key_interaction_text, drop_glyph, throw_glyph]
+
+		# Check if carried object has rotation enabled
+		var has_rotation = false
+		if carried and "enable_rotation_while_carried" in carried:
+			has_rotation = carried.enable_rotation_while_carried
+
+		# Show/hide rotation controls based on whether rotation is enabled
+		var rotate_y_line = carry_hint.get_node("RotateYLine")
+		var rotate_x_line = carry_hint.get_node("RotateXLine")
+
+		if has_rotation:
+			_update_button_display(
+				rotate_y_line.get_node("RotateYLeftIcon"),
+				rotate_y_line.get_node("RotateYLeftLabel"),
+				"rotate_counter"
+			)
+			_update_button_display(
+				rotate_y_line.get_node("RotateYRightIcon"),
+				rotate_y_line.get_node("RotateYRightLabel"),
+				"rotate_clockwise"
+			)
+			_update_button_display(
+				rotate_x_line.get_node("RotateXDownIcon"),
+				rotate_x_line.get_node("RotateXDownLabel"),
+				"scale_sticker_down"
+			)
+			_update_button_display(
+				rotate_x_line.get_node("RotateXUpIcon"),
+				rotate_x_line.get_node("RotateXUpLabel"),
+				"scale_sticker_up"
+			)
+			rotate_y_line.show()
+			rotate_x_line.show()
 		else:
-			var drop_glyph = InputDeviceManager.get_formatted_prompt("action_secondary")
-			var throw_glyph = InputDeviceManager.get_formatted_prompt("action_primary")
-			carry_hint.text = "%s Drop  |  %s Throw" % [drop_glyph, throw_glyph]
+			rotate_y_line.hide()
+			rotate_x_line.hide()
+
+		# Show/hide E-key interaction if available
+		var interact_line = carry_hint.get_node("InteractLine")
+		if carried and carried.has_e_key_interaction and carried.can_interact_while_carried:
+			interact_line.get_node("InteractLabel").text = InputDeviceManager.get_formatted_prompt("interact")
+			interact_line.get_node("InteractText").text = " " + carried.e_key_interaction_text
+			interact_line.show()
+		else:
+			interact_line.hide()
+
+		# Always show drop/throw controls
+		var drop_throw_line = carry_hint.get_node("DropThrowLine")
+		_update_button_display(
+			drop_throw_line.get_node("DropIcon"),
+			drop_throw_line.get_node("DropLabel"),
+			"action_secondary"
+		)
+		_update_button_display(
+			drop_throw_line.get_node("ThrowIcon"),
+			drop_throw_line.get_node("ThrowLabel"),
+			"action_primary"
+		)
+		drop_throw_line.show()
+
 		carry_hint.show()
-		
-		# Hide normal interaction prompt while carrying
-		if interaction_label:
-			interaction_label.hide()
+
+		# Hide other prompts while carrying
+		if interaction_prompt:
+			interaction_prompt.hide()
+		if painting_hint:
+			painting_hint.hide()
 	else:
 		carry_hint.hide()
+
+func _is_2d_painting_active() -> bool:
+	"""Check if player is currently in 2D painting mode"""
+	if not PaintingModeManager or not PaintingModeManager.painting_system_2d:
+		return false
+
+	var painting_2d = PaintingModeManager.painting_system_2d
+
+	# Check if preview sprite exists and is visible
+	if painting_2d.preview_sprite and painting_2d.preview_sprite.visible:
+		return true
+
+	return false
+
+func _update_button_display(icon_node: TextureRect, label_node: Label, action_name: String) -> void:
+	"""Update a button's icon and label based on current input device"""
+	var is_gamepad = InputDeviceManager.current_device == InputDeviceManager.DeviceType.GAMEPAD
+	var action_data = InputDeviceManager.glyph_map.get(action_name, {})
+
+	if is_gamepad and action_data.has("gamepad_icon"):
+		# Gamepad mode with icon
+		icon_node.texture = load(action_data["gamepad_icon"])
+		icon_node.show()
+		label_node.hide()
+	else:
+		# Keyboard mode (text)
+		var text = action_data.get("keyboard", "?")
+		label_node.text = "[%s]" % text
+		label_node.show()
+		icon_node.hide()
+
+func _update_painting_hint() -> void:
+	"""Update painting controls hint when in 2D painting mode"""
+	if not painting_hint:
+		return
+
+	var is_painting = _is_2d_painting_active()
+
+	if is_painting:
+		var is_gamepad = InputDeviceManager.current_device == InputDeviceManager.DeviceType.GAMEPAD
+
+		# Update Rotate line
+		var rotate_icon = painting_hint.get_node("RotateLine/RotateRightIcon")
+		var rotate_label = painting_hint.get_node("RotateLine/RotateLabel")
+		if is_gamepad:
+			rotate_icon.show()
+			rotate_label.text = " Rotate"
+		else:
+			rotate_icon.hide()
+			rotate_label.text = "[T] Rotate"
+
+		# Update Scale line
+		var scale_icon = painting_hint.get_node("ScaleLine/ScaleDownIcon")
+		var scale_label = painting_hint.get_node("ScaleLine/ScaleLabel")
+		if is_gamepad:
+			scale_icon.show()
+			scale_label.text = " Scale"
+		else:
+			scale_icon.hide()
+			scale_label.text = "[X] / [Z] Scale"
+
+		# Update Cycle line (has two icons)
+		var cycle_prev_icon = painting_hint.get_node("CycleLine/CyclePrevIcon")
+		var cycle_next_icon = painting_hint.get_node("CycleLine/CycleNextIcon")
+		var cycle_label = painting_hint.get_node("CycleLine/CycleLabel")
+		if is_gamepad:
+			cycle_prev_icon.show()
+			cycle_next_icon.show()
+			cycle_label.text = " Cycle"
+		else:
+			cycle_prev_icon.hide()
+			cycle_next_icon.hide()
+			cycle_label.text = "[1] / [2] Cycle"
+
+		# Update Place line
+		var place_icon = painting_hint.get_node("PlaceUndoLine/PlaceIcon")
+		var place_text = painting_hint.get_node("PlaceUndoLine/PlaceText")
+		if is_gamepad:
+			place_icon.show()
+			place_text.text = " Place"
+		else:
+			place_icon.hide()
+			place_text.text = "[Left Click] Place"
+
+		# Update Undo line
+		var undo_icon = painting_hint.get_node("HBoxContainer/UndoIcon")
+		var undo_text = painting_hint.get_node("HBoxContainer/UndoText")
+		if is_gamepad:
+			undo_icon.show()
+			undo_text.text = " Undo"
+		else:
+			undo_icon.hide()
+			undo_text.text = "[Right Click] Undo"
+
+		painting_hint.show()
+
+		# Hide normal interaction prompt (replace mode)
+		if interaction_prompt:
+			interaction_prompt.hide()
+	else:
+		painting_hint.hide()
 
 # --- PUBLIC METHODS ---
 
 ## Show a custom message on the HUD
 func show_message(message: String, duration: float = 2.0) -> void:
-	if not interaction_label:
+	if not interaction_label or not interaction_prompt:
 		return
 	
 	interaction_label.text = message
-	interaction_label.show()
+	interaction_prompt.show()
 	
 	if duration > 0:
 		await get_tree().create_timer(duration).timeout
-		interaction_label.hide()
+		interaction_prompt.hide()
 
 ## Update crosshair visibility
 func set_crosshair_visible(show_crosshair: bool) -> void:
