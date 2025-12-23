@@ -16,6 +16,10 @@ var camera: Camera3D = null
 # Raycast settings
 @export var raycast_distance: float = 10.0
 
+# Placement cooldown (prevents trigger spamming)
+@export var placement_cooldown: float = 0.15  ## Cooldown in seconds between sticker placements
+var last_placement_time: float = 0.0
+
 # Audio
 var tick_sound: AudioStreamPlayer
 var tick_sound_layer2: AudioStreamPlayer
@@ -106,6 +110,11 @@ func _unhandled_input(event):
 
 	# Handle placement action
 	if should_place:
+		# Cooldown check to prevent trigger spamming
+		var current_time = Time.get_ticks_msec() / 1000.0
+		if current_time - last_placement_time < placement_cooldown:
+			return
+
 		var raycast_result = _perform_unified_raycast()
 		if not raycast_result:
 			return
@@ -114,12 +123,14 @@ func _unhandled_input(event):
 			# Route to 2D system
 			if painting_system_2d:
 				painting_system_2d.handle_primary_action(raycast_result)
+				last_placement_time = current_time
 				get_viewport().set_input_as_handled()
 		else:
 			# Route to 3D system (with interactable check)
 			if not _is_raycast_hitting_interactable(raycast_result):
 				if painting_system_3d:
 					painting_system_3d.handle_primary_action(raycast_result)
+					last_placement_time = current_time
 					get_viewport().set_input_as_handled()
 
 	# Handle undo action
