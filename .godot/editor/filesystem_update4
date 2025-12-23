@@ -1,15 +1,1 @@
 res://scripts/HUD.gd
-res://scripts/MissionManager.gd
-res://scripts/UIManager.gd
-res://scripts/painting/PaintingSystem2D.gd
-res://scripts/painting/PaintingSystem.gd
-res://scenes/UI/HUD.tscn
-res://scripts/InputDeviceManager.gd
-res://scripts/SteamManager.gd
-res://themes/ui_theme.tres
-res://models/particles/new_array_mesh.tres
-res://models/particles/new_array_mesh2.tres
-res://models/particles/new_array_mesh3.tres
-res://scripts/components/WeaponComponent.gd
-res://scenes/NailGun.tscn
-res://scripts/PlayerInteractionComponent.gd

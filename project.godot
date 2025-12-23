@@ -207,3 +207,14 @@ scale_sticker_down={
 3d/time_before_sleep=0.2
 3d/solver/contact_max_allowed_penetration=0.001
 3d/physics_ticks_per_second=60
+
+[steam]
+
+initialization/app_id=0
+initialization/initialize_on_startup=false
+initialization/embed_callbacks=false
+multiplayer_peer/max_channels=4
+
+[steam_server]
+
+initialization/embed_callbacks=false

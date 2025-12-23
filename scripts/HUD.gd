@@ -5,8 +5,8 @@ extends CanvasLayer
 
 # --- NODE REFERENCES ---
 @onready var interaction_prompt: HBoxContainer = $CenterContainer/InteractionPrompt
-@onready var interaction_label: Label = $CenterContainer/InteractionPrompt/InteractionLabel
-@onready var interaction_icon: TextureRect = $CenterContainer/InteractionPrompt/InteractionIcon
+@onready var interaction_icon: TextureRect = $CenterContainer/InteractionPrompt/TextureRect
+@onready var interaction_label: Label = $CenterContainer/InteractionPrompt/Label
 @onready var crosshair: Control = $Crosshair
 @onready var carry_hint: VBoxContainer = $CarryHint  # Will show carry controls when holding object
 @onready var painting_hint: VBoxContainer = $PaintingHint  # Will show painting controls when in 2D painting mode
@@ -14,6 +14,7 @@ extends CanvasLayer
 # --- PRIVATE VARIABLES ---
 var _player: CharacterBody3D
 var _player_interaction_component: PlayerInteractionComponent
+var _current_prompt_text: String = ""  # Store current prompt for device switching
 
 # --- GODOT METHODS ---
 
@@ -93,9 +94,23 @@ func _on_input_device_changed(_new_device) -> void:
 	"""Refresh all hints when input device changes"""
 	_update_carry_hint()
 	_update_painting_hint()
+	_update_interaction_prompt()
 
 func _on_prompt_changed(prompt_text: String) -> void:
-	if not interaction_label or not interaction_prompt:
+	# Store the prompt text for device switching
+	_current_prompt_text = prompt_text
+	_update_interaction_prompt()
+
+func _on_object_detected(_interactable: Node3D) -> void:
+	pass
+
+func _on_nothing_detected() -> void:
+	_current_prompt_text = ""
+	_update_interaction_prompt()
+
+func _update_interaction_prompt() -> void:
+	"""Update the interaction prompt based on current device and prompt text"""
+	if not interaction_label or not interaction_prompt or not interaction_icon:
 		return
 
 	# Don't show interaction prompt if painting or carrying
@@ -103,19 +118,32 @@ func _on_prompt_changed(prompt_text: String) -> void:
 		interaction_prompt.hide()
 		return
 
-	if prompt_text == "":
+	if _current_prompt_text == "":
 		interaction_prompt.hide()
+		return
+
+	# Check if we're in gamepad mode
+	var is_gamepad = InputDeviceManager.current_device == InputDeviceManager.DeviceType.GAMEPAD
+
+	if is_gamepad:
+		# Show icon, update label (strip the "[X]" prefix from prompt text)
+		var action_data = InputDeviceManager.glyph_map.get("interact", {})
+		if action_data.has("gamepad_icon"):
+			interaction_icon.texture = load(action_data["gamepad_icon"])
+			interaction_icon.show()
+
+			# Strip the glyph prefix (e.g., "[X] " or "[E] ") from the text
+			var display_text = _current_prompt_text
+			var regex = RegEx.new()
+			regex.compile("^\\[.*?\\]\\s*")
+			display_text = regex.sub(display_text, "", true)
+			interaction_label.text = display_text
 	else:
-		# Display the prompt directly (already formatted by PlayerInteractionComponent)
-		interaction_label.text = prompt_text
-		interaction_prompt.show()
+		# Keyboard mode - hide icon, show full text with keyboard glyph
+		interaction_icon.hide()
+		interaction_label.text = _current_prompt_text
 
-func _on_object_detected(_interactable: Node3D) -> void:
-	pass
-
-func _on_nothing_detected() -> void:
-	if interaction_prompt:
-		interaction_prompt.hide()
+	interaction_prompt.show()
 
 func _update_carry_hint() -> void:
 	"""Update the carry controls hint based on whether player is carrying something"""
