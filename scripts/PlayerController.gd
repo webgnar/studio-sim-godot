@@ -75,9 +75,8 @@ func _ready() -> void:
 		push_error("Camera not found! Please check scene structure.")
 		return
 
-	# Capture the mouse when the game starts (deferred to ensure proper initialization)
-	# This hides the cursor and keeps it centered.
-	call_deferred("_initialize_mouse_capture")
+	# Mouse capture is now handled by UIManager to avoid conflicts
+	# PlayerController only recaptures when clicking in-game after ESC
 	
 	# Store the original camera position for head bob calculations
 	_original_camera_position = _camera.position
@@ -119,64 +118,17 @@ func _notification(what: int) -> void:
 					DebugLogger.write_log("[PlayerController] Window focused - recapturing mouse")
 		NOTIFICATION_WM_WINDOW_FOCUS_OUT:
 			# Optional: Log when window loses focus
-			if DebugLogger and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
+			var mouse_locked = (Input.mouse_mode == Input.MOUSE_MODE_CAPTURED or
+								Input.mouse_mode == Input.MOUSE_MODE_CONFINED_HIDDEN)
+			if DebugLogger and mouse_locked:
 				DebugLogger.write_log("[PlayerController] Window focus lost")
 
-func _initialize_mouse_capture() -> void:
-	"""Initialize mouse capture with robust handling"""
-	# CRITICAL: Wait for the OS to finish the exclusive fullscreen transition
-	# The window mode is set to exclusive fullscreen in project settings,
-	# but the OS needs time to complete the transition before mouse capture will work.
-	# Without this wait, the OS silently denies capture and mouse input breaks.
-	await get_tree().process_frame
-	await get_tree().process_frame  # Extra frame for safety
-
-	# Wait a bit for UIManager to complete initialization
-	await get_tree().create_timer(0.1).timeout
-
-	# Only capture if UIManager says we should be in gameplay mode
-	if UIManager and UIManager.current_state == UIManager.GameState.GAMEPLAY:
-		await _verify_and_capture_mouse()
-		if DebugLogger:
-			DebugLogger.write_log("[PlayerController] Mouse capture initialized in GAMEPLAY state")
-	else:
-		if DebugLogger:
-			var state_name = "UNKNOWN" if not UIManager else str(UIManager.current_state)
-			DebugLogger.write_log("[PlayerController] Waiting for GAMEPLAY state (current: %s)" % state_name)
-
-func _verify_and_capture_mouse() -> void:
-	"""Verify mouse capture with retry mechanism"""
-	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-
-	# Verify capture succeeded (deferred to next frame)
-	await get_tree().process_frame
-
-	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
-		push_warning("[PlayerController] Mouse capture failed! Retrying...")
-		if DebugLogger:
-			DebugLogger.write_log("[PlayerController] Mouse capture FAILED - retrying")
-		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-
-		# Verify again
-		await get_tree().process_frame
-		if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
-			print("[PlayerController] Mouse captured successfully on retry")
-			if DebugLogger:
-				DebugLogger.write_log("[PlayerController] Mouse captured on RETRY")
-		else:
-			push_error("[PlayerController] Mouse capture failed after retry!")
-			if DebugLogger:
-				DebugLogger.write_log("[PlayerController] Mouse capture FAILED after retry")
-	else:
-		print("[PlayerController] Mouse captured successfully")
-		if DebugLogger:
-			DebugLogger.write_log("[PlayerController] Mouse captured successfully")
-
 func _recapture_mouse_on_focus() -> void:
-	"""Recapture mouse when window regains focus, with frame wait for fullscreen stability"""
-	# Wait one frame to ensure exclusive fullscreen mode is stable
-	await get_tree().process_frame
-	await _verify_and_capture_mouse()
+	"""Recapture mouse when window regains focus via UIManager"""
+	# Use UIManager to ensure proper fullscreen and capture handling
+	if UIManager and UIManager.current_state == UIManager.GameState.GAMEPLAY:
+		# Re-trigger GAMEPLAY state to recapture mouse properly
+		UIManager.change_state(UIManager.GameState.GAMEPLAY)
 
 func _setup_interaction_component() -> void:
 	# Check if PlayerInteractionComponent already exists as a child
@@ -361,40 +313,50 @@ func _unhandled_input(event: InputEvent) -> void:
 	# Accumulate mouse input into target rotation (smoothing applied in _physics_process)
 	if event is InputEventMouseMotion and _camera != null:
 		var mouse_motion := event as InputEventMouseMotion
-		# Only process mouse look if mouse is captured
-		if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
-			# Accumulate input into target rotation
-			_target_rot.x -= mouse_motion.relative.y * sensitivity  # Pitch (vertical)
-			_target_rot.y -= mouse_motion.relative.x * sensitivity  # Yaw (horizontal)
+		# Process mouse look if mouse is captured OR confined_hidden (macOS compatibility)
+		var mouse_locked = (Input.mouse_mode == Input.MOUSE_MODE_CAPTURED or
+							Input.mouse_mode == Input.MOUSE_MODE_CONFINED_HIDDEN)
 
-			# Clamp the target pitch to prevent flipping
-			_target_rot.x = clamp(_target_rot.x, deg_to_rad(-80), deg_to_rad(80))
+		if mouse_locked:
+			# If we're getting zero relative motion, the capture isn't working properly
+			if mouse_motion.relative.length() < 0.01:
+				push_warning("[PlayerController] Mouse mode %d but getting zero relative motion! Position: %s" % [Input.mouse_mode, mouse_motion.position])
+				if DebugLogger:
+					DebugLogger.write_log("[PlayerController] Mouse capture BROKEN - mode: %d, relative: %s, position: %s" % [Input.mouse_mode, mouse_motion.relative, mouse_motion.position])
+			else:
+				# Accumulate input into target rotation
+				_target_rot.x -= mouse_motion.relative.y * sensitivity  # Pitch (vertical)
+				_target_rot.y -= mouse_motion.relative.x * sensitivity  # Yaw (horizontal)
+
+				# Clamp the target pitch to prevent flipping
+				_target_rot.x = clamp(_target_rot.x, deg_to_rad(-80), deg_to_rad(80))
 
 	# --- MOUSE CLICK HANDLING ---
 	# Handle mouse clicks to recapture mouse or interact with objects
 	if event is InputEventMouseButton and _camera != null:
 		var mouse_event := event as InputEventMouseButton
 		if mouse_event.button_index == MOUSE_BUTTON_LEFT and mouse_event.pressed:
-			# If mouse is not captured, capture it (re-enter game mode)
+			# If mouse is not locked, lock it (re-enter game mode)
 			if Input.mouse_mode == Input.MOUSE_MODE_VISIBLE:
-				Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+				# Use UIManager's state transition instead of direct capture
+				# This ensures proper fullscreen handling
+				if UIManager:
+					UIManager.change_state(UIManager.GameState.GAMEPLAY)
 				get_viewport().set_input_as_handled()  # Stop event propagation
 				return  # Don't process other interactions while recapturing
 
 	# You can also handle other inputs here, like pausing the game.
 	if SteamInput.is_action_just_pressed("ui_cancel"): # ESC key or controller back button
 		# Only release mouse, never capture it (UIManager handles capture)
-		if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
+		var mouse_locked = (Input.mouse_mode == Input.MOUSE_MODE_CAPTURED or
+							Input.mouse_mode == Input.MOUSE_MODE_CONFINED_HIDDEN)
+		if mouse_locked:
 			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
 func _exit_tree() -> void:
 	# Make sure to release the mouse when the player object is removed.
 	# This is good practice for when changing scenes or quitting the game.
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-
-func _set_mouse_captured() -> void:
-	"""Capture the mouse - deferred to ensure it happens after scene load"""
-	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 func _is_sprinting() -> bool:
 	"""Check if player is sprinting via keyboard Shift or controller sprint button"""

@@ -41,14 +41,36 @@ func _ready():
 	# Load player data from disk
 	load_player_data()
 
-	# CRITICAL: Wait for exclusive fullscreen transition to complete
-	# The window mode is set to exclusive fullscreen in project settings,
-	# but we need to wait for the OS to finish the transition before capturing mouse
+	# CRITICAL: Ensure we're in fullscreen BEFORE capturing mouse
+	# macOS works better with FULLSCREEN (mode 3) than EXCLUSIVE_FULLSCREEN (mode 4)
+	# Regular fullscreen allows the macOS compositor to properly grant mouse capture
+	var current_mode = DisplayServer.window_get_mode()
+	print("UIManager: Initial window mode: %d (0=WINDOWED, 1=MINIMIZED, 2=MAXIMIZED, 3=FULLSCREEN, 4=EXCLUSIVE_FULLSCREEN)" % current_mode)
+
+	if current_mode != DisplayServer.WINDOW_MODE_FULLSCREEN:
+		print("UIManager: Setting fullscreen mode (was mode %d)" % current_mode)
+		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
+
+		# Wait for the mode switch to take effect
+		await get_tree().process_frame
+		current_mode = DisplayServer.window_get_mode()
+		print("UIManager: Window mode immediately after setting: %d" % current_mode)
+
+	# Wait for macOS to complete the fullscreen transition
+	# Regular fullscreen is faster than exclusive, but still needs time
 	await get_tree().process_frame
 	await get_tree().process_frame
 
+	# Additional time delay for macOS fullscreen animation
+	await get_tree().create_timer(0.1).timeout
+
 	# Wait another frame for all UI screens to register
 	await get_tree().process_frame
+
+	# Verify we're actually in fullscreen before proceeding
+	current_mode = DisplayServer.window_get_mode()
+	print("UIManager: Final window mode: %d (3=FULLSCREEN)" % current_mode)
+	print("UIManager: Current mouse mode before capture: %d (0=VISIBLE, 2=CAPTURED, 5=CONFINED_HIDDEN)" % Input.mouse_mode)
 
 	# Start in gameplay state so player can move immediately
 	change_state(GameState.GAMEPLAY)
@@ -103,7 +125,9 @@ func change_state(new_state: GameState):
 
 		GameState.GAMEPLAY:
 			# No UI overlay, just HUD (HUD handles its own visibility)
-			_set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+			# Use CONFINED_HIDDEN instead of CAPTURED for better macOS compatibility
+			# CONFINED keeps mouse in window, HIDDEN hides cursor - similar to CAPTURED but more reliable on macOS
+			_set_mouse_mode(Input.MOUSE_MODE_CONFINED_HIDDEN)
 			if CameraManager:
 				CameraManager.set_player_input(true)
 
@@ -116,7 +140,8 @@ func change_state(new_state: GameState):
 
 		GameState.IN_MISSION:
 			# Similar to GAMEPLAY but mission is active
-			_set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+			# Use CONFINED_HIDDEN instead of CAPTURED for better macOS compatibility
+			_set_mouse_mode(Input.MOUSE_MODE_CONFINED_HIDDEN)
 			if CameraManager:
 				CameraManager.set_player_input(true)
 
@@ -149,9 +174,27 @@ func _hide_all_screens():
 		shop_ui.call("hide_screen")
 
 func _set_mouse_mode(mode: Input.MouseMode):
-	"""Set mouse capture mode"""
+	"""Set mouse capture mode with verification"""
 	if Input.mouse_mode != mode:
 		Input.mouse_mode = mode
+
+		# Verify the mode was actually set (especially important for CAPTURED/CONFINED_HIDDEN modes)
+		await get_tree().process_frame
+
+		if Input.mouse_mode != mode:
+			push_error("UIManager: Failed to set mouse mode to %d! Current mode: %d (0=VISIBLE, 2=CAPTURED, 5=CONFINED_HIDDEN)" % [mode, Input.mouse_mode])
+
+			# Retry once
+			await get_tree().process_frame
+			Input.mouse_mode = mode
+			await get_tree().process_frame
+
+			if Input.mouse_mode == mode:
+				print("UIManager: Mouse mode set to %d on retry (0=VISIBLE, 2=CAPTURED, 5=CONFINED_HIDDEN)" % mode)
+			else:
+				push_error("UIManager: Mouse mode still failed after retry! Mode: %d (0=VISIBLE, 2=CAPTURED, 5=CONFINED_HIDDEN)" % Input.mouse_mode)
+		else:
+			print("UIManager: Mouse mode successfully set to %d (0=VISIBLE, 2=CAPTURED, 5=CONFINED_HIDDEN)" % mode)
 
 func register_screen(screen_type: String, screen: Node):
 	"""Register UI screens with the manager"""
