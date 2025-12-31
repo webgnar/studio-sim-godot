@@ -113,7 +113,8 @@ func _notification(what: int) -> void:
 		NOTIFICATION_WM_WINDOW_FOCUS_IN:
 			# Re-capture mouse when window gains focus (if in gameplay state)
 			if CameraManager and CameraManager.player_input_enabled:
-				call_deferred("_verify_and_capture_mouse")
+				# Wait a frame to ensure fullscreen mode is stable before capturing
+				call_deferred("_recapture_mouse_on_focus")
 				if DebugLogger:
 					DebugLogger.write_log("[PlayerController] Window focused - recapturing mouse")
 		NOTIFICATION_WM_WINDOW_FOCUS_OUT:
@@ -123,6 +124,13 @@ func _notification(what: int) -> void:
 
 func _initialize_mouse_capture() -> void:
 	"""Initialize mouse capture with robust handling"""
+	# CRITICAL: Wait for the OS to finish the exclusive fullscreen transition
+	# The window mode is set to exclusive fullscreen in project settings,
+	# but the OS needs time to complete the transition before mouse capture will work.
+	# Without this wait, the OS silently denies capture and mouse input breaks.
+	await get_tree().process_frame
+	await get_tree().process_frame  # Extra frame for safety
+
 	# Wait a bit for UIManager to complete initialization
 	await get_tree().create_timer(0.1).timeout
 
@@ -163,6 +171,12 @@ func _verify_and_capture_mouse() -> void:
 		print("[PlayerController] Mouse captured successfully")
 		if DebugLogger:
 			DebugLogger.write_log("[PlayerController] Mouse captured successfully")
+
+func _recapture_mouse_on_focus() -> void:
+	"""Recapture mouse when window regains focus, with frame wait for fullscreen stability"""
+	# Wait one frame to ensure exclusive fullscreen mode is stable
+	await get_tree().process_frame
+	await _verify_and_capture_mouse()
 
 func _setup_interaction_component() -> void:
 	# Check if PlayerInteractionComponent already exists as a child

@@ -577,7 +577,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.71681786, 0)
 light_color = Color(0.7411765, 1, 1, 1)
 light_energy = 9.0
 light_indirect_energy = 0.0
-shadow_enabled = true
 omni_range = 10.0
 omni_attenuation = 2.0
 
@@ -588,7 +587,6 @@ transform = Transform3D(0.33, 0, 0, 0, 0.33, 0, 0, 0, 0.33, 0, 5.100599, 2.25037
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5879202, 0)
 light_color = Color(0.7607843, 1, 1, 1)
 light_energy = 9.0
-shadow_enabled = true
 omni_range = 10.0
 omni_attenuation = 2.0
 
@@ -599,7 +597,6 @@ transform = Transform3D(0.33, 0, 0, 0, 0.33, 0, 0, 0, 0.33, 0, 4.8278055, 9.2230
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.80340767, 0)
 light_color = Color(0.6431373, 1, 1, 1)
 light_energy = 9.0
-shadow_enabled = true
 omni_range = 10.0
 omni_attenuation = 2.0
 
@@ -759,14 +756,14 @@ spot_attenuation = 2.11
 spot_angle = 46.65
 
 [node name="OmniLight3D" type="OmniLight3D" parent="spot"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.64, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.17222023, -1.4203625, 0)
 omni_range = 0.249
 
 [node name="spot4" parent="." instance=ExtResource("20_munwf")]
 transform = Transform3D(0.1499385, 0.0042955433, 0, -0.0042955433, 0.1499385, 0, 0, 0, 0.14999999, -3.3168278, 4.545951, -4.5102897)
 
 [node name="SpotLight3D" type="SpotLight3D" parent="spot4"]
-transform = Transform3D(6.666666, 0, 0, 0, -2.9140926e-07, 6.666666, 0, -6.666666, -2.9140926e-07, 0, 1.25, 0)
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 1.25, 0)
 light_energy = 2.98
 spot_range = 4.437
 spot_attenuation = -1.82
@@ -774,14 +771,14 @@ spot_angle = 33.33
 spot_angle_attenuation = 36.758244
 
 [node name="OmniLight3D" type="OmniLight3D" parent="spot4"]
-transform = Transform3D(6.666666, 0, 0, 0, 6.666666, 0, 0, 0, 6.666666, 0, -1.64, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.64, 0)
 omni_range = 0.249
 
 [node name="spot3" parent="." instance=ExtResource("20_munwf")]
 transform = Transform3D(0.1499385, 0.0042955433, 0, -0.0042955433, 0.1499385, 0, 0, 0, 0.14999999, -3.3168278, 4.545951, -0.12206173)
 
 [node name="SpotLight3D" type="SpotLight3D" parent="spot3"]
-transform = Transform3D(6.666666, 0, 0, 0, -2.9140926e-07, 6.666666, 0, -6.666666, -2.9140926e-07, 0, 1.25, 0)
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 1.25, 0)
 light_energy = 2.98
 spot_range = 4.437
 spot_attenuation = -1.82
@@ -789,14 +786,14 @@ spot_angle = 33.33
 spot_angle_attenuation = 36.758244
 
 [node name="OmniLight3D" type="OmniLight3D" parent="spot3"]
-transform = Transform3D(6.666666, 0, 0, 0, 6.666666, 0, 0, 0, 6.666666, 0, -1.64, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.64, 0)
 omni_range = 0.249
 
 [node name="spot2" parent="." instance=ExtResource("20_munwf")]
 transform = Transform3D(0.1499385, 0.0042955433, 0, -0.0042955433, 0.1499385, 0, 0, 0, 0.14999999, -3.3168278, 4.545951, 12.858265)
 
 [node name="SpotLight3D" type="SpotLight3D" parent="spot2"]
-transform = Transform3D(6.666666, 0, 0, 0, -2.9140926e-07, 6.666666, 0, -6.666666, -2.9140926e-07, 0, 1.25, 0)
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 1.25, 0)
 light_energy = 2.98
 spot_range = 4.437
 spot_attenuation = -1.82
@@ -804,7 +801,7 @@ spot_angle = 33.33
 spot_angle_attenuation = 36.758244
 
 [node name="OmniLight3D" type="OmniLight3D" parent="spot2"]
-transform = Transform3D(6.666666, 0, 0, 0, 6.666666, 0, 0, 0, 6.666666, 0, -1.64, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.64, 0)
 omni_range = 0.249
 
 [node name="hvac group" type="Node3D" parent="."]

@@ -41,7 +41,13 @@ func _ready():
 	# Load player data from disk
 	load_player_data()
 
-	# Wait a frame for all UI screens to register
+	# CRITICAL: Wait for exclusive fullscreen transition to complete
+	# The window mode is set to exclusive fullscreen in project settings,
+	# but we need to wait for the OS to finish the transition before capturing mouse
+	await get_tree().process_frame
+	await get_tree().process_frame
+
+	# Wait another frame for all UI screens to register
 	await get_tree().process_frame
 
 	# Start in gameplay state so player can move immediately
