@@ -208,6 +208,11 @@ scale_sticker_down={
 3d/solver/contact_max_allowed_penetration=0.001
 3d/physics_ticks_per_second=60
 
+[rendering]
+
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
+
 [steam]
 
 initialization/app_id=0
