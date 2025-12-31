@@ -50,10 +50,10 @@ var _original_camera_position: Vector3
 # FOV variables
 var _current_fov: float
 
-# Current speed property - returns walk or sprint speed based on Shift key
+# Current speed property - returns walk or sprint speed based on sprint input
 var current_speed: float:
 	get:
-		return sprint_speed if Input.is_key_pressed(KEY_SHIFT) else walk_speed
+		return sprint_speed if _is_sprinting() else walk_speed
 
 # --- GODOT METHODS ---
 
@@ -221,12 +221,12 @@ func _physics_process(delta: float) -> void:
 
 	# --- JUMPING ---
 	# Handle the jump action.
-	if Input.is_action_just_pressed("jump") and is_on_floor():
+	if SteamInput.is_action_just_pressed("jump") and is_on_floor():
 		velocity.y = jump_velocity
 
 	# --- MOVEMENT ---
 	# Get the input direction vector from the input actions.
-	var input_dir := Input.get_vector("move_left", "move_right", "move_forward", "move_back")
+	var input_dir := SteamInput.get_vector("move_left", "move_right", "move_forward", "move_back")
 	
 	# Convert the 2D input vector to a 3D direction vector.
 	var direction := (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
@@ -257,30 +257,18 @@ func _physics_process(delta: float) -> void:
 	# --- JOYSTICK CAMERA LOOK ---
 	# Handle camera rotation with right stick (accumulate into target rotation)
 	if _camera:
-		var look_x = 0.0
-		var look_y = 0.0
-
-		# Use ControllerMapper for platform-specific axis mapping
-		if ControllerMapper:
-			look_x = ControllerMapper.get_axis_raw(0, "right_stick_x", 0.15)
-			look_y = ControllerMapper.get_axis_raw(0, "right_stick_y", 0.15)
-		else:
-			# Fallback if ControllerMapper not available
-			look_x = Input.get_joy_axis(0, JOY_AXIS_RIGHT_X)
-			look_y = Input.get_joy_axis(0, JOY_AXIS_RIGHT_Y)
-
-			# Apply deadzone manually
-			var deadzone = 0.15
-			if abs(look_x) < deadzone:
-				look_x = 0.0
-			if abs(look_y) < deadzone:
-				look_y = 0.0
+		# Use SteamInput for camera - works with Steam Input API or falls back to Godot Input
+		var camera_input = SteamInput.get_analog_action("camera")
+		var look_x = camera_input.x
+		var look_y = camera_input.y
 
 		# Accumulate joystick input into target rotation
 		if look_x != 0.0 or look_y != 0.0:
 			var joystick_sens = sensitivity * joystick_sensitivity_multiplier
 
 			# Accumulate into target rotation
+			# NOTE: Delta scaling is CORRECT here - Steam Input returns normalized -1..1 values,
+			# we scale by delta to make rotation frame-rate independent
 			_target_rot.y -= look_x * joystick_sens * delta  # Yaw (horizontal)
 			_target_rot.x -= look_y * joystick_sens * delta  # Pitch (vertical)
 
@@ -343,8 +331,7 @@ func _physics_process(delta: float) -> void:
 	# --- UPDATE ANIMATIONS ---
 	# Send movement data to animation controller
 	if _player_animation != null:
-		var is_sprinting := Input.is_key_pressed(KEY_SHIFT)
-		_player_animation.update_animation_state(velocity, is_on_floor(), is_sprinting)
+		_player_animation.update_animation_state(velocity, is_on_floor(), _is_sprinting())
 
 func _unhandled_input(event: InputEvent) -> void:
 	# Debug logging for exports
@@ -377,10 +364,11 @@ func _unhandled_input(event: InputEvent) -> void:
 			# If mouse is not captured, capture it (re-enter game mode)
 			if Input.mouse_mode == Input.MOUSE_MODE_VISIBLE:
 				Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+				get_tree().set_input_as_handled()  # Stop event propagation
 				return  # Don't process other interactions while recapturing
 
 	# You can also handle other inputs here, like pausing the game.
-	if Input.is_action_just_pressed("ui_cancel"): # ESC key
+	if SteamInput.is_action_just_pressed("ui_cancel"): # ESC key or controller back button
 		# Only release mouse, never capture it (UIManager handles capture)
 		if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
@@ -393,3 +381,7 @@ func _exit_tree() -> void:
 func _set_mouse_captured() -> void:
 	"""Capture the mouse - deferred to ensure it happens after scene load"""
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+
+func _is_sprinting() -> bool:
+	"""Check if player is sprinting via keyboard Shift or controller sprint button"""
+	return Input.is_key_pressed(KEY_SHIFT) or SteamInput.is_action_pressed("sprint")

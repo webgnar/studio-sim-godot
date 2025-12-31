@@ -5,14 +5,14 @@
 		// Movement - Analog stick
 		"move"
 		{
-			"type" "joystick_move"
+			"type" "analog"
 			"title" "Movement"
 		}
 
 		// Camera - Analog stick
 		"camera"
 		{
-			"type" "joystick_camera"
+			"type" "analog"
 			"title" "Camera Look"
 		}
 
@@ -93,7 +93,7 @@
 		// UI Navigation
 		"menu_navigate"
 		{
-			"type" "dpad"
+			"type" "analog"
 			"title" "Menu Navigation"
 		}
 

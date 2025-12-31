@@ -24,6 +24,10 @@ var input_handles: Array = []
 # Current active input handle (primary controller)
 var active_input_handle: int = 0
 
+# State tracking for just_pressed/just_released detection
+var _previous_states: Dictionary = {}
+var _current_states: Dictionary = {}
+
 func _ready():
 	# Wait for SteamManager to initialize
 	if SteamManager:
@@ -50,7 +54,12 @@ func _setup_action_handles():
 
 	# Get input handles for all controllers
 	input_handles = Steam.getConnectedControllers()
-	if input_handles.size() > 0:
+	if input_handles.size() == 0:
+		push_warning("[SteamInput] No controllers connected at startup - handles will be 0")
+		if DebugLogger:
+			DebugLogger.write_log("[SteamInput] WARNING: No controllers connected")
+		# Still set up handles, they'll work when controller connects
+	else:
 		active_input_handle = input_handles[0]
 		print("[SteamInput] Found %d controller(s), using handle: %d" % [input_handles.size(), active_input_handle])
 
@@ -58,6 +67,11 @@ func _setup_action_handles():
 	action_set_handles[ActionSet.GAMEPLAY] = Steam.getActionSetHandle("gameplay")
 	action_set_handles[ActionSet.MENU] = Steam.getActionSetHandle("menu")
 	action_set_handles[ActionSet.PAINTING] = Steam.getActionSetHandle("painting")
+
+	# Validate action set handles
+	for action_set in action_set_handles.keys():
+		if action_set_handles[action_set] == 0:
+			push_warning("[SteamInput] Failed to get action set handle: %s" % ActionSet.keys()[action_set])
 
 	# Get digital action handles
 	action_handles["jump"] = Steam.getDigitalActionHandle("jump")
@@ -79,10 +93,30 @@ func _setup_action_handles():
 	action_handles["menu_select"] = Steam.getDigitalActionHandle("menu_select")
 	action_handles["menu_back"] = Steam.getDigitalActionHandle("menu_back")
 
+	# Validate digital action handles
+	var invalid_count = 0
+	for action_name in action_handles.keys():
+		if action_handles[action_name] == 0:
+			push_warning("[SteamInput] Failed to get digital action handle: %s" % action_name)
+			invalid_count += 1
+
 	# Get analog action handles
 	analog_action_handles["move"] = Steam.getAnalogActionHandle("move")
 	analog_action_handles["camera"] = Steam.getAnalogActionHandle("camera")
 	analog_action_handles["menu_navigate"] = Steam.getAnalogActionHandle("menu_navigate")
+
+	# Validate analog action handles
+	for action_name in analog_action_handles.keys():
+		if analog_action_handles[action_name] == 0:
+			push_warning("[SteamInput] Failed to get analog action handle: %s" % action_name)
+			invalid_count += 1
+
+	if invalid_count > 0:
+		push_warning("[SteamInput] %d action handles failed - check steam_input_manifest.vdf" % invalid_count)
+		if DebugLogger:
+			DebugLogger.write_log("[SteamInput] %d invalid handles - VDF may be incorrect" % invalid_count)
+	else:
+		print("[SteamInput] All action handles validated successfully")
 
 	# Activate default action set
 	activate_action_set(ActionSet.GAMEPLAY)
@@ -118,9 +152,10 @@ func is_action_pressed(action_name: String) -> bool:
 func is_action_just_pressed(action_name: String) -> bool:
 	"""Check if action was just pressed this frame"""
 	if _is_steam_input_active():
-		# Steam Input doesn't have "just pressed" - we'd need to track state changes
-		# For now, use the state directly (this is a limitation)
-		return _get_steam_digital_action_state(action_name)
+		# Use state tracking for edge detection
+		var current = _current_states.get(action_name, false)
+		var previous = _previous_states.get(action_name, false)
+		return current and not previous
 	else:
 		# Fallback to Godot Input
 		return Input.is_action_just_pressed(action_name)
@@ -128,9 +163,10 @@ func is_action_just_pressed(action_name: String) -> bool:
 func is_action_just_released(action_name: String) -> bool:
 	"""Check if action was just released this frame"""
 	if _is_steam_input_active():
-		# Steam Input doesn't have "just released" - we'd need to track state changes
-		# Fallback to Godot Input for now
-		return Input.is_action_just_released(action_name)
+		# Use state tracking for edge detection
+		var current = _current_states.get(action_name, false)
+		var previous = _previous_states.get(action_name, false)
+		return not current and previous
 	else:
 		# Fallback to Godot Input
 		return Input.is_action_just_released(action_name)
@@ -193,6 +229,16 @@ func _get_steam_analog_action(action_name: String) -> Vector2:
 	return Vector2.ZERO
 
 func _process(_delta):
+	# Update state tracking for edge detection (before any input reads)
+	if _is_steam_input_active():
+		# Save current states as previous (shallow copy is fine - we only store bools)
+		_previous_states = _current_states
+		_current_states = {}
+
+		# Update current states for all actions
+		for action_name in action_handles.keys():
+			_current_states[action_name] = _get_steam_digital_action_state(action_name)
+
 	# Update active input handle if controllers change
 	if _is_steam_input_active():
 		var connected = Steam.getConnectedControllers()

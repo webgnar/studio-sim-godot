@@ -9,3 +9,6 @@ res://scripts/tools/MissionAuthoringTool.gd
 res://scripts/ui/MissionHUD.gd
 res://scripts/components/WeaponComponent.gd
 res://scripts/old stuff/LightSwitchInteraction.gd
+res://scripts/PlayerController.gd
+res://scripts/SteamInput.gd
+res://scripts/SteamManager.gd

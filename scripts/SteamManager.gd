@@ -306,6 +306,12 @@ func _initialize_steam_input():
 	var init_result = Steam.inputInit(false)  # false = don't use explicit controller config
 
 	if init_result:
+		# Enable device callbacks for hot-plug support
+		Steam.enableDeviceCallbacks()
+		print("SteamManager: Steam Input device callbacks enabled")
+		if DebugLogger:
+			DebugLogger.write_log("[SteamManager] Device callbacks enabled - hot-swap supported")
+
 		steam_input_enabled = true
 		print("SteamManager: Steam Input initialized successfully")
 		print("  Steam Input will provide superior controller support")
