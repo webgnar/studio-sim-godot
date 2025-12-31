@@ -279,7 +279,14 @@ func spawn_sticker(world_position: Vector3, normal: Vector3):
 	# Align sprite to face away from wall (opposite of normal)
 	# The sprite should face outward (toward camera)
 	var look_target = world_position - normal
-	sprite.look_at(look_target, Vector3.UP)
+
+	# Choose an up vector that isn't colinear with the normal
+	# If normal is nearly vertical, use FORWARD instead of UP
+	var up_vector = Vector3.UP
+	if abs(normal.dot(Vector3.UP)) > 0.99:  # Normal is nearly vertical
+		up_vector = Vector3.FORWARD
+
+	sprite.look_at(look_target, up_vector)
 
 	# Apply current rotation (rotate around surface normal)
 	var rotation_radians = deg_to_rad(current_rotation)

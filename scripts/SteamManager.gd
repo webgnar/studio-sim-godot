@@ -218,7 +218,7 @@ func set_stat_int(stat_id: String, value: int) -> void:
 
 	# Update Steam
 	if not Steam.setStatInt(stat_id, value):
-		push_error("SteamManager: Failed to set stat: %s" % stat_id)
+		# push_error("SteamManager: Failed to set stat: %s" % stat_id)  # Commented until Steamworks backend configured
 		return
 
 	# Update local state
