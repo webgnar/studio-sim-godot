@@ -28,6 +28,10 @@ var active_input_handle: int = 0
 var _previous_states: Dictionary = {}
 var _current_states: Dictionary = {}
 
+# Controller polling optimization
+var _controller_check_timer: float = 0.0
+const CONTROLLER_CHECK_INTERVAL: float = 1.0  # Check for new controllers once per second instead of every frame
+
 func _ready():
 	# Wait for SteamManager to initialize
 	if SteamManager:
@@ -239,11 +243,14 @@ func _process(_delta):
 		for action_name in action_handles.keys():
 			_current_states[action_name] = _get_steam_digital_action_state(action_name)
 
-	# Update active input handle if controllers change
+	# Update active input handle if controllers change (OPTIMIZED: only check once per second)
 	if _is_steam_input_active():
-		var connected = Steam.getConnectedControllers()
-		if connected.size() > 0 and connected[0] != active_input_handle:
-			active_input_handle = connected[0]
-			print("[SteamInput] Active controller changed to handle: %d" % active_input_handle)
-			# Reactivate current action set for new controller
-			activate_action_set(current_action_set)
+		_controller_check_timer += _delta
+		if _controller_check_timer >= CONTROLLER_CHECK_INTERVAL:
+			_controller_check_timer = 0.0
+			var connected = Steam.getConnectedControllers()
+			if connected.size() > 0 and connected[0] != active_input_handle:
+				active_input_handle = connected[0]
+				print("[SteamInput] Active controller changed to handle: %d" % active_input_handle)
+				# Reactivate current action set for new controller
+				activate_action_set(current_action_set)

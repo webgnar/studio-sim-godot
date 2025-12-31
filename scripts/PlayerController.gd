@@ -364,7 +364,7 @@ func _unhandled_input(event: InputEvent) -> void:
 			# If mouse is not captured, capture it (re-enter game mode)
 			if Input.mouse_mode == Input.MOUSE_MODE_VISIBLE:
 				Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-				get_tree().set_input_as_handled()  # Stop event propagation
+				get_viewport().set_input_as_handled()  # Stop event propagation
 				return  # Don't process other interactions while recapturing
 
 	# You can also handle other inputs here, like pausing the game.

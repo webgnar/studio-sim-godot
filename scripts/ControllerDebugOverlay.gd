@@ -7,6 +7,10 @@ var panel: PanelContainer
 var label: Label
 var visible_in_export: bool = false  # Hidden by default, toggle with F4
 
+# Performance optimization: update UI less frequently
+var _update_timer: float = 0.0
+const UPDATE_INTERVAL: float = 0.1  # Update 10 times per second instead of 60 (saves ~83% of processing)
+
 func _ready():
 	_create_ui()
 	visible = visible_in_export
@@ -34,6 +38,12 @@ func _create_ui():
 func _process(_delta):
 	if not visible:
 		return
+
+	# Performance optimization: only update UI every UPDATE_INTERVAL seconds
+	_update_timer += _delta
+	if _update_timer < UPDATE_INTERVAL:
+		return
+	_update_timer = 0.0
 
 	var text = "╔════════════════════════════════════════╗\n"
 	text += "║     INPUT DEBUG OVERLAY (F4)           ║\n"

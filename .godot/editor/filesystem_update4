@@ -13,3 +13,4 @@ res://scripts/PlayerController.gd
 res://scripts/SteamInput.gd
 res://scripts/SteamManager.gd
 res://scripts/painting/PaintingSystem.gd
+res://scripts/ControllerDebugOverlay.gd
