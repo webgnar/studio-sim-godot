@@ -77,7 +77,7 @@ func _ready() -> void:
 
 	# Capture the mouse when the game starts (deferred to ensure proper initialization)
 	# This hides the cursor and keeps it centered.
-	call_deferred("_set_mouse_captured")
+	call_deferred("_initialize_mouse_capture")
 	
 	# Store the original camera position for head bob calculations
 	_original_camera_position = _camera.position
@@ -106,6 +106,63 @@ func _ready() -> void:
 	
 	# Setup interaction component
 	_setup_interaction_component()
+
+func _notification(what: int) -> void:
+	"""Handle window focus events for mouse capture"""
+	match what:
+		NOTIFICATION_WM_WINDOW_FOCUS_IN:
+			# Re-capture mouse when window gains focus (if in gameplay state)
+			if CameraManager and CameraManager.player_input_enabled:
+				call_deferred("_verify_and_capture_mouse")
+				if DebugLogger:
+					DebugLogger.write_log("[PlayerController] Window focused - recapturing mouse")
+		NOTIFICATION_WM_WINDOW_FOCUS_OUT:
+			# Optional: Log when window loses focus
+			if DebugLogger and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
+				DebugLogger.write_log("[PlayerController] Window focus lost")
+
+func _initialize_mouse_capture() -> void:
+	"""Initialize mouse capture with robust handling"""
+	# Wait a bit for UIManager to complete initialization
+	await get_tree().create_timer(0.1).timeout
+
+	# Only capture if UIManager says we should be in gameplay mode
+	if UIManager and UIManager.current_state == UIManager.GameState.GAMEPLAY:
+		await _verify_and_capture_mouse()
+		if DebugLogger:
+			DebugLogger.write_log("[PlayerController] Mouse capture initialized in GAMEPLAY state")
+	else:
+		if DebugLogger:
+			var state_name = "UNKNOWN" if not UIManager else str(UIManager.current_state)
+			DebugLogger.write_log("[PlayerController] Waiting for GAMEPLAY state (current: %s)" % state_name)
+
+func _verify_and_capture_mouse() -> void:
+	"""Verify mouse capture with retry mechanism"""
+	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+
+	# Verify capture succeeded (deferred to next frame)
+	await get_tree().process_frame
+
+	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
+		push_warning("[PlayerController] Mouse capture failed! Retrying...")
+		if DebugLogger:
+			DebugLogger.write_log("[PlayerController] Mouse capture FAILED - retrying")
+		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+
+		# Verify again
+		await get_tree().process_frame
+		if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
+			print("[PlayerController] Mouse captured successfully on retry")
+			if DebugLogger:
+				DebugLogger.write_log("[PlayerController] Mouse captured on RETRY")
+		else:
+			push_error("[PlayerController] Mouse capture failed after retry!")
+			if DebugLogger:
+				DebugLogger.write_log("[PlayerController] Mouse capture FAILED after retry")
+	else:
+		print("[PlayerController] Mouse captured successfully")
+		if DebugLogger:
+			DebugLogger.write_log("[PlayerController] Mouse captured successfully")
 
 func _setup_interaction_component() -> void:
 	# Check if PlayerInteractionComponent already exists as a child
@@ -200,15 +257,24 @@ func _physics_process(delta: float) -> void:
 	# --- JOYSTICK CAMERA LOOK ---
 	# Handle camera rotation with right stick (accumulate into target rotation)
 	if _camera:
-		var look_x = Input.get_joy_axis(0, JOY_AXIS_RIGHT_X)  # Axis 2
-		var look_y = Input.get_joy_axis(0, JOY_AXIS_RIGHT_Y)  # Axis 3
+		var look_x = 0.0
+		var look_y = 0.0
 
-		# Apply deadzone to avoid drift
-		var deadzone = 0.15
-		if abs(look_x) < deadzone:
-			look_x = 0.0
-		if abs(look_y) < deadzone:
-			look_y = 0.0
+		# Use ControllerMapper for platform-specific axis mapping
+		if ControllerMapper:
+			look_x = ControllerMapper.get_axis_raw(0, "right_stick_x", 0.15)
+			look_y = ControllerMapper.get_axis_raw(0, "right_stick_y", 0.15)
+		else:
+			# Fallback if ControllerMapper not available
+			look_x = Input.get_joy_axis(0, JOY_AXIS_RIGHT_X)
+			look_y = Input.get_joy_axis(0, JOY_AXIS_RIGHT_Y)
+
+			# Apply deadzone manually
+			var deadzone = 0.15
+			if abs(look_x) < deadzone:
+				look_x = 0.0
+			if abs(look_y) < deadzone:
+				look_y = 0.0
 
 		# Accumulate joystick input into target rotation
 		if look_x != 0.0 or look_y != 0.0:
@@ -281,10 +347,15 @@ func _physics_process(delta: float) -> void:
 		_player_animation.update_animation_state(velocity, is_on_floor(), is_sprinting)
 
 func _unhandled_input(event: InputEvent) -> void:
+	# Debug logging for exports
+	if not OS.has_feature("editor") and DebugLogger:
+		if event is InputEventMouseMotion or event is InputEventMouseButton:
+			DebugLogger.log_input_event(event)
+
 	# Skip input if CameraManager has disabled it (e.g., during cinematic cameras)
 	if not CameraManager.player_input_enabled:
 		return
-	
+
 	# --- MOUSE LOOK ---
 	# Accumulate mouse input into target rotation (smoothing applied in _physics_process)
 	if event is InputEventMouseMotion and _camera != null:

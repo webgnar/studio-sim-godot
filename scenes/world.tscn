@@ -1,4 +1,4 @@
-[gd_scene load_steps=134 format=3 uid="uid://cnmivki1rop3b"]
+[gd_scene load_steps=133 format=3 uid="uid://cnmivki1rop3b"]
 
 [ext_resource type="Material" uid="uid://wwlsotlotycw" path="res://materials/wood.tres" id="1_4mrxx"]
 [ext_resource type="Texture2D" uid="uid://bke1xjp3mdreb" path="res://sprites/door.jpg" id="1_i7141"]
@@ -71,12 +71,11 @@
 [ext_resource type="PackedScene" uid="uid://db8764j2674fq" path="res://models/props/outlet_box.glb" id="79_swu3i"]
 [ext_resource type="PackedScene" uid="uid://d2hcs1m04uvg7" path="res://models/interactables/button.glb" id="80_oexs8"]
 [ext_resource type="Script" uid="uid://byo8qed1v1rkt" path="res://scripts/components/PaintingConvertButton.gd" id="81_n78cu"]
-[ext_resource type="PackedScene" uid="uid://ctu3xtbhbgtub" path="res://scenes/NailGun.tscn" id="81_oexs8"]
+[ext_resource type="PackedScene" uid="uid://ctu3xtbhbgtub" path="res://scenes/objects/NailGun.tscn" id="81_oexs8"]
 [ext_resource type="PackedScene" uid="uid://cra27ims6pb5n" path="res://scenes/UI/MissionResultsViewer.tscn" id="81_results_viewer"]
 [ext_resource type="PackedScene" uid="uid://bryic0ubsrfjn" path="res://models/interactables/buttonGreen.glb" id="81_swu3i"]
 [ext_resource type="Script" uid="uid://bsdnronq274dp" path="res://scripts/components/PaintingSubmitButton.gd" id="82_submit"]
 [ext_resource type="PackedScene" uid="uid://c8mhk3sajq2fn" path="res://scenes/UI/MissionHUD.tscn" id="83_hud"]
-[ext_resource type="PackedScene" uid="uid://6u7bns57r2hi" path="res://scenes/objects/gun.tscn" id="83_n78cu"]
 [ext_resource type="AudioStream" uid="uid://84rjpuccue2i" path="res://sounds/boomboxSwitch.ogg" id="boombox_switch"]
 [ext_resource type="AudioStream" uid="uid://8so1mqtnfhkh" path="res://sounds/box open 1.ogg" id="box_open_1"]
 [ext_resource type="AudioStream" uid="uid://bkyiswhv5fuaf" path="res://sounds/box open 2.ogg" id="box_open_2"]
@@ -447,7 +446,7 @@ size = Vector2(2.5, 3)
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_1v02h"]
 resource_name = "_albedo"
-viewport_path = NodePath("mirror/SubViewport")
+viewport_path = NodePath("../MirrorNew/SubViewport")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_shehe"]
 resource_local_to_scene = true
@@ -1308,9 +1307,6 @@ shape = SubResource("CylinderShape3D_kvmu4")
 script = ExtResource("82_submit")
 interaction_text = "Submit Painting"
 custom_interaction_distance = 15.0
-
-[node name="Gun" parent="." instance=ExtResource("83_n78cu")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0882328, 1.2773702, -4.697838)
 
 [node name="mirror" parent="." instance=ExtResource("39_qaasp")]
 transform = Transform3D(-4.7902194e-08, -0.99488777, 0.10098683, -3.9073655e-08, 0.10098683, 0.99488777, -1, 4.3711392e-08, -4.3711385e-08, 2.8, 1.497, 5.232)

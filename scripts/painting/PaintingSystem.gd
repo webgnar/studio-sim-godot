@@ -5,6 +5,7 @@ class_name PaintingSystem
 ## Handles spawning, movement, ordering, rotation of layers
 
 # Signals
+@warning_ignore("UNUSED_SIGNAL")
 signal layer_equipped(index: int)  # Emitted when Q/E changes the equipped sticker
 
 # Node references (assign in inspector or via code)
@@ -255,7 +256,7 @@ func spawn_sticker(world_position: Vector3, normal: Vector3):
 	# Calculate pixel size based on texture dimensions and canvas size
 	# Goal: Make stickers fit proportionally on the canvas
 	var texture_size = definition.texture.get_size()
-	var aspect_ratio = texture_size.x / texture_size.y
+	var _aspect_ratio = texture_size.x / texture_size.y
 
 	# Base pixel size to fit canvas (3x2 wall)
 	# This makes the sticker take up roughly 1/4 of the canvas by default
@@ -444,6 +445,6 @@ func verify_painting(target: PaintingMission) -> bool:
 	return true
 
 # Mode management (deprecated - input always enabled now)
-func set_input_enabled(enabled: bool):
+func set_input_enabled(_enabled: bool):
 	"""Deprecated: Input is now always enabled. Routing handled by PaintingModeManager."""
 	pass  # No-op for backward compatibility

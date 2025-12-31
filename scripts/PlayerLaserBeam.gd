@@ -20,7 +20,7 @@ func _ready():
 		_raycast = _find_raycast_in_tree(get_parent())
 	
 	if not _raycast:
-		push_warning("PlayerLaserBeam: No RayCast3D found! Creating one at Camera3D")
+		# Auto-create RayCast3D if none found
 		_create_default_raycast()
 	
 	# Create the visual beam
@@ -91,15 +91,15 @@ func _process(_delta):
 	
 	# Update raycast
 	_raycast.force_raycast_update()
-	
+
 	var beam_length = max_beam_length
-	var hit_point = _raycast.target_position
-	
+	var _hit_point = _raycast.target_position
+
 	if _raycast.is_colliding():
 		var collision_point = _raycast.get_collision_point()
 		var raycast_global_pos = _raycast.global_position
 		beam_length = raycast_global_pos.distance_to(collision_point)
-		hit_point = _raycast.to_local(collision_point)
+		_hit_point = _raycast.to_local(collision_point)
 	
 	# Position beam at raycast origin
 	_mesh_instance.global_position = _raycast.global_position

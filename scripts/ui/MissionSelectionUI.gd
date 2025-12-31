@@ -601,7 +601,7 @@ func _on_view_results():
 
 	print("MissionSelectionUI: Viewing results for mission '%s'" % selected_mission.title)
 
-func _on_painting_created(count: int):
+func _on_painting_created(_count: int):
 	"""Update stats display when a painting is created"""
 	_update_stats_display()
 

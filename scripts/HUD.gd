@@ -79,7 +79,7 @@ func _process(_delta: float) -> void:
 
 # --- SIGNAL HANDLERS ---
 
-func _on_state_changed(old_state, new_state) -> void:
+func _on_state_changed(_old_state, new_state) -> void:
 	"""Handle game state changes from UIManager"""
 	# Show HUD only in GAMEPLAY and IN_MISSION states
 	match new_state:

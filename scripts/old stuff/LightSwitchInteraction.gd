@@ -119,7 +119,7 @@ func _toggle_switch() -> void:
 
 func _toggle_controlled_lights(turn_on: bool) -> void:
 	if _controlled_lights.size() == 0:
-		push_warning("Switch " + switch_id + " has no controlled lights!")
+		# No lights connected to this switch
 		return
 
 	for light in _controlled_lights:

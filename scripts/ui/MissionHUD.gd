@@ -36,8 +36,10 @@ func _setup_anchors():
 	offset_right = -10  # Margin from right edge
 	offset_bottom = -10 # Margin from bottom edge
 
-	grow_horizontal = 0
-	grow_vertical = 0
+	@warning_ignore("INT_AS_ENUM_WITHOUT_MATCH")
+	grow_horizontal = 0 as Control.GrowDirection
+	@warning_ignore("INT_AS_ENUM_WITHOUT_MATCH")
+	grow_vertical = 0 as Control.GrowDirection
 
 func _on_mission_started(mission: PaintingMission):
 	"""Show HUD when mission starts"""

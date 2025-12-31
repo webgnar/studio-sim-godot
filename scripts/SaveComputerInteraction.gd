@@ -7,7 +7,7 @@ func _on_ready():
 	"""Called by InteractionComponent base class"""
 	interaction_text = "Save Game"
 
-func _on_interacted(player_interaction: PlayerInteractionComponent):
+func _on_interacted(_player_interaction: PlayerInteractionComponent):
 	"""Called when player presses E while looking at this object"""
 	if not WorldStateManager:
 		push_error("SaveComputerInteraction: WorldStateManager not found!")

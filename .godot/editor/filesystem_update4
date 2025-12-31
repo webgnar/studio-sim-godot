@@ -1,0 +1,11 @@
+res://scripts/HUD.gd
+res://scripts/PlayerLaserBeam.gd
+res://scripts/ProjectileNail.gd
+res://scripts/SaveComputerInteraction.gd
+res://scripts/components/NailGunComponent.gd
+res://scripts/components/PaintingConvertButton.gd
+res://scripts/components/PaintingSubmitButton.gd
+res://scripts/tools/MissionAuthoringTool.gd
+res://scripts/ui/MissionHUD.gd
+res://scripts/components/WeaponComponent.gd
+res://scripts/old stuff/LightSwitchInteraction.gd

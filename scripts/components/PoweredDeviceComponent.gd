@@ -78,14 +78,14 @@ func interact(_interactor: Node3D) -> void:
 
 # --- POWER STATE ---
 
-func _on_plugged_in(outlet: OutletComponent) -> void:
+func _on_plugged_in(_outlet: OutletComponent) -> void:
 	"""Called when power cord is plugged into outlet"""
 	has_power = true
 	power_state_changed.emit(true)
 	powered_on.emit()
 	_update_interaction_text()
 
-func _on_unplugged(outlet: OutletComponent) -> void:
+func _on_unplugged(_outlet: OutletComponent) -> void:
 	"""Called when power cord is unplugged from outlet"""
 	has_power = false
 	power_state_changed.emit(false)

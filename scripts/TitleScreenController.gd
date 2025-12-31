@@ -59,7 +59,7 @@ func _process(delta):
 	if input_cooldown > 0:
 		input_cooldown -= delta
 
-func _input(event):
+func _input(_event):
 	var viewport = get_viewport()
 	if not viewport:
 		return  # Scene is transitioning, viewport is null

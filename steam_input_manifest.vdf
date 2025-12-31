@@ -1,0 +1,191 @@
+"steam_input_manifest"
+{
+	"actions"
+	{
+		// Movement - Analog stick
+		"move"
+		{
+			"type" "joystick_move"
+			"title" "Movement"
+		}
+
+		// Camera - Analog stick
+		"camera"
+		{
+			"type" "joystick_camera"
+			"title" "Camera Look"
+		}
+
+		// Core actions - Digital buttons
+		"jump"
+		{
+			"type" "button"
+			"title" "Jump"
+		}
+
+		"sprint"
+		{
+			"type" "button"
+			"title" "Sprint/Run"
+		}
+
+		"interact"
+		{
+			"type" "button"
+			"title" "Interact"
+		}
+
+		"action_primary"
+		{
+			"type" "button"
+			"title" "Primary Action"
+		}
+
+		"action_secondary"
+		{
+			"type" "button"
+			"title" "Secondary Action"
+		}
+
+		"go_back"
+		{
+			"type" "button"
+			"title" "Go Back"
+		}
+
+		// Painting/Sticker controls
+		"rotate_clockwise"
+		{
+			"type" "button"
+			"title" "Rotate Clockwise"
+		}
+
+		"rotate_counter"
+		{
+			"type" "button"
+			"title" "Rotate Counter-Clockwise"
+		}
+
+		"scale_up"
+		{
+			"type" "button"
+			"title" "Scale Up"
+		}
+
+		"scale_down"
+		{
+			"type" "button"
+			"title" "Scale Down"
+		}
+
+		"cycle_next"
+		{
+			"type" "button"
+			"title" "Next Sticker"
+		}
+
+		"cycle_prev"
+		{
+			"type" "button"
+			"title" "Previous Sticker"
+		}
+
+		// UI Navigation
+		"menu_navigate"
+		{
+			"type" "dpad"
+			"title" "Menu Navigation"
+		}
+
+		"menu_select"
+		{
+			"type" "button"
+			"title" "Select/Confirm"
+		}
+
+		"menu_back"
+		{
+			"type" "button"
+			"title" "Back/Cancel"
+		}
+	}
+
+	"action_sets"
+	{
+		"gameplay"
+		{
+			"title" "In-Game Controls"
+			"actions"
+			{
+				"move" {}
+				"camera" {}
+				"jump" {}
+				"sprint" {}
+				"interact" {}
+				"action_primary" {}
+				"action_secondary" {}
+				"go_back" {}
+				"rotate_clockwise" {}
+				"rotate_counter" {}
+				"scale_up" {}
+				"scale_down" {}
+				"cycle_next" {}
+				"cycle_prev" {}
+			}
+		}
+
+		"menu"
+		{
+			"title" "Menu Controls"
+			"actions"
+			{
+				"menu_navigate" {}
+				"menu_select" {}
+				"menu_back" {}
+			}
+		}
+
+		"painting"
+		{
+			"title" "Painting Mode Controls"
+			"actions"
+			{
+				"move" {}
+				"camera" {}
+				"action_primary" {}
+				"action_secondary" {}
+				"rotate_clockwise" {}
+				"rotate_counter" {}
+				"scale_up" {}
+				"scale_down" {}
+				"cycle_next" {}
+				"cycle_prev" {}
+				"go_back" {}
+			}
+		}
+	}
+
+	"localization"
+	{
+		"english"
+		{
+			"move" "Movement"
+			"camera" "Camera Look"
+			"jump" "Jump"
+			"sprint" "Sprint/Run"
+			"interact" "Interact"
+			"action_primary" "Primary Action (Place/Shoot)"
+			"action_secondary" "Secondary Action (Drop/Undo)"
+			"go_back" "Go Back"
+			"rotate_clockwise" "Rotate Clockwise"
+			"rotate_counter" "Rotate Counter-Clockwise"
+			"scale_up" "Scale Up"
+			"scale_down" "Scale Down"
+			"cycle_next" "Next Sticker"
+			"cycle_prev" "Previous Sticker"
+			"menu_navigate" "Navigate Menu"
+			"menu_select" "Select"
+			"menu_back" "Back"
+		}
+	}
+}

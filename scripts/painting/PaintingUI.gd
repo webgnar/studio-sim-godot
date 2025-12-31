@@ -44,7 +44,7 @@ var animation_tween: Tween = null  # Active animation tween
 
 func _ready():
 	# Use 2D system as primary reference (missions use 2D, sticker library identical)
-	active_system = painting_system_2d if painting_system_2d else painting_system_3d
+	active_system = (painting_system_2d as Node) if painting_system_2d else (painting_system_3d as Node)
 
 	# Connect to active system only (PaintingModeManager handles syncing)
 	if active_system:
@@ -122,7 +122,7 @@ func _process(delta):
 		if ui_idle_time > auto_hide_delay:
 			_hide_ui()
 
-func _on_layer_equipped(index: int):
+func _on_layer_equipped(_index: int):
 	"""Called when Q/E or mouse wheel changes the equipped sticker"""
 	ui_idle_time = 0.0  # Reset idle timer
 	_show_ui()  # Show UI when cycling stickers

@@ -15,7 +15,7 @@ static func create_histogram_texture(histogram: Dictionary, size: Vector2i = Vec
 	var g = histogram.get("green", 0.0)
 	var b = histogram.get("blue", 0.0)
 
-	var bar_width = size.x / 3
+	var bar_width = int(size.x / 3.0)
 	var max_height = size.y - 20
 
 	# Draw three bars
@@ -74,7 +74,7 @@ static func create_top_colors_swatch(histogram: Dictionary, size: Vector2i = Vec
 	var image = Image.create(size.x, size.y, false, Image.FORMAT_RGBA8)
 
 	# Divide into 5 vertical sections for diverse color palette
-	var section_width = size.x / 5
+	var section_width = int(size.x / 5.0)
 
 	for i in range(min(5, top_colors.size())):
 		var x_start = int(i * section_width)

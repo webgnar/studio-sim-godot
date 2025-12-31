@@ -5,6 +5,7 @@ class_name PaintingSystem2D
 ## Handles sticker placement with automatic canvas clipping for accurate validation
 
 # Signals
+@warning_ignore("UNUSED_SIGNAL")
 signal layer_equipped(index: int)  # Emitted when Q/E changes the equipped sticker
 
 # Node references (assign in inspector)
@@ -97,21 +98,21 @@ func _setup_plane_material():
 		push_error("painting_plane or canvas_viewport not assigned!")
 		return
 
-	var material = painting_plane.get_surface_override_material(0)
+	var plane_material = painting_plane.get_surface_override_material(0)
 
-	if not material:
+	if not plane_material:
 		# Create new StandardMaterial3D if none exists
-		material = StandardMaterial3D.new()
-		material.shading_mode = BaseMaterial3D.SHADING_MODE_PER_PIXEL  # Use shaded mode for proper lighting
-		material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-		painting_plane.set_surface_override_material(0, material)
+		plane_material = StandardMaterial3D.new()
+		plane_material.shading_mode = BaseMaterial3D.SHADING_MODE_PER_PIXEL  # Use shaded mode for proper lighting
+		plane_material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+		painting_plane.set_surface_override_material(0, plane_material)
 
 	# Assign viewport texture to material
-	if material is StandardMaterial3D:
-		material.albedo_texture = canvas_viewport.get_texture()
-		material.albedo_color = Color(1, 1, 1, 1)  # Full opacity for texture (transparency comes from viewport)
+	if plane_material is StandardMaterial3D:
+		plane_material.albedo_texture = canvas_viewport.get_texture()
+		plane_material.albedo_color = Color(1, 1, 1, 1)  # Full opacity for texture (transparency comes from viewport)
 	else:
-		push_error("Material is not StandardMaterial3D! Type: " + str(material.get_class()))
+		push_error("Material is not StandardMaterial3D! Type: " + str(plane_material.get_class()))
 
 func _setup_viewport_background():
 	"""Add a visible background to the SubViewport canvas"""
@@ -796,11 +797,11 @@ func _generate_heatmap_data(current: Image, reference: Image, tolerance: float) 
 	# Optional downsampling for performance
 	var max_dim = 512
 	if width > max_dim or height > max_dim:
-		var scale = float(max_dim) / max(width, height)
+		var scale_factor = float(max_dim) / max(width, height)
 		current = current.duplicate()
 		reference = reference.duplicate()
-		current.resize(int(width * scale), int(height * scale), Image.INTERPOLATE_LANCZOS)
-		reference.resize(int(width * scale), int(height * scale), Image.INTERPOLATE_LANCZOS)
+		current.resize(int(width * scale_factor), int(height * scale_factor), Image.INTERPOLATE_LANCZOS)
+		reference.resize(int(width * scale_factor), int(height * scale_factor), Image.INTERPOLATE_LANCZOS)
 		width = current.get_size().x
 		height = current.get_size().y
 
@@ -833,7 +834,7 @@ func _generate_heatmap_data(current: Image, reference: Image, tolerance: float) 
 	return heatmap
 
 # Mode management (deprecated - input always enabled now)
-func set_input_enabled(enabled: bool):
+func set_input_enabled(_enabled: bool):
 	"""Deprecated: Input is now always enabled. Routing handled by PaintingModeManager."""
 	pass  # No-op for backward compatibility
 

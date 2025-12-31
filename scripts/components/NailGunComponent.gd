@@ -121,8 +121,8 @@ func _spawn_bullet() -> void:
 	var nail_up = fire_direction.cross(nail_right).normalized()  # Y axis
 
 	# X axis should point opposite to fire direction (so -X points in fire_direction)
-	var basis = Basis(-fire_direction, nail_up, nail_right)
-	projectile_nail.global_transform.basis = basis
+	var nail_basis = Basis(-fire_direction, nail_up, nail_right)
+	projectile_nail.global_transform.basis = nail_basis
 
 	# Launch the nail AFTER position is set
 	projectile_nail.launch()
@@ -155,6 +155,6 @@ func _calculate_nail_rotation(surface_normal: Vector3) -> Vector3:
 	up = right.cross(surface_normal).normalized()
 
 	# Basis: X=surface_normal (head out), Y=up, Z=right
-	var basis = Basis(surface_normal, up, right)
+	var nail_basis = Basis(surface_normal, up, right)
 
-	return basis.get_euler()
+	return nail_basis.get_euler()

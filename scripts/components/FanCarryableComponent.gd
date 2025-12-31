@@ -40,7 +40,7 @@ func _update_interaction_text() -> void:
 	else:
 		e_key_interaction_text = "Turn On Fan"
 
-func _on_power_changed(is_powered: bool) -> void:
+func _on_power_changed(_is_powered: bool) -> void:
 	"""Update text when power state changes"""
 	_update_interaction_text()
 

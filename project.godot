@@ -43,6 +43,12 @@ WorldStateManager="*res://scripts/WorldStateManager.gd"
 ValidationLoadingOverlay="*res://scenes/UI/ValidationLoadingOverlay.tscn"
 AudioManager="*res://scripts/AudioManager.gd"
 InputDeviceManager="*res://scripts/InputDeviceManager.gd"
+DebugLogger="*res://scripts/DebugLogger.gd"
+InputValidator="*res://scripts/InputValidator.gd"
+ControllerMapper="*res://scripts/ControllerMapper.gd"
+SteamInput="*res://scripts/SteamInput.gd"
+ControllerDebugOverlay="*res://scripts/ControllerDebugOverlay.gd"
+LaunchOptionsHandler="*res://scripts/LaunchOptionsHandler.gd"
 
 [display]
 

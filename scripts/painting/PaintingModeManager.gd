@@ -44,7 +44,7 @@ func _ready():
 	tick_sound_layer3.volume_db = -5.0
 	add_child(tick_sound_layer3)
 
-func _process(delta):
+func _process(_delta):
 	# Handle sticker cycling (unified for both systems)
 	if Input.is_action_just_pressed("cycle_sticker_prev"):
 		cycle_sticker(-1)
@@ -54,7 +54,7 @@ func _process(delta):
 func cycle_sticker(direction: int):
 	"""Cycle through stickers and sync both systems"""
 	# Use whichever system is available to get library size
-	var system = painting_system_2d if painting_system_2d else painting_system_3d
+	var system: Node = (painting_system_2d as Node) if painting_system_2d else (painting_system_3d as Node)
 	if not system or system.sticker_library.is_empty():
 		return
 

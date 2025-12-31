@@ -73,7 +73,7 @@ func _on_body_entered(body: Node) -> void:
 	"""Handle collision - spawn WallNail using pre-calculated hit info"""
 
 	print("=== PROJECTILE NAIL COLLISION DETECTED ===")
-	print("  Hit body: ", body.name if body else "null")
+	print("  Hit body: ", (body.name as String) if body else ("null" as String))
 	print("  Has target: ", has_target)
 	print("  Projectile pos: ", global_position)
 
@@ -139,9 +139,9 @@ func _calculate_nail_rotation(surface_normal: Vector3) -> Vector3:
 	up = right.cross(surface_normal).normalized()
 
 	# Basis: X=surface_normal (head out), Y=up, Z=right
-	var basis = Basis(surface_normal, up, right)
+	var nail_basis = Basis(surface_normal, up, right)
 
-	return basis.get_euler()
+	return nail_basis.get_euler()
 
 func _try_apply_damage(body: Node) -> void:
 	"""Attempt to apply damage to the hit object"""

@@ -162,10 +162,10 @@ func _update_manifest(mission_file_path: String):
 	var manifest = {}
 
 	if FileAccess.file_exists(manifest_path):
-		var file = FileAccess.open(manifest_path, FileAccess.READ)
-		if file:
-			var json_string = file.get_as_text()
-			file.close()
+		var read_file = FileAccess.open(manifest_path, FileAccess.READ)
+		if read_file:
+			var json_string = read_file.get_as_text()
+			read_file.close()
 
 			var json = JSON.new()
 			if json.parse(json_string) == OK:

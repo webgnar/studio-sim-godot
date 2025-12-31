@@ -109,9 +109,9 @@ func fade_to_scene(scene_path: String, fade_out_dur: float = -1.0, fade_in_dur: 
 	transition_completed.emit()
 
 
-func set_fade_visible(visible: bool) -> void:
+func set_fade_visible(fade_visible: bool) -> void:
 	"""Manually set fade to fully visible or invisible (no animation)"""
-	if visible:
+	if fade_visible:
 		color_rect.color = Color(0, 0, 0, 1.0)  # Full black
 	else:
 		color_rect.color = Color(0, 0, 0, 0.0)  # Transparent

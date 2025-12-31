@@ -19,7 +19,7 @@ signal closed
 @onready var open_menu_sound: AudioStreamPlayer = $OpenMenuSound
 @onready var close_menu_sound: AudioStreamPlayer = $CloseMenuSound
 @onready var tick_sound: AudioStreamPlayer = $TickSound
-@onready var button_hit_sound: AudioStreamPlayer = $ButtonHitSound
+@onready var button_hit_sound: AudioStreamPlayer = get_node_or_null("ButtonHitSound")
 
 var theme_panel_style: StyleBoxFlat = null
 var current_bg_color: Color = Color(0.2, 0.2, 0.2, 0.9)  # Default from theme
@@ -132,9 +132,9 @@ func _input(event):
 		# Content mode: navigate within content, up from first slider returns to tabs
 		if Input.is_action_just_pressed("ui_up"):
 			if input_cooldown <= 0:
-				var focused = get_viewport().gui_get_focus_owner()
+				var focused_control = get_viewport().gui_get_focus_owner()
 				# Check if we're at the first slider in current tab, if so return to tab mode
-				if focused == sfx_slider or focused == hue_slider:
+				if focused_control == sfx_slider or focused_control == hue_slider:
 					is_in_tab_mode = true
 					_update_tab_mode_visual()
 					# Play navigation sound
@@ -150,9 +150,9 @@ func _input(event):
 			get_viewport().set_input_as_handled()
 		elif Input.is_action_just_pressed("ui_down"):
 			if input_cooldown <= 0:
-				var focused = get_viewport().gui_get_focus_owner()
+				var focused_control = get_viewport().gui_get_focus_owner()
 				# Navigate from sliders to Back button, but stop at Back button
-				if focused == close_button:
+				if focused_control == close_button:
 					# Already at Back button, don't navigate further
 					pass
 				else:
@@ -301,15 +301,15 @@ func save_settings():
 	
 	# Load existing settings first
 	if FileAccess.file_exists("user://settings.json"):
-		var file = FileAccess.open("user://settings.json", FileAccess.READ)
-		if file:
-			var json_string = file.get_as_text()
-			file.close()
-			
+		var read_file = FileAccess.open("user://settings.json", FileAccess.READ)
+		if read_file:
+			var json_string = read_file.get_as_text()
+			read_file.close()
+
 			var json = JSON.new()
 			if json.parse(json_string) == OK:
 				settings = json.data
-	
+
 	# Update visual settings - save hue and saturation
 	settings["bg_hue"] = current_hue
 	settings["bg_saturation"] = current_saturation
@@ -317,7 +317,7 @@ func save_settings():
 	# Also save audio settings (in case AudioManager.save_settings() wasn't called)
 	settings["sfx_volume"] = AudioManager.sfx_volume
 	settings["music_volume"] = AudioManager.music_volume
-	
+
 	# Write to file
 	var file = FileAccess.open("user://settings.json", FileAccess.WRITE)
 	if file:

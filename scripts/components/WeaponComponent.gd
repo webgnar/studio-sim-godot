@@ -45,10 +45,8 @@ func _ready() -> void:
 	# Find animation players
 	_find_animators()
 
-	# Find bullet spawn marker
+	# Find bullet spawn marker (optional - child classes may use different marker names)
 	bullet_spawn_marker = parent_object.get_node_or_null("bullet")
-	if not bullet_spawn_marker:
-		push_error("WeaponComponent: No 'bullet' Marker3D found in gun!")
 
 	# Get CarryableComponent reference
 	carryable_component = _find_carryable_component(parent_object)
@@ -103,13 +101,13 @@ func _find_animators() -> void:
 		if sprite3d:
 			flash_animator = sprite3d.get_node_or_null("AnimationPlayer")
 
-	# Debug warnings
-	if not slide_animator:
-		push_warning("WeaponComponent: Slide/Recoil AnimationPlayer not found")
-	if not flash_animator:
-		push_warning("WeaponComponent: Flash AnimationPlayer not found")
-	if not pickup_animator:
-		push_warning("WeaponComponent: Pickup AnimationPlayer not found - weapon won't have pickup animation")
+	# Optional animator checks (commented out - many weapons don't need all animators)
+	# if not slide_animator:
+	# 	push_warning("WeaponComponent: Slide/Recoil AnimationPlayer not found")
+	# if not flash_animator:
+	# 	push_warning("WeaponComponent: Flash AnimationPlayer not found")
+	# if not pickup_animator:
+	# 	push_warning("WeaponComponent: Pickup AnimationPlayer not found - weapon won't have pickup animation")
 
 func _find_carryable_component(node: Node) -> CarryableComponent:
 	"""Search for CarryableComponent in node hierarchy"""
@@ -256,7 +254,7 @@ func drop() -> void:
 	var drop_pos = camera.global_position + forward_offset + Vector3(0, -0.3, 0)
 
 	# Reparent back to original parent (or world root)
-	var target_parent = original_parent if original_parent and is_instance_valid(original_parent) else get_tree().root
+	var target_parent: Node = (original_parent as Node) if (original_parent and is_instance_valid(original_parent)) else (get_tree().root as Node)
 	parent_rb.reparent(target_parent)
 
 	# Restore position

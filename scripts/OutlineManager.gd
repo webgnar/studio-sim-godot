@@ -36,9 +36,9 @@ func show_outline(object: Node3D) -> void:
 ## Hide the current outline
 func hide_outline() -> void:
 	# Remove all outline duplicates
-	for duplicate in outline_duplicates:
-		if is_instance_valid(duplicate):
-			duplicate.queue_free()
+	for outline_dup in outline_duplicates:
+		if is_instance_valid(outline_dup):
+			outline_dup.queue_free()
 
 	outline_duplicates.clear()
 	current_outlined_object = null

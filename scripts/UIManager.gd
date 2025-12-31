@@ -17,7 +17,8 @@ enum GameState {
 }
 
 # Current game state (start as null, will be set to MAIN_MENU in _ready)
-var current_state: GameState = -1  # Invalid state to force initial transition
+@warning_ignore("INT_AS_ENUM_WITHOUT_MATCH")
+var current_state: GameState = -1 as GameState  # Invalid state to force initial transition
 
 # Player data
 var missions_completed: int = 0

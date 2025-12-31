@@ -99,7 +99,7 @@ func save_world_state() -> bool:
 			continue
 
 		var nail_id = _registered_nails[nail]
-		var nail_component = _find_nail_component(nail)
+		var _nail_component = _find_nail_component(nail)
 
 		var nail_data = {
 			"id": nail_id,

@@ -81,11 +81,11 @@ func _generate_heatmap_with_tolerance(current: Image, reference: Image, toleranc
 	# Optional downsampling for performance
 	var max_dim = 512
 	if width > max_dim or height > max_dim:
-		var scale = float(max_dim) / max(width, height)
+		var scale_factor = float(max_dim) / max(width, height)
 		current = current.duplicate()
 		reference = reference.duplicate()
-		current.resize(int(width * scale), int(height * scale), Image.INTERPOLATE_LANCZOS)
-		reference.resize(int(width * scale), int(height * scale), Image.INTERPOLATE_LANCZOS)
+		current.resize(int(width * scale_factor), int(height * scale_factor), Image.INTERPOLATE_LANCZOS)
+		reference.resize(int(width * scale_factor), int(height * scale_factor), Image.INTERPOLATE_LANCZOS)
 		width = current.get_size().x
 		height = current.get_size().y
 

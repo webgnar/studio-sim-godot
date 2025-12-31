@@ -14,7 +14,7 @@ func _on_ready() -> void:
 	interaction_text = "Submit Painting"
 
 ## Called by PlayerInteractionComponent when player interacts
-func _on_interacted(player_interaction_component: PlayerInteractionComponent) -> void:
+func _on_interacted(_player_interaction_component: PlayerInteractionComponent) -> void:
 	# Cooldown check
 	var current_time = Time.get_ticks_msec() / 1000.0
 	if current_time - last_pressed < button_cooldown:

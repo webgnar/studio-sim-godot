@@ -12,6 +12,7 @@ signal stats_ready()
 # Steam availability
 var is_steam_available: bool = false
 var is_online: bool = false
+var steam_input_enabled: bool = false
 
 # Achievement tracking (API names as keys)
 var achievements: Dictionary = {}
@@ -52,9 +53,6 @@ func initialize_steam() -> void:
 	if OS.has_feature("editor"):
 		print("SteamManager: Running in editor, Steam features limited")
 
-	# Check if Steam is running
-	var is_on_steam_deck: bool = Steam.isSteamRunningOnSteamDeck()
-
 	# Initialize Steam
 	var init_response: Dictionary = Steam.steamInitEx()
 
@@ -84,6 +82,9 @@ func initialize_steam() -> void:
 	# Load Steam data
 	load_steam_stats()
 	load_steam_achievements()
+
+	# Initialize Steam Input API
+	_initialize_steam_input()
 
 	steam_initialized.emit(true)
 
@@ -251,7 +252,7 @@ func update_playtime() -> void:
 		return
 
 	var current_time: int = Time.get_ticks_msec()
-	var session_duration_sec: int = (current_time - session_start_time) / 1000
+	var session_duration_sec: int = int((current_time - session_start_time) / 1000.0)
 
 	var new_total_playtime = total_playtime_seconds + session_duration_sec
 	set_stat_int("STAT_PLAYTIME_SECONDS", new_total_playtime)
@@ -295,6 +296,26 @@ func reset_all_achievements_and_stats() -> void:
 	load_steam_achievements()
 
 	print("SteamManager: All stats and achievements reset")
+
+func _initialize_steam_input():
+	"""Initialize Steam Input API"""
+	if not _is_steam_singleton_available():
+		return
+
+	# Try to initialize Steam Input
+	var init_result = Steam.inputInit(false)  # false = don't use explicit controller config
+
+	if init_result:
+		steam_input_enabled = true
+		print("SteamManager: Steam Input initialized successfully")
+		print("  Steam Input will provide superior controller support")
+		if DebugLogger:
+			DebugLogger.write_log("[SteamManager] Steam Input API enabled")
+	else:
+		steam_input_enabled = false
+		print("SteamManager: Steam Input not available - using Godot Input fallback")
+		if DebugLogger:
+			DebugLogger.write_log("[SteamManager] Steam Input not available - using fallback")
 
 func _exit_tree():
 	"""Update playtime before exiting"""

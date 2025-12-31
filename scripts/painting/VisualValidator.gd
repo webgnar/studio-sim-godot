@@ -4,7 +4,7 @@ class_name VisualValidator
 ## Visual validation utilities for comparing painted images
 ## Provides pixel-by-pixel comparison and color distribution analysis
 
-static func compare_images(current: Image, reference: Image, color_tolerance: float = 20.0) -> Dictionary:
+static func compare_images(current: Image, reference_img: Image, color_tolerance: float = 20.0) -> Dictionary:
 	"""
 	Compare two images pixel-by-pixel and return similarity metrics
 
@@ -20,13 +20,13 @@ static func compare_images(current: Image, reference: Image, color_tolerance: fl
 			- matching_pixels: Number of pixels within tolerance
 	"""
 
-	if not current or not reference:
+	if not current or not reference_img:
 		push_error("VisualValidator: Cannot compare null images!")
 		return {"visual_score": 0.0, "total_pixels": 0, "matching_pixels": 0}
 
 	# Ensure both images have the same size
 	var current_size = current.get_size()
-	var reference_size = reference.get_size()
+	var reference_size = reference_img.get_size()
 
 	if current_size != reference_size:
 		push_warning("VisualValidator: Image size mismatch! Current: %s, Reference: %s" % [current_size, reference_size])
@@ -42,7 +42,7 @@ static func compare_images(current: Image, reference: Image, color_tolerance: fl
 	for y in range(height):
 		for x in range(width):
 			var current_color = current.get_pixel(x, y)
-			var reference_color = reference.get_pixel(x, y)
+			var reference_color = reference_img.get_pixel(x, y)
 
 			# Skip pixels where reference is transparent (background/outside painting area)
 			if reference_color.a < 0.1:
