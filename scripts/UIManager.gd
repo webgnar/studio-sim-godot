@@ -27,6 +27,9 @@ var missions_completed: int = 0
 var playtime_update_timer: float = 0.0
 const PLAYTIME_UPDATE_INTERVAL: float = 60.0  # Update every 60 seconds
 
+# Platform detection for mouse mode
+var _platform_name: String = ""
+
 # Registered UI screens
 var main_menu: Control = null
 var mission_selection: Control = null
@@ -38,6 +41,10 @@ var hud: CanvasLayer = null
 const SAVE_PATH = "user://player_data.json"
 
 func _ready():
+	# Detect platform for mouse mode optimization
+	_platform_name = OS.get_name()
+	print("UIManager: Detected platform: %s" % _platform_name)
+
 	# Load player data from disk
 	load_player_data()
 
@@ -125,9 +132,8 @@ func change_state(new_state: GameState):
 
 		GameState.GAMEPLAY:
 			# No UI overlay, just HUD (HUD handles its own visibility)
-			# Use CONFINED_HIDDEN instead of CAPTURED for better macOS compatibility
-			# CONFINED keeps mouse in window, HIDDEN hides cursor - similar to CAPTURED but more reliable on macOS
-			_set_mouse_mode(Input.MOUSE_MODE_CONFINED_HIDDEN)
+			# Use platform-specific mouse mode for optimal FPS experience
+			_set_mouse_mode(_get_gameplay_mouse_mode())
 			if CameraManager:
 				CameraManager.set_player_input(true)
 
@@ -140,8 +146,8 @@ func change_state(new_state: GameState):
 
 		GameState.IN_MISSION:
 			# Similar to GAMEPLAY but mission is active
-			# Use CONFINED_HIDDEN instead of CAPTURED for better macOS compatibility
-			_set_mouse_mode(Input.MOUSE_MODE_CONFINED_HIDDEN)
+			# Use platform-specific mouse mode for optimal FPS experience
+			_set_mouse_mode(_get_gameplay_mouse_mode())
 			if CameraManager:
 				CameraManager.set_player_input(true)
 
@@ -172,6 +178,28 @@ func _hide_all_screens():
 		validation_result.call("hide_screen")
 	if shop_ui and shop_ui.has_method("hide_screen"):
 		shop_ui.call("hide_screen")
+
+func _get_gameplay_mouse_mode() -> Input.MouseMode:
+	"""Get the appropriate mouse mode for gameplay based on platform
+
+	Platform-specific behavior:
+	- Linux/Steam Deck: CAPTURED - True FPS capture, prevents cursor from reaching edges
+	- macOS: CONFINED_HIDDEN - Works in Godot editor, allows development workflow
+	- Windows: CAPTURED - Standard FPS behavior
+
+	Note: macOS development may experience cursor escaping to Dock/edges.
+	This is acceptable for development; production target (Steam Deck) uses CAPTURED.
+	"""
+	if _platform_name == "macOS":
+		# macOS + Godot editor has issues with CAPTURED mode (camera won't move)
+		# Use CONFINED_HIDDEN for development workflow
+		print("UIManager: Using MOUSE_MODE_CONFINED_HIDDEN for macOS (dev mode)")
+		return Input.MOUSE_MODE_CONFINED_HIDDEN
+	else:
+		# Linux/Steam Deck and other platforms use CAPTURED for proper FPS control
+		# This prevents cursor from reaching window edges where motion can stop
+		print("UIManager: Using MOUSE_MODE_CAPTURED for %s (production FPS mode)" % _platform_name)
+		return Input.MOUSE_MODE_CAPTURED
 
 func _set_mouse_mode(mode: Input.MouseMode):
 	"""Set mouse capture mode with verification"""
