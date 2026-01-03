@@ -12,7 +12,7 @@ config_version=5
 
 config/name="studio sim"
 run/main_scene="res://scenes/TitleScreen.tscn"
-config/features=PackedStringArray("4.5", "Forward Plus")
+config/features=PackedStringArray("4.5", "GL Compatibility")
 config/icon="uid://cqiw0qxli55ih"
 
 [audio]
@@ -255,7 +255,7 @@ renderer/rendering_method.mobile="gl_compatibility"
 
 [steam]
 
-initialization/app_id=0
+initialization/app_id=4278180
 initialization/initialize_on_startup=false
 initialization/embed_callbacks=false
 multiplayer_peer/max_channels=4

@@ -10,6 +10,7 @@ extends Node3D
 var _raycast: RayCast3D
 var _mesh_instance: MeshInstance3D
 var _material: StandardMaterial3D
+var _beam_enabled: bool = true  # Toggle state for the laser beam
 
 func _ready():
 	# Try to find the raycast
@@ -78,14 +79,20 @@ func _create_beam_mesh():
 	_mesh_instance.mesh = cylinder
 	_mesh_instance.material_override = _material
 
+func _input(event):
+	# Toggle beam with L key
+	if event is InputEventKey and event.keycode == KEY_L and event.pressed and not event.echo:
+		_beam_enabled = not _beam_enabled
+		print("Laser beam ", "enabled" if _beam_enabled else "disabled")
+
 func _process(_delta):
 	if not _raycast or not _mesh_instance:
 		return
-	
-	# Only show beam when NOT in first-person view
+
+	# Only show beam when NOT in first-person view AND beam is enabled
 	var in_cinematic = CameraManager.current_camera != CameraManager.player_camera
-	visible = in_cinematic
-	
+	visible = in_cinematic and _beam_enabled
+
 	if not visible:
 		return
 	

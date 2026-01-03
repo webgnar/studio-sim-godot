@@ -318,12 +318,8 @@ func _unhandled_input(event: InputEvent) -> void:
 							Input.mouse_mode == Input.MOUSE_MODE_CONFINED_HIDDEN)
 
 		if mouse_locked:
-			# If we're getting zero relative motion, the capture isn't working properly
-			if mouse_motion.relative.length() < 0.01:
-				push_warning("[PlayerController] Mouse mode %d but getting zero relative motion! Position: %s" % [Input.mouse_mode, mouse_motion.position])
-				if DebugLogger:
-					DebugLogger.write_log("[PlayerController] Mouse capture BROKEN - mode: %d, relative: %s, position: %s" % [Input.mouse_mode, mouse_motion.relative, mouse_motion.position])
-			else:
+			# Only process mouse input when there's actual motion
+			if mouse_motion.relative.length() > 0.01:
 				# Accumulate input into target rotation
 				_target_rot.x -= mouse_motion.relative.y * sensitivity  # Pitch (vertical)
 				_target_rot.y -= mouse_motion.relative.x * sensitivity  # Yaw (horizontal)
