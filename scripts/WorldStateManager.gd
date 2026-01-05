@@ -20,7 +20,7 @@ var _registered_paintings: Dictionary = {}
 var _registered_nails: Dictionary = {}
 
 # Reference to 3D painting system for saving stickers
-var _painting_system_3d: PaintingSystem = null
+var _painting_system_3d: PaintingSystem3D = null
 
 func _ready():
 	_ensure_directories()
@@ -58,7 +58,7 @@ func unregister_nail(nail: Node) -> void:
 	if nail in _registered_nails:
 		_registered_nails.erase(nail)
 
-func register_painting_system_3d(system: PaintingSystem) -> void:
+func register_painting_system_3d(system: PaintingSystem3D) -> void:
 	"""Register the 3D painting system for sticker persistence"""
 	if not system:
 		push_warning("Attempted to register null painting system")
@@ -174,7 +174,8 @@ func save_world_state() -> bool:
 				},
 				"pixel_size": placed_layer.node.pixel_size,
 				"order": placed_layer.order,
-				"rotation_deg": placed_layer.rotation_deg
+				"rotation_deg": placed_layer.rotation_deg,
+				"surface_key": placed_layer.surface_key  # NEW: Save surface association
 			}
 
 			save_data["stickers_3d"].append(sticker_data)
@@ -461,6 +462,7 @@ func _load_sticker_3d(sticker_data: Dictionary) -> bool:
 	var pixel_size = sticker_data.get("pixel_size", 0.001)
 	var order = sticker_data.get("order", 0)
 	var rotation_deg = sticker_data.get("rotation_deg", 0.0)
+	var surface_key = sticker_data.get("surface_key", "migrated")  # NEW: Load surface key (default for old saves)
 
 	# Validate data
 	if sticker_id == "":
@@ -487,14 +489,8 @@ func _load_sticker_3d(sticker_data: Dictionary) -> bool:
 	sprite.no_depth_test = false
 	sprite.pixel_size = pixel_size
 
-	# Create StandardMaterial3D (same as spawn_sticker)
-	var material = StandardMaterial3D.new()
-	material.albedo_texture = definition.texture
-	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-	material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR
-	material.cull_mode = BaseMaterial3D.CULL_DISABLED
-	sprite.material_override = material
+	# Use shared material cache (NEW - same as spawn_sticker)
+	sprite.material_override = _painting_system_3d._get_or_create_material(definition.texture)
 
 	# Add to canvas root
 	_painting_system_3d.canvas_root.add_child(sprite)
@@ -511,14 +507,20 @@ func _load_sticker_3d(sticker_data: Dictionary) -> bool:
 		rotation_data.get("z", 0.0)
 	)
 
-	# Create PlacedLayer tracking structure
-	var placed = PlacedLayer.new(sticker_id, sprite, order)
+	# Create PlacedLayer tracking structure with surface key (NEW)
+	var placed = PlacedLayer.new(sticker_id, sprite, order, 1.0, surface_key)
 	placed.rotation_deg = rotation_deg
 	_painting_system_3d.placed_layers.append(placed)
 
-	# Update next_order to prevent conflicts
-	if order >= _painting_system_3d.next_order:
-		_painting_system_3d.next_order = order + 1
+	# Add to spatial hash (NEW)
+	_painting_system_3d._add_to_spatial_hash(placed)
+
+	# Update surface_order_counters to prevent conflicts (NEW - fixed)
+	if surface_key in _painting_system_3d.surface_order_counters:
+		if order >= _painting_system_3d.surface_order_counters[surface_key]:
+			_painting_system_3d.surface_order_counters[surface_key] = order + 1
+	else:
+		_painting_system_3d.surface_order_counters[surface_key] = order + 1
 
 	return true
 

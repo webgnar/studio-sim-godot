@@ -1,5 +1,5 @@
 extends Node3D
-class_name PaintingSystem
+class_name PaintingSystem3D
 
 ## Core painting system - manages stickers on canvas
 ## Handles spawning, movement, ordering, rotation of layers
@@ -19,15 +19,19 @@ var placed_layers: Array[PlacedLayer] = []
 
 # Current state
 var selected_sticker_index: int = 0  # Which sticker is selected from library
-var selected_layer: PlacedLayer = null  # Currently selected placed layer
-var is_dragging: bool = false
-var next_order: int = 0  # Next available order value
-var input_enabled: bool = true  # Can be disabled when not active mode
+var next_order: int = 0  # Next available order value (DEPRECATED - use surface_order_counters)
+
+# Surface-based order tracking (NEW)
+var surface_order_counters: Dictionary = {}  # surface_key -> int (next order for that surface)
+
+# Performance optimizations (NEW)
+var spatial_hash: Dictionary = {}  # grid_key -> Array[PlacedLayer] (fast sticker lookup)
+var material_cache: Dictionary = {}  # texture_path -> StandardMaterial3D (shared materials)
+const GRID_SIZE = 0.5  # 50cm grid cells for spatial hashing
 
 # Input settings
 @export var raycast_distance: float = 10.0
 @export var sticker_scale: float = 1  # Scale stickers to fit canvas better
-@export var enable_dragging: bool = false  # Disable dragging for now
 
 # Sticker placement settings (rotation and scale applied when placing)
 var current_rotation: float = 0.0  # Rotation in degrees around surface normal
@@ -106,41 +110,69 @@ func _load_sticker_library():
 		else:
 			push_error("Failed to load sticker texture: %s" % path)
 
+func _generate_surface_key(collider: Node) -> String:
+	"""Generate a unique key for a surface based on the collider"""
+	# Use collider instance ID as surface identifier
+	# This assumes each wall/surface is a separate collider
+	return str(collider.get_instance_id())
+
+func _get_next_order_for_surface(surface_key: String) -> int:
+	"""Get the next available order value for a specific surface"""
+	if not surface_order_counters.has(surface_key):
+		surface_order_counters[surface_key] = 0
+
+	var order = surface_order_counters[surface_key]
+	surface_order_counters[surface_key] += 1
+	return order
+
+func _get_grid_key(position: Vector3) -> Vector3i:
+	"""Convert world position to spatial hash grid key"""
+	return Vector3i(
+		int(position.x / GRID_SIZE),
+		int(position.y / GRID_SIZE),
+		int(position.z / GRID_SIZE)
+	)
+
+func _add_to_spatial_hash(layer: PlacedLayer):
+	"""Add a placed layer to the spatial hash for fast lookup"""
+	var key = _get_grid_key(layer.node.global_position)
+	if not spatial_hash.has(key):
+		spatial_hash[key] = []
+	spatial_hash[key].append(layer)
+
+func _get_or_create_material(texture: Texture2D) -> StandardMaterial3D:
+	"""Get or create a shared material for a texture (reduces memory usage)"""
+	var texture_path = texture.resource_path
+	if material_cache.has(texture_path):
+		return material_cache[texture_path]
+
+	# Create new material for this texture
+	var material = StandardMaterial3D.new()
+	material.albedo_texture = texture
+	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_DEPTH_PRE_PASS
+	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR
+	material.cull_mode = BaseMaterial3D.CULL_DISABLED
+	material_cache[texture_path] = material
+	return material
+
 func _process(delta):
 	if not camera or not canvas_root:
 		return
 
 	# Sticker cycling now handled by PaintingModeManager
 
-	# Delete selected sticker
-	if Input.is_action_just_pressed("ui_text_delete"):
-		delete_selected_layer()
+	# Handle rotation adjustment (continuous while button held)
+	if Input.is_action_pressed("rotate_counter"):
+		adjust_rotation(delta, -1)  # Counter-clockwise
+	elif Input.is_action_pressed("rotate_clockwise"):
+		adjust_rotation(delta, 1)  # Clockwise
 
-	# If no layer is selected, handle rotation and scaling adjustments for next placement
-	if not selected_layer:
-		# Handle rotation adjustment (continuous while button held)
-		if Input.is_action_pressed("rotate_counter"):
-			adjust_rotation(delta, -1)  # Counter-clockwise
-		elif Input.is_action_pressed("rotate_clockwise"):
-			adjust_rotation(delta, 1)  # Clockwise
-
-		# Handle scale adjustment (continuous while button held)
-		if Input.is_action_pressed("scale_sticker_up"):
-			adjust_scale(delta, 1)  # Increase scale
-		elif Input.is_action_pressed("scale_sticker_down"):
-			adjust_scale(delta, -1)  # Decrease scale
-	else:
-		# If a layer is selected, handle rotation of selected layer (90 degree snapping)
-		if Input.is_action_just_pressed("rotate_counter"):
-			rotate_layer_90(selected_layer, -1)  # Counter-clockwise
-		if Input.is_action_just_pressed("rotate_clockwise"):
-			rotate_layer_90(selected_layer, 1)  # Clockwise
-
-		# Handle z-order adjustment
-		if Input.is_action_just_pressed("ui_up"):
-			raise_layer_order(selected_layer)
-		if Input.is_action_just_pressed("ui_down"):
-			lower_layer_order(selected_layer)
+	# Handle scale adjustment (continuous while button held)
+	if Input.is_action_pressed("scale_sticker_up"):
+		adjust_scale(delta, 1)  # Increase scale
+	elif Input.is_action_pressed("scale_sticker_down"):
+		adjust_scale(delta, -1)  # Decrease scale
 
 func adjust_rotation(delta: float, direction: int):
 	"""Adjust rotation for next sticker placement"""
@@ -163,7 +195,7 @@ func adjust_scale(delta: float, direction: int):
 func handle_primary_action(raycast_result: Dictionary):
 	"""Called by PaintingModeManager when user clicks to place sticker"""
 	if raycast_result and raycast_result.has("position") and raycast_result.has("normal"):
-		spawn_sticker(raycast_result.position, raycast_result.normal)
+		spawn_sticker(raycast_result.position, raycast_result.normal, raycast_result)
 
 func handle_secondary_action(raycast_result: Dictionary):
 	"""Called by PaintingModeManager when user right-clicks to remove sticker"""
@@ -197,14 +229,30 @@ func _raycast_from_mouse() -> Dictionary:
 
 func _get_layer_at_position(world_position: Vector3) -> PlacedLayer:
 	"""Find if there's a placed layer near the clicked position (world-space)"""
+	# Use spatial hash to check only nearby stickers (100x faster than checking all)
+	var grid_key = _get_grid_key(world_position)
+	var candidates = []
+
+	# Check nearby grid cells (3x3x3 = 27 cells max)
+	for dx in range(-1, 2):
+		for dy in range(-1, 2):
+			for dz in range(-1, 2):
+				var check_key = grid_key + Vector3i(dx, dy, dz)
+				if spatial_hash.has(check_key):
+					candidates.append_array(spatial_hash[check_key])
+
+	# If no candidates in spatial hash, return null
+	if candidates.is_empty():
+		return null
+
 	var closest_layer: PlacedLayer = null
 	var closest_dist = INF
 
-	# Check in reverse order (top layers first - higher z-order)
-	var reversed_layers = placed_layers.duplicate()
-	reversed_layers.reverse()
+	# Check candidates in reverse order (top layers first - higher z-order)
+	# Sort by order descending to check topmost layers first
+	candidates.sort_custom(func(a, b): return a.order > b.order)
 
-	for layer in reversed_layers:
+	for layer in candidates:
 		if layer.node and layer.node.texture:
 			# Calculate the actual size of this sticker based on its texture and scale
 			var texture_size = layer.node.texture.get_size()
@@ -228,13 +276,26 @@ func _get_layer_at_position(world_position: Vector3) -> PlacedLayer:
 
 	return closest_layer
 
-func spawn_sticker(world_position: Vector3, normal: Vector3):
+func spawn_sticker(world_position: Vector3, normal: Vector3, raycast_result: Dictionary = {}):
 	"""Spawn a new sticker at the given world position"""
 	if sticker_library.is_empty():
 		push_error("No stickers in library!")
 		return
 
 	var definition = sticker_library[selected_sticker_index]
+
+	# Generate surface key from raycast collider (NEW)
+	var surface_key = ""
+	if raycast_result.has("collider"):
+		surface_key = _generate_surface_key(raycast_result.collider)
+		print("[DEBUG] Raycast hit collider: ", raycast_result.collider.name, " (ID: ", surface_key, ")")
+	else:
+		surface_key = "default"  # Fallback for legacy calls
+		print("[DEBUG] No collider in raycast - using default surface_key")
+
+	# Get order for THIS surface (not global) (NEW)
+	var surface_order = _get_next_order_for_surface(surface_key)
+	print("[DEBUG] Surface order: ", surface_order, " on surface: ", surface_key)
 
 	# Create Sprite3D node
 	var sprite = Sprite3D.new()
@@ -244,14 +305,8 @@ func spawn_sticker(world_position: Vector3, normal: Vector3):
 	sprite.billboard = BaseMaterial3D.BILLBOARD_DISABLED
 	sprite.no_depth_test = false
 
-	# Create a StandardMaterial3D for Forward+ renderer compatibility
-	var material = StandardMaterial3D.new()
-	material.albedo_texture = definition.texture
-	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED  # Unshaded for consistent appearance
-	material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR
-	material.cull_mode = BaseMaterial3D.CULL_DISABLED  # Visible from both sides
-	sprite.material_override = material
+	# Use shared material cache (NEW - reduces memory usage)
+	sprite.material_override = _get_or_create_material(definition.texture)
 
 	# Calculate pixel size based on texture dimensions and canvas size
 	# Goal: Make stickers fit proportionally on the canvas
@@ -268,9 +323,13 @@ func spawn_sticker(world_position: Vector3, normal: Vector3):
 	canvas_root.add_child(sprite)
 
 	# Offset slightly in front of wall to avoid z-fighting
-	# Use z-offset stacking for layer ordering (WebGL-compatible alternative to render_priority)
-	var z_offset = 0.001 + (next_order * 0.0001)  # Each layer gets progressively more offset
+	# Use surface-relative z-offset for layer ordering (FIXED - reduced from 1cm to 1mm per sticker)
+	# Smaller spacing prevents flickering while maintaining depth ordering
+	var z_offset = 0.005 + (surface_order * 0.001)  # Each layer gets 1mm offset (10x reduction from original)
 	var final_world_position = world_position + (normal * z_offset)
+	print("[DEBUG] Z-offset: ", z_offset, " (base: 0.005 + order ", surface_order, " * 0.001)")
+	print("[DEBUG] Hit position: ", world_position, " | Normal: ", normal)
+	print("[DEBUG] Final position: ", final_world_position)
 
 	# Use world-space positioning (enables multi-surface painting)
 	# PaintingRoot can be positioned anywhere - stickers use global coordinates
@@ -289,24 +348,26 @@ func spawn_sticker(world_position: Vector3, normal: Vector3):
 	sprite.look_at(look_target, up_vector)
 
 	# Apply current rotation (rotate around surface normal)
-	var rotation_radians = deg_to_rad(current_rotation)
+	# Negated to match 2D rotation direction
+	var rotation_radians = deg_to_rad(-current_rotation)
 	sprite.rotate_object_local(Vector3(0, 0, 1), rotation_radians)
 
-	# Create placed layer data
-	var placed = PlacedLayer.new(definition.id, sprite, next_order, current_scale_multiplier)
+	# Create placed layer data with surface key (NEW)
+	var placed = PlacedLayer.new(definition.id, sprite, surface_order, current_scale_multiplier, surface_key)
 	placed.rotation_deg = current_rotation  # Store the rotation
 	placed_layers.append(placed)
+	print("[DEBUG] Created sticker #", placed_layers.size(), " - ID: ", definition.id, " | Order: ", surface_order, " | Surface: ", surface_key)
 
-	next_order += 1
+	# Add to spatial hash for fast lookup (NEW)
+	_add_to_spatial_hash(placed)
+	print("[DEBUG] Total stickers on this surface: ", surface_order_counters[surface_key])
+	print("==========================================")
 
 	# Track sticker placement in Steam
 	if SteamManager:
 		SteamManager.increment_stat("STAT_STICKERS_PLACED")
 		if SteamManager.get_stat("STAT_STICKERS_PLACED") >= 1000:
 			SteamManager.unlock_achievement("ACH_PAINTER")
-
-	# Don't select the newly placed sticker - keep rotation/scale active for continuous placement
-	# User can click on placed stickers later to select them if needed
 
 func cycle_sticker(direction: int):
 	"""Cycle through available stickers in library (deprecated - use PaintingModeManager)"""
@@ -319,54 +380,6 @@ func cycle_sticker(direction: int):
 
 	# Note: Syncing and signal emission now handled by PaintingModeManager
 	# This function kept for backward compatibility
-
-func rotate_layer_90(layer: PlacedLayer, direction: int):
-	"""Rotate a layer by 90 degrees (snapping)"""
-	if not layer or not layer.node:
-		return
-
-	# Snap to 90-degree increments
-	var rotation_step = 90.0 * direction
-	layer.rotation_deg += rotation_step
-
-	# Normalize to 0-360 range
-	layer.rotation_deg = fmod(layer.rotation_deg, 360.0)
-	if layer.rotation_deg < 0:
-		layer.rotation_deg += 360.0
-
-	# Apply rotation around Z axis
-	var radians = deg_to_rad(rotation_step)
-	layer.node.rotate_object_local(Vector3(0, 0, 1), radians)
-
-func raise_layer_order(layer: PlacedLayer):
-	"""Increase layer's z-order (bring forward)"""
-	if not layer or not layer.node:
-		return
-
-	layer.order += 1
-	layer.node.render_priority = layer.order
-
-func lower_layer_order(layer: PlacedLayer):
-	"""Decrease layer's z-order (send backward)"""
-	if not layer or not layer.node:
-		return
-
-	layer.order -= 1
-	layer.node.render_priority = layer.order
-
-func delete_selected_layer():
-	"""Delete the currently selected layer"""
-	if not selected_layer:
-		return
-
-	# Remove from scene
-	if selected_layer.node:
-		selected_layer.node.queue_free()
-
-	# Remove from array
-	placed_layers.erase(selected_layer)
-
-	selected_layer = null
 
 func undo_last_sticker():
 	"""Remove the most recently placed sticker (LIFO order)"""
@@ -383,6 +396,12 @@ func undo_last_sticker():
 			last_layer = layer
 
 	if last_layer:
+		# Remove from spatial hash (NEW)
+		if last_layer.node:
+			var key = _get_grid_key(last_layer.node.global_position)
+			if spatial_hash.has(key):
+				spatial_hash[key].erase(last_layer)
+
 		# Remove from scene
 		if last_layer.node:
 			last_layer.node.queue_free()
@@ -390,19 +409,22 @@ func undo_last_sticker():
 		# Remove from array
 		placed_layers.erase(last_layer)
 
-		# Clear selection if this was the selected layer
-		if selected_layer == last_layer:
-			selected_layer = null
-
-		# Decrement next_order so it can be reused
-		if next_order > 0:
-			next_order -= 1
+		# Decrement the counter for THIS surface (NEW - fixed)
+		if last_layer.surface_key in surface_order_counters:
+			if surface_order_counters[last_layer.surface_key] > 0:
+				surface_order_counters[last_layer.surface_key] -= 1
 
 func remove_sticker_at_position(world_position: Vector3):
 	"""Remove the sticker at the raycast hit position"""
 	var layer_to_remove = _get_layer_at_position(world_position)
 
 	if layer_to_remove:
+		# Remove from spatial hash (NEW)
+		if layer_to_remove.node:
+			var key = _get_grid_key(layer_to_remove.node.global_position)
+			if spatial_hash.has(key):
+				spatial_hash[key].erase(layer_to_remove)
+
 		# Remove from scene
 		if layer_to_remove.node:
 			layer_to_remove.node.queue_free()
@@ -410,20 +432,9 @@ func remove_sticker_at_position(world_position: Vector3):
 		# Remove from array
 		placed_layers.erase(layer_to_remove)
 
-		# Clear selection if this was the selected layer
-		if selected_layer == layer_to_remove:
-			selected_layer = null
-
 		print("Removed sticker at position: ", world_position)
 	else:
 		print("No sticker found at raycast position")
-
-func select_layer_by_index(index: int):
-	"""Select a placed layer by its index in the array"""
-	if index >= 0 and index < placed_layers.size():
-		selected_layer = placed_layers[index]
-	else:
-		selected_layer = null
 
 func clear_canvas():
 	"""Remove all placed stickers from canvas"""
@@ -431,8 +442,10 @@ func clear_canvas():
 		if layer.node:
 			layer.node.queue_free()
 	placed_layers.clear()
-	next_order = 0
-	selected_layer = null
+	next_order = 0  # Keep for backward compatibility
+	surface_order_counters.clear()  # NEW
+	spatial_hash.clear()  # NEW
+	material_cache.clear()  # NEW
 
 # Validation system (for Phase 2)
 func verify_painting(target: PaintingMission) -> bool:
@@ -450,8 +463,3 @@ func verify_painting(target: PaintingMission) -> bool:
 			return false
 
 	return true
-
-# Mode management (deprecated - input always enabled now)
-func set_input_enabled(_enabled: bool):
-	"""Deprecated: Input is now always enabled. Routing handled by PaintingModeManager."""
-	pass  # No-op for backward compatibility

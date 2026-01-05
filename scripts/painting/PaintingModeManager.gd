@@ -5,7 +5,7 @@ extends Node
 ## based on raycast detection of canvas plane
 
 # References to painting systems (set by world scene)
-var painting_system_3d: PaintingSystem = null
+var painting_system_3d: PaintingSystem3D = null
 var painting_system_2d: PaintingSystem2D = null
 var painting_root_3d: Node3D = null
 var painting_root_2d: Node3D = null
@@ -214,7 +214,7 @@ func _is_raycast_hitting_interactable(raycast_result: Dictionary) -> bool:
 
 	return false
 
-func register_3d_system(system: PaintingSystem, root: Node3D):
+func register_3d_system(system: PaintingSystem3D, root: Node3D):
 	"""Register the 3D painting system"""
 	painting_system_3d = system
 	painting_root_3d = root

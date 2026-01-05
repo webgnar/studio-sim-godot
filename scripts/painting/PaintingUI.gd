@@ -8,7 +8,7 @@ class_name PaintingUI
 # Preload the sticker slot scene
 const StickerSlotScene = preload("res://scenes/UI/StickerSlot.tscn")
 
-@export var painting_system_3d: PaintingSystem
+@export var painting_system_3d: PaintingSystem3D
 @export var painting_system_2d: PaintingSystem2D
 @export var sticker_slot_theme: Theme  # Theme for sticker slot styling
 
