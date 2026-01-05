@@ -1234,7 +1234,7 @@ transform = Transform3D(0.8496623, -0.119170085, -0.5136851, -0.0009949702, 0.97
 visible = false
 
 [node name="CameraZone3 inside" parent="." instance=ExtResource("71_dyafi")]
-transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 1.4262035, 1.1246414, 16.459383)
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 1.4262035, 1.1246414, 20.052149)
 
 [node name="CollisionShape3D" parent="CameraZone3 inside" index="0"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.6680121, 0.06352091, 1.4029835)
