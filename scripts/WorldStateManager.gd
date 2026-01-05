@@ -489,8 +489,8 @@ func _load_sticker_3d(sticker_data: Dictionary) -> bool:
 	sprite.no_depth_test = false
 	sprite.pixel_size = pixel_size
 
-	# Use shared material cache (NEW - same as spawn_sticker)
-	sprite.material_override = _painting_system_3d._get_or_create_material(definition.texture)
+	# Use material with render_priority (NEW - same as spawn_sticker)
+	sprite.material_override = _painting_system_3d._get_or_create_material(definition.texture, order)
 
 	# Add to canvas root
 	_painting_system_3d.canvas_root.add_child(sprite)

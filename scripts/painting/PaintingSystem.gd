@@ -110,11 +110,32 @@ func _load_sticker_library():
 		else:
 			push_error("Failed to load sticker texture: %s" % path)
 
-func _generate_surface_key(collider: Node) -> String:
-	"""Generate a unique key for a surface based on the collider"""
-	# Use collider instance ID as surface identifier
-	# This assumes each wall/surface is a separate collider
-	return str(collider.get_instance_id())
+func _generate_surface_key(collider: Node, position: Vector3, normal: Vector3) -> String:
+	"""Generate a unique key for a surface based on collider, position, and normal"""
+	# Combine collider ID with quantized position and normal to identify unique surfaces
+	# This handles cases where multiple walls are part of the same collider
+	var collider_id = str(collider.get_instance_id())
+
+	# Quantize position to 1m grid to group nearby hits on the same plane
+	var pos_key = Vector3(
+		snapped(position.x, 1.0),
+		snapped(position.y, 1.0),
+		snapped(position.z, 1.0)
+	)
+
+	# Quantize normal to 0.1 precision to group similar facing directions
+	# This identifies which wall face we're on
+	var norm_key = Vector3(
+		snapped(normal.x, 0.1),
+		snapped(normal.y, 0.1),
+		snapped(normal.z, 0.1)
+	).normalized()
+
+	return "%s_%.1f_%.1f_%.1f_%.2f_%.2f_%.2f" % [
+		collider_id,
+		pos_key.x, pos_key.y, pos_key.z,
+		norm_key.x, norm_key.y, norm_key.z
+	]
 
 func _get_next_order_for_surface(surface_key: String) -> int:
 	"""Get the next available order value for a specific surface"""
@@ -140,20 +161,28 @@ func _add_to_spatial_hash(layer: PlacedLayer):
 		spatial_hash[key] = []
 	spatial_hash[key].append(layer)
 
-func _get_or_create_material(texture: Texture2D) -> StandardMaterial3D:
-	"""Get or create a shared material for a texture (reduces memory usage)"""
-	var texture_path = texture.resource_path
-	if material_cache.has(texture_path):
-		return material_cache[texture_path]
+func _get_or_create_material(texture: Texture2D, order: int = 0) -> StandardMaterial3D:
+	"""Get or create a material for a texture with specific render priority"""
+	# Can't share materials if they have different render priorities
+	# So we create unique materials per order
+	var material_key = texture.resource_path + "_" + str(order)
+	if material_cache.has(material_key):
+		return material_cache[material_key]
 
-	# Create new material for this texture
+	# Create new material for this texture + order combination
 	var material = StandardMaterial3D.new()
 	material.albedo_texture = texture
 	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_DEPTH_PRE_PASS
 	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR
 	material.cull_mode = BaseMaterial3D.CULL_DISABLED
-	material_cache[texture_path] = material
+
+	# Try to set render_priority (may not work in GL Compatibility, but worth trying)
+	if "render_priority" in material:
+		material.render_priority = order
+		print("[DEBUG] Set render_priority to ", order)
+
+	material_cache[material_key] = material
 	return material
 
 func _process(delta):
@@ -286,9 +315,10 @@ func spawn_sticker(world_position: Vector3, normal: Vector3, raycast_result: Dic
 
 	# Generate surface key from raycast collider (NEW)
 	var surface_key = ""
-	if raycast_result.has("collider"):
-		surface_key = _generate_surface_key(raycast_result.collider)
-		print("[DEBUG] Raycast hit collider: ", raycast_result.collider.name, " (ID: ", surface_key, ")")
+	if raycast_result.has("collider") and raycast_result.has("position") and raycast_result.has("normal"):
+		surface_key = _generate_surface_key(raycast_result.collider, world_position, normal)
+		print("[DEBUG] Raycast hit collider: ", raycast_result.collider.name)
+		print("[DEBUG] Surface key: ", surface_key)
 	else:
 		surface_key = "default"  # Fallback for legacy calls
 		print("[DEBUG] No collider in raycast - using default surface_key")
@@ -305,8 +335,8 @@ func spawn_sticker(world_position: Vector3, normal: Vector3, raycast_result: Dic
 	sprite.billboard = BaseMaterial3D.BILLBOARD_DISABLED
 	sprite.no_depth_test = false
 
-	# Use shared material cache (NEW - reduces memory usage)
-	sprite.material_override = _get_or_create_material(definition.texture)
+	# Use material with render_priority (per-order materials for proper layering)
+	sprite.material_override = _get_or_create_material(definition.texture, surface_order)
 
 	# Calculate pixel size based on texture dimensions and canvas size
 	# Goal: Make stickers fit proportionally on the canvas
@@ -323,11 +353,11 @@ func spawn_sticker(world_position: Vector3, normal: Vector3, raycast_result: Dic
 	canvas_root.add_child(sprite)
 
 	# Offset slightly in front of wall to avoid z-fighting
-	# Use surface-relative z-offset for layer ordering (FIXED - reduced from 1cm to 1mm per sticker)
-	# Smaller spacing prevents flickering while maintaining depth ordering
-	var z_offset = 0.005 + (surface_order * 0.001)  # Each layer gets 1mm offset (10x reduction from original)
+	# Use surface-relative z-offset for layer ordering (FIXED - 3mm per sticker for oblique angle stability)
+	# Smaller spacing prevents flickering while maintaining depth ordering at all angles
+	var z_offset = 0.005 + (surface_order * 0.003)  # Each layer gets 3mm offset (better for oblique viewing)
 	var final_world_position = world_position + (normal * z_offset)
-	print("[DEBUG] Z-offset: ", z_offset, " (base: 0.005 + order ", surface_order, " * 0.001)")
+	print("[DEBUG] Z-offset: ", z_offset, " (base: 0.005 + order ", surface_order, " * 0.003)")
 	print("[DEBUG] Hit position: ", world_position, " | Normal: ", normal)
 	print("[DEBUG] Final position: ", final_world_position)
 
