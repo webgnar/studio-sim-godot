@@ -110,7 +110,7 @@ func _load_sticker_library():
 		else:
 			push_error("Failed to load sticker texture: %s" % path)
 
-func _generate_surface_key(collider: Node, position: Vector3, normal: Vector3) -> String:
+func _generate_surface_key(collider: Node, hit_position: Vector3, normal: Vector3) -> String:
 	"""Generate a unique key for a surface based on collider, position, and normal"""
 	# Combine collider ID with quantized position and normal to identify unique surfaces
 	# This handles cases where multiple walls are part of the same collider
@@ -118,9 +118,9 @@ func _generate_surface_key(collider: Node, position: Vector3, normal: Vector3) -
 
 	# Quantize position to 1m grid to group nearby hits on the same plane
 	var pos_key = Vector3(
-		snapped(position.x, 1.0),
-		snapped(position.y, 1.0),
-		snapped(position.z, 1.0)
+		snapped(hit_position.x, 1.0),
+		snapped(hit_position.y, 1.0),
+		snapped(hit_position.z, 1.0)
 	)
 
 	# Quantize normal to 0.1 precision to group similar facing directions
@@ -146,12 +146,12 @@ func _get_next_order_for_surface(surface_key: String) -> int:
 	surface_order_counters[surface_key] += 1
 	return order
 
-func _get_grid_key(position: Vector3) -> Vector3i:
+func _get_grid_key(world_pos: Vector3) -> Vector3i:
 	"""Convert world position to spatial hash grid key"""
 	return Vector3i(
-		int(position.x / GRID_SIZE),
-		int(position.y / GRID_SIZE),
-		int(position.z / GRID_SIZE)
+		int(world_pos.x / GRID_SIZE),
+		int(world_pos.y / GRID_SIZE),
+		int(world_pos.z / GRID_SIZE)
 	)
 
 func _add_to_spatial_hash(layer: PlacedLayer):
