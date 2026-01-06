@@ -58,7 +58,9 @@ func _ready() -> void:
 	if InputDeviceManager:
 		InputDeviceManager.device_changed.connect(_on_input_device_changed)
 
-func _process(_delta: float) -> void:
+func _physics_process(_delta: float) -> void:
+	# Use physics_process for more reliable raycast collision detection
+	# especially in exported builds
 	_update_interactable()
 
 func _input(event: InputEvent) -> void:
@@ -186,7 +188,7 @@ func _setup_raycast() -> void:
 	_raycast.collision_mask = raycast_collision_mask
 	_raycast.collide_with_areas = false
 	_raycast.collide_with_bodies = true
-	
+
 	# Add as child of camera so it points where we're looking
 	_camera.add_child(_raycast)
 	_raycast.enabled = true

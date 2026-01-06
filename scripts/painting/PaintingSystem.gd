@@ -60,9 +60,9 @@ func _load_sticker_library():
 	var folder_path = "res://sprites/painting layers/"
 	var file_names: Array[String] = []
 
-	# HTML5/WebGL builds can't scan directories dynamically
-	# Use a predefined list of sticker files
-	if OS.has_feature("web"):
+	# Platform builds (Windows, macOS, Linux, Steam Deck) can't scan res:// directories dynamically
+	# Use a predefined list for all exported builds to ensure reliability across platforms
+	if not OS.has_feature("editor"):
 		file_names = [
 			"1.png", "2.png", "3.png", "4.png", "5.png",
 			"6.png", "7.png", "8.png", "9.png", "10.png",
@@ -73,7 +73,7 @@ func _load_sticker_library():
 			"31.png"
 		]
 	else:
-		# Desktop builds: scan directory dynamically
+		# Editor only: scan directory dynamically for development convenience
 		var dir = DirAccess.open(folder_path)
 
 		if not dir:
@@ -109,6 +109,11 @@ func _load_sticker_library():
 			sticker_library.append(definition)
 		else:
 			push_error("Failed to load sticker texture: %s" % path)
+			if DebugLogger and not OS.has_feature("editor"):
+				DebugLogger.write_log("[PaintingSystem3D] Failed to load sticker: %s" % path)
+
+	if DebugLogger and not OS.has_feature("editor"):
+		DebugLogger.write_log("[PaintingSystem3D] Loaded %d stickers into library" % sticker_library.size())
 
 func _generate_surface_key(collider: Node, hit_position: Vector3, normal: Vector3) -> String:
 	"""Generate a unique key for a surface based on collider, position, and normal"""
@@ -223,8 +228,20 @@ func adjust_scale(delta: float, direction: int):
 
 func handle_primary_action(raycast_result: Dictionary):
 	"""Called by PaintingModeManager when user clicks to place sticker"""
+	if DebugLogger and not OS.has_feature("editor"):
+		DebugLogger.write_log("[PaintingSystem3D] handle_primary_action called")
+		DebugLogger.write_log("[PaintingSystem3D] raycast_result has data: %s" % (raycast_result != null and not raycast_result.is_empty()))
+		if raycast_result:
+			DebugLogger.write_log("[PaintingSystem3D] has position: %s" % raycast_result.has("position"))
+			DebugLogger.write_log("[PaintingSystem3D] has normal: %s" % raycast_result.has("normal"))
+
 	if raycast_result and raycast_result.has("position") and raycast_result.has("normal"):
+		if DebugLogger and not OS.has_feature("editor"):
+			DebugLogger.write_log("[PaintingSystem3D] Calling spawn_sticker")
 		spawn_sticker(raycast_result.position, raycast_result.normal, raycast_result)
+	else:
+		if DebugLogger and not OS.has_feature("editor"):
+			DebugLogger.write_log("[PaintingSystem3D] Raycast data incomplete, cannot spawn")
 
 func handle_secondary_action(raycast_result: Dictionary):
 	"""Called by PaintingModeManager when user right-clicks to remove sticker"""
@@ -307,8 +324,16 @@ func _get_layer_at_position(world_position: Vector3) -> PlacedLayer:
 
 func spawn_sticker(world_position: Vector3, normal: Vector3, raycast_result: Dictionary = {}):
 	"""Spawn a new sticker at the given world position"""
+	if DebugLogger and not OS.has_feature("editor"):
+		DebugLogger.write_log("[PaintingSystem3D] spawn_sticker called at position: %s" % world_position)
+		DebugLogger.write_log("[PaintingSystem3D] sticker_library size: %d" % sticker_library.size())
+		DebugLogger.write_log("[PaintingSystem3D] selected_sticker_index: %d" % selected_sticker_index)
+		DebugLogger.write_log("[PaintingSystem3D] canvas_root: %s" % canvas_root)
+
 	if sticker_library.is_empty():
 		push_error("No stickers in library!")
+		if DebugLogger and not OS.has_feature("editor"):
+			DebugLogger.write_log("[PaintingSystem3D] ERROR: No stickers in library!")
 		return
 
 	var definition = sticker_library[selected_sticker_index]
@@ -392,6 +417,9 @@ func spawn_sticker(world_position: Vector3, normal: Vector3, raycast_result: Dic
 	_add_to_spatial_hash(placed)
 	print("[DEBUG] Total stickers on this surface: ", surface_order_counters[surface_key])
 	print("==========================================")
+
+	if DebugLogger and not OS.has_feature("editor"):
+		DebugLogger.write_log("[PaintingSystem3D] Sticker spawned successfully! Total placed: %d" % placed_layers.size())
 
 	# Track sticker placement in Steam
 	if SteamManager:

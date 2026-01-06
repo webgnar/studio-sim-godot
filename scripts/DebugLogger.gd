@@ -14,7 +14,9 @@ func _ready():
 		log_file = FileAccess.open(LOG_PATH, FileAccess.WRITE)
 
 		if log_file:
+			var log_full_path = OS.get_user_data_dir() + "/debug.log"
 			write_log("=== Debug Log Started ===")
+			write_log("LOG FILE LOCATION: %s" % log_full_path)
 			write_log("Platform: %s" % OS.get_name())
 			write_log("Godot Version: %s" % Engine.get_version_info()["string"])
 			write_log("User data path: %s" % OS.get_user_data_dir())
@@ -23,6 +25,12 @@ func _ready():
 			# Log display info
 			write_log("Screen size: %s" % DisplayServer.screen_get_size())
 			write_log("Window size: %s" % DisplayServer.window_get_size())
+
+			# Print to console prominently
+			print("\n" + "=".repeat(80))
+			print("DEBUG LOG FILE LOCATION:")
+			print(log_full_path)
+			print("=".repeat(80) + "\n")
 		else:
 			push_error("DebugLogger: Failed to open log file at %s" % LOG_PATH)
 

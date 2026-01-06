@@ -144,9 +144,9 @@ func _load_sticker_library():
 	var folder_path = "res://sprites/painting layers/"
 	var file_names: Array[String] = []
 
-	# HTML5/WebGL builds can't scan directories dynamically
-	# Use a predefined list of sticker files
-	if OS.has_feature("web"):
+	# Platform builds (Windows, macOS, Linux, Steam Deck) can't scan res:// directories dynamically
+	# Use a predefined list for all exported builds to ensure reliability across platforms
+	if not OS.has_feature("editor"):
 		file_names = [
 			"1.png", "2.png", "3.png", "4.png", "5.png",
 			"6.png", "7.png", "8.png", "9.png", "10.png",
@@ -157,7 +157,7 @@ func _load_sticker_library():
 			"31.png"
 		]
 	else:
-		# Desktop builds: scan directory dynamically
+		# Editor only: scan directory dynamically for development convenience
 		var dir = DirAccess.open(folder_path)
 
 		if not dir:
@@ -193,6 +193,11 @@ func _load_sticker_library():
 			sticker_library.append(definition)
 		else:
 			push_error("Failed to load sticker texture: %s" % path)
+			if DebugLogger and not OS.has_feature("editor"):
+				DebugLogger.write_log("[PaintingSystem2D] Failed to load sticker: %s" % path)
+
+	if DebugLogger and not OS.has_feature("editor"):
+		DebugLogger.write_log("[PaintingSystem2D] Loaded %d stickers into library" % sticker_library.size())
 
 func _process(delta):
 	if not camera:
@@ -235,8 +240,21 @@ func _process(delta):
 
 func handle_primary_action(raycast_result: Dictionary):
 	"""Called by PaintingModeManager when user clicks on canvas"""
+	if DebugLogger and not OS.has_feature("editor"):
+		DebugLogger.write_log("[PaintingSystem2D] handle_primary_action called")
+		DebugLogger.write_log("[PaintingSystem2D] raycast_result has data: %s" % (raycast_result != null and not raycast_result.is_empty()))
+		if raycast_result:
+			DebugLogger.write_log("[PaintingSystem2D] has position: %s" % raycast_result.has("position"))
+			if raycast_result.has("position"):
+				DebugLogger.write_log("[PaintingSystem2D] position value: %s" % raycast_result.position)
+
 	if raycast_result and raycast_result.has("position"):
+		if DebugLogger and not OS.has_feature("editor"):
+			DebugLogger.write_log("[PaintingSystem2D] Calling spawn_sticker")
 		spawn_sticker(raycast_result.position)
+	else:
+		if DebugLogger and not OS.has_feature("editor"):
+			DebugLogger.write_log("[PaintingSystem2D] Raycast data incomplete, cannot spawn")
 
 func handle_secondary_action():
 	"""Called by PaintingModeManager when user right-clicks"""
@@ -403,14 +421,26 @@ func _update_preview_scale():
 
 func spawn_sticker(world_position: Vector3):
 	"""Spawn a new sticker at the given world position"""
+	if DebugLogger and not OS.has_feature("editor"):
+		DebugLogger.write_log("[PaintingSystem2D] spawn_sticker called at world position: %s" % world_position)
+		DebugLogger.write_log("[PaintingSystem2D] sticker_library size: %d" % sticker_library.size())
+		DebugLogger.write_log("[PaintingSystem2D] selected_sticker_index: %d" % selected_sticker_index)
+		DebugLogger.write_log("[PaintingSystem2D] painting_plane: %s" % painting_plane)
+		DebugLogger.write_log("[PaintingSystem2D] canvas_viewport: %s" % canvas_viewport)
+
 	if sticker_library.is_empty():
 		push_error("No stickers in library!")
+		if DebugLogger and not OS.has_feature("editor"):
+			DebugLogger.write_log("[PaintingSystem2D] ERROR: No stickers in library!")
 		return
 
 	var definition = sticker_library[selected_sticker_index]
 
 	# Convert world position to viewport coordinates
 	var viewport_pos = _world_to_viewport_coords(world_position)
+
+	if DebugLogger and not OS.has_feature("editor"):
+		DebugLogger.write_log("[PaintingSystem2D] Converted to viewport coords: %s" % viewport_pos)
 
 	# Create Sprite2D node
 	var sprite = Sprite2D.new()
@@ -438,6 +468,10 @@ func spawn_sticker(world_position: Vector3):
 	placed_layers.append(placed)
 
 	next_order += 1
+
+	if DebugLogger and not OS.has_feature("editor"):
+		DebugLogger.write_log("[PaintingSystem2D] Sticker spawned successfully! Total placed: %d" % placed_layers.size())
+		DebugLogger.write_log("[PaintingSystem2D] Sprite position: %s, scale: %s, rotation: %.1f" % [sprite.position, sprite.scale, sprite.rotation_degrees])
 
 	# Track sticker placement in Steam
 	if SteamManager:

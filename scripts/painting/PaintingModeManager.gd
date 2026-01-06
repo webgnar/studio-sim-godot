@@ -101,8 +101,12 @@ func _unhandled_input(event):
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 			should_place = true
+			if DebugLogger and not OS.has_feature("editor"):
+				DebugLogger.write_log("[PaintingModeManager] Left click - should_place=true")
 		elif event.button_index == MOUSE_BUTTON_RIGHT and event.pressed:
 			should_undo = true
+			if DebugLogger and not OS.has_feature("editor"):
+				DebugLogger.write_log("[PaintingModeManager] Right click - should_undo=true")
 	elif event.is_action_pressed("action_primary"):
 		should_place = true
 	elif event.is_action_pressed("action_secondary"):
@@ -113,21 +117,34 @@ func _unhandled_input(event):
 		# Cooldown check to prevent trigger spamming
 		var current_time = Time.get_ticks_msec() / 1000.0
 		if current_time - last_placement_time < placement_cooldown:
+			if DebugLogger and not OS.has_feature("editor"):
+				DebugLogger.write_log("[PaintingModeManager] Cooldown active, ignoring click")
 			return
 
 		var raycast_result = _perform_unified_raycast()
 		if not raycast_result:
+			if DebugLogger and not OS.has_feature("editor"):
+				DebugLogger.write_log("[PaintingModeManager] Raycast returned empty")
 			return
+
+		if DebugLogger and not OS.has_feature("editor"):
+			var collider_name = raycast_result.collider.name if raycast_result.has("collider") else "null"
+			DebugLogger.write_log("[PaintingModeManager] Raycast hit: %s" % collider_name)
 
 		if _is_canvas_plane(raycast_result):
 			# Route to 2D system
+			if DebugLogger and not OS.has_feature("editor"):
+				DebugLogger.write_log("[PaintingModeManager] Canvas plane detected, routing to 2D system")
 			if painting_system_2d:
 				painting_system_2d.handle_primary_action(raycast_result)
 				last_placement_time = current_time
 				get_viewport().set_input_as_handled()
 		else:
 			# Route to 3D system (with interactable check)
-			if not _is_raycast_hitting_interactable(raycast_result):
+			var is_interactable = _is_raycast_hitting_interactable(raycast_result)
+			if DebugLogger and not OS.has_feature("editor"):
+				DebugLogger.write_log("[PaintingModeManager] Not canvas plane. Is interactable: %s" % is_interactable)
+			if not is_interactable:
 				if painting_system_3d:
 					painting_system_3d.handle_primary_action(raycast_result)
 					last_placement_time = current_time

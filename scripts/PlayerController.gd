@@ -300,14 +300,19 @@ func _physics_process(delta: float) -> void:
 		_player_animation.update_animation_state(velocity, is_on_floor(), _is_sprinting())
 
 func _unhandled_input(event: InputEvent) -> void:
-	# Debug logging for exports
-	if not OS.has_feature("editor") and DebugLogger:
-		if event is InputEventMouseMotion or event is InputEventMouseButton:
-			DebugLogger.log_input_event(event)
-
 	# Skip input if CameraManager has disabled it (e.g., during cinematic cameras)
 	if not CameraManager.player_input_enabled:
 		return
+
+	# --- CAMERA ZONE TOGGLE ---
+	# Handle C key to toggle camera zones on/off
+	if event is InputEventKey:
+		var key_event = event as InputEventKey
+		if key_event.keycode == KEY_C and key_event.pressed and not key_event.echo:
+			if CameraManager:
+				CameraManager.toggle_zones(not CameraManager.zones_enabled)
+			get_viewport().set_input_as_handled()
+			return
 
 	# --- MOUSE LOOK ---
 	# Accumulate mouse input into target rotation (smoothing applied in _physics_process)

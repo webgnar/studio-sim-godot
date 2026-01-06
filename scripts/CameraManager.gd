@@ -12,6 +12,10 @@ var active_zones: Array[Node] = []
 var is_blending: bool = false
 var player_input_enabled: bool = true
 
+# Camera zone system toggle
+var zones_enabled: bool = false  # Start disabled by default
+signal zones_toggled(enabled: bool)
+
 # Internal blending state
 var _blend_timer: float = 0.0
 var _blend_duration: float = 0.0
@@ -37,6 +41,10 @@ func register_player_camera(cam: Camera3D):
 
 func enter_camera_zone(zone: Node, blend_time: float = -1.0):
 	"""Called when player enters a camera zone"""
+	# If zones are disabled, don't activate
+	if not zones_enabled:
+		return
+
 	if blend_time < 0:
 		blend_time = default_blend_time
 	
@@ -70,6 +78,24 @@ func exit_camera_zone(zone: Node, blend_time: float = -1.0):
 			var new_camera = target_zone.get_active_camera()
 			if new_camera and new_camera != current_camera:
 				switch_to_camera(new_camera, blend_time)
+
+func toggle_zones(enabled: bool):
+	"""Enable or disable the camera zone system"""
+	zones_enabled = enabled
+
+	# If disabling while zones are active, immediately return to player camera
+	if not enabled and not active_zones.is_empty():
+		# Clear all active zones
+		active_zones.clear()
+
+		# Return to player camera immediately
+		if player_camera and current_camera != player_camera:
+			switch_to_camera(player_camera, default_blend_time)
+
+		# Re-enable player input if it was disabled by a zone
+		set_player_input(true)
+
+	emit_signal("zones_toggled", enabled)
 
 func switch_to_camera(new_cam: Camera3D, blend_time: float = 0.6):
 	"""Switch to a specific camera with smooth blending"""

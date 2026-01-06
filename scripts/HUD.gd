@@ -19,6 +19,10 @@ var _current_prompt_text: String = ""  # Store current prompt for device switchi
 # --- GODOT METHODS ---
 
 func _ready() -> void:
+	# CRITICAL: Set mouse_filter to IGNORE on all Control children
+	# This prevents HUD from consuming mouse motion events needed for FPS camera look
+	_setup_mouse_filters()
+
 	# Find the player
 	_player = get_parent()
 
@@ -46,10 +50,34 @@ func _ready() -> void:
 	if InputDeviceManager:
 		InputDeviceManager.device_changed.connect(_on_input_device_changed)
 
+	# Connect to camera zone toggle for user feedback
+	if CameraManager:
+		CameraManager.zones_toggled.connect(_on_zones_toggled)
+
 	# Connect to player interaction component signals
 	_connect_to_player_interaction_component()
 
+	# Log for debugging exports
+	if DebugLogger:
+		DebugLogger.write_log("[HUD] Mouse filter set to IGNORE on all UI elements")
+
 # --- SETUP METHODS ---
+
+func _setup_mouse_filters() -> void:
+	"""Set mouse_filter to IGNORE on all HUD Control nodes to prevent consuming mouse motion"""
+	# Set filter on all root Control children
+	for child in get_children():
+		if child is Control:
+			child.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			# Recursively set on all descendants too
+			_set_mouse_filter_recursive(child)
+
+func _set_mouse_filter_recursive(node: Node) -> void:
+	"""Recursively set mouse_filter to IGNORE on all Control descendants"""
+	for child in node.get_children():
+		if child is Control:
+			child.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_set_mouse_filter_recursive(child)
 
 func _connect_to_player_interaction_component() -> void:
 	# Wait a frame for PlayerInteractionComponent to be created
@@ -341,3 +369,8 @@ func show_message(message: String, duration: float = 2.0) -> void:
 func set_crosshair_visible(show_crosshair: bool) -> void:
 	if crosshair:
 		crosshair.visible = show_crosshair
+
+func _on_zones_toggled(enabled: bool) -> void:
+	"""Show feedback when camera zones are toggled"""
+	var message = "Camera Zones: ON" if enabled else "Camera Zones: OFF"
+	show_message(message, 2.0)

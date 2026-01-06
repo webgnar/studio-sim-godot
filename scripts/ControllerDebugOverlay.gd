@@ -19,17 +19,23 @@ func _ready():
 	if OS.has_feature("editor"):
 		print("[ControllerDebugOverlay] Ready - Press F4 to toggle input debug overlay")
 
+	# Log for debugging exports
+	if DebugLogger:
+		DebugLogger.write_log("[ControllerDebugOverlay] Panel and Label mouse_filter set to IGNORE")
+
 func _create_ui():
 	# Create background panel
 	panel = PanelContainer.new()
 	panel.position = Vector2(10, 10)
 	panel.modulate = Color(1, 1, 1, 0.85)  # Slightly transparent
+	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE  # Don't consume mouse events
 	add_child(panel)
 
 	# Create label with monospace font
 	label = Label.new()
 	label.add_theme_font_size_override("font_size", 14)
 	label.add_theme_color_override("font_color", Color.WHITE)
+	label.mouse_filter = Control.MOUSE_FILTER_IGNORE  # Don't consume mouse events
 	panel.add_child(label)
 
 	# Set layer to render on top of everything
