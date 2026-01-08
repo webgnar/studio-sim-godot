@@ -92,6 +92,7 @@ sky_material = SubResource("ProceduralSkyMaterial_n78cu")
 
 [sub_resource type="Environment" id="Environment_4wyf3"]
 background_mode = 2
+background_energy_multiplier = 0.5
 sky = SubResource("Sky_rwgxs")
 tonemap_mode = 2
 glow_enabled = true
@@ -586,7 +587,7 @@ transform = Transform3D(0.33, 0, 0, 0, 0.33, 0, 0, 0, 0.33, 0, 5.100599, 2.25037
 [node name="OmniLight3D" type="OmniLight3D" parent="light2"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5879202, 0)
 light_color = Color(0.92989415, 0.9505616, 0.9608441, 1)
-light_energy = 9.0
+light_energy = 16.0
 omni_range = 10.0
 omni_attenuation = 2.0
 
@@ -595,10 +596,10 @@ transform = Transform3D(0.33, 0, 0, 0, 0.33, 0, 0, 0, 0.33, 0, 4.8278055, 9.2230
 
 [node name="OmniLight3D" type="OmniLight3D" parent="light3"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.80340767, 0)
-light_color = Color(0.6431373, 1, 1, 1)
-light_energy = 9.0
+light_color = Color(0.9036027, 0.9299972, 0.9524482, 1)
+light_energy = 6.303
 omni_range = 10.0
-omni_attenuation = 2.0
+omni_attenuation = 1.848
 
 [node name="studio" type="CSGCombiner3D" parent="."]
 transform = Transform3D(0.46, 0, 0, 0, 7.49, 0, 0, 0, 22.64, -4.9423933, 3.544661, 4)
@@ -756,6 +757,20 @@ spot_attenuation = 2.11
 spot_angle = 46.65
 
 [node name="OmniLight3D" type="OmniLight3D" parent="spot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.17222023, -1.4203625, 0)
+omni_range = 0.249
+
+[node name="mirror light" parent="." instance=ExtResource("20_munwf")]
+transform = Transform3D(0.0807274, 0.12642428, 0, -0.12642428, 0.0807274, 0, 0, 0, 0.14999995, 2.97379, 3.3326015, 5.158282)
+
+[node name="SpotLight3D" type="SpotLight3D" parent="mirror light"]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0)
+light_energy = 2.98
+spot_range = 6.7
+spot_attenuation = 2.11
+spot_angle = 46.65
+
+[node name="OmniLight3D" type="OmniLight3D" parent="mirror light"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.17222023, -1.4203625, 0)
 omni_range = 0.249
 

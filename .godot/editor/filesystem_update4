@@ -1,14 +1,6 @@
+res://scripts/ControllerDebugOverlay.gd
 res://scenes/world.tscn
 res://themes/ui_theme.tres
 res://models/particles/new_array_mesh.tres
 res://models/particles/new_array_mesh2.tres
 res://models/particles/new_array_mesh3.tres
-res://scripts/CameraManager.gd
-res://scripts/HUD.gd
-res://scripts/PlayerController.gd
-res://scripts/PlayerInteractionComponent.gd
-res://scripts/ControllerDebugOverlay.gd
-res://scripts/DebugLogger.gd
-res://scripts/painting/PaintingModeManager.gd
-res://scripts/painting/PaintingSystem2D.gd
-res://scripts/painting/PaintingSystem.gd
