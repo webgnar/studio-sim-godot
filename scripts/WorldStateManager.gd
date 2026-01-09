@@ -88,7 +88,8 @@ func save_world_state() -> bool:
 		"last_saved": _get_timestamp(),
 		"paintings": [],
 		"nails": [],
-		"stickers_3d": []
+		"stickers_3d": [],
+		"economy": _save_economic_state()  # PHASE 0: Economy save
 	}
 
 	var valid_painting_ids = []
@@ -255,6 +256,10 @@ func load_world_state(world_root: Node3D) -> void:
 				stickers_loaded += 1
 	else:
 		push_warning("PaintingSystem not registered, skipping 3D sticker load")
+
+	# PHASE 0: Load economic state
+	var economy_data = save_data.get("economy", {})
+	_load_economic_state(economy_data)
 
 	print("World state loaded: %d/%d nails, %d/%d paintings, %d/%d stickers" % [nails_loaded, nails_array.size(), paintings_loaded, paintings_array.size(), stickers_loaded, stickers_array.size()])
 
@@ -559,3 +564,45 @@ func _find_hanging_component(painting: Node) -> Node:
 		if child.has_method("hang_on_nail"):
 			return child
 	return null
+
+# ============================================================================
+# PHASE 0: Economy Save/Load
+# ============================================================================
+
+func _save_economic_state() -> Dictionary:
+	"""Save economy data to dictionary"""
+	var economy_data = {}
+
+	# Save money if EconomyManager exists
+	if has_node("/root/EconomyManager"):
+		economy_data["money"] = EconomyManager.get_money()
+
+	# Save reputation if ReputationManager exists
+	if has_node("/root/ReputationManager"):
+		economy_data["reputation_level"] = ReputationManager.get_reputation_level()
+		economy_data["reputation_points"] = ReputationManager.get_reputation_points()
+
+	# Save recent paintings if StyleTracker exists
+	if has_node("/root/StyleTracker"):
+		economy_data["recent_paintings"] = StyleTracker.get_recent_paintings()
+
+	return economy_data
+
+func _load_economic_state(economy_data: Dictionary):
+	"""Load economy data from dictionary"""
+	# Load money if EconomyManager exists
+	if has_node("/root/EconomyManager") and economy_data.has("money"):
+		EconomyManager.set_money(economy_data["money"])
+		print("Loaded economy: $%d" % economy_data["money"])
+
+	# Load reputation if ReputationManager exists
+	if has_node("/root/ReputationManager"):
+		var rep_level = economy_data.get("reputation_level", 0)
+		var rep_points = economy_data.get("reputation_points", 0.0)
+		ReputationManager.set_reputation(rep_points, rep_level)
+		print("Loaded reputation: Level %d (%.1f points)" % [rep_level, rep_points])
+
+	# Load recent paintings if StyleTracker exists
+	if has_node("/root/StyleTracker") and economy_data.has("recent_paintings"):
+		StyleTracker.set_recent_paintings(economy_data["recent_paintings"])
+		print("Loaded painting history: %d paintings" % economy_data["recent_paintings"].size())

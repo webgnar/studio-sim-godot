@@ -148,6 +148,42 @@ func complete_mission(result: ValidationResult, latest_painting_path: String = "
 		if mission_start_time > 0:
 			mission_duration_sec = (Time.get_ticks_msec() - mission_start_time) / 1000.0
 
+		# === PHASE 0: Economy Integration ===
+		# Calculate payout based on reputation and repetition
+		var base_price = 100  # $100 base
+		var commission_bonus = 1.5  # +50% for commissioned work
+		var rep_multiplier = 1.0
+		var repetition_penalty = 1.0
+
+		# Get reputation multiplier if ReputationManager exists
+		if has_node("/root/ReputationManager"):
+			rep_multiplier = ReputationManager.get_price_multiplier()
+
+		# Get repetition penalty if StyleTracker exists
+		if has_node("/root/StyleTracker"):
+			repetition_penalty = StyleTracker.get_repetition_penalty()
+
+		# Calculate final payout
+		var payout = int(base_price * commission_bonus * rep_multiplier * repetition_penalty)
+		payout = max(payout, int(base_price * 0.2))  # Floor at 20% of base
+
+		# Award money if EconomyManager exists
+		if has_node("/root/EconomyManager"):
+			EconomyManager.add_money(payout, "mission: " + current_mission.title)
+
+		# Award reputation (0.5-2.0 points based on validation score)
+		if has_node("/root/ReputationManager"):
+			var rep_gain = (result.match_percentage / 100.0) * 2.0
+			ReputationManager.add_reputation(rep_gain, "mission")
+
+		# Track painting style for repetition detection
+		if has_node("/root/StyleTracker") and has_node("/root/PaintingSystem2D"):
+			var painting_system = get_node("/root/World/PaintingRoot2D/PaintingSystem2D")
+			if painting_system:
+				var sticker_ids = _extract_sticker_ids(painting_system.placed_layers)
+				var colors = _extract_dominant_colors(painting_system.placed_layers)
+				StyleTracker.record_painting(sticker_ids, colors)
+
 		# Update Steam achievements and stats
 		if SteamManager:
 			_update_steam_on_mission_complete(
@@ -305,3 +341,36 @@ func _update_steam_on_mission_complete(mission: PaintingMission, result: Validat
 
 	# Store all changes to Steam
 	SteamManager.store_steam_data()
+
+func _extract_sticker_ids(placed_layers: Array) -> Array[String]:
+	"""Extract sticker IDs from placed layers for style tracking"""
+	var sticker_ids: Array[String] = []
+
+	for layer in placed_layers:
+		if layer.has("id"):
+			sticker_ids.append(str(layer.id))
+
+	return sticker_ids
+
+func _extract_dominant_colors(placed_layers: Array) -> Array[Color]:
+	"""Extract dominant colors from placed layers for style tracking"""
+	var colors: Array[Color] = []
+
+	# For now, extract colors from sticker textures
+	# This is a simplified version - can be enhanced later
+	for layer in placed_layers:
+		if layer.has("node") and layer.node:
+			var sprite = layer.node as Sprite2D
+			if sprite and sprite.texture:
+				# Sample center pixel of texture (simplified)
+				var tex = sprite.texture as Texture2D
+				if tex:
+					# For now, use a placeholder color based on texture path
+					# In a real implementation, you'd sample the texture
+					colors.append(Color(randf(), randf(), randf()))
+
+	# Limit to top 5 colors
+	if colors.size() > 5:
+		colors.resize(5)
+
+	return colors

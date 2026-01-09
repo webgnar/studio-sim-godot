@@ -1,4 +1,4 @@
-[gd_scene load_steps=133 format=3 uid="uid://cnmivki1rop3b"]
+[gd_scene load_steps=134 format=3 uid="uid://cnmivki1rop3b"]
 
 [ext_resource type="Material" uid="uid://wwlsotlotycw" path="res://materials/wood.tres" id="1_4mrxx"]
 [ext_resource type="Texture2D" uid="uid://bke1xjp3mdreb" path="res://sprites/door.jpg" id="1_i7141"]
@@ -76,6 +76,7 @@
 [ext_resource type="PackedScene" uid="uid://bryic0ubsrfjn" path="res://models/interactables/buttonGreen.glb" id="81_swu3i"]
 [ext_resource type="Script" uid="uid://bsdnronq274dp" path="res://scripts/components/PaintingSubmitButton.gd" id="82_submit"]
 [ext_resource type="PackedScene" uid="uid://c8mhk3sajq2fn" path="res://scenes/UI/MissionHUD.tscn" id="83_hud"]
+[ext_resource type="PackedScene" path="res://scenes/UI/MoneyReputationHUD.tscn" id="84_money_hud"]
 [ext_resource type="AudioStream" uid="uid://84rjpuccue2i" path="res://sounds/boomboxSwitch.ogg" id="boombox_switch"]
 [ext_resource type="AudioStream" uid="uid://8so1mqtnfhkh" path="res://sounds/box open 1.ogg" id="box_open_1"]
 [ext_resource type="AudioStream" uid="uid://bkyiswhv5fuaf" path="res://sounds/box open 2.ogg" id="box_open_2"]
@@ -488,6 +489,8 @@ theme = ExtResource("4_ygn2i")
 [node name="MissionResultsViewer" parent="GameplayUI_Layer" instance=ExtResource("81_results_viewer")]
 
 [node name="MissionHUD" parent="GameplayUI_Layer" instance=ExtResource("83_hud")]
+
+[node name="MoneyReputationHUD" parent="GameplayUI_Layer" instance=ExtResource("84_money_hud")]
 
 [node name="SaveNotification" parent="GameplayUI_Layer" instance=ExtResource("78_save_notif")]
 
@@ -1059,7 +1062,7 @@ size = Vector2i(256, 256)
 [node name="Camera3D" type="Camera3D" parent="MirrorNew/SubViewport"]
 transform = Transform3D(1.2796953e-07, 0.21836469, 0.9758673, -2.8635068e-08, 0.9758673, -0.21836469, -1, 0, 1.3113417e-07, 4.2467685, 1.1345179, 6.6101465)
 
-[node name="cardboard box" parent="." instance=ExtResource("26_ts3gi")]
+[node name="cardboard box" parent="." groups=["no_outline"] instance=ExtResource("26_ts3gi")]
 transform = Transform3D(0.33, 0, 0, 0, 0.33, 0, 0, 0, 0.33, 2.5710077, 0.29857874, 13.236617)
 
 [node name="BoxInteraction" type="Node3D" parent="cardboard box"]

@@ -1,6 +1,1 @@
-res://scripts/ControllerDebugOverlay.gd
-res://scenes/world.tscn
-res://themes/ui_theme.tres
-res://models/particles/new_array_mesh.tres
-res://models/particles/new_array_mesh2.tres
-res://models/particles/new_array_mesh3.tres
+res://scripts/economy/StyleTracker.gd
