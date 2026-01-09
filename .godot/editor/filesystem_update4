@@ -1,1 +1,12 @@
 res://scripts/economy/StyleTracker.gd
+res://scenes/world.tscn
+res://themes/ui_theme.tres
+res://models/particles/new_array_mesh.tres
+res://models/particles/new_array_mesh2.tres
+res://models/particles/new_array_mesh3.tres
+res://materials/wall.tres
+res://scenes/objects/door.tscn
+res://scenes/objects/key.tscn
+res://scripts/WorldStateManager.gd
+res://scenes/objects/NailGun.tscn
+res://materials/floor.tres

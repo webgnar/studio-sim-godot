@@ -22,6 +22,9 @@ var _registered_nails: Dictionary = {}
 # Reference to 3D painting system for saving stickers
 var _painting_system_3d: PaintingSystem3D = null
 
+# Player state flags (keys, unlocks, etc.)
+var _player_flags: Dictionary = {}
+
 func _ready():
 	_ensure_directories()
 
@@ -68,6 +71,22 @@ func register_painting_system_3d(system: PaintingSystem3D) -> void:
 	print("PaintingSystem registered for persistence")
 
 # ============================================================================
+# Player State Flags (Keys, Unlocks, etc.)
+# ============================================================================
+
+func set_flag(flag_name: String, value: bool = true) -> void:
+	"""Set a player state flag (e.g., 'studio_key' = true when key is picked up)"""
+	_player_flags[flag_name] = value
+
+func has_flag(flag_name: String) -> bool:
+	"""Check if player has a specific flag"""
+	return _player_flags.get(flag_name, false)
+
+func clear_flag(flag_name: String) -> void:
+	"""Remove a player flag"""
+	_player_flags.erase(flag_name)
+
+# ============================================================================
 # Save/Load
 # ============================================================================
 
@@ -89,7 +108,8 @@ func save_world_state() -> bool:
 		"paintings": [],
 		"nails": [],
 		"stickers_3d": [],
-		"economy": _save_economic_state()  # PHASE 0: Economy save
+		"economy": _save_economic_state(),  # PHASE 0: Economy save
+		"player_flags": _player_flags  # Player state flags (keys, unlocks, etc.)
 	}
 
 	var valid_painting_ids = []
@@ -261,6 +281,9 @@ func load_world_state(world_root: Node3D) -> void:
 	var economy_data = save_data.get("economy", {})
 	_load_economic_state(economy_data)
 
+	# Load player state flags
+	_player_flags = save_data.get("player_flags", {})
+
 	print("World state loaded: %d/%d nails, %d/%d paintings, %d/%d stickers" % [nails_loaded, nails_array.size(), paintings_loaded, paintings_array.size(), stickers_loaded, stickers_array.size()])
 
 func clear_world_state() -> void:
@@ -283,6 +306,9 @@ func clear_world_state() -> void:
 	# Clear 3D stickers
 	if _painting_system_3d:
 		_painting_system_3d.clear_canvas()
+
+	# Clear player flags
+	_player_flags.clear()
 
 	print("World state cleared")
 

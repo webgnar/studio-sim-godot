@@ -11,4 +11,4 @@ normal_scale = 0.12
 normal_texture = ExtResource("3_yeuu4")
 ao_enabled = true
 ao_texture = ExtResource("2_4nr2h")
-uv1_scale = Vector3(1, 4.12, 1)
+uv1_scale = Vector3(1, 0.58, 1)

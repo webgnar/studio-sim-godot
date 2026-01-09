@@ -1,0 +1,62 @@
+[gd_scene load_steps=7 format=3 uid="uid://do5j2we5toj7h"]
+
+[ext_resource type="PackedScene" uid="uid://dlo0d3de5te3f" path="res://models/interactables/door.glb" id="1_yar34"]
+[ext_resource type="Script" uid="uid://c5j2a80cljpeo" path="res://scripts/DoorInteraction.gd" id="2_uw3m6"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_yar34"]
+size = Vector3(35.782, 68.634, 2.2)
+
+[sub_resource type="Animation" id="Animation_uw3m6"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("model:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_yar34"]
+resource_name = "open"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("model:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, -2.8988, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_xm0wp"]
+_data = {
+&"RESET": SubResource("Animation_uw3m6"),
+&"open": SubResource("Animation_yar34")
+}
+
+[node name="Door" type="Node3D"]
+
+[node name="model" parent="." instance=ExtResource("1_yar34")]
+
+[node name="RigidBody3D" type="StaticBody3D" parent="model"]
+collision_layer = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="model/RigidBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.502363, -1.3496294, 0)
+shape = SubResource("BoxShape3D_yar34")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_xm0wp")
+}
+
+[node name="DoorInteraction" type="Node3D" parent="."]
+script = ExtResource("2_uw3m6")

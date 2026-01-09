@@ -8,7 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://dnbul2rmvqtyp" path="res://scenes/objects/ProjectileNail.tscn" id="5_projectilenail"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_7rh32"]
-size = Vector3(1.0625, 0.67160034, 0.46032715)
+size = Vector3(0.8100586, 0.67160034, 0.46032715)
 
 [sub_resource type="Animation" id="Animation_7rh32"]
 length = 0.001
@@ -100,7 +100,6 @@ max_contacts_reported = 4
 script = ExtResource("1_nailgun")
 nail_scene = ExtResource("4_wallnail")
 projectile_nail_scene = ExtResource("5_projectilenail")
-pickup_interaction_text = "Pick Up"
 equipped_position = Vector3(0.18, 0, -0.1)
 equipped_rotation = Vector3(0, 20, 0)
 shoot_sound = ExtResource("4_7rh32")
@@ -112,7 +111,7 @@ drop_power = 0.5
 metadata/_custom_type_script = "uid://cbwg344irqecy"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.03125, -0.040725708, -0.012268066)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.009521484, -0.040725708, -0.012268066)
 shape = SubResource("BoxShape3D_7rh32")
 
 [node name="model" parent="." instance=ExtResource("3_83it2")]
