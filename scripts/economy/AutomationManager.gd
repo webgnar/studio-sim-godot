@@ -13,6 +13,10 @@ const ASSISTANT_REP_REQUIREMENT: int = 1  # Reputation level 1 (10 points)
 const ASSISTANT_INTERVAL: float = 300.0  # 5 minutes in seconds
 const ASSISTANT_PAYOUT: int = 40  # $40 per painting
 
+# Audio
+@export var payout_sound: AudioStream  # Sound played when assistant completes painting
+var audio_player: AudioStreamPlayer = null
+
 # Signals
 signal assistant_purchased
 signal assistant_payout(amount: int)
@@ -20,6 +24,13 @@ signal assistant_progress(time_remaining: float, progress_percent: float)
 
 func _ready():
 	print("AutomationManager: Initialized")
+
+	# Create audio player for payout sounds
+	if payout_sound:
+		audio_player = AudioStreamPlayer.new()
+		audio_player.name = "AssistantAudio"
+		audio_player.bus = "SFX"
+		add_child(audio_player)
 
 func _process(delta: float):
 	if studio_assistant_active:
@@ -48,6 +59,11 @@ func _complete_assistant_painting():
 	EconomyManager.add_money(ASSISTANT_PAYOUT, "studio_assistant")
 	assistant_payout.emit(ASSISTANT_PAYOUT)
 	print("AutomationManager: Studio Assistant completed painting (+$%d)" % ASSISTANT_PAYOUT)
+
+	# Play payout sound
+	if payout_sound and audio_player:
+		audio_player.stream = payout_sound
+		audio_player.play()
 
 func can_purchase_assistant() -> bool:
 	"""Check if player can afford and unlock studio assistant"""

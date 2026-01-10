@@ -6,3 +6,4 @@ res://models/particles/new_array_mesh3.tres
 res://scripts/components/StudioAssistantPurchaseButton.gd
 res://scripts/DoorInteraction.gd
 res://scripts/OutlineManager.gd
+res://scripts/economy/AutomationManager.gd
