@@ -1,3 +1,5 @@
+HingeJoint3D
+MeshInstance3D
 CSGBox3D
 CSGCombiner3D
 Node3D
@@ -11,4 +13,3 @@ RigidBody3D
 DirectionalLight3D
 Label
 TextureRect
-HBoxContainer
