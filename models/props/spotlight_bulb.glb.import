@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://c8duo4thyjdsv"
-path="res://.godot/imported/spotlight.glb-309c8fd0f096e985f53ff30d26a767c3.scn"
+uid="uid://cg5g571ypcout"
+path="res://.godot/imported/spotlight_bulb.glb-d75ceb396bd0da920d1faa5bc4c5086d.scn"
 
 [deps]
 
-source_file="res://models/props/spotlight.glb"
-dest_files=["res://.godot/imported/spotlight.glb-309c8fd0f096e985f53ff30d26a767c3.scn"]
+source_file="res://models/props/spotlight_bulb.glb"
+dest_files=["res://.godot/imported/spotlight_bulb.glb-d75ceb396bd0da920d1faa5bc4c5086d.scn"]
 
 [params]
 
@@ -37,6 +37,14 @@ import_script/path=""
 materials/extract=0
 materials/extract_format=0
 materials/extract_path=""
-_subresources={}
+_subresources={
+"materials": {
+"shippy2_0": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://materials/glowinglight.tres",
+"use_external/path": "uid://dq24dwen214a7"
+}
+}
+}
 gltf/naming_version=2
 gltf/embedded_image_handling=1

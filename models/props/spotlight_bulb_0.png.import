@@ -2,20 +2,20 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dy85piinx1hxm"
-path.s3tc="res://.godot/imported/spotlight_1.png-02c2aa9765c1f3587dd2283466e8a709.s3tc.ctex"
+uid="uid://baq5s51y5p3re"
+path.s3tc="res://.godot/imported/spotlight_bulb_0.png-881aa6eb3e6f11674f8a11e5554a459f.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 generator_parameters={
-"md5": "14f3c992145c6cdebd7fba2176c1a525"
+"md5": "1f9c1e789c9c6345040f525a7f91e48c"
 }
 
 [deps]
 
-source_file="res://models/props/spotlight_1.png"
-dest_files=["res://.godot/imported/spotlight_1.png-02c2aa9765c1f3587dd2283466e8a709.s3tc.ctex"]
+source_file="res://models/props/spotlight_bulb_0.png"
+dest_files=["res://.godot/imported/spotlight_bulb_0.png-881aa6eb3e6f11674f8a11e5554a459f.s3tc.ctex"]
 
 [params]
 

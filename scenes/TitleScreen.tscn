@@ -1,4 +1,4 @@
-[gd_scene load_steps=80 format=3 uid="uid://da8jmxqyjt0xs"]
+[gd_scene load_steps=78 format=3 uid="uid://da8jmxqyjt0xs"]
 
 [ext_resource type="Script" uid="uid://bn5a584271aim" path="res://scripts/TitleScreenController.gd" id="1_2ktle"]
 [ext_resource type="Material" uid="uid://wwlsotlotycw" path="res://materials/wood.tres" id="1_hjcsb"]
@@ -7,14 +7,12 @@
 [ext_resource type="Texture2D" uid="uid://dyuvtxhp260rj" path="res://sprites/normals/wood_ambient.png" id="3_l7b4h"]
 [ext_resource type="Texture2D" uid="uid://3smflfln5x7y" path="res://sprites/normals/wood_specular.png" id="4_3mdse"]
 [ext_resource type="Texture2D" uid="uid://bifvpuur5heg3" path="res://sprites/normals/wood_normal.png" id="5_f48o8"]
-[ext_resource type="PackedScene" uid="uid://boyehvhrdbdi6" path="res://models/props/lights.glb" id="6_1bmgf"]
 [ext_resource type="Material" uid="uid://s7aanj1sph6l" path="res://materials/floor.tres" id="7_v0xar"]
 [ext_resource type="Material" uid="uid://re8gmfn1nbgt" path="res://materials/wall.tres" id="8_vq22d"]
 [ext_resource type="Material" uid="uid://48uded6h5otx" path="res://materials/brickwhite.tres" id="9_q7lne"]
 [ext_resource type="Texture2D" uid="uid://bke1xjp3mdreb" path="res://sprites/door.jpg" id="10_ijstc"]
 [ext_resource type="PackedScene" uid="uid://kraxm2alr635" path="res://scenes/old stuff/breakable_window.tscn" id="11_y4bqf"]
 [ext_resource type="PackedScene" uid="uid://clyqlnamf1d2w" path="res://scenes/old stuff/wall_outlet.tscn" id="13_l7b4h"]
-[ext_resource type="PackedScene" uid="uid://c8duo4thyjdsv" path="res://models/props/spotlight.glb" id="14_q7lne"]
 [ext_resource type="PackedScene" uid="uid://xeaph8bqk1j1" path="res://models/props/pipe_red.glb" id="15_ijstc"]
 [ext_resource type="PackedScene" uid="uid://fjppju80c5ic" path="res://models/props/pipe_yellow.glb" id="16_y4bqf"]
 [ext_resource type="PackedScene" uid="uid://cmaavrflrf4d4" path="res://models/props/pipe_gray.glb" id="17_1nrh6"]
@@ -367,40 +365,6 @@ transform = Transform3D(-7.562069e-08, -7.117353e-07, -0.9843476, -4.644262e-09,
 size = Vector3(0.7, 1, 1)
 material = SubResource("StandardMaterial3D_1nrh6")
 
-[node name="light1" parent="StudioEnvironment" instance=ExtResource("6_1bmgf")]
-transform = Transform3D(0.33, 0, 0, 0, 0.33, 0, 0, 0, 0.33, 0, 5.100599, -3)
-
-[node name="OmniLight3D" type="OmniLight3D" parent="StudioEnvironment/light1"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.71681786, 0)
-light_color = Color(0.7411765, 1, 1, 1)
-light_energy = 3.739
-light_indirect_energy = 0.0
-omni_range = 10.0
-omni_attenuation = 2.0
-
-[node name="light2" parent="StudioEnvironment" instance=ExtResource("6_1bmgf")]
-transform = Transform3D(0.33, 0, 0, 0, 0.33, 0, 0, 0, 0.33, 0, 5.100599, 2.250371)
-
-[node name="OmniLight3D2" type="OmniLight3D" parent="StudioEnvironment/light2"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.71681786, 0)
-light_color = Color(0.7411765, 1, 1, 1)
-light_energy = 1.937
-light_indirect_energy = 0.0
-omni_range = 10.0
-omni_attenuation = 2.0
-
-[node name="light3" parent="StudioEnvironment" instance=ExtResource("6_1bmgf")]
-transform = Transform3D(0.33, 0, 0, 0, 0.33, 0, 0, 0, 0.33, 0, 4.8278055, 9.223094)
-
-[node name="OmniLight3D" type="OmniLight3D" parent="StudioEnvironment/light3"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.71681786, 0)
-light_color = Color(0.7411765, 1, 1, 1)
-light_energy = 9.0
-light_indirect_energy = 0.0
-shadow_enabled = true
-omni_range = 10.0
-omni_attenuation = 2.0
-
 [node name="studio" type="CSGCombiner3D" parent="StudioEnvironment"]
 transform = Transform3D(0.46, 0, 0, 0, 7.49, 0, 0, 0, 22.64, -4.9423933, 3.544661, 4)
 use_collision = true
@@ -557,55 +521,6 @@ transform = Transform3D(-1.1175871e-08, 0, -0.14, 0, 0.14, 0, 0.14, 0, -1.117587
 
 [node name="wall outlet7" parent="outlets" instance=ExtResource("13_l7b4h")]
 transform = Transform3D(-6.119594e-09, 0, -0.14, 0, 0.14, 0, 0.14, 0, -6.119594e-09, -3.5728824, 1.6572046, 3.6067662)
-
-[node name="spot" parent="." instance=ExtResource("14_q7lne")]
-transform = Transform3D(0.1499385, 0.0042955433, 0, -0.0042955433, 0.1499385, 0, 0, 0, 0.14999999, -3.3168278, 4.545951, 7.324863)
-
-[node name="SpotLight3D" type="SpotLight3D" parent="spot"]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 1.25, 0)
-light_energy = 3.196
-spot_range = 4.437
-spot_attenuation = -1.82
-spot_angle = 33.33
-spot_angle_attenuation = 36.758244
-
-[node name="OmniLight3D" type="OmniLight3D" parent="spot"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.64, 0)
-omni_range = 0.249
-
-[node name="spot4" parent="." instance=ExtResource("14_q7lne")]
-transform = Transform3D(0.14135073, 0.050199345, 0, -0.050199345, 0.14135073, 0, 0, 0, 0.14999999, -1.9416356, 4.545951, -4.010144)
-
-[node name="SpotLight3D" type="SpotLight3D" parent="spot4"]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 1.25, 0)
-light_energy = 11.268
-light_size = 0.955
-spot_range = 5.154
-spot_attenuation = -1.55
-spot_angle = 42.25
-spot_angle_attenuation = 36.758244
-
-[node name="OmniLight3D" type="OmniLight3D" parent="spot4"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.64, 0)
-omni_range = 0.249
-
-[node name="spot3" parent="." instance=ExtResource("14_q7lne")]
-transform = Transform3D(0.14642341, 0.03256051, 0, -0.03256051, 0.14642341, 0, 0, 0, 0.14999999, -1.9969552, 4.9114475, -0.12206173)
-
-[node name="SpotLight3D" type="SpotLight3D" parent="spot3"]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 1.25, 0)
-light_energy = 13.43
-light_indirect_energy = 1.649
-light_volumetric_fog_energy = 2.297
-light_size = 0.112
-spot_range = 5.555
-spot_attenuation = -1.37
-spot_angle = 42.25
-spot_angle_attenuation = 36.758244
-
-[node name="OmniLight3D" type="OmniLight3D" parent="spot3"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.64, 0)
-omni_range = 0.249
 
 [node name="hvac group" type="Node3D" parent="."]
 

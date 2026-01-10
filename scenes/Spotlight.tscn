@@ -1,0 +1,19 @@
+[gd_scene load_steps=3 format=3 uid="uid://dca7mypiho8qy"]
+
+[ext_resource type="PackedScene" uid="uid://d2iod6p4tr0bd" path="res://models/props/spotlight_fixture.glb" id="1_xf8pf"]
+[ext_resource type="PackedScene" uid="uid://cg5g571ypcout" path="res://models/props/spotlight_bulb.glb" id="2_5gqtt"]
+
+[node name="Spotlight" type="Node3D"]
+
+[node name="fixture" parent="." instance=ExtResource("1_xf8pf")]
+
+[node name="bulb" parent="." instance=ExtResource("2_5gqtt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.8108926, 0)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.5071452, 0)
+omni_range = 0.704
+omni_attenuation = 3.02
+
+[node name="SpotLight3D" type="SpotLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, -3, 0)

@@ -3,7 +3,7 @@ res://themes/ui_theme.tres
 res://models/particles/new_array_mesh.tres
 res://models/particles/new_array_mesh2.tres
 res://models/particles/new_array_mesh3.tres
-res://scripts/components/StudioAssistantPurchaseButton.gd
-res://scripts/DoorInteraction.gd
-res://scripts/OutlineManager.gd
-res://scripts/economy/AutomationManager.gd
+res://scenes/TitleScreen.tscn
+res://scenes/Spotlight.tscn
+res://materials/glowinglight.tres
+res://scenes/objects/Fluorescent.tscn

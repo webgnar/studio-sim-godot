@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://boyehvhrdbdi6"
-path="res://.godot/imported/lights.glb-0edfb39bc2e9e80564478974aa7626a6.scn"
+uid="uid://dmnsh3sa5iyf0"
+path="res://.godot/imported/worklamp.glb-62310b55f62fc7ca9e59c12f7941d6b5.scn"
 
 [deps]
 
-source_file="res://models/props/lights.glb"
-dest_files=["res://.godot/imported/lights.glb-0edfb39bc2e9e80564478974aa7626a6.scn"]
+source_file="res://models/props/worklamp.glb"
+dest_files=["res://.godot/imported/worklamp.glb-62310b55f62fc7ca9e59c12f7941d6b5.scn"]
 
 [params]
 
@@ -37,14 +37,6 @@ import_script/path=""
 materials/extract=0
 materials/extract_format=0
 materials/extract_path=""
-_subresources={
-"nodes": {
-"PATH:lights": {
-"generate/physics": true,
-"physics/layer": 2,
-"physics/mask": 0
-}
-}
-}
+_subresources={}
 gltf/naming_version=2
 gltf/embedded_image_handling=1

@@ -2,20 +2,20 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://tpoavo8y6av4"
-path.s3tc="res://.godot/imported/spotlight_0.png-825a8515bb62563c6e28fa897235729f.s3tc.ctex"
+uid="uid://ctthp4jpf46r4"
+path.s3tc="res://.godot/imported/worklamp_0.png-448057c218aa39deccdfe415d8669322.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 generator_parameters={
-"md5": "e1b549689d2ef57fc14f770ef48e4c40"
+"md5": "ebfc096f1d00ee18f35b4bb5067ebbdb"
 }
 
 [deps]
 
-source_file="res://models/props/spotlight_0.png"
-dest_files=["res://.godot/imported/spotlight_0.png-825a8515bb62563c6e28fa897235729f.s3tc.ctex"]
+source_file="res://models/props/worklamp_0.png"
+dest_files=["res://.godot/imported/worklamp_0.png-448057c218aa39deccdfe415d8669322.s3tc.ctex"]
 
 [params]
 
