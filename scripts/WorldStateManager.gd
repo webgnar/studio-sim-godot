@@ -76,11 +76,15 @@ func register_painting_system_3d(system: PaintingSystem3D) -> void:
 
 func set_flag(flag_name: String, value: bool = true) -> void:
 	"""Set a player state flag (e.g., 'studio_key' = true when key is picked up)"""
+	print("[WorldStateManager] 🔧 Setting flag '%s' to %s" % [flag_name, value])
 	_player_flags[flag_name] = value
+	print("[WorldStateManager] 🔧 Current flags: %s" % _player_flags)
 
 func has_flag(flag_name: String) -> bool:
 	"""Check if player has a specific flag"""
-	return _player_flags.get(flag_name, false)
+	var result = _player_flags.get(flag_name, false)
+	print("[WorldStateManager] 🔍 Checking flag '%s': %s (all flags: %s)" % [flag_name, result, _player_flags])
+	return result
 
 func clear_flag(flag_name: String) -> void:
 	"""Remove a player flag"""

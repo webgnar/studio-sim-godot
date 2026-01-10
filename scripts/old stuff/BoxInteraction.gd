@@ -203,14 +203,14 @@ func _animate_lid_pair_reverse(lid_names: Array[String]) -> void:
 func _wait_for_animations_to_complete() -> void:
 	var all_anim_players = _get_animation_players()
 	var playing_animations = []
-	
+
 	for anim_player in all_anim_players:
-		if anim_player.is_playing():
+		if is_instance_valid(anim_player) and anim_player.is_playing():
 			playing_animations.append(anim_player)
-	
+
 	if playing_animations.size() > 0:
 		for anim_player in playing_animations:
-			if anim_player.is_playing():
+			if is_instance_valid(anim_player) and anim_player.is_playing():
 				await anim_player.animation_finished
 	else:
 		await get_tree().create_timer(0.1).timeout
