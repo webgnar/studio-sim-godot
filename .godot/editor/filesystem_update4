@@ -16,3 +16,4 @@ res://scripts/economy/ReputationManager.gd
 res://scenes/objects/cardboardBox.tscn
 res://scripts/DoorInteraction.gd
 res://scripts/UIManager.gd
+res://shaders/hover_outline.gdshader

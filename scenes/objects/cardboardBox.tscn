@@ -1,11 +1,197 @@
-[gd_scene load_steps=3 format=3 uid="uid://b4nwg0q6ash8e"]
+[gd_scene load_steps=18 format=3 uid="uid://b4nwg0q6ash8e"]
 
 [ext_resource type="PackedScene" uid="uid://d0y6fk05wn5dc" path="res://models/interactables/cardboard box/box.glb" id="1_wti17"]
 [ext_resource type="PackedScene" uid="uid://tejn0hfpdhf7" path="res://models/interactables/cardboard box/box topL.glb" id="2_fg35f"]
+[ext_resource type="Script" uid="uid://d5m48bcsj83f" path="res://scripts/old stuff/BoxInteraction.gd" id="3_fg35f"]
+[ext_resource type="AudioStream" uid="uid://8so1mqtnfhkh" path="res://sounds/box open 1.ogg" id="4_fiwsb"]
+[ext_resource type="AudioStream" uid="uid://bkyiswhv5fuaf" path="res://sounds/box open 2.ogg" id="5_4rmvi"]
+
+[sub_resource type="Animation" id="Animation_x2olw"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, -1.5707963, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_f17e3"]
+resource_name = "rotate"
+length = 1.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.82, 1.31, 1.5),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(0, -1.5707963, 0), Vector3(0, -1.5707964, -2.1223204), Vector3(0, -1.5707964, -3.3108895), Vector3(0, -1.5707964, -4.0090213)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_817gm"]
+_data = {
+&"RESET": SubResource("Animation_x2olw"),
+&"rotate": SubResource("Animation_f17e3")
+}
+
+[sub_resource type="Animation" id="Animation_l8ah6"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 1.5707965, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_ggc52"]
+resource_name = "rotate"
+length = 2.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.4, 2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 1.5707965, 0), Vector3(0, 1.5707964, -2.1066124), Vector3(0, 1.5707964, -4.160865)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_e75v4"]
+_data = {
+&"RESET": SubResource("Animation_l8ah6"),
+&"rotate": SubResource("Animation_ggc52")
+}
+
+[sub_resource type="Animation" id="Animation_navra"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_37qwj"]
+resource_name = "rotate"
+length = 2.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0.01666665, 0.86666656, 1.3866668, 1.9666667),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, 0, -3.2986722), Vector3(0, 0, -3.6390114), Vector3(0, 0, -3.848451)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_luhhm"]
+_data = {
+&"RESET": SubResource("Animation_navra"),
+&"rotate": SubResource("Animation_37qwj")
+}
+
+[sub_resource type="Animation" id="Animation_rup4s"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, -3.1415925, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_fh13f"]
+resource_name = "rotate"
+length = 1.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(-1.1920929e-07, 0.37333333, 0.6733333, 1.1333333, 1.5),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(0, -3.1415925, 0), Vector3(0, -3.1415927, -1.2740904), Vector3(0, -3.1415927, -2.8867745), Vector3(0, -3.1415927, -4.197517), Vector3(0, -3.1415927, -4.4593163)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_4kbfs"]
+_data = {
+&"RESET": SubResource("Animation_rup4s"),
+&"rotate": SubResource("Animation_fh13f")
+}
 
 [node name="CardboardBox" type="Node3D"]
 
-[node name="default" parent="." instance=ExtResource("1_wti17")]
+[node name="box bottom" parent="." instance=ExtResource("1_wti17")]
 
-[node name="default2" parent="." instance=ExtResource("2_fg35f")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1925641, 0)
+[node name="lid1" parent="." instance=ExtResource("2_fg35f")]
+transform = Transform3D(7.54979e-08, 0, -1, 0, 1, 0, 1, 0, 7.54979e-08, -0.011651158, 1.194471, 0.974849)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="lid1"]
+libraries = {
+&"": SubResource("AnimationLibrary_817gm")
+}
+
+[node name="lid2" parent="." instance=ExtResource("2_fg35f")]
+transform = Transform3D(-1.6292068e-07, 0, 1, 0, 1, 0, -1, 0, -1.6292068e-07, -0.011651158, 1.194471, -1.0021005)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="lid2"]
+libraries = {
+&"": SubResource("AnimationLibrary_e75v4")
+}
+
+[node name="lid3" parent="." instance=ExtResource("2_fg35f")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.9976504, 1.1547137, 0)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="lid3"]
+libraries = {
+&"": SubResource("AnimationLibrary_luhhm")
+}
+
+[node name="lid4" parent="." instance=ExtResource("2_fg35f")]
+transform = Transform3D(-1, 0, -1.509958e-07, 0, 1, 0, 1.509958e-07, 0, -1, -1.0027584, 1.1547137, 0)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="lid4"]
+libraries = {
+&"": SubResource("AnimationLibrary_4kbfs")
+}
+
+[node name="BoxInteraction" type="Node3D" parent="."]
+script = ExtResource("3_fg35f")
+flap_1_open_sound = ExtResource("4_fiwsb")
+flap_2_open_sound = ExtResource("5_4rmvi")
+box_close_sound = ExtResource("5_4rmvi")
