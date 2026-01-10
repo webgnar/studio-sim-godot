@@ -46,17 +46,13 @@ Reputation Gain = (match_percentage / 100) × 2.0 points
 
 ---
 
-## Phase 1: Studio Assistant (NEXT)
+## Phase 1: Studio Assistant ✅ IMPLEMENTED
 
-**Status**: Not started, needs design clarification
+**Status**: Code complete, needs scene setup in Godot editor
 
-### Corrected Understanding
+### Design: Passive Income Generator
 
-Original plan said "Paint 20% faster" - **this makes no sense** for manual FPS sticker placement.
-
-**New Design: Passive Income Generator**
-
-The Studio Assistant should be an NPC that paints and sells work independently while you focus on high-value commissions.
+The Studio Assistant is an NPC that paints and sells work independently while you focus on high-value commissions.
 
 ### Implementation Plan
 
@@ -129,6 +125,51 @@ Strategic choice: Grind reputation early, buy assistant later for income boost
 - Saves assistant_active state in WorldStateManager
 - Ticks in _process(), only when game is actively running (no offline progress)
 
+### What Was Actually Implemented
+
+**New Files Created**:
+1. `scripts/economy/AutomationManager.gd` - Core automation system
+   - Tracks studio_assistant_active state
+   - Timer-based passive income ($40 every 5 minutes)
+   - Reputation penalty multiplier (0.9x when active)
+   - Save/load support
+   - Signals: assistant_purchased, assistant_payout, assistant_progress
+
+2. `scripts/components/StudioAssistantPurchaseButton.gd` - Purchase interaction
+   - Extends InteractionComponent
+   - Checks money ($1,200) and reputation (Level 1) requirements
+   - Updates interaction text based on affordability
+   - Disables after purchase
+
+3. `scripts/components/StudioAssistantStatusPanel.gd` - Progress display
+   - Shows countdown timer to next painting
+   - ASCII progress bar
+   - Total session earnings tracker
+   - Updates every frame for live countdown
+
+**Modified Files**:
+- `project.godot` - Registered AutomationManager as autoload
+- `scripts/economy/ReputationManager.gd` - Applies 0.9x penalty when assistant active
+- `scripts/WorldStateManager.gd` - Saves/loads automation state
+
+**Scene Setup Needed** (do this in Godot editor):
+1. Add a purchase button object with StudioAssistantPurchaseButton component (e.g., computer or button)
+2. Create status panel in assistant room:
+   - Add Label3D node
+   - Attach StudioAssistantStatusPanel script
+   - Assign label reference in inspector
+3. Test that the key system unlocks the assistant room door
+4. (Optional) Add NPC model and canvas for visual feedback
+
+**Testing Checklist**:
+- [ ] Reach reputation level 1 (10 points)
+- [ ] Earn $1,200
+- [ ] Purchase assistant via button
+- [ ] See passive income every 5 minutes
+- [ ] Verify reputation gain reduced to 90%
+- [ ] Check status panel shows countdown
+- [ ] Save/load preserves assistant state and timer
+
 ---
 
 ## Phase 2: Print Machine (FUTURE)
@@ -185,7 +226,7 @@ WorldStateManager="*res://scripts/WorldStateManager.gd"
 EconomyManager="*res://scripts/economy/EconomyManager.gd"
 ReputationManager="*res://scripts/economy/ReputationManager.gd"
 StyleTracker="*res://scripts/economy/StyleTracker.gd"
-# Phase 1: AutomationManager="*res://scripts/economy/AutomationManager.gd"
+AutomationManager="*res://scripts/economy/AutomationManager.gd"  # Phase 1 ✅
 ```
 
 ### Key Files Modified in Phase 0
@@ -220,23 +261,41 @@ MissionManager.complete_mission()
 
 ## Current State
 
-**Working**:
+**Phase 0** ✅ COMPLETE:
 - ✅ Paint missions and earn money
-- ✅ Reputation levels affect payout
+- ✅ Reputation levels affect payout (1.2x-3.0x)
 - ✅ HUD shows money and reputation
 - ✅ Economy persists across saves
 
-**Next Action**:
-- Design and implement Studio Assistant as passive income generator
-- Build simple room with NPC and canvas
-- Add purchase UI and timer-based payouts
-- Test if passive income + reputation penalty feels like meaningful choice
+**Phase 1** ✅ CODE COMPLETE:
+- ✅ AutomationManager system implemented
+- ✅ Purchase button component created
+- ✅ Status panel display created
+- ✅ Reputation penalty integration (0.9x)
+- ✅ Save/load support
+- ⏳ Scene setup in Godot editor (user needs to place objects)
+
+**Next Actions for User**:
+1. In Godot editor, add purchase button:
+   - Create a Node3D (e.g., computer, button, or sign)
+   - Add child node: StudioAssistantPurchaseButton (extends InteractionComponent)
+   - Place near front of studio or on desk
+2. In assistant room, add status panel:
+   - Create Node3D
+   - Add Label3D child
+   - Attach StudioAssistantStatusPanel script
+   - Assign label reference in inspector
+3. Test the full loop:
+   - Earn reputation level 1 + $1,200
+   - Purchase assistant
+   - Wait 5 minutes, see $40 passive income
+   - Complete a mission, verify reputation gain is 10% lower
 
 **Questions to Answer in Testing**:
 - Does $40 every 5 minutes feel rewarding?
 - Is the -10% reputation penalty noticeable?
-- Do players care about the visual NPC or just the money?
-- Should assistant work while in painting mode or only when idle?
+- Does the assistant room feel worthwhile to visit?
+- Should payout amount or interval be adjusted?
 
 ---
 

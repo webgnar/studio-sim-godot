@@ -612,6 +612,10 @@ func _save_economic_state() -> Dictionary:
 	if has_node("/root/StyleTracker"):
 		economy_data["recent_paintings"] = StyleTracker.get_recent_paintings()
 
+	# PHASE 1: Save automation state if AutomationManager exists
+	if has_node("/root/AutomationManager"):
+		economy_data["automation"] = AutomationManager.get_save_data()
+
 	return economy_data
 
 func _load_economic_state(economy_data: Dictionary):
@@ -632,3 +636,8 @@ func _load_economic_state(economy_data: Dictionary):
 	if has_node("/root/StyleTracker") and economy_data.has("recent_paintings"):
 		StyleTracker.set_recent_paintings(economy_data["recent_paintings"])
 		print("Loaded painting history: %d paintings" % economy_data["recent_paintings"].size())
+
+	# PHASE 1: Load automation state if AutomationManager exists
+	if has_node("/root/AutomationManager") and economy_data.has("automation"):
+		AutomationManager.load_save_data(economy_data["automation"])
+		print("Loaded automation state")

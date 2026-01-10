@@ -10,3 +10,9 @@ res://scenes/objects/key.tscn
 res://scripts/WorldStateManager.gd
 res://scenes/objects/NailGun.tscn
 res://materials/floor.tres
+res://scenes/elevator.tscn
+res://materials/hover_outline_material.tres
+res://scripts/economy/ReputationManager.gd
+res://scenes/objects/cardboardBox.tscn
+res://scripts/DoorInteraction.gd
+res://scripts/UIManager.gd

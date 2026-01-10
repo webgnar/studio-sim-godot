@@ -7,7 +7,7 @@ class_name DoorInteraction
 @export var required_key_flag: String = "studio_key"  # Flag name required to unlock
 @export var locked_text: String = "Locked - Need Key"
 @export var unlocked_text: String = "Open Door"
-@export var collision_body_name: String = "RigidBody3D"  # Name of the collision body to disable when open
+@export var collision_body_name: String = "model/RigidBody3D"  # Name of the collision body to disable when open
 
 var is_open: bool = false
 var animation_player: AnimationPlayer

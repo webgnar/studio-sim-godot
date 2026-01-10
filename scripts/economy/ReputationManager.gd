@@ -19,8 +19,18 @@ func _ready():
 
 func add_reputation(amount: float, source: String = "unknown"):
 	"""Add reputation points and check for level up"""
-	reputation_points += amount
-	print("ReputationManager: +%.2f reputation from %s (Total: %.1f)" % [amount, source, reputation_points])
+	# Apply automation penalty if studio assistant is active
+	var penalty_multiplier = 1.0
+	if has_node("/root/AutomationManager"):
+		penalty_multiplier = AutomationManager.get_reputation_penalty()
+
+	var final_amount = amount * penalty_multiplier
+	reputation_points += final_amount
+
+	if penalty_multiplier < 1.0:
+		print("ReputationManager: +%.2f reputation from %s (%.2f base × %.2f penalty) (Total: %.1f)" % [final_amount, source, amount, penalty_multiplier, reputation_points])
+	else:
+		print("ReputationManager: +%.2f reputation from %s (Total: %.1f)" % [final_amount, source, reputation_points])
 
 	_check_level_up()
 	reputation_changed.emit(reputation_points, reputation_level)

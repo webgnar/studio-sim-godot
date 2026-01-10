@@ -1,4 +1,4 @@
-[gd_scene load_steps=135 format=3 uid="uid://cnmivki1rop3b"]
+[gd_scene load_steps=139 format=3 uid="uid://cnmivki1rop3b"]
 
 [ext_resource type="Material" uid="uid://wwlsotlotycw" path="res://materials/wood.tres" id="1_4mrxx"]
 [ext_resource type="Material" uid="uid://s7aanj1sph6l" path="res://materials/floor.tres" id="1_k0juu"]
@@ -25,6 +25,7 @@
 [ext_resource type="Texture2D" uid="uid://lcah2yte71x6" path="res://sprites/normals/floor-cement-2_normal.png" id="23_swu3i"]
 [ext_resource type="AudioStream" uid="uid://o3kakxscxwb1" path="res://sounds/lightswitchOFF.ogg" id="24_e75v4"]
 [ext_resource type="Texture2D" uid="uid://fgkr11lem74k" path="res://sprites/wall-new.jpg" id="24_grmox"]
+[ext_resource type="Shader" uid="uid://br4qh8mg5yosn" path="res://shaders/mirror.gdshader" id="25_xgqkh"]
 [ext_resource type="Texture2D" uid="uid://bw6anp2m20wyf" path="res://sprites/normals/wall-new_ambient.png" id="25_xgy6y"]
 [ext_resource type="Texture2D" uid="uid://dhtvy1vi0gvek" path="res://sprites/normals/wall-new_normal.png" id="26_kvmu4"]
 [ext_resource type="PackedScene" uid="uid://d0y6fk05wn5dc" path="res://models/interactables/cardboard box/box.glb" id="26_ts3gi"]
@@ -182,6 +183,20 @@ _data = {
 [sub_resource type="BoxShape3D" id="BoxShape3D_l8ah6"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_e75v4"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_munwf"]
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_xgqkh"]
+viewport_path = NodePath("MirrorNew/SubViewport")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ts3gi"]
+resource_local_to_scene = true
+render_priority = 0
+shader = ExtResource("25_xgqkh")
+shader_parameter/refl_tx = SubResource("ViewportTexture_xgqkh")
+shader_parameter/metallic = 0.7950000377625
+shader_parameter/roughness = 0.29600001406
+shader_parameter/reflection_strength = 1.0
 
 [sub_resource type="Animation" id="Animation_x2olw"]
 length = 0.001
@@ -595,6 +610,40 @@ material = SubResource("StandardMaterial3D_dss4m")
 transform = Transform3D(-7.562069e-08, -7.117353e-07, -0.9843476, -4.644262e-09, 0.99999994, -2.642525e-09, 0.035150174, 1.4461054e-08, -8.742276e-10, 0.6765671, 4.656613e-10, 0.4384692)
 size = Vector3(0.7, 1, 1)
 material = SubResource("StandardMaterial3D_dss4m")
+
+[node name="hallwaylight" parent="." instance=ExtResource("6_jhx03")]
+transform = Transform3D(0.33, 0, 0, 0, 0.33, 0, 0, 0, 0.33, 7.3721495, 4.7976737, 12.32481)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="hallwaylight"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.71681786, 0)
+light_color = Color(0.92955935, 0.9450547, 0.9603961, 1)
+light_energy = 9.0
+light_indirect_energy = 0.0
+omni_range = 10.0
+omni_attenuation = 2.0
+
+[node name="SpotLight3D" type="SpotLight3D" parent="hallwaylight"]
+transform = Transform3D(3.030303, 0, 0, 0, -0.101686075, 3.0285964, 0, -3.0285964, -0.101686075, 0, -2.9249954, 0)
+spot_range = 15.715
+spot_attenuation = 0.35
+spot_angle = 85.43
+
+[node name="hallwaylight2" parent="." instance=ExtResource("6_jhx03")]
+transform = Transform3D(0.33, 0, 0, 0, 0.33, 0, 0, 0, 0.33, 7.3721495, 4.7976737, 4.328372)
+
+[node name="SpotLight3D2" type="SpotLight3D" parent="hallwaylight2"]
+transform = Transform3D(3.030303, 0, 0, 0, -0.101686075, 3.0285964, 0, -3.0285964, -0.101686075, 0, -2.9249964, 0.18797398)
+spot_range = 15.715
+spot_attenuation = 0.35
+spot_angle = 85.43
+
+[node name="OmniLight3D" type="OmniLight3D" parent="hallwaylight2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.71681786, 0)
+light_color = Color(0.92955935, 0.9450547, 0.9603961, 1)
+light_energy = 9.0
+light_indirect_energy = 0.0
+omni_range = 10.0
+omni_attenuation = 2.0
 
 [node name="light1" parent="." instance=ExtResource("6_jhx03")]
 transform = Transform3D(0.33, 0, 0, 0, 0.33, 0, 0, 0, 0.33, 0, 5.100599, -3)
@@ -1134,6 +1183,21 @@ transform = Transform3D(0.014088948, -0.019586174, -0.62915206, 0.47128618, 0.04
 
 [node name="pipegraybent2" parent="electrical conduit" instance=ExtResource("19_kpybi")]
 transform = Transform3D(0.013917993, 0.06352692, -0.6286893, 0.017449299, 1.3355626, 0.030572794, 0.47172707, -0.05127709, 0.01741816, 58.345383, 9.54422, -27.782818)
+
+[node name="MirrorNew" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.16199991, -0.9867908, 0, 0.9867908, 0.16199991, 0, 0, 0, 1, 3.6321473, 1.012416, 7)
+visible = false
+mesh = SubResource("PlaneMesh_munwf")
+surface_material_override/0 = SubResource("ShaderMaterial_ts3gi")
+
+[node name="dummycam" type="Node3D" parent="MirrorNew"]
+transform = Transform3D(1.9106855e-15, 1, 4.371139e-08, 4.371139e-08, -4.371139e-08, 1, 1, 0, -4.371139e-08, -0.8476826, -3, 1.3113416e-07)
+
+[node name="SubViewport" type="SubViewport" parent="MirrorNew"]
+size = Vector2i(256, 256)
+
+[node name="Camera3D" type="Camera3D" parent="MirrorNew/SubViewport"]
+transform = Transform3D(1.2796953e-07, 0.21836469, 0.9758673, -2.8635068e-08, 0.9758673, -0.21836469, -1, 0, 1.3113417e-07, 4.2467685, 1.1345179, 6.6101465)
 
 [node name="cardboard box" parent="." groups=["no_outline"] instance=ExtResource("26_ts3gi")]
 transform = Transform3D(0.33, 0, 0, 0, 0.33, 0, 0, 0, 0.33, 2.5710077, 0.29857874, 13.236617)

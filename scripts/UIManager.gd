@@ -184,22 +184,15 @@ func _get_gameplay_mouse_mode() -> Input.MouseMode:
 
 	Platform-specific behavior:
 	- Linux/Steam Deck: CAPTURED - True FPS capture, prevents cursor from reaching edges
-	- macOS: CONFINED_HIDDEN - Works in Godot editor, allows development workflow
+	- macOS: CAPTURED - Proper FPS control, prevents cursor escape
 	- Windows: CAPTURED - Standard FPS behavior
 
-	Note: macOS development may experience cursor escaping to Dock/edges.
-	This is acceptable for development; production target (Steam Deck) uses CAPTURED.
+	All platforms now use CAPTURED mode for consistent behavior and proper mouse lock.
 	"""
-	if _platform_name == "macOS":
-		# macOS + Godot editor has issues with CAPTURED mode (camera won't move)
-		# Use CONFINED_HIDDEN for development workflow
-		print("UIManager: Using MOUSE_MODE_CONFINED_HIDDEN for macOS (dev mode)")
-		return Input.MOUSE_MODE_CONFINED_HIDDEN
-	else:
-		# Linux/Steam Deck and other platforms use CAPTURED for proper FPS control
-		# This prevents cursor from reaching window edges where motion can stop
-		print("UIManager: Using MOUSE_MODE_CAPTURED for %s (production FPS mode)" % _platform_name)
-		return Input.MOUSE_MODE_CAPTURED
+	# All platforms (including macOS) use CAPTURED for proper FPS control
+	# This prevents cursor from reaching window edges or escaping off screen
+	print("UIManager: Using MOUSE_MODE_CAPTURED for %s" % _platform_name)
+	return Input.MOUSE_MODE_CAPTURED
 
 func _set_mouse_mode(mode: Input.MouseMode):
 	"""Set mouse capture mode with verification"""

@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://b4nwg0q6ash8e"]
+
+[ext_resource type="PackedScene" uid="uid://d0y6fk05wn5dc" path="res://models/interactables/cardboard box/box.glb" id="1_wti17"]
+[ext_resource type="PackedScene" uid="uid://tejn0hfpdhf7" path="res://models/interactables/cardboard box/box topL.glb" id="2_fg35f"]
+
+[node name="CardboardBox" type="Node3D"]
+
+[node name="default" parent="." instance=ExtResource("1_wti17")]
+
+[node name="default2" parent="." instance=ExtResource("2_fg35f")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1925641, 0)

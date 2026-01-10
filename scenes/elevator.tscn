@@ -1,0 +1,39 @@
+[gd_scene load_steps=4 format=3 uid="uid://clxnamuc6vov8"]
+
+[ext_resource type="Material" uid="uid://wwlsotlotycw" path="res://materials/wood.tres" id="1_8lbij"]
+[ext_resource type="Texture2D" uid="uid://gdhlf7v0fpx" path="res://sprites/floor2.jpg" id="2_jmdsd"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gisge"]
+albedo_texture = ExtResource("2_jmdsd")
+
+[node name="Elevator" type="Node3D"]
+
+[node name="CSGCombiner3D" type="CSGCombiner3D" parent="."]
+use_collision = true
+collision_layer = 2
+collision_mask = 0
+
+[node name="CSGBox3D" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.38793945, 0.9206543, 0.67815185)
+size = Vector3(0.2241211, 2.8413086, 3.5082703)
+material = ExtResource("1_8lbij")
+
+[node name="CSGBox3D3" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.8531795, 0.9206543, 0.67815185)
+size = Vector3(0.2241211, 2.8413086, 3.5082703)
+material = ExtResource("1_8lbij")
+
+[node name="CSGBox3D4" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(-4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0, 1, 2.1122987, 2.3962665, 0.71459746)
+size = Vector3(0.2241211, 3.6610107, 3.5811615)
+material = ExtResource("1_8lbij")
+
+[node name="CSGBox3D5" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(-4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0, 1, 2.1520631, -0.41506326, 0.67815185)
+size = Vector3(0.2241211, 3.7405396, 3.5082703)
+material = SubResource("StandardMaterial3D_gisge")
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 2.2129622, 0.9152646, -0.97515535)
+size = Vector3(0.2241211, 2.8413086, 3.5082703)
+material = ExtResource("1_8lbij")

@@ -1,6 +1,8 @@
+SpotLight3D
+CSGBox3D
+CSGCombiner3D
 StaticBody3D
 Node3D
-CSGBox3D
 Area3D
 CollisionShape3D
 AnimationPlayer
@@ -10,5 +12,3 @@ DirectionalLight3D
 Label
 TextureRect
 HBoxContainer
-HSlider
-Marker3D
