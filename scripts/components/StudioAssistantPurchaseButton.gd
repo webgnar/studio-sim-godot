@@ -4,14 +4,20 @@ class_name StudioAssistantPurchaseButton
 ## Purchase button for Studio Assistant upgrade
 ## Extends InteractionComponent for proper player interaction
 
-func _on_ready() -> void:
+func _ready() -> void:
+	print("StudioAssistantPurchaseButton: _ready() called on node: ", name)
+	super._ready()  # Call parent InteractionComponent._ready() first
 	_update_interaction_text()
+	print("StudioAssistantPurchaseButton: Interaction text set to: ", interaction_text)
 
 	# Connect to AutomationManager signal to update text when purchased
 	if has_node("/root/AutomationManager"):
 		AutomationManager.assistant_purchased.connect(_on_assistant_purchased)
+		print("StudioAssistantPurchaseButton: Connected to AutomationManager signals")
 
 func _on_interacted(_player_interaction_component: PlayerInteractionComponent) -> void:
+	print("StudioAssistantPurchaseButton: _on_interacted() called!")
+
 	# Check if already purchased
 	if AutomationManager.is_assistant_active():
 		print("StudioAssistantPurchaseButton: Already purchased")

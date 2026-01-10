@@ -66,6 +66,10 @@ func _create_outline_for_node(node: Node) -> void:
 
 ## Create an outline duplicate for a single MeshInstance3D
 func _create_outline_duplicate(mesh_instance: MeshInstance3D) -> void:
+	# Skip if mesh instance has no mesh (empty placeholder nodes in GLB files)
+	if not mesh_instance.mesh:
+		return
+
 	# Create duplicate mesh
 	var outline = MeshInstance3D.new()
 	outline.name = mesh_instance.name + "_Outline"

@@ -11,7 +11,13 @@ signal money_changed(new_amount: int)
 signal painting_sold(amount: int, source: String)
 
 func _ready():
-	print("EconomyManager: Initialized with $%d" % money)
+	# DEBUG: Start with test money and reputation
+	money = 1200
+	if has_node("/root/ReputationManager"):
+		ReputationManager.set_reputation(10.0, 1)  # Level 1, 10 points
+
+	print("EconomyManager: [DEBUG MODE] Starting with $%d and Rep Level 1" % money)
+	money_changed.emit(money)  # Update HUD
 
 func add_money(amount: int, source: String = "unknown"):
 	"""Add money and emit signals"""

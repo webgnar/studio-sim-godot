@@ -172,38 +172,78 @@ Strategic choice: Grind reputation early, buy assistant later for income boost
 
 ---
 
-## Phase 2: Print Machine (FUTURE)
+## Phase 2: Houseplants (FUTURE)
 
 **Not designed yet. Wait until Phase 1 feels good.**
 
-Ideas:
-- Cost: $1,000
-- After completing a painting, generate 2 extra prints at $30 each
-- Increases market saturation (if repetition penalty re-enabled)
-- Visual: Physical printing machine in studio
+### Design: Studio Decoration & Mood System
+
+Purchasable houseplants that increase studio happiness/mood meter.
+
+**Mechanics**:
+- Multiple different plants available for purchase
+- Each plant type has different cost and happiness boost
+- Plants are physical objects you place in studio
+- New stat: **Happiness Meter** (0-100%)
+- Happiness affects: [TBD - reputation gain? painting speed? unlock requirements?]
+
+**Plant Ideas**:
+- Small Succulent: $200 → +5% happiness
+- Potted Fern: $400 → +10% happiness
+- Snake Plant: $600 → +15% happiness
+- Monstera: $1,000 → +20% happiness
+- Fiddle Leaf Fig: $1,500 → +25% happiness
+
+**Implementation**:
+- `scripts/economy/HappinessManager.gd` - Tracks happiness meter
+- `scripts/components/PlantPurchaseButton.gd` - Purchase interaction for each plant
+- `scenes/plants/` - Individual plant models/scenes
+- Happiness display in HUD
+- Plants can be placed via interaction (carry and place system?)
+
+**Questions to Answer**:
+- What does happiness actually boost? (Reputation? Money? Assistant speed?)
+- Can plants be moved after purchase?
+- Should there be a happiness cap?
+- Do plants stack additively (5% + 10% = 15%) or multiplicatively?
 
 ---
 
-## Phase 3: Marketing Campaign (FUTURE)
+## Phase 3: Freeform Painting Shipping (FUTURE)
 
 **Not designed yet. Wait until Phase 2 feels good.**
 
-Ideas:
-- Cost: $750 (consumable, can buy multiple times)
-- Next 5 paintings earn +30% price
-- Visual: Poster appears on wall showing "5 paintings remaining"
+### Design: Paint & Sell Without Missions
 
----
+Players can create paintings without active commissions and ship them for sale.
 
-## Phase 4: Freeform Painting & Sales (FUTURE)
+**Mechanics**:
+- Start painting mode without accepting a mission
+- Paint anything you want (no target to match)
+- When finished, "ship painting" via computer/shipping station
+- Painting sells for base price ($50-100?) modified by:
+  - Reputation multiplier (same as missions)
+  - Number of layers used (more complex = more valuable?)
+  - Happiness bonus?
+  - Style repetition penalty (re-enable StyleTracker)
 
-**Not designed yet. Far future feature.**
+**Balancing**:
+- Should be LOWER value than mission work (missions are "commissions")
+- Encourages creative expression without optimal efficiency
+- Good for "I just want to paint" moments
+- Lower or NO reputation gain (or reduced gain)
 
-Ideas:
-- Paint without active mission
-- Sell paintings from gallery/computer
-- Lower reputation gain than commissions
-- This is where repetition penalty could be re-enabled
+**Implementation**:
+- Modify mission UI to allow "Freeform Mode" button
+- Add shipping interaction (computer, mailbox, or shipping station)
+- Price calculation system for freeform work
+- Gallery/history view of shipped paintings?
+
+**Questions to Answer**:
+- How much should freeform paintings pay compared to missions?
+- Should they give reputation at all?
+- Should there be a daily limit on freeform sales?
+- Can you save freeform paintings or must ship immediately?
 
 ---
 
@@ -301,9 +341,8 @@ MissionManager.complete_mission()
 
 ## Future Considerations
 
-- **Three upgrades total** (assistant, print machine, marketing) before considering more complex systems
-- **Trend system** only if upgrades feel shallow
-- **Market simulation** only if game needs more depth
-- **Prestige** only if players reach reputation cap and want more progression
+- **Happiness system** (Phase 2) adds decorating/cozy gameplay loop
+- **Freeform painting** (Phase 3) lets players express creativity without pressure
+- **Prestige System** (Phase 5 - far future) only if players reach reputation cap and want more progression
 
 **Current philosophy**: Ship small, test feel, iterate based on what's fun.

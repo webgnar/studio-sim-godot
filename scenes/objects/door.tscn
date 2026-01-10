@@ -1,7 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://do5j2we5toj7h"]
+[gd_scene load_steps=8 format=3 uid="uid://do5j2we5toj7h"]
 
 [ext_resource type="PackedScene" uid="uid://dlo0d3de5te3f" path="res://models/interactables/door.glb" id="1_yar34"]
 [ext_resource type="Script" uid="uid://c5j2a80cljpeo" path="res://scripts/DoorInteraction.gd" id="2_uw3m6"]
+[ext_resource type="AudioStream" uid="uid://chy7m86hyxfg4" path="res://sounds/picotron/doorunlock.ogg" id="3_w0irj"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_yar34"]
 size = Vector3(1.7891, 3.4317, 0.11)
@@ -48,6 +49,7 @@ shape = SubResource("ConvexPolygonShape3D_xm0wp")
 script = ExtResource("2_uw3m6")
 drag_force = 400.0
 mouse_sensitivity = 0.01
+unlock_sound = ExtResource("3_w0irj")
 
 [node name="Area3D" type="Area3D" parent="DoorInteraction"]
 collision_layer = 4
