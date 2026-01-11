@@ -1,4 +1,4 @@
-[gd_scene load_steps=78 format=3 uid="uid://da8jmxqyjt0xs"]
+[gd_scene load_steps=80 format=3 uid="uid://da8jmxqyjt0xs"]
 
 [ext_resource type="Script" uid="uid://bn5a584271aim" path="res://scripts/TitleScreenController.gd" id="1_2ktle"]
 [ext_resource type="Material" uid="uid://wwlsotlotycw" path="res://materials/wood.tres" id="1_hjcsb"]
@@ -41,7 +41,9 @@
 [ext_resource type="Material" uid="uid://dog65sdatf7px" path="res://materials/painting6.tres" id="45_37bcn"]
 [ext_resource type="Material" uid="uid://cf5qhur1stvis" path="res://materials/painting7.tres" id="46_37bcn"]
 [ext_resource type="Material" uid="uid://624cv0t17tb6" path="res://materials/painting8.tres" id="47_pe36d"]
+[ext_resource type="PackedScene" uid="uid://c8iqeb7qfo8rl" path="res://scenes/objects/Fluorescent.tscn" id="48_6ogcu"]
 [ext_resource type="Material" uid="uid://d3gd1i8tfs2qr" path="res://materials/painting9.tres" id="48_q22b5"]
+[ext_resource type="PackedScene" uid="uid://dca7mypiho8qy" path="res://scenes/Spotlight.tscn" id="49_cr31u"]
 [ext_resource type="Material" uid="uid://d3lrekkwqrp4x" path="res://materials/painting10.tres" id="49_u3ctg"]
 [ext_resource type="Material" uid="uid://bjmebhl4btt7u" path="res://materials/painting11.tres" id="50_juc6n"]
 [ext_resource type="AudioStream" uid="uid://ddn5s1tg3jt8p" path="res://sounds/picotron/ambient.ogg" id="51_ffc86"]
@@ -845,6 +847,23 @@ transform = Transform3D(0.029999997, 0, 0, 0, 0.029999997, 0, 0, 0, 0.029999996,
 transform = Transform3D(-33.500034, -2.9286643e-06, -2.9286653e-06, 2.928665e-06, 1.4643323e-06, -33.500034, 2.9286643e-06, -33.500034, -1.4643323e-06, 0, 0, -1.7421951)
 surface_material_override/0 = ExtResource("50_juc6n")
 
+[node name="Fluorescent" parent="." instance=ExtResource("48_6ogcu")]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 4.795303, -0.98478186)
+
+[node name="Fluorescent2" parent="." instance=ExtResource("48_6ogcu")]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 4.8686376, 4.543931)
+
+[node name="Fluorescent3" parent="." instance=ExtResource("48_6ogcu")]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 4.6608667, 10.901708)
+
+[node name="Spotlight" parent="." instance=ExtResource("49_cr31u")]
+transform = Transform3D(0.1481093, 0.134401, 0, -0.134401, 0.1481093, 0, 0, 0, 0.19999997, -0.83698523, 4.2729445, 6.553215)
+
+[node name="SpotLight3D" parent="Spotlight" index="3"]
+spot_range = 6.371
+spot_attenuation = 0.16
+spot_angle = 59.56
+
 [editable path="PaintingProp2"]
 [editable path="PaintingProp3"]
 [editable path="PaintingProp4"]
@@ -855,3 +874,4 @@ surface_material_override/0 = ExtResource("50_juc6n")
 [editable path="PaintingProp9"]
 [editable path="PaintingProp10"]
 [editable path="PaintingProp11"]
+[editable path="Spotlight"]

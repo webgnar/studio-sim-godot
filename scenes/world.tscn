@@ -343,17 +343,18 @@ texture_filter = 1
 [node name="World" type="Node3D"]
 script = ExtResource("1_qaasp")
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(0.9170601, 0.21834035, 0.333659, 0, -0.8367643, 0.54756325, 0.39874908, -0.5021484, -0.76736313, 0, 11.110161, 0)
-light_color = Color(0.92156863, 1, 1, 1)
-light_energy = 0.316
-light_indirect_energy = 0.0
-light_volumetric_fog_energy = 0.0
-light_specular = 16.0
-shadow_enabled = true
-
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_4wyf3")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.024990592, -0.9996877, 0, 0.9996877, 0.024990592, 0, 9.141167, 0)
+light_energy = 0.2
+
+[node name="DirectionalLight3D2" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.9557057, 0.22730023, 0.18697909, 0, -0.63528335, 0.77227914, 0.29432392, -0.73807156, -0.60714394, 0, 7.9149475, -11.400858)
+shadow_enabled = true
+shadow_bias = 0.0
+shadow_normal_bias = 10.0
 
 [node name="PaintingUI_Layer" type="CanvasLayer" parent="."]
 
@@ -659,7 +660,7 @@ material = ExtResource("3_qfnet")
 [node name="WINDOWS" type="Node3D" parent="."]
 
 [node name="window2" parent="WINDOWS" instance=ExtResource("66_4kmvx")]
-transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -2.301294, 4.0959244, -6.759644)
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -2.301294, 4.015899, -6.759644)
 
 [node name="window3" parent="WINDOWS" instance=ExtResource("66_4kmvx")]
 transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -0.008910894, 2.467302, -6.661096)
@@ -668,13 +669,13 @@ transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -0.008910894, 2.467302,
 transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -2.2844849, 2.467302, -6.661096)
 
 [node name="window4" parent="WINDOWS" instance=ExtResource("66_4kmvx")]
-transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -0.008910894, 4.0959244, -6.759644)
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -0.008910894, 4.0121565, -6.759644)
 
 [node name="window5" parent="WINDOWS" instance=ExtResource("66_4kmvx")]
 transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 2.3344998, 2.467302, -6.661096)
 
 [node name="window6" parent="WINDOWS" instance=ExtResource("66_4kmvx")]
-transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 2.3344998, 4.0959244, -6.759644)
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 2.3344998, 4.021855, -6.759644)
 
 [node name="outlets" type="Node3D" parent="."]
 
@@ -981,7 +982,7 @@ transform = Transform3D(0.78001225, 0, 1.937151e-06, 0, 0.78, 0, -1.937151e-06, 
 shape = SubResource("CylinderShape3D_q57r8")
 debug_color = Color(0.9490196, 0, 0.58431375, 0.8117647)
 
-[node name="FAN" type="RigidBody3D" parent="."]
+[node name="FAN" type="RigidBody3D" parent="." groups=["no_outline"]]
 transform = Transform3D(0.70710677, 0, -0.70710677, 0, 1, 0, 0.70710677, 0, 0.70710677, 2.4920397, 0.17234671, -0.74469566)
 collision_layer = 8
 collision_mask = 3
