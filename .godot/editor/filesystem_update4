@@ -1,9 +1,6 @@
-res://scenes/world.tscn
+res://scenes/objects/Fluorescent.tscn
 res://themes/ui_theme.tres
 res://models/particles/new_array_mesh.tres
 res://models/particles/new_array_mesh2.tres
 res://models/particles/new_array_mesh3.tres
-res://scenes/TitleScreen.tscn
-res://scenes/Spotlight.tscn
-res://materials/glowinglight.tres
-res://scenes/objects/Fluorescent.tscn
+res://scenes/world.tscn

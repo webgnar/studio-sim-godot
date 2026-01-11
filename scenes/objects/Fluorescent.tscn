@@ -24,5 +24,6 @@ omni_attenuation = -1.525
 
 [node name="SpotLight3D" type="SpotLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0)
+light_energy = 6.0
 spot_range = 14.5
 spot_angle = 74.71
