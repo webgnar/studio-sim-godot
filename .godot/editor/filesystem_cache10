@@ -1,5 +1,5 @@
 63f7b34db8d8cdea90c76aacccf841ec
-::res://::1768110293
+::res://::1768159728
 CAMERA_SYSTEM_SETUP.md::TextFile::-1::1762247192::0::1::::<><><>0<>0<><>::
 DEBUG_EXPORT.md::TextFile::-1::1767209587::0::1::::<><><>0<>0<><>::
 default.tscn::PackedScene::4365866954318602301::1762583134::0::1::::<><><>0<>0<><>::uid://sx0bao2oqis7::::res://models/player/human skeleton rewrite.glb
@@ -323,7 +323,7 @@ setup_ukrainian.ini::TextFile::-1::1763490949::0::1::::<><><>0<>0<><>::
 ::res://native/steamworks/sdk/tools/linux/::1766457514
 README.md::TextFile::-1::1763490949::0::1::::<><><>0<>0<><>::
 ::res://resources/::1765333083
-::res://resources/missions/::1768111838
+::res://resources/missions/::1768111841
 face.tres::Resource/PaintingMission::-1::1767916813::0::1::::<><><>0<>0<><>::
 face_ref.png::CompressedTexture2D::8550873900762448927::1767916813::1767916826::1::::<><><>0<>0<>13ee78dd4ae403d31a7d2bea10ae7b1f<>res://.godot/imported/face_ref.png-028c3bcee965aa4ecbbee276404df1a4.ctex::
 landscape1.tres::Resource/PaintingMission::-1::1767912718::0::1::::<><><>0<>0<><>::

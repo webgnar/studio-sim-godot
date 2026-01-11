@@ -427,6 +427,50 @@ transform = Transform3D(-3.8946845e-07, 2.97, 2.5964567e-07, 2.97, 3.8946845e-07
 [node name="skyscraper" parent="outside Background" instance=ExtResource("75_qaasp")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 9.283257, 49.06675, 14.295425)
 
+[node name="Spotlight1" parent="." instance=ExtResource("86_grmox")]
+transform = Transform3D(0.19553687, 0.04201586, 0, -0.04201586, 0.19553687, 0, 0, 0, 0.2, -2.5281055, 4.97409, -1.6068956)
+
+[node name="OmniLight3D" parent="Spotlight1" index="2"]
+omni_range = 0.4
+
+[node name="SpotLight3D" parent="Spotlight1" index="3"]
+spot_angle = 68.3
+
+[node name="Spotlight2" parent="." instance=ExtResource("86_grmox")]
+transform = Transform3D(0.09220727, 0.17747626, 0, -0.17747626, 0.09220727, 0, 0, 0, 0.2, -0.47758496, 4.2677326, 6.604772)
+
+[node name="OmniLight3D" parent="Spotlight2" index="2"]
+omni_range = 0.4
+
+[node name="SpotLight3D" parent="Spotlight2" index="3"]
+transform = Transform3D(0.9659258, -5.551385e-09, 0.25881907, -0.25881907, -4.216698e-08, 0.9659258, 5.551385e-09, -1, -4.216698e-08, 0, -3, 0)
+shadow_enabled = true
+shadow_opacity = 0.62
+spot_range = 15.076
+spot_attenuation = 1.4
+spot_angle = 52.27
+
+[node name="Spotlight3" parent="." instance=ExtResource("86_grmox")]
+transform = Transform3D(0.19891857, 0.020770296, 0, -0.020770296, 0.19891857, 0, 0, 0, 0.2, -2.884933, 4.710015, 12.842417)
+
+[node name="Fluorescent1" parent="." instance=ExtResource("87_kvmu4")]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 4.7435613, -1.0815148)
+
+[node name="SpotLight3D" parent="Fluorescent1" index="5"]
+spot_angle = 90.0
+
+[node name="Fluorescent2" parent="." instance=ExtResource("87_kvmu4")]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 4.999279, 4.4252267)
+
+[node name="SpotLight3D" parent="Fluorescent2" index="5"]
+spot_angle = 90.0
+
+[node name="Fluorescent3" parent="." instance=ExtResource("87_kvmu4")]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 5.0153227, 11.774637)
+
+[node name="SpotLight3D" parent="Fluorescent3" index="5"]
+spot_angle = 90.0
+
 [node name="celing" type="CSGBox3D" parent="."]
 transform = Transform3D(-2.0107239e-08, 7.49, 0, -0.46, -3.2739828e-07, 0, 0, 0, 22.64, 0.057606697, 5.5446606, 4)
 use_collision = true
@@ -755,14 +799,14 @@ material = SubResource("StandardMaterial3D_xo05s")
 transform = Transform3D(0.15, 0, 0, 0, 0.15, 0, 0, 0, 0.15, 3.7619934, 1.4918613, 2.850231)
 
 [node name="lightswitch1" parent="light switch box" instance=ExtResource("22_0nbtd")]
-transform = Transform3D(0.11477976, -0.067848116, 0, 0.067848116, 0.11477976, 0, 0, 0, 0.1333333, -0.16674995, -0.052223206, -0.31477928)
+transform = Transform3D(0.11477975, -0.067848116, 0, 0.06784811, 0.11477976, 0, 0, 0, 0.13333328, -0.16674995, -0.052223206, -0.31477928)
 
 [node name="LightSwitchInteraction" type="Node3D" parent="light switch box/lightswitch1"]
 script = ExtResource("29_lightswitch_new")
 switch_id = "main_room_lights"
 switch_on_sound = ExtResource("23_l8ah6")
 switch_off_sound = ExtResource("24_e75v4")
-controlled_light_paths = Array[String](["../../light1/OmniLight3D", "../../spot3/SpotLight3D", "../../spot3/OmniLight3D", "../../spot4/SpotLight3D", "../../spot4/OmniLight3D"])
+controlled_light_paths = Array[String](["../../Spotlight1/OmniLight3D", "../../Spotlight1/SpotLight3D", "../../Fluorescent1/OmniLight3D", "../../Fluorescent1/SpotLight3D"])
 starts_on = true
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="light switch box/lightswitch1"]
@@ -785,7 +829,7 @@ script = ExtResource("29_lightswitch_new")
 switch_id = "ceiling_light2"
 switch_on_sound = ExtResource("23_l8ah6")
 switch_off_sound = ExtResource("24_e75v4")
-controlled_light_paths = Array[String](["../../light2/OmniLight3D"])
+controlled_light_paths = Array[String](["../../Spotlight2/OmniLight3D", "../../Spotlight2/SpotLight3D", "../../Fluorescent2/OmniLight3D", "../../Fluorescent2/SpotLight3D"])
 starts_on = true
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="light switch box/lightwitch2"]
@@ -802,25 +846,25 @@ shape = SubResource("BoxShape3D_ggc52")
 [node name="light switch box2" parent="." instance=ExtResource("21_ts3gi")]
 transform = Transform3D(0.15, 0, 0, 0, 0.15, 0, 0, 0, 0.15, 3.7406611, 1.6819067, 9.071993)
 
-[node name="lightswitch1" parent="light switch box2" instance=ExtResource("22_0nbtd")]
+[node name="lightswitch3" parent="light switch box2" instance=ExtResource("22_0nbtd")]
 transform = Transform3D(0.1147798, -0.06784814, 0, 0.06784814, 0.1147798, 0, 0, 0, 0.13333331, -0.16674995, -0.052223206, -0.31477928)
 
-[node name="LightSwitchInteraction" type="Node3D" parent="light switch box2/lightswitch1"]
+[node name="LightSwitchInteraction" type="Node3D" parent="light switch box2/lightswitch3"]
 script = ExtResource("29_lightswitch_new")
 switch_id = "light3_and_spots"
 switch_on_sound = ExtResource("23_l8ah6")
 switch_off_sound = ExtResource("24_e75v4")
-controlled_light_paths = Array[String](["../../light3/OmniLight3D", "../../spot/SpotLight3D", "../../spot/OmniLight3D", "../../spot2/SpotLight3D", "../../spot2/OmniLight3D"])
+controlled_light_paths = Array[String](["../../Spotlight3/OmniLight3D", "../../Spotlight3/SpotLight3D", "../../Fluorescent3/OmniLight3D", "../../Fluorescent3/SpotLight3D"])
 starts_on = true
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="light switch box2/lightswitch1"]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="light switch box2/lightswitch3"]
 libraries = {
 &"": SubResource("AnimationLibrary_3l05q")
 }
 
-[node name="StaticBody3D" type="StaticBody3D" parent="light switch box2/lightswitch1"]
+[node name="StaticBody3D" type="StaticBody3D" parent="light switch box2/lightswitch3"]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="light switch box2/lightswitch1/StaticBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="light switch box2/lightswitch3/StaticBody3D"]
 transform = Transform3D(3.31, 0, 0, 0, 3.31, 0, 0, 0, 3.3099997, -2.949997, 0, 0)
 shape = SubResource("BoxShape3D_l8ah6")
 
@@ -1242,57 +1286,13 @@ transform = Transform3D(0.12734991, 1.1873254e-08, -0.2716284, 0.2716284, -5.566
 [node name="Door" parent="." groups=["no_outline"] instance=ExtResource("83_kcpaj")]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 3.8344553, 1.6604776, 0.50646925)
 
-[node name="Spotlight" parent="." instance=ExtResource("86_grmox")]
-transform = Transform3D(0.19553687, 0.04201586, 0, -0.04201586, 0.19553687, 0, 0, 0, 0.2, -2.5281055, 4.97409, -1.6068956)
-
-[node name="OmniLight3D" parent="Spotlight" index="2"]
-omni_range = 0.4
-
-[node name="SpotLight3D" parent="Spotlight" index="3"]
-spot_angle = 68.3
-
-[node name="Spotlight2" parent="." instance=ExtResource("86_grmox")]
-transform = Transform3D(0.09220727, 0.17747626, 0, -0.17747626, 0.09220727, 0, 0, 0, 0.2, -0.47758496, 4.2677326, 6.604772)
-
-[node name="OmniLight3D" parent="Spotlight2" index="2"]
-omni_range = 0.4
-
-[node name="SpotLight3D" parent="Spotlight2" index="3"]
-transform = Transform3D(0.9659258, -5.551385e-09, 0.25881907, -0.25881907, -4.216698e-08, 0.9659258, 5.551385e-09, -1, -4.216698e-08, 0, -3, 0)
-shadow_enabled = true
-shadow_opacity = 0.62
-spot_range = 15.076
-spot_attenuation = 1.4
-spot_angle = 52.27
-
-[node name="Fluorescent" parent="." instance=ExtResource("87_kvmu4")]
-transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 4.7435613, -1.0815148)
-
-[node name="SpotLight3D" parent="Fluorescent" index="5"]
-spot_angle = 90.0
-
-[node name="Fluorescent2" parent="." instance=ExtResource("87_kvmu4")]
-transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 4.999279, 4.4252267)
-
-[node name="SpotLight3D" parent="Fluorescent2" index="5"]
-spot_angle = 90.0
-
-[node name="Fluorescent3" parent="." instance=ExtResource("87_kvmu4")]
-transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 5.0153227, 11.774637)
-
-[node name="SpotLight3D" parent="Fluorescent3" index="5"]
-spot_angle = 90.0
-
-[node name="Spotlight3" parent="." instance=ExtResource("86_grmox")]
-transform = Transform3D(0.19891857, 0.020770296, 0, -0.020770296, 0.19891857, 0, 0, 0, 0.2, -2.884933, 4.710015, 12.842417)
-
+[editable path="Spotlight1"]
+[editable path="Spotlight2"]
+[editable path="Fluorescent1"]
+[editable path="Fluorescent2"]
+[editable path="Fluorescent3"]
 [editable path="Styrofoam cube"]
 [editable path="CameraZone"]
 [editable path="CameraZone3 inside"]
 [editable path="CameraZone3 inside2"]
 [editable path="CameraZone3 inside3"]
-[editable path="Spotlight"]
-[editable path="Spotlight2"]
-[editable path="Fluorescent"]
-[editable path="Fluorescent2"]
-[editable path="Fluorescent3"]
