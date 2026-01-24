@@ -57,6 +57,7 @@ ControllerMapper="*res://scripts/ControllerMapper.gd"
 SteamInput="*res://scripts/SteamInput.gd"
 ControllerDebugOverlay="*res://scripts/ControllerDebugOverlay.gd"
 LaunchOptionsHandler="*res://scripts/LaunchOptionsHandler.gd"
+PaintingExporter="*res://scripts/PaintingExporter.gd"
 
 [display]
 

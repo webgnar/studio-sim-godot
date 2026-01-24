@@ -589,9 +589,9 @@ size = Vector3(8.528, 35.846, 9.38482)
 material = SubResource("StandardMaterial3D_gny1c")
 
 [node name="CSGBox3D" type="CSGBox3D" parent="hallway/CSGBox3D"]
-transform = Transform3D(1.9106855e-15, 1, 4.371139e-08, 4.371139e-08, -4.371139e-08, 1, 1, 0, -4.371139e-08, 0.017606735, -1.8016491, 1.6547699)
+transform = Transform3D(1.9106855e-15, 1, 4.371139e-08, 4.371139e-08, -4.371139e-08, 1, 1, 0, -4.371139e-08, 0.017606735, -1.8016491, 1.841896)
 operation = 2
-size = Vector3(5.917511, 5.5410156, 36.63073)
+size = Vector3(6.2917633, 5.5410156, 36.63073)
 material = SubResource("StandardMaterial3D_frq1x")
 
 [node name="AssistantStudio" type="Node3D" parent="."]

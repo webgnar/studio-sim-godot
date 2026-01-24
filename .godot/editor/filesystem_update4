@@ -3,5 +3,7 @@ res://themes/ui_theme.tres
 res://models/particles/new_array_mesh.tres
 res://models/particles/new_array_mesh2.tres
 res://models/particles/new_array_mesh3.tres
+res://scripts/components/ElevatorExportButton.gd
+res://scripts/components/ElevatorGateButton.gd
+res://scripts/ElevatorController.gd
 res://scenes/elevator.tscn
-res://materials/wood.tres
