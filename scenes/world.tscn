@@ -1,4 +1,4 @@
-[gd_scene load_steps=127 format=3 uid="uid://cnmivki1rop3b"]
+[gd_scene load_steps=131 format=3 uid="uid://cnmivki1rop3b"]
 
 [ext_resource type="Material" uid="uid://wwlsotlotycw" path="res://materials/wood.tres" id="1_4mrxx"]
 [ext_resource type="Texture2D" uid="uid://cbn0d3riillev" path="res://sprites/wood.jpg" id="1_q5onr"]
@@ -27,6 +27,7 @@
 [ext_resource type="PackedScene" uid="uid://cugtdfp4dt78m" path="res://scenes/player.tscn" id="27_l137e"]
 [ext_resource type="Script" uid="uid://cftd54g3pgkr1" path="res://scripts/old stuff/LightSwitchInteraction.gd" id="29_lightswitch_new"]
 [ext_resource type="PackedScene" uid="uid://clxnamuc6vov8" path="res://scenes/elevator.tscn" id="29_xgy6y"]
+[ext_resource type="Texture2D" uid="uid://uyikjs5uvqxf" path="res://textures/512 cementbrick.png" id="30_kvmu4"]
 [ext_resource type="Texture2D" uid="uid://daneppyy5y8cp" path="res://sprites/floor-cement-2.jpg" id="31_c15v2"]
 [ext_resource type="PackedScene" uid="uid://br0ke8na4oeqj" path="res://scenes/button_green.tscn" id="31_grmox"]
 [ext_resource type="Script" uid="uid://hlurbym3vcmr" path="res://scripts/components/StudioAssistantPurchaseButton.gd" id="32_xgy6y"]
@@ -124,6 +125,16 @@ ao_enabled = true
 ao_texture = ExtResource("25_xgy6y")
 uv1_scale = Vector3(1, 4.38, 1)
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gny1c"]
+albedo_texture = ExtResource("30_kvmu4")
+uv1_scale = Vector3(10.22, 1, 1)
+texture_filter = 0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_frq1x"]
+albedo_texture = ExtResource("30_kvmu4")
+uv1_scale = Vector3(10.68, 1, 1)
+texture_filter = 0
+
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_xgy6y"]
 radius = 1.0146484
 
@@ -147,6 +158,17 @@ ao_enabled = true
 ao_light_affect = 0.08
 ao_texture = ExtResource("22_ygn2i")
 uv1_scale = Vector3(3.353, 3.481, 3.131)
+uv1_offset = Vector3(0, -1, 0)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xgy6y"]
+albedo_texture = ExtResource("31_c15v2")
+normal_enabled = true
+normal_scale = 0.24
+normal_texture = ExtResource("23_swu3i")
+ao_enabled = true
+ao_light_affect = 0.08
+ao_texture = ExtResource("22_ygn2i")
+uv1_scale = Vector3(3.18, 2.11, 2.89)
 uv1_offset = Vector3(0, -1, 0)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xo05s"]
@@ -425,7 +447,7 @@ transform = Transform3D(-0.204136, 0, 0.38978007, 0, 0.44, 0, -0.38978007, 0, -0
 transform = Transform3D(-3.8946845e-07, 2.97, 2.5964567e-07, 2.97, 3.8946845e-07, -2.2698936e-14, -5.674736e-14, 2.5964567e-07, -2.97, -58.9851, -8.151672, 17.451527)
 
 [node name="skyscraper" parent="outside Background" instance=ExtResource("75_qaasp")]
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 9.283257, 49.06675, 14.295425)
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 9.283257, 49.06675, 21.26212)
 
 [node name="Spotlight1" parent="." instance=ExtResource("86_grmox")]
 transform = Transform3D(0.19553687, 0.04201586, 0, -0.04201586, 0.19553687, 0, 0, 0, 0.2, -2.5281055, 4.97409, -1.6068956)
@@ -525,6 +547,9 @@ size = Vector3(0.7, 1, 1)
 material = SubResource("StandardMaterial3D_dss4m")
 
 [node name="hallway" type="CSGCombiner3D" parent="."]
+use_collision = true
+collision_layer = 2
+collision_mask = 0
 
 [node name="wall5" type="CSGBox3D" parent="hallway"]
 transform = Transform3D(0.46, 0, 0, 0, 7.49, 0, 1.7763568e-15, 0, 11.09, 13.833213, 2.795661, 10.857089)
@@ -544,19 +569,30 @@ operation = 2
 size = Vector3(1, 0.522583, 0.4542389)
 
 [node name="wall4" type="CSGBox3D" parent="hallway"]
-transform = Transform3D(-2.0107239e-08, 0, 11.09, 0, 7.49, 0, -0.46, 0, -4.847593e-07, 9.139735, 2.795661, -0.91813946)
+transform = Transform3D(-2.0107239e-08, 0, 11.09, 0, 7.49, 0, -0.46, 0, -4.847593e-07, 8.982361, 2.795661, -0.91813946)
 use_collision = true
 collision_mask = 0
-size = Vector3(1, 0.8, 0.8787842)
+size = Vector3(1, 0.8, 0.9071655)
 material = ExtResource("5_71j4m")
 
 [node name="CSGBox3D" type="CSGBox3D" parent="hallway/wall4"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.29397285, -0.13066696, -0.06864923)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.29397273, -0.13066696, -0.057548463)
 operation = 2
-size = Vector3(1.7677002, 0.58929443, 0.47702026)
+size = Vector3(1.7677002, 0.58929443, 0.45481873)
 
 [node name="window2" parent="hallway" instance=ExtResource("66_4kmvx")]
 transform = Transform3D(-5.6824803e-09, 0, -0.12, 0, 0.16, 0, 0.13, 0, -5.2453664e-09, 13.81536, 2.8592591, 1.0591073)
+
+[node name="CSGBox3D" type="CSGBox3D" parent="hallway"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.311363, -12.234131, -5.6662564)
+size = Vector3(8.528, 35.846, 9.38482)
+material = SubResource("StandardMaterial3D_gny1c")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="hallway/CSGBox3D"]
+transform = Transform3D(1.9106855e-15, 1, 4.371139e-08, 4.371139e-08, -4.371139e-08, 1, 1, 0, -4.371139e-08, 0.017606735, -1.8016491, 1.6547699)
+operation = 2
+size = Vector3(5.917511, 5.5410156, 36.63073)
+material = SubResource("StandardMaterial3D_frq1x")
 
 [node name="AssistantStudio" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.778659, 1.5494895, 8.896082)
@@ -565,6 +601,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.778659, 1.5494895, 8.89608
 transform = Transform3D(-1.2676303e-08, 0, -0.16, 0, 0.16, 0, 0.29, 0, -6.993822e-09, 2.0367012, 1.5464349, -1.0785532)
 
 [node name="CSGCombiner3D" type="CSGCombiner3D" parent="AssistantStudio"]
+use_collision = true
+collision_layer = 2
+collision_mask = 0
 
 [node name="wall6" type="CSGBox3D" parent="AssistantStudio/CSGCombiner3D"]
 transform = Transform3D(-0.15908581, 0, 10.405681, 0, 7.49, 0, -0.43161523, 0, -3.835351, -1.2205849, 1.2605457, -3.6025372)
@@ -700,6 +739,20 @@ material = ExtResource("3_qfnet")
 transform = Transform3D(2.13, 0, 0, 0, 0.88, 0, 0, 0, 0.02, 19.440466, -0.13351133, 0.22372615)
 size = Vector3(0.50341797, 1, 1)
 material = ExtResource("3_qfnet")
+
+[node name="floor3" type="CSGBox3D" parent="studio"]
+transform = Transform3D(22.413044, 0, 0, 0, 0.008010681, 0, 0, 0, 1.0114841, 30.00969, -0.5221257, 0.2987898)
+use_collision = true
+collision_mask = 0
+size = Vector3(0.9383885, 12.45, 1.0341797)
+material = SubResource("StandardMaterial3D_grmox")
+
+[node name="floor4" type="CSGBox3D" parent="studio"]
+transform = Transform3D(22.413044, 0, 0, 0, 0.008010681, 0, 0, 0, 1.0114841, 10.269602, -0.5221257, 0.65374136)
+use_collision = true
+collision_mask = 0
+size = Vector3(0.8251733, 12.45, 0.33233643)
+material = SubResource("StandardMaterial3D_xgy6y")
 
 [node name="WINDOWS" type="Node3D" parent="."]
 
@@ -1285,6 +1338,12 @@ transform = Transform3D(0.12734991, 1.1873254e-08, -0.2716284, 0.2716284, -5.566
 
 [node name="Door" parent="." groups=["no_outline"] instance=ExtResource("83_kcpaj")]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 3.8344553, 1.6604776, 0.50646925)
+
+[node name="Fluorescent" parent="." instance=ExtResource("87_kvmu4")]
+transform = Transform3D(-1.3113417e-08, 0, -0.3, 0, 0.3, 0, 0.3, 0, -1.3113417e-08, 8.539603, 4.685627, 2.1567757)
+
+[node name="Fluorescent4" parent="." instance=ExtResource("87_kvmu4")]
+transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 11.078434, 4.88143, 8.960271)
 
 [editable path="Spotlight1"]
 [editable path="Spotlight2"]

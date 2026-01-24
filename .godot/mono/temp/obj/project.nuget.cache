@@ -1,12 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "EGUu8jl4yUQ=",
+  "dgSpecHash": "G/cgQEissK4=",
   "success": true,
   "projectFilePath": "/Users/zackgg/Godot/studio-sim-godot/fps.csproj",
   "expectedPackageFiles": [
-    "/Users/zackgg/.nuget/packages/godot.sourcegenerators/4.5.0/godot.sourcegenerators.4.5.0.nupkg.sha512",
-    "/Users/zackgg/.nuget/packages/godotsharp/4.5.0/godotsharp.4.5.0.nupkg.sha512",
-    "/Users/zackgg/.nuget/packages/godotsharpeditor/4.5.0/godotsharpeditor.4.5.0.nupkg.sha512"
+    "/Users/zackgg/.nuget/packages/godot.sourcegenerators/4.5.1/godot.sourcegenerators.4.5.1.nupkg.sha512",
+    "/Users/zackgg/.nuget/packages/godotsharp/4.5.1/godotsharp.4.5.1.nupkg.sha512",
+    "/Users/zackgg/.nuget/packages/godotsharpeditor/4.5.1/godotsharpeditor.4.5.1.nupkg.sha512"
   ],
   "logs": []
 }

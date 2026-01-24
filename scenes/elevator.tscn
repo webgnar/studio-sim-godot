@@ -1,10 +1,79 @@
-[gd_scene load_steps=4 format=3 uid="uid://clxnamuc6vov8"]
+[gd_scene load_steps=16 format=3 uid="uid://clxnamuc6vov8"]
 
 [ext_resource type="Material" uid="uid://wwlsotlotycw" path="res://materials/wood.tres" id="1_8lbij"]
 [ext_resource type="Texture2D" uid="uid://gdhlf7v0fpx" path="res://sprites/floor2.jpg" id="2_jmdsd"]
+[ext_resource type="Texture2D" uid="uid://dcarqsvmjsak4" path="res://textures/512 sewer 2.PNG" id="2_pr5mj"]
+[ext_resource type="PackedScene" uid="uid://dca7mypiho8qy" path="res://scenes/Spotlight.tscn" id="4_xslfi"]
+[ext_resource type="Texture2D" uid="uid://cgy7cjvpoahj8" path="res://textures/256 bridge wood.png" id="5_s8m3u"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rtj8h"]
+albedo_texture = ExtResource("2_pr5mj")
+uv1_scale = Vector3(1.35, 1.51, 1)
+texture_filter = 0
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gisge"]
 albedo_texture = ExtResource("2_jmdsd")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2fcxx"]
+albedo_color = Color(0.6181674, 0.48843923, 0, 1)
+albedo_texture = ExtResource("5_s8m3u")
+uv1_scale = Vector3(1.77, 0.04, 1)
+uv1_offset = Vector3(-2.6, -0.27, 0)
+texture_filter = 0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_o4pep"]
+transparency = 1
+cull_mode = 2
+albedo_texture = ExtResource("5_s8m3u")
+uv1_scale = Vector3(0.54, 1, 1)
+texture_filter = 0
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_lldhi"]
+material = SubResource("StandardMaterial3D_o4pep")
+size = Vector2(1.69, 3.59)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_jkj2p"]
+material = SubResource("StandardMaterial3D_o4pep")
+size = Vector2(1.34, 3.59)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_pr5mj"]
+size = Vector3(3.6870117, 3.5732422, 0.23852539)
+
+[sub_resource type="Animation" id="Animation_pr5mj"]
+resource_name = "close"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.24, 0.38, 0.55, 1),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(2.1267476, 3.3083477, 2.501618), Vector3(2.1267476, 0.59681416, 2.501618), Vector3(2.1267476, 0.69101095, 2.501618), Vector3(2.1267476, 0.60988426, 2.501618), Vector3(2.1267476, 0.5827608, 2.501618)]
+}
+
+[sub_resource type="Animation" id="Animation_xslfi"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(2.1267476, 0, 2.501618)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_s8m3u"]
+_data = {
+&"RESET": SubResource("Animation_xslfi"),
+&"close": SubResource("Animation_pr5mj")
+}
 
 [node name="Elevator" type="Node3D"]
 
@@ -26,7 +95,7 @@ material = ExtResource("1_8lbij")
 [node name="CSGBox3D4" type="CSGBox3D" parent="CSGCombiner3D"]
 transform = Transform3D(-4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0, 1, 2.1122987, 2.3962665, 0.71459746)
 size = Vector3(0.2241211, 3.6610107, 3.5811615)
-material = ExtResource("1_8lbij")
+material = SubResource("StandardMaterial3D_rtj8h")
 
 [node name="CSGBox3D5" type="CSGBox3D" parent="CSGCombiner3D"]
 transform = Transform3D(-4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0, 1, 2.1520631, -0.41506326, 0.67815185)
@@ -37,3 +106,50 @@ material = SubResource("StandardMaterial3D_gisge")
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 2.2129622, 0.9152646, -0.97515535)
 size = Vector3(0.2241211, 2.8413086, 3.5082703)
 material = ExtResource("1_8lbij")
+
+[node name="Spotlight" parent="." instance=ExtResource("4_xslfi")]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 2.0242853, 2.2985659, -0.62002814)
+
+[node name="OmniLight3D" parent="Spotlight" index="2"]
+visible = false
+
+[node name="gate" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.1267476, 0, 2.501618)
+
+[node name="CSGBox3D" type="CSGBox3D" parent="gate"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00579834, -0.7619228, -0.0076026917)
+size = Vector3(3.6156006, 0.24206543, 0.11706543)
+material = SubResource("StandardMaterial3D_2fcxx")
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="gate"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00579834, 1.072417, -0.0076026917)
+size = Vector3(3.6156006, 0.24206543, 0.11706543)
+material = SubResource("StandardMaterial3D_2fcxx")
+
+[node name="CSGBox3D3" type="CSGBox3D" parent="gate"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00579834, 2.3672667, -0.0076026917)
+size = Vector3(3.6156006, 0.24206543, 0.11706543)
+material = SubResource("StandardMaterial3D_2fcxx")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="gate"]
+transform = Transform3D(1.9106855e-15, 4.371139e-08, 1, 1, -4.371139e-08, 0, 4.371139e-08, 1, -4.371139e-08, 0, 0.124145746, 0)
+mesh = SubResource("PlaneMesh_lldhi")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="gate"]
+transform = Transform3D(1.9106855e-15, 4.371139e-08, 1, 1, -4.371139e-08, 0, 4.371139e-08, 1, -4.371139e-08, 0, 1.7495327, 0)
+mesh = SubResource("PlaneMesh_jkj2p")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="gate"]
+collision_layer = 2
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="gate/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0146484375, 0.7524414, -0.0072021484)
+shape = SubResource("BoxShape3D_pr5mj")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="gate"]
+libraries = {
+&"": SubResource("AnimationLibrary_s8m3u")
+}
+
+[editable path="Spotlight"]
