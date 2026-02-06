@@ -3,6 +3,7 @@ extends Node3D  # or whatever your world root extends
 @onready var painting_root_3d = $PaintingRoot
 @onready var painting_root_2d = $PaintingRoot2d
 @onready var mission_authoring_ui = $DevTools_Layer/MissionAuthoringUi
+var camera_zone_switch: Node = null
 
 func _ready():
 	# Register both painting systems with the mode manager
@@ -18,9 +19,23 @@ func _ready():
 	if mission_authoring_ui and painting_system_2d:
 		mission_authoring_ui.set_painting_system(painting_system_2d)
 
+	# Connect lightswitch4 to toggle camera zones
+	var lightwitch4 = find_child("lightwitch4", true, false)
+	if lightwitch4:
+		for child in lightwitch4.get_children():
+			if child is LightSwitchInteraction:
+				camera_zone_switch = child
+				break
+	if camera_zone_switch:
+		camera_zone_switch.lights_toggled.connect(_on_camera_zone_switch_toggled)
+
 	# Wait one frame for scene tree to fully initialize
 	await get_tree().process_frame
 
 	# Load saved world state (spawn saved carryable paintings)
 	if WorldStateManager:
 		WorldStateManager.load_world_state(self)
+
+func _on_camera_zone_switch_toggled(_switch_id: String, is_on: bool) -> void:
+	if CameraManager:
+		CameraManager.toggle_zones(is_on)

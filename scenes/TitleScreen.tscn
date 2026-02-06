@@ -78,92 +78,8 @@ uv1_triplanar = true
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_08fpa"]
 albedo_texture = ExtResource("10_ijstc")
 
-[sub_resource type="Animation" id="Animation_37bcn"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:rotation")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(-0.22279128, 0, 0)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath(".:position")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(0, 1.1513119, 9.747228)]
-}
-
-[sub_resource type="Animation" id="Animation_hkayi"]
-resource_name = "pan"
-length = 30.0
-loop_mode = 1
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:position")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 29.933332),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Vector3(0, 1.7278764, 9.747228), Vector3(0, 1.7278764, 9.747228)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath(".:rotation")
-tracks/1/interp = 2
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0, 9.933333, 20, 29.933332),
-"transitions": PackedFloat32Array(1, 1, 1, 1),
-"update": 0,
-"values": [Vector3(-0.34906584, 0, 0), Vector3(-0.34906587, -0.39582318, 0), Vector3(-0.3490659, 0.41971484, -4.375921e-09), Vector3(-0.34906584, 0, 0)]
-}
-
-[sub_resource type="Animation" id="Animation_pe36d"]
-resource_name = "pan in"
-length = 5.0
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:position")
-tracks/0/interp = 2
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 5),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Vector3(0, 4.3842945, 9.747228), Vector3(0, 1.7278764, 9.747228)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath(".:rotation")
-tracks/1/interp = 2
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0, 5),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Vector3(-0.43633232, 0, 0), Vector3(-0.34906584, 0, 0)]
-}
-
 [sub_resource type="Animation" id="Animation_cr31u"]
-resource_name = "pan out"
+resource_name = "move in"
 length = 5.0
 tracks/0/type = "value"
 tracks/0/imported = false
@@ -190,12 +106,39 @@ tracks/1/keys = {
 "values": [Vector3(-0.34906584, 0, 0), Vector3(-0.34906584, 0, 0)]
 }
 
+[sub_resource type="Animation" id="Animation_hkayi"]
+resource_name = "pan"
+length = 30.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0.06666667, 30),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, 1.7278764, 9.747228), Vector3(0, 1.7278764, 9.747228)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:rotation")
+tracks/1/interp = 2
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0.06666667, 9.933333, 20, 30),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(-0.34906584, 0, 0), Vector3(-0.34906587, -0.39582318, 0), Vector3(-0.3490659, 0.41971484, -4.375921e-09), Vector3(-0.34906584, 0, 0)]
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_ureuc"]
 _data = {
-&"RESET": SubResource("Animation_37bcn"),
-&"pan": SubResource("Animation_hkayi"),
-&"pan in": SubResource("Animation_pe36d"),
-&"pan out": SubResource("Animation_cr31u")
+&"move in": SubResource("Animation_cr31u"),
+&"pan": SubResource("Animation_hkayi")
 }
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0d6if"]
@@ -551,11 +494,10 @@ transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 2.3344998, 2.467302, -6
 transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 2.3344998, 4.0959244, -6.759644)
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=2123973771]
-transform = Transform3D(1, 0, 0, 0, 0.9752845, 0.22095278, 0, -0.22095278, 0.9752845, 0, 1.1513119, 9.747228)
+transform = Transform3D(1, 0, 0, 0, 0.9396926, 0.34202012, 0, -0.34202012, 0.9396926, 0, 1.7278764, 9.747228)
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Camera3D" unique_id=1757215895]
 libraries/ = SubResource("AnimationLibrary_ureuc")
-autoplay = &"pan in"
 
 [node name="UI_Layer" parent="." unique_id=1702470508 instance=ExtResource("1_ui_layer")]
 

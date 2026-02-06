@@ -60,7 +60,6 @@
 [ext_resource type="PackedScene" uid="uid://bsbvqf088sigr" path="res://models/props/woodPallet.gltf" id="71_r5yoc"]
 [ext_resource type="PackedScene" uid="uid://btuhdnbc2hjii" path="res://scenes/PaintingRoot.tscn" id="73_1m1ue"]
 [ext_resource type="PackedScene" uid="uid://d2y06butup31i" path="res://scenes/objects/table.tscn" id="73_ca4ee"]
-[ext_resource type="PackedScene" uid="uid://itduhs107nac" path="res://models/props/water_cooler.gltf" id="74_ca4ee"]
 [ext_resource type="PackedScene" uid="uid://bqbqfg2mfb0iw" path="res://scenes/UI/PaintingUI.tscn" id="74_ntuqo"]
 [ext_resource type="PackedScene" uid="uid://bshsrjrokypta" path="res://scenes/PaintingRoot2D.tscn" id="75_ca4ee"]
 [ext_resource type="PackedScene" uid="uid://cerojl5wo53gx" path="res://models/outside/skyscraper.gltf" id="75_qaasp"]
@@ -86,6 +85,7 @@
 [ext_resource type="PackedScene" uid="uid://c8iqeb7qfo8rl" path="res://scenes/objects/Fluorescent.tscn" id="87_kvmu4"]
 [ext_resource type="PackedScene" uid="uid://b4nwg0q6ash8e" path="res://scenes/objects/cardboardBox.tscn" id="87_xgy6y"]
 [ext_resource type="PackedScene" uid="uid://dsw1cl0yimheg" path="res://models/props/security_camera.glb" id="89_5p8eo"]
+[ext_resource type="PackedScene" uid="uid://bmig8p8tifpsu" path="res://models/props/berkey.glb" id="89_gny1c"]
 [ext_resource type="AudioStream" uid="uid://84rjpuccue2i" path="res://sounds/boomboxSwitch.ogg" id="boombox_switch"]
 [ext_resource type="AudioStream" uid="uid://bukro42figtah" path="res://sounds/fan switch.ogg" id="fan_switch"]
 [ext_resource type="AudioStream" uid="uid://bw0ig22tombxc" path="res://sounds/ministudio.ogg" id="ministudio_audio"]
@@ -328,17 +328,17 @@ _data = {
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_frq1x"]
 radius = 1.0
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_gny1c"]
+[sub_resource type="PlaneMesh" id="PlaneMesh_5p8eo"]
 resource_local_to_scene = true
 size = Vector2(2.5, 3)
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_frq1x"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_gny1c"]
 resource_name = "_albedo"
 viewport_path = NodePath("../MirrorNew/SubViewport")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mlb8o"]
 resource_local_to_scene = true
-albedo_texture = SubResource("ViewportTexture_frq1x")
+albedo_texture = SubResource("ViewportTexture_gny1c")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_1v02h"]
 size = Vector2(2.5, 3)
@@ -448,7 +448,7 @@ transform = Transform3D(-0.204136, 0, 0.38978007, 0, 0.44, 0, -0.38978007, 0, -0
 transform = Transform3D(-3.8946845e-07, 2.97, 2.5964567e-07, 2.97, 3.8946845e-07, -2.2698936e-14, -5.674736e-14, 2.5964567e-07, -2.97, -58.9851, -8.151672, 17.451527)
 
 [node name="skyscraper" parent="outside Background" unique_id=1622378402 instance=ExtResource("75_qaasp")]
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 9.283257, 49.06675, 21.26212)
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 16.419205, 47.451096, 26.89219)
 
 [node name="Spotlight1" parent="." unique_id=468801462 instance=ExtResource("86_grmox")]
 transform = Transform3D(0.19553687, 0.04201586, 0, -0.04201586, 0.19553687, 0, 0, 0, 0.2, -2.5281055, 4.97409, -1.6068956)
@@ -916,21 +916,21 @@ libraries/ = SubResource("AnimationLibrary_3l05q")
 transform = Transform3D(3.31, 0, 0, 0, 3.31, 0, 0, 0, 3.3099997, -2.949997, 0, 0)
 shape = SubResource("BoxShape3D_l8ah6")
 
-[node name="lightwitch2" parent="light switch box2" unique_id=489981057 instance=ExtResource("22_0nbtd")]
+[node name="lightwitch4" parent="light switch box2" unique_id=489981057 instance=ExtResource("22_0nbtd")]
 transform = Transform3D(0.1147798, -0.06784814, 0, 0.06784814, 0.1147798, 0, 0, 0, 0.13333331, -0.16674995, -0.052223206, 0.33827782)
 
-[node name="LightSwitchInteraction" type="Node3D" parent="light switch box2/lightwitch2" unique_id=1957194036]
+[node name="LightSwitchInteraction" type="Node3D" parent="light switch box2/lightwitch4" unique_id=1957194036]
 script = ExtResource("29_lightswitch_new")
 switch_id = "unused_switch"
 switch_on_sound = ExtResource("23_l8ah6")
 switch_off_sound = ExtResource("24_e75v4")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="light switch box2/lightwitch2" unique_id=1272007002]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="light switch box2/lightwitch4" unique_id=1272007002]
 libraries/ = SubResource("AnimationLibrary_3l05q")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="light switch box2/lightwitch2" unique_id=1107568910]
+[node name="StaticBody3D" type="StaticBody3D" parent="light switch box2/lightwitch4" unique_id=1107568910]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="light switch box2/lightwitch2/StaticBody3D" unique_id=1180575601]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="light switch box2/lightwitch4/StaticBody3D" unique_id=1180575601]
 transform = Transform3D(2.85, 1.1920929e-07, 0, -1.1920929e-07, 2.85, 0, 0, 0, 2.85, -3.0112762, 0.25697327, 0)
 shape = SubResource("BoxShape3D_e75v4")
 
@@ -962,28 +962,28 @@ transform = Transform3D(-0.48780954, 0.01852866, 5.907605e-10, 0, -2.9244132e-08
 transform = Transform3D(-0.48780954, 5.146584e-08, -0.013515013, 9.821866e-09, 2.5580473, 8.806105e-24, 0.013515012, -1.4258873e-09, -0.48780948, 57.61538, -5.898941, -27.716822)
 
 [node name="pipe gray11" parent="electrical conduit" unique_id=1661041824 instance=ExtResource("19_xgqkh")]
-transform = Transform3D(-0.48780954, 4.1964462e-08, -0.013515011, 9.821866e-09, 2.0857918, 8.806105e-24, 0.0135150105, -1.1626466e-09, -0.48780948, -0.5216236, -9.451349, -19.962933)
+transform = Transform3D(-0.48780954, 4.1964462e-08, -0.013515011, 9.821866e-09, 2.0857918, 8.806105e-24, 0.0135150105, -1.1626466e-09, -0.48780948, -0.44036293, -9.432787, -20.222458)
 
 [node name="pipe gray12" parent="electrical conduit" unique_id=479151464 instance=ExtResource("19_xgqkh")]
-transform = Transform3D(-0.48780954, 0.10790221, 5.9076055e-10, 0, -1.7030406e-07, 0.48799673, 0.013515021, 3.8946085, 2.1322835e-08, -1.1734715, 3.8683472, -43.49068)
+transform = Transform3D(-0.48780954, 0.10790221, 5.9076055e-10, 0, -1.7030406e-07, 0.48799673, 0.013515022, 3.8946083, 2.1322833e-08, -1.1740761, 3.9180393, -43.51249)
 
 [node name="pipe gray8" parent="electrical conduit" unique_id=427022524 instance=ExtResource("19_xgqkh")]
 transform = Transform3D(-0.48780954, 7.2052174e-08, -0.013515013, 9.821866e-09, 3.5812664, 8.806105e-24, 0.013515012, -1.9962423e-09, -0.48780948, 55.846436, 1.1073971, -92.64468)
 
 [node name="pipe gray13" parent="electrical conduit" unique_id=568997987 instance=ExtResource("19_xgqkh")]
-transform = Transform3D(-0.48780954, 4.1964455e-08, -0.013515013, 9.821866e-09, 2.0857923, 8.806105e-24, 0.013515012, -1.1626466e-09, -0.48780948, -1.7510796, -8.854012, -66.60398)
+transform = Transform3D(-0.48780954, 4.196446e-08, -0.013515012, 9.821866e-09, 2.085792, 8.806105e-24, 0.013515011, -1.1626466e-09, -0.48780948, -1.7537022, -8.854012, -66.69865)
 
 [node name="pipe gray15" parent="electrical conduit" unique_id=479234154 instance=ExtResource("19_xgqkh")]
 transform = Transform3D(-0.48780954, 0.044686772, 5.9076055e-10, 0, -7.052997e-08, 0.48799673, 0.013515021, 1.6129187, 2.1322835e-08, -0.2139988, -0.15611267, -8.859549)
 
 [node name="pipe gray17" parent="electrical conduit" unique_id=1584002450 instance=ExtResource("19_xgqkh")]
-transform = Transform3D(-0.48780954, 0.055585984, 5.907605e-10, 0, -8.7732396e-08, 0.48799673, 0.013515023, 2.0063133, 2.1322832e-08, 0.3564663, -0.19228172, 11.730774)
+transform = Transform3D(-0.48780954, 0.055585984, 5.9076055e-10, 0, -8.773239e-08, 0.48799673, 0.013515022, 2.0063136, 2.1322833e-08, 0.355999, -0.19228172, 11.713913)
 
 [node name="pipe gray18" parent="electrical conduit" unique_id=757881209 instance=ExtResource("19_xgqkh")]
-transform = Transform3D(-0.48780954, 2.6128822e-08, -0.013515012, 9.821868e-09, 1.298701, -1.699718e-15, 0.013515011, -7.2391676e-10, -0.48780948, 0.7113266, -8.816652, 24.539034)
+transform = Transform3D(-0.48780954, 2.6128822e-08, -0.013515012, 9.821868e-09, 1.298701, -1.699718e-15, 0.013515011, -7.2391676e-10, -0.48780948, 0.7134819, -8.816652, 24.616867)
 
 [node name="pipe gray16" parent="electrical conduit" unique_id=653431353 instance=ExtResource("19_xgqkh")]
-transform = Transform3D(-0.48780954, 2.2961686e-08, -0.013515012, 9.821866e-09, 1.1412827, 8.806105e-24, 0.013515011, -6.361652e-10, -0.48780948, -0.44057083, -7.470871, -19.302631)
+transform = Transform3D(-0.48780954, 2.2961688e-08, -0.013515011, 9.821866e-09, 1.1412827, 8.806105e-24, 0.0135150105, -6.361652e-10, -0.48780948, -0.36273956, -7.470871, -19.494564)
 
 [node name="pipe gray14" parent="electrical conduit" unique_id=1434922060 instance=ExtResource("19_xgqkh")]
 transform = Transform3D(-0.48780954, 1.1876733e-08, -0.013515013, 9.821866e-09, 0.5903186, 8.806105e-24, 0.013515012, -3.2905095e-10, -0.48780948, -1.5434437, -16.920996, -69.139114)
@@ -1001,19 +1001,19 @@ transform = Transform3D(0.0030084765, -0.7083679, 2.7523328e-08, -3.9304145e-17,
 transform = Transform3D(-0.47120264, -0.04725565, 1.8361002e-09, 2.6829152e-16, -3.0964372e-08, -0.6296731, 0.03150376, -0.70680416, 2.7462566e-08, -3.2299976, -21.056435, -113.077484)
 
 [node name="pipe graybent9" parent="electrical conduit" unique_id=2001813186 instance=ExtResource("19_kpybi")]
-transform = Transform3D(-0.47222424, -0.008056181, -0.0003669918, -0.00051746785, 0.019861743, 0.47206894, -0.0053583803, 0.70805794, -0.013246185, -0.4286499, 3.375414, -20.531729)
+transform = Transform3D(-0.4722243, -0.008056184, -0.00036699174, -0.00051746774, 0.019861743, 0.47206894, -0.005358382, 0.70805794, -0.013246185, -0.43446922, 3.5429287, -20.741781)
 
-[node name="pipe graybent13" parent="electrical conduit" unique_id=1819074338 instance=ExtResource("19_kpybi")]
-transform = Transform3D(0.45752048, -0.17547736, 0.0037828556, -0.0005174673, 0.019861745, 0.47206894, -0.11704487, -0.686017, 0.012699854, -1.6908474, 3.3457108, -66.08952)
+[node name="pipe graybent13" parent="electrical conduit" unique_id=1839907680 instance=ExtResource("19_kpybi")]
+transform = Transform3D(0.47222435, 0.008056251, 0.00036699043, -0.00051746744, 0.019861743, 0.47206894, 0.0053584315, -0.70805794, 0.013246188, -1.6924, 3.4574718, -66.14566)
 
 [node name="pipe graybent11" parent="electrical conduit" unique_id=1804392828 instance=ExtResource("19_kpybi")]
-transform = Transform3D(0.46922457, 0.080109015, -0.0009836464, -0.00051746774, 0.019861745, 0.472069, 0.05341255, -0.7035578, 0.013214709, -0.38128853, -0.6103287, -18.822264)
+transform = Transform3D(0.46922457, 0.080109015, -0.0009836464, -0.00051746774, 0.019861745, 0.472069, 0.05341255, -0.7035578, 0.013214709, -0.38491058, -0.6103287, -18.952951)
 
 [node name="pipe graybent12" parent="electrical conduit" unique_id=1905776368 instance=ExtResource("19_kpybi")]
 transform = Transform3D(0.4674692, 0.099043265, 0.0117261065, -0.06632097, 0.70113486, 0.011904409, -0.009941708, -0.020145781, 0.47195917, 0.80736923, -0.72273254, 24.081074)
 
 [node name="pipe graybent10" parent="electrical conduit" unique_id=215757955 instance=ExtResource("19_kpybi")]
-transform = Transform3D(-0.47171298, -0.027680157, 0.013079032, 0.018441768, -0.7078414, -0.0006766505, 0.013095486, -0.00024769665, 0.4720732, -1.7175655, -21.068768, -67.053696)
+transform = Transform3D(-0.471713, -0.027680159, 0.013079031, 0.018441767, -0.7078414, -0.0006766505, 0.013095486, -0.0002476967, 0.4720732, -1.7219849, -21.068768, -67.21324)
 
 [node name="pipe graybent2" parent="electrical conduit" unique_id=512666991 instance=ExtResource("19_kpybi")]
 transform = Transform3D(2.0634998e-08, -0.019618535, 0.6294316, -0.47225487, 3.8701757e-15, 2.7523889e-08, -5.7170313e-10, -0.7081105, -0.017438697, 55.572853, -22.107609, -82.279785)
@@ -1182,10 +1182,10 @@ transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -0.2
 visible = false
 
 [node name="CollisionShape3D" parent="CameraZone3 inside" index="0"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.6708736, 0.06352091, -0.26856962)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.2076321, 0.06352091, -1.8029405)
 
 [node name="SecurityCamera1" parent="CameraZone3 inside" index="1"]
-transform = Transform3D(0.50333434, 0.43860352, -0.74450076, -0.12841095, 0.88999957, 0.43750566, 0.85449684, -0.124609545, 0.50428885, -1.1006107, 2.3195395, 3.2707257)
+transform = Transform3D(0.9623225, 0.056403447, -0.26599646, -9.067214e-09, 0.9782491, 0.20743363, 0.27191073, -0.19961804, 0.94139105, 0, 2, 3)
 
 [node name="Label3D" parent="CameraZone3 inside" index="3"]
 visible = false
@@ -1219,9 +1219,6 @@ visible = false
 [node name="table" parent="." unique_id=2030200054 instance=ExtResource("73_ca4ee")]
 transform = Transform3D(0, 0, 0.099999994, 0, 0.1, 0, -0.099999994, 0, 0, 1.8911555, 0.70087993, 8.85083)
 
-[node name="water" parent="." unique_id=425873989 instance=ExtResource("74_ca4ee")]
-transform = Transform3D(-6.5567085e-09, 0, 0.15, 0, 0.15, 0, -0.15, 0, -6.5567085e-09, 0.7842419, 1.6628616, 8.432643)
-
 [node name="buttonRed" type="Node3D" parent="." unique_id=1452256917]
 transform = Transform3D(-4.371139e-09, 0.1, 0, -0.1, -4.371139e-09, 0, 0, 0, 0.1, -3.32696, 1.3548026, 4.018647)
 
@@ -1252,7 +1249,7 @@ transform = Transform3D(-4.371139e-09, 0.1, 0, -0.1, -4.371139e-09, 0, 0, 0, 0.1
 
 [node name="mirror" parent="." unique_id=1626491013 instance=ExtResource("39_qaasp")]
 transform = Transform3D(-4.7902194e-08, -0.99488777, 0.10098683, -3.9073655e-08, 0.10098683, 0.99488777, -1, 4.3711392e-08, -4.3711385e-08, 2.8, 1.497, 5.232)
-mesh = SubResource("PlaneMesh_gny1c")
+mesh = SubResource("PlaneMesh_5p8eo")
 surface_material_override/0 = SubResource("StandardMaterial3D_mlb8o")
 show_debug_logs = false
 
@@ -1337,14 +1334,17 @@ transform = Transform3D(-1.3113417e-08, 0, -0.3, 0, 0.3, 0, 0.3, 0, -1.3113417e-
 [node name="Fluorescent4" parent="." unique_id=91859222 instance=ExtResource("87_kvmu4")]
 transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 11.078434, 4.88143, 8.960271)
 
-[node name="security camera" parent="." unique_id=678712659 instance=ExtResource("89_5p8eo")]
-transform = Transform3D(-0.05, 0, -7.54979e-09, 0, 0.05, 0, 7.54979e-09, 0, -0.05, 3.5283103, 3.5409694, 13.051759)
+[node name="sec camera3" parent="." unique_id=678712659 instance=ExtResource("89_5p8eo")]
+transform = Transform3D(-0.05, 0, 4.371139e-09, 0, 0.05, 0, -4.371139e-09, 0, -0.05, 3.6587749, 4.17496, -4.7213)
 
-[node name="security camera2" parent="." unique_id=1038559221 instance=ExtResource("89_5p8eo")]
-transform = Transform3D(-0.05, 0, -7.54979e-09, 0, 0.05, 0, 7.54979e-09, 0, -0.05, 3.5283103, 3.5409694, 6.950505)
+[node name="sec camera2" parent="." unique_id=448471004 instance=ExtResource("89_5p8eo")]
+transform = Transform3D(-0.05, 0, 4.371139e-09, 0, 0.05, 0, -4.371139e-09, 0, -0.05, 3.6587749, 3.662991, 7.1122212)
 
-[node name="security camera3" parent="." unique_id=1971311398 instance=ExtResource("89_5p8eo")]
-transform = Transform3D(-0.042409338, 0, -0.026484866, 0, 0.05, 0, 0.026484866, 0, -0.042409338, 3.68748, 4.175748, -5.6151404)
+[node name="sec camera" parent="." unique_id=210338497 instance=ExtResource("89_5p8eo")]
+transform = Transform3D(-0.05, 0, 4.371139e-09, 0, 0.05, 0, -4.371139e-09, 0, -0.05, 3.6587749, 4.041248, 13.682507)
+
+[node name="berkey" parent="." unique_id=295986114 instance=ExtResource("89_gny1c")]
+transform = Transform3D(-3.059797e-09, 0, -0.07, 0, 0.07, 0, 0.07, 0, -3.059797e-09, 0.80310917, 1.7617197, 8.410689)
 
 [editable path="Spotlight1"]
 [editable path="Spotlight2"]

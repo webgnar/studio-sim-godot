@@ -24,6 +24,10 @@ func _ready():
 	# Set mouse mode to visible
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
+	# Fade in from black
+	SceneTransition.set_fade_visible(true)
+	SceneTransition.fade_in()
+
 	# Start fan animation
 	if fan_animation_player:
 		fan_animation_player.play("spin")
@@ -43,8 +47,9 @@ func _ready():
 	options_menu.closed.connect(_on_options_closed)
 	add_child(options_menu)
 
-	# Chain camera animations: "pan in" -> "pan"
+	# Play "move in" backwards as intro, chain to "pan" when done
 	camera_anim.animation_finished.connect(_on_camera_animation_finished)
+	camera_anim.play_backwards("move in")
 
 	# Connect background music to loop
 	if background_music:
@@ -175,22 +180,25 @@ func _transition_to_game(scene_path: String, wipe_data: bool) -> void:
 	if wipe_data:
 		_wipe_save_data()
 
-	# Stop current camera animation and tween to pan out start position
-	camera_anim.stop()
-	var tween = create_tween().set_parallel(true)
-	tween.tween_property(camera, "position", Vector3(0, 1.7278764, 9.747228), 0.5)
-	tween.tween_property(camera, "rotation", Vector3(-0.34906584, 0, 0), 0.5)
-	await tween.finished
+	# Start loading the next scene in the background while animations play
+	ResourceLoader.load_threaded_request(scene_path)
 
-	# Play pan out and character exit concurrently
-	camera_anim.play("pan out")
+	# Disconnect chaining signal so stopping doesn't start "pan"
+	if camera_anim.animation_finished.is_connected(_on_camera_animation_finished):
+		camera_anim.animation_finished.disconnect(_on_camera_animation_finished)
+
+	# Play move in forward as the exit animation
+	camera_anim.play("move in")
+
+	# Play character exit concurrently
 	if character and character.has_method("play_exit_animation"):
 		character.play_exit_animation()
-	# Pan out (5s) is longer than character exit (~3-4s), so just await pan out
+
 	await camera_anim.animation_finished
 
-	# Fade to scene using SceneTransition singleton
-	SceneTransition.fade_to_scene(scene_path)
+	# Grab the preloaded scene and transition
+	var scene = ResourceLoader.load_threaded_get(scene_path) as PackedScene
+	SceneTransition.fade_to_packed_scene(scene)
 
 func _on_quit_pressed():
 	"""Quit the game"""
@@ -246,7 +254,7 @@ func _delete_directory_recursive(path: String):
 	DirAccess.remove_absolute(path)
 
 func _on_camera_animation_finished(anim_name: String):
-	if anim_name == "pan in":
+	if anim_name == "move in":
 		camera_anim.play("pan")
 
 func _on_background_music_finished():

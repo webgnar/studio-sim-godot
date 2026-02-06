@@ -109,6 +109,46 @@ func fade_to_scene(scene_path: String, fade_out_dur: float = -1.0, fade_in_dur: 
 	transition_completed.emit()
 
 
+func fade_to_packed_scene(scene: PackedScene, fade_out_dur: float = -1.0, fade_in_dur: float = -1.0) -> void:
+	"""Complete transition: fade out, change to pre-loaded scene, fade in"""
+	if is_transitioning:
+		push_warning("SceneTransition: Already transitioning, ignoring fade_to_packed_scene call")
+		return
+
+	if fade_out_dur < 0:
+		fade_out_dur = default_fade_out_duration
+	if fade_in_dur < 0:
+		fade_in_dur = default_fade_in_duration
+
+	is_transitioning = true
+
+	# Fade out
+	var tween_out = create_tween()
+	tween_out.tween_property(color_rect, "color:a", 1.0, fade_out_dur)
+	await tween_out.finished
+
+	fade_out_completed.emit()
+
+	# Change scene using pre-loaded PackedScene
+	var error = get_tree().change_scene_to_packed(scene)
+	if error != OK:
+		push_error("SceneTransition: Failed to change to packed scene (Error code: %d)" % error)
+		is_transitioning = false
+		return
+
+	# Wait one frame to ensure scene is loaded
+	await get_tree().process_frame
+
+	# Fade in
+	var tween_in = create_tween()
+	tween_in.tween_property(color_rect, "color:a", 0.0, fade_in_dur)
+	await tween_in.finished
+
+	fade_in_completed.emit()
+	is_transitioning = false
+	transition_completed.emit()
+
+
 func set_fade_visible(fade_visible: bool) -> void:
 	"""Manually set fade to fully visible or invisible (no animation)"""
 	if fade_visible:
