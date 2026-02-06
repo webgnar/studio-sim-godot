@@ -103,6 +103,9 @@ func export_painting_png(painting: CarryablePainting, downloads_path: String, fi
 		push_error("PaintingExporter: Failed to get image from texture")
 		return ""
 
+	# Fix rotation: in-game texture is rotated 90° left, so rotate right to correct
+	image.rotate_90(CLOCKWISE)
+
 	var error = image.save_png(full_path)
 	if error != OK:
 		push_error("PaintingExporter: Failed to save PNG: " + str(error))
@@ -167,6 +170,8 @@ func export_painting_glb(painting: CarryablePainting, downloads_path: String, fi
 		image = src_texture.get_image()
 
 	if image:
+		# Fix rotation: in-game texture is rotated 90° left, so rotate right to correct
+		image.rotate_90(CLOCKWISE)
 		var export_texture = ImageTexture.create_from_image(image)
 		export_material.albedo_texture = export_texture
 
