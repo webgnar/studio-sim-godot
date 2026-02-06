@@ -55,5 +55,8 @@ transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0.24
 
 [node name="HUD" parent="." instance=ExtResource("4_smehm")]
 
+[node name="FootstepSound" type="AudioStreamPlayer" parent="."]
+bus = &"SFX"
+
 [node name="LaserBeamVisualizer" type="Node3D" parent="."]
 script = ExtResource("5_ur7pv")

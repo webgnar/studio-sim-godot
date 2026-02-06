@@ -46,6 +46,12 @@ var _interaction_component: PlayerInteractionComponent
 # Head bob variables
 var _bob_time: float = 0.0
 var _original_camera_position: Vector3
+var _prev_bob_y: float = 0.0
+var _footstep_triggered: bool = false
+
+# Footstep sounds
+var _footstep_streams: Array[AudioStream] = []
+@onready var _footstep_player: AudioStreamPlayer = $FootstepSound
 
 # FOV variables
 var _current_fov: float
@@ -103,6 +109,12 @@ func _ready() -> void:
 	elif has_node("AnimationController"):
 		_player_animation = get_node("AnimationController")
 	
+	# Preload footstep sounds
+	_footstep_streams = [
+		preload("res://sounds/ftstep.ogg"),
+		preload("res://sounds/ftstep2.ogg"),
+	]
+
 	# Setup interaction component
 	_setup_interaction_component()
 
@@ -280,6 +292,14 @@ func _physics_process(delta: float) -> void:
 		# Calculate horizontal bob synchronized with vertical - side sway happens every other step
 		var bob_x := sin(_bob_time * 0.5) * bob_amplitude * 0.3 * speed_factor
 		
+		# Footstep sound: play once when bob reaches lowest point (local minimum)
+		if bob_y > _prev_bob_y and _prev_bob_y < 0 and not _footstep_triggered:
+			_play_footstep()
+			_footstep_triggered = true
+		elif bob_y <= _prev_bob_y:
+			_footstep_triggered = false
+		_prev_bob_y = bob_y
+
 		# Apply the bob to the camera position
 		_camera.position = _original_camera_position + Vector3(bob_x, bob_y, 0)
 	else:
@@ -289,6 +309,8 @@ func _physics_process(delta: float) -> void:
 		# Reset bob time when not moving
 		if velocity.length() < 0.1:
 			_bob_time = 0.0
+			_prev_bob_y = 0.0
+			_footstep_triggered = false
 
 	# --- APPLY MOVEMENT ---
 	# This is the core function of CharacterBody3D. It moves the character and handles collisions.
@@ -362,3 +384,8 @@ func _exit_tree() -> void:
 func _is_sprinting() -> bool:
 	"""Check if player is sprinting via keyboard Shift or controller sprint button"""
 	return Input.is_key_pressed(KEY_SHIFT) or SteamInput.is_action_pressed("sprint")
+
+func _play_footstep() -> void:
+	_footstep_player.stream = _footstep_streams.pick_random()
+	_footstep_player.pitch_scale = randf_range(0.8, 1.0)
+	_footstep_player.play()

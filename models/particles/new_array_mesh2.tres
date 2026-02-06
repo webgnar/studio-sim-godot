@@ -1,4 +1,4 @@
-[gd_resource type="ArrayMesh" load_steps=4 format=4 uid="uid://dck0wffmllx2e"]
+[gd_resource type="ArrayMesh" format=4 uid="uid://dck0wffmllx2e"]
 
 [ext_resource type="Texture2D" uid="uid://c80jrnw02elen" path="res://models/particles/shard2_0.png" id="1_0ooor"]
 

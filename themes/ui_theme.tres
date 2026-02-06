@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=14 format=3 uid="uid://cbtaxh5m7udor"]
+[gd_resource type="Theme" format=3 uid="uid://cbtaxh5m7udor"]
 
 [ext_resource type="Texture2D" uid="uid://sb7vac4222ai" path="res://sprites/ui/slider button.png" id="1_jkgan"]
 [ext_resource type="FontFile" uid="uid://tmjyio0w6cu0" path="res://fonts/studio-sim.ttf" id="1_xxbg1"]
