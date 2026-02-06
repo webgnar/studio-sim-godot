@@ -8,13 +8,17 @@
 
 config_version=5
 
+[animation]
+
+compatibility/default_parent_skeleton_in_mesh_instance_3d=true
+
 [application]
 
 config/name="studio sim"
 run/main_scene="res://scenes/TitleScreen.tscn"
-config/features=PackedStringArray("4.5", "GL Compatibility")
+config/features=PackedStringArray("4.6", "GL Compatibility")
 boot_splash/bg_color=Color(0, 0, 0, 1)
-boot_splash/fullsize=false
+boot_splash/stretch_mode=0
 boot_splash/use_filter=false
 boot_splash/image="uid://c2dm0vx6wbeg1"
 config/icon="uid://cqiw0qxli55ih"
@@ -58,6 +62,7 @@ SteamInput="*res://scripts/SteamInput.gd"
 ControllerDebugOverlay="*res://scripts/ControllerDebugOverlay.gd"
 LaunchOptionsHandler="*res://scripts/LaunchOptionsHandler.gd"
 PaintingExporter="*res://scripts/PaintingExporter.gd"
+GalleryUploader="*res://scripts/GalleryUploader.gd"
 
 [display]
 

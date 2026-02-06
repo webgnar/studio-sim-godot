@@ -158,6 +158,10 @@ func start_export() -> void:
 		png_path = result.get("png", "")
 		glb_path = result.get("glb", "")
 
+	# Upload to gallery (non-blocking)
+	if not png_path.is_empty() and not glb_path.is_empty():
+		GalleryUploader.upload_painting(png_path, glb_path)
+
 	# Remove painting from game (it's been "shipped")
 	paintings_inside.erase(painting)
 	painting.queue_free()  # This will auto-unregister from WorldStateManager via _exit_tree()
