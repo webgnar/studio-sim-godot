@@ -11,6 +11,8 @@ extends Node3D
 @onready var game_start_sound: AudioStreamPlayer = $GameStartSound
 @onready var background_music: AudioStreamPlayer = $BackgroundMusic
 @onready var fan_animation_player: AnimationPlayer = $"FAN/fan legs/cage/blade/AnimationPlayer"
+@onready var camera_anim: AnimationPlayer = $Camera3D/AnimationPlayer
+@onready var camera: Camera3D = $Camera3D
 
 var is_transitioning: bool = false
 var options_menu: Control = null
@@ -40,6 +42,9 @@ func _ready():
 	options_menu = OPTIONS_MENU_SCENE.instantiate()
 	options_menu.closed.connect(_on_options_closed)
 	add_child(options_menu)
+
+	# Chain camera animations: "pan in" -> "pan"
+	camera_anim.animation_finished.connect(_on_camera_animation_finished)
 
 	# Connect background music to loop
 	if background_music:
@@ -170,10 +175,19 @@ func _transition_to_game(scene_path: String, wipe_data: bool) -> void:
 	if wipe_data:
 		_wipe_save_data()
 
-	# Play character exit animation if character exists
+	# Stop current camera animation and tween to pan out start position
+	camera_anim.stop()
+	var tween = create_tween().set_parallel(true)
+	tween.tween_property(camera, "position", Vector3(0, 1.7278764, 9.747228), 0.5)
+	tween.tween_property(camera, "rotation", Vector3(-0.34906584, 0, 0), 0.5)
+	await tween.finished
+
+	# Play pan out and character exit concurrently
+	camera_anim.play("pan out")
 	if character and character.has_method("play_exit_animation"):
 		character.play_exit_animation()
-		await character.exit_animation_completed
+	# Pan out (5s) is longer than character exit (~3-4s), so just await pan out
+	await camera_anim.animation_finished
 
 	# Fade to scene using SceneTransition singleton
 	SceneTransition.fade_to_scene(scene_path)
@@ -230,6 +244,10 @@ func _delete_directory_recursive(path: String):
 
 	# Remove the directory itself
 	DirAccess.remove_absolute(path)
+
+func _on_camera_animation_finished(anim_name: String):
+	if anim_name == "pan in":
+		camera_anim.play("pan")
 
 func _on_background_music_finished():
 	"""Loop background music when it finishes"""

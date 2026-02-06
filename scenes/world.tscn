@@ -85,6 +85,7 @@
 [ext_resource type="PackedScene" uid="uid://dca7mypiho8qy" path="res://scenes/Spotlight.tscn" id="86_grmox"]
 [ext_resource type="PackedScene" uid="uid://c8iqeb7qfo8rl" path="res://scenes/objects/Fluorescent.tscn" id="87_kvmu4"]
 [ext_resource type="PackedScene" uid="uid://b4nwg0q6ash8e" path="res://scenes/objects/cardboardBox.tscn" id="87_xgy6y"]
+[ext_resource type="PackedScene" uid="uid://dsw1cl0yimheg" path="res://models/props/security_camera.glb" id="89_5p8eo"]
 [ext_resource type="AudioStream" uid="uid://84rjpuccue2i" path="res://sounds/boomboxSwitch.ogg" id="boombox_switch"]
 [ext_resource type="AudioStream" uid="uid://bukro42figtah" path="res://sounds/fan switch.ogg" id="fan_switch"]
 [ext_resource type="AudioStream" uid="uid://bw0ig22tombxc" path="res://sounds/ministudio.ogg" id="ministudio_audio"]
@@ -327,17 +328,17 @@ _data = {
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_frq1x"]
 radius = 1.0
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_kvmu4"]
+[sub_resource type="PlaneMesh" id="PlaneMesh_gny1c"]
 resource_local_to_scene = true
 size = Vector2(2.5, 3)
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_5p8eo"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_frq1x"]
 resource_name = "_albedo"
 viewport_path = NodePath("../MirrorNew/SubViewport")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mlb8o"]
 resource_local_to_scene = true
-albedo_texture = SubResource("ViewportTexture_5p8eo")
+albedo_texture = SubResource("ViewportTexture_frq1x")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_1v02h"]
 size = Vector2(2.5, 3)
@@ -961,10 +962,10 @@ transform = Transform3D(-0.48780954, 0.01852866, 5.907605e-10, 0, -2.9244132e-08
 transform = Transform3D(-0.48780954, 5.146584e-08, -0.013515013, 9.821866e-09, 2.5580473, 8.806105e-24, 0.013515012, -1.4258873e-09, -0.48780948, 57.61538, -5.898941, -27.716822)
 
 [node name="pipe gray11" parent="electrical conduit" unique_id=1661041824 instance=ExtResource("19_xgqkh")]
-transform = Transform3D(-0.48780954, 4.1964455e-08, -0.013515013, 9.821866e-09, 2.0857923, 8.806105e-24, 0.013515012, -1.1626466e-09, -0.48780948, -0.5252037, -9.432787, -20.09215)
+transform = Transform3D(-0.48780954, 4.1964462e-08, -0.013515011, 9.821866e-09, 2.0857918, 8.806105e-24, 0.0135150105, -1.1626466e-09, -0.48780948, -0.5216236, -9.451349, -19.962933)
 
 [node name="pipe gray12" parent="electrical conduit" unique_id=479151464 instance=ExtResource("19_xgqkh")]
-transform = Transform3D(-0.48780954, 0.10790221, 5.907605e-10, 0, -1.7030406e-07, 0.48799673, 0.013515023, 3.894608, 2.1322832e-08, -1.1858082, 3.9180412, -43.935955)
+transform = Transform3D(-0.48780954, 0.10790221, 5.9076055e-10, 0, -1.7030406e-07, 0.48799673, 0.013515021, 3.8946085, 2.1322835e-08, -1.1734715, 3.8683472, -43.49068)
 
 [node name="pipe gray8" parent="electrical conduit" unique_id=427022524 instance=ExtResource("19_xgqkh")]
 transform = Transform3D(-0.48780954, 7.2052174e-08, -0.013515013, 9.821866e-09, 3.5812664, 8.806105e-24, 0.013515012, -1.9962423e-09, -0.48780948, 55.846436, 1.1073971, -92.64468)
@@ -979,10 +980,10 @@ transform = Transform3D(-0.48780954, 0.044686772, 5.9076055e-10, 0, -7.052997e-0
 transform = Transform3D(-0.48780954, 0.055585984, 5.907605e-10, 0, -8.7732396e-08, 0.48799673, 0.013515023, 2.0063133, 2.1322832e-08, 0.3564663, -0.19228172, 11.730774)
 
 [node name="pipe gray18" parent="electrical conduit" unique_id=757881209 instance=ExtResource("19_xgqkh")]
-transform = Transform3D(-0.48780954, 2.6128818e-08, -0.013515013, 9.821868e-09, 1.298701, -1.6997181e-15, 0.013515012, -7.2391676e-10, -0.48780948, 0.71095276, -8.81665, 24.525524)
+transform = Transform3D(-0.48780954, 2.6128822e-08, -0.013515012, 9.821868e-09, 1.298701, -1.699718e-15, 0.013515011, -7.2391676e-10, -0.48780948, 0.7113266, -8.816652, 24.539034)
 
 [node name="pipe gray16" parent="electrical conduit" unique_id=653431353 instance=ExtResource("19_xgqkh")]
-transform = Transform3D(-0.48780954, 2.2961684e-08, -0.013515013, 9.821866e-09, 1.1412827, 8.806105e-24, 0.013515012, -6.361652e-10, -0.48780948, -0.44360542, -7.470871, -19.412127)
+transform = Transform3D(-0.48780954, 2.2961686e-08, -0.013515012, 9.821866e-09, 1.1412827, 8.806105e-24, 0.013515011, -6.361652e-10, -0.48780948, -0.44057083, -7.470871, -19.302631)
 
 [node name="pipe gray14" parent="electrical conduit" unique_id=1434922060 instance=ExtResource("19_xgqkh")]
 transform = Transform3D(-0.48780954, 1.1876733e-08, -0.013515013, 9.821866e-09, 0.5903186, 8.806105e-24, 0.013515012, -3.2905095e-10, -0.48780948, -1.5434437, -16.920996, -69.139114)
@@ -1002,8 +1003,11 @@ transform = Transform3D(-0.47120264, -0.04725565, 1.8361002e-09, 2.6829152e-16, 
 [node name="pipe graybent9" parent="electrical conduit" unique_id=2001813186 instance=ExtResource("19_kpybi")]
 transform = Transform3D(-0.47222424, -0.008056181, -0.0003669918, -0.00051746785, 0.019861743, 0.47206894, -0.0053583803, 0.70805794, -0.013246185, -0.4286499, 3.375414, -20.531729)
 
+[node name="pipe graybent13" parent="electrical conduit" unique_id=1819074338 instance=ExtResource("19_kpybi")]
+transform = Transform3D(0.45752048, -0.17547736, 0.0037828556, -0.0005174673, 0.019861745, 0.47206894, -0.11704487, -0.686017, 0.012699854, -1.6908474, 3.3457108, -66.08952)
+
 [node name="pipe graybent11" parent="electrical conduit" unique_id=1804392828 instance=ExtResource("19_kpybi")]
-transform = Transform3D(0.46922454, 0.08010901, -0.0009836464, -0.0005174678, 0.019861745, 0.472069, 0.053412545, -0.7035578, 0.013214709, -0.38232422, -0.61032677, -18.85959)
+transform = Transform3D(0.46922457, 0.080109015, -0.0009836464, -0.00051746774, 0.019861745, 0.472069, 0.05341255, -0.7035578, 0.013214709, -0.38128853, -0.6103287, -18.822264)
 
 [node name="pipe graybent12" parent="electrical conduit" unique_id=1905776368 instance=ExtResource("19_kpybi")]
 transform = Transform3D(0.4674692, 0.099043265, 0.0117261065, -0.06632097, 0.70113486, 0.011904409, -0.009941708, -0.020145781, 0.47195917, 0.80736923, -0.72273254, 24.081074)
@@ -1178,10 +1182,10 @@ transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -0.2
 visible = false
 
 [node name="CollisionShape3D" parent="CameraZone3 inside" index="0"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.2076321, 0.06352091, -1.8029405)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.6708736, 0.06352091, -0.26856962)
 
 [node name="SecurityCamera1" parent="CameraZone3 inside" index="1"]
-transform = Transform3D(0.9623225, 0.056403447, -0.26599646, -9.067214e-09, 0.9782491, 0.20743363, 0.27191073, -0.19961804, 0.94139105, 0, 2, 3)
+transform = Transform3D(0.50333434, 0.43860352, -0.74450076, -0.12841095, 0.88999957, 0.43750566, 0.85449684, -0.124609545, 0.50428885, -1.1006107, 2.3195395, 3.2707257)
 
 [node name="Label3D" parent="CameraZone3 inside" index="3"]
 visible = false
@@ -1248,7 +1252,7 @@ transform = Transform3D(-4.371139e-09, 0.1, 0, -0.1, -4.371139e-09, 0, 0, 0, 0.1
 
 [node name="mirror" parent="." unique_id=1626491013 instance=ExtResource("39_qaasp")]
 transform = Transform3D(-4.7902194e-08, -0.99488777, 0.10098683, -3.9073655e-08, 0.10098683, 0.99488777, -1, 4.3711392e-08, -4.3711385e-08, 2.8, 1.497, 5.232)
-mesh = SubResource("PlaneMesh_kvmu4")
+mesh = SubResource("PlaneMesh_gny1c")
 surface_material_override/0 = SubResource("StandardMaterial3D_mlb8o")
 show_debug_logs = false
 
@@ -1332,6 +1336,15 @@ transform = Transform3D(-1.3113417e-08, 0, -0.3, 0, 0.3, 0, 0.3, 0, -1.3113417e-
 
 [node name="Fluorescent4" parent="." unique_id=91859222 instance=ExtResource("87_kvmu4")]
 transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 11.078434, 4.88143, 8.960271)
+
+[node name="security camera" parent="." unique_id=678712659 instance=ExtResource("89_5p8eo")]
+transform = Transform3D(-0.05, 0, -7.54979e-09, 0, 0.05, 0, 7.54979e-09, 0, -0.05, 3.5283103, 3.5409694, 13.051759)
+
+[node name="security camera2" parent="." unique_id=1038559221 instance=ExtResource("89_5p8eo")]
+transform = Transform3D(-0.05, 0, -7.54979e-09, 0, 0.05, 0, 7.54979e-09, 0, -0.05, 3.5283103, 3.5409694, 6.950505)
+
+[node name="security camera3" parent="." unique_id=1971311398 instance=ExtResource("89_5p8eo")]
+transform = Transform3D(-0.042409338, 0, -0.026484866, 0, 0.05, 0, 0.026484866, 0, -0.042409338, 3.68748, 4.175748, -5.6151404)
 
 [editable path="Spotlight1"]
 [editable path="Spotlight2"]
