@@ -87,8 +87,11 @@ func _input(event):
 
 	# Check if a text field is being edited (don't intercept input)
 	if _is_text_editing():
-		# Only handle go_back to exit text editing
-		if event.is_action_pressed("go_back"):
+		# Exit on Escape or gamepad B button (not keyboard B, which should type 'B')
+		if event is InputEventKey and event.pressed and event.keycode == KEY_ESCAPE:
+			_release_text_focus()
+			viewport.set_input_as_handled()
+		elif event is InputEventJoypadButton and event.is_action_pressed("go_back"):
 			_release_text_focus()
 			viewport.set_input_as_handled()
 		return

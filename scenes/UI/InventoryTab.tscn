@@ -104,7 +104,7 @@ text = "Save"
 [node name="EmptyLabel" type="Label" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer"]
 visible = false
 layout_mode = 2
-text = "No paintings yet. Complete a commission to create one!"
+text = "There are no paintings in your Inventory. Pressing the red button will add a painting to your Inventory."
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 2

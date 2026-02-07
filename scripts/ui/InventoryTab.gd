@@ -37,6 +37,10 @@ func _ready():
 	save_button.pressed.connect(_on_save_pressed)
 	save_button.focus_mode = Control.FOCUS_ALL
 
+	# Auto-enter text editing when mouse clicks a text field
+	name_input.gui_input.connect(_on_text_gui_input.bind(name_input))
+	statement_input.gui_input.connect(_on_text_gui_input.bind(statement_input))
+
 	# Find sounds from parent PauseMenu
 	var pause_menu = _find_parent_pause_menu()
 	if pause_menu:
@@ -57,13 +61,17 @@ func _input(event):
 	if not visible:
 		return
 
-	# Don't process if text is being edited
+	# Don't process navigation if text is being edited — let keys reach the text field
 	if is_editing_text:
-		if event.is_action_pressed("go_back") or (event is InputEventKey and event.pressed and event.keycode == KEY_ESCAPE):
+		# Exit editing on Escape key or gamepad B button (not keyboard B, which should type 'B')
+		if event is InputEventKey and event.pressed and event.keycode == KEY_ESCAPE:
 			_exit_text_editing()
 			get_viewport().set_input_as_handled()
-		# Also handle Enter in LineEdit to exit editing
-		if event is InputEventKey and event.pressed and event.keycode == KEY_ENTER:
+		elif event is InputEventJoypadButton and event.is_action_pressed("go_back"):
+			_exit_text_editing()
+			get_viewport().set_input_as_handled()
+		# Enter in LineEdit exits editing (submit)
+		elif event is InputEventKey and event.pressed and event.keycode == KEY_ENTER:
 			var focused = get_viewport().gui_get_focus_owner()
 			if focused is LineEdit:
 				_exit_text_editing()
@@ -306,20 +314,24 @@ func _navigate_detail(direction: int):
 			button_nav_sound.play()
 
 func _update_detail_focus():
-	"""Update visual focus on the detail panel item"""
+	"""Update visual highlight on the detail panel item.
+	Text fields are NOT given focus during navigation (that would let stray keys type into them).
+	Focus is only granted when entering editing mode via _enter_text_editing()."""
 	_clear_detail_focus()
 	match detail_focus_index:
 		0:
-			name_input.grab_focus()
+			name_input.modulate = Color(1.2, 1.2, 1.0, 1.0)
 		1:
-			statement_input.grab_focus()
+			statement_input.modulate = Color(1.2, 1.2, 1.0, 1.0)
 		2:
 			save_button.grab_focus()
 
 func _clear_detail_focus():
-	"""Clear focus from all detail panel items"""
+	"""Clear focus and highlight from all detail panel items"""
 	name_input.release_focus()
+	name_input.modulate = Color.WHITE
 	statement_input.release_focus()
+	statement_input.modulate = Color.WHITE
 	save_button.release_focus()
 
 func _activate_detail_item():
@@ -347,14 +359,26 @@ func _enter_text_editing(control: Control):
 		control.set_caret_column(control.get_line(control.get_caret_line()).length())
 
 func _exit_text_editing():
-	"""Exit text editing mode"""
+	"""Exit text editing mode and release text field focus"""
 	is_editing_text = false
-	# Keep focus on the control but prevent text input
+	# Release focus from text fields so stray keys don't type into them
+	_clear_detail_focus()
 	_update_detail_focus()
 
 # ============================================================================
 # Actions
 # ============================================================================
+
+func _on_text_gui_input(event: InputEvent, control: Control):
+	"""Auto-enter text editing when mouse clicks a text field"""
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		if not is_editing_text:
+			is_editing_text = true
+			nav_mode = NavMode.DETAIL_PANEL
+			if control == name_input:
+				detail_focus_index = 0
+			elif control == statement_input:
+				detail_focus_index = 1
 
 func _on_save_pressed():
 	"""Save the painting name and artist statement"""
