@@ -18,16 +18,11 @@ func _ready() -> void:
 	animation_player = get_node("AnimationPlayer")
 	
 	if animation_player == null:
-		print("AnimationPlayer not found! Please check scene structure.")
-	else:
-		# List available animations for debugging
-		var available_animations := animation_player.get_animation_list()
-		print("Available animations: " + str(available_animations))
+		push_warning("AnimationPlayer not found! Please check scene structure.")
 
 # Called by PlayerController to update animation state
 func update_animation_state(velocity: Vector3, is_on_floor: bool, is_sprinting: bool) -> void:
 	if animation_player == null:
-		print("AnimationPlayer is null!")
 		return
 	
 	var _was_moving := _is_moving  # Track previous state for potential future use
@@ -57,11 +52,10 @@ func play_animation(animation_name: String, speed: float = 1.0) -> bool:
 	if animation_player != null and animation_player.has_animation(animation_name):
 		if animation_player.current_animation != animation_name:
 			animation_player.play(animation_name)
-			print("Successfully playing animation: " + animation_name + " at speed " + str(speed) + "x")
 		
 		# Set the speed multiplier
 		animation_player.speed_scale = speed
 		return true
 	else:
-		print("Animation '" + animation_name + "' not found or AnimationPlayer is null!")
+		push_warning("Animation '" + animation_name + "' not found or AnimationPlayer is null!")
 		return false

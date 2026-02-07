@@ -20,6 +20,9 @@ var achievements: Dictionary = {}
 # Statistics tracking (API names as keys)
 var statistics: Dictionary = {}
 
+# User info
+var persona_name: String = ""
+
 # Session tracking
 var session_start_time: int = 0
 var total_playtime_seconds: int = 0
@@ -70,7 +73,7 @@ func initialize_steam() -> void:
 
 	# Get user info
 	var steam_id: int = Steam.getSteamID()
-	var persona_name: String = Steam.getPersonaName()
+	persona_name = Steam.getPersonaName()
 
 	print("SteamManager: Steam initialized successfully!")
 	print("  User: %s (ID: %d)" % [persona_name, steam_id])

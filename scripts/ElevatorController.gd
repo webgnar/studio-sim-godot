@@ -174,7 +174,7 @@ func start_export() -> void:
 
 	# Upload to gallery (non-blocking)
 	if not png_path.is_empty() and not glb_path.is_empty():
-		GalleryUploader.upload_painting(png_path, glb_path, painting.painting_name, painting.artist_statement)
+		GalleryUploader.upload_painting(png_path, glb_path, painting.painting_name, painting.artist_statement, SteamManager.persona_name)
 
 	# Remove painting from game (it's been "shipped")
 	paintings_inside.erase(painting)
