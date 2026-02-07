@@ -326,16 +326,6 @@ func _unhandled_input(event: InputEvent) -> void:
 	if not CameraManager.player_input_enabled:
 		return
 
-	# --- CAMERA ZONE TOGGLE ---
-	# Handle C key to toggle camera zones on/off
-	if event is InputEventKey:
-		var key_event = event as InputEventKey
-		if key_event.keycode == KEY_C and key_event.pressed and not key_event.echo:
-			if CameraManager:
-				CameraManager.toggle_zones(not CameraManager.zones_enabled)
-			get_viewport().set_input_as_handled()
-			return
-
 	# --- MOUSE LOOK ---
 	# Accumulate mouse input into target rotation (smoothing applied in _physics_process)
 	if event is InputEventMouseMotion and _camera != null:

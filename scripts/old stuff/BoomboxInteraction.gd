@@ -162,7 +162,6 @@ func _check_if_audio_finished() -> void:
 	if _radio_audio_player and not _radio_audio_player.playing:
 		# Restart the same song to create a loop
 		_radio_audio_player.play()
-		print("Looping current song")
 
 func get_radio_state() -> BoomboxState:
 	return _current_state

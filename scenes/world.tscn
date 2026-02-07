@@ -64,7 +64,7 @@
 [ext_resource type="PackedScene" uid="uid://bshsrjrokypta" path="res://scenes/PaintingRoot2D.tscn" id="75_ca4ee"]
 [ext_resource type="PackedScene" uid="uid://cerojl5wo53gx" path="res://models/outside/skyscraper.gltf" id="75_qaasp"]
 [ext_resource type="PackedScene" uid="uid://c7vk8n8k7j8k8" path="res://scenes/UI/MissionAuthoringUI.tscn" id="76_author"]
-[ext_resource type="PackedScene" path="res://scenes/UI/PauseMenu.tscn" id="77_pause_menu"]
+[ext_resource type="PackedScene" uid="uid://cc268ul382nus" path="res://scenes/UI/PauseMenu.tscn" id="77_pause_menu"]
 [ext_resource type="PackedScene" uid="uid://isbwb03yee7n" path="res://scenes/UI/ValidationResultUI.tscn" id="78_result"]
 [ext_resource type="PackedScene" uid="uid://cpuv8jn4hm5gn" path="res://scenes/UI/SaveNotification.tscn" id="78_save_notif"]
 [ext_resource type="PackedScene" uid="uid://bv4237ec57bk2" path="res://scenes/objects/SaveComputer.tscn" id="79_l137e"]
@@ -91,6 +91,7 @@
 [ext_resource type="AudioStream" uid="uid://bjojrg2a7xxut" path="res://sounds/picotron/waterdrop.ogg" id="92_8xaka"]
 [ext_resource type="PackedScene" uid="uid://cqoxj5pobyw2a" path="res://models/props/baricade_1.glb" id="93_8xaka"]
 [ext_resource type="PackedScene" uid="uid://c21nti0oy66lb" path="res://models/props/baricade_2.glb" id="94_n6seq"]
+[ext_resource type="PackedScene" uid="uid://cv51ha8ljywkh" path="res://models/props/camera_sticker.glb" id="95_n6seq"]
 [ext_resource type="AudioStream" uid="uid://84rjpuccue2i" path="res://sounds/boomboxSwitch.ogg" id="boombox_switch"]
 [ext_resource type="AudioStream" uid="uid://bukro42figtah" path="res://sounds/fan switch.ogg" id="fan_switch"]
 [ext_resource type="AudioStream" uid="uid://bw0ig22tombxc" path="res://sounds/ministudio.ogg" id="ministudio_audio"]
@@ -333,17 +334,17 @@ _data = {
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_frq1x"]
 radius = 1.0
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_8xaka"]
+[sub_resource type="PlaneMesh" id="PlaneMesh_ufs10"]
 resource_local_to_scene = true
 size = Vector2(2.5, 3)
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_n6seq"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_h5nhj"]
 resource_name = "_albedo"
 viewport_path = NodePath("../MirrorNew/SubViewport")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ufs10"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_q6do4"]
 resource_local_to_scene = true
-albedo_texture = SubResource("ViewportTexture_n6seq")
+albedo_texture = SubResource("ViewportTexture_h5nhj")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_1v02h"]
 size = Vector2(2.5, 3)
@@ -945,7 +946,7 @@ transform = Transform3D(-1.1175871e-08, 0, -0.14, 0, 0.14, 0, 0.14, 0, -1.117587
 [node name="wall outlet7" parent="outlets" unique_id=1820465902 instance=ExtResource("66_8lgfd")]
 transform = Transform3D(-6.119594e-09, 0, -0.14, 0, 0.14, 0, 0.14, 0, -6.119594e-09, -3.5728824, 1.6572046, 3.6067662)
 
-[node name="Player" parent="." unique_id=1499860304 instance=ExtResource("27_l137e")]
+[node name="Player" parent="." unique_id=1378579681 instance=ExtResource("27_l137e")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.946882, 1.2067637, 12.445705)
 
 [node name="hvac group" type="Node3D" parent="." unique_id=179664338]
@@ -1387,8 +1388,8 @@ transform = Transform3D(-4.371139e-09, 0.1, 0, -0.1, -4.371139e-09, 0, 0, 0, 0.1
 
 [node name="mirror" parent="." unique_id=1626491013 instance=ExtResource("39_qaasp")]
 transform = Transform3D(-4.7902194e-08, -0.99488777, 0.10098683, -3.9073655e-08, 0.10098683, 0.99488777, -1, 4.3711392e-08, -4.3711385e-08, 2.8, 1.497, 5.232)
-mesh = SubResource("PlaneMesh_8xaka")
-surface_material_override/0 = SubResource("StandardMaterial3D_ufs10")
+mesh = SubResource("PlaneMesh_ufs10")
+surface_material_override/0 = SubResource("StandardMaterial3D_q6do4")
 show_debug_logs = false
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="mirror" unique_id=399456008]
@@ -1521,6 +1522,9 @@ collision_layer = 2
 [node name="CollisionShape3D" type="CollisionShape3D" parent="baricade 2/StaticBody3D" unique_id=2029042886]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.14646912, 1.8250904, 0.35619354)
 shape = SubResource("BoxShape3D_pb8sg")
+
+[node name="camera sticker" parent="." unique_id=990435022 instance=ExtResource("95_n6seq")]
+transform = Transform3D(-2.1855695e-09, 0, -0.05, 0, 0.05, 0, 0.05, 0, -2.1855695e-09, 3.6745884, 1.737043, 9.13512)
 
 [editable path="Spotlight1"]
 [editable path="Spotlight2"]

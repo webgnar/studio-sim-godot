@@ -14,3 +14,6 @@ res://scripts/painting/PaintingModeManager.gd
 res://scripts/PlayerAnimation.gd
 res://scripts/GalleryUploader.gd
 res://scripts/SteamManager.gd
+res://scripts/old stuff/BoomboxInteraction.gd
+res://scripts/PlayerController.gd
+res://scenes/world.tscn
