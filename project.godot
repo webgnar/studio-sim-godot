@@ -254,6 +254,7 @@ cycle_prev={
 3d_physics/layer_4="Interactables"
 3d_physics/layer_5="Stretcher Bars"
 3d_physics/layer_6="Nail Peg"
+3d_physics/layer_7="Painting Back Face"
 
 [physics]
 

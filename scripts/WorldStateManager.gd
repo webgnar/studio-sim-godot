@@ -207,6 +207,13 @@ func save_world_state() -> bool:
 			if nail_node in _registered_nails:
 				painting_data["hung_on_nail"] = _registered_nails[nail_node]
 
+		# Save signature texture if present
+		var sig_system = painting.get_node_or_null("PaintingSignatureSystem") as PaintingSignatureSystem
+		if sig_system and sig_system.has_signature():
+			var sig_path = _save_signature_texture(sig_system.get_signature_image(), painting_id)
+			if sig_path != "":
+				painting_data["signature_texture_path"] = sig_path
+
 		save_data["paintings"].append(painting_data)
 		valid_painting_ids.append(painting_id)
 
@@ -381,6 +388,10 @@ func _cleanup_orphaned_textures(valid_painting_ids: Array) -> void:
 			# Extract painting ID from filename (remove .png extension)
 			var painting_id = filename.get_basename()
 
+			# Strip _signature suffix so signature PNGs aren't orphaned
+			if painting_id.ends_with("_signature"):
+				painting_id = painting_id.substr(0, painting_id.length() - 10)
+
 			# Check if this ID is in the valid list
 			if not painting_id in valid_painting_ids:
 				var full_path = TEXTURES_DIR + "/" + filename
@@ -504,6 +515,16 @@ func _load_painting(world_root: Node3D, painting_data: Dictionary, nail_id_map: 
 		material.albedo_texture = texture
 		mesh_instance.set_surface_override_material(0, material)
 
+	# Load signature texture if present
+	var sig_path = painting_data.get("signature_texture_path", "")
+	if sig_path != "" and FileAccess.file_exists(sig_path):
+		var sig_image = Image.new()
+		if sig_image.load(sig_path) == OK:
+			var sig_system = painting.get_node_or_null("PaintingSignatureSystem") as PaintingSignatureSystem
+			if sig_system:
+				sig_system.initialize_from_image(sig_image)
+				painting.signature_texture_path = sig_path
+
 	# Check if painting was hung on a nail
 	var hung_on_nail_id = painting_data.get("hung_on_nail", "")
 	if hung_on_nail_id != "" and hung_on_nail_id in nail_id_map:
@@ -614,6 +635,16 @@ func _delete_directory_recursive(path: String) -> void:
 
 	dir.list_dir_end()
 	DirAccess.remove_absolute(path)
+
+func _save_signature_texture(image: Image, painting_id: String) -> String:
+	"""Save a signature image to disk alongside the painting texture."""
+	var filename = painting_id + "_signature.png"
+	var full_path = TEXTURES_DIR + "/" + filename
+	var error = image.save_png(full_path)
+	if error != OK:
+		push_error("Failed to save signature texture: " + str(error))
+		return ""
+	return full_path
 
 func _find_nail_component(nail: Node) -> Node:
 	"""Find NailComponent in nail node hierarchy"""

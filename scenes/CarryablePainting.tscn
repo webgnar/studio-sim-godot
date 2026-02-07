@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://do8vkeu1l02i1" path="res://scripts/components/PaintingHangingComponent.gd" id="1_hanging"]
 [ext_resource type="Script" uid="uid://dvkl3cic5pjcq" path="res://scripts/CarryablePainting.gd" id="1_painting"]
 [ext_resource type="PackedScene" uid="uid://guuhi66wtyyp" path="res://models/paintings/stretcher.glb" id="2_stretcher"]
+[ext_resource type="Script" uid="uid://cxevfv0ev3okf" path="res://scripts/painting/PaintingSignatureSystem.gd" id="4_58v5g"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_painting"]
 friction = 1.5
@@ -28,6 +29,16 @@ size = Vector3(0.2, 3.109, 0.2)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_right_bar"]
 size = Vector3(0.2, 3.109, 0.2)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_vrnca"]
+size = Vector2(3, 3)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_58v5g"]
+transparency = 1
+albedo_color = Color(1, 1, 1, 0)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_b2lxr"]
+size = Vector3(3, 0.3, 3)
 
 [node name="CarryablePainting" type="RigidBody3D" unique_id=1044698982 groups=["no_outline"]]
 collision_layer = 4
@@ -95,3 +106,19 @@ collision_mask = 32
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StretcherBarsPhysics/RightBar" unique_id=887044699]
 shape = SubResource("BoxShape3D_right_bar")
+
+[node name="BackFaceMesh" type="MeshInstance3D" parent="." unique_id=1354198493]
+transform = Transform3D(-1, -8.742278e-08, 0, 8.742278e-08, -1, 0, 0, 0, 1, 0, -0.13918078, 0)
+mesh = SubResource("PlaneMesh_vrnca")
+surface_material_override/0 = SubResource("StandardMaterial3D_58v5g")
+
+[node name="BackFaceBody" type="StaticBody3D" parent="." unique_id=1547371137]
+collision_layer = 64
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="BackFaceBody" unique_id=897744340]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.068437636, 0)
+shape = SubResource("BoxShape3D_b2lxr")
+
+[node name="PaintingSignatureSystem" type="Node3D" parent="." unique_id=329223639]
+script = ExtResource("4_58v5g")

@@ -1,12 +1,12 @@
-AnimationPlayer
 Node3D
 CollisionShape3D
 StaticBody3D
+MeshInstance3D
+AnimationPlayer
 AudioStreamPlayer3D
 AnimatedSprite3D
 Sprite3D
 CSGBox3D
-MeshInstance3D
 CSGMesh3D
 DirectionalLight3D
 SpotLight3D

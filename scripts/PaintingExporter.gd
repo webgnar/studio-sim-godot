@@ -130,6 +130,7 @@ func export_painting_png(painting: CarryablePainting, downloads_path: String, fi
 		return ""
 
 	print("PaintingExporter: Saved PNG to ", full_path)
+
 	return full_path
 
 func export_painting_glb(painting: CarryablePainting, downloads_path: String, filename_base: String) -> String:
@@ -200,6 +201,30 @@ func export_painting_glb(painting: CarryablePainting, downloads_path: String, fi
 	export_root.add_child(canvas_mesh)
 	canvas_mesh.owner = export_root
 
+	# Add signature back-face plane if present
+	var sig_system = painting.get_node_or_null("PaintingSignatureSystem") as PaintingSignatureSystem
+	if sig_system and sig_system.has_signature():
+		var back_mesh = MeshInstance3D.new()
+		back_mesh.name = "SignatureCanvas"
+		var back_plane = PlaneMesh.new()
+		back_plane.size = Vector2(3, 3)
+		back_mesh.mesh = back_plane
+		# Flip to face opposite direction from front canvas, offset behind it
+		back_mesh.transform = Transform3D(
+			Vector3(1, 0, 0), Vector3(0, -1, 0), Vector3(0, 0, 1), Vector3(0, -0.15, 0)
+		)
+
+		# Use raw signature image — transparent background, opaque black strokes only
+		var sig_image = sig_system.get_signature_image().duplicate()
+
+		var sig_material = StandardMaterial3D.new()
+		sig_material.albedo_texture = ImageTexture.create_from_image(sig_image)
+		sig_material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+		sig_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+		back_mesh.set_surface_override_material(0, sig_material)
+
+		export_root.add_child(back_mesh)
+		back_mesh.owner = export_root
 	# Use GLTFDocument to export
 	var gltf_document = GLTFDocument.new()
 	var gltf_state = GLTFState.new()

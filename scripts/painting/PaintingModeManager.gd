@@ -20,6 +20,10 @@ var camera: Camera3D = null
 @export var placement_cooldown: float = 0.15  ## Cooldown in seconds between sticker placements
 var last_placement_time: float = 0.0
 
+# Signing state
+var _is_signing: bool = false
+var _active_signature: PaintingSignatureSystem = null
+
 # Audio
 var tick_sound: AudioStreamPlayer
 var tick_sound_layer2: AudioStreamPlayer
@@ -45,6 +49,14 @@ func _ready():
 	add_child(tick_sound_layer3)
 
 func _process(_delta):
+	# Handle continuous signing while button held
+	if _is_signing:
+		if Input.is_action_pressed("action_primary"):
+			_continue_signing()
+		else:
+			_finish_signing()
+		return
+
 	# Handle sticker cycling (unified for both systems)
 	if Input.is_action_just_pressed("cycle_sticker_prev"):
 		cycle_sticker(-1)
@@ -111,6 +123,18 @@ func _unhandled_input(event):
 		should_place = true
 	elif event.is_action_pressed("action_secondary"):
 		should_undo = true
+
+	# Check for signing on painting back face (before sticker logic)
+	if should_place:
+		var back_face_result = _check_back_face_raycast()
+		if back_face_result:
+			var sig_system = _find_signature_system(back_face_result.collider)
+			if sig_system and not _is_painting_carried(back_face_result.collider):
+				_active_signature = sig_system
+				_is_signing = true
+				sig_system.draw_at_world_position(back_face_result.position)
+				get_viewport().set_input_as_handled()
+				return
 
 	# Handle placement action
 	if should_place:
@@ -250,3 +274,73 @@ func sync_sticker_selection(index: int):
 		painting_system_2d.selected_sticker_index = index
 		# Update 2D preview to show the new sticker
 		painting_system_2d._update_preview_texture()
+
+# --- Signing Helpers ---
+
+func _check_back_face_raycast() -> Dictionary:
+	"""Raycast specifically for painting back face (layer 7 = bit 6 = mask 64)."""
+	if not camera:
+		camera = get_viewport().get_camera_3d()
+		if not camera:
+			return {}
+
+	var viewport = camera.get_viewport()
+	var mouse_pos: Vector2 = viewport.get_visible_rect().size / 2.0
+	var from = camera.project_ray_origin(mouse_pos)
+	var to = from + camera.project_ray_normal(mouse_pos) * raycast_distance
+
+	var space_state = camera.get_world_3d().direct_space_state
+	var query = PhysicsRayQueryParameters3D.create(from, to)
+	query.collision_mask = 64  # Layer 7 only
+	query.collide_with_areas = false
+	query.collide_with_bodies = true
+
+	return space_state.intersect_ray(query)
+
+func _find_signature_system(collider: Node) -> PaintingSignatureSystem:
+	"""Walk up from the back face collider to find the PaintingSignatureSystem."""
+	var current = collider
+	var depth = 0
+	while current and depth < 10:
+		if current is CarryablePainting:
+			return current.get_node_or_null("PaintingSignatureSystem") as PaintingSignatureSystem
+		current = current.get_parent()
+		depth += 1
+	return null
+
+func _is_painting_carried(collider: Node) -> bool:
+	"""Check if the painting owning this collider is currently being carried."""
+	var current = collider
+	var depth = 0
+	while current and depth < 10:
+		if current is CarryablePainting:
+			var hanging = current.get_node_or_null("PaintingHangingComponent")
+			if hanging and "is_carried" in hanging:
+				return hanging.is_carried
+			return false
+		current = current.get_parent()
+		depth += 1
+	return false
+
+func _continue_signing():
+	"""Called each frame while signing to draw at current raycast position."""
+	if not _active_signature:
+		_finish_signing()
+		return
+
+	var result = _check_back_face_raycast()
+	if result:
+		var sig_system = _find_signature_system(result.collider)
+		if sig_system == _active_signature:
+			_active_signature.draw_at_world_position(result.position)
+			return
+
+	# Raycast missed or hit different painting — end stroke but stay in signing mode
+	_active_signature.finish_stroke()
+
+func _finish_signing():
+	"""End the current signing session."""
+	if _active_signature:
+		_active_signature.finish_stroke()
+	_active_signature = null
+	_is_signing = false
