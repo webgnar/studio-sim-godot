@@ -64,7 +64,7 @@
 [ext_resource type="PackedScene" uid="uid://bshsrjrokypta" path="res://scenes/PaintingRoot2D.tscn" id="75_ca4ee"]
 [ext_resource type="PackedScene" uid="uid://cerojl5wo53gx" path="res://models/outside/skyscraper.gltf" id="75_qaasp"]
 [ext_resource type="PackedScene" uid="uid://c7vk8n8k7j8k8" path="res://scenes/UI/MissionAuthoringUI.tscn" id="76_author"]
-[ext_resource type="PackedScene" uid="uid://ctv5r4f51ufg3" path="res://scenes/UI/MissionSelectionUI.tscn" id="77_select"]
+[ext_resource type="PackedScene" path="res://scenes/UI/PauseMenu.tscn" id="77_pause_menu"]
 [ext_resource type="PackedScene" uid="uid://isbwb03yee7n" path="res://scenes/UI/ValidationResultUI.tscn" id="78_result"]
 [ext_resource type="PackedScene" uid="uid://cpuv8jn4hm5gn" path="res://scenes/UI/SaveNotification.tscn" id="78_save_notif"]
 [ext_resource type="PackedScene" uid="uid://bv4237ec57bk2" path="res://scenes/objects/SaveComputer.tscn" id="79_l137e"]
@@ -89,6 +89,8 @@
 [ext_resource type="Texture2D" uid="uid://bhfm6dt1hofij" path="res://sprites/waterdrop.png" id="90_mlb8o"]
 [ext_resource type="Texture2D" uid="uid://cntrsinhjv1tx" path="res://sprites/waterdrop_hit.png" id="91_ebmc1"]
 [ext_resource type="AudioStream" uid="uid://bjojrg2a7xxut" path="res://sounds/picotron/waterdrop.ogg" id="92_8xaka"]
+[ext_resource type="PackedScene" uid="uid://cqoxj5pobyw2a" path="res://models/props/baricade_1.glb" id="93_8xaka"]
+[ext_resource type="PackedScene" uid="uid://c21nti0oy66lb" path="res://models/props/baricade_2.glb" id="94_n6seq"]
 [ext_resource type="AudioStream" uid="uid://84rjpuccue2i" path="res://sounds/boomboxSwitch.ogg" id="boombox_switch"]
 [ext_resource type="AudioStream" uid="uid://bukro42figtah" path="res://sounds/fan switch.ogg" id="fan_switch"]
 [ext_resource type="AudioStream" uid="uid://bw0ig22tombxc" path="res://sounds/ministudio.ogg" id="ministudio_audio"]
@@ -331,17 +333,17 @@ _data = {
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_frq1x"]
 radius = 1.0
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_5p8eo"]
+[sub_resource type="PlaneMesh" id="PlaneMesh_8xaka"]
 resource_local_to_scene = true
 size = Vector2(2.5, 3)
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_gny1c"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_n6seq"]
 resource_name = "_albedo"
 viewport_path = NodePath("../MirrorNew/SubViewport")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mlb8o"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ufs10"]
 resource_local_to_scene = true
-albedo_texture = SubResource("ViewportTexture_gny1c")
+albedo_texture = SubResource("ViewportTexture_n6seq")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_1v02h"]
 size = Vector2(2.5, 3)
@@ -496,6 +498,9 @@ _data = {
 &"waterdrop": SubResource("Animation_mu18u")
 }
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_pb8sg"]
+size = Vector3(25.251678, 16.538967, 1.7124023)
+
 [node name="World" type="Node3D" unique_id=81477]
 script = ExtResource("1_qaasp")
 
@@ -520,7 +525,7 @@ painting_system_2d = NodePath("../../PaintingRoot2d/CanvasViewport/CanvasRoot")
 
 [node name="GameplayUI_Layer" type="CanvasLayer" parent="." unique_id=497812470]
 
-[node name="MissionSelectionUI" parent="GameplayUI_Layer" unique_id=1148253465 instance=ExtResource("77_select")]
+[node name="PauseMenu" parent="GameplayUI_Layer" unique_id=1200484280 instance=ExtResource("77_pause_menu")]
 
 [node name="ValidationResultUI" parent="GameplayUI_Layer" unique_id=1071964797 instance=ExtResource("78_result")]
 theme = ExtResource("4_ygn2i")
@@ -1382,8 +1387,8 @@ transform = Transform3D(-4.371139e-09, 0.1, 0, -0.1, -4.371139e-09, 0, 0, 0, 0.1
 
 [node name="mirror" parent="." unique_id=1626491013 instance=ExtResource("39_qaasp")]
 transform = Transform3D(-4.7902194e-08, -0.99488777, 0.10098683, -3.9073655e-08, 0.10098683, 0.99488777, -1, 4.3711392e-08, -4.3711385e-08, 2.8, 1.497, 5.232)
-mesh = SubResource("PlaneMesh_5p8eo")
-surface_material_override/0 = SubResource("StandardMaterial3D_mlb8o")
+mesh = SubResource("PlaneMesh_8xaka")
+surface_material_override/0 = SubResource("StandardMaterial3D_ufs10")
 show_debug_logs = false
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="mirror" unique_id=399456008]
@@ -1468,7 +1473,7 @@ transform = Transform3D(-1.3113417e-08, 0, -0.3, 0, 0.3, 0, 0.3, 0, -1.3113417e-
 transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 11.078434, 4.88143, 8.960271)
 
 [node name="sec camera3" parent="." unique_id=678712659 instance=ExtResource("89_5p8eo")]
-transform = Transform3D(-0.05, 0, 4.371139e-09, 0, 0.05, 0, -4.371139e-09, 0, -0.05, 3.6587749, 4.17496, -4.7213)
+transform = Transform3D(-0.031258054, 0, -0.039024793, 0, 0.05, 0, 0.039024793, 0, -0.031258054, 3.794696, 4.17496, -5.9969425)
 
 [node name="sec camera2" parent="." unique_id=448471004 instance=ExtResource("89_5p8eo")]
 transform = Transform3D(-0.05, 0, 4.371139e-09, 0, 0.05, 0, -4.371139e-09, 0, -0.05, 3.6587749, 3.662991, 7.1122212)
@@ -1477,7 +1482,7 @@ transform = Transform3D(-0.05, 0, 4.371139e-09, 0, 0.05, 0, -4.371139e-09, 0, -0
 transform = Transform3D(-0.05, 0, 4.371139e-09, 0, 0.05, 0, -4.371139e-09, 0, -0.05, 3.6587749, 4.041248, 13.682507)
 
 [node name="berkey" parent="." unique_id=295986114 instance=ExtResource("89_gny1c")]
-transform = Transform3D(-3.059797e-09, 0, -0.07, 0, 0.07, 0, 0.07, 0, -3.059797e-09, 0.80310917, 1.7617197, 8.410689)
+transform = Transform3D(-3.059797e-09, 0, -0.07, 0, 0.07, 0, 0.07, 0, -3.059797e-09, 0.80310917, 1.7198212, 8.410689)
 
 [node name="waterdrop" type="Node3D" parent="berkey" unique_id=319029114]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.212265, 0, 9.536743e-07)
@@ -1503,6 +1508,19 @@ autoplay = &"waterdrop"
 transform = Transform3D(14.285714, 0, 0, 0, 14.285714, 0, 0, 0, 14.285714, 0, 0, 0)
 stream = ExtResource("92_8xaka")
 volume_db = -38.899
+
+[node name="baricade 1" parent="." unique_id=1529760255 instance=ExtResource("93_8xaka")]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 6.655397, 0.7673063, 7.165266)
+
+[node name="baricade 2" parent="." unique_id=1127012402 instance=ExtResource("94_n6seq")]
+transform = Transform3D(-0.1, 0, 1.509958e-08, 0, 0.1, 0, -1.509958e-08, 0, -0.1, 5.797236, 0.6591382, 8.597177)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="baricade 2" unique_id=440754542]
+collision_layer = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="baricade 2/StaticBody3D" unique_id=2029042886]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.14646912, 1.8250904, 0.35619354)
+shape = SubResource("BoxShape3D_pb8sg")
 
 [editable path="Spotlight1"]
 [editable path="Spotlight2"]

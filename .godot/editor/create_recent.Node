@@ -1,11 +1,11 @@
-Node3D
-AudioStreamPlayer3D
 AnimationPlayer
+Node3D
+CollisionShape3D
+StaticBody3D
+AudioStreamPlayer3D
 AnimatedSprite3D
 Sprite3D
 CSGBox3D
-CollisionShape3D
-StaticBody3D
 MeshInstance3D
 CSGMesh3D
 DirectionalLight3D

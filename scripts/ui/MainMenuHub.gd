@@ -147,7 +147,7 @@ func _update_stats_display():
 func _on_missions_pressed():
 	"""Open mission selection screen"""
 	if UIManager:
-		UIManager.change_state(UIManager.GameState.MISSION_SELECT)
+		UIManager.change_state(UIManager.GameState.PAUSE_MENU)
 
 func _on_shop_pressed():
 	"""Open shop screen"""

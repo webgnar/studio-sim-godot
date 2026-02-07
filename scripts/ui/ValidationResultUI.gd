@@ -256,4 +256,4 @@ func _on_back_to_missions():
 
 	# Return to mission selection via UIManager
 	if UIManager:
-		UIManager.change_state(UIManager.GameState.MISSION_SELECT)
+		UIManager.change_state(UIManager.GameState.PAUSE_MENU)

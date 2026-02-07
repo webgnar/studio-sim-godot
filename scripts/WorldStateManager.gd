@@ -3,7 +3,7 @@ extends Node
 # WorldStateManager - Singleton for managing persistent world state (carryable paintings)
 # Handles saving/loading painting positions, rotations, and textures to disk
 
-const SAVE_VERSION = 2
+const SAVE_VERSION = 3
 const WORLD_STATE_PATH = "user://world_state.json"
 const TEXTURES_DIR = "user://world_paintings"
 
@@ -40,7 +40,9 @@ func register_painting(painting: Node, painting_id: String, texture_path: String
 
 	_registered_paintings[painting] = {
 		"id": painting_id,
-		"texture_path": texture_path
+		"texture_path": texture_path,
+		"name": painting.painting_name if "painting_name" in painting else "",
+		"artist_statement": painting.artist_statement if "artist_statement" in painting else ""
 	}
 
 func unregister_painting(painting: Node) -> void:
@@ -69,6 +71,33 @@ func register_painting_system_3d(system: PaintingSystem3D) -> void:
 
 	_painting_system_3d = system
 	print("PaintingSystem registered for persistence")
+
+# ============================================================================
+# Painting Metadata Helpers
+# ============================================================================
+
+func update_painting_metadata(painting: Node, painting_name: String, statement: String) -> void:
+	"""Update a painting's name and artist statement"""
+	if painting in _registered_paintings:
+		_registered_paintings[painting]["name"] = painting_name
+		_registered_paintings[painting]["artist_statement"] = statement
+		painting.painting_name = painting_name
+		painting.artist_statement = statement
+
+func get_all_paintings() -> Array:
+	"""Returns array of painting data dicts for the inventory UI"""
+	var result = []
+	for painting in _registered_paintings.keys():
+		if is_instance_valid(painting):
+			var meta = _registered_paintings[painting]
+			result.append({
+				"node": painting,
+				"id": meta["id"],
+				"texture_path": meta["texture_path"],
+				"name": meta.get("name", ""),
+				"artist_statement": meta.get("artist_statement", "")
+			})
+	return result
 
 # ============================================================================
 # Player State Flags (Keys, Unlocks, etc.)
@@ -155,6 +184,8 @@ func save_world_state() -> bool:
 		var painting_data = {
 			"id": painting_id,
 			"texture_path": texture_path,
+			"name": metadata.get("name", ""),
+			"artist_statement": metadata.get("artist_statement", ""),
 			"position": {
 				"x": painting.global_position.x,
 				"y": painting.global_position.y,
@@ -246,9 +277,10 @@ func load_world_state(world_root: Node3D) -> void:
 
 	var save_data = json.data
 
-	# Validate version
-	if not save_data.has("version") or save_data["version"] != SAVE_VERSION:
-		push_warning("World state version mismatch, skipping load")
+	# Validate version (accept version 2 or 3 for backward compatibility)
+	var save_version = save_data.get("version", 0)
+	if save_version < 2 or save_version > SAVE_VERSION:
+		push_warning("World state version mismatch (got %d, expected 2-%d), skipping load" % [save_version, SAVE_VERSION])
 		return
 
 	# Load nails FIRST (before paintings)
@@ -435,6 +467,8 @@ func _load_painting(world_root: Node3D, painting_data: Dictionary, nail_id_map: 
 	# Set metadata (must be set before adding to tree so _ready can register)
 	painting.painting_id = painting_id
 	painting.texture_path = texture_path
+	painting.painting_name = painting_data.get("name", "")
+	painting.artist_statement = painting_data.get("artist_statement", "")
 
 	# Add to world
 	world_root.add_child(painting)

@@ -263,7 +263,7 @@ func _on_back_pressed():
 	dialog.visible = false
 
 	if UIManager:
-		UIManager.change_state(UIManager.GameState.MISSION_SELECT)
+		UIManager.change_state(UIManager.GameState.PAUSE_MENU)
 
 func _find_painting_system() -> PaintingSystem2D:
 	"""Find the PaintingSystem2D in the scene tree"""

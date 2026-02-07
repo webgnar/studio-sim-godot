@@ -1,6 +1,9 @@
 extends Control
 
 ## OptionsMenu - Tabbed settings menu for Audio and Visual options
+## Can be standalone or embedded inside PauseMenu
+
+@export var is_embedded: bool = false
 
 signal closed
 
@@ -55,6 +58,10 @@ func _ready():
 		saturation_slider.value_changed.connect(_on_saturation_slider_changed)
 	
 	close_button.pressed.connect(_on_close_pressed)
+
+	# Hide close button when embedded (PauseMenu handles closing)
+	if is_embedded:
+		close_button.visible = false
 	
 	# Get theme panel style
 	var theme_res = load("res://themes/ui_theme.tres")
@@ -99,25 +106,35 @@ func _input(event):
 	if not visible:
 		return
 	
-	# ESC or B button to close
+	# ESC or B button to close (when standalone) or go back to tab mode (when embedded)
 	if event.is_action_pressed("ui_cancel") or event.is_action_pressed("go_back"):
+		if is_embedded:
+			if not is_in_tab_mode:
+				# Return to tab mode within options
+				is_in_tab_mode = true
+				_update_tab_mode_visual()
+				if button_nav_sound:
+					button_nav_sound.play()
+				get_viewport().set_input_as_handled()
+			# When in tab mode and embedded, don't consume - let PauseMenu handle it
+			return
 		_on_close_pressed()
 		get_viewport().set_input_as_handled()
 		return
 	
 	if is_in_tab_mode:
 		# Tab mode: left/right switches tabs, down enters content
-		if Input.is_action_just_pressed("ui_left"):
+		if event.is_action_pressed("ui_left"):
 			if input_cooldown <= 0:
 				_switch_tab(-1)
 				input_cooldown = input_cooldown_time
 			get_viewport().set_input_as_handled()
-		elif Input.is_action_just_pressed("ui_right"):
+		elif event.is_action_pressed("ui_right"):
 			if input_cooldown <= 0:
 				_switch_tab(1)
 				input_cooldown = input_cooldown_time
 			get_viewport().set_input_as_handled()
-		elif Input.is_action_just_pressed("ui_down"):
+		elif event.is_action_pressed("ui_down"):
 			if input_cooldown <= 0:
 				# Enter content mode
 				is_in_tab_mode = false
@@ -125,12 +142,12 @@ func _input(event):
 				_focus_first_content_item()
 				input_cooldown = input_cooldown_time
 			get_viewport().set_input_as_handled()
-		elif Input.is_action_just_pressed("ui_up"):
+		elif event.is_action_pressed("ui_up"):
 			# In tab mode, up does nothing (stay at tabs, no looping)
 			get_viewport().set_input_as_handled()
 	else:
 		# Content mode: navigate within content, up from first slider returns to tabs
-		if Input.is_action_just_pressed("ui_up"):
+		if event.is_action_pressed("ui_up"):
 			if input_cooldown <= 0:
 				var focused_control = get_viewport().gui_get_focus_owner()
 				# Check if we're at the first slider in current tab, if so return to tab mode
@@ -148,7 +165,7 @@ func _input(event):
 						button_nav_sound.play()
 				input_cooldown = input_cooldown_time
 			get_viewport().set_input_as_handled()
-		elif Input.is_action_just_pressed("ui_down"):
+		elif event.is_action_pressed("ui_down"):
 			if input_cooldown <= 0:
 				var focused_control = get_viewport().gui_get_focus_owner()
 				# Navigate from sliders to Back button, but stop at Back button
@@ -162,17 +179,17 @@ func _input(event):
 						button_nav_sound.play()
 				input_cooldown = input_cooldown_time
 			get_viewport().set_input_as_handled()
-		
+
 		# Handle slider adjustment with left/right in content mode
 		var focused = get_viewport().gui_get_focus_owner()
 		if focused is HSlider:
-			if Input.is_action_just_pressed("ui_left"):
+			if event.is_action_pressed("ui_left"):
 				focused.value -= focused.step
 				is_holding_slider = true
 				slider_direction = -1
 				slider_hold_timer = 0.0
 				get_viewport().set_input_as_handled()
-			elif Input.is_action_just_pressed("ui_right"):
+			elif event.is_action_pressed("ui_right"):
 				focused.value += focused.step
 				is_holding_slider = true
 				slider_direction = 1
@@ -187,12 +204,13 @@ func show_menu():
 	"""Show the options menu"""
 	show()
 
-	# Play open menu sound
-	if open_menu_sound:
+	# Play open menu sound (skip when embedded - PauseMenu handles sounds)
+	if open_menu_sound and not is_embedded:
 		open_menu_sound.play()
 
-	# Ensure menu is above other UI layers
-	z_index = 100
+	# Ensure menu is above other UI layers (skip when embedded - PauseMenu handles layering)
+	if not is_embedded:
+		z_index = 100
 
 	# Always start on Audio tab (tab 0)
 	tab_container.current_tab = 0
@@ -207,8 +225,9 @@ func show_menu():
 	# Reset input cooldown
 	input_cooldown = 0.0
 
-	# Set mouse mode to visible
-	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	# Set mouse mode to visible (skip when embedded - PauseMenu handles this)
+	if not is_embedded:
+		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
 	# Enable processing so _input gets called
 	process_mode = Node.PROCESS_MODE_INHERIT

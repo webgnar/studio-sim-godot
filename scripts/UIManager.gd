@@ -10,10 +10,11 @@ signal state_changed(old_state: GameState, new_state: GameState)
 enum GameState {
 	MAIN_MENU,      # Main menu hub visible
 	GAMEPLAY,       # In studio, FPS controls active
-	MISSION_SELECT, # Mission browser open
+	MISSION_SELECT, # Mission browser open (deprecated, use PAUSE_MENU)
 	IN_MISSION,     # Actively painting/working on mission
 	VALIDATION,     # Viewing mission results
-	SHOP            # Shop interface (placeholder)
+	SHOP,           # Shop interface (placeholder)
+	PAUSE_MENU      # Pause menu with tabs (Commissions, Inventory, Options)
 }
 
 # Current game state (start as null, will be set to MAIN_MENU in _ready)
@@ -35,6 +36,7 @@ var main_menu: Control = null
 var mission_selection: Control = null
 var validation_result: Control = null
 var shop_ui: Control = null
+var pause_menu: Control = null
 var hud: CanvasLayer = null
 
 # Save file path
@@ -87,8 +89,8 @@ func _input(event):
 	if event.is_action_pressed("start"):
 		match current_state:
 			GameState.GAMEPLAY, GameState.IN_MISSION:
-				change_state(GameState.MISSION_SELECT)
-			GameState.MISSION_SELECT:
+				change_state(GameState.PAUSE_MENU)
+			GameState.PAUSE_MENU:
 				# Return to previous state (GAMEPLAY or IN_MISSION)
 				if MissionManager and MissionManager.current_mission:
 					change_state(GameState.IN_MISSION)
@@ -138,7 +140,10 @@ func change_state(new_state: GameState):
 				CameraManager.set_player_input(true)
 
 		GameState.MISSION_SELECT:
-			if mission_selection:
+			# Deprecated: route to PAUSE_MENU
+			if pause_menu:
+				pause_menu.call("show_screen")
+			elif mission_selection:
 				mission_selection.call("show_screen")
 			_set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 			if CameraManager:
@@ -165,6 +170,13 @@ func change_state(new_state: GameState):
 			if CameraManager:
 				CameraManager.set_player_input(false)
 
+		GameState.PAUSE_MENU:
+			if pause_menu:
+				pause_menu.call("show_screen")
+			_set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+			if CameraManager:
+				CameraManager.set_player_input(false)
+
 	# Emit state change signal
 	emit_signal("state_changed", old_state, new_state)
 
@@ -178,6 +190,8 @@ func _hide_all_screens():
 		validation_result.call("hide_screen")
 	if shop_ui and shop_ui.has_method("hide_screen"):
 		shop_ui.call("hide_screen")
+	if pause_menu and pause_menu.has_method("hide_screen"):
+		pause_menu.call("hide_screen")
 
 func _get_gameplay_mouse_mode() -> Input.MouseMode:
 	"""Get the appropriate mouse mode for gameplay based on platform
@@ -232,6 +246,9 @@ func register_screen(screen_type: String, screen: Node):
 		"shop":
 			shop_ui = screen
 			print("UIManager: Registered shop")
+		"pause_menu":
+			pause_menu = screen
+			print("UIManager: Registered pause menu")
 		"hud":
 			hud = screen
 			print("UIManager: Registered HUD")

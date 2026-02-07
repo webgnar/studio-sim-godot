@@ -2,7 +2,9 @@ extends Control
 class_name MissionSelectionUI
 
 ## UI for browsing and selecting painting missions
-## Opens with F7 key in 3D mode, displays mission list and details
+## Can be standalone or embedded inside PauseMenu
+
+@export var is_embedded: bool = false
 
 # Preload the mission card scene
 const MissionCardScene = preload("res://scenes/UI/MissionCard.tscn")
@@ -53,8 +55,8 @@ func _ready():
 	# Hide dialog initially
 	dialog.visible = false
 
-	# Register with UIManager
-	if UIManager:
+	# Register with UIManager (only if standalone, not embedded in PauseMenu)
+	if not is_embedded and UIManager:
 		UIManager.register_screen("mission_selection", self)
 
 	# Connect to PaintingSpawner
@@ -69,6 +71,9 @@ func _ready():
 
 	# Update stats display
 	_update_stats_display()
+
+	# Disable input processing by default (PauseMenu manages activation via process_mode)
+	process_mode = Node.PROCESS_MODE_DISABLED
 
 func _find_results_viewer():
 	"""Find the MissionResultsViewer in the scene tree"""
@@ -107,13 +112,24 @@ func _input(event):
 	if not viewport:
 		return
 
-	# Start button or go_back to close dialog (works in both modes)
-	if event.is_action_pressed("start") or event.is_action_pressed("go_back"):
+	# Start button closes menu entirely (even when embedded, PauseMenu handles start separately)
+	if event.is_action_pressed("start") and not is_embedded:
 		if nav_mode == NavMode.PREVIEW_BUTTONS:
 			_exit_preview_mode()
 		else:
 			_close_dialog()
 		viewport.set_input_as_handled()
+		return
+
+	# go_back navigates back through nav modes; when embedded, stop at MISSION_LIST
+	if event.is_action_pressed("go_back"):
+		if nav_mode == NavMode.PREVIEW_BUTTONS:
+			_exit_preview_mode()
+			viewport.set_input_as_handled()
+		elif not is_embedded:
+			_close_dialog()
+			viewport.set_input_as_handled()
+		# When embedded and in MISSION_LIST, don't consume - let PauseMenu handle it
 		return
 
 	# Handle input based on navigation mode
@@ -328,8 +344,8 @@ func _open_dialog():
 	# Show dialog
 	dialog.visible = true
 
-	# Play menu open sound
-	if open_menu_sound:
+	# Play menu open sound (skip when embedded - PauseMenu handles sounds)
+	if open_menu_sound and not is_embedded:
 		open_menu_sound.play()
 
 	# Disable player input
@@ -364,6 +380,9 @@ func hide_screen():
 
 func _close_dialog():
 	"""Hide the dialog and return to gameplay"""
+	if is_embedded:
+		return  # PauseMenu handles closing
+
 	# Play menu close sound
 	if close_menu_sound:
 		close_menu_sound.play()

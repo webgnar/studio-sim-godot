@@ -4,6 +4,8 @@ class_name CarryablePainting
 # Metadata for save system
 var painting_id: String = ""
 var texture_path: String = ""
+var painting_name: String = ""
+var artist_statement: String = ""
 
 func _ready():
 	# Auto-register with save system if metadata exists

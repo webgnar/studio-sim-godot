@@ -1,0 +1,361 @@
+extends Control
+class_name PauseMenuUI
+
+## Pause menu with horizontal tabs: Commissions, Inventory, Options
+## Handles top-level tab switching and delegates input to active tab content
+
+enum Tab { COMMISSIONS, INVENTORY, OPTIONS }
+enum NavMode { TAB_BAR, TAB_CONTENT }
+
+@onready var dialog: PanelContainer = $Dialog
+@onready var tab_bar: HBoxContainer = $Dialog/MarginContainer/VBoxContainer/TabBar
+@onready var tab_content: Control = $Dialog/MarginContainer/VBoxContainer/TabContent
+
+# Tab buttons
+@onready var commissions_tab_button: Button = $Dialog/MarginContainer/VBoxContainer/TabBar/CommissionsTab
+@onready var inventory_tab_button: Button = $Dialog/MarginContainer/VBoxContainer/TabBar/InventoryTab
+@onready var options_tab_button: Button = $Dialog/MarginContainer/VBoxContainer/TabBar/OptionsTab
+
+# Tab content containers
+@onready var commissions_content: Control = $Dialog/MarginContainer/VBoxContainer/TabContent/CommissionsContent
+@onready var inventory_content: Control = $Dialog/MarginContainer/VBoxContainer/TabContent/InventoryContent
+@onready var options_content: Control = $Dialog/MarginContainer/VBoxContainer/TabContent/OptionsContent
+
+# Sound effects
+@onready var open_menu_sound: AudioStreamPlayer = $OpenMenuSound
+@onready var close_menu_sound: AudioStreamPlayer = $CloseMenuSound
+@onready var button_nav_sound: AudioStreamPlayer = $ButtonNavSound
+@onready var button_hit_sound: AudioStreamPlayer = $ButtonHitSound
+
+# Embedded child references (set after _ready finds them)
+var mission_selection_ui: MissionSelectionUI = null
+var inventory_tab: Control = null
+var options_menu: Control = null
+
+# State
+var current_tab: Tab = Tab.COMMISSIONS
+var nav_mode: NavMode = NavMode.TAB_BAR
+var tab_buttons: Array[Button] = []
+var input_cooldown: float = 0.0
+var input_cooldown_time: float = 0.15
+
+func _ready():
+	# Hide dialog initially
+	dialog.visible = false
+
+	# Build tab buttons array
+	tab_buttons = [commissions_tab_button, inventory_tab_button, options_tab_button]
+
+	# Connect tab button signals
+	commissions_tab_button.pressed.connect(func(): _switch_tab(Tab.COMMISSIONS))
+	inventory_tab_button.pressed.connect(func(): _switch_tab(Tab.INVENTORY))
+	options_tab_button.pressed.connect(func(): _switch_tab(Tab.OPTIONS))
+
+	# Find embedded child UIs
+	mission_selection_ui = _find_child_of_type(commissions_content, "MissionSelectionUI") as MissionSelectionUI
+	inventory_tab = _find_child_by_class_name(inventory_content, "InventoryTab")
+	options_menu = _find_child_by_script_name(options_content, "OptionsMenu")
+
+	# Re-anchor OptionsMenu PanelContainer to fill tab content area
+	if options_menu:
+		var panel = options_menu.get_node_or_null("PanelContainer")
+		if panel:
+			panel.anchors_preset = Control.PRESET_FULL_RECT
+			panel.offset_left = 0
+			panel.offset_top = 0
+			panel.offset_right = 0
+			panel.offset_bottom = 0
+
+	# Register with UIManager
+	if UIManager:
+		UIManager.register_screen("pause_menu", self)
+
+func _process(delta):
+	if not dialog.visible:
+		return
+
+	if input_cooldown > 0:
+		input_cooldown -= delta
+
+func _input(event):
+	if not dialog.visible:
+		return
+
+	var viewport = get_viewport()
+	if not viewport:
+		return
+
+	# Check if a text field is being edited (don't intercept input)
+	if _is_text_editing():
+		# Only handle go_back to exit text editing
+		if event.is_action_pressed("go_back"):
+			_release_text_focus()
+			viewport.set_input_as_handled()
+		return
+
+	# LB/RB for instant tab switching from any mode
+	if event.is_action_pressed("cycle_prev"):
+		if input_cooldown <= 0:
+			_cycle_tab(-1)
+			input_cooldown = input_cooldown_time
+		viewport.set_input_as_handled()
+		return
+
+	if event.is_action_pressed("cycle_next"):
+		if input_cooldown <= 0:
+			_cycle_tab(1)
+			input_cooldown = input_cooldown_time
+		viewport.set_input_as_handled()
+		return
+
+	# Start button always closes the menu
+	if event.is_action_pressed("start"):
+		_close_menu()
+		viewport.set_input_as_handled()
+		return
+
+	if nav_mode == NavMode.TAB_BAR:
+		_handle_tab_bar_input(event, viewport)
+	# TAB_CONTENT mode: let child content scripts handle input via their own _input()
+	# The children will consume events they handle via set_input_as_handled()
+	# If go_back is not consumed by children, we catch it here
+	elif nav_mode == NavMode.TAB_CONTENT:
+		if event.is_action_pressed("go_back"):
+			# Only intercept if child didn't consume it
+			# (child scripts call set_input_as_handled when they handle go_back)
+			_enter_tab_bar_mode()
+			viewport.set_input_as_handled()
+
+func _handle_tab_bar_input(event, viewport):
+	"""Handle input when navigating the tab bar"""
+	if event.is_action_pressed("ui_left") or event.is_action_pressed("move_left"):
+		if input_cooldown <= 0:
+			_cycle_tab(-1)
+			input_cooldown = input_cooldown_time
+		viewport.set_input_as_handled()
+		return
+
+	if event.is_action_pressed("ui_right") or event.is_action_pressed("move_right"):
+		if input_cooldown <= 0:
+			_cycle_tab(1)
+			input_cooldown = input_cooldown_time
+		viewport.set_input_as_handled()
+		return
+
+	if event.is_action_pressed("ui_down") or event.is_action_pressed("move_back") or event.is_action_pressed("jump") or event.is_action_pressed("ui_accept"):
+		if input_cooldown <= 0:
+			_enter_tab_content_mode()
+			input_cooldown = input_cooldown_time
+		viewport.set_input_as_handled()
+		return
+
+	if event.is_action_pressed("go_back"):
+		_close_menu()
+		viewport.set_input_as_handled()
+		return
+
+func show_screen():
+	"""Show the pause menu (called by UIManager)"""
+	dialog.visible = true
+
+	# Reset to Commissions tab and tab bar mode
+	_switch_tab(Tab.COMMISSIONS)
+	_enter_tab_bar_mode()
+
+	# Reset input cooldown
+	input_cooldown = 0.0
+
+	# Play open sound
+	if open_menu_sound:
+		open_menu_sound.play()
+
+func hide_screen():
+	"""Hide the pause menu (called by UIManager)"""
+	dialog.visible = false
+	_hide_all_tab_content()
+
+func _close_menu():
+	"""Close the pause menu and return to gameplay"""
+	if close_menu_sound:
+		close_menu_sound.play()
+
+	nav_mode = NavMode.TAB_BAR
+
+	if UIManager:
+		if MissionManager and MissionManager.current_mission:
+			UIManager.change_state(UIManager.GameState.IN_MISSION)
+		else:
+			UIManager.change_state(UIManager.GameState.GAMEPLAY)
+
+func _switch_tab(tab: Tab):
+	"""Switch to a specific tab"""
+	current_tab = tab
+	_hide_all_tab_content()
+	_show_tab_content(tab)
+	_update_tab_button_styles()
+
+	# Play nav sound
+	if button_nav_sound:
+		button_nav_sound.play()
+
+func _cycle_tab(direction: int):
+	"""Cycle through tabs with clamping (no wrap)"""
+	var new_tab = clampi(current_tab + direction, 0, Tab.OPTIONS)
+	if new_tab != current_tab:
+		# If we were in content mode, enter tab bar first
+		if nav_mode == NavMode.TAB_CONTENT:
+			_enter_tab_bar_mode()
+		_switch_tab(new_tab as Tab)
+
+func _enter_tab_bar_mode():
+	"""Enter tab bar navigation mode"""
+	nav_mode = NavMode.TAB_BAR
+	_update_tab_bar_visual()
+
+	# Deactivate current tab content so it stops processing input
+	_deactivate_tab_content(current_tab)
+
+func _enter_tab_content_mode():
+	"""Enter tab content navigation mode - enable input on active tab"""
+	nav_mode = NavMode.TAB_CONTENT
+	_update_tab_bar_visual()
+
+	# Enable input processing on the active tab's content (content is already visible)
+	match current_tab:
+		Tab.COMMISSIONS:
+			if mission_selection_ui:
+				mission_selection_ui.process_mode = Node.PROCESS_MODE_INHERIT
+				mission_selection_ui.nav_mode = MissionSelectionUI.NavMode.MISSION_LIST
+				mission_selection_ui._clear_button_focus()
+				mission_selection_ui.input_cooldown = 0.0
+		Tab.INVENTORY:
+			if inventory_tab:
+				inventory_tab.process_mode = Node.PROCESS_MODE_INHERIT
+				inventory_tab.nav_mode = InventoryTab.NavMode.PAINTING_LIST
+				inventory_tab.is_editing_text = false
+				inventory_tab.input_cooldown = 0.0
+		Tab.OPTIONS:
+			if options_menu:
+				options_menu.process_mode = Node.PROCESS_MODE_INHERIT
+				options_menu.is_in_tab_mode = true
+				options_menu._update_tab_mode_visual()
+				options_menu.input_cooldown = 0.0
+
+	if button_hit_sound:
+		button_hit_sound.play()
+
+func _deactivate_tab_content(tab: Tab):
+	"""Deactivate a specific tab's content (stop processing input, keep visible)"""
+	match tab:
+		Tab.COMMISSIONS:
+			if mission_selection_ui:
+				mission_selection_ui.process_mode = Node.PROCESS_MODE_DISABLED
+		Tab.INVENTORY:
+			if inventory_tab:
+				inventory_tab.process_mode = Node.PROCESS_MODE_DISABLED
+		Tab.OPTIONS:
+			if options_menu:
+				options_menu.process_mode = Node.PROCESS_MODE_DISABLED
+
+func _hide_all_tab_content():
+	"""Hide all tab content areas and disable input processing"""
+	commissions_content.visible = false
+	inventory_content.visible = false
+	options_content.visible = false
+
+	# Disable input and hide internal content
+	if mission_selection_ui:
+		mission_selection_ui.dialog.visible = false
+		mission_selection_ui.process_mode = Node.PROCESS_MODE_DISABLED
+	if inventory_tab:
+		inventory_tab.process_mode = Node.PROCESS_MODE_DISABLED
+	if options_menu:
+		options_menu.hide()
+		options_menu.process_mode = Node.PROCESS_MODE_DISABLED
+
+func _show_tab_content(tab: Tab):
+	"""Show the content area for a specific tab (always shows visually, input controlled by process_mode)"""
+	match tab:
+		Tab.COMMISSIONS:
+			commissions_content.visible = true
+			if mission_selection_ui:
+				mission_selection_ui.show_screen()
+				# Keep input disabled - PauseMenu enables it when entering TAB_CONTENT
+				mission_selection_ui.process_mode = Node.PROCESS_MODE_DISABLED
+		Tab.INVENTORY:
+			inventory_content.visible = true
+			if inventory_tab and inventory_tab.has_method("activate"):
+				inventory_tab.activate()
+				# Keep input disabled
+				inventory_tab.process_mode = Node.PROCESS_MODE_DISABLED
+		Tab.OPTIONS:
+			options_content.visible = true
+			if options_menu and options_menu.has_method("show_menu"):
+				options_menu.show_menu()
+				# Keep input disabled (show_menu sets INHERIT, override it)
+				options_menu.process_mode = Node.PROCESS_MODE_DISABLED
+
+func _update_tab_button_styles():
+	"""Update tab button visual states"""
+	for i in range(tab_buttons.size()):
+		var button = tab_buttons[i]
+		if i == current_tab:
+			button.modulate = Color(1.0, 1.0, 1.0, 1.0)
+			button.disabled = true  # Prevent re-clicking active tab
+		else:
+			button.modulate = Color(0.6, 0.6, 0.6, 1.0)
+			button.disabled = false
+
+func _update_tab_bar_visual():
+	"""Update tab bar highlight for tab mode"""
+	if nav_mode == NavMode.TAB_BAR:
+		tab_bar.modulate = Color(0.7, 1.0, 1.0, 1.0)  # Cyan tint
+	else:
+		tab_bar.modulate = Color(1.0, 1.0, 1.0, 1.0)  # Normal
+
+func _is_text_editing() -> bool:
+	"""Check if a LineEdit or TextEdit currently has keyboard focus"""
+	var focused = get_viewport().gui_get_focus_owner()
+	return focused is LineEdit or focused is TextEdit
+
+func _release_text_focus():
+	"""Release keyboard focus from text fields"""
+	var focused = get_viewport().gui_get_focus_owner()
+	if focused:
+		focused.release_focus()
+
+# ============================================================================
+# Child finding helpers
+# ============================================================================
+
+func _find_child_of_type(parent: Node, type_name: String) -> Node:
+	"""Find first child node that matches a class name"""
+	for child in parent.get_children():
+		if child.get_class() == type_name or (child.get_script() and child.get_script().get_global_name() == type_name):
+			return child
+		var result = _find_child_of_type(child, type_name)
+		if result:
+			return result
+	return null
+
+func _find_child_by_class_name(parent: Node, class_name_str: String) -> Node:
+	"""Find first child whose script has a matching global name"""
+	for child in parent.get_children():
+		if child.get_script() and child.get_script().get_global_name() == class_name_str:
+			return child
+		var result = _find_child_by_class_name(child, class_name_str)
+		if result:
+			return result
+	return null
+
+func _find_child_by_script_name(parent: Node, script_name: String) -> Node:
+	"""Find first child whose script resource path contains the script name"""
+	for child in parent.get_children():
+		if child.get_script():
+			var path = child.get_script().resource_path
+			if path.get_file().get_basename() == script_name:
+				return child
+		var result = _find_child_by_script_name(child, script_name)
+		if result:
+			return result
+	return null

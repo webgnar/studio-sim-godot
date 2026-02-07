@@ -1,0 +1,119 @@
+[gd_scene format=3 uid="uid://cc268ul382nus"]
+
+[ext_resource type="Script" uid="uid://h5bexxabn8" path="res://scripts/ui/PauseMenu.gd" id="1_script"]
+[ext_resource type="Theme" uid="uid://cbtaxh5m7udor" path="res://themes/ui_theme.tres" id="2_theme"]
+[ext_resource type="PackedScene" uid="uid://ctv5r4f51ufg3" path="res://scenes/UI/MissionSelectionUI.tscn" id="3_mission_select"]
+[ext_resource type="PackedScene" uid="uid://bw6qndm8f0bap" path="res://scenes/UI/OptionsMenu.tscn" id="4_options"]
+[ext_resource type="PackedScene" path="res://scenes/UI/InventoryTab.tscn" id="5_inventory"]
+[ext_resource type="AudioStream" uid="uid://cobqa7fyriw4h" path="res://sounds/picotron/openmenu.ogg" id="6_open"]
+[ext_resource type="AudioStream" uid="uid://cyvlgci21yq6s" path="res://sounds/picotron/closemenu.ogg" id="7_close"]
+[ext_resource type="AudioStream" uid="uid://ht7rkfvqubdm" path="res://sounds/picotron/buttonnav.ogg" id="8_nav"]
+[ext_resource type="AudioStream" uid="uid://dae4sj3nmur45" path="res://sounds/picotron/buttonhit.ogg" id="9_hit"]
+
+[node name="PauseMenu" type="Control" unique_id=1561803109]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme = ExtResource("2_theme")
+script = ExtResource("1_script")
+
+[node name="Dialog" type="PanelContainer" parent="." unique_id=1317571074]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="Dialog" unique_id=1038769054]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Dialog/MarginContainer" unique_id=436552300]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="TabBar" type="HBoxContainer" parent="Dialog/MarginContainer/VBoxContainer" unique_id=1992921398]
+layout_mode = 2
+theme_override_constants/separation = 5
+alignment = 1
+
+[node name="CommissionsTab" type="Button" parent="Dialog/MarginContainer/VBoxContainer/TabBar" unique_id=1763618734]
+custom_minimum_size = Vector2(200, 40)
+layout_mode = 2
+text = "COMMISSIONS"
+
+[node name="InventoryTab" type="Button" parent="Dialog/MarginContainer/VBoxContainer/TabBar" unique_id=1450620378]
+custom_minimum_size = Vector2(200, 40)
+layout_mode = 2
+text = "INVENTORY"
+
+[node name="OptionsTab" type="Button" parent="Dialog/MarginContainer/VBoxContainer/TabBar" unique_id=481085732]
+custom_minimum_size = Vector2(200, 40)
+layout_mode = 2
+text = "OPTIONS"
+
+[node name="TabContent" type="Control" parent="Dialog/MarginContainer/VBoxContainer" unique_id=1835759430]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="CommissionsContent" type="Control" parent="Dialog/MarginContainer/VBoxContainer/TabContent" unique_id=527348747]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MissionSelectionUI" parent="Dialog/MarginContainer/VBoxContainer/TabContent/CommissionsContent" unique_id=1220037652 instance=ExtResource("3_mission_select")]
+layout_mode = 1
+is_embedded = true
+
+[node name="InventoryContent" type="Control" parent="Dialog/MarginContainer/VBoxContainer/TabContent" unique_id=578219640]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="InventoryTab" parent="Dialog/MarginContainer/VBoxContainer/TabContent/InventoryContent" unique_id=1851750507 instance=ExtResource("5_inventory")]
+
+[node name="OptionsContent" type="Control" parent="Dialog/MarginContainer/VBoxContainer/TabContent" unique_id=945299885]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="OptionsMenu" parent="Dialog/MarginContainer/VBoxContainer/TabContent/OptionsContent" unique_id=1956811031 instance=ExtResource("4_options")]
+layout_mode = 1
+is_embedded = true
+
+[node name="OpenMenuSound" type="AudioStreamPlayer" parent="." unique_id=331198535]
+stream = ExtResource("6_open")
+bus = &"SFX"
+
+[node name="CloseMenuSound" type="AudioStreamPlayer" parent="." unique_id=33033624]
+stream = ExtResource("7_close")
+bus = &"SFX"
+
+[node name="ButtonNavSound" type="AudioStreamPlayer" parent="." unique_id=1534880965]
+stream = ExtResource("8_nav")
+bus = &"SFX"
+
+[node name="ButtonHitSound" type="AudioStreamPlayer" parent="." unique_id=1989900886]
+stream = ExtResource("9_hit")
+bus = &"SFX"

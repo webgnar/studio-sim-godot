@@ -49,7 +49,13 @@ func export_painting(painting: CarryablePainting) -> Dictionary:
 	export_started.emit(painting)
 
 	var downloads = get_downloads_folder()
-	var filename_base = _generate_filename_base()
+
+	# Use painting name for filename if available, otherwise fall back to timestamp
+	var filename_base: String
+	if painting.painting_name != "":
+		filename_base = _sanitize_filename(painting.painting_name)
+	else:
+		filename_base = _generate_filename_base()
 
 	# Export PNG
 	var png_path = export_painting_png(painting, downloads, filename_base)
@@ -69,6 +75,18 @@ func export_painting(painting: CarryablePainting) -> Dictionary:
 		"png": png_path,
 		"glb": glb_path
 	}
+
+func _sanitize_filename(name: String) -> String:
+	"""Remove/replace characters that are invalid in filenames"""
+	var sanitized = name.strip_edges()
+	var invalid_chars = ['/', '\\', ':', '*', '?', '"', '<', '>', '|']
+	for c in invalid_chars:
+		sanitized = sanitized.replace(c, "_")
+	if sanitized.length() > 100:
+		sanitized = sanitized.substr(0, 100)
+	if sanitized.is_empty():
+		return _generate_filename_base()
+	return sanitized
 
 func export_painting_png(painting: CarryablePainting, downloads_path: String, filename_base: String) -> String:
 	"""Export painting texture as PNG file"""

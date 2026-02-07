@@ -25,6 +25,8 @@ var _current_png_path: String = ""
 var _current_glb_path: String = ""
 var _image_uploaded: bool = false
 var _model_uploaded: bool = false
+var _current_painting_name: String = ""
+var _current_artist_statement: String = ""
 
 func _ready() -> void:
 	_presign_request = _create_http_request("PresignRequest")
@@ -46,7 +48,7 @@ func _create_http_request(node_name: String) -> HTTPRequest:
 	add_child(req)
 	return req
 
-func upload_painting(png_path: String, glb_path: String) -> void:
+func upload_painting(png_path: String, glb_path: String, painting_name: String = "", artist_statement: String = "") -> void:
 	if is_uploading:
 		push_warning("GalleryUploader: Already uploading, skipping")
 		return
@@ -65,6 +67,8 @@ func upload_painting(png_path: String, glb_path: String) -> void:
 	_image_uploaded = false
 	_model_uploaded = false
 	_current_id = ""
+	_current_painting_name = painting_name
+	_current_artist_statement = artist_statement
 
 	upload_started.emit(png_path, glb_path)
 	print("GalleryUploader: Starting upload...")
@@ -149,7 +153,12 @@ func _check_uploads_complete() -> void:
 		"X-API-Key: " + API_KEY,
 		"Content-Type: application/json",
 	]
-	var body = JSON.stringify({"id": _current_id})
+	var confirm_data = {"id": _current_id}
+	if _current_painting_name != "":
+		confirm_data["name"] = _current_painting_name
+	if _current_artist_statement != "":
+		confirm_data["artistStatement"] = _current_artist_statement
+	var body = JSON.stringify(confirm_data)
 	var error = _confirm_request.request(API_BASE_URL + "/upload/confirm", headers, HTTPClient.METHOD_POST, body)
 	if error != OK:
 		_fail("Failed to start confirm request: " + str(error))
@@ -176,3 +185,5 @@ func _reset_state() -> void:
 	_current_glb_path = ""
 	_image_uploaded = false
 	_model_uploaded = false
+	_current_painting_name = ""
+	_current_artist_statement = ""
