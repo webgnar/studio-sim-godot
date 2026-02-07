@@ -12,3 +12,5 @@ res://scripts/PaintingExporter.gd
 res://scripts/WorldStateManager.gd
 res://scripts/painting/PaintingModeManager.gd
 res://scripts/PlayerAnimation.gd
+res://scripts/GalleryUploader.gd
+res://scripts/SteamManager.gd

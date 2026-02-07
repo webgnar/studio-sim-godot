@@ -210,8 +210,9 @@ func export_painting_glb(painting: CarryablePainting, downloads_path: String, fi
 		back_plane.size = Vector2(3, 3)
 		back_mesh.mesh = back_plane
 		# Flip to face opposite direction from front canvas, offset behind it
+		# X must also be negated to prevent horizontal mirroring when viewed from behind
 		back_mesh.transform = Transform3D(
-			Vector3(1, 0, 0), Vector3(0, -1, 0), Vector3(0, 0, 1), Vector3(0, -0.15, 0)
+			Vector3(-1, 0, 0), Vector3(0, -1, 0), Vector3(0, 0, 1), Vector3(0, -0.15, 0)
 		)
 
 		# Use raw signature image — transparent background, opaque black strokes only
