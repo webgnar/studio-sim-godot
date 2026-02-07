@@ -10,6 +10,7 @@ extends CanvasLayer
 @onready var crosshair: Control = $Crosshair
 @onready var carry_hint: VBoxContainer = $CarryHint  # Will show carry controls when holding object
 @onready var painting_hint: VBoxContainer = $PaintingHint  # Will show painting controls when in 2D painting mode
+@onready var camera_icon: TextureRect = $CameraIcon  # Shows when camera zones are active
 
 # --- PRIVATE VARIABLES ---
 var _player: CharacterBody3D
@@ -374,3 +375,5 @@ func _on_zones_toggled(enabled: bool) -> void:
 	"""Show feedback when camera zones are toggled"""
 	var message = "Camera Zones: ON" if enabled else "Camera Zones: OFF"
 	show_message(message, 2.0)
+	if camera_icon:
+		camera_icon.visible = enabled

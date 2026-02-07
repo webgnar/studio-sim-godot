@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://cmkthatew8dv2"]
+[gd_scene load_steps=11 format=3 uid="uid://cmkthatew8dv2"]
 
 [ext_resource type="Script" uid="uid://d2t2wfmgd2wmn" path="res://scripts/HUD.gd" id="1"]
 [ext_resource type="Theme" uid="uid://cbtaxh5m7udor" path="res://themes/ui_theme.tres" id="2"]
@@ -9,6 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://g4asi3np5tvu" path="res://sprites/ui/rb.png" id="6_e8ns6"]
 [ext_resource type="Texture2D" uid="uid://canne3e2geuxw" path="res://sprites/ui/rt.png" id="7_m51yh"]
 [ext_resource type="Texture2D" uid="uid://bkayr38ljn01r" path="res://sprites/ui/lt.png" id="8_8d6le"]
+[ext_resource type="Texture2D" path="res://sprites/vxicon.png" id="9_vxicon"]
 
 [node name="HUD" type="CanvasLayer"]
 script = ExtResource("1")
@@ -346,3 +347,19 @@ text = "[Left Click]"
 layout_mode = 2
 theme = ExtResource("2")
 text = " Throw"
+
+[node name="CameraIcon" type="TextureRect" parent="."]
+visible = false
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -80.0
+offset_top = -80.0
+offset_right = -16.0
+offset_bottom = -16.0
+grow_horizontal = 0
+grow_vertical = 0
+texture = ExtResource("9_vxicon")
+stretch_mode = 5

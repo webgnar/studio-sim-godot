@@ -79,7 +79,6 @@
 [ext_resource type="PackedScene" uid="uid://do5j2we5toj7h" path="res://scenes/objects/door.tscn" id="83_kcpaj"]
 [ext_resource type="PackedScene" uid="uid://culyhivorlo83" path="res://scenes/objects/key.tscn" id="83_n78cu"]
 [ext_resource type="Texture2D" uid="uid://dv58j61xl61oc" path="res://sprites/brick_diffuse_ambient.png" id="84_grmox"]
-[ext_resource type="PackedScene" uid="uid://cnv8ytqh44d0f" path="res://scenes/UI/MoneyReputationHUD.tscn" id="84_money_hud"]
 [ext_resource type="Texture2D" uid="uid://bqkunprbwvn68" path="res://sprites/brick_diffuse_normal.png" id="85_xgy6y"]
 [ext_resource type="PackedScene" uid="uid://dca7mypiho8qy" path="res://scenes/Spotlight.tscn" id="86_grmox"]
 [ext_resource type="PackedScene" uid="uid://c8iqeb7qfo8rl" path="res://scenes/objects/Fluorescent.tscn" id="87_kvmu4"]
@@ -535,7 +534,6 @@ theme = ExtResource("4_ygn2i")
 
 [node name="MissionHUD" parent="GameplayUI_Layer" unique_id=1077091467 instance=ExtResource("83_hud")]
 
-[node name="MoneyReputationHUD" parent="GameplayUI_Layer" unique_id=2022103841 instance=ExtResource("84_money_hud")]
 
 [node name="SaveNotification" parent="GameplayUI_Layer" unique_id=736111851 instance=ExtResource("78_save_notif")]
 
