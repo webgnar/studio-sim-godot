@@ -1,13 +1,11 @@
-res://materials
+res://sprites/
 res://materials/
-res://scenes
-/Users/zackgg/Desktop/studio sim linux
-/Users/zackgg/Desktop/studio sim windows
-res://sprites
-/Users/zackgg/Desktop
-res://scenes/objects
-/Users/zackgg/Godot/studio-sim-godot/web exports
-res://scripts
-/Applications
+res://materials/
+res://scenes/
+/Users/zackgg/Desktop/
+res://scenes/objects/
+/Users/zackgg/Godot/studio-sim-godot/web exports/
+res://scripts/
+/Applications/
 res://
 res://shaders/

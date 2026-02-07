@@ -86,6 +86,9 @@
 [ext_resource type="PackedScene" uid="uid://b4nwg0q6ash8e" path="res://scenes/objects/cardboardBox.tscn" id="87_xgy6y"]
 [ext_resource type="PackedScene" uid="uid://dsw1cl0yimheg" path="res://models/props/security_camera.glb" id="89_5p8eo"]
 [ext_resource type="PackedScene" uid="uid://bmig8p8tifpsu" path="res://models/props/berkey.glb" id="89_gny1c"]
+[ext_resource type="Texture2D" uid="uid://bhfm6dt1hofij" path="res://sprites/waterdrop.png" id="90_mlb8o"]
+[ext_resource type="Texture2D" uid="uid://cntrsinhjv1tx" path="res://sprites/waterdrop_hit.png" id="91_ebmc1"]
+[ext_resource type="AudioStream" uid="uid://bjojrg2a7xxut" path="res://sounds/picotron/waterdrop.ogg" id="92_8xaka"]
 [ext_resource type="AudioStream" uid="uid://84rjpuccue2i" path="res://sounds/boomboxSwitch.ogg" id="boombox_switch"]
 [ext_resource type="AudioStream" uid="uid://bukro42figtah" path="res://sounds/fan switch.ogg" id="fan_switch"]
 [ext_resource type="AudioStream" uid="uid://bw0ig22tombxc" path="res://sounds/ministudio.ogg" id="ministudio_audio"]
@@ -362,6 +365,136 @@ uv1_offset = Vector3(-0.12, 0.01, 1.34)
 uv1_triplanar = true
 uv1_world_triplanar = true
 texture_filter = 1
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_n6seq"]
+atlas = ExtResource("91_ebmc1")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ufs10"]
+atlas = ExtResource("91_ebmc1")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_h5nhj"]
+atlas = ExtResource("91_ebmc1")
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_q6do4"]
+atlas = ExtResource("91_ebmc1")
+region = Rect2(48, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pb8sg"]
+atlas = ExtResource("91_ebmc1")
+region = Rect2(64, 0, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ce70q"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_n6seq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ufs10")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_h5nhj")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_q6do4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pb8sg")
+}],
+"loop": true,
+"name": &"ripple",
+"speed": 5.0
+}]
+
+[sub_resource type="Animation" id="Animation_odf6h"]
+length = 3.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("waterdrop/Sprite3D:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.3, 3),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, -6.0883465, 0), Vector3(0, -6.0883465, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("waterdrop/AnimatedSprite3D:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.36666667, 1.2666667, 1.7),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [false, true, true, false]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("waterdrop/AudioStreamPlayer3D:playing")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0.33333337),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+
+[sub_resource type="Animation" id="Animation_mu18u"]
+resource_name = "waterdrop"
+length = 3.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("waterdrop/Sprite3D:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.3, 3),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, -6.0883465, 0), Vector3(0, -6.0883465, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("waterdrop/AnimatedSprite3D:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.36666667, 1.2666667, 1.7),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [false, true, true, false]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("waterdrop/AudioStreamPlayer3D:playing")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0.36107588),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_7b7y8"]
+_data = {
+&"RESET": SubResource("Animation_odf6h"),
+&"waterdrop": SubResource("Animation_mu18u")
+}
 
 [node name="World" type="Node3D" unique_id=81477]
 script = ExtResource("1_qaasp")
@@ -1345,6 +1478,31 @@ transform = Transform3D(-0.05, 0, 4.371139e-09, 0, 0.05, 0, -4.371139e-09, 0, -0
 
 [node name="berkey" parent="." unique_id=295986114 instance=ExtResource("89_gny1c")]
 transform = Transform3D(-3.059797e-09, 0, -0.07, 0, 0.07, 0, 0.07, 0, -3.059797e-09, 0.80310917, 1.7617197, 8.410689)
+
+[node name="waterdrop" type="Node3D" parent="berkey" unique_id=319029114]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.212265, 0, 9.536743e-07)
+
+[node name="Sprite3D" type="Sprite3D" parent="berkey/waterdrop" unique_id=518031669]
+modulate = Color(0.69173586, 0.69173586, 0.69173586, 0.6877967)
+texture = ExtResource("90_mlb8o")
+
+[node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="berkey/waterdrop" unique_id=183563501]
+transform = Transform3D(10.271924, -4.4900014e-07, -1.962642e-14, 0, -4.4900008e-07, 10.271924, -4.4900014e-07, -10.271924, -4.4900008e-07, 0, -5.84536, 0)
+visible = false
+sprite_frames = SubResource("SpriteFrames_ce70q")
+animation = &"ripple"
+autoplay = "ripple"
+frame_progress = 0.53499645
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="berkey/waterdrop" unique_id=1214116549]
+root_node = NodePath("../..")
+libraries/ = SubResource("AnimationLibrary_7b7y8")
+autoplay = &"waterdrop"
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="berkey/waterdrop" unique_id=1229619872]
+transform = Transform3D(14.285714, 0, 0, 0, 14.285714, 0, 0, 0, 14.285714, 0, 0, 0)
+stream = ExtResource("92_8xaka")
+volume_db = -38.899
 
 [editable path="Spotlight1"]
 [editable path="Spotlight2"]
