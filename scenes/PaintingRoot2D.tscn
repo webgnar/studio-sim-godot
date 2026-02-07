@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://bshsrjrokypta"]
+[gd_scene format=3 uid="uid://bshsrjrokypta"]
 
 [ext_resource type="Script" uid="uid://ddu5r4f51ufg2" path="res://scripts/painting/PaintingRoot2D.gd" id="1_616st"]
 [ext_resource type="Script" uid="uid://cwv7q3pr2rgqg" path="res://scripts/painting/PaintingSystem2D.gd" id="1_r7cr7"]
@@ -18,15 +18,15 @@ texture_filter = 0
 [sub_resource type="BoxShape3D" id="BoxShape3D_616st"]
 size = Vector3(4.5, 0.1, 4.5)
 
-[node name="PaintingRoot2d" type="Node3D"]
+[node name="PaintingRoot2d" type="Node3D" unique_id=1449395554]
 script = ExtResource("1_616st")
 
-[node name="CanvasViewport" type="SubViewport" parent="."]
+[node name="CanvasViewport" type="SubViewport" parent="." unique_id=1743827848]
 transparent_bg = true
 size = Vector2i(1024, 1024)
 render_target_update_mode = 4
 
-[node name="CanvasRoot" type="Node2D" parent="CanvasViewport" node_paths=PackedStringArray("painting_plane", "plane_collision", "canvas_viewport")]
+[node name="CanvasRoot" type="Node2D" parent="CanvasViewport" unique_id=442295369 node_paths=PackedStringArray("painting_plane", "plane_collision", "canvas_viewport")]
 script = ExtResource("1_r7cr7")
 painting_plane = NodePath("../../PaintingPlaneMesh")
 plane_collision = NodePath("../../PaintingPlaneMesh/StaticBody3D")
@@ -36,19 +36,20 @@ sticker_sound_1 = ExtResource("3_co74h")
 sticker_sound_2 = ExtResource("4_wru4m")
 sticker_sound_5 = ExtResource("7_aovqr")
 
-[node name="PaintingPlaneMesh" type="MeshInstance3D" parent="."]
+[node name="PaintingPlaneMesh" type="MeshInstance3D" parent="." unique_id=630417583]
+transform = Transform3D(1.01, 0, 0, 0, 1.01, 0, 0, 0, 1.01, 0, 0, 0)
 mesh = SubResource("PlaneMesh_m05bo")
 surface_material_override/0 = SubResource("StandardMaterial3D_5x4y3")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="PaintingPlaneMesh" groups=["2d_painting_canvas"]]
+[node name="StaticBody3D" type="StaticBody3D" parent="PaintingPlaneMesh" unique_id=214281708 groups=["2d_painting_canvas"]]
 collision_layer = 4
 collision_mask = 0
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="PaintingPlaneMesh/StaticBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PaintingPlaneMesh/StaticBody3D" unique_id=1326601138]
 shape = SubResource("BoxShape3D_616st")
 
-[node name="stretcher" parent="." instance=ExtResource("3_5x4y3")]
+[node name="stretcher" parent="." unique_id=436563309 instance=ExtResource("3_5x4y3")]
 transform = Transform3D(0.045, 0, 0, 0, -1.9670126e-09, -0.045, 0, 0.045, -1.9670126e-09, 0, -0.07518089, 0)
 
-[node name="SpawnMarker" type="Marker3D" parent="."]
+[node name="SpawnMarker" type="Marker3D" parent="." unique_id=918331394]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.43519586, 0)

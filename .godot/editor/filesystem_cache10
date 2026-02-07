@@ -1,5 +1,5 @@
 63f7b34db8d8cdea90c76aacccf841ec
-::res://::1770490434
+::res://::1770493092
 CAMERA_SYSTEM_SETUP.md::TextFile::-1::1762247192::0::1::::<><><>0<>0<><>::
 DEBUG_EXPORT.md::TextFile::-1::1767209587::0::1::::<><><>0<>0<><>::
 default.tscn::PackedScene::4365866954318602301::1762583134::0::1::::<><><>0<>0<><>::uid://sx0bao2oqis7::::res://models/player/human skeleton rewrite.glb
@@ -85,9 +85,9 @@ cube_full_2.png::CompressedTexture2D::8020523631721481283::1761637710::176432074
 cube_full_3.png::CompressedTexture2D::5621435126292450646::1761637710::1764320741::1::::<><><>0<>0<>e1cc527a8927b89a163c7a2657e98a5f<>res://.godot/imported/cube_full_3.png-2dadf42060c3492a60d0c5266a32389f.s3tc.ctex::
 cube_full_4.png::CompressedTexture2D::5379237190578598070::1761637710::1764320742::1::::<><><>0<>0<>c846c181786631381bedfb3fb7e2d5a2<>res://.godot/imported/cube_full_4.png-2b2a8a8e334deb7c81ecb57ed6d99cff.s3tc.ctex::
 cube_full_5.png::CompressedTexture2D::8550743911448765214::1761637710::1764320742::1::::<><><>0<>0<>e06f3fb03e38d334fe8d0d86d1b1b42c<>res://.godot/imported/cube_full_5.png-124382756187ab7fea92e1468202b8e9.s3tc.ctex::
-::res://models/blender/::1770492575
+::res://models/blender/::1770492580
 humanrig.blend::PackedScene::130607420480918248::1770492575::1770492580::1::::<><><>0<>0<>c192982d0502a6768f8bc81b5245551d<>res://.godot/imported/humanrig.blend-223624ccdde19de52993f7e9e20614c4.scn::uid://bnv1lpe2pst51::::res://models/blender/textures/Image_0.png<>uid://bq8qp4vst5d0h::::res://models/blender/textures/Image_2.png<>uid://b1p50f6u7ynl2::::res://models/blender/textures/Image_1.png
-::res://models/blender/textures/::1770492493
+::res://models/blender/textures/::1770492578
 Image_0.png::CompressedTexture2D::3343826664644661058::1765138497::1770492578::1::::<><><>0<>0<>d7654abc8d0174b3983fa313b87cdef7<>res://.godot/imported/Image_0.png-daefec75d73b84c557a2b77bcc8b5b05.s3tc.ctex::
 Image_1.png::CompressedTexture2D::4244162750681573573::1765138497::1770492578::1::::<><><>0<>0<>0ee0e6899a01643e46f48ea8975aafe3<>res://.godot/imported/Image_1.png-a03e36221f9e2a4a5ac0f9479dbd7959.s3tc.ctex::
 Image_2.png::CompressedTexture2D::3578566463040887045::1765138497::1770492578::1::::<><><>0<>0<>aef88fd59947b417cdd783ebcff3acf3<>res://.godot/imported/Image_2.png-94328d0ec98a9ccde2ed0632f031a1a1.s3tc.ctex::
@@ -580,15 +580,15 @@ plugIn.ogg::AudioStreamOggVorbis::4195966990803464657::1762064280::1764320741::1
 plugOut.ogg::AudioStreamOggVorbis::2362873068258311919::1762064284::1764320741::1::::<><><>0<>0<>b7a65a6ce4ab1f231112eb944317ea05<>res://.godot/imported/plugOut.ogg-19e180cc33c5dc723c0acf21dc253a14.oggvorbisstr::
 studiodoorcreak.ogg::AudioStreamOggVorbis::5484185960116068973::1768019137::1768019138::1::::<><><>0<>0<>4b12e454dacd0d41da6033ce6f13d279<>res://.godot/imported/studiodoorcreak.ogg-44c9b814f6cdcc43e0c71b84a9c2c16d.oggvorbisstr::
 trash can.ogg::AudioStreamOggVorbis::8226499830824661997::1762139388::1764320741::1::::<><><>0<>0<>d7ed99db5f50ea493f8fe5b8d349329b<>res://.godot/imported/trash can.ogg-e977452c7b831fbd4f1e177342ea7e7a.oggvorbisstr::
-::res://sounds/picotron/::1770444214
+::res://sounds/picotron/::1770493092
 ambient.ogg::AudioStreamOggVorbis::7398520542138253893::1765687583::1765687584::1::::<><><>0<>0<>95090e91e4b2282af2af152a097b1481<>res://.godot/imported/ambient.ogg-51ffc862055261eb9a83bc141426fba6.oggvorbisstr::
 buttonhit.ogg::AudioStreamOggVorbis::7169313015748236092::1765689900::1765689900::1::::<><><>0<>0<>3655799e36c165bb7ba8574d106d6ea6<>res://.godot/imported/buttonhit.ogg-263a06abffb19c7665206fa42fc879cd.oggvorbisstr::
 buttonnav.ogg::AudioStreamOggVorbis::532518918992108662::1765687634::1765687635::1::::<><><>0<>0<>e5afa1f3f33bdbc017ef4b277097cc45<>res://.godot/imported/buttonnav.ogg-cd086db8856830900a329563ec6052d8.oggvorbisstr::
 closemenu.ogg::AudioStreamOggVorbis::6501404267885694768::1765687675::1765687675::1::::<><><>0<>0<>a5dfd2d0d21870079e86a78ae5281b5c<>res://.godot/imported/closemenu.ogg-a1c5dd4a9e5542d252bc9148edfff948.oggvorbisstr::
 doorslam.ogg::AudioStreamOggVorbis::6267668368084174679::1768019255::1768019255::1::::<><><>0<>0<>dd34a13c1a0940e6128bd8100c6af714<>res://.godot/imported/doorslam.ogg-c2f6f71e18daca3562d15e76879f17a8.oggvorbisstr::
 doorunlock.ogg::AudioStreamOggVorbis::5315674493755770709::1768019190::1768019191::1::::<><><>0<>0<>2cbc1bdea393e62405f8182abce8a91d<>res://.godot/imported/doorunlock.ogg-7346cfae6d6def1e2c517fd96a114ed0.oggvorbisstr::
-elevator door.ogg::AudioStreamOggVorbis::5902734059949160717::1770444213::1770444214::1::::<><><>0<>0<>ec169f4e45b07ba7473f9fe01bc5eb9c<>res://.godot/imported/elevator door.ogg-84f6c762c06aa31e19203f1a5951199a.oggvorbisstr::
-elevator down.ogg::AudioStreamOggVorbis::470377522243892790::1770444213::1770444214::1::::<><><>0<>0<>2b67f2dec0db2c3049f642ec398c0408<>res://.godot/imported/elevator down.ogg-8a778b73b29078a007e37b83a24a15c6.oggvorbisstr::
+elevator_door.ogg::AudioStreamOggVorbis::5902734059949160717::1770444213::1770493086::1::::<><><>0<>0<>23a9e1dd27d927b30a244b3313e92f32<>res://.godot/imported/elevator_door.ogg-43fe6782e7f4fce3a9ade15079f9205b.oggvorbisstr::
+elevator_down.ogg::AudioStreamOggVorbis::470377522243892790::1770444213::1770493092::1::::<><><>0<>0<>6fc1184781420a6132f2ac856fa003fd<>res://.godot/imported/elevator_down.ogg-d9198dba3fb41eb2cd35526d9e9890bc.oggvorbisstr::
 gamestart.ogg::AudioStreamOggVorbis::7582605903353625035::1765687656::1765687657::1::::<><><>0<>0<>6137c9fae2a485033538b0279972eb13<>res://.godot/imported/gamestart.ogg-904bc006f3e8c6bb62c90b893ce23108.oggvorbisstr::
 keypickup.ogg::AudioStreamOggVorbis::5989480480908496519::1768020212::1768020213::1::::<><><>0<>0<>4c2a2f836985ea8f7f2d0824f03e89a6<>res://.godot/imported/keypickup.ogg-aaad3af324dbcee3169b5fbc09eabe89.oggvorbisstr::
 nailshoot.ogg::AudioStreamOggVorbis::4285251261807738841::1765690422::1765690422::1::::<><><>0<>0<>4c7e17e2b5fdeefb55861362b97b89c5<>res://.godot/imported/nailshoot.ogg-de04cb011922c43d95171a188787ae4e.oggvorbisstr::

@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://c8qv7n3hp2k4r"]
+[gd_scene format=3 uid="uid://c8qv7n3hp2k4r"]
 
 [ext_resource type="Script" uid="uid://do8vkeu1l02i1" path="res://scripts/components/PaintingHangingComponent.gd" id="1_hanging"]
 [ext_resource type="Script" uid="uid://dvkl3cic5pjcq" path="res://scripts/CarryablePainting.gd" id="1_painting"]
@@ -29,7 +29,7 @@ size = Vector3(0.2, 3.109, 0.2)
 [sub_resource type="BoxShape3D" id="BoxShape3D_right_bar"]
 size = Vector3(0.2, 3.109, 0.2)
 
-[node name="CarryablePainting" type="RigidBody3D" groups=["no_outline"]]
+[node name="CarryablePainting" type="RigidBody3D" unique_id=1044698982 groups=["no_outline"]]
 collision_layer = 4
 collision_mask = 14
 mass = 5.0
@@ -41,18 +41,19 @@ linear_damp = 2.5
 angular_damp = 3.0
 script = ExtResource("1_painting")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1234884982]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0.004296899, -0.05982775, 0.005706668)
 shape = SubResource("BoxShape3D_carryable")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1748243799]
+transform = Transform3D(1.01, 0, 0, 0, 1.01, 0, 0, 0, 1.01, 0, 0, 0)
 mesh = SubResource("PlaneMesh_carryable")
 surface_material_override/0 = SubResource("StandardMaterial3D_carryable")
 
-[node name="stretcher" parent="." instance=ExtResource("2_stretcher")]
+[node name="stretcher" parent="." unique_id=779301807 instance=ExtResource("2_stretcher")]
 transform = Transform3D(0.045, 0, 0, 0, -1.9670126e-09, -0.045, 0, 0.045, -1.9670126e-09, 0, -0.07518089, 0)
 
-[node name="PaintingHangingComponent" type="Node3D" parent="."]
+[node name="PaintingHangingComponent" type="Node3D" parent="." unique_id=1501278379]
 script = ExtResource("1_hanging")
 carry_distance_offset = 0.1
 gravity_while_carrying = 0.3
@@ -60,37 +61,37 @@ enable_rotation_while_carried = true
 use_interact_key_for_pickup = true
 throw_power = 20.0
 
-[node name="StretcherBarsPhysics" type="Node3D" parent="."]
+[node name="StretcherBarsPhysics" type="Node3D" parent="." unique_id=394777745]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0.012642026, 0)
 
-[node name="TopBar" type="Area3D" parent="StretcherBarsPhysics"]
+[node name="TopBar" type="Area3D" parent="StretcherBarsPhysics" unique_id=814157537]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5545, -0.075)
 collision_layer = 16
 collision_mask = 32
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="StretcherBarsPhysics/TopBar"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StretcherBarsPhysics/TopBar" unique_id=1320192892]
 shape = SubResource("BoxShape3D_top_bar")
 
-[node name="BottomBar" type="Area3D" parent="StretcherBarsPhysics"]
+[node name="BottomBar" type="Area3D" parent="StretcherBarsPhysics" unique_id=255412397]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.5545, -0.075)
 collision_layer = 16
 collision_mask = 32
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="StretcherBarsPhysics/BottomBar"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StretcherBarsPhysics/BottomBar" unique_id=362946183]
 shape = SubResource("BoxShape3D_bottom_bar")
 
-[node name="LeftBar" type="Area3D" parent="StretcherBarsPhysics"]
+[node name="LeftBar" type="Area3D" parent="StretcherBarsPhysics" unique_id=1297602966]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5445, 0, -0.075)
 collision_layer = 16
 collision_mask = 32
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="StretcherBarsPhysics/LeftBar"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StretcherBarsPhysics/LeftBar" unique_id=1330949012]
 shape = SubResource("BoxShape3D_left_bar")
 
-[node name="RightBar" type="Area3D" parent="StretcherBarsPhysics"]
+[node name="RightBar" type="Area3D" parent="StretcherBarsPhysics" unique_id=2002974983]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5445, 0, -0.075)
 collision_layer = 16
 collision_mask = 32
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="StretcherBarsPhysics/RightBar"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StretcherBarsPhysics/RightBar" unique_id=887044699]
 shape = SubResource("BoxShape3D_right_bar")

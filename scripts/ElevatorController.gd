@@ -29,6 +29,9 @@ var is_exporting: bool = false
 
 # Audio
 var _export_sound: AudioStreamPlayer3D
+var _door_sound: AudioStreamPlayer3D
+var _door_stream: AudioStream = preload("res://sounds/picotron/elevator_door.ogg")
+var _descent_stream: AudioStream = preload("res://sounds/picotron/elevator_down.ogg")
 
 func _ready() -> void:
 	# If exports weren't resolved, try to find nodes by path
@@ -56,7 +59,15 @@ func _setup_audio() -> void:
 	_export_sound.name = "ExportSound"
 	_export_sound.max_distance = 15.0
 	_export_sound.bus = "SFX"
+	_export_sound.stream = _descent_stream
 	add_child(_export_sound)
+
+	_door_sound = AudioStreamPlayer3D.new()
+	_door_sound.name = "DoorSound"
+	_door_sound.max_distance = 15.0
+	_door_sound.bus = "SFX"
+	_door_sound.stream = _door_stream
+	add_child(_door_sound)
 
 func _on_body_entered(body: Node) -> void:
 	if body is CarryablePainting:
@@ -92,6 +103,7 @@ func open_gate() -> void:
 		return
 
 	gate_state = GateState.ANIMATING
+	_door_sound.play()
 
 	if gate_animation_player and gate_animation_player.has_animation("open"):
 		gate_animation_player.play("open")
@@ -108,6 +120,7 @@ func close_gate() -> void:
 		return
 
 	gate_state = GateState.ANIMATING
+	_door_sound.play()
 
 	if gate_animation_player and gate_animation_player.has_animation("close"):
 		gate_animation_player.play("close")
@@ -145,7 +158,8 @@ func start_export() -> void:
 	var painting = paintings_inside[0]
 	export_started.emit(painting)
 
-	# Play descent animation
+	# Play descent animation with sound
+	_export_sound.play()
 	await _play_descent_effect()
 
 	# Perform export
@@ -171,6 +185,7 @@ func start_export() -> void:
 
 	# Open gate after export
 	gate_state = GateState.ANIMATING
+	_door_sound.play()
 	if gate_animation_player and gate_animation_player.has_animation("open"):
 		gate_animation_player.play("open")
 		await gate_animation_player.animation_finished

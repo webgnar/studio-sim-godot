@@ -97,7 +97,10 @@ func _on_interacted(_player_interaction_component: PlayerInteractionComponent) -
 
 	elevator_controller.start_export()
 
-	# Play button press animation if available
+	# Play button press animation followed by release
 	var anim_player = find_animation_player()
 	if anim_player and anim_player.has_animation("press"):
 		anim_player.play("press")
+		await anim_player.animation_finished
+		if anim_player.has_animation("release"):
+			anim_player.play("release")
