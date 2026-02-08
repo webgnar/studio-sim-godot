@@ -299,42 +299,6 @@ func _update_steam_on_mission_complete(mission: PaintingMission, result: Validat
 	if SteamManager.get_stat("STAT_MISSIONS_COMPLETED") >= 1:
 		SteamManager.unlock_achievement("ACH_FIRST_MISSION")
 
-	# Achievement: First perfect
-	if result.is_perfect():
-		SteamManager.unlock_achievement("ACH_FIRST_PERFECT")
-
-	# Achievement: 5 missions
-	if SteamManager.get_stat("STAT_MISSIONS_COMPLETED") >= 5:
-		SteamManager.unlock_achievement("ACH_MISSIONS_5")
-
-	# Achievement: 10 missions
-	if SteamManager.get_stat("STAT_MISSIONS_COMPLETED") >= 10:
-		SteamManager.unlock_achievement("ACH_MISSIONS_10")
-
-	# Achievement: All missions (14 total based on manifest)
-	if SteamManager.get_stat("STAT_MISSIONS_COMPLETED") >= 14:
-		SteamManager.unlock_achievement("ACH_MISSIONS_ALL")
-
-	# Achievement: First S rank
-	if grade == "S":
-		SteamManager.unlock_achievement("ACH_GRADE_S")
-
-	# Achievement: 5 S ranks
-	if SteamManager.get_stat("STAT_MISSIONS_S_RANK") >= 5:
-		SteamManager.unlock_achievement("ACH_GRADE_S_5")
-
-	# Achievement: All missions S rank (14 total)
-	if SteamManager.get_stat("STAT_MISSIONS_S_RANK") >= 14:
-		SteamManager.unlock_achievement("ACH_PERFECTIONIST")
-
-	# Achievement: Complete hard mission (difficulty 8+)
-	if mission.difficulty >= 8:
-		SteamManager.unlock_achievement("ACH_HARD_MISSION")
-
-		# Achievement: S rank on hard mission
-		if grade == "S":
-			SteamManager.unlock_achievement("ACH_HARD_PERFECT")
-
 	# Achievement: Speedrunner (under 60 seconds)
 	if duration_sec > 0.0 and duration_sec < 60.0:
 		SteamManager.unlock_achievement("ACH_SPEEDRUNNER")

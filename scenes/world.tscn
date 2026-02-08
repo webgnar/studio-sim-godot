@@ -333,17 +333,17 @@ _data = {
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_frq1x"]
 radius = 1.0
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_ufs10"]
+[sub_resource type="PlaneMesh" id="PlaneMesh_8xaka"]
 resource_local_to_scene = true
 size = Vector2(2.5, 3)
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_h5nhj"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_n6seq"]
 resource_name = "_albedo"
 viewport_path = NodePath("../MirrorNew/SubViewport")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_q6do4"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ufs10"]
 resource_local_to_scene = true
-albedo_texture = SubResource("ViewportTexture_h5nhj")
+albedo_texture = SubResource("ViewportTexture_n6seq")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_1v02h"]
 size = Vector2(2.5, 3)
@@ -514,8 +514,8 @@ light_energy = 0.2
 [node name="DirectionalLight3D2" type="DirectionalLight3D" parent="." unique_id=627802137]
 transform = Transform3D(0.9557057, 0.22730023, 0.18697909, 0, -0.63528335, 0.77227914, 0.29432392, -0.73807156, -0.60714394, 0, 7.9149475, -11.400858)
 shadow_enabled = true
-shadow_bias = 0.0
-shadow_normal_bias = 10.0
+shadow_bias = 0.188
+shadow_normal_bias = 0.94
 
 [node name="PaintingUI_Layer" type="CanvasLayer" parent="." unique_id=842324816]
 
@@ -533,7 +533,6 @@ theme = ExtResource("4_ygn2i")
 [node name="MissionResultsViewer" parent="GameplayUI_Layer" unique_id=238323232 instance=ExtResource("81_results_viewer")]
 
 [node name="MissionHUD" parent="GameplayUI_Layer" unique_id=1077091467 instance=ExtResource("83_hud")]
-
 
 [node name="SaveNotification" parent="GameplayUI_Layer" unique_id=736111851 instance=ExtResource("78_save_notif")]
 
@@ -597,18 +596,20 @@ omni_range = 0.4
 spot_angle = 68.3
 
 [node name="Spotlight2" parent="." unique_id=1239230442 instance=ExtResource("86_grmox")]
-transform = Transform3D(0.09220727, 0.17747626, 0, -0.17747626, 0.09220727, 0, 0, 0, 0.2, -0.47758496, 4.2677326, 6.604772)
+transform = Transform3D(0.09220726, 0.17747626, 0, -0.17747626, 0.09220726, 0, 0, 0, 0.2, -0.47758496, 4.2677326, 7.830458)
+visible = false
 
 [node name="OmniLight3D" parent="Spotlight2" index="2"]
 omni_range = 0.4
 
 [node name="SpotLight3D" parent="Spotlight2" index="3"]
-transform = Transform3D(0.9659258, -5.551385e-09, 0.25881907, -0.25881907, -4.216698e-08, 0.9659258, 5.551385e-09, -1, -4.216698e-08, 0, -3, 0)
 shadow_enabled = true
-shadow_opacity = 0.62
-spot_range = 15.076
-spot_attenuation = 1.4
-spot_angle = 52.27
+shadow_bias = 0.519
+shadow_normal_bias = 3.444
+shadow_opacity = 0.84
+spot_attenuation = 1.9
+spot_angle = 54.09
+spot_angle_attenuation = 1.1486982
 
 [node name="Spotlight3" parent="." unique_id=818290708 instance=ExtResource("86_grmox")]
 transform = Transform3D(0.19891857, 0.020770296, 0, -0.020770296, 0.19891857, 0, 0, 0, 0.2, -2.884933, 4.710015, 12.842417)
@@ -632,9 +633,10 @@ transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 5.0153227, 11.774637
 spot_angle = 90.0
 
 [node name="celing" type="CSGBox3D" parent="." unique_id=266199176]
-transform = Transform3D(-2.0107239e-08, 7.49, 0, -0.46, -3.2739828e-07, 0, 0, 0, 22.64, 0.057606697, 5.5446606, 4)
+transform = Transform3D(-2.0107239e-08, 7.49, 0, -0.46, -3.2739828e-07, 0, 0, 0, 22.64, 0.06583545, 5.5446606, 4)
 use_collision = true
 collision_layer = 2
+size = Vector3(1, 1.0183105, 1)
 material = ExtResource("1_4mrxx")
 
 [node name="strut" type="CSGBox3D" parent="celing" unique_id=1466166137]
@@ -1042,7 +1044,6 @@ switch_id = "light3_and_spots"
 switch_on_sound = ExtResource("23_l8ah6")
 switch_off_sound = ExtResource("24_e75v4")
 controlled_light_paths = Array[String](["../../Spotlight3/OmniLight3D", "../../Spotlight3/SpotLight3D", "../../Fluorescent3/OmniLight3D", "../../Fluorescent3/SpotLight3D"])
-starts_on = true
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="light switch box2/lightswitch3" unique_id=1288458892]
 libraries/ = SubResource("AnimationLibrary_3l05q")
@@ -1386,8 +1387,8 @@ transform = Transform3D(-4.371139e-09, 0.1, 0, -0.1, -4.371139e-09, 0, 0, 0, 0.1
 
 [node name="mirror" parent="." unique_id=1626491013 instance=ExtResource("39_qaasp")]
 transform = Transform3D(-4.7902194e-08, -0.99488777, 0.10098683, -3.9073655e-08, 0.10098683, 0.99488777, -1, 4.3711392e-08, -4.3711385e-08, 2.8, 1.497, 5.232)
-mesh = SubResource("PlaneMesh_ufs10")
-surface_material_override/0 = SubResource("StandardMaterial3D_q6do4")
+mesh = SubResource("PlaneMesh_8xaka")
+surface_material_override/0 = SubResource("StandardMaterial3D_ufs10")
 show_debug_logs = false
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="mirror" unique_id=399456008]
@@ -1467,9 +1468,6 @@ transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 3.83
 
 [node name="Fluorescent" parent="." unique_id=864907143 instance=ExtResource("87_kvmu4")]
 transform = Transform3D(-1.3113417e-08, 0, -0.3, 0, 0.3, 0, 0.3, 0, -1.3113417e-08, 8.539603, 4.685627, 2.1567757)
-
-[node name="Fluorescent4" parent="." unique_id=91859222 instance=ExtResource("87_kvmu4")]
-transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 11.078434, 4.88143, 8.960271)
 
 [node name="sec camera3" parent="." unique_id=678712659 instance=ExtResource("89_5p8eo")]
 transform = Transform3D(-0.031258054, 0, -0.039024793, 0, 0.05, 0, 0.039024793, 0, -0.031258054, 3.794696, 4.17496, -5.9969425)

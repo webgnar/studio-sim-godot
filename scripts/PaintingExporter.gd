@@ -71,6 +71,21 @@ func export_painting(painting: CarryablePainting) -> Dictionary:
 
 	export_completed.emit(png_path, glb_path)
 
+	# Unlock export achievements
+	if SteamManager:
+		SteamManager.unlock_achievement("ACH_EXPORT_PAINTING")
+		SteamManager.increment_stat("STAT_PAINTINGS_EXPORTED")
+		SteamManager.store_steam_data()
+		var total = SteamManager.get_stat("STAT_PAINTINGS_EXPORTED")
+		if total >= 5:
+			SteamManager.unlock_achievement("ACH_EXPORT_5")
+		if total >= 10:
+			SteamManager.unlock_achievement("ACH_EXPORT_10")
+		if total >= 20:
+			SteamManager.unlock_achievement("ACH_EXPORT_20")
+		if total >= 50:
+			SteamManager.unlock_achievement("ACH_EXPORT_50")
+
 	return {
 		"png": png_path,
 		"glb": glb_path

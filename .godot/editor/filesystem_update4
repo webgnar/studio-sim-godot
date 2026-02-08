@@ -19,3 +19,4 @@ res://scripts/PlayerController.gd
 res://scenes/world.tscn
 res://scenes/UI/HUD.tscn
 res://scripts/HUD.gd
+res://scripts/MissionManager.gd

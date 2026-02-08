@@ -96,29 +96,19 @@ func setup_achievements() -> void:
 	achievements = {
 		# Tutorial & First Steps
 		"ACH_FIRST_MISSION": false,
-		"ACH_FIRST_PERFECT": false,
-
-		# Mission Completion (Progressive)
-		"ACH_MISSIONS_5": false,
-		"ACH_MISSIONS_10": false,
-		"ACH_MISSIONS_ALL": false,
-
-		# Grade-Based
-		"ACH_GRADE_S": false,
-		"ACH_GRADE_S_5": false,
-		"ACH_PERFECTIONIST": false,  # All missions S rank
-
-		# Difficulty-Based
-		"ACH_HARD_MISSION": false,
-		"ACH_HARD_PERFECT": false,
 
 		# Playtime
-		"ACH_PLAY_1HOUR": false,
+		"ACH_PLAY_2HOURS": false,
 		"ACH_PLAY_10HOURS": false,
 
 		# Fun/Hidden
 		"ACH_SPEEDRUNNER": false,  # Complete mission under 1 minute
 		"ACH_PAINTER": false,  # Place 1000 total stickers
+		"ACH_EXPORT_PAINTING": false,  # Export a painting
+		"ACH_EXPORT_5": false,
+		"ACH_EXPORT_10": false,
+		"ACH_EXPORT_20": false,
+		"ACH_EXPORT_50": false,
 	}
 
 func setup_statistics() -> void:
@@ -132,6 +122,7 @@ func setup_statistics() -> void:
 
 		# Sticker tracking
 		"STAT_STICKERS_PLACED": 0,
+		"STAT_PAINTINGS_EXPORTED": 0,
 
 		# Time tracking
 		"STAT_PLAYTIME_SECONDS": 0,
@@ -271,8 +262,8 @@ func check_playtime_achievements() -> void:
 	"""Check and unlock playtime-based achievements"""
 	var hours_played = total_playtime_seconds / 3600.0
 
-	if hours_played >= 1.0:
-		unlock_achievement("ACH_PLAY_1HOUR")
+	if hours_played >= 2.0:
+		unlock_achievement("ACH_PLAY_2HOURS")
 
 	if hours_played >= 10.0:
 		unlock_achievement("ACH_PLAY_10HOURS")
