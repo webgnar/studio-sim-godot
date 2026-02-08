@@ -4,8 +4,9 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://bey8yr0o3tjml"
 path.s3tc="res://.godot/imported/water_cooler_1.png-377fa49606739e6ce9e744a3ef8dadfb.s3tc.ctex"
+path.etc2="res://.godot/imported/water_cooler_1.png-377fa49606739e6ce9e744a3ef8dadfb.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -15,7 +16,7 @@ generator_parameters={
 [deps]
 
 source_file="res://models/props/water_cooler_1.png"
-dest_files=["res://.godot/imported/water_cooler_1.png-377fa49606739e6ce9e744a3ef8dadfb.s3tc.ctex"]
+dest_files=["res://.godot/imported/water_cooler_1.png-377fa49606739e6ce9e744a3ef8dadfb.s3tc.ctex", "res://.godot/imported/water_cooler_1.png-377fa49606739e6ce9e744a3ef8dadfb.etc2.ctex"]
 
 [params]
 

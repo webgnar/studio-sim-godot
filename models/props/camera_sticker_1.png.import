@@ -4,8 +4,9 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://b8v4obonacr1h"
 path.s3tc="res://.godot/imported/camera_sticker_1.png-d174a8570f964a460889037c315d22b8.s3tc.ctex"
+path.etc2="res://.godot/imported/camera_sticker_1.png-d174a8570f964a460889037c315d22b8.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -15,7 +16,7 @@ generator_parameters={
 [deps]
 
 source_file="res://models/props/camera_sticker_1.png"
-dest_files=["res://.godot/imported/camera_sticker_1.png-d174a8570f964a460889037c315d22b8.s3tc.ctex"]
+dest_files=["res://.godot/imported/camera_sticker_1.png-d174a8570f964a460889037c315d22b8.s3tc.ctex", "res://.godot/imported/camera_sticker_1.png-d174a8570f964a460889037c315d22b8.etc2.ctex"]
 
 [params]
 

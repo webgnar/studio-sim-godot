@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://dyuvtxhp260rj"
 path.s3tc="res://.godot/imported/wood_ambient.png-42ee888be305c40456ba33bc1114499d.s3tc.ctex"
+path.etc2="res://.godot/imported/wood_ambient.png-42ee888be305c40456ba33bc1114499d.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://sprites/normals/wood_ambient.png"
-dest_files=["res://.godot/imported/wood_ambient.png-42ee888be305c40456ba33bc1114499d.s3tc.ctex"]
+dest_files=["res://.godot/imported/wood_ambient.png-42ee888be305c40456ba33bc1114499d.s3tc.ctex", "res://.godot/imported/wood_ambient.png-42ee888be305c40456ba33bc1114499d.etc2.ctex"]
 
 [params]
 

@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://la8qonc8i8ry"
 path.s3tc="res://.godot/imported/texture_4_albedo2.png-9c2d3f3b0b397656ea2f1134b059679f.s3tc.ctex"
+path.etc2="res://.godot/imported/texture_4_albedo2.png-9c2d3f3b0b397656ea2f1134b059679f.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://textures/texture_4_albedo2.png"
-dest_files=["res://.godot/imported/texture_4_albedo2.png-9c2d3f3b0b397656ea2f1134b059679f.s3tc.ctex"]
+dest_files=["res://.godot/imported/texture_4_albedo2.png-9c2d3f3b0b397656ea2f1134b059679f.s3tc.ctex", "res://.godot/imported/texture_4_albedo2.png-9c2d3f3b0b397656ea2f1134b059679f.etc2.ctex"]
 
 [params]
 

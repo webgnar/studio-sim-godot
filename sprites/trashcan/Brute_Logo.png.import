@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://cubccvt5724u3"
 path.s3tc="res://.godot/imported/Brute_Logo.png-831b44461856e34079ed047c063b5736.s3tc.ctex"
+path.etc2="res://.godot/imported/Brute_Logo.png-831b44461856e34079ed047c063b5736.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://sprites/trashcan/Brute_Logo.png"
-dest_files=["res://.godot/imported/Brute_Logo.png-831b44461856e34079ed047c063b5736.s3tc.ctex"]
+dest_files=["res://.godot/imported/Brute_Logo.png-831b44461856e34079ed047c063b5736.s3tc.ctex", "res://.godot/imported/Brute_Logo.png-831b44461856e34079ed047c063b5736.etc2.ctex"]
 
 [params]
 

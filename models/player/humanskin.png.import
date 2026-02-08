@@ -4,8 +4,9 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://dvi43txkn6cty"
 path.s3tc="res://.godot/imported/humanskin.png-5e6ca4453bd1a84062922852e6bdf61b.s3tc.ctex"
+path.etc2="res://.godot/imported/humanskin.png-5e6ca4453bd1a84062922852e6bdf61b.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -15,7 +16,7 @@ generator_parameters={
 [deps]
 
 source_file="res://models/player/humanskin.png"
-dest_files=["res://.godot/imported/humanskin.png-5e6ca4453bd1a84062922852e6bdf61b.s3tc.ctex"]
+dest_files=["res://.godot/imported/humanskin.png-5e6ca4453bd1a84062922852e6bdf61b.s3tc.ctex", "res://.godot/imported/humanskin.png-5e6ca4453bd1a84062922852e6bdf61b.etc2.ctex"]
 
 [params]
 

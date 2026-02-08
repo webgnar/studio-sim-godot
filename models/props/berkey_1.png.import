@@ -4,8 +4,9 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://bvf8vdsw8j0ba"
 path.s3tc="res://.godot/imported/berkey_1.png-e41bd9bfb4ca30888bbd65ea2e7edfbc.s3tc.ctex"
+path.etc2="res://.godot/imported/berkey_1.png-e41bd9bfb4ca30888bbd65ea2e7edfbc.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -15,7 +16,7 @@ generator_parameters={
 [deps]
 
 source_file="res://models/props/berkey_1.png"
-dest_files=["res://.godot/imported/berkey_1.png-e41bd9bfb4ca30888bbd65ea2e7edfbc.s3tc.ctex"]
+dest_files=["res://.godot/imported/berkey_1.png-e41bd9bfb4ca30888bbd65ea2e7edfbc.s3tc.ctex", "res://.godot/imported/berkey_1.png-e41bd9bfb4ca30888bbd65ea2e7edfbc.etc2.ctex"]
 
 [params]
 

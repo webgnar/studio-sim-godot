@@ -4,8 +4,9 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://ckons7fhyt817"
 path.s3tc="res://.godot/imported/SfRoadFlat_0.png-3c5caab9e1194ae17798db27368a803a.s3tc.ctex"
+path.etc2="res://.godot/imported/SfRoadFlat_0.png-3c5caab9e1194ae17798db27368a803a.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -15,7 +16,7 @@ generator_parameters={
 [deps]
 
 source_file="res://models/outside/SfRoadFlat_0.png"
-dest_files=["res://.godot/imported/SfRoadFlat_0.png-3c5caab9e1194ae17798db27368a803a.s3tc.ctex"]
+dest_files=["res://.godot/imported/SfRoadFlat_0.png-3c5caab9e1194ae17798db27368a803a.s3tc.ctex", "res://.godot/imported/SfRoadFlat_0.png-3c5caab9e1194ae17798db27368a803a.etc2.ctex"]
 
 [params]
 

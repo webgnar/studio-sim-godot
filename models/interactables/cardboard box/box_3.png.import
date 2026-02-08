@@ -4,8 +4,9 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://58kd102kql2p"
 path.s3tc="res://.godot/imported/box_3.png-93e028a4b119cb1aacb9b0e320caeeeb.s3tc.ctex"
+path.etc2="res://.godot/imported/box_3.png-93e028a4b119cb1aacb9b0e320caeeeb.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -15,7 +16,7 @@ generator_parameters={
 [deps]
 
 source_file="res://models/interactables/cardboard box/box_3.png"
-dest_files=["res://.godot/imported/box_3.png-93e028a4b119cb1aacb9b0e320caeeeb.s3tc.ctex"]
+dest_files=["res://.godot/imported/box_3.png-93e028a4b119cb1aacb9b0e320caeeeb.s3tc.ctex", "res://.godot/imported/box_3.png-93e028a4b119cb1aacb9b0e320caeeeb.etc2.ctex"]
 
 [params]
 

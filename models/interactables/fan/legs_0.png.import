@@ -4,8 +4,9 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://dxn1wbaq2ynee"
 path.s3tc="res://.godot/imported/legs_0.png-3a1c1a076b2b3c48c23ba3cf0f6e7280.s3tc.ctex"
+path.etc2="res://.godot/imported/legs_0.png-3a1c1a076b2b3c48c23ba3cf0f6e7280.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -15,7 +16,7 @@ generator_parameters={
 [deps]
 
 source_file="res://models/interactables/fan/legs_0.png"
-dest_files=["res://.godot/imported/legs_0.png-3a1c1a076b2b3c48c23ba3cf0f6e7280.s3tc.ctex"]
+dest_files=["res://.godot/imported/legs_0.png-3a1c1a076b2b3c48c23ba3cf0f6e7280.s3tc.ctex", "res://.godot/imported/legs_0.png-3a1c1a076b2b3c48c23ba3cf0f6e7280.etc2.ctex"]
 
 [params]
 

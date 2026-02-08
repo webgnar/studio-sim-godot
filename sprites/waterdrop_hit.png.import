@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://cntrsinhjv1tx"
 path.s3tc="res://.godot/imported/waterdrop_hit.png-c2b079e9c51cfbb67be38fd56e6d6fea.s3tc.ctex"
+path.etc2="res://.godot/imported/waterdrop_hit.png-c2b079e9c51cfbb67be38fd56e6d6fea.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://sprites/waterdrop_hit.png"
-dest_files=["res://.godot/imported/waterdrop_hit.png-c2b079e9c51cfbb67be38fd56e6d6fea.s3tc.ctex"]
+dest_files=["res://.godot/imported/waterdrop_hit.png-c2b079e9c51cfbb67be38fd56e6d6fea.s3tc.ctex", "res://.godot/imported/waterdrop_hit.png-c2b079e9c51cfbb67be38fd56e6d6fea.etc2.ctex"]
 
 [params]
 

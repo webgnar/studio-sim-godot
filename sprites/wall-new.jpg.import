@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://fgkr11lem74k"
 path.s3tc="res://.godot/imported/wall-new.jpg-518fc2c0ee7b90866fe430ebb1bf4a02.s3tc.ctex"
+path.etc2="res://.godot/imported/wall-new.jpg-518fc2c0ee7b90866fe430ebb1bf4a02.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://sprites/wall-new.jpg"
-dest_files=["res://.godot/imported/wall-new.jpg-518fc2c0ee7b90866fe430ebb1bf4a02.s3tc.ctex"]
+dest_files=["res://.godot/imported/wall-new.jpg-518fc2c0ee7b90866fe430ebb1bf4a02.s3tc.ctex", "res://.godot/imported/wall-new.jpg-518fc2c0ee7b90866fe430ebb1bf4a02.etc2.ctex"]
 
 [params]
 

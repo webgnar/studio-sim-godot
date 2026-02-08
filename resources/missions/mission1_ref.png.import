@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://ck1mpv0dfdlo5"
 path.s3tc="res://.godot/imported/mission1_ref.png-0c35a00f0a1b42cc7f8b86799aa71db9.s3tc.ctex"
+path.etc2="res://.godot/imported/mission1_ref.png-0c35a00f0a1b42cc7f8b86799aa71db9.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://resources/missions/mission1_ref.png"
-dest_files=["res://.godot/imported/mission1_ref.png-0c35a00f0a1b42cc7f8b86799aa71db9.s3tc.ctex"]
+dest_files=["res://.godot/imported/mission1_ref.png-0c35a00f0a1b42cc7f8b86799aa71db9.s3tc.ctex", "res://.godot/imported/mission1_ref.png-0c35a00f0a1b42cc7f8b86799aa71db9.etc2.ctex"]
 
 [params]
 

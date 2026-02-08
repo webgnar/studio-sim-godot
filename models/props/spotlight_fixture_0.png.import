@@ -4,8 +4,9 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://b31bkjy8edt83"
 path.s3tc="res://.godot/imported/spotlight_fixture_0.png-336127864f1a18a33c4b2eb5fe194c9a.s3tc.ctex"
+path.etc2="res://.godot/imported/spotlight_fixture_0.png-336127864f1a18a33c4b2eb5fe194c9a.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -15,7 +16,7 @@ generator_parameters={
 [deps]
 
 source_file="res://models/props/spotlight_fixture_0.png"
-dest_files=["res://.godot/imported/spotlight_fixture_0.png-336127864f1a18a33c4b2eb5fe194c9a.s3tc.ctex"]
+dest_files=["res://.godot/imported/spotlight_fixture_0.png-336127864f1a18a33c4b2eb5fe194c9a.s3tc.ctex", "res://.godot/imported/spotlight_fixture_0.png-336127864f1a18a33c4b2eb5fe194c9a.etc2.ctex"]
 
 [params]
 

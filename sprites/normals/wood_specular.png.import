@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://3smflfln5x7y"
 path.s3tc="res://.godot/imported/wood_specular.png-6c9cb34ac7f3925834b62e09715acb5d.s3tc.ctex"
+path.etc2="res://.godot/imported/wood_specular.png-6c9cb34ac7f3925834b62e09715acb5d.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://sprites/normals/wood_specular.png"
-dest_files=["res://.godot/imported/wood_specular.png-6c9cb34ac7f3925834b62e09715acb5d.s3tc.ctex"]
+dest_files=["res://.godot/imported/wood_specular.png-6c9cb34ac7f3925834b62e09715acb5d.s3tc.ctex", "res://.godot/imported/wood_specular.png-6c9cb34ac7f3925834b62e09715acb5d.etc2.ctex"]
 
 [params]
 

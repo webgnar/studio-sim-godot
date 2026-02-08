@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://bw5ieg2l0umui"
 path.s3tc="res://.godot/imported/zack8_ref.png-5a990fdeb45e4da6843f46e392a0fd29.s3tc.ctex"
+path.etc2="res://.godot/imported/zack8_ref.png-5a990fdeb45e4da6843f46e392a0fd29.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://resources/missions/zack8_ref.png"
-dest_files=["res://.godot/imported/zack8_ref.png-5a990fdeb45e4da6843f46e392a0fd29.s3tc.ctex"]
+dest_files=["res://.godot/imported/zack8_ref.png-5a990fdeb45e4da6843f46e392a0fd29.s3tc.ctex", "res://.godot/imported/zack8_ref.png-5a990fdeb45e4da6843f46e392a0fd29.etc2.ctex"]
 
 [params]
 

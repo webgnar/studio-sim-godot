@@ -4,8 +4,9 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://bbyxraf0qa8dr"
 path.s3tc="res://.godot/imported/pipe_yellow_0.png-def8e2adc92069596462e18c0531985d.s3tc.ctex"
+path.etc2="res://.godot/imported/pipe_yellow_0.png-def8e2adc92069596462e18c0531985d.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -15,7 +16,7 @@ generator_parameters={
 [deps]
 
 source_file="res://models/props/pipe_yellow_0.png"
-dest_files=["res://.godot/imported/pipe_yellow_0.png-def8e2adc92069596462e18c0531985d.s3tc.ctex"]
+dest_files=["res://.godot/imported/pipe_yellow_0.png-def8e2adc92069596462e18c0531985d.s3tc.ctex", "res://.godot/imported/pipe_yellow_0.png-def8e2adc92069596462e18c0531985d.etc2.ctex"]
 
 [params]
 

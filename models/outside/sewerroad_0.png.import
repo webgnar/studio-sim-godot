@@ -4,8 +4,9 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://dn54iqdowuqre"
 path.s3tc="res://.godot/imported/sewerroad_0.png-77abfb0ae0b0439b28565eb760df2104.s3tc.ctex"
+path.etc2="res://.godot/imported/sewerroad_0.png-77abfb0ae0b0439b28565eb760df2104.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -15,7 +16,7 @@ generator_parameters={
 [deps]
 
 source_file="res://models/outside/sewerroad_0.png"
-dest_files=["res://.godot/imported/sewerroad_0.png-77abfb0ae0b0439b28565eb760df2104.s3tc.ctex"]
+dest_files=["res://.godot/imported/sewerroad_0.png-77abfb0ae0b0439b28565eb760df2104.s3tc.ctex", "res://.godot/imported/sewerroad_0.png-77abfb0ae0b0439b28565eb760df2104.etc2.ctex"]
 
 [params]
 

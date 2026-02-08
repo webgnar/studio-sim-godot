@@ -4,8 +4,9 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://u4w1oikmbwnv"
 path.s3tc="res://.godot/imported/shardcube_0.png-838f88a0f76b4a0f1de8468c9ed92d9c.s3tc.ctex"
+path.etc2="res://.godot/imported/shardcube_0.png-838f88a0f76b4a0f1de8468c9ed92d9c.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -15,7 +16,7 @@ generator_parameters={
 [deps]
 
 source_file="res://models/particles/shardcube_0.png"
-dest_files=["res://.godot/imported/shardcube_0.png-838f88a0f76b4a0f1de8468c9ed92d9c.s3tc.ctex"]
+dest_files=["res://.godot/imported/shardcube_0.png-838f88a0f76b4a0f1de8468c9ed92d9c.s3tc.ctex", "res://.godot/imported/shardcube_0.png-838f88a0f76b4a0f1de8468c9ed92d9c.etc2.ctex"]
 
 [params]
 

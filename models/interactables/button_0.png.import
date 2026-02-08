@@ -4,8 +4,9 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://bs46uxnaof3c6"
 path.s3tc="res://.godot/imported/button_0.png-3532599318f0539f63df9467d353b7c8.s3tc.ctex"
+path.etc2="res://.godot/imported/button_0.png-3532599318f0539f63df9467d353b7c8.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -15,7 +16,7 @@ generator_parameters={
 [deps]
 
 source_file="res://models/interactables/button_0.png"
-dest_files=["res://.godot/imported/button_0.png-3532599318f0539f63df9467d353b7c8.s3tc.ctex"]
+dest_files=["res://.godot/imported/button_0.png-3532599318f0539f63df9467d353b7c8.s3tc.ctex", "res://.godot/imported/button_0.png-3532599318f0539f63df9467d353b7c8.etc2.ctex"]
 
 [params]
 

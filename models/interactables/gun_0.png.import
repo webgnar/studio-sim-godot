@@ -4,8 +4,9 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://rm2h7hdu2y4p"
 path.s3tc="res://.godot/imported/gun_0.png-13c7fdd4e8b89150e57d9ee724c9e29c.s3tc.ctex"
+path.etc2="res://.godot/imported/gun_0.png-13c7fdd4e8b89150e57d9ee724c9e29c.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -15,7 +16,7 @@ generator_parameters={
 [deps]
 
 source_file="res://models/interactables/gun_0.png"
-dest_files=["res://.godot/imported/gun_0.png-13c7fdd4e8b89150e57d9ee724c9e29c.s3tc.ctex"]
+dest_files=["res://.godot/imported/gun_0.png-13c7fdd4e8b89150e57d9ee724c9e29c.s3tc.ctex", "res://.godot/imported/gun_0.png-13c7fdd4e8b89150e57d9ee724c9e29c.etc2.ctex"]
 
 [params]
 

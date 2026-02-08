@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://c6ichykhg0cah"
 path.s3tc="res://.godot/imported/human figure_0_ambient.png-c3043b7f2c52dbd93d54a51b4e43a9bb.s3tc.ctex"
+path.etc2="res://.godot/imported/human figure_0_ambient.png-c3043b7f2c52dbd93d54a51b4e43a9bb.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://sprites/normals/human figure_0_ambient.png"
-dest_files=["res://.godot/imported/human figure_0_ambient.png-c3043b7f2c52dbd93d54a51b4e43a9bb.s3tc.ctex"]
+dest_files=["res://.godot/imported/human figure_0_ambient.png-c3043b7f2c52dbd93d54a51b4e43a9bb.s3tc.ctex", "res://.godot/imported/human figure_0_ambient.png-c3043b7f2c52dbd93d54a51b4e43a9bb.etc2.ctex"]
 
 [params]
 
