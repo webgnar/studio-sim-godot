@@ -381,10 +381,10 @@ zack11.tres::Resource/PaintingMission::-1::1765218033::0::1::::<><><>0<>0<><>::
 zack11_ref.png::CompressedTexture2D::2601680885712539142::1765218032::1770566055::1::::<><><>0<>0<>0206ebe0b8350b70597fecf269e69e2b<>res://.godot/imported/zack11_ref.png-a92b7294d1ca56b651794d2030a62e7a.s3tc.ctex<*>res://.godot/imported/zack11_ref.png-a92b7294d1ca56b651794d2030a62e7a.etc2.ctex::
 zack34.tres::Resource/PaintingMission::-1::1768111838::0::1::::<><><>0<>0<><>::
 zack34_ref.png::CompressedTexture2D::1317710064765597490::1768111838::1768111841::1::::<><><>0<>0<>4dcecfd2f01cece93451d7d4881d4cdc<>res://.godot/imported/zack34_ref.png-0298b0c20581d85e4a1629779ad044db.ctex::
-::res://scenes/::1770567393
+::res://scenes/::1770568108
 button_green.tscn::PackedScene::3631856535886751545::1768026191::0::1::::<><><>0<>0<><>::uid://db8764j2674fq::::res://models/props/outlet_box.glb<>uid://bryic0ubsrfjn::::res://models/interactables/buttonGreen.glb<>uid://bsdnronq274dp::::res://scripts/components/PaintingSubmitButton.gd
 CarryablePainting.tscn::PackedScene::7123436180156521915::1770496510::0::1::::<><><>0<>0<><>::uid://do8vkeu1l02i1::::res://scripts/components/PaintingHangingComponent.gd<>uid://dvkl3cic5pjcq::::res://scripts/CarryablePainting.gd<>uid://guuhi66wtyyp::::res://models/paintings/stretcher.glb<>uid://cxevfv0ev3okf::::res://scripts/painting/PaintingSignatureSystem.gd
-CritiqueTV.tscn::PackedScene::-1::1770567393::0::1::::<><><>0<>0<><>::res://scripts/CritiqueDisplay.gd
+CritiqueTV.tscn::PackedScene::-1::1770568108::0::1::::<><><>0<>0<><>::res://scripts/CritiqueDisplay.gd
 elevator.tscn::PackedScene::5593189317963326843::1770445324::0::1::::<><><>0<>0<><>::uid://wwlsotlotycw::::res://materials/wood.tres<>uid://gdhlf7v0fpx::::res://sprites/floor2.jpg<>uid://dcarqsvmjsak4::::res://textures/512 sewer 2.PNG<>uid://dca7mypiho8qy::::res://scenes/Spotlight.tscn<>uid://cgy7cjvpoahj8::::res://textures/256 bridge wood.png<>uid://bacrh2x2fuqr8::::res://scripts/ElevatorController.gd<>uid://clfirxfup43df::::res://scripts/components/ElevatorExportButton.gd<>uid://deln44y5ixtum::::res://scripts/components/ElevatorGateButton.gd<>uid://bryic0ubsrfjn::::res://models/interactables/buttonGreen.glb<>uid://db8764j2674fq::::res://models/props/outlet_box.glb<>uid://d2hcs1m04uvg7::::res://models/interactables/button.glb
 human.tscn::PackedScene::1698309852409355828::1761713575::0::1::::<><><>0<>0<><>::uid://sx0bao2oqis7::::res://models/player/human skeleton rewrite.glb
 humanrig_blender.tscn::PackedScene::466415374710567118::1765219016::0::1::::<><><>0<>0<><>::uid://b4jc5oc0kffk::::res://models/blender/humanrig.blend
@@ -444,7 +444,7 @@ TitleScreenUI.tscn::PackedScene::-1::1766435093::0::1::::<><><>0<>0<><>::
 ValidationDebugOverlay.tscn::PackedScene::-1::1765350053::0::1::::<><><>0<>0<><>::res://scripts/ui/ValidationDebugOverlay.gd
 ValidationLoadingOverlay.tscn::PackedScene::-1::1765349139::0::1::::<><><>0<>0<><>::res://scripts/ui/ValidationLoadingOverlay.gd
 ValidationResultUI.tscn::PackedScene::598769645583896637::1765387305::0::1::::<><><>0<>0<><>::uid://ci6lixgsw804b::::res://scripts/ui/ValidationResultUI.gd
-::res://scripts/::1770567356
+::res://scripts/::1770568097
 AudioManager.gd::GDScript::1683297059755285547::1766349912::0::1::::<>Node<><>0<>0<><>::
 Bullet.gd::GDScript::4494185522286921364::1765049008::0::1::::Bullet<>RigidBody3D<><>0<>0<><>::
 CameraManager.gd::GDScript::5090965087567803578::1767640563::0::1::::<>Node<><>0<>0<><>::
@@ -452,7 +452,7 @@ CameraZone.gd::GDScript::4337440007670042935::1764017871::0::1::::<>Area3D<><>0<
 CarryablePainting.gd::GDScript::8654589551705045776::1770495555::0::1::::CarryablePainting<>RigidBody3D<><>0<>0<><>::
 ControllerDebugOverlay.gd::GDScript::5829514318379726784::1767838876::0::1::::<>CanvasLayer<><>0<>0<><>::
 ControllerMapper.gd::GDScript::1571345890455605991::1767214384::0::1::::<>Node<><>0<>0<><>::
-CritiqueDisplay.gd::GDScript::2528788451277119289::1770567356::0::1::::<>Node3D<><>0<>0<><>::
+CritiqueDisplay.gd::GDScript::2528788451277119289::1770568097::0::1::::<>Node3D<><>0<>0<><>::
 DebugLogger.gd::GDScript::515986937051626152::1767653968::0::1::::<>Node<><>0<>0<><>::
 DebugPaintingConverter.gd::GDScript::6359550447124289428::1764786410::0::1::::<>Node<><>0<>0<><>::
 DoorInteraction.gd::GDScript::6898727207115013066::1768028283::0::1::::DoorInteraction<>InteractionComponent<><>0<>0<><>::
@@ -614,7 +614,7 @@ sticker4.ogg::AudioStreamOggVorbis::1152824999652457875::1765735412::1765735412:
 sticker5.ogg::AudioStreamOggVorbis::2784672444781205456::1765735412::1765735412::1::::<><><>0<>0<>169386aa8d569e310dbc37b84edbc485<>res://.godot/imported/sticker5.ogg-519633cea0d4e197076cbc26056f1d9b.oggvorbisstr::
 tick.ogg::AudioStreamOggVorbis::4794528285477049175::1765691700::1765691704::1::::<><><>0<>0<>998e50cba754501e6027e111b58f74dc<>res://.godot/imported/tick.ogg-ac1bc737f7bc244a3eabe98ac51b871c.oggvorbisstr::
 waterdrop.ogg::AudioStreamOggVorbis::3047598733317024911::1770438913::1770438914::1::::<><><>0<>0<>2f59e4a6ecdc7d9c8ca01162d72c5ee0<>res://.godot/imported/waterdrop.ogg-d50ff071c86da7fe25be4f956da14a90.oggvorbisstr::
-::res://sprites/::1770566054
+::res://sprites/::1770568101
 brickswhite.jpg::CompressedTexture2D::602923287757623317::1761017159::1770566054::1::::<><><>0<>0<>72eb648cbf6ae6718078ff0f866d1f27<>res://.godot/imported/brickswhite.jpg-2ef5dd5939b6d64fae0101b6da7744e6.s3tc.ctex<*>res://.godot/imported/brickswhite.jpg-2ef5dd5939b6d64fae0101b6da7744e6.etc2.ctex::
 brick_bump.jpg::CompressedTexture2D::7798957486458330038::1761081225::1770566054::1::::<><><>0<>0<>805c9fb9d7d9fad3c0ed1948f41b8f9d<>res://.godot/imported/brick_bump.jpg-e109f37b2b87e2f26ecda5f0e9cff7ff.s3tc.ctex<*>res://.godot/imported/brick_bump.jpg-e109f37b2b87e2f26ecda5f0e9cff7ff.etc2.ctex::
 brick_diffuse.jpg::CompressedTexture2D::5115407613002048939::1761081225::1770566054::1::::<><><>0<>0<>aaf2d6b38d69c7256d184639b6839328<>res://.godot/imported/brick_diffuse.jpg-bab9fb7c0b6137326e8893ff33801de5.s3tc.ctex<*>res://.godot/imported/brick_diffuse.jpg-bab9fb7c0b6137326e8893ff33801de5.etc2.ctex::
@@ -638,6 +638,12 @@ wall.jpg::CompressedTexture2D::3576362921534608400::1761017159::1770566054::1:::
 waterdrop.png::CompressedTexture2D::2888848629566441997::1770436848::1770566054::1::::<><><>0<>0<>c7c25629d597504ef3083ca5d2ef9c94<>res://.godot/imported/waterdrop.png-9737d085726e3e96421a90c2f516315b.s3tc.ctex<*>res://.godot/imported/waterdrop.png-9737d085726e3e96421a90c2f516315b.etc2.ctex::
 waterdrop_hit.png::CompressedTexture2D::5725584285775266525::1770436844::1770566054::1::::<><><>0<>0<>a01c3eccc1ad213cc00400760c659d33<>res://.godot/imported/waterdrop_hit.png-c2b079e9c51cfbb67be38fd56e6d6fea.s3tc.ctex<*>res://.godot/imported/waterdrop_hit.png-c2b079e9c51cfbb67be38fd56e6d6fea.etc2.ctex::
 wood.jpg::CompressedTexture2D::4871391901317986273::1761017159::1770566054::1::::<><><>0<>0<>613e5487258fc132d24339580bf7cf60<>res://.godot/imported/wood.jpg-01240e422271cfa6bf6b21d4165d0295.s3tc.ctex<*>res://.godot/imported/wood.jpg-01240e422271cfa6bf6b21d4165d0295.etc2.ctex::
+::res://sprites/art critics/::1770568122
+bum.png::CompressedTexture2D::8210604042140832023::1770568122::1770568123::1::::<><><>0<>0<>aa2604213f9a0ad2489516cbd0583036<>res://.godot/imported/bum.png-d59caae31e160e6b5c4b73d13e2da5e4.ctex::
+general.png::CompressedTexture2D::2826033953597695113::1770568122::1770568123::1::::<><><>0<>0<>612e4b3fb1b45167b5befa9689246a56<>res://.godot/imported/general.png-4990f2f98f851a44dc36d5407b536c92.ctex::
+govtpig.png::CompressedTexture2D::4521703755922942040::1770568122::1770568123::1::::<><><>0<>0<>e9fc2bf04c292dfaa51d7aef519a8b7f<>res://.godot/imported/govtpig.png-7afd30e12aec5ec21cdd2e1e074b76f5.ctex::
+guy.png::CompressedTexture2D::4360970187086169042::1770568122::1770568123::1::::<><><>0<>0<>a27223e59174f48d1a118b95e4cb261c<>res://.godot/imported/guy.png-22dfd3cde006cf83e36f20948603e01d.ctex::
+woman.png::CompressedTexture2D::4867838855618123692::1770568122::1770568123::1::::<><><>0<>0<>2ca2e734b88cbdce8a98869f437de802<>res://.godot/imported/woman.png-e1e89a1c656b9e4970a4b67405913ad9.ctex::
 ::res://sprites/normals/::1770566054
 brickswhite_displacement.png::CompressedTexture2D::71681923954913180::1761018474::1764320741::1::::<><><>0<>0<>46bea52099d283f664f146043af9942c<>res://.godot/imported/brickswhite_displacement.png-f49dfde752e45839a269ec13999fbb43.ctex::
 brickswhite_normal.png::CompressedTexture2D::1603939500243260366::1761018474::1770566054::1::::<><><>0<>0<>f95824efb53b963315673598049a8f12<>res://.godot/imported/brickswhite_normal.png-4f1fe9ec64c4fd5e771a5bce34c241dc.s3tc.ctex<*>res://.godot/imported/brickswhite_normal.png-4f1fe9ec64c4fd5e771a5bce34c241dc.etc2.ctex::

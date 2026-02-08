@@ -21,6 +21,10 @@ var _cached_artist_statement: String = ""
 var _cached_artist_name: String = ""
 
 var _critique_request: HTTPRequest
+var _scroll_offset: float = 0.0
+var _scroll_pause_timer: float = 0.0
+const SCROLL_SPEED = 10.0 # pixels per second
+const SCROLL_PAUSE = 10.0 # seconds to pause at top and bottom
 
 func _ready() -> void:
 	# Set up ViewportTexture from SubViewport.get_texture() (most reliable method)
@@ -46,6 +50,27 @@ func _ready() -> void:
 	GalleryUploader.upload_failed.connect(_on_upload_failed)
 
 	_set_text("Awaiting next painting...")
+
+func _process(delta: float) -> void:
+	if _state != State.DISPLAYING or not critique_label:
+		return
+
+	var max_scroll = critique_label.get_v_scroll_bar().max_value - critique_label.size.y
+	if max_scroll <= 0:
+		return # text fits on screen, no scrolling needed
+
+	if _scroll_pause_timer > 0:
+		_scroll_pause_timer -= delta
+		return
+
+	_scroll_offset += SCROLL_SPEED * delta
+	if _scroll_offset >= max_scroll:
+		# Reached bottom — pause then reset to top
+		_scroll_offset = 0.0
+		_scroll_pause_timer = SCROLL_PAUSE
+		critique_label.get_v_scroll_bar().value = 0
+	else:
+		critique_label.get_v_scroll_bar().value = _scroll_offset
 
 func _on_export_started(painting: CarryablePainting) -> void:
 	print("CritiqueDisplay: Export started for painting: ", painting.painting_name)
@@ -102,3 +127,6 @@ func _on_critique_response(result: int, response_code: int, _headers: PackedStri
 func _set_text(text: String) -> void:
 	if critique_label:
 		critique_label.text = text
+		critique_label.get_v_scroll_bar().value = 0
+		_scroll_offset = 0.0
+		_scroll_pause_timer = SCROLL_PAUSE

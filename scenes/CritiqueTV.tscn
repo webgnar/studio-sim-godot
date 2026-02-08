@@ -1,18 +1,18 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene format=3 uid="uid://bs7m75lssp7qx"]
 
-[ext_resource type="Script" path="res://scripts/CritiqueDisplay.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://bca71no7j3vhh" path="res://scripts/CritiqueDisplay.gd" id="1_script"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_tv"]
 size = Vector2(1.6, 0.9)
 
-[node name="CritiqueTV" type="Node3D"]
+[node name="CritiqueTV" type="Node3D" unique_id=34237044]
 script = ExtResource("1_script")
 
-[node name="SubViewport" type="SubViewport" parent="."]
+[node name="SubViewport" type="SubViewport" parent="." unique_id=833401773]
 size = Vector2i(640, 360)
 render_target_update_mode = 4
 
-[node name="ColorRect" type="ColorRect" parent="SubViewport"]
+[node name="ColorRect" type="ColorRect" parent="SubViewport" unique_id=49168948]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -20,7 +20,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.06, 0.06, 0.09, 1)
 
-[node name="MarginContainer" type="MarginContainer" parent="SubViewport"]
+[node name="MarginContainer" type="MarginContainer" parent="SubViewport" unique_id=1264582242]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -31,14 +31,12 @@ theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 20
 
-[node name="RichTextLabel" type="RichTextLabel" parent="SubViewport/MarginContainer"]
+[node name="RichTextLabel" type="RichTextLabel" parent="SubViewport/MarginContainer" unique_id=310604522]
 layout_mode = 2
 theme_override_colors/default_color = Color(0.9, 0.95, 0.9, 1)
 theme_override_font_sizes/normal_font_size = 20
 text = "Awaiting next painting..."
-autowrap_mode = 3
-scroll_active = false
 
-[node name="Screen" type="MeshInstance3D" parent="."]
+[node name="Screen" type="MeshInstance3D" parent="." unique_id=1207183709]
 transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0)
 mesh = SubResource("PlaneMesh_tv")
