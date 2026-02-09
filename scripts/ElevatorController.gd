@@ -30,8 +30,10 @@ var is_exporting: bool = false
 # Audio
 var _export_sound: AudioStreamPlayer3D
 var _door_sound: AudioStreamPlayer3D
+var _error_sound: AudioStreamPlayer3D
 var _door_stream: AudioStream = preload("res://sounds/picotron/elevator_door.ogg")
 var _descent_stream: AudioStream = preload("res://sounds/picotron/elevator_down.ogg")
+var _error_stream: AudioStream = preload("res://sounds/picotron/error.ogg")
 
 func _ready() -> void:
 	# If exports weren't resolved, try to find nodes by path
@@ -68,6 +70,13 @@ func _setup_audio() -> void:
 	_door_sound.bus = "SFX"
 	_door_sound.stream = _door_stream
 	add_child(_door_sound)
+
+	_error_sound = AudioStreamPlayer3D.new()
+	_error_sound.name = "ErrorSound"
+	_error_sound.max_distance = 15.0
+	_error_sound.bus = "SFX"
+	_error_sound.stream = _error_stream
+	add_child(_error_sound)
 
 func _on_body_entered(body: Node) -> void:
 	if body is CarryablePainting:
@@ -114,8 +123,14 @@ func open_gate() -> void:
 	gate_state = GateState.OPEN
 	gate_opened.emit()
 
+func has_too_many_paintings() -> bool:
+	return paintings_inside.size() > 1
+
 func close_gate() -> void:
 	"""Close the elevator gate"""
+	if has_too_many_paintings():
+		_error_sound.play()
+		return
 	if not can_toggle_gate() or gate_state == GateState.CLOSED:
 		return
 
@@ -181,6 +196,9 @@ func start_export() -> void:
 	paintings_inside.erase(painting)
 	painting.queue_free()  # This will auto-unregister from WorldStateManager via _exit_tree()
 
+	# Save game state after shipping
+	await WorldStateManager.save_world_state()
+
 	# Ascend back up
 	await _play_ascent_effect()
 
@@ -191,9 +209,8 @@ func start_export() -> void:
 		gate_animation_player.play("open")
 		await gate_animation_player.animation_finished
 	gate_state = GateState.OPEN
-	gate_opened.emit()
-
 	is_exporting = false
+	gate_opened.emit()
 	export_completed.emit(png_path, glb_path)
 
 

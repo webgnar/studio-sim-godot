@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://cnjld2r5btwho"
+path="res://.godot/imported/dial up.ogg-c78ec2f8d70c4a839d605d8e88886c20.oggvorbisstr"
+
+[deps]
+
+source_file="res://sounds/dial up.ogg"
+dest_files=["res://.godot/imported/dial up.ogg-c78ec2f8d70c4a839d605d8e88886c20.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

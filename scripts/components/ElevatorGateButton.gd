@@ -19,6 +19,8 @@ func _ready() -> void:
 	if elevator_controller:
 		elevator_controller.gate_opened.connect(_on_gate_state_changed)
 		elevator_controller.gate_closed.connect(_on_gate_state_changed)
+		elevator_controller.painting_entered.connect(_on_painting_changed)
+		elevator_controller.painting_exited.connect(_on_painting_changed)
 		_update_interaction_text()
 	else:
 		push_warning("ElevatorGateButton: Could not find ElevatorController!")
@@ -40,6 +42,9 @@ func _find_elevator_controller() -> ElevatorController:
 func _on_gate_state_changed() -> void:
 	_update_interaction_text()
 
+func _on_painting_changed(_painting: CarryablePainting) -> void:
+	_update_interaction_text()
+
 func _update_interaction_text() -> void:
 	if not elevator_controller:
 		interaction_text = "Close Gate"
@@ -49,8 +54,12 @@ func _update_interaction_text() -> void:
 		interaction_text = "..."
 		is_disabled = true
 	elif elevator_controller.is_gate_open():
-		interaction_text = "Close Gate"
-		is_disabled = false
+		if elevator_controller.has_too_many_paintings():
+			interaction_text = "Too Many Paintings"
+			is_disabled = true
+		else:
+			interaction_text = "Close Gate"
+			is_disabled = false
 	else:
 		interaction_text = "Open Gate"
 		is_disabled = false

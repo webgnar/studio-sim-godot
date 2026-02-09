@@ -796,7 +796,7 @@ shape = SubResource("CylinderShape3D_xgy6y")
 transform = Transform3D(1.44, 0, 0, 0, 1.44, 0, 0, 0, 1.44, 5.356282, 0.43740082, -4.5508404)
 
 [node name="CritiqueTV" parent="." unique_id=1552722384 node_paths=PackedStringArray("elevator_controller") instance=ExtResource("97_crtq")]
-transform = Transform3D(-2.8167248, 0, -1.0325029, 0, 3, 0, 1.0325029, 0, -2.8167248, 10.24617, 2, 5.04909)
+transform = Transform3D(-2.8167248, 0, -1.0325029, 0, 3, 0, 1.0325029, 0, -2.8167248, 10.0047655, 2, 5.076686)
 elevator_controller = NodePath("../Elevator")
 
 [node name="studio" type="CSGCombiner3D" parent="." unique_id=2031648802]

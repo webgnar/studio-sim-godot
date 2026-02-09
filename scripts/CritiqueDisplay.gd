@@ -8,6 +8,8 @@ extends Node3D
 @onready var _sub_viewport: SubViewport = $SubViewport
 @onready var _screen: MeshInstance3D = $Screen
 @onready var critique_label: RichTextLabel = $SubViewport/MarginContainer/RichTextLabel
+@onready var avatar_sprite: Sprite3D = $Sprite3D
+@onready var dial_up_sound: AudioStreamPlayer3D = $DialUpSound
 
 const R2_BASE_URL = "https://pub-eba211d5cf614843a0f1582ec6c62c2e.r2.dev/paintings/"
 const CRITIQUE_API_URL = "https://studio-sim-gallery.vercel.app/api/critique"
@@ -20,11 +22,19 @@ var _cached_painting_name: String = ""
 var _cached_artist_statement: String = ""
 var _cached_artist_name: String = ""
 
+const CRITIC_AVATARS: Array[String] = [
+	"res://sprites/art critics/bum.png",
+	"res://sprites/art critics/general.png",
+	"res://sprites/art critics/govtpig.png",
+	"res://sprites/art critics/guy.png",
+	"res://sprites/art critics/woman.png",
+]
+
 var _critique_request: HTTPRequest
 var _scroll_offset: float = 0.0
 var _scroll_pause_timer: float = 0.0
 var _waiting_at_bottom: bool = false
-const SCROLL_SPEED = 15.0 # pixels per second
+const SCROLL_SPEED = 10.0 # pixels per second
 const SCROLL_PAUSE = 10.0 # seconds to pause at top and bottom
 
 func _ready() -> void:
@@ -98,6 +108,7 @@ func _on_upload_completed(gallery_id: String) -> void:
 		return
 	_state = State.LOADING_CRITIQUE
 	_set_text("Getting critique...")
+	dial_up_sound.play()
 	_request_critique(gallery_id)
 
 func _on_upload_failed(_error_message: String) -> void:
@@ -134,7 +145,13 @@ func _on_critique_response(result: int, response_code: int, _headers: PackedStri
 
 	var critique_text = body.get_string_from_utf8()
 	_state = State.DISPLAYING
+	_show_random_critic()
 	_set_text(critique_text)
+
+func _show_random_critic() -> void:
+	var idx = randi() % CRITIC_AVATARS.size()
+	avatar_sprite.texture = load(CRITIC_AVATARS[idx])
+	avatar_sprite.visible = true
 
 func _set_text(text: String) -> void:
 	if critique_label:
@@ -143,3 +160,5 @@ func _set_text(text: String) -> void:
 		_scroll_offset = 0.0
 		_scroll_pause_timer = SCROLL_PAUSE
 		_waiting_at_bottom = false
+	if _state != State.DISPLAYING:
+		avatar_sprite.visible = false
