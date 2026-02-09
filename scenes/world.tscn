@@ -337,17 +337,17 @@ _data = {
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_frq1x"]
 radius = 1.0
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_pb8sg"]
+[sub_resource type="PlaneMesh" id="PlaneMesh_q6do4"]
 resource_local_to_scene = true
 size = Vector2(2.5, 3)
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_ce70q"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_pb8sg"]
 resource_name = "_albedo"
 viewport_path = NodePath("../MirrorNew/SubViewport")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_odf6h"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ce70q"]
 resource_local_to_scene = true
-albedo_texture = SubResource("ViewportTexture_ce70q")
+albedo_texture = SubResource("ViewportTexture_pb8sg")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_1v02h"]
 size = Vector2(2.5, 3)
@@ -1536,8 +1536,8 @@ transform = Transform3D(-4.371139e-09, 0.1, 0, -0.1, -4.371139e-09, 0, 0, 0, 0.1
 
 [node name="mirror" parent="." unique_id=1626491013 instance=ExtResource("39_qaasp")]
 transform = Transform3D(-4.7902194e-08, -0.99488777, 0.10098683, -3.9073655e-08, 0.10098683, 0.99488777, -1, 4.3711392e-08, -4.3711385e-08, 2.8, 1.497, 5.232)
-mesh = SubResource("PlaneMesh_pb8sg")
-surface_material_override/0 = SubResource("StandardMaterial3D_odf6h")
+mesh = SubResource("PlaneMesh_q6do4")
+surface_material_override/0 = SubResource("StandardMaterial3D_ce70q")
 show_debug_logs = false
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="mirror" unique_id=399456008]
@@ -1654,6 +1654,7 @@ autoplay = &"waterdrop"
 transform = Transform3D(14.285714, 0, 0, 0, 14.285714, 0, 0, 0, 14.285714, 0, -5.8067646, 0)
 stream = ExtResource("92_8xaka")
 volume_db = -40.0
+max_distance = 2.0
 
 [node name="waterdrop2" type="Node3D" parent="berkey" unique_id=702136775]
 
@@ -1676,6 +1677,7 @@ autoplay = &"drop"
 transform = Transform3D(14.285714, 0, 0, 0, 14.285714, 0, 0, 0, 14.285714, 1.5141907, -5.9911175, 0)
 stream = ExtResource("92_8xaka")
 volume_db = -40.0
+max_distance = 2.0
 
 [node name="baricade 1" parent="." unique_id=1529760255 instance=ExtResource("93_8xaka")]
 transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 6.655397, 0.7673063, 7.165266)
