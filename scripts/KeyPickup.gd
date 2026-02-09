@@ -10,6 +10,13 @@ class_name KeyPickup
 func _on_ready() -> void:
 	interaction_text = pickup_text
 
+	# Hide key initially — BoxInteraction will show it when the box opens
+	if parent_object:
+		parent_object.visible = false
+		var static_body = parent_object.get_node_or_null("StaticBody3D")
+		if static_body:
+			static_body.collision_layer = 0
+
 	# Ensure audio player exists for pickup sound
 	if not _audio_player and pickup_sound:
 		_audio_player = AudioStreamPlayer3D.new()
@@ -18,7 +25,6 @@ func _on_ready() -> void:
 		_audio_player.attenuation_model = AudioStreamPlayer3D.ATTENUATION_INVERSE_DISTANCE
 		_audio_player.bus = "SFX"
 		add_child(_audio_player)
-		print("🔑 Created audio player for key pickup sound")
 
 func _on_interacted(_player: PlayerInteractionComponent) -> void:
 	print("========== KEY PICKUP DEBUG ==========")

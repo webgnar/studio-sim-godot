@@ -18,3 +18,4 @@ res://scripts/components/PaintingSubmitButton.gd
 res://scripts/old stuff/BoxInteraction.gd
 res://scenes/UI/PauseMenu.tscn
 res://scripts/DeathZone.gd
+res://scripts/KeyPickup.gd

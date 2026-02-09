@@ -34,35 +34,25 @@ var _current_state: BoxState = BoxState.CLOSED
 var _spawned_object: Node3D = null
 var _open_text: String = ""  # Store open text from inspector
 var _close_text: String = ""  # Store close text
-var _key_node: Node3D = null  # Reference to Key child node (if any)
 
 func _on_ready() -> void:
 	# Store inspector value as the "open" text (default state)
 	_open_text = interaction_text if interaction_text != "" else "Open Box"
 	_close_text = "Close Box"  # Can be made @export if needed
 	_ensure_audio_player()
-	_setup_key_node()
 
-func _setup_key_node() -> void:
-	# Find Key child node in parent (CardboardBox)
-	_key_node = find_in_parent("Key")
-	if not _key_node:
-		return
-
-	if WorldStateManager.has_flag(key_flag_name):
-		# Player already has the key from a previous save — remove it entirely
-		_key_node.queue_free()
-		_key_node = null
-	else:
-		# Hide key until box is opened
-		_set_key_visible(false)
+func _find_key_node() -> Node3D:
+	var key = find_in_parent("Key")
+	if key and is_instance_valid(key):
+		return key
+	return null
 
 func _set_key_visible(show: bool) -> void:
-	if not _key_node or not is_instance_valid(_key_node):
+	var key = _find_key_node()
+	if not key:
 		return
-	_key_node.visible = show
-	# Disable/enable collision so raycast doesn't hit hidden key
-	var static_body = _key_node.get_node_or_null("StaticBody3D")
+	key.visible = show
+	var static_body = key.get_node_or_null("StaticBody3D")
 	if static_body:
 		static_body.collision_layer = 4 if show else 0
 
@@ -254,9 +244,14 @@ func _on_box_fully_opened() -> void:
 	if not _spawned_object:
 		_spawn_object()
 
-	# Reveal the key when box opens (if player doesn't already have it)
-	if not WorldStateManager.has_flag(key_flag_name):
-		_set_key_visible(true)
+	# Handle key visibility
+	var key = _find_key_node()
+	if key:
+		if WorldStateManager.has_flag(key_flag_name):
+			# Player already has key (loaded save) — remove it
+			key.queue_free()
+		else:
+			_set_key_visible(true)
 
 	box_opened.emit()
 
@@ -290,9 +285,11 @@ func _get_animation_players() -> Array[AnimationPlayer]:
 	return players
 
 func _collect_animation_players(node: Node, collection: Array[AnimationPlayer]) -> void:
+	# Skip the Key node — its looping animation would block _wait_for_animations_to_complete
+	if node.name == "Key":
+		return
 	if node is AnimationPlayer:
 		collection.append(node)
-	
 	for child in node.get_children():
 		_collect_animation_players(child, collection)
 
