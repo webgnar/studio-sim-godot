@@ -43,6 +43,9 @@ var hud: CanvasLayer = null
 const SAVE_PATH = "user://player_data.json"
 
 func _ready():
+	# Keep processing while game tree is paused (for _input and state transitions)
+	process_mode = Node.PROCESS_MODE_ALWAYS
+
 	# Detect platform for mouse mode optimization
 	_platform_name = OS.get_name()
 	print("UIManager: Detected platform: %s" % _platform_name)
@@ -176,6 +179,9 @@ func change_state(new_state: GameState):
 			_set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 			if CameraManager:
 				CameraManager.set_player_input(false)
+
+	# Pause/unpause game tree (freezes all game world nodes while menu is open)
+	get_tree().paused = (current_state == GameState.PAUSE_MENU)
 
 	# Emit state change signal
 	emit_signal("state_changed", old_state, new_state)

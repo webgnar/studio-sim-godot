@@ -47,6 +47,9 @@ var input_cooldown_time: float = 0.15
 var _tab_nav_held: bool = false  # Prevent rapid tab cycling from held analog stick
 
 func _ready():
+	# Keep processing while game tree is paused (menu must stay interactive)
+	process_mode = Node.PROCESS_MODE_ALWAYS
+
 	# Hide dialog initially
 	dialog.visible = false
 
@@ -222,6 +225,9 @@ func _on_return_to_title_pressed():
 		CameraManager.set_process(false)
 
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+
+	# Unpause before scene transition (SceneTransition uses tweens/await)
+	get_tree().paused = false
 
 	SceneTransition.fade_to_scene("res://scenes/TitleScreen.tscn")
 

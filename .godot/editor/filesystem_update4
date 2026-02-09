@@ -22,3 +22,4 @@ res://scripts/KeyPickup.gd
 res://scenes/UI/OptionsMenu.tscn
 res://scripts/InputDeviceManager.gd
 res://scripts/TitleScreenController.gd
+res://scripts/UIManager.gd
