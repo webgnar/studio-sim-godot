@@ -91,7 +91,7 @@
 [ext_resource type="PackedScene" uid="uid://cqoxj5pobyw2a" path="res://models/props/baricade_1.glb" id="93_8xaka"]
 [ext_resource type="PackedScene" uid="uid://c21nti0oy66lb" path="res://models/props/baricade_2.glb" id="94_n6seq"]
 [ext_resource type="PackedScene" uid="uid://cv51ha8ljywkh" path="res://models/props/camera_sticker.glb" id="95_n6seq"]
-[ext_resource type="PackedScene" path="res://scenes/CritiqueTV.tscn" id="97_crtq"]
+[ext_resource type="PackedScene" uid="uid://bs7m75lssp7qx" path="res://scenes/CritiqueTV.tscn" id="97_crtq"]
 [ext_resource type="AudioStream" uid="uid://84rjpuccue2i" path="res://sounds/boomboxSwitch.ogg" id="boombox_switch"]
 [ext_resource type="AudioStream" uid="uid://bukro42figtah" path="res://sounds/fan switch.ogg" id="fan_switch"]
 [ext_resource type="AudioStream" uid="uid://bw0ig22tombxc" path="res://sounds/ministudio.ogg" id="ministudio_audio"]

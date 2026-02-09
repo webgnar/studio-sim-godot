@@ -23,7 +23,8 @@ var _cached_artist_name: String = ""
 var _critique_request: HTTPRequest
 var _scroll_offset: float = 0.0
 var _scroll_pause_timer: float = 0.0
-const SCROLL_SPEED = 10.0 # pixels per second
+var _waiting_at_bottom: bool = false
+const SCROLL_SPEED = 15.0 # pixels per second
 const SCROLL_PAUSE = 10.0 # seconds to pause at top and bottom
 
 func _ready() -> void:
@@ -49,6 +50,10 @@ func _ready() -> void:
 	GalleryUploader.upload_completed.connect(_on_upload_completed)
 	GalleryUploader.upload_failed.connect(_on_upload_failed)
 
+	# Hide the scrollbar visually but keep scroll functionality
+	if critique_label:
+		critique_label.get_v_scroll_bar().modulate.a = 0
+
 	_set_text("Awaiting next painting...")
 
 func _process(delta: float) -> void:
@@ -61,14 +66,21 @@ func _process(delta: float) -> void:
 
 	if _scroll_pause_timer > 0:
 		_scroll_pause_timer -= delta
+		if _scroll_pause_timer <= 0 and _waiting_at_bottom:
+			# Bottom pause finished — reset to top and pause there too
+			_waiting_at_bottom = false
+			_scroll_offset = 0.0
+			_scroll_pause_timer = SCROLL_PAUSE
+			critique_label.get_v_scroll_bar().value = 0
 		return
 
 	_scroll_offset += SCROLL_SPEED * delta
 	if _scroll_offset >= max_scroll:
-		# Reached bottom — pause then reset to top
-		_scroll_offset = 0.0
+		# Reached bottom — hold here and pause
+		_scroll_offset = max_scroll
+		critique_label.get_v_scroll_bar().value = max_scroll
+		_waiting_at_bottom = true
 		_scroll_pause_timer = SCROLL_PAUSE
-		critique_label.get_v_scroll_bar().value = 0
 	else:
 		critique_label.get_v_scroll_bar().value = _scroll_offset
 
@@ -130,3 +142,4 @@ func _set_text(text: String) -> void:
 		critique_label.get_v_scroll_bar().value = 0
 		_scroll_offset = 0.0
 		_scroll_pause_timer = SCROLL_PAUSE
+		_waiting_at_bottom = false
