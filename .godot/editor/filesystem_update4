@@ -14,3 +14,4 @@ res://scripts/ui/MissionSelectionUI.gd
 res://scripts/ui/PaintingCard.gd
 res://scripts/ui/PauseMenu.gd
 res://scripts/components/ElevatorGateButton.gd
+res://scripts/components/PaintingSubmitButton.gd

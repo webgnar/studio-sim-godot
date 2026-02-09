@@ -8,10 +8,36 @@ class_name PaintingSubmitButton
 
 var last_pressed: float = 0.0
 var pending_painting_system: PaintingSystem2D = null
+var _error_sound: AudioStreamPlayer3D
+var _error_stream: AudioStream = preload("res://sounds/picotron/error.ogg")
 
 func _on_ready() -> void:
-	# Always set interaction text
-	interaction_text = "Submit Painting"
+	_error_sound = AudioStreamPlayer3D.new()
+	_error_sound.name = "ErrorSound"
+	_error_sound.max_distance = 15.0
+	_error_sound.bus = "SFX"
+	_error_sound.stream = _error_stream
+	add_child(_error_sound)
+
+	_update_interaction_text()
+	MissionManager.mission_started.connect(func(_m): _update_interaction_text())
+	MissionManager.mission_completed.connect(func(_m, _r): _update_interaction_text())
+	MissionManager.mission_failed.connect(func(_m, _r): _update_interaction_text())
+	MissionManager.mission_aborted.connect(func(_m): _update_interaction_text())
+
+func _update_interaction_text() -> void:
+	if MissionManager and MissionManager.current_mission:
+		interaction_text = "Submit Painting"
+		is_disabled = false
+	else:
+		interaction_text = "No Mission"
+		is_disabled = true
+
+func interact(player_interaction_component: PlayerInteractionComponent) -> void:
+	if is_disabled:
+		_error_sound.play()
+		return
+	super.interact(player_interaction_component)
 
 ## Called by PlayerInteractionComponent when player interacts
 func _on_interacted(_player_interaction_component: PlayerInteractionComponent) -> void:
@@ -21,11 +47,6 @@ func _on_interacted(_player_interaction_component: PlayerInteractionComponent) -
 		return
 
 	last_pressed = current_time
-
-	# Check if mission is active
-	if not MissionManager or not MissionManager.current_mission:
-		push_warning("PaintingSubmitButton: No active mission! Cannot submit painting.")
-		return
 
 	# Get painting system
 	var painting_system = PaintingModeManager.painting_system_2d
