@@ -17,6 +17,8 @@ signal closed
 @onready var saturation_slider: HSlider = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/VisualSettings/SaturationSlider
 @onready var saturation_value_label: Label = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/VisualSettings/SaturationHeader/SaturationValue
 @onready var close_button: Button = $PanelContainer/MarginContainer/VBoxContainer/CloseButton
+@onready var return_to_title_button: Button = $PanelContainer/MarginContainer/VBoxContainer/ReturnToTitleButton
+@onready var controls_list: VBoxContainer = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Controls/ScrollContainer/ControlsList
 @onready var panel_container: PanelContainer = $PanelContainer
 @onready var button_nav_sound: AudioStreamPlayer = $ButtonNavSound
 @onready var open_menu_sound: AudioStreamPlayer = $OpenMenuSound
@@ -37,6 +39,26 @@ var slider_direction: int = 0  # -1 for left, 1 for right
 var keyboard_nav_enabled: bool = false
 var input_cooldown: float = 0.0
 var input_cooldown_time: float = 0.15  # Cooldown between navigation inputs
+var binding_labels: Array[Label] = []  # Labels showing current bindings in Controls tab
+
+# Controls to display: [display_name, action_name_in_glyph_map]
+var controls_entries: Array = [
+	["Move", "move"],
+	["Look", "look"],
+	["Jump", "jump"],
+	["Run", "run"],
+	["Interact", "interact"],
+	["Paint", "action_primary"],
+	["Drop", "action_secondary"],
+	["Rotate CW", "rotate_clockwise"],
+	["Rotate CCW", "rotate_counter"],
+	["Scale Up", "scale_sticker_up"],
+	["Scale Down", "scale_sticker_down"],
+	["Next Sticker", "cycle_sticker_next"],
+	["Prev Sticker", "cycle_sticker_prev"],
+	["Back", "go_back"],
+	["Pause", "start"],
+]
 
 func _ready():
 	# Hide by default
@@ -59,10 +81,15 @@ func _ready():
 		saturation_slider.value_changed.connect(_on_saturation_slider_changed)
 	
 	close_button.pressed.connect(_on_close_pressed)
+	return_to_title_button.pressed.connect(_on_return_to_title_pressed)
 
 	# Hide close button when embedded (PauseMenu handles closing)
+	# Show return-to-title only when embedded (not on title screen)
 	if is_embedded:
 		close_button.visible = false
+		return_to_title_button.visible = true
+	else:
+		return_to_title_button.visible = false
 	
 	# Get theme panel style
 	var theme_res = load("res://themes/ui_theme.tres")
@@ -73,7 +100,11 @@ func _ready():
 	
 	# Load settings from AudioManager and file
 	load_settings()
-	
+
+	# Build controls display and listen for device changes
+	_populate_controls_display()
+	InputDeviceManager.device_changed.connect(_on_device_changed)
+
 	# Set up focus navigation
 	_setup_focus_navigation()
 
@@ -155,8 +186,8 @@ func _input(event):
 		if event.is_action_pressed("ui_up"):
 			if input_cooldown <= 0:
 				var focused_control = get_viewport().gui_get_focus_owner()
-				# Check if we're at the first slider in current tab, if so return to tab mode
-				if focused_control == sfx_slider or focused_control == hue_slider:
+				# Check if we're at the first focusable in current tab, if so return to tab mode
+				if focused_control == sfx_slider or focused_control == hue_slider or (tab_container.current_tab == 2 and focused_control == return_to_title_button):
 					is_in_tab_mode = true
 					_update_tab_mode_visual()
 					# Play navigation sound
@@ -173,9 +204,9 @@ func _input(event):
 		elif event.is_action_pressed("ui_down"):
 			if input_cooldown <= 0:
 				var focused_control = get_viewport().gui_get_focus_owner()
-				# Navigate from sliders to Back button, but stop at Back button
-				if focused_control == close_button:
-					# Already at Back button, don't navigate further
+				# Navigate from sliders to buttons, but stop at bottom-most button
+				if focused_control == close_button or focused_control == return_to_title_button:
+					# Already at bottom, don't navigate further
 					pass
 				else:
 					_navigate_focus(1)
@@ -418,6 +449,65 @@ func load_settings():
 	if theme_panel_style:
 		theme_panel_style.bg_color = current_bg_color
 
+func _populate_controls_display():
+	"""Build the controls list with label rows"""
+	binding_labels.clear()
+	for entry in controls_entries:
+		var row = HBoxContainer.new()
+		row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+
+		var action_label = Label.new()
+		action_label.text = entry[0]
+		action_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		action_label.add_theme_font_size_override("font_size", 24)
+		row.add_child(action_label)
+
+		var binding_label = Label.new()
+		binding_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+		binding_label.add_theme_font_size_override("font_size", 24)
+		row.add_child(binding_label)
+		binding_labels.append(binding_label)
+
+		controls_list.add_child(row)
+
+	_update_controls_display()
+
+func _update_controls_display():
+	"""Update binding labels for the current input device"""
+	for i in range(controls_entries.size()):
+		var action_name = controls_entries[i][1]
+		binding_labels[i].text = InputDeviceManager.get_action_glyph(action_name)
+
+func _on_device_changed(_new_device):
+	_update_controls_display()
+
+func _on_return_to_title_pressed():
+	"""Quit and return to the title screen"""
+	if button_hit_sound:
+		button_hit_sound.play()
+
+	# Reset UIManager state so autoload doesn't hold freed node references
+	@warning_ignore("INT_AS_ENUM_WITHOUT_MATCH")
+	UIManager.current_state = -1 as UIManager.GameState
+	UIManager.pause_menu = null
+	UIManager.main_menu = null
+	UIManager.mission_selection = null
+	UIManager.validation_result = null
+	UIManager.shop_ui = null
+	UIManager.hud = null
+
+	# Reset CameraManager so its transition camera doesn't override the title screen camera
+	CameraManager.player_camera = null
+	CameraManager.current_camera = null
+	CameraManager.active_zones.clear()
+	if CameraManager.is_blending:
+		CameraManager.is_blending = false
+		CameraManager.set_process(false)
+
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+
+	SceneTransition.fade_to_scene("res://scenes/TitleScreen.tscn")
+
 func _navigate_focus(direction: int):
 	"""Navigate focus up/down through controls"""
 	var focused = get_viewport().gui_get_focus_owner()
@@ -436,9 +526,12 @@ func _focus_first_content_item():
 	"""Focus the first item in the current tab's content"""
 	if tab_container.current_tab == 0:  # Audio tab
 		sfx_slider.grab_focus()
-	else:  # Visual tab
+	elif tab_container.current_tab == 1:  # Visual tab
 		if hue_slider:
 			hue_slider.grab_focus()
+	elif tab_container.current_tab == 2:  # Controls tab
+		if is_embedded and return_to_title_button.visible:
+			return_to_title_button.grab_focus()
 
 func _switch_tab(direction: int):
 	"""Switch between tabs (Audio/Visual) - no looping"""
@@ -472,24 +565,27 @@ func _update_close_button_focus():
 		close_button.focus_previous = close_button.get_path_to(music_slider)
 	elif tab_container.current_tab == 1 and saturation_slider:  # Visual tab
 		close_button.focus_previous = close_button.get_path_to(saturation_slider)
+	elif tab_container.current_tab == 2:  # Controls tab
+		close_button.focus_previous = close_button.get_path_to(return_to_title_button)
 
 func _setup_focus_navigation():
 	"""Set up focus navigation for controls"""
-	# Enable focus for sliders and button
+	# Enable focus for sliders and buttons
 	sfx_slider.focus_mode = Control.FOCUS_ALL
 	music_slider.focus_mode = Control.FOCUS_ALL
 	close_button.focus_mode = Control.FOCUS_ALL
-	
+	return_to_title_button.focus_mode = Control.FOCUS_ALL
+
 	# Set up focus neighbors for Audio tab
 	sfx_slider.focus_neighbor_bottom = sfx_slider.get_path_to(music_slider)
 	sfx_slider.focus_neighbor_top = sfx_slider.get_path_to(close_button)
 	sfx_slider.focus_next = sfx_slider.get_path_to(music_slider)
-	
+
 	music_slider.focus_neighbor_top = music_slider.get_path_to(sfx_slider)
 	music_slider.focus_neighbor_bottom = music_slider.get_path_to(close_button)
 	music_slider.focus_previous = music_slider.get_path_to(sfx_slider)
 	music_slider.focus_next = music_slider.get_path_to(close_button)
-	
+
 	# Set up focus for Visual tab only if sliders exist
 	if hue_slider and saturation_slider:
 		hue_slider.focus_mode = Control.FOCUS_ALL
@@ -501,7 +597,7 @@ func _setup_focus_navigation():
 		saturation_slider.focus_neighbor_bottom = saturation_slider.get_path_to(close_button)
 		saturation_slider.focus_previous = saturation_slider.get_path_to(hue_slider)
 		saturation_slider.focus_next = saturation_slider.get_path_to(close_button)
-	
+
 	# Close button navigation (will be updated per tab)
 	close_button.focus_neighbor_top = close_button.get_path_to(music_slider)
 	close_button.focus_neighbor_bottom = close_button.get_path_to(sfx_slider)

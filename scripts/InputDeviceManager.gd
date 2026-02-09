@@ -131,6 +131,16 @@ func _initialize_glyph_map() -> void:
 		"start": {
 			"keyboard": "`",
 			"gamepad": "Start"  # Button 6
+		},
+
+		# Combined display entries (for controls reference screen)
+		"move": {
+			"keyboard": "WASD",
+			"gamepad": "Left Stick"
+		},
+		"look": {
+			"keyboard": "Mouse",
+			"gamepad": "Right Stick"
 		}
 	}
 

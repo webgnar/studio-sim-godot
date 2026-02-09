@@ -47,6 +47,9 @@ func _ready():
 	options_menu.closed.connect(_on_options_closed)
 	add_child(options_menu)
 
+	# Ensure our camera is the active one (CameraManager autoload may hold stale state)
+	camera.make_current()
+
 	# Play "move in" backwards as intro, chain to "pan" when done
 	camera_anim.animation_finished.connect(_on_camera_animation_finished)
 	camera_anim.play_backwards("move in")
@@ -195,6 +198,12 @@ func _transition_to_game(scene_path: String, wipe_data: bool) -> void:
 		character.play_exit_animation()
 
 	await camera_anim.animation_finished
+
+	# Reset UIManager to GAMEPLAY so mouse capture and camera input work in the world scene
+	# (UIManager._ready() only runs once on first launch; this handles returning from title)
+	@warning_ignore("INT_AS_ENUM_WITHOUT_MATCH")
+	UIManager.current_state = -1 as UIManager.GameState
+	UIManager.change_state(UIManager.GameState.GAMEPLAY)
 
 	# Grab the preloaded scene and transition
 	var scene = ResourceLoader.load_threaded_get(scene_path) as PackedScene

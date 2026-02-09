@@ -19,3 +19,6 @@ res://scripts/old stuff/BoxInteraction.gd
 res://scenes/UI/PauseMenu.tscn
 res://scripts/DeathZone.gd
 res://scripts/KeyPickup.gd
+res://scenes/UI/OptionsMenu.tscn
+res://scripts/InputDeviceManager.gd
+res://scripts/TitleScreenController.gd

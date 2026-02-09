@@ -163,6 +163,24 @@ tick_count = 11
 ticks_on_borders = true
 ticks_position = 2
 
+[node name="Controls" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer"]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Controls"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ControlsList" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Controls/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 4
+
+[node name="ReturnToTitleButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Quit and Return to Title Screen"
+
 [node name="CloseButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 text = "Back"

@@ -6,6 +6,7 @@ extends Area3D
 var _is_respawning: bool = false
 var _death_camera: Camera3D
 var _target_player: CharacterBody3D
+var _death_sound: AudioStream = preload("res://sounds/die.ogg")
 
 func _ready():
 	body_entered.connect(_on_body_entered)
@@ -22,6 +23,14 @@ func _on_body_entered(body):
 func _respawn(player):
 	_is_respawning = true
 	_target_player = player
+
+	# Play death sound
+	var sfx = AudioStreamPlayer.new()
+	sfx.stream = _death_sound
+	sfx.bus = "SFX"
+	add_child(sfx)
+	sfx.play()
+	sfx.finished.connect(sfx.queue_free)
 
 	# Disable player input (gravity still applies)
 	CameraManager.set_player_input(false)
