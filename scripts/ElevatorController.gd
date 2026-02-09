@@ -126,11 +126,11 @@ func open_gate() -> void:
 func has_too_many_paintings() -> bool:
 	return paintings_inside.size() > 1
 
+func play_error_sound() -> void:
+	_error_sound.play()
+
 func close_gate() -> void:
 	"""Close the elevator gate"""
-	if has_too_many_paintings():
-		_error_sound.play()
-		return
 	if not can_toggle_gate() or gate_state == GateState.CLOSED:
 		return
 

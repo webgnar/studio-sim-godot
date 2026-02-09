@@ -64,6 +64,12 @@ func _update_interaction_text() -> void:
 		interaction_text = "Open Gate"
 		is_disabled = false
 
+func interact(player_interaction_component: PlayerInteractionComponent) -> void:
+	if is_disabled and elevator_controller and elevator_controller.has_too_many_paintings():
+		elevator_controller.play_error_sound()
+		return
+	super.interact(player_interaction_component)
+
 func _on_interacted(_player_interaction_component: PlayerInteractionComponent) -> void:
 	# Cooldown check
 	var current_time = Time.get_ticks_msec() / 1000.0
