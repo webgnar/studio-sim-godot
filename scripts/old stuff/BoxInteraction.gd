@@ -111,10 +111,11 @@ func _open_lid_pair_1() -> void:
 
 func _open_lid_pair_2() -> void:
 	print("Opening lid pair 2 (lid3 & lid4)...")
-	
+
 	if flap_2_open_sound:
 		_play_sound(flap_2_open_sound)
-	
+
+	_reveal_key()
 	_set_state(BoxState.OPENING_2)
 	_animate_lid_pair(["lid3", "lid4"])
 	
@@ -128,10 +129,11 @@ func _open_lid_pair_2_with_delay() -> void:
 	await get_tree().create_timer(sequence_buffer).timeout
 	
 	print("Opening lid pair 2 (lid3 & lid4) after delay...")
-	
+
 	if flap_2_open_sound:
 		_play_sound(flap_2_open_sound)
-	
+
+	_reveal_key()
 	_animate_lid_pair(["lid3", "lid4"])
 	
 	await _wait_for_animations_to_complete()
@@ -237,21 +239,21 @@ func _set_state(new_state: BoxState) -> void:
 	_current_state = new_state
 	box_state_changed.emit(new_state)
 
+func _reveal_key() -> void:
+	var key = _find_key_node()
+	if not key:
+		return
+	if WorldStateManager.has_flag(key_flag_name):
+		key.queue_free()
+	else:
+		_set_key_visible(true)
+
 func _on_box_fully_opened() -> void:
 	interaction_text = _close_text
 	emit_state_change("OPEN")
 
 	if not _spawned_object:
 		_spawn_object()
-
-	# Handle key visibility
-	var key = _find_key_node()
-	if key:
-		if WorldStateManager.has_flag(key_flag_name):
-			# Player already has key (loaded save) — remove it
-			key.queue_free()
-		else:
-			_set_key_visible(true)
 
 	box_opened.emit()
 
