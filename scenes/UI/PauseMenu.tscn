@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://h5bexxabn8" path="res://scripts/ui/PauseMenu.gd" id="1_script"]
 [ext_resource type="Theme" uid="uid://cbtaxh5m7udor" path="res://themes/ui_theme.tres" id="2_theme"]
 [ext_resource type="PackedScene" uid="uid://ctv5r4f51ufg3" path="res://scenes/UI/MissionSelectionUI.tscn" id="3_mission_select"]
+[ext_resource type="Texture2D" uid="uid://dk140duf12uhs" path="res://sprites/key_icon.png" id="3_rgmlj"]
 [ext_resource type="PackedScene" uid="uid://bw6qndm8f0bap" path="res://scenes/UI/OptionsMenu.tscn" id="4_options"]
 [ext_resource type="PackedScene" path="res://scenes/UI/InventoryTab.tscn" id="5_inventory"]
 [ext_resource type="AudioStream" uid="uid://cobqa7fyriw4h" path="res://sounds/picotron/openmenu.ogg" id="6_open"]
@@ -60,6 +61,11 @@ text = "INVENTORY"
 custom_minimum_size = Vector2(200, 40)
 layout_mode = 2
 text = "OPTIONS"
+
+[node name="KeyIcon" type="TextureRect" parent="Dialog/MarginContainer/VBoxContainer/TabBar" unique_id=1630929932]
+layout_mode = 2
+size_flags_vertical = 4
+texture = ExtResource("3_rgmlj")
 
 [node name="TabContent" type="Control" parent="Dialog/MarginContainer/VBoxContainer" unique_id=1835759430]
 layout_mode = 2

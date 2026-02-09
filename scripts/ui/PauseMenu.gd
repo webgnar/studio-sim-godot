@@ -32,6 +32,9 @@ var mission_selection_ui: MissionSelectionUI = null
 var inventory_tab: Control = null
 var options_menu: Control = null
 
+# Key icon (placed in TabBar in scene)
+@onready var key_icon: TextureRect = $Dialog/MarginContainer/VBoxContainer/TabBar/TextureRect
+
 # State
 var current_tab: Tab = Tab.COMMISSIONS
 var nav_mode: NavMode = NavMode.TAB_BAR
@@ -65,6 +68,10 @@ func _ready():
 			panel.offset_top = 0
 			panel.offset_right = 0
 			panel.offset_bottom = 0
+
+	# Hide key icon initially
+	if key_icon:
+		key_icon.visible = false
 
 	# Register with UIManager
 	if UIManager:
@@ -174,6 +181,9 @@ func show_screen():
 
 	# Reset input cooldown
 	input_cooldown = 0.0
+
+	# Update key icon visibility
+	_update_key_icon()
 
 	# Play open sound
 	if open_menu_sound:
@@ -339,6 +349,10 @@ func _release_text_focus():
 	var focused = get_viewport().gui_get_focus_owner()
 	if focused:
 		focused.release_focus()
+
+func _update_key_icon():
+	if key_icon:
+		key_icon.visible = WorldStateManager.has_flag("studio_key")
 
 # ============================================================================
 # Child finding helpers

@@ -91,6 +91,7 @@
 [ext_resource type="PackedScene" uid="uid://cqoxj5pobyw2a" path="res://models/props/baricade_1.glb" id="93_8xaka"]
 [ext_resource type="PackedScene" uid="uid://c21nti0oy66lb" path="res://models/props/baricade_2.glb" id="94_n6seq"]
 [ext_resource type="PackedScene" uid="uid://cv51ha8ljywkh" path="res://models/props/camera_sticker.glb" id="95_n6seq"]
+[ext_resource type="Script" uid="uid://m71r0arc8vb5" path="res://scripts/DeathZone.gd" id="96_ufs10"]
 [ext_resource type="PackedScene" uid="uid://bs7m75lssp7qx" path="res://scenes/CritiqueTV.tscn" id="97_crtq"]
 [ext_resource type="AudioStream" uid="uid://84rjpuccue2i" path="res://sounds/boomboxSwitch.ogg" id="boombox_switch"]
 [ext_resource type="AudioStream" uid="uid://bukro42figtah" path="res://sounds/fan switch.ogg" id="fan_switch"]
@@ -499,8 +500,57 @@ _data = {
 &"waterdrop": SubResource("Animation_mu18u")
 }
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_ce70q"]
+atlas = ExtResource("91_ebmc1")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_odf6h"]
+atlas = ExtResource("91_ebmc1")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mu18u"]
+atlas = ExtResource("91_ebmc1")
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7b7y8"]
+atlas = ExtResource("91_ebmc1")
+region = Rect2(48, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wui3h"]
+atlas = ExtResource("91_ebmc1")
+region = Rect2(64, 0, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_qetcs"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ce70q")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_odf6h")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mu18u")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7b7y8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wui3h")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
 [sub_resource type="BoxShape3D" id="BoxShape3D_pb8sg"]
 size = Vector3(25.251678, 16.538967, 1.7124023)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ufs10"]
+size = Vector3(59.567818, 2, 62.196514)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_h5nhj"]
+size = Vector3(8.818, 1.3930664, 9.446)
 
 [node name="World" type="Node3D" unique_id=81477]
 script = ExtResource("1_qaasp")
@@ -1487,7 +1537,7 @@ transform = Transform3D(-0.05, 0, 4.371139e-09, 0, 0.05, 0, -4.371139e-09, 0, -0
 transform = Transform3D(-3.059797e-09, 0, -0.07, 0, 0.07, 0, 0.07, 0, -3.059797e-09, 0.80310917, 1.7198212, 8.410689)
 
 [node name="waterdrop" type="Node3D" parent="berkey" unique_id=319029114]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.212265, 0, 9.536743e-07)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.259079, -0.09316635, 2.861023e-06)
 
 [node name="Sprite3D" type="Sprite3D" parent="berkey/waterdrop" unique_id=518031669]
 modulate = Color(0.69173586, 0.69173586, 0.69173586, 0.6877967)
@@ -1511,6 +1561,16 @@ transform = Transform3D(14.285714, 0, 0, 0, 14.285714, 0, 0, 0, 14.285714, 0, 0,
 stream = ExtResource("92_8xaka")
 volume_db = -38.899
 
+[node name="waterdrop2" type="Node3D" parent="berkey" unique_id=702136775]
+
+[node name="Sprite3D" type="Sprite3D" parent="berkey/waterdrop2" unique_id=688100307]
+
+[node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="berkey/waterdrop2" unique_id=1510909033]
+transform = Transform3D(10.2, -4.4585613e-07, -4.458562e-07, 4.4585613e-07, -4.4585613e-07, 10.2, -4.4585613e-07, -10.2, -4.458561e-07, 1.490387, -5.982689, 0)
+sprite_frames = SubResource("SpriteFrames_qetcs")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="berkey/waterdrop2" unique_id=136730085]
+
 [node name="baricade 1" parent="." unique_id=1529760255 instance=ExtResource("93_8xaka")]
 transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 6.655397, 0.7673063, 7.165266)
 
@@ -1526,6 +1586,23 @@ shape = SubResource("BoxShape3D_pb8sg")
 
 [node name="camera sticker" parent="." unique_id=990435022 instance=ExtResource("95_n6seq")]
 transform = Transform3D(-2.1855695e-09, 0, -0.05, 0, 0.05, 0, 0.05, 0, -2.1855695e-09, 3.6745884, 1.737043, 9.13512)
+
+[node name="DeathZone" type="Area3D" parent="." unique_id=990205795]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -5.2460318, 6.2699566)
+script = ExtResource("96_ufs10")
+spawn_position = Vector3(-0.947, 1.207, 12)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="DeathZone" unique_id=2059192584]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.699909, 0, 6.6168137)
+shape = SubResource("BoxShape3D_ufs10")
+
+[node name="DeathZone2" type="Area3D" parent="." unique_id=1658766208]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.352553, 0)
+script = ExtResource("96_ufs10")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="DeathZone2" unique_id=2086860833]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.491428, -0.16903782, -6.0622597)
+shape = SubResource("BoxShape3D_h5nhj")
 
 [editable path="Spotlight1"]
 [editable path="Spotlight2"]

@@ -27,16 +27,44 @@ signal box_state_changed(new_state: BoxState)
 @export_group("Animation Timing")
 @export var sequence_buffer: float = 0.3
 
+@export_group("Key Settings")
+@export var key_flag_name: String = "studio_key"  # Flag to check in WorldStateManager
+
 var _current_state: BoxState = BoxState.CLOSED
 var _spawned_object: Node3D = null
 var _open_text: String = ""  # Store open text from inspector
 var _close_text: String = ""  # Store close text
+var _key_node: Node3D = null  # Reference to Key child node (if any)
 
 func _on_ready() -> void:
 	# Store inspector value as the "open" text (default state)
 	_open_text = interaction_text if interaction_text != "" else "Open Box"
 	_close_text = "Close Box"  # Can be made @export if needed
 	_ensure_audio_player()
+	_setup_key_node()
+
+func _setup_key_node() -> void:
+	# Find Key child node in parent (CardboardBox)
+	_key_node = find_in_parent("Key")
+	if not _key_node:
+		return
+
+	if WorldStateManager.has_flag(key_flag_name):
+		# Player already has the key from a previous save — remove it entirely
+		_key_node.queue_free()
+		_key_node = null
+	else:
+		# Hide key until box is opened
+		_set_key_visible(false)
+
+func _set_key_visible(show: bool) -> void:
+	if not _key_node or not is_instance_valid(_key_node):
+		return
+	_key_node.visible = show
+	# Disable/enable collision so raycast doesn't hit hidden key
+	var static_body = _key_node.get_node_or_null("StaticBody3D")
+	if static_body:
+		static_body.collision_layer = 4 if show else 0
 
 func _ensure_audio_player() -> void:
 	"""Make sure we have an audio player for box sounds"""
@@ -222,10 +250,14 @@ func _set_state(new_state: BoxState) -> void:
 func _on_box_fully_opened() -> void:
 	interaction_text = _close_text
 	emit_state_change("OPEN")
-	
+
 	if not _spawned_object:
 		_spawn_object()
-	
+
+	# Reveal the key when box opens (if player doesn't already have it)
+	if not WorldStateManager.has_flag(key_flag_name):
+		_set_key_visible(true)
+
 	box_opened.emit()
 
 func _on_box_fully_closed() -> void:
@@ -234,10 +266,13 @@ func _on_box_fully_closed() -> void:
 
 	if box_close_sound:
 		_play_sound(box_close_sound)
-	
+
 	if _spawned_object:
 		_remove_spawned_object()
-	
+
+	# Hide key again when box closes
+	_set_key_visible(false)
+
 	box_closed.emit()
 
 func _spawn_object() -> void:
