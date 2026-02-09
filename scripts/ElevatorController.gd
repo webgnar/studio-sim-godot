@@ -176,7 +176,8 @@ func start_export() -> void:
 	if not png_path.is_empty() and not glb_path.is_empty():
 		GalleryUploader.upload_painting(png_path, glb_path, painting.painting_name, painting.artist_statement, SteamManager.persona_name)
 
-	# Remove painting from game (it's been "shipped")
+	# Ship painting (preserves metadata in inventory as SHIPPED) then remove from world
+	WorldStateManager.ship_painting(painting)
 	paintings_inside.erase(painting)
 	painting.queue_free()  # This will auto-unregister from WorldStateManager via _exit_tree()
 

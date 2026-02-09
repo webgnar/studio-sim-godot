@@ -41,6 +41,7 @@ enum NavMode { MISSION_LIST, PREVIEW_BUTTONS }
 var nav_mode: NavMode = NavMode.MISSION_LIST
 var preview_buttons: Array[Button] = []
 var preview_button_index: int = 0
+var keyboard_nav_enabled: bool = false
 var input_cooldown: float = 0.0
 var input_cooldown_time: float = 0.15  # Cooldown between navigation inputs
 
@@ -106,6 +107,10 @@ func _process(delta):
 func _input(event):
 	# Only handle input when dialog is visible
 	if not dialog.visible:
+		return
+
+	# Only process keyboard/gamepad input when enabled (mouse works via gui_input signals)
+	if not keyboard_nav_enabled:
 		return
 
 	var viewport = get_viewport()
@@ -335,6 +340,10 @@ func _open_dialog():
 	nav_mode = NavMode.MISSION_LIST
 	_clear_button_focus()
 
+	# Enable keyboard nav (standalone always has it; embedded waits for PauseMenu)
+	if not is_embedded:
+		keyboard_nav_enabled = true
+
 	# Reset input cooldown
 	input_cooldown = 0.0
 
@@ -419,6 +428,12 @@ func _on_card_clicked(index: int):
 	"""Handle mission card click"""
 	selected_index = index
 	_update_selection()
+
+	# Notify parent PauseMenu to enter TAB_CONTENT mode (mouse entry)
+	if is_embedded:
+		var pause_menu = _find_parent_pause_menu()
+		if pause_menu and pause_menu.nav_mode == PauseMenuUI.NavMode.TAB_BAR:
+			pause_menu._enter_tab_content_mode(true)
 
 func _select_next_mission():
 	"""Select the next mission in the list"""
@@ -631,3 +646,12 @@ func _update_stats_display():
 
 	if PaintingSpawner and paintings_created_label:
 		paintings_created_label.text = "Paintings Created: %d" % PaintingSpawner.paintings_created
+
+func _find_parent_pause_menu() -> Node:
+	"""Find the PauseMenu parent node"""
+	var node = get_parent()
+	while node:
+		if node.get_script() and node.get_script().get_global_name() == "PauseMenuUI":
+			return node
+		node = node.get_parent()
+	return null

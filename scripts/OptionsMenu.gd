@@ -34,6 +34,7 @@ var slider_hold_delay: float = 0.3  # Initial delay before repeating
 var slider_repeat_rate: float = 0.05  # Time between repeats
 var is_holding_slider: bool = false
 var slider_direction: int = 0  # -1 for left, 1 for right
+var keyboard_nav_enabled: bool = false
 var input_cooldown: float = 0.0
 var input_cooldown_time: float = 0.15  # Cooldown between navigation inputs
 
@@ -105,7 +106,11 @@ func _process(delta):
 func _input(event):
 	if not visible:
 		return
-	
+
+	# Only process keyboard/gamepad input when enabled (mouse works via built-in Godot GUI)
+	if not keyboard_nav_enabled:
+		return
+
 	# ESC or B button to close (when standalone) or go back to tab mode (when embedded)
 	if event.is_action_pressed("ui_cancel") or event.is_action_pressed("go_back"):
 		if is_embedded:
@@ -221,6 +226,10 @@ func show_menu():
 	# Start in tab mode
 	is_in_tab_mode = true
 	_update_tab_mode_visual()
+
+	# Enable keyboard nav (standalone always has it; embedded waits for PauseMenu)
+	if not is_embedded:
+		keyboard_nav_enabled = true
 
 	# Reset input cooldown
 	input_cooldown = 0.0

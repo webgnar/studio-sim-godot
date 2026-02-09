@@ -12,8 +12,11 @@ var carryable_painting_scene = preload("res://scenes/CarryablePainting.tscn")
 var wall_nail_scene = preload("res://scenes/WallNail.tscn")
 
 # Dictionary mapping painting nodes to their metadata
-# Format: { painting_node: {"id": String, "texture_path": String} }
+# Format: { painting_node: {"id": String, "texture_path": String, "status": String} }
 var _registered_paintings: Dictionary = {}
+
+# Array of shipped painting metadata dicts (no node reference — paintings removed from world)
+var _shipped_paintings: Array = []
 
 # Dictionary mapping nail nodes to their IDs
 # Format: { nail_node: nail_id }
@@ -42,7 +45,8 @@ func register_painting(painting: Node, painting_id: String, texture_path: String
 		"id": painting_id,
 		"texture_path": texture_path,
 		"name": painting.painting_name if "painting_name" in painting else "",
-		"artist_statement": painting.artist_statement if "artist_statement" in painting else ""
+		"artist_statement": painting.artist_statement if "artist_statement" in painting else "",
+		"status": "WIP"
 	}
 
 func unregister_painting(painting: Node) -> void:
@@ -76,16 +80,34 @@ func register_painting_system_3d(system: PaintingSystem3D) -> void:
 # Painting Metadata Helpers
 # ============================================================================
 
-func update_painting_metadata(painting: Node, painting_name: String, statement: String) -> void:
-	"""Update a painting's name and artist statement"""
+func update_painting_metadata(painting: Node, painting_name: String, statement: String, status: String = "") -> void:
+	"""Update a painting's name, artist statement, and optionally status"""
 	if painting in _registered_paintings:
 		_registered_paintings[painting]["name"] = painting_name
 		_registered_paintings[painting]["artist_statement"] = statement
+		if status != "":
+			_registered_paintings[painting]["status"] = status
 		painting.painting_name = painting_name
 		painting.artist_statement = statement
 
+func ship_painting(painting: Node) -> void:
+	"""Move a painting to shipped status (preserves metadata after node is freed)"""
+	if painting not in _registered_paintings:
+		push_warning("Attempted to ship unregistered painting")
+		return
+
+	var meta = _registered_paintings[painting]
+	_shipped_paintings.append({
+		"id": meta["id"],
+		"texture_path": meta["texture_path"],
+		"name": meta.get("name", ""),
+		"artist_statement": meta.get("artist_statement", ""),
+		"status": "SHIPPED"
+	})
+	print("WorldStateManager: Painting '%s' shipped" % meta.get("name", meta["id"]))
+
 func get_all_paintings() -> Array:
-	"""Returns array of painting data dicts for the inventory UI"""
+	"""Returns array of painting data dicts for the inventory UI (includes shipped paintings)"""
 	var result = []
 	for painting in _registered_paintings.keys():
 		if is_instance_valid(painting):
@@ -95,8 +117,19 @@ func get_all_paintings() -> Array:
 				"id": meta["id"],
 				"texture_path": meta["texture_path"],
 				"name": meta.get("name", ""),
-				"artist_statement": meta.get("artist_statement", "")
+				"artist_statement": meta.get("artist_statement", ""),
+				"status": meta.get("status", "WIP")
 			})
+	# Append shipped paintings (no node reference)
+	for shipped in _shipped_paintings:
+		result.append({
+			"node": null,
+			"id": shipped["id"],
+			"texture_path": shipped["texture_path"],
+			"name": shipped.get("name", ""),
+			"artist_statement": shipped.get("artist_statement", ""),
+			"status": "SHIPPED"
+		})
 	return result
 
 # ============================================================================
@@ -139,6 +172,7 @@ func save_world_state() -> bool:
 		"version": SAVE_VERSION,
 		"last_saved": _get_timestamp(),
 		"paintings": [],
+		"shipped_paintings": _shipped_paintings.duplicate(true),
 		"nails": [],
 		"stickers_3d": [],
 		"economy": _save_economic_state(),  # PHASE 0: Economy save
@@ -186,6 +220,7 @@ func save_world_state() -> bool:
 			"texture_path": texture_path,
 			"name": metadata.get("name", ""),
 			"artist_statement": metadata.get("artist_statement", ""),
+			"status": metadata.get("status", "WIP"),
 			"position": {
 				"x": painting.global_position.x,
 				"y": painting.global_position.y,
@@ -253,6 +288,10 @@ func save_world_state() -> bool:
 	file.store_string(json_string)
 	file.close()
 
+	# Include shipped painting IDs so their textures aren't cleaned up
+	for shipped in _shipped_paintings:
+		valid_painting_ids.append(shipped["id"])
+
 	# Clean up orphaned texture files
 	_cleanup_orphaned_textures(valid_painting_ids)
 
@@ -301,6 +340,9 @@ func load_world_state(world_root: Node3D) -> void:
 			nail_id_map[nail_data["id"]] = nail
 			nails_loaded += 1
 
+	# Load shipped paintings (metadata-only, no nodes to spawn)
+	_shipped_paintings = save_data.get("shipped_paintings", [])
+
 	# Load paintings SECOND (after nails)
 	var paintings_array = save_data.get("paintings", [])
 	var paintings_loaded = 0
@@ -342,8 +384,9 @@ func clear_world_state() -> void:
 	if DirAccess.dir_exists_absolute(TEXTURES_DIR):
 		_delete_directory_recursive(TEXTURES_DIR)
 
-	# Clear registered paintings and nails (though scene should be reloading anyway)
+	# Clear registered paintings, shipped paintings, and nails
 	_registered_paintings.clear()
+	_shipped_paintings.clear()
 	_registered_nails.clear()
 
 	# Clear 3D stickers
@@ -481,8 +524,15 @@ func _load_painting(world_root: Node3D, painting_data: Dictionary, nail_id_map: 
 	painting.painting_name = painting_data.get("name", "")
 	painting.artist_statement = painting_data.get("artist_statement", "")
 
-	# Add to world
+	# Store status to apply after registration
+	var saved_status = painting_data.get("status", "WIP")
+
+	# Add to world (triggers _ready → register_painting with default "WIP" status)
 	world_root.add_child(painting)
+
+	# Apply saved status (overrides the default "WIP" set during registration)
+	if painting in _registered_paintings:
+		_registered_paintings[painting]["status"] = saved_status
 
 	# Set transform
 	painting.global_position = Vector3(

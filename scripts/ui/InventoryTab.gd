@@ -11,6 +11,7 @@ const PaintingCardScene = preload("res://scenes/UI/PaintingCard.tscn")
 @onready var painting_list_container: VBoxContainer = $HBoxContainer/LeftPanel/ScrollContainer/PaintingList
 @onready var stats_label: Label = $HBoxContainer/LeftPanel/StatsLabel
 @onready var preview_image: TextureRect = $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/PaintingImage
+@onready var status_label: Label = $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/StatusLabel
 @onready var name_input: LineEdit = $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/NameContainer/NameInput
 @onready var statement_label: Label = $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/StatementLabel
 @onready var statement_input: TextEdit = $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/StatementInput
@@ -25,6 +26,7 @@ var painting_cards: Array[PaintingCard] = []
 var painting_entries: Array = []  # Array of dicts from WorldStateManager
 var detail_focus_index: int = 0  # 0=name, 1=statement, 2=save
 var is_editing_text: bool = false
+var keyboard_nav_enabled: bool = false
 var input_cooldown: float = 0.0
 var input_cooldown_time: float = 0.15
 
@@ -59,6 +61,10 @@ func _process(delta):
 
 func _input(event):
 	if not visible:
+		return
+
+	# Only process keyboard/gamepad input when enabled (mouse works via gui_input signals)
+	if not keyboard_nav_enabled:
 		return
 
 	# Don't process navigation if text is being edited — let keys reach the text field
@@ -193,6 +199,8 @@ func _populate_painting_list():
 func _show_detail_panel(show: bool):
 	"""Show or hide the detail panel content"""
 	preview_image.visible = show
+	if status_label:
+		status_label.visible = show
 	name_input.visible = show
 	name_input.get_parent().visible = show  # NameContainer
 	if statement_label:
@@ -279,6 +287,24 @@ func _update_preview(data: Dictionary):
 			preview_image.texture = null
 	else:
 		preview_image.texture = null
+
+	# Update status display
+	var status = data.get("status", "WIP")
+	if status_label:
+		status_label.text = "Status: %s" % status
+		match status:
+			"WIP":
+				status_label.modulate = Color(1.0, 0.9, 0.3)
+			"DONE":
+				status_label.modulate = Color(0.4, 1.0, 0.4)
+			"SHIPPED":
+				status_label.modulate = Color(0.4, 0.8, 1.0)
+
+	# For SHIPPED paintings, make fields read-only
+	var is_shipped = (status == "SHIPPED")
+	name_input.editable = not is_shipped
+	statement_input.editable = not is_shipped
+	save_button.visible = not is_shipped
 
 	# Set name and statement fields
 	name_input.text = data.get("name", "")
@@ -374,11 +400,16 @@ func _on_text_gui_input(event: InputEvent, control: Control):
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 		if not is_editing_text:
 			is_editing_text = true
+			keyboard_nav_enabled = true
 			nav_mode = NavMode.DETAIL_PANEL
 			if control == name_input:
 				detail_focus_index = 0
 			elif control == statement_input:
 				detail_focus_index = 1
+			# Notify parent PauseMenu to enter TAB_CONTENT mode
+			var pause_menu = _find_parent_pause_menu()
+			if pause_menu and pause_menu.nav_mode == PauseMenuUI.NavMode.TAB_BAR:
+				pause_menu._enter_tab_content_mode(true)
 
 func _on_save_pressed():
 	"""Save the painting name and artist statement"""
@@ -388,23 +419,31 @@ func _on_save_pressed():
 	var data = painting_entries[selected_index]
 	var painting_node = data["node"]
 
-	if not is_instance_valid(painting_node):
+	# Can't save shipped paintings (no node, read-only)
+	if painting_node == null or not is_instance_valid(painting_node):
 		push_warning("InventoryTab: Painting node no longer valid")
 		return
 
 	var new_name = name_input.text.strip_edges()
 	var new_statement = statement_input.text.strip_edges()
 
-	# Update through WorldStateManager
-	WorldStateManager.update_painting_metadata(painting_node, new_name, new_statement)
+	# Update through WorldStateManager (set status to DONE on save)
+	WorldStateManager.update_painting_metadata(painting_node, new_name, new_statement, "DONE")
 
 	# Update local data
 	painting_entries[selected_index]["name"] = new_name
 	painting_entries[selected_index]["artist_statement"] = new_statement
+	painting_entries[selected_index]["status"] = "DONE"
 
 	# Update the card in the sidebar
 	if selected_index < painting_cards.size():
 		painting_cards[selected_index].update_name(new_name)
+		painting_cards[selected_index].update_status("DONE")
+
+	# Update status in preview
+	if status_label:
+		status_label.text = "Status: DONE"
+		status_label.modulate = Color(0.4, 1.0, 0.4)
 
 	print("InventoryTab: Saved painting '%s'" % new_name)
 
@@ -412,6 +451,11 @@ func _on_card_clicked(index: int):
 	"""Handle painting card click"""
 	selected_index = index
 	_update_selection()
+
+	# Notify parent PauseMenu to enter TAB_CONTENT mode (mouse entry)
+	var pause_menu = _find_parent_pause_menu()
+	if pause_menu and pause_menu.nav_mode == PauseMenuUI.NavMode.TAB_BAR:
+		pause_menu._enter_tab_content_mode(true)
 
 # ============================================================================
 # Helpers

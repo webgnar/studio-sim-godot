@@ -8,7 +8,9 @@ signal card_clicked(index: int)
 
 @onready var thumbnail: TextureRect = $MarginContainer/HBoxContainer/Thumbnail
 @onready var title_label: Label = $MarginContainer/HBoxContainer/InfoContainer/TitleLabel
+@onready var info_container: VBoxContainer = $MarginContainer/HBoxContainer/InfoContainer
 
+var status_label: Label = null
 var card_index: int = 0
 var painting_data: Dictionary = {}
 var is_selected: bool = false
@@ -28,6 +30,11 @@ func _ready():
 
 	add_theme_stylebox_override("panel", default_style)
 
+	# Create status label
+	status_label = Label.new()
+	status_label.add_theme_font_size_override("font_size", 14)
+	info_container.add_child(status_label)
+
 	# Connect click
 	gui_input.connect(_on_gui_input)
 
@@ -42,6 +49,9 @@ func setup(data: Dictionary, index: int):
 		display_name = "Untitled"
 	title_label.text = display_name
 
+	# Set status
+	update_status(data.get("status", "WIP"))
+
 	# Load thumbnail
 	_load_thumbnail(data.get("texture_path", ""))
 
@@ -53,6 +63,21 @@ func set_selected(selected: bool):
 func update_name(new_name: String):
 	"""Update the displayed name"""
 	title_label.text = new_name if new_name != "" else "Untitled"
+
+func update_status(status: String):
+	"""Update the displayed status with color coding"""
+	if not status_label:
+		return
+	status_label.text = status
+	match status:
+		"WIP":
+			status_label.modulate = Color(1.0, 0.9, 0.3)  # Yellow
+		"DONE":
+			status_label.modulate = Color(0.4, 1.0, 0.4)  # Green
+		"SHIPPED":
+			status_label.modulate = Color(0.4, 0.8, 1.0)  # Cyan
+		_:
+			status_label.modulate = Color.WHITE
 
 func _load_thumbnail(texture_path: String):
 	"""Load and display the painting thumbnail"""

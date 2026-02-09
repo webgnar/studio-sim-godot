@@ -85,6 +85,13 @@ func _input(event):
 	if not viewport:
 		return
 
+	# Auto-enter TAB_CONTENT mode when mouse clicks in the content area
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		if nav_mode == NavMode.TAB_BAR and tab_content.get_global_rect().has_point(event.position):
+			_enter_tab_content_mode(true)
+			# Don't consume — let the click propagate to child controls
+			return
+
 	# Check if a text field is being edited (don't intercept input)
 	if _is_text_editing():
 		# Exit on Escape or gamepad B button (not keyboard B, which should type 'B')
@@ -218,47 +225,50 @@ func _enter_tab_bar_mode():
 	# Deactivate current tab content so it stops processing input
 	_deactivate_tab_content(current_tab)
 
-func _enter_tab_content_mode():
-	"""Enter tab content navigation mode - enable input on active tab"""
+func _enter_tab_content_mode(from_mouse: bool = false):
+	"""Enter tab content navigation mode - enable keyboard nav on active tab"""
 	nav_mode = NavMode.TAB_CONTENT
 	_update_tab_bar_visual()
 
-	# Enable input processing on the active tab's content (content is already visible)
+	# Enable keyboard navigation on the active tab's content
 	match current_tab:
 		Tab.COMMISSIONS:
 			if mission_selection_ui:
-				mission_selection_ui.process_mode = Node.PROCESS_MODE_INHERIT
-				mission_selection_ui.nav_mode = MissionSelectionUI.NavMode.MISSION_LIST
-				mission_selection_ui._clear_button_focus()
-				mission_selection_ui.input_cooldown = 0.0
+				mission_selection_ui.keyboard_nav_enabled = true
+				if not from_mouse:
+					mission_selection_ui.nav_mode = MissionSelectionUI.NavMode.MISSION_LIST
+					mission_selection_ui._clear_button_focus()
+					mission_selection_ui.input_cooldown = 0.0
 		Tab.INVENTORY:
 			if inventory_tab:
-				inventory_tab.process_mode = Node.PROCESS_MODE_INHERIT
-				inventory_tab.nav_mode = InventoryTab.NavMode.PAINTING_LIST
-				inventory_tab.is_editing_text = false
-				inventory_tab.input_cooldown = 0.0
+				inventory_tab.keyboard_nav_enabled = true
+				if not from_mouse:
+					inventory_tab.nav_mode = InventoryTab.NavMode.PAINTING_LIST
+					inventory_tab.is_editing_text = false
+					inventory_tab.input_cooldown = 0.0
 		Tab.OPTIONS:
 			if options_menu:
-				options_menu.process_mode = Node.PROCESS_MODE_INHERIT
-				options_menu.is_in_tab_mode = true
-				options_menu._update_tab_mode_visual()
-				options_menu.input_cooldown = 0.0
+				options_menu.keyboard_nav_enabled = true
+				if not from_mouse:
+					options_menu.is_in_tab_mode = true
+					options_menu._update_tab_mode_visual()
+					options_menu.input_cooldown = 0.0
 
-	if button_hit_sound:
+	if not from_mouse and button_hit_sound:
 		button_hit_sound.play()
 
 func _deactivate_tab_content(tab: Tab):
-	"""Deactivate a specific tab's content (stop processing input, keep visible)"""
+	"""Deactivate keyboard navigation on a tab's content (keep visible and mouse-interactive)"""
 	match tab:
 		Tab.COMMISSIONS:
 			if mission_selection_ui:
-				mission_selection_ui.process_mode = Node.PROCESS_MODE_DISABLED
+				mission_selection_ui.keyboard_nav_enabled = false
 		Tab.INVENTORY:
 			if inventory_tab:
-				inventory_tab.process_mode = Node.PROCESS_MODE_DISABLED
+				inventory_tab.keyboard_nav_enabled = false
 		Tab.OPTIONS:
 			if options_menu:
-				options_menu.process_mode = Node.PROCESS_MODE_DISABLED
+				options_menu.keyboard_nav_enabled = false
 
 func _hide_all_tab_content():
 	"""Hide all tab content areas and disable input processing"""
@@ -277,26 +287,29 @@ func _hide_all_tab_content():
 		options_menu.process_mode = Node.PROCESS_MODE_DISABLED
 
 func _show_tab_content(tab: Tab):
-	"""Show the content area for a specific tab (always shows visually, input controlled by process_mode)"""
+	"""Show the content area for a specific tab (mouse-interactive immediately, keyboard nav controlled by flag)"""
 	match tab:
 		Tab.COMMISSIONS:
 			commissions_content.visible = true
 			if mission_selection_ui:
 				mission_selection_ui.show_screen()
-				# Keep input disabled - PauseMenu enables it when entering TAB_CONTENT
-				mission_selection_ui.process_mode = Node.PROCESS_MODE_DISABLED
+				# Enable process_mode so mouse works, but disable keyboard nav
+				mission_selection_ui.process_mode = Node.PROCESS_MODE_INHERIT
+				mission_selection_ui.keyboard_nav_enabled = false
 		Tab.INVENTORY:
 			inventory_content.visible = true
 			if inventory_tab and inventory_tab.has_method("activate"):
 				inventory_tab.activate()
-				# Keep input disabled
-				inventory_tab.process_mode = Node.PROCESS_MODE_DISABLED
+				# Enable process_mode so mouse works, but disable keyboard nav
+				inventory_tab.process_mode = Node.PROCESS_MODE_INHERIT
+				inventory_tab.keyboard_nav_enabled = false
 		Tab.OPTIONS:
 			options_content.visible = true
 			if options_menu and options_menu.has_method("show_menu"):
 				options_menu.show_menu()
-				# Keep input disabled (show_menu sets INHERIT, override it)
-				options_menu.process_mode = Node.PROCESS_MODE_DISABLED
+				# Enable process_mode so mouse works, but disable keyboard nav
+				options_menu.process_mode = Node.PROCESS_MODE_INHERIT
+				options_menu.keyboard_nav_enabled = false
 
 func _update_tab_button_styles():
 	"""Update tab button visual states"""
