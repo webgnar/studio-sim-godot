@@ -44,6 +44,7 @@ var nav_mode: NavMode = NavMode.TAB_BAR
 var tab_buttons: Array[Button] = []
 var input_cooldown: float = 0.0
 var input_cooldown_time: float = 0.15
+var _tab_nav_held: bool = false  # Prevent rapid tab cycling from held analog stick
 
 func _ready():
 	# Hide dialog initially
@@ -79,6 +80,12 @@ func _process(delta):
 
 	if input_cooldown > 0:
 		input_cooldown -= delta
+
+	# Reset tab nav held when stick returns to center
+	if _tab_nav_held:
+		if not Input.is_action_pressed("ui_left") and not Input.is_action_pressed("move_left") \
+			and not Input.is_action_pressed("ui_right") and not Input.is_action_pressed("move_right"):
+			_tab_nav_held = false
 
 func _input(event):
 	if not dialog.visible:
@@ -142,16 +149,16 @@ func _input(event):
 func _handle_tab_bar_input(event, viewport):
 	"""Handle input when navigating the tab bar"""
 	if event.is_action_pressed("ui_left") or event.is_action_pressed("move_left"):
-		if input_cooldown <= 0:
+		if not _tab_nav_held:
 			_cycle_tab(-1)
-			input_cooldown = input_cooldown_time
+			_tab_nav_held = true
 		viewport.set_input_as_handled()
 		return
 
 	if event.is_action_pressed("ui_right") or event.is_action_pressed("move_right"):
-		if input_cooldown <= 0:
+		if not _tab_nav_held:
 			_cycle_tab(1)
-			input_cooldown = input_cooldown_time
+			_tab_nav_held = true
 		viewport.set_input_as_handled()
 		return
 
@@ -177,6 +184,7 @@ func show_screen():
 
 	# Reset input cooldown
 	input_cooldown = 0.0
+	_tab_nav_held = false
 
 	# Update key icon visibility
 	_update_key_icon()

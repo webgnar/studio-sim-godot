@@ -38,6 +38,7 @@ var slider_direction: int = 0  # -1 for left, 1 for right
 var keyboard_nav_enabled: bool = false
 var input_cooldown: float = 0.0
 var input_cooldown_time: float = 0.15  # Cooldown between navigation inputs
+var _tab_nav_held: bool = false  # Prevent rapid tab cycling from held analog stick
 var binding_labels: Array[Label] = []  # Labels showing current bindings in Controls tab
 
 # Controls to display: [display_name, action_name_in_glyph_map]
@@ -109,7 +110,12 @@ func _process(delta):
 	# Update input cooldown
 	if input_cooldown > 0:
 		input_cooldown -= delta
-	
+
+	# Reset tab nav held when stick returns to center
+	if _tab_nav_held:
+		if not Input.is_action_pressed("ui_left") and not Input.is_action_pressed("ui_right"):
+			_tab_nav_held = false
+
 	if not is_holding_slider:
 		return
 	
@@ -155,14 +161,14 @@ func _input(event):
 	if is_in_tab_mode:
 		# Tab mode: left/right switches tabs, down enters content
 		if event.is_action_pressed("ui_left"):
-			if input_cooldown <= 0:
+			if not _tab_nav_held:
 				_switch_tab(-1)
-				input_cooldown = input_cooldown_time
+				_tab_nav_held = true
 			get_viewport().set_input_as_handled()
 		elif event.is_action_pressed("ui_right"):
-			if input_cooldown <= 0:
+			if not _tab_nav_held:
 				_switch_tab(1)
-				input_cooldown = input_cooldown_time
+				_tab_nav_held = true
 			get_viewport().set_input_as_handled()
 		elif event.is_action_pressed("ui_down"):
 			if input_cooldown <= 0:
@@ -258,6 +264,7 @@ func show_menu():
 
 	# Reset input cooldown
 	input_cooldown = 0.0
+	_tab_nav_held = false
 
 	# Set mouse mode to visible (skip when embedded - PauseMenu handles this)
 	if not is_embedded:
@@ -326,10 +333,6 @@ func _on_saturation_slider_changed(value: float):
 
 func _on_close_pressed():
 	"""Close the options menu"""
-	# Play button hit sound first
-	if button_hit_sound:
-		button_hit_sound.play()
-
 	hide()
 
 	# Play close menu sound

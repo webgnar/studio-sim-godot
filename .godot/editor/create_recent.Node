@@ -1,7 +1,7 @@
+TextureRect
 AudioStreamPlayer3D
 CollisionShape3D
 Area3D
-TextureRect
 AnimationPlayer
 AnimatedSprite3D
 Sprite3D

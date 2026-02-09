@@ -2,9 +2,11 @@
 
 [ext_resource type="Script" uid="uid://h5bexxabn8" path="res://scripts/ui/PauseMenu.gd" id="1_script"]
 [ext_resource type="Theme" uid="uid://cbtaxh5m7udor" path="res://themes/ui_theme.tres" id="2_theme"]
+[ext_resource type="Texture2D" uid="uid://dc06s6fukhq2a" path="res://sprites/ui/lb.png" id="3_ecia5"]
 [ext_resource type="PackedScene" uid="uid://ctv5r4f51ufg3" path="res://scenes/UI/MissionSelectionUI.tscn" id="3_mission_select"]
 [ext_resource type="Texture2D" uid="uid://dk140duf12uhs" path="res://sprites/key_icon.png" id="3_rgmlj"]
 [ext_resource type="PackedScene" uid="uid://bw6qndm8f0bap" path="res://scenes/UI/OptionsMenu.tscn" id="4_options"]
+[ext_resource type="Texture2D" uid="uid://g4asi3np5tvu" path="res://sprites/ui/rb.png" id="5_adhrm"]
 [ext_resource type="PackedScene" path="res://scenes/UI/InventoryTab.tscn" id="5_inventory"]
 [ext_resource type="AudioStream" uid="uid://cobqa7fyriw4h" path="res://sounds/picotron/openmenu.ogg" id="6_open"]
 [ext_resource type="AudioStream" uid="uid://cyvlgci21yq6s" path="res://sounds/picotron/closemenu.ogg" id="7_close"]
@@ -47,6 +49,10 @@ layout_mode = 2
 theme_override_constants/separation = 50
 alignment = 1
 
+[node name="TextureRect" type="TextureRect" parent="Dialog/MarginContainer/VBoxContainer/TabBar" unique_id=1693687554]
+layout_mode = 2
+texture = ExtResource("3_ecia5")
+
 [node name="CommissionsTab" type="Button" parent="Dialog/MarginContainer/VBoxContainer/TabBar" unique_id=1763618734]
 custom_minimum_size = Vector2(200, 40)
 layout_mode = 2
@@ -66,6 +72,10 @@ text = "OPTIONS"
 layout_mode = 2
 size_flags_vertical = 4
 texture = ExtResource("3_rgmlj")
+
+[node name="TextureRect2" type="TextureRect" parent="Dialog/MarginContainer/VBoxContainer/TabBar" unique_id=280591683]
+layout_mode = 2
+texture = ExtResource("5_adhrm")
 
 [node name="TabContent" type="Control" parent="Dialog/MarginContainer/VBoxContainer" unique_id=1835759430]
 layout_mode = 2
@@ -105,11 +115,6 @@ grow_vertical = 2
 
 [node name="OptionsMenu" parent="Dialog/MarginContainer/VBoxContainer/TabContent/OptionsContent" unique_id=1956811031 instance=ExtResource("4_options")]
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
 is_embedded = true
 
 [node name="ReturnToTitleButton" type="Button" parent="Dialog/MarginContainer/VBoxContainer/TabContent/OptionsContent" unique_id=1837623103]
