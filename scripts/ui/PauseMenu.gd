@@ -21,6 +21,9 @@ enum NavMode { TAB_BAR, TAB_CONTENT }
 @onready var inventory_content: Control = $Dialog/MarginContainer/VBoxContainer/TabContent/InventoryContent
 @onready var options_content: Control = $Dialog/MarginContainer/VBoxContainer/TabContent/OptionsContent
 
+# Return to title button (in Options tab)
+@onready var return_to_title_button: Button = $Dialog/MarginContainer/VBoxContainer/TabContent/OptionsContent/ReturnToTitleButton
+
 # Sound effects
 @onready var open_menu_sound: AudioStreamPlayer = $OpenMenuSound
 @onready var close_menu_sound: AudioStreamPlayer = $CloseMenuSound
@@ -59,15 +62,8 @@ func _ready():
 	inventory_tab = _find_child_by_class_name(inventory_content, "InventoryTab")
 	options_menu = _find_child_by_script_name(options_content, "OptionsMenu")
 
-	# Re-anchor OptionsMenu PanelContainer to fill tab content area
-	if options_menu:
-		var panel = options_menu.get_node_or_null("PanelContainer")
-		if panel:
-			panel.anchors_preset = Control.PRESET_FULL_RECT
-			panel.offset_left = 0
-			panel.offset_top = 0
-			panel.offset_right = 0
-			panel.offset_bottom = 0
+	# Connect return to title button
+	return_to_title_button.pressed.connect(_on_return_to_title_pressed)
 
 	# Hide key icon initially
 	if key_icon:
@@ -193,6 +189,33 @@ func hide_screen():
 	"""Hide the pause menu (called by UIManager)"""
 	dialog.visible = false
 	_hide_all_tab_content()
+
+func _on_return_to_title_pressed():
+	"""Quit and return to the title screen"""
+	if button_hit_sound:
+		button_hit_sound.play()
+
+	# Reset UIManager state so autoload doesn't hold freed node references
+	@warning_ignore("INT_AS_ENUM_WITHOUT_MATCH")
+	UIManager.current_state = -1 as UIManager.GameState
+	UIManager.pause_menu = null
+	UIManager.main_menu = null
+	UIManager.mission_selection = null
+	UIManager.validation_result = null
+	UIManager.shop_ui = null
+	UIManager.hud = null
+
+	# Reset CameraManager so its transition camera doesn't override the title screen camera
+	CameraManager.player_camera = null
+	CameraManager.current_camera = null
+	CameraManager.active_zones.clear()
+	if CameraManager.is_blending:
+		CameraManager.is_blending = false
+		CameraManager.set_process(false)
+
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+
+	SceneTransition.fade_to_scene("res://scenes/TitleScreen.tscn")
 
 func _close_menu():
 	"""Close the pause menu and return to gameplay"""
