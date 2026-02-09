@@ -33,7 +33,7 @@ var inventory_tab: Control = null
 var options_menu: Control = null
 
 # Key icon (placed in TabBar in scene)
-@onready var key_icon: TextureRect = $Dialog/MarginContainer/VBoxContainer/TabBar/TextureRect
+@onready var key_icon: TextureRect = $Dialog/MarginContainer/VBoxContainer/TabBar/KeyIcon
 
 # State
 var current_tab: Tab = Tab.COMMISSIONS
