@@ -128,19 +128,19 @@ func show_results(result: ValidationResult, mission: PaintingMission):
 			grade_label.modulate = Color(1.0, 0.3, 0.3)  # Red
 
 	# Show score
-	score_label.text = "Score: %.1f%%" % result.match_percentage
+	score_label.text = tr("Score: %.1f%%") % result.match_percentage
 
 	# Show pass/fail status with threshold
 	if result.success:
-		status_label.text = "PASSED! (%.0f%% required)" % result.pass_threshold
+		status_label.text = tr("PASSED! (%.0f%% required)") % result.pass_threshold
 		status_label.modulate = Color(0.4, 1.0, 0.4)
 	else:
-		status_label.text = "Failed (%.0f%% required)" % result.pass_threshold
+		status_label.text = tr("Failed (%.0f%% required)") % result.pass_threshold
 		status_label.modulate = Color(1.0, 0.4, 0.4)
 
 	# Show message
 	if result.errors.is_empty():
-		message_label.text = "Great work! Mission completed."
+		message_label.text = tr("Great work! Mission completed.")
 	else:
 		message_label.text = "\n".join(result.errors)
 
@@ -157,8 +157,8 @@ func show_results(result: ValidationResult, mission: PaintingMission):
 	color_label.visible = true
 
 	# Show Precision and Color Field scores with fixed weights (30% precision, 70% color field)
-	visual_label.text = "Precision: %.1f%% (weight: 30%%)" % result.visual_match_percentage
-	color_label.text = "Color Field: %.1f%% (weight: 70%%)" % result.color_distribution_score
+	visual_label.text = tr("Precision: %.1f%% (weight: 30%%)") % result.visual_match_percentage
+	color_label.text = tr("Color Field: %.1f%% (weight: 70%%)") % result.color_distribution_score
 
 	# Show results via UIManager (which will call show_screen())
 	# Note: Dialog visibility is now managed by UIManager

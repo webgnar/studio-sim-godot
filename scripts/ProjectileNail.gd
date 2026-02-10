@@ -155,6 +155,8 @@ func _try_apply_damage(body: Node) -> void:
 	var breakable = _find_breakable_component(body)
 	if breakable and breakable.has_method("take_damage"):
 		breakable.take_damage(damage)
+		if SteamManager:
+			SteamManager.unlock_achievement("ACH_NAILGUN")
 
 func _find_breakable_component(node: Node) -> Node:
 	"""Search for BreakableComponent in node hierarchy"""

@@ -63,6 +63,7 @@ ControllerDebugOverlay="*res://scripts/ControllerDebugOverlay.gd"
 LaunchOptionsHandler="*res://scripts/LaunchOptionsHandler.gd"
 PaintingExporter="*res://scripts/PaintingExporter.gd"
 GalleryUploader="*res://scripts/GalleryUploader.gd"
+LocaleManager="*res://scripts/LocaleManager.gd"
 
 [display]
 

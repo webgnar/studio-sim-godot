@@ -32,7 +32,7 @@ func _ready():
 	quit_button.pressed.connect(_on_quit_pressed)
 
 	# Update quit button text
-	quit_button.text = "Quit (Main Menu)"
+	quit_button.text = tr("Quit (Main Menu)")
 
 	# Load theme
 	theme = load("res://themes/ui_theme.tres")
@@ -133,16 +133,16 @@ func _on_painting_created(count: int):
 func _update_money_display():
 	"""Update the money counter"""
 	if UIManager and money_label:
-		money_label.text = "$%d" % UIManager.player_money
+		money_label.text = tr("$%d") % UIManager.player_money
 
 func _update_stats_display():
 	"""Update mission completion statistics"""
 	if UIManager and completed_missions_label and total_earnings_label:
-		completed_missions_label.text = "Missions Completed: %d" % UIManager.missions_completed
-		total_earnings_label.text = "Total Earnings: $%d" % UIManager.lifetime_earnings
+		completed_missions_label.text = tr("Missions Completed: %d") % UIManager.missions_completed
+		total_earnings_label.text = tr("Total Earnings: $%d") % UIManager.lifetime_earnings
 
 	if PaintingSpawner and paintings_created_label:
-		paintings_created_label.text = "Paintings Created: %d" % PaintingSpawner.paintings_created
+		paintings_created_label.text = tr("Paintings Created: %d") % PaintingSpawner.paintings_created
 
 func _on_missions_pressed():
 	"""Open mission selection screen"""

@@ -473,10 +473,10 @@ func spawn_sticker(world_position: Vector3):
 		DebugLogger.write_log("[PaintingSystem2D] Sticker spawned successfully! Total placed: %d" % placed_layers.size())
 		DebugLogger.write_log("[PaintingSystem2D] Sprite position: %s, scale: %s, rotation: %.1f" % [sprite.position, sprite.scale, sprite.rotation_degrees])
 
-	# Track sticker placement in Steam
+	# Track 2D sticker placement in Steam
 	if SteamManager:
-		SteamManager.increment_stat("STAT_STICKERS_PLACED")
-		if SteamManager.get_stat("STAT_STICKERS_PLACED") >= 1000:
+		SteamManager.increment_stat("STAT_STICKERS_PLACED_2D")
+		if SteamManager.get_stat("STAT_STICKERS_PLACED_2D") >= 500:
 			SteamManager.unlock_achievement("ACH_PAINTER")
 
 	# Select the newly placed sticker

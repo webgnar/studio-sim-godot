@@ -23,9 +23,6 @@ var statistics: Dictionary = {}
 # User info
 var persona_name: String = ""
 
-# Session tracking
-var session_start_time: int = 0
-var total_playtime_seconds: int = 0
 
 # Debug mode
 var debug_mode: bool = true  # Set to false for production
@@ -79,9 +76,6 @@ func initialize_steam() -> void:
 	print("  User: %s (ID: %d)" % [persona_name, steam_id])
 	print("  Online: %s" % is_online)
 
-	# Start session timer
-	session_start_time = Time.get_ticks_msec()
-
 	# Load Steam data
 	load_steam_stats()
 	load_steam_achievements()
@@ -94,21 +88,24 @@ func initialize_steam() -> void:
 func setup_achievements() -> void:
 	"""Define all achievements (must match Steamworks backend)"""
 	achievements = {
-		# Tutorial & First Steps
-		"ACH_FIRST_MISSION": false,
-
-		# Playtime
-		"ACH_PLAY_2HOURS": false,
-		"ACH_PLAY_10HOURS": false,
-
-		# Fun/Hidden
+		# Skill
 		"ACH_SPEEDRUNNER": false,  # Complete mission under 1 minute
-		"ACH_PAINTER": false,  # Place 1000 total stickers
+		"ACH_ALL_MISSIONS_NO_SAVE": false,  # Complete all co-missions without saving
+
+		# Painting / Stickers
+		"ACH_PAINTER": false,  # Place 500 2D stickers in missions
+		"ACH_TAGGER": false,  # Place 500 3D stickers in the world
 		"ACH_EXPORT_PAINTING": false,  # Export a painting
 		"ACH_EXPORT_5": false,
 		"ACH_EXPORT_10": false,
 		"ACH_EXPORT_20": false,
 		"ACH_EXPORT_50": false,
+
+		# Discovery / Fun
+		"ACH_FAN": false,  # Turn on the Stanley
+		"ACH_NAILGUN": false,  # Break a window with the nailgun
+		"ACH_ELEVATOR": false,  # Lock yourself in the elevator
+		"ACH_DIE": false,  # Cause the player to die
 	}
 
 func setup_statistics() -> void:
@@ -120,12 +117,10 @@ func setup_statistics() -> void:
 		"STAT_MISSIONS_S_RANK": 0,
 		"STAT_MISSIONS_FAILED": 0,
 
-		# Sticker tracking
-		"STAT_STICKERS_PLACED": 0,
+		# Sticker tracking (split by system)
+		"STAT_STICKERS_PLACED_2D": 0,  # 2D mission stickers
+		"STAT_STICKERS_PLACED_3D": 0,  # 3D world stickers
 		"STAT_PAINTINGS_EXPORTED": 0,
-
-		# Time tracking
-		"STAT_PLAYTIME_SECONDS": 0,
 
 		# Best scores
 		"STAT_BEST_SCORE": 0,  # Highest mission score (0-100)
@@ -161,9 +156,6 @@ func load_steam_stats() -> void:
 
 		if debug_mode:
 			print("SteamManager: Loaded stat %s = %d" % [stat_id, stat_value])
-
-	# Load total playtime
-	total_playtime_seconds = statistics.get("STAT_PLAYTIME_SECONDS", 0)
 
 	stats_ready.emit()
 
@@ -240,34 +232,6 @@ func store_steam_data() -> void:
 	if debug_mode:
 		print("SteamManager: Data successfully stored to Steam")
 
-func update_playtime() -> void:
-	"""Update total playtime statistic"""
-	if session_start_time == 0:
-		return
-
-	var current_time: int = Time.get_ticks_msec()
-	var session_duration_sec: int = int((current_time - session_start_time) / 1000.0)
-
-	var new_total_playtime = total_playtime_seconds + session_duration_sec
-	set_stat_int("STAT_PLAYTIME_SECONDS", new_total_playtime)
-	total_playtime_seconds = new_total_playtime
-
-	# Reset session timer
-	session_start_time = current_time
-
-	# Check playtime achievements
-	check_playtime_achievements()
-
-func check_playtime_achievements() -> void:
-	"""Check and unlock playtime-based achievements"""
-	var hours_played = total_playtime_seconds / 3600.0
-
-	if hours_played >= 2.0:
-		unlock_achievement("ACH_PLAY_2HOURS")
-
-	if hours_played >= 10.0:
-		unlock_achievement("ACH_PLAY_10HOURS")
-
 func get_stat(stat_id: String) -> int:
 	"""Get current value of a statistic"""
 	return statistics.get(stat_id, 0)
@@ -318,6 +282,5 @@ func _initialize_steam_input():
 			DebugLogger.write_log("[SteamManager] Steam Input not available - using fallback")
 
 func _exit_tree():
-	"""Update playtime before exiting"""
-	update_playtime()
+	"""Store data before exiting"""
 	store_steam_data()

@@ -194,7 +194,7 @@ func _populate_painting_list():
 		painting_cards.append(card)
 
 	# Update stats
-	stats_label.text = "Paintings: %d" % painting_entries.size()
+	stats_label.text = tr("Paintings: %d") % painting_entries.size()
 
 func _show_detail_panel(show: bool):
 	"""Show or hide the detail panel content"""
@@ -291,7 +291,7 @@ func _update_preview(data: Dictionary):
 	# Update status display
 	var status = data.get("status", "WIP")
 	if status_label:
-		status_label.text = "Status: %s" % status
+		status_label.text = tr("Status: %s") % tr(status)
 		match status:
 			"WIP":
 				status_label.modulate = Color(1.0, 0.9, 0.3)
@@ -442,7 +442,7 @@ func _on_save_pressed():
 
 	# Update status in preview
 	if status_label:
-		status_label.text = "Status: DONE"
+		status_label.text = tr("Status: %s") % tr("DONE")
 		status_label.modulate = Color(0.4, 1.0, 0.4)
 
 	print("InventoryTab: Saved painting '%s'" % new_name)

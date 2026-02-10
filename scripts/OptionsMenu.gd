@@ -100,6 +100,9 @@ func _ready():
 	_populate_controls_display()
 	InputDeviceManager.device_changed.connect(_on_device_changed)
 
+	# Build language selector tab
+	_create_language_tab()
+
 	# Set up focus navigation
 	_setup_focus_navigation()
 
@@ -187,7 +190,10 @@ func _input(event):
 			if input_cooldown <= 0:
 				var focused_control = get_viewport().gui_get_focus_owner()
 				# Check if we're at the first focusable in current tab, if so return to tab mode
-				if focused_control == sfx_slider or focused_control == hue_slider or tab_container.current_tab == 2:
+				var is_first_in_tab = (focused_control == sfx_slider or focused_control == hue_slider
+					or tab_container.current_tab == 2
+					or (tab_container.current_tab == 3 and language_buttons.size() > 0 and focused_control == language_buttons[0]))
+				if is_first_in_tab:
 					is_in_tab_mode = true
 					_update_tab_mode_visual()
 					# Play navigation sound
@@ -454,7 +460,7 @@ func _populate_controls_display():
 		row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 
 		var action_label = Label.new()
-		action_label.text = entry[0]
+		action_label.text = tr(entry[0])
 		action_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		action_label.add_theme_font_size_override("font_size", 32)
 		row.add_child(action_label)
@@ -478,6 +484,63 @@ func _update_controls_display():
 func _on_device_changed(_new_device):
 	_update_controls_display()
 
+var language_buttons: Array[Button] = []
+
+func _create_language_tab():
+	"""Create a Language tab with locale selection buttons"""
+	var language_container = VBoxContainer.new()
+	language_container.name = "Language"
+	language_container.add_theme_constant_override("separation", 20)
+
+	var button_container = VBoxContainer.new()
+	button_container.add_theme_constant_override("separation", 10)
+
+	for locale in LocaleManager.SUPPORTED_LOCALES:
+		var btn = Button.new()
+		btn.text = LocaleManager.LOCALE_NAMES[locale]
+		btn.focus_mode = Control.FOCUS_ALL
+		btn.pressed.connect(_on_language_selected.bind(locale))
+		button_container.add_child(btn)
+		language_buttons.append(btn)
+
+	language_container.add_child(button_container)
+	tab_container.add_child(language_container)
+
+	# Set up focus chain for language buttons
+	for i in range(language_buttons.size()):
+		if i > 0:
+			language_buttons[i].focus_previous = language_buttons[i].get_path_to(language_buttons[i - 1])
+			language_buttons[i].focus_neighbor_top = language_buttons[i].get_path_to(language_buttons[i - 1])
+		if i < language_buttons.size() - 1:
+			language_buttons[i].focus_next = language_buttons[i].get_path_to(language_buttons[i + 1])
+			language_buttons[i].focus_neighbor_bottom = language_buttons[i].get_path_to(language_buttons[i + 1])
+
+	# Highlight current language
+	_update_language_buttons()
+
+func _on_language_selected(locale: String):
+	"""Handle language button press"""
+	LocaleManager.set_locale(locale)
+	_update_language_buttons()
+
+	# Rebuild controls display with translated labels
+	for child in controls_list.get_children():
+		child.queue_free()
+	binding_labels.clear()
+	_populate_controls_display()
+
+	if button_hit_sound:
+		button_hit_sound.play()
+
+func _update_language_buttons():
+	"""Highlight the currently selected language button"""
+	for i in range(language_buttons.size()):
+		var btn = language_buttons[i]
+		var locale = LocaleManager.SUPPORTED_LOCALES[i]
+		if locale == LocaleManager.current_locale:
+			btn.modulate = Color(0.2, 1.0, 0.8, 1.0)
+		else:
+			btn.modulate = Color(1.0, 1.0, 1.0, 1.0)
 
 func _navigate_focus(direction: int):
 	"""Navigate focus up/down through controls"""
@@ -502,6 +565,9 @@ func _focus_first_content_item():
 			hue_slider.grab_focus()
 	elif tab_container.current_tab == 2:  # Controls tab
 		pass  # Read-only controls display, no focusable items
+	elif tab_container.current_tab == 3:  # Language tab
+		if language_buttons.size() > 0:
+			language_buttons[0].grab_focus()
 
 func _switch_tab(direction: int):
 	"""Switch between tabs (Audio/Visual) - no looping"""

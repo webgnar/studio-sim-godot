@@ -27,6 +27,10 @@ var paintings_inside: Array[CarryablePainting] = []
 var gate_state: GateState = GateState.OPEN
 var is_exporting: bool = false
 
+# Player detection for elevator achievement
+var player_detection_area: Area3D
+var player_inside_elevator: bool = false
+
 # Audio
 var _export_sound: AudioStreamPlayer3D
 var _door_sound: AudioStreamPlayer3D
@@ -53,6 +57,12 @@ func _ready() -> void:
 	else:
 		push_warning("ElevatorController: No detection_area found!")
 
+	# Setup player detection for achievement
+	_setup_player_detection()
+
+	# Connect gate_closed for elevator achievement
+	gate_closed.connect(_on_gate_closed_check_player)
+
 	# Setup audio
 	_setup_audio()
 
@@ -77,6 +87,44 @@ func _setup_audio() -> void:
 	_error_sound.bus = "SFX"
 	_error_sound.stream = _error_stream
 	add_child(_error_sound)
+
+func _setup_player_detection() -> void:
+	"""Create an Area3D to detect the player inside the elevator (for achievement)"""
+	player_detection_area = Area3D.new()
+	player_detection_area.name = "PlayerDetectionArea"
+	player_detection_area.collision_layer = 0
+	player_detection_area.collision_mask = 1  # Player's CharacterBody3D layer
+	player_detection_area.monitoring = true
+	player_detection_area.monitorable = false
+
+	var shape = CollisionShape3D.new()
+	var box = BoxShape3D.new()
+	box.size = Vector3(3.2, 2.5, 3.0)  # Match PaintingDetectionArea dimensions
+	shape.shape = box
+
+	player_detection_area.add_child(shape)
+	player_detection_area.position = Vector3(2.1, 1.0, 0.75)  # Match PaintingDetectionArea position
+
+	if moving_parts:
+		moving_parts.add_child(player_detection_area)
+	else:
+		add_child(player_detection_area)
+
+	player_detection_area.body_entered.connect(_on_player_entered)
+	player_detection_area.body_exited.connect(_on_player_exited)
+
+func _on_player_entered(body: Node) -> void:
+	if body is CharacterBody3D:
+		player_inside_elevator = true
+
+func _on_player_exited(body: Node) -> void:
+	if body is CharacterBody3D:
+		player_inside_elevator = false
+
+func _on_gate_closed_check_player() -> void:
+	"""Check if player is trapped inside when gate closes"""
+	if player_inside_elevator and SteamManager:
+		SteamManager.unlock_achievement("ACH_ELEVATOR")
 
 func _on_body_entered(body: Node) -> void:
 	if body is CarryablePainting:

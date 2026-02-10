@@ -421,11 +421,11 @@ func spawn_sticker(world_position: Vector3, normal: Vector3, raycast_result: Dic
 	if DebugLogger and not OS.has_feature("editor"):
 		DebugLogger.write_log("[PaintingSystem3D] Sticker spawned successfully! Total placed: %d" % placed_layers.size())
 
-	# Track sticker placement in Steam
+	# Track 3D sticker placement in Steam
 	if SteamManager:
-		SteamManager.increment_stat("STAT_STICKERS_PLACED")
-		if SteamManager.get_stat("STAT_STICKERS_PLACED") >= 1000:
-			SteamManager.unlock_achievement("ACH_PAINTER")
+		SteamManager.increment_stat("STAT_STICKERS_PLACED_3D")
+		if SteamManager.get_stat("STAT_STICKERS_PLACED_3D") >= 500:
+			SteamManager.unlock_achievement("ACH_TAGGER")
 
 func cycle_sticker(direction: int):
 	"""Cycle through available stickers in library (deprecated - use PaintingModeManager)"""

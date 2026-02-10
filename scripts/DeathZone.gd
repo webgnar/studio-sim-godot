@@ -24,6 +24,10 @@ func _respawn(player):
 	_is_respawning = true
 	_target_player = player
 
+	# Unlock death achievement
+	if SteamManager:
+		SteamManager.unlock_achievement("ACH_DIE")
+
 	# Play death sound
 	var sfx = AudioStreamPlayer.new()
 	sfx.stream = _death_sound

@@ -13,6 +13,10 @@ func _on_interacted(_player_interaction: PlayerInteractionComponent):
 		push_error("SaveComputerInteraction: WorldStateManager not found!")
 		return
 
+	# Mark manual save for no-save achievement tracking
+	if MissionManager:
+		MissionManager.has_manually_saved = true
+
 	print("Saving game...")
 	var success = await WorldStateManager.save_world_state()
 

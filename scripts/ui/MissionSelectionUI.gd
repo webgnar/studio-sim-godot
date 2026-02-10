@@ -515,7 +515,7 @@ func _update_preview_panel():
 	mission_description.text = selected_mission.description
 
 	# Update difficulty
-	difficulty_label.text = "Difficulty: %d/10" % selected_mission.difficulty
+	difficulty_label.text = tr("Difficulty: %d/10") % selected_mission.difficulty
 
 	# Check if this is the current mission
 	var is_current_mission = (MissionManager and MissionManager.current_mission == selected_mission)
@@ -530,7 +530,7 @@ func _update_preview_panel():
 	# Update completion status and buttons
 	var completion_data = MissionManager.get_mission_completion(selected_mission.mission_id)
 	if completion_data["completed"]:
-		completion_label.text = "Completed - Grade: %s (%.1f%%)" % [
+		completion_label.text = tr("Completed - Grade: %s (%.1f%%)") % [
 			completion_data["grade"],
 			completion_data["best_score"]
 		]
@@ -549,7 +549,7 @@ func _update_preview_panel():
 		else:
 			view_results_button.tooltip_text = ""
 	else:
-		completion_label.text = "Not completed"
+		completion_label.text = tr("Not completed")
 		completion_label.modulate = Color(0.8, 0.8, 0.8)
 		completion_label.visible = true
 
@@ -642,10 +642,10 @@ func _on_painting_created(_count: int):
 func _update_stats_display():
 	"""Update mission completion statistics"""
 	if UIManager and completed_missions_label:
-		completed_missions_label.text = "Missions Completed: %d" % UIManager.missions_completed
+		completed_missions_label.text = tr("Missions Completed: %d") % UIManager.missions_completed
 
 	if PaintingSpawner and paintings_created_label:
-		paintings_created_label.text = "Paintings Created: %d" % PaintingSpawner.paintings_created
+		paintings_created_label.text = tr("Paintings Created: %d") % PaintingSpawner.paintings_created
 
 func _find_parent_pause_menu() -> Node:
 	"""Find the PauseMenu parent node"""

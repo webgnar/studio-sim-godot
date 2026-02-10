@@ -24,10 +24,6 @@ var current_state: GameState = -1 as GameState  # Invalid state to force initial
 # Player data
 var missions_completed: int = 0
 
-# Playtime tracking for Steam
-var playtime_update_timer: float = 0.0
-const PLAYTIME_UPDATE_INTERVAL: float = 60.0  # Update every 60 seconds
-
 # Platform detection for mouse mode
 var _platform_name: String = ""
 
@@ -103,17 +99,6 @@ func _input(event):
 				# In other states (validation, shop), do nothing
 				pass
 		get_viewport().set_input_as_handled()
-
-func _process(delta: float):
-	"""Update playtime tracking"""
-	playtime_update_timer += delta
-
-	if playtime_update_timer >= PLAYTIME_UPDATE_INTERVAL:
-		playtime_update_timer = 0.0
-
-		# Update Steam playtime
-		if SteamManager:
-			SteamManager.update_playtime()
 
 func change_state(new_state: GameState):
 	"""Central state transition handler"""

@@ -64,7 +64,7 @@ func _ready() -> void:
 	if critique_label:
 		critique_label.get_v_scroll_bar().modulate.a = 0
 
-	_set_text("Awaiting next painting...")
+	_set_text(tr("Awaiting next painting..."))
 
 func _process(delta: float) -> void:
 	if _state != State.DISPLAYING or not critique_label:
@@ -100,21 +100,21 @@ func _on_export_started(painting: CarryablePainting) -> void:
 	_cached_artist_statement = painting.artist_statement
 	_cached_artist_name = SteamManager.persona_name
 	_state = State.WAITING_FOR_UPLOAD
-	_set_text("Uploading painting...")
+	_set_text(tr("Uploading painting..."))
 
 func _on_upload_completed(gallery_id: String) -> void:
 	print("CritiqueDisplay: Upload completed, gallery_id=", gallery_id, " state=", _state)
 	if _state != State.WAITING_FOR_UPLOAD:
 		return
 	_state = State.LOADING_CRITIQUE
-	_set_text("Getting critique...")
+	_set_text(tr("Getting critique..."))
 	dial_up_sound.play()
 	_request_critique(gallery_id)
 
 func _on_upload_failed(_error_message: String) -> void:
 	if _state == State.WAITING_FOR_UPLOAD or _state == State.LOADING_CRITIQUE:
 		_state = State.IDLE
-		_set_text("Upload failed — no critique available.")
+		_set_text(tr("Upload failed — no critique available."))
 
 func _request_critique(gallery_id: String) -> void:
 	# Cancel any in-flight request
@@ -125,7 +125,8 @@ func _request_critique(gallery_id: String) -> void:
 		"imageUrl": image_url,
 		"title": _cached_painting_name,
 		"artistName": _cached_artist_name,
-		"artistStatement": _cached_artist_statement
+		"artistStatement": _cached_artist_statement,
+		"locale": LocaleManager.current_locale
 	})
 	var headers = [
 		"Content-Type: application/json",
@@ -133,13 +134,13 @@ func _request_critique(gallery_id: String) -> void:
 	var error = _critique_request.request(CRITIQUE_API_URL, headers, HTTPClient.METHOD_POST, body)
 	if error != OK:
 		_state = State.IDLE
-		_set_text("Failed to request critique.")
+		_set_text(tr("Failed to request critique."))
 		push_error("CritiqueDisplay: Failed to start request: " + str(error))
 
 func _on_critique_response(result: int, response_code: int, _headers: PackedStringArray, body: PackedByteArray) -> void:
 	if result != HTTPRequest.RESULT_SUCCESS or response_code < 200 or response_code >= 300:
 		_state = State.IDLE
-		_set_text("Critique unavailable.")
+		_set_text(tr("Critique unavailable."))
 		push_error("CritiqueDisplay: Request failed (result: " + str(result) + ", status: " + str(response_code) + ")")
 		return
 

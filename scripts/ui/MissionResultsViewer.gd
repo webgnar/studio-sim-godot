@@ -114,7 +114,7 @@ func show_results_for_mission(mission: PaintingMission):
 	_set_grade_color(completion_data["grade"])
 
 	# Update best score
-	best_score_label.text = "Best Score: %.1f%%" % completion_data["best_score"]
+	best_score_label.text = tr("Best Score: %.1f%%") % completion_data["best_score"]
 
 	# Load target image
 	_load_target_image()
@@ -184,7 +184,7 @@ func _load_player_painting():
 		score = completion_data.get("best_score", 0.0)
 
 	# Update score label
-	player_score_label.text = "Score: %.1f%%" % score
+	player_score_label.text = tr("Score: %.1f%%") % score
 
 	# Load painting image
 	var texture = _load_painting_from_path(painting_path)
@@ -194,9 +194,9 @@ func _load_player_painting():
 		player_image.texture = null
 		# Show placeholder or error message
 		if painting_path == "":
-			player_score_label.text = "No saved painting available"
+			player_score_label.text = tr("No saved painting available")
 		else:
-			player_score_label.text = "Failed to load painting"
+			player_score_label.text = tr("Failed to load painting")
 
 func _load_painting_from_path(path: String) -> ImageTexture:
 	"""Load a saved painting image from user:// path"""

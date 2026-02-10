@@ -296,20 +296,20 @@ func _update_painting_hint() -> void:
 		var rotate_label = painting_hint.get_node("RotateLine/RotateLabel")
 		if is_gamepad:
 			rotate_icon.show()
-			rotate_label.text = " Rotate"
+			rotate_label.text = " " + tr("Rotate")
 		else:
 			rotate_icon.hide()
-			rotate_label.text = "[T] Rotate"
+			rotate_label.text = "[T] " + tr("Rotate")
 
 		# Update Scale line
 		var scale_icon = painting_hint.get_node("ScaleLine/ScaleDownIcon")
 		var scale_label = painting_hint.get_node("ScaleLine/ScaleLabel")
 		if is_gamepad:
 			scale_icon.show()
-			scale_label.text = " Scale"
+			scale_label.text = " " + tr("Scale")
 		else:
 			scale_icon.hide()
-			scale_label.text = "[X] / [Z] Scale"
+			scale_label.text = "[X] / [Z] " + tr("Scale")
 
 		# Update Cycle line (has two icons)
 		var cycle_prev_icon = painting_hint.get_node("CycleLine/CyclePrevIcon")
@@ -318,31 +318,31 @@ func _update_painting_hint() -> void:
 		if is_gamepad:
 			cycle_prev_icon.show()
 			cycle_next_icon.show()
-			cycle_label.text = " Cycle"
+			cycle_label.text = " " + tr("Cycle")
 		else:
 			cycle_prev_icon.hide()
 			cycle_next_icon.hide()
-			cycle_label.text = "[1] / [2] Cycle"
+			cycle_label.text = "[1] / [2] " + tr("Cycle")
 
 		# Update Place line
 		var place_icon = painting_hint.get_node("PlaceUndoLine/PlaceIcon")
 		var place_text = painting_hint.get_node("PlaceUndoLine/PlaceText")
 		if is_gamepad:
 			place_icon.show()
-			place_text.text = " Place"
+			place_text.text = " " + tr("Place")
 		else:
 			place_icon.hide()
-			place_text.text = "[Left Click] Place"
+			place_text.text = "[Left Click] " + tr("Place")
 
 		# Update Undo line
 		var undo_icon = painting_hint.get_node("HBoxContainer/UndoIcon")
 		var undo_text = painting_hint.get_node("HBoxContainer/UndoText")
 		if is_gamepad:
 			undo_icon.show()
-			undo_text.text = " Undo"
+			undo_text.text = " " + tr("Undo")
 		else:
 			undo_icon.hide()
-			undo_text.text = "[Right Click] Undo"
+			undo_text.text = "[Right Click] " + tr("Undo")
 
 		painting_hint.show()
 
@@ -373,7 +373,7 @@ func set_crosshair_visible(show_crosshair: bool) -> void:
 
 func _on_zones_toggled(enabled: bool) -> void:
 	"""Show feedback when camera zones are toggled"""
-	var message = "Camera Zones: ON" if enabled else "Camera Zones: OFF"
+	var message = tr("Camera Zones: ON") if enabled else tr("Camera Zones: OFF")
 	show_message(message, 2.0)
 	if camera_icon:
 		camera_icon.visible = enabled

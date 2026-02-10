@@ -26,6 +26,8 @@ func _on_e_key_interacted(player_interaction: PlayerInteractionComponent) -> voi
 	"""E-key toggles the fan on/off via PoweredDeviceComponent"""
 	if powered_device:
 		powered_device.interact(player_interaction)
+		if powered_device.is_on and SteamManager:
+			SteamManager.unlock_achievement("ACH_FAN")
 
 func _update_interaction_text() -> void:
 	"""Update the E-key text based on fan state"""

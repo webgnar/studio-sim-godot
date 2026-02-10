@@ -34,6 +34,7 @@
 [ext_resource type="Script" uid="uid://c8uap2yk1tjju" path="res://scripts/components/StudioAssistantStatusPanel.gd" id="33_kvmu4"]
 [ext_resource type="Script" uid="uid://cdcxs0jsffsfb" path="res://scripts/old stuff/BoomboxInteraction.gd" id="36_boombox_new"]
 [ext_resource type="PackedScene" uid="uid://bxi8jlwr1acc4" path="res://scenes/mirror.tscn" id="39_qaasp"]
+[ext_resource type="Texture2D" uid="uid://iwkinqup0swt" path="res://textures/256 wood floor.png" id="40_pb8sg"]
 [ext_resource type="PackedScene" uid="uid://ddornft2ln8sq" path="res://models/interactables/boomBox.glb" id="41_rga7q"]
 [ext_resource type="PackedScene" uid="uid://bhsyl3tj8hblj" path="res://scenes/old stuff/brute trash can.tscn" id="46_18clu"]
 [ext_resource type="Script" uid="uid://cbwg344irqecy" path="res://scripts/components/CarryableComponent.gd" id="46_e68xj"]
@@ -86,9 +87,9 @@
 [ext_resource type="PackedScene" uid="uid://c8iqeb7qfo8rl" path="res://scenes/objects/Fluorescent.tscn" id="87_kvmu4"]
 [ext_resource type="PackedScene" uid="uid://b4nwg0q6ash8e" path="res://scenes/objects/cardboardBox.tscn" id="87_xgy6y"]
 [ext_resource type="PackedScene" uid="uid://dsw1cl0yimheg" path="res://models/props/security_camera.glb" id="89_5p8eo"]
-[ext_resource type="PackedScene" uid="uid://bmig8p8tifpsu" path="res://models/props/berkey.glb" id="89_gny1c"]
 [ext_resource type="Texture2D" uid="uid://bhfm6dt1hofij" path="res://sprites/waterdrop.png" id="90_mlb8o"]
 [ext_resource type="Texture2D" uid="uid://cntrsinhjv1tx" path="res://sprites/waterdrop_hit.png" id="91_ebmc1"]
+[ext_resource type="PackedScene" uid="uid://dp15jyb8i26p7" path="res://models/props/berkey2.glb" id="91_pb8sg"]
 [ext_resource type="AudioStream" uid="uid://bjojrg2a7xxut" path="res://sounds/picotron/waterdrop.ogg" id="92_8xaka"]
 [ext_resource type="PackedScene" uid="uid://cqoxj5pobyw2a" path="res://models/props/baricade_1.glb" id="93_8xaka"]
 [ext_resource type="PackedScene" uid="uid://c21nti0oy66lb" path="res://models/props/baricade_2.glb" id="94_n6seq"]
@@ -169,6 +170,17 @@ ao_light_affect = 0.08
 ao_texture = ExtResource("22_ygn2i")
 uv1_scale = Vector3(3.353, 3.481, 3.131)
 uv1_offset = Vector3(0, -1, 0)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ce70q"]
+albedo_texture = ExtResource("40_pb8sg")
+metallic = 1.0
+metallic_texture = ExtResource("3_o8fc1")
+normal_enabled = true
+normal_texture = ExtResource("4_xo05s")
+ao_enabled = true
+ao_texture = ExtResource("2_jhx03")
+uv1_scale = Vector3(1.11, 0.82, 1)
+uv1_offset = Vector3(0.98, 0, 0)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xgy6y"]
 albedo_texture = ExtResource("31_c15v2")
@@ -337,17 +349,17 @@ _data = {
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_frq1x"]
 radius = 1.0
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_q6do4"]
+[sub_resource type="PlaneMesh" id="PlaneMesh_ce70q"]
 resource_local_to_scene = true
 size = Vector2(2.5, 3)
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_pb8sg"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_odf6h"]
 resource_name = "_albedo"
 viewport_path = NodePath("../MirrorNew/SubViewport")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ce70q"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mu18u"]
 resource_local_to_scene = true
-albedo_texture = SubResource("ViewportTexture_pb8sg")
+albedo_texture = SubResource("ViewportTexture_odf6h")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_1v02h"]
 size = Vector2(2.5, 3)
@@ -415,29 +427,69 @@ animations = [{
 "speed": 5.0
 }]
 
-[sub_resource type="Animation" id="Animation_odf6h"]
-length = 3.0
-loop_mode = 1
+[sub_resource type="Animation" id="Animation_q6do4"]
+length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("waterdrop/Sprite3D:position")
+tracks/0/path = NodePath("Sprite3D:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.56666666, 3),
-"transitions": PackedFloat32Array(1, 1, 1),
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector3(0, 0, 0), Vector3(0, -6.0883465, 0), Vector3(0, -6.0883465, 0)]
+"values": [Vector3(0, 0, 0)]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("waterdrop/AnimatedSprite3D:visible")
+tracks/1/path = NodePath("AnimatedSprite3D:visible")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.6, 1.2666667, 1.7),
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("AudioStreamPlayer3D:playing")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
+[sub_resource type="Animation" id="Animation_pb8sg"]
+resource_name = "drip"
+length = 3.5
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite3D:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.3, 3.5),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, -6.2937565, 0), Vector3(0, -6.2937565, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("AnimatedSprite3D:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.3, 1.3333334, 1.7666667),
 "transitions": PackedFloat32Array(1, 1, 1, 1),
 "update": 1,
 "values": [false, true, true, false]
@@ -445,61 +497,20 @@ tracks/1/keys = {
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("waterdrop/AudioStreamPlayer3D:playing")
+tracks/2/path = NodePath("AudioStreamPlayer3D:playing")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
-"times": PackedFloat32Array(0.5),
+"times": PackedFloat32Array(0.30148083),
 "transitions": PackedFloat32Array(1),
 "update": 1,
 "values": [true]
 }
 
-[sub_resource type="Animation" id="Animation_mu18u"]
-resource_name = "waterdrop"
-length = 3.0
-loop_mode = 1
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("waterdrop/Sprite3D:position")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.3, 3),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 0,
-"values": [Vector3(0, 0, 0), Vector3(0, -6.0883465, 0), Vector3(0, -6.0883465, 0)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("waterdrop/AnimatedSprite3D:visible")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.36666667, 1.2666667, 1.7),
-"transitions": PackedFloat32Array(1, 1, 1, 1),
-"update": 1,
-"values": [false, true, true, false]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("waterdrop/AudioStreamPlayer3D:playing")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0.36107588),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [true]
-}
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_7b7y8"]
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_ce70q"]
 _data = {
-&"RESET": SubResource("Animation_odf6h"),
-&"waterdrop": SubResource("Animation_mu18u")
+&"RESET": SubResource("Animation_q6do4"),
+&"drip": SubResource("Animation_pb8sg")
 }
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ce70q"]
@@ -557,7 +568,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector3(1.4496002, -0.12114334, 0)]
+"values": [Vector3(0, 0, 0)]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -595,10 +606,10 @@ tracks/0/path = NodePath("Sprite3D:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.3, 4.5),
+"times": PackedFloat32Array(0, 0.33333334, 4.5),
 "transitions": PackedFloat32Array(1, 1, 1),
 "update": 0,
-"values": [Vector3(1.4496002, -0.12114334, 0), Vector3(1.4496002, -6.215622, 0), Vector3(1.4496002, -6.215622, 0)]
+"values": [Vector3(0, 0, 0), Vector3(0, -6.094694, 0), Vector3(0, -6.094694, 0)]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -607,7 +618,7 @@ tracks/1/path = NodePath("AnimatedSprite3D:visible")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.3, 2.1, 2.7333333),
+"times": PackedFloat32Array(0, 0.33333334, 2, 2.2666667),
 "transitions": PackedFloat32Array(1, 1, 1, 1),
 "update": 1,
 "values": [false, true, true, false]
@@ -619,7 +630,7 @@ tracks/2/path = NodePath("AudioStreamPlayer3D:playing")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
-"times": PackedFloat32Array(0.26666668),
+"times": PackedFloat32Array(0.33333334),
 "transitions": PackedFloat32Array(1),
 "update": 1,
 "values": [true]
@@ -858,6 +869,7 @@ material = ExtResource("5_71j4m")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.29397273, -0.13066696, -0.057548463)
 operation = 2
 size = Vector3(1.7677002, 0.58929443, 0.45481873)
+material = ExtResource("3_qfnet")
 
 [node name="window2" parent="hallway" unique_id=1646168312 instance=ExtResource("66_4kmvx")]
 transform = Transform3D(-5.6824803e-09, 0, -0.12, 0, 0.16, 0, 0.13, 0, -5.2453664e-09, 13.81536, 2.8592591, 1.0591073)
@@ -975,6 +987,7 @@ material = ExtResource("5_71j4m")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 0.9999999, 0, -0.16516119, -0.09741212)
 operation = 2
 size = Vector3(1, 0.44067383, 0.072753906)
+material = SubResource("StandardMaterial3D_ce70q")
 
 [node name="wall3" type="CSGBox3D" parent="studio" unique_id=154693461]
 transform = Transform3D(-4.371139e-08, 0, 24.108696, 0, 1, 0, -0.020318022, 0, -2.1411632e-08, 9.24275, -0.099999994, 0.48586574)
@@ -1536,8 +1549,8 @@ transform = Transform3D(-4.371139e-09, 0.1, 0, -0.1, -4.371139e-09, 0, 0, 0, 0.1
 
 [node name="mirror" parent="." unique_id=1626491013 instance=ExtResource("39_qaasp")]
 transform = Transform3D(-4.7902194e-08, -0.99488777, 0.10098683, -3.9073655e-08, 0.10098683, 0.99488777, -1, 4.3711392e-08, -4.3711385e-08, 2.8, 1.497, 5.232)
-mesh = SubResource("PlaneMesh_q6do4")
-surface_material_override/0 = SubResource("StandardMaterial3D_ce70q")
+mesh = SubResource("PlaneMesh_ce70q")
+surface_material_override/0 = SubResource("StandardMaterial3D_mu18u")
 show_debug_logs = false
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="mirror" unique_id=399456008]
@@ -1627,57 +1640,57 @@ transform = Transform3D(-0.05, 0, 4.371139e-09, 0, 0.05, 0, -4.371139e-09, 0, -0
 [node name="sec camera" parent="." unique_id=210338497 instance=ExtResource("89_5p8eo")]
 transform = Transform3D(-0.05, 0, 4.371139e-09, 0, 0.05, 0, -4.371139e-09, 0, -0.05, 3.6587749, 4.041248, 13.682507)
 
-[node name="berkey" parent="." unique_id=295986114 instance=ExtResource("89_gny1c")]
-transform = Transform3D(-3.059797e-09, 0, -0.07, 0, 0.07, 0, 0.07, 0, -3.059797e-09, 0.80310917, 1.7198212, 8.410689)
+[node name="berkey2" parent="." unique_id=574215945 instance=ExtResource("91_pb8sg")]
+transform = Transform3D(-3.059797e-09, 0, -0.07, 0, 0.07, 0, 0.07, 0, -3.059797e-09, 0.8052486, 1.7242677, 8.420579)
 
-[node name="waterdrop" type="Node3D" parent="berkey" unique_id=319029114]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.259079, -0.09316635, 2.861023e-06)
+[node name="waterdrop" type="Node3D" parent="berkey2" unique_id=319029114]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.2948837, -0.06352234, 0.030564308)
 
-[node name="Sprite3D" type="Sprite3D" parent="berkey/waterdrop" unique_id=518031669]
+[node name="Sprite3D" type="Sprite3D" parent="berkey2/waterdrop" unique_id=518031669]
 transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, 0, 0)
 texture = ExtResource("90_mlb8o")
 
-[node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="berkey/waterdrop" unique_id=183563501]
+[node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="berkey2/waterdrop" unique_id=183563501]
 transform = Transform3D(10.271924, -4.4900014e-07, -1.962642e-14, 0, -4.4900008e-07, 10.271924, -4.4900014e-07, -10.271924, -4.4900008e-07, 0, -5.84536, 0)
 visible = false
 sprite_frames = SubResource("SpriteFrames_ce70q")
 animation = &"ripple"
 autoplay = "ripple"
-frame_progress = 0.91210437
+frame_progress = 0.7735107
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="berkey/waterdrop" unique_id=1214116549]
-root_node = NodePath("../..")
-libraries/ = SubResource("AnimationLibrary_7b7y8")
-autoplay = &"waterdrop"
-
-[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="berkey/waterdrop" unique_id=1229619872]
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="berkey2/waterdrop" unique_id=1229619872]
 transform = Transform3D(14.285714, 0, 0, 0, 14.285714, 0, 0, 0, 14.285714, 0, -5.8067646, 0)
 stream = ExtResource("92_8xaka")
 volume_db = -40.0
 max_distance = 2.0
 
-[node name="waterdrop2" type="Node3D" parent="berkey" unique_id=702136775]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="berkey2/waterdrop" unique_id=1932296436]
+libraries/ = SubResource("AnimationLibrary_ce70q")
+autoplay = &"drip"
 
-[node name="Sprite3D" type="Sprite3D" parent="berkey/waterdrop2" unique_id=688100307]
-transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 1.4496002, -0.12114334, 0)
+[node name="waterdrop2" type="Node3D" parent="berkey2" unique_id=702136775]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.443016, -0.06352234, 0.030563354)
+
+[node name="Sprite3D" type="Sprite3D" parent="berkey2/waterdrop2" unique_id=688100307]
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, 0, 0)
 texture = ExtResource("90_mlb8o")
 
-[node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="berkey/waterdrop2" unique_id=1510909033]
-transform = Transform3D(10.2, -4.4585613e-07, -4.458562e-07, 4.4585613e-07, -4.4585613e-07, 10.2, -4.4585613e-07, -10.2, -4.458561e-07, 1.490387, -5.8990707, 0)
+[node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="berkey2/waterdrop2" unique_id=1510909033]
+transform = Transform3D(10.2, -4.4585613e-07, -4.458562e-07, 4.4585613e-07, -4.4585613e-07, 10.2, -4.4585613e-07, -10.2, -4.458561e-07, 0, -5.82662, 0)
 sprite_frames = SubResource("SpriteFrames_qetcs")
 animation = &"ripple"
 autoplay = "ripple"
-frame_progress = 0.453345
+frame_progress = 0.55477065
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="berkey/waterdrop2" unique_id=136730085]
-libraries/ = SubResource("AnimationLibrary_q6do4")
-autoplay = &"drop"
-
-[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="berkey/waterdrop2" unique_id=1695120031]
-transform = Transform3D(14.285714, 0, 0, 0, 14.285714, 0, 0, 0, 14.285714, 1.5141907, -5.9911175, 0)
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="berkey2/waterdrop2" unique_id=1695120031]
+transform = Transform3D(14.285714, 0, 0, 0, 14.285714, 0, 0, 0, 14.285714, -0.011131287, -5.9911175, 0)
 stream = ExtResource("92_8xaka")
 volume_db = -40.0
 max_distance = 2.0
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="berkey2/waterdrop2" unique_id=136730085]
+libraries/ = SubResource("AnimationLibrary_q6do4")
+autoplay = &"drop"
 
 [node name="baricade 1" parent="." unique_id=1529760255 instance=ExtResource("93_8xaka")]
 transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 6.655397, 0.7673063, 7.165266)

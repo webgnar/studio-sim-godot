@@ -85,7 +85,7 @@ func setup(mission_data: PaintingMission, index: int):
 	if MissionManager:
 		var completion_data = MissionManager.get_mission_completion(mission.mission_id)
 		if completion_data["completed"]:
-			completion_label.text = "Completed - Grade: %s" % completion_data["grade"]
+			completion_label.text = tr("Completed - Grade: %s") % completion_data["grade"]
 			completion_label.visible = true
 		else:
 			completion_label.visible = false
