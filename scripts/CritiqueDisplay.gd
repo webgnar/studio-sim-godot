@@ -22,13 +22,15 @@ var _cached_painting_name: String = ""
 var _cached_artist_statement: String = ""
 var _cached_artist_name: String = ""
 
-const CRITIC_AVATARS: Array[String] = [
-	"res://sprites/art critics/bum.png",
-	"res://sprites/art critics/general.png",
-	"res://sprites/art critics/govtpig.png",
-	"res://sprites/art critics/guy.png",
-	"res://sprites/art critics/woman.png",
+const CRITICS: Array[Dictionary] = [
+	{"avatar": "res://sprites/art critics/bum.png", "type": "bum"},
+	{"avatar": "res://sprites/art critics/general.png", "type": "general"},
+	{"avatar": "res://sprites/art critics/govtpig.png", "type": "govtpig"},
+	{"avatar": "res://sprites/art critics/guy.png", "type": "guy"},
+	{"avatar": "res://sprites/art critics/woman.png", "type": "woman"},
 ]
+
+var _current_critic: Dictionary = {}
 
 var _critique_request: HTTPRequest
 var _scroll_offset: float = 0.0
@@ -109,6 +111,7 @@ func _on_upload_completed(gallery_id: String) -> void:
 	_state = State.LOADING_CRITIQUE
 	_set_text(tr("Getting critique..."))
 	dial_up_sound.play()
+	_current_critic = CRITICS[randi() % CRITICS.size()]
 	_request_critique(gallery_id)
 
 func _on_upload_failed(_error_message: String) -> void:
@@ -126,7 +129,8 @@ func _request_critique(gallery_id: String) -> void:
 		"title": _cached_painting_name,
 		"artistName": _cached_artist_name,
 		"artistStatement": _cached_artist_statement,
-		"locale": LocaleManager.current_locale
+		"locale": LocaleManager.current_locale,
+		"criticType": _current_critic.get("type", "guy"),
 	})
 	var headers = [
 		"Content-Type: application/json",
@@ -146,12 +150,13 @@ func _on_critique_response(result: int, response_code: int, _headers: PackedStri
 
 	var critique_text = body.get_string_from_utf8()
 	_state = State.DISPLAYING
-	_show_random_critic()
+	_show_critic()
 	_set_text(critique_text)
 
-func _show_random_critic() -> void:
-	var idx = randi() % CRITIC_AVATARS.size()
-	avatar_sprite.texture = load(CRITIC_AVATARS[idx])
+func _show_critic() -> void:
+	if _current_critic.is_empty():
+		_current_critic = CRITICS[randi() % CRITICS.size()]
+	avatar_sprite.texture = load(_current_critic["avatar"])
 	avatar_sprite.visible = true
 
 func _set_text(text: String) -> void:
