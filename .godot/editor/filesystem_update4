@@ -9,3 +9,9 @@ res://scripts/PaintingExporter.gd
 res://scripts/components/StudioAssistantStatusPanel.gd
 res://scripts/old stuff/BoxInteraction.gd
 res://scripts/ui/InventoryTab.gd
+res://scripts/components/ElevatorGateButton.gd
+res://scripts/ui/PauseMenu.gd
+res://scripts/ui/PaintingPromptDialog.gd
+res://scenes/UI/PaintingPromptDialog.tscn
+res://scenes/UI/MissionHUD.tscn
+res://scripts/ui/MissionHUD.gd

@@ -1,37 +1,47 @@
-[gd_scene load_steps=3 format=3 uid="uid://c8mhk3sajq2fn"]
+[gd_scene format=3 uid="uid://c8mhk3sajq2fn"]
 
 [ext_resource type="Script" uid="uid://bmkoimsaxok4p" path="res://scripts/ui/MissionHUD.gd" id="1_hud"]
 [ext_resource type="Theme" uid="uid://cbtaxh5m7udor" path="res://themes/ui_theme.tres" id="1_xm83d"]
 
-[node name="MissionHUD" type="Control"]
+[node name="MissionHUD" type="Control" unique_id=1999822325]
 layout_mode = 3
-anchors_preset = 0
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = -150.0
+offset_right = 270.0
+offset_bottom = -10.0
+grow_vertical = 0
 theme = ExtResource("1_xm83d")
 script = ExtResource("1_hud")
 
-[node name="PanelContainer" type="PanelContainer" parent="."]
-layout_mode = 0
-offset_right = 240.0
-offset_bottom = 60.0
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=946451363]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="PanelContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer" unique_id=580865293]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer" unique_id=1361475232]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="ThumbnailRect" type="TextureRect" parent="PanelContainer/MarginContainer/HBoxContainer"]
+[node name="ThumbnailRect" type="TextureRect" parent="PanelContainer/MarginContainer/HBoxContainer" unique_id=415856091]
 custom_minimum_size = Vector2(120, 120)
 layout_mode = 2
 expand_mode = 1
 stretch_mode = 5
 
-[node name="MissionNameLabel" type="Label" parent="PanelContainer/MarginContainer/HBoxContainer"]
+[node name="MissionNameLabel" type="Label" parent="PanelContainer/MarginContainer/HBoxContainer" unique_id=1436207368]
 layout_mode = 2
 size_flags_vertical = 1
 text = "Mission Name"

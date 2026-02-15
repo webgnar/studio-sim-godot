@@ -461,6 +461,15 @@ func _on_card_clicked(index: int):
 # Helpers
 # ============================================================================
 
+func select_painting_by_node(painting_node: CarryablePainting) -> void:
+	"""Select a specific painting in the list by its node reference"""
+	for i in range(painting_entries.size()):
+		if painting_entries[i].get("node") == painting_node:
+			selected_index = i
+			_update_selection()
+			_show_detail_panel(true)
+			return
+
 func _find_parent_pause_menu() -> Node:
 	"""Find the PauseMenu parent node"""
 	var node = get_parent()

@@ -1,7 +1,7 @@
 extends Control
 class_name MissionHUD
 
-## Always-visible HUD in bottom-right corner showing current mission name and target thumbnail
+## Always-visible HUD in bottom-left corner showing current mission name and target thumbnail
 
 @onready var panel_container = $PanelContainer
 @onready var thumbnail_rect = $PanelContainer/MarginContainer/HBoxContainer/ThumbnailRect
@@ -18,28 +18,6 @@ func _ready():
 		MissionManager.mission_failed.connect(_on_mission_ended)
 		MissionManager.mission_aborted.connect(_on_mission_ended)
 
-	# Position in bottom-right corner
-	_setup_anchors()
-
-func _setup_anchors():
-	"""Position HUD in bottom-right corner"""
-	# Anchor to bottom-right
-	anchor_left = 1.0
-	anchor_top = 1.0
-	anchor_right = 1.0
-	anchor_bottom = 1.0
-
-	# Offset from corner (left, top, right, bottom)
-	# Negative values to pull inward from anchors
-	offset_left = -260  # Width of HUD + margin
-	offset_top = -80    # Height of HUD + margin
-	offset_right = -10  # Margin from right edge
-	offset_bottom = -10 # Margin from bottom edge
-
-	@warning_ignore("INT_AS_ENUM_WITHOUT_MATCH")
-	grow_horizontal = 0 as Control.GrowDirection
-	@warning_ignore("INT_AS_ENUM_WITHOUT_MATCH")
-	grow_vertical = 0 as Control.GrowDirection
 
 func _on_mission_started(mission: PaintingMission):
 	"""Show HUD when mission starts"""

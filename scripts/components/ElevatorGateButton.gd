@@ -3,10 +3,13 @@ class_name ElevatorGateButton
 
 ## Button component for opening/closing the elevator gate
 
+const PaintingPromptDialogScene = preload("res://scenes/UI/PaintingPromptDialog.tscn")
+
 @export var elevator_controller: ElevatorController
 @export var button_cooldown: float = 0.5
 
 var last_pressed: float = 0.0
+var _pending_metadata_check: bool = false
 
 func _ready() -> void:
 	super._ready()
@@ -18,7 +21,7 @@ func _ready() -> void:
 	# Connect signals and update text
 	if elevator_controller:
 		elevator_controller.gate_opened.connect(_on_gate_state_changed)
-		elevator_controller.gate_closed.connect(_on_gate_state_changed)
+		elevator_controller.gate_closed.connect(_on_gate_closed)
 		elevator_controller.painting_entered.connect(_on_painting_changed)
 		elevator_controller.painting_exited.connect(_on_painting_changed)
 		_update_interaction_text()
@@ -41,6 +44,16 @@ func _find_elevator_controller() -> ElevatorController:
 
 func _on_gate_state_changed() -> void:
 	_update_interaction_text()
+
+func _on_gate_closed() -> void:
+	_update_interaction_text()
+
+	# Check for missing metadata after the gate finishes closing
+	if _pending_metadata_check:
+		_pending_metadata_check = false
+		var painting = _find_painting_missing_metadata()
+		if painting:
+			_show_metadata_prompt(painting)
 
 func _on_painting_changed(_painting: CarryablePainting) -> void:
 	_update_interaction_text()
@@ -85,8 +98,41 @@ func _on_interacted(_player_interaction_component: PlayerInteractionComponent) -
 	if not elevator_controller.can_toggle_gate():
 		return
 
-	elevator_controller.toggle_gate()
+	# If closing with paintings inside, flag for metadata check after gate closes
+	if elevator_controller.is_gate_open() and not elevator_controller.paintings_inside.is_empty():
+		_pending_metadata_check = true
 
+	elevator_controller.toggle_gate()
+	_play_button_animation()
+
+func _find_painting_missing_metadata() -> CarryablePainting:
+	"""Check if any painting in the elevator is missing a title or artist statement"""
+	for painting in elevator_controller.paintings_inside:
+		if painting.painting_name.strip_edges().is_empty() or painting.artist_statement.strip_edges().is_empty():
+			return painting
+	return null
+
+func _show_metadata_prompt(painting: CarryablePainting) -> void:
+	"""Show the prompt dialog asking player to add metadata"""
+	var dialog = PaintingPromptDialogScene.instantiate()
+	dialog.setup(painting)
+	dialog.dismissed.connect(_on_prompt_dismissed)
+	dialog.open_inventory.connect(_on_prompt_open_inventory)
+	get_tree().root.add_child(dialog)
+
+func _on_prompt_dismissed() -> void:
+	"""Player chose to skip - continue normally"""
+	pass
+
+func _on_prompt_open_inventory(painting: CarryablePainting) -> void:
+	"""Player chose to add metadata - open gate and open inventory to that painting"""
+	# Re-open the gate so the painting is accessible
+	if elevator_controller and elevator_controller.is_gate_closed():
+		elevator_controller.open_gate()
+	if UIManager and UIManager.pause_menu and UIManager.pause_menu.has_method("open_to_painting"):
+		UIManager.pause_menu.open_to_painting(painting)
+
+func _play_button_animation() -> void:
 	# Play button press animation followed by release
 	var anim_player = find_animation_player()
 	if anim_player and anim_player.has_animation("press"):

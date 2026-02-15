@@ -231,6 +231,30 @@ func _on_return_to_title_pressed():
 
 	SceneTransition.fade_to_scene("res://scenes/TitleScreen.tscn")
 
+func open_to_painting(painting_node: CarryablePainting) -> void:
+	"""Open the pause menu directly to the inventory tab with a specific painting selected"""
+	# Enter pause state
+	if UIManager:
+		UIManager.change_state(UIManager.GameState.PAUSE_MENU)
+
+	dialog.visible = true
+	input_cooldown = 0.0
+	_tab_nav_held = false
+	_update_key_icon()
+
+	# Switch to inventory tab
+	_switch_tab(Tab.INVENTORY)
+
+	# Select the specific painting
+	if inventory_tab and inventory_tab.has_method("select_painting_by_node"):
+		inventory_tab.select_painting_by_node(painting_node)
+
+	# Enter content mode so user can immediately edit
+	_enter_tab_content_mode()
+
+	if open_menu_sound:
+		open_menu_sound.play()
+
 func _close_menu():
 	"""Close the pause menu and return to gameplay"""
 	if close_menu_sound:
