@@ -47,14 +47,14 @@ func _find_key_node() -> Node3D:
 		return key
 	return null
 
-func _set_key_visible(show: bool) -> void:
+func _set_key_visible(should_show: bool) -> void:
 	var key = _find_key_node()
 	if not key:
 		return
-	key.visible = show
+	key.visible = should_show
 	var static_body = key.get_node_or_null("StaticBody3D")
 	if static_body:
-		static_body.collision_layer = 4 if show else 0
+		static_body.collision_layer = 4 if should_show else 0
 
 func _ensure_audio_player() -> void:
 	"""Make sure we have an audio player for box sounds"""

@@ -283,7 +283,6 @@ func _play_ascent_effect() -> void:
 		await get_tree().create_timer(descent_duration).timeout
 		return
 
-	var start_pos = moving_parts.position
 	var end_pos = Vector3.ZERO  # Return to original position
 
 	var tween = create_tween()

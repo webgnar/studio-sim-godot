@@ -897,10 +897,10 @@ collision_layer = 2
 collision_mask = 0
 
 [node name="wall6" type="CSGBox3D" parent="AssistantStudio/CSGCombiner3D" unique_id=1638121924]
-transform = Transform3D(-0.15908581, 0, 10.405681, 0, 7.49, 0, -0.43161523, 0, -3.835351, -1.2205849, 1.2605457, -3.6025372)
+transform = Transform3D(-0.15908581, 0, 10.405681, 0, 7.49, 0, -0.43161523, 0, -3.835351, 0.9959574, 1.2605457, -4.4195156)
 use_collision = true
 collision_mask = 0
-size = Vector3(1, 0.8, 0.5739746)
+size = Vector3(1, 0.8, 1)
 material = ExtResource("5_71j4m")
 
 [node name="wall7" type="CSGBox3D" parent="AssistantStudio/CSGCombiner3D" unique_id=227541685]

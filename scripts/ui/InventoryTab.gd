@@ -196,21 +196,21 @@ func _populate_painting_list():
 	# Update stats
 	stats_label.text = tr("Paintings: %d") % painting_entries.size()
 
-func _show_detail_panel(show: bool):
+func _show_detail_panel(should_show: bool):
 	"""Show or hide the detail panel content"""
-	preview_image.visible = show
+	preview_image.visible = should_show
 	if status_label:
-		status_label.visible = show
-	name_input.visible = show
-	name_input.get_parent().visible = show  # NameContainer
+		status_label.visible = should_show
+	name_input.visible = should_show
+	name_input.get_parent().visible = should_show  # NameContainer
 	if statement_label:
-		statement_label.visible = show
-	statement_input.visible = show
-	save_button.visible = show
+		statement_label.visible = should_show
+	statement_input.visible = should_show
+	save_button.visible = should_show
 
 	# Show/hide empty label
 	if empty_label:
-		empty_label.visible = not show
+		empty_label.visible = not should_show
 
 # ============================================================================
 # Navigation

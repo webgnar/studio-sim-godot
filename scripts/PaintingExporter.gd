@@ -91,9 +91,9 @@ func export_painting(painting: CarryablePainting) -> Dictionary:
 		"glb": glb_path
 	}
 
-func _sanitize_filename(name: String) -> String:
+func _sanitize_filename(file_name: String) -> String:
 	"""Remove/replace characters that are invalid in filenames"""
-	var sanitized = name.strip_edges()
+	var sanitized = file_name.strip_edges()
 	var invalid_chars = ['/', '\\', ':', '*', '?', '"', '<', '>', '|']
 	for c in invalid_chars:
 		sanitized = sanitized.replace(c, "_")
@@ -262,8 +262,8 @@ func export_painting_glb(painting: CarryablePainting, downloads_path: String, fi
 	print("PaintingExporter: Saved GLB to ", full_path)
 	return full_path
 
-func _set_owner_recursive(node: Node, owner: Node) -> void:
+func _set_owner_recursive(node: Node, new_owner: Node) -> void:
 	"""Recursively set owner for all children (required for GLTF export)"""
 	for child in node.get_children():
-		child.owner = owner
-		_set_owner_recursive(child, owner)
+		child.owner = new_owner
+		_set_owner_recursive(child, new_owner)

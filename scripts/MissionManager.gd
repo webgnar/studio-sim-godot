@@ -275,7 +275,7 @@ func load_progression():
 	else:
 		push_error("MissionManager: Failed to open progression file!")
 
-func _update_steam_on_mission_complete(mission: PaintingMission, result: ValidationResult, score: float, grade: String, duration_sec: float, was_completed_before: bool):
+func _update_steam_on_mission_complete(_mission: PaintingMission, result: ValidationResult, score: float, grade: String, duration_sec: float, was_completed_before: bool):
 	"""Handle all Steam achievement/stat updates for mission completion"""
 
 	# Update statistics

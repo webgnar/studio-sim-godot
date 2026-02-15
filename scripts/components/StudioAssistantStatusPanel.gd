@@ -45,8 +45,10 @@ func _update_display():
 		return
 
 	var time_remaining = status.time_remaining
-	var minutes = int(time_remaining) / 60
-	var seconds = int(time_remaining) % 60
+	@warning_ignore("integer_division")
+	var minutes: int = int(time_remaining) / 60
+	@warning_ignore("integer_division")
+	var seconds: int = int(time_remaining) % 60
 
 	var progress_bar = _make_progress_bar(status.progress_percent)
 
