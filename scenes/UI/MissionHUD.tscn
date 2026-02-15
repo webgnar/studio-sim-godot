@@ -21,6 +21,10 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = -0.79
+offset_top = -20.63
+offset_right = 108.20999
+offset_bottom = -10.630005
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -41,15 +45,14 @@ layout_mode = 2
 expand_mode = 1
 stretch_mode = 5
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer" unique_id=1267419849]
 layout_mode = 2
-size_flags_vertical = 1
 theme_override_constants/separation = 4
 
 [node name="MissionNameLabel" type="Label" parent="PanelContainer/MarginContainer/HBoxContainer/VBoxContainer" unique_id=1436207368]
 layout_mode = 2
 text = "Mission Name"
 
-[node name="TimerLabel" type="Label" parent="PanelContainer/MarginContainer/HBoxContainer/VBoxContainer"]
+[node name="TimerLabel" type="Label" parent="PanelContainer/MarginContainer/HBoxContainer/VBoxContainer" unique_id=1544865287]
 layout_mode = 2
 text = "0:00"

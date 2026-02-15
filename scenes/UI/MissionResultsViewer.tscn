@@ -1,12 +1,12 @@
-[gd_scene load_steps=6 format=3 uid="uid://cra27ims6pb5n"]
+[gd_scene format=3 uid="uid://bhsjas6o40vsv"]
 
 [ext_resource type="Theme" uid="uid://cbtaxh5m7udor" path="res://themes/ui_theme.tres" id="1_poh0k"]
-[ext_resource type="Script" uid="uid://bt23ft5ot5o0p" path="res://scripts/ui/MissionResultsViewer.gd" id="1_results"]
+[ext_resource type="Script" path="res://scripts/ui/MissionResultsViewer.gd" id="1_results"]
 [ext_resource type="Texture2D" uid="uid://dor0d4yiulgi5" path="res://sprites/ui/arrow.png" id="2_f72b2"]
-[ext_resource type="AudioStream" path="res://sounds/picotron/buttonnav.ogg" id="3_buttonnav"]
-[ext_resource type="AudioStream" path="res://sounds/picotron/buttonhit.ogg" id="4_buttonhit"]
+[ext_resource type="AudioStream" uid="uid://ht7rkfvqubdm" path="res://sounds/picotron/buttonnav.ogg" id="3_buttonnav"]
+[ext_resource type="AudioStream" uid="uid://dae4sj3nmur45" path="res://sounds/picotron/buttonhit.ogg" id="4_buttonhit"]
 
-[node name="MissionResultsViewer" type="Control"]
+[node name="MissionResultsViewer" type="Control" unique_id=905026584]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -17,7 +17,7 @@ mouse_filter = 2
 theme = ExtResource("1_poh0k")
 script = ExtResource("1_results")
 
-[node name="Dialog" type="PanelContainer" parent="."]
+[node name="Dialog" type="PanelContainer" parent="." unique_id=1678242840]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -32,108 +32,108 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 1
 
-[node name="MarginContainer" type="MarginContainer" parent="Dialog"]
+[node name="MarginContainer" type="MarginContainer" parent="Dialog" unique_id=706433617]
 layout_mode = 2
 theme_override_constants/margin_left = 20
 theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 20
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Dialog/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Dialog/MarginContainer" unique_id=441515929]
 layout_mode = 2
 theme_override_constants/separation = 15
 
-[node name="ScoreContainer" type="HBoxContainer" parent="Dialog/MarginContainer/VBoxContainer"]
+[node name="ScoreContainer" type="HBoxContainer" parent="Dialog/MarginContainer/VBoxContainer" unique_id=1592236261]
 layout_mode = 2
 size_flags_horizontal = 4
 alignment = 1
 
-[node name="GradeLabel" type="Label" parent="Dialog/MarginContainer/VBoxContainer/ScoreContainer"]
+[node name="GradeLabel" type="Label" parent="Dialog/MarginContainer/VBoxContainer/ScoreContainer" unique_id=165120465]
 layout_mode = 2
 theme_override_font_sizes/font_size = 60
 text = "A"
 horizontal_alignment = 1
 
-[node name="Spacer" type="Control" parent="Dialog/MarginContainer/VBoxContainer/ScoreContainer"]
+[node name="Spacer" type="Control" parent="Dialog/MarginContainer/VBoxContainer/ScoreContainer" unique_id=1966199397]
 custom_minimum_size = Vector2(40, 0)
 layout_mode = 2
 
-[node name="BestScoreLabel" type="Label" parent="Dialog/MarginContainer/VBoxContainer/ScoreContainer"]
+[node name="BestScoreLabel" type="Label" parent="Dialog/MarginContainer/VBoxContainer/ScoreContainer" unique_id=1736518682]
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "Best Score: 85.5%"
 vertical_alignment = 1
 
-[node name="ToggleContainer" type="HBoxContainer" parent="Dialog/MarginContainer/VBoxContainer"]
+[node name="ToggleContainer" type="HBoxContainer" parent="Dialog/MarginContainer/VBoxContainer" unique_id=1341590841]
 layout_mode = 2
 alignment = 1
 
-[node name="back" type="Button" parent="Dialog/MarginContainer/VBoxContainer/ToggleContainer"]
+[node name="back" type="Button" parent="Dialog/MarginContainer/VBoxContainer/ToggleContainer" unique_id=1841630392]
 layout_mode = 2
 text = " back"
 icon = ExtResource("2_f72b2")
 
-[node name="ShowLatestButton" type="Button" parent="Dialog/MarginContainer/VBoxContainer/ToggleContainer"]
+[node name="ShowLatestButton" type="Button" parent="Dialog/MarginContainer/VBoxContainer/ToggleContainer" unique_id=36682671]
 custom_minimum_size = Vector2(150, 35)
 layout_mode = 2
 text = "Show Latest"
 
-[node name="ShowBestButton" type="Button" parent="Dialog/MarginContainer/VBoxContainer/ToggleContainer"]
+[node name="ShowBestButton" type="Button" parent="Dialog/MarginContainer/VBoxContainer/ToggleContainer" unique_id=1878644249]
 custom_minimum_size = Vector2(150, 35)
 layout_mode = 2
 text = "Show Best"
 
-[node name="ImageComparison" type="HBoxContainer" parent="Dialog/MarginContainer/VBoxContainer"]
+[node name="ImageComparison" type="HBoxContainer" parent="Dialog/MarginContainer/VBoxContainer" unique_id=927547673]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 20
 alignment = 1
 
-[node name="PlayerPaintingPanel" type="PanelContainer" parent="Dialog/MarginContainer/VBoxContainer/ImageComparison"]
+[node name="PlayerPaintingPanel" type="PanelContainer" parent="Dialog/MarginContainer/VBoxContainer/ImageComparison" unique_id=1690602455]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Dialog/MarginContainer/VBoxContainer/ImageComparison/PlayerPaintingPanel"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Dialog/MarginContainer/VBoxContainer/ImageComparison/PlayerPaintingPanel" unique_id=2069435138]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Dialog/MarginContainer/VBoxContainer/ImageComparison/PlayerPaintingPanel/VBoxContainer"]
+[node name="Label" type="Label" parent="Dialog/MarginContainer/VBoxContainer/ImageComparison/PlayerPaintingPanel/VBoxContainer" unique_id=1620300180]
 layout_mode = 2
 text = "Your Painting"
 horizontal_alignment = 1
 
-[node name="PlayerImage" type="TextureRect" parent="Dialog/MarginContainer/VBoxContainer/ImageComparison/PlayerPaintingPanel/VBoxContainer"]
+[node name="PlayerImage" type="TextureRect" parent="Dialog/MarginContainer/VBoxContainer/ImageComparison/PlayerPaintingPanel/VBoxContainer" unique_id=513144521]
 custom_minimum_size = Vector2(300, 300)
 layout_mode = 2
 expand_mode = 1
 stretch_mode = 5
 
-[node name="ScoreLabel" type="Label" parent="Dialog/MarginContainer/VBoxContainer/ImageComparison/PlayerPaintingPanel/VBoxContainer"]
+[node name="ScoreLabel" type="Label" parent="Dialog/MarginContainer/VBoxContainer/ImageComparison/PlayerPaintingPanel/VBoxContainer" unique_id=911672028]
 layout_mode = 2
 text = "Score: 85.5%"
 horizontal_alignment = 1
 
-[node name="TargetPaintingPanel" type="PanelContainer" parent="Dialog/MarginContainer/VBoxContainer/ImageComparison"]
+[node name="TargetPaintingPanel" type="PanelContainer" parent="Dialog/MarginContainer/VBoxContainer/ImageComparison" unique_id=900240290]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Dialog/MarginContainer/VBoxContainer/ImageComparison/TargetPaintingPanel"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Dialog/MarginContainer/VBoxContainer/ImageComparison/TargetPaintingPanel" unique_id=1889099725]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Dialog/MarginContainer/VBoxContainer/ImageComparison/TargetPaintingPanel/VBoxContainer"]
+[node name="Label" type="Label" parent="Dialog/MarginContainer/VBoxContainer/ImageComparison/TargetPaintingPanel/VBoxContainer" unique_id=2050677759]
 layout_mode = 2
 text = "Target"
 horizontal_alignment = 1
 
-[node name="TargetImage" type="TextureRect" parent="Dialog/MarginContainer/VBoxContainer/ImageComparison/TargetPaintingPanel/VBoxContainer"]
+[node name="TargetImage" type="TextureRect" parent="Dialog/MarginContainer/VBoxContainer/ImageComparison/TargetPaintingPanel/VBoxContainer" unique_id=509946466]
 custom_minimum_size = Vector2(300, 300)
 layout_mode = 2
 expand_mode = 1
 stretch_mode = 5
 
-[node name="ButtonNavSound" type="AudioStreamPlayer" parent="."]
+[node name="ButtonNavSound" type="AudioStreamPlayer" parent="." unique_id=1440963132]
 stream = ExtResource("3_buttonnav")
 
-[node name="ButtonHitSound" type="AudioStreamPlayer" parent="."]
+[node name="ButtonHitSound" type="AudioStreamPlayer" parent="." unique_id=38199287]
 stream = ExtResource("4_buttonhit")

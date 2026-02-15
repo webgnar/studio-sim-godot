@@ -1,7 +1,7 @@
 extends Control
 class_name ValidationResultUI
 
-## UI for displaying painting validation results
+## UI for displaying painting validation results after mission submission
 ## Shows grade, score, and allows retry or return to mission selection
 
 @onready var dialog = $Dialog
@@ -27,37 +27,26 @@ class_name ValidationResultUI
 var current_result: ValidationResult = null
 var current_mission: PaintingMission = null
 var painting_system_2d: PaintingSystem2D = null
-var mission_selection_ui: MissionSelectionUI = null
 
 func _ready():
-	# Connect button signals
 	retry_button.pressed.connect(_on_retry_mission)
 	back_button.pressed.connect(_on_back_to_missions)
 
-	# Hide dialog initially
 	dialog.visible = false
 
-	# Register with UIManager
 	if UIManager:
 		UIManager.register_screen("validation", self)
 
-	# Find painting system and mission selection UI
 	_find_dependencies()
 
 func _find_dependencies():
-	"""Find the PaintingSystem2D and MissionSelectionUI in the scene tree"""
 	var root = get_tree().root
 	painting_system_2d = _search_for_type(root, PaintingSystem2D)
-	mission_selection_ui = _search_for_type(root, MissionSelectionUI)
 
 	if not painting_system_2d:
 		push_error("ValidationResultUI: Could not find PaintingSystem2D!")
 
-	if not mission_selection_ui:
-		push_error("ValidationResultUI: Could not find MissionSelectionUI!")
-
 func _search_for_type(node: Node, type) -> Node:
-	"""Recursively search for a node of specific type"""
 	if is_instance_of(node, type):
 		return node
 
@@ -72,65 +61,53 @@ func _input(event):
 	if not dialog.visible:
 		return
 
-	# R key to retry
 	if event is InputEventKey and event.pressed and event.keycode == KEY_R:
 		_on_retry_mission()
 		get_viewport().set_input_as_handled()
 		return
 
-	# Go back to missions
 	if event.is_action_pressed("go_back"):
 		_on_back_to_missions()
 		get_viewport().set_input_as_handled()
 		return
 
 func show_screen():
-	"""Show the validation result screen (called by UIManager)"""
 	dialog.visible = true
 
-	# Disable painting input
 	if painting_system_2d:
 		painting_system_2d.set_input_enabled(false)
 
-	# Focus retry button
 	retry_button.grab_focus()
 
 func hide_screen():
-	"""Hide the validation result screen (called by UIManager)"""
 	dialog.visible = false
 
-	# Re-enable painting input
 	if painting_system_2d:
 		painting_system_2d.set_input_enabled(true)
 
 func show_results(result: ValidationResult, mission: PaintingMission):
-	"""Display validation results"""
 	current_result = result
 	current_mission = mission
 
-	# Show grade
 	var grade = result.get_grade()
 	grade_label.text = grade
 
-	# Color code the grade
 	match grade:
 		"S":
-			grade_label.modulate = Color(1.0, 0.84, 0.0)  # Gold
+			grade_label.modulate = Color(1.0, 0.84, 0.0)
 		"A":
-			grade_label.modulate = Color(0.2, 1.0, 0.2)  # Green
+			grade_label.modulate = Color(0.2, 1.0, 0.2)
 		"B":
-			grade_label.modulate = Color(0.4, 0.8, 1.0)  # Light blue
+			grade_label.modulate = Color(0.4, 0.8, 1.0)
 		"C":
-			grade_label.modulate = Color(1.0, 1.0, 0.4)  # Yellow
+			grade_label.modulate = Color(1.0, 1.0, 0.4)
 		"D":
-			grade_label.modulate = Color(1.0, 0.6, 0.2)  # Orange
+			grade_label.modulate = Color(1.0, 0.6, 0.2)
 		"F":
-			grade_label.modulate = Color(1.0, 0.3, 0.3)  # Red
+			grade_label.modulate = Color(1.0, 0.3, 0.3)
 
-	# Show score
 	score_label.text = tr("Score: %.1f%%") % result.match_percentage
 
-	# Show pass/fail status with threshold
 	if result.success:
 		status_label.text = tr("PASSED! (%.0f%% required)") % result.pass_threshold
 		status_label.modulate = Color(0.4, 1.0, 0.4)
@@ -138,37 +115,25 @@ func show_results(result: ValidationResult, mission: PaintingMission):
 		status_label.text = tr("Failed (%.0f%% required)") % result.pass_threshold
 		status_label.modulate = Color(1.0, 0.4, 0.4)
 
-	# Show message
 	if result.errors.is_empty():
 		message_label.text = tr("Great work! Mission completed.")
 	else:
 		message_label.text = "\n".join(result.errors)
 
-	# Show image comparison
 	_display_comparison_images(mission)
-
-	# Show heatmap and histograms if debug data is available
 	_display_analysis_visualizations(result)
 
-	# Show score breakdown (simplified validation - Visual + Color only)
 	breakdown_label.visible = true
-	coordinate_label.visible = false  # No longer used
+	coordinate_label.visible = false
 	visual_label.visible = true
 	color_label.visible = true
-
-	# Show Precision and Color Field scores with fixed weights (30% precision, 70% color field)
 	visual_label.text = tr("Precision: %.1f%% (weight: 30%%)") % result.visual_match_percentage
 	color_label.text = tr("Color Field: %.1f%% (weight: 70%%)") % result.color_distribution_score
 
-	# Show results via UIManager (which will call show_screen())
-	# Note: Dialog visibility is now managed by UIManager
 	dialog.visible = true
-
-	# Focus retry button
 	retry_button.grab_focus()
 
 func _display_comparison_images(mission: PaintingMission):
-	"""Display side-by-side comparison of player's painting vs target"""
 	if not mission or not painting_system_2d:
 		comparison_container.visible = false
 		return
@@ -176,23 +141,17 @@ func _display_comparison_images(mission: PaintingMission):
 	var player_texture: ImageTexture = null
 	var reference_texture: Texture2D = null
 
-	# Capture player's current painting
 	if painting_system_2d.canvas_viewport:
 		var viewport_texture = painting_system_2d.canvas_viewport.get_texture()
 		if viewport_texture:
 			var current_image = viewport_texture.get_image()
 			if current_image:
-				# Rotate to match reference orientation (references are rotated 90° clockwise)
 				current_image.rotate_90(CLOCKWISE)
-
-				# Convert Image to ImageTexture
 				player_texture = ImageTexture.create_from_image(current_image)
 
-	# Load reference image
 	if mission.reference_image_path and mission.reference_image_path != "":
 		reference_texture = load(mission.reference_image_path) as Texture2D
 
-	# Display images if both are available
 	if player_texture and reference_texture:
 		your_image.texture = player_texture
 		target_image.texture = reference_texture
@@ -205,36 +164,29 @@ func _display_comparison_images(mission: PaintingMission):
 			push_warning("ValidationResultUI: Could not load reference image from '%s'" % mission.reference_image_path)
 
 func _display_analysis_visualizations(result: ValidationResult):
-	"""Display heatmap and histograms from debug data"""
 	if not result or not result.debug_enabled or result.debug_data.is_empty():
-		# Hide visualizations if no debug data
 		heatmap_panel.visible = false
 		histogram_panel.visible = false
 		return
 
 	var debug = result.debug_data
 
-	# Display heatmap
 	if debug.has("heatmap_data"):
 		heatmap_image.texture = ImageTexture.create_from_image(debug["heatmap_data"])
 		heatmap_panel.visible = true
 	else:
 		heatmap_panel.visible = false
 
-	# Display color swatches
 	if debug.has("current_histogram") and debug.has("reference_histogram"):
 		var player_hist = debug["current_histogram"]
 		var ref_hist = debug["reference_histogram"]
-
 		player_swatch_display.texture = HistogramRenderer.create_top_colors_swatch(player_hist, Vector2i(300, 80))
 		reference_swatch_display.texture = HistogramRenderer.create_top_colors_swatch(ref_hist, Vector2i(300, 80))
-
 		histogram_panel.visible = true
 	else:
 		histogram_panel.visible = false
 
 func _on_retry_mission():
-	"""Retry the current mission"""
 	if not current_mission:
 		push_error("ValidationResultUI: No mission to retry!")
 		return
@@ -243,17 +195,11 @@ func _on_retry_mission():
 		push_error("ValidationResultUI: No painting system found!")
 		return
 
-	# Restart the mission (clear canvas)
 	painting_system_2d.start_mission(current_mission)
 	MissionManager.start_mission(current_mission)
 
-	# Note: MissionManager.start_mission() will call UIManager.change_state(IN_MISSION)
-
 func _on_back_to_missions():
-	"""Return to mission selection"""
-	# Clear current mission
 	MissionManager.current_mission = null
 
-	# Return to mission selection via UIManager
 	if UIManager:
 		UIManager.change_state(UIManager.GameState.PAUSE_MENU)

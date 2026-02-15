@@ -31,7 +31,20 @@ const AbortMissionIcon = preload("res://sprites/ui/abortmission.png")
 @onready var button_nav_sound = $ButtonNavSound
 @onready var button_hit_sound = $ButtonHitSound
 
-var results_viewer = null  # MissionResultsViewer (dynamic typing to avoid circular dependency)
+# Preview content container (the normal mission detail view)
+@onready var preview_content = $Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer
+
+# Results view nodes
+@onready var results_container = $Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer
+@onready var results_grade_label = $Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer/GradeLabel
+@onready var results_score_label = $Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer/ScoreLabel
+@onready var results_player_image = $Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer/ImageComparison/PlayerPanel/PlayerImage
+@onready var results_target_image = $Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer/ImageComparison/TargetPanel/TargetImage
+@onready var show_latest_button = $Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer/ToggleContainer/ShowLatestButton
+@onready var show_best_button = $Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer/ToggleContainer/ShowBestButton
+@onready var results_retry_button = $Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer/ResultsButtonContainer/RetryButton
+@onready var results_back_button = $Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer/ResultsButtonContainer/BackButton
+
 var selected_mission: PaintingMission = null
 var selected_index: int = 0
 var mission_cards: Array[MissionCard] = []
@@ -43,12 +56,24 @@ var preview_buttons: Array[Button] = []
 var preview_button_index: int = 0
 var keyboard_nav_enabled: bool = false
 var input_cooldown: float = 0.0
-var input_cooldown_time: float = 0.15  # Cooldown between navigation inputs
+var input_cooldown_time: float = 0.15
+
+# Results view state
+var showing_results: bool = false
+var showing_latest: bool = true
+
+# Toggle button styles
+var active_toggle_style: StyleBoxFlat
+var inactive_toggle_style: StyleBoxFlat
 
 func _ready():
 	# Connect button signals
 	view_results_button.pressed.connect(_on_view_results)
 	start_button.pressed.connect(_on_start_or_abort_mission)
+	show_latest_button.pressed.connect(_on_show_latest)
+	show_best_button.pressed.connect(_on_show_best)
+	results_retry_button.pressed.connect(_on_results_retry)
+	results_back_button.pressed.connect(_on_results_back)
 
 	# Setup preview button navigation array (View Results, Start)
 	preview_buttons = [view_results_button, start_button]
@@ -64,37 +89,30 @@ func _ready():
 	if PaintingSpawner:
 		PaintingSpawner.painting_created.connect(_on_painting_created)
 
-	# Find results viewer
-	_find_results_viewer()
-
 	# Set up focus navigation
 	_setup_focus_navigation()
 
 	# Update stats display
 	_update_stats_display()
 
+	# Create toggle button styles
+	_create_toggle_styles()
+
 	# Disable input processing by default (PauseMenu manages activation via process_mode)
 	process_mode = Node.PROCESS_MODE_DISABLED
 
-func _find_results_viewer():
-	"""Find the MissionResultsViewer in the scene tree"""
-	var root = get_tree().root
-	results_viewer = _search_for_results_viewer(root)
+func _create_toggle_styles():
+	active_toggle_style = StyleBoxFlat.new()
+	active_toggle_style.bg_color = Color(0.2, 0.6, 1.0, 0.3)
+	active_toggle_style.border_color = Color(0.2, 0.6, 1.0)
+	active_toggle_style.set_border_width_all(2)
+	active_toggle_style.set_corner_radius_all(4)
 
-	if not results_viewer:
-		push_error("MissionSelectionUI: Could not find MissionResultsViewer in scene!")
-
-func _search_for_results_viewer(node: Node):
-	"""Recursively search for MissionResultsViewer"""
-	if node.get_script() and node.get_script().get_global_name() == "MissionResultsViewer":
-		return node
-
-	for child in node.get_children():
-		var result = _search_for_results_viewer(child)
-		if result:
-			return result
-
-	return null
+	inactive_toggle_style = StyleBoxFlat.new()
+	inactive_toggle_style.bg_color = Color(0.2, 0.2, 0.2, 0.5)
+	inactive_toggle_style.border_color = Color(0.4, 0.4, 0.4)
+	inactive_toggle_style.set_border_width_all(1)
+	inactive_toggle_style.set_corner_radius_all(4)
 
 func _process(delta):
 	if not dialog.visible:
@@ -115,6 +133,11 @@ func _input(event):
 
 	var viewport = get_viewport()
 	if not viewport:
+		return
+
+	# If showing results, handle results-specific input
+	if showing_results:
+		_handle_results_input(event, viewport)
 		return
 
 	# Start button closes menu entirely (even when embedded, PauseMenu handles start separately)
@@ -142,6 +165,13 @@ func _input(event):
 		_handle_mission_list_input(event, viewport)
 	elif nav_mode == NavMode.PREVIEW_BUTTONS:
 		_handle_preview_buttons_input(event, viewport)
+
+func _handle_results_input(event, viewport):
+	"""Handle input when results view is shown"""
+	if event.is_action_pressed("go_back"):
+		_on_results_back()
+		viewport.set_input_as_handled()
+		return
 
 func _handle_mission_list_input(event, viewport):
 	"""Handle input when navigating the mission list"""
@@ -340,6 +370,9 @@ func _open_dialog():
 	nav_mode = NavMode.MISSION_LIST
 	_clear_button_focus()
 
+	# Make sure we're showing the preview, not results
+	_hide_results_view()
+
 	# Enable keyboard nav (standalone always has it; embedded waits for PauseMenu)
 	if not is_embedded:
 		keyboard_nav_enabled = true
@@ -429,6 +462,10 @@ func _on_card_clicked(index: int):
 	selected_index = index
 	_update_selection()
 
+	# If we were showing results, go back to preview
+	if showing_results:
+		_hide_results_view()
+
 	# Notify parent PauseMenu to enter TAB_CONTENT mode (mouse entry)
 	if is_embedded:
 		var pause_menu = _find_parent_pause_menu()
@@ -443,6 +480,10 @@ func _select_next_mission():
 	selected_index = (selected_index + 1) % MissionManager.available_missions.size()
 	_update_selection()
 
+	# If we were showing results, go back to preview
+	if showing_results:
+		_hide_results_view()
+
 	# Play navigation sound
 	if button_nav_sound:
 		button_nav_sound.play()
@@ -456,6 +497,10 @@ func _select_previous_mission():
 	if selected_index < 0:
 		selected_index = MissionManager.available_missions.size() - 1
 	_update_selection()
+
+	# If we were showing results, go back to preview
+	if showing_results:
+		_hide_results_view()
 
 	# Play navigation sound
 	if button_nav_sound:
@@ -481,21 +526,21 @@ func _scroll_to_selected_card():
 	"""Scroll the ScrollContainer to make the selected card visible"""
 	if not scroll_container or selected_index >= mission_cards.size():
 		return
-	
+
 	var selected_card = mission_cards[selected_index]
 	if not selected_card:
 		return
-	
+
 	# Get the card's position and size
 	var card_top = selected_card.position.y
 	var card_bottom = card_top + selected_card.size.y
-	
+
 	# Get the visible area of the scroll container
 	var scroll_pos = scroll_container.scroll_vertical
 	var viewport_height = scroll_container.size.y
 	var visible_top = scroll_pos
 	var visible_bottom = scroll_pos + viewport_height
-	
+
 	# Check if card is above visible area
 	if card_top < visible_top:
 		scroll_container.scroll_vertical = int(card_top)
@@ -566,6 +611,136 @@ func _update_preview_panel():
 	else:
 		preview_image.texture = null
 
+# --- Results View ---
+
+func _on_view_results():
+	"""Show inline results for the selected mission"""
+	if not selected_mission:
+		return
+
+	var completion_data = MissionManager.get_mission_completion(selected_mission.mission_id)
+	if not completion_data["completed"]:
+		return
+
+	showing_results = true
+	showing_latest = true
+
+	# Swap preview content for results
+	preview_content.visible = false
+	results_container.visible = true
+
+	# Populate results
+	_set_grade_color(completion_data["grade"])
+	results_grade_label.text = completion_data["grade"]
+	results_score_label.text = tr("Best Score: %.1f%%") % completion_data["best_score"]
+
+	# Load target image
+	if selected_mission.reference_image_path and selected_mission.reference_image_path != "":
+		var texture = load(selected_mission.reference_image_path) as Texture2D
+		results_target_image.texture = texture
+	else:
+		results_target_image.texture = null
+
+	# Load player painting
+	_update_toggle_styles()
+	_load_results_painting(completion_data)
+
+	# Focus back button
+	results_back_button.grab_focus()
+
+	print("MissionSelectionUI: Viewing results for mission '%s'" % selected_mission.title)
+
+func _hide_results_view():
+	"""Switch back to normal preview content"""
+	showing_results = false
+	preview_content.visible = true
+	results_container.visible = false
+
+func _set_grade_color(grade: String):
+	match grade:
+		"S":
+			results_grade_label.modulate = Color(1.0, 0.84, 0.0)
+		"A":
+			results_grade_label.modulate = Color(0.2, 1.0, 0.2)
+		"B":
+			results_grade_label.modulate = Color(0.4, 0.8, 1.0)
+		"C":
+			results_grade_label.modulate = Color(1.0, 1.0, 0.4)
+		"D":
+			results_grade_label.modulate = Color(1.0, 0.6, 0.2)
+		"F":
+			results_grade_label.modulate = Color(1.0, 0.3, 0.3)
+		_:
+			results_grade_label.modulate = Color(1.0, 1.0, 1.0)
+
+func _load_results_painting(completion_data: Dictionary):
+	"""Load the player's saved painting based on latest/best toggle"""
+	var painting_path = ""
+	if showing_latest:
+		painting_path = completion_data.get("latest_painting_path", "")
+	else:
+		painting_path = completion_data.get("best_painting_path", "")
+
+	if painting_path != "" and FileAccess.file_exists(painting_path):
+		var image = Image.load_from_file(painting_path)
+		if image:
+			results_player_image.texture = ImageTexture.create_from_image(image)
+			return
+
+	results_player_image.texture = null
+
+func _update_toggle_styles():
+	if showing_latest:
+		show_latest_button.add_theme_stylebox_override("normal", active_toggle_style)
+		show_best_button.add_theme_stylebox_override("normal", inactive_toggle_style)
+	else:
+		show_latest_button.add_theme_stylebox_override("normal", inactive_toggle_style)
+		show_best_button.add_theme_stylebox_override("normal", active_toggle_style)
+
+func _on_show_latest():
+	if showing_latest:
+		return
+	showing_latest = true
+	_update_toggle_styles()
+	if selected_mission:
+		var completion_data = MissionManager.get_mission_completion(selected_mission.mission_id)
+		_load_results_painting(completion_data)
+
+func _on_show_best():
+	if not showing_latest:
+		return
+	showing_latest = false
+	_update_toggle_styles()
+	if selected_mission:
+		var completion_data = MissionManager.get_mission_completion(selected_mission.mission_id)
+		_load_results_painting(completion_data)
+
+func _on_results_retry():
+	"""Retry the mission from results view"""
+	if not selected_mission:
+		return
+
+	var painting_system = PaintingModeManager.painting_system_2d
+	if not painting_system:
+		push_error("MissionSelectionUI: No painting system found!")
+		return
+
+	MissionManager.start_mission(selected_mission)
+	painting_system.start_mission(selected_mission)
+
+	nav_mode = NavMode.MISSION_LIST
+	_clear_button_focus()
+	_hide_results_view()
+	dialog.visible = false
+
+func _on_results_back():
+	"""Return to mission preview from results view"""
+	_hide_results_view()
+	nav_mode = NavMode.MISSION_LIST
+	_clear_button_focus()
+
+# --- Other ---
+
 func _on_start_or_abort_mission():
 	"""Start the selected mission or abort if it's the current mission"""
 	if not selected_mission:
@@ -610,30 +785,8 @@ func _abort_mission_immediate():
 	# Return to GAMEPLAY state
 	if UIManager:
 		UIManager.change_state(UIManager.GameState.GAMEPLAY)
-	
+
 	print("MissionSelectionUI: Mission aborted")
-
-func _on_view_results():
-	"""Show results viewer for the selected mission"""
-	if not selected_mission:
-		push_error("MissionSelectionUI: No mission selected!")
-		return
-
-	if not results_viewer:
-		push_error("MissionSelectionUI: Results viewer not found!")
-		return
-
-	# Reset navigation mode
-	nav_mode = NavMode.MISSION_LIST
-	_clear_button_focus()
-
-	# Hide mission selection
-	dialog.visible = false
-
-	# Show results viewer
-	results_viewer.show_results_for_mission(selected_mission)
-
-	print("MissionSelectionUI: Viewing results for mission '%s'" % selected_mission.title)
 
 func _on_painting_created(_count: int):
 	"""Update stats display when a painting is created"""

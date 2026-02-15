@@ -75,7 +75,6 @@
 [ext_resource type="PackedScene" uid="uid://d2hcs1m04uvg7" path="res://models/interactables/button.glb" id="80_oexs8"]
 [ext_resource type="Script" uid="uid://byo8qed1v1rkt" path="res://scripts/components/PaintingConvertButton.gd" id="81_n78cu"]
 [ext_resource type="PackedScene" uid="uid://ctu3xtbhbgtub" path="res://scenes/objects/NailGun.tscn" id="81_oexs8"]
-[ext_resource type="PackedScene" uid="uid://cra27ims6pb5n" path="res://scenes/UI/MissionResultsViewer.tscn" id="81_results_viewer"]
 [ext_resource type="PackedScene" uid="uid://bryic0ubsrfjn" path="res://models/interactables/buttonGreen.glb" id="81_swu3i"]
 [ext_resource type="Texture2D" uid="uid://djd4xqb57hhr7" path="res://sprites/brick_bump.jpg" id="83_c15v2"]
 [ext_resource type="PackedScene" uid="uid://c8mhk3sajq2fn" path="res://scenes/UI/MissionHUD.tscn" id="83_hud"]
@@ -679,8 +678,6 @@ painting_system_2d = NodePath("../../PaintingRoot2d/CanvasViewport/CanvasRoot")
 
 [node name="ValidationResultUI" parent="GameplayUI_Layer" unique_id=1071964797 instance=ExtResource("78_result")]
 theme = ExtResource("4_ygn2i")
-
-[node name="MissionResultsViewer" parent="GameplayUI_Layer" unique_id=238323232 instance=ExtResource("81_results_viewer")]
 
 [node name="MissionHUD" parent="GameplayUI_Layer" unique_id=1077091467 instance=ExtResource("83_hud")]
 

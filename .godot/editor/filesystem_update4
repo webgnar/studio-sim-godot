@@ -15,3 +15,9 @@ res://scripts/ui/PaintingPromptDialog.gd
 res://scenes/UI/PaintingPromptDialog.tscn
 res://scenes/UI/MissionHUD.tscn
 res://scripts/ui/MissionHUD.gd
+res://scenes/UI/ValidationResultUI.tscn
+res://scenes/UI/ValidationLoadingOverlay.tscn
+res://scenes/phone.tscn
+res://scripts/ui/MissionSelectionUI.gd
+res://scripts/ui/ValidationResultUI.gd
+res://scenes/UI/MissionSelectionUI.tscn
