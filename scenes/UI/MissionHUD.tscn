@@ -41,8 +41,15 @@ layout_mode = 2
 expand_mode = 1
 stretch_mode = 5
 
-[node name="MissionNameLabel" type="Label" parent="PanelContainer/MarginContainer/HBoxContainer" unique_id=1436207368]
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 1
+theme_override_constants/separation = 4
+
+[node name="MissionNameLabel" type="Label" parent="PanelContainer/MarginContainer/HBoxContainer/VBoxContainer" unique_id=1436207368]
+layout_mode = 2
 text = "Mission Name"
-vertical_alignment = 1
+
+[node name="TimerLabel" type="Label" parent="PanelContainer/MarginContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+text = "0:00"
