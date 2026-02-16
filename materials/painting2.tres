@@ -1,6 +1,6 @@
-[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://dvsw85ud7bbns"]
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://dvsw85ud7bbns"]
 
-[ext_resource type="Texture2D" uid="uid://ddgwjor2tb3jg" path="res://resources/missions/zack1_ref.png" id="1_ft6tu"]
+[ext_resource type="Texture2D" uid="uid://ddgwjor2tb3jg" path="res://resources/missions/crazy display.png" id="1_ft6tu"]
 
 [resource]
 albedo_texture = ExtResource("1_ft6tu")

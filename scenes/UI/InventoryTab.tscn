@@ -1,9 +1,9 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene format=3 uid="uid://c6huchrcnqsod"]
 
-[ext_resource type="Script" path="res://scripts/ui/InventoryTab.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://bl0hqa8lmagvs" path="res://scripts/ui/InventoryTab.gd" id="1_script"]
 
-[node name="InventoryTab" type="Control"]
-layout_mode = 1
+[node name="InventoryTab" type="Control" unique_id=1843316344]
+layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -11,7 +11,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_script")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=66023317]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -20,95 +20,95 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 20
 
-[node name="LeftPanel" type="VBoxContainer" parent="HBoxContainer"]
+[node name="LeftPanel" type="VBoxContainer" parent="HBoxContainer" unique_id=1275129141]
 custom_minimum_size = Vector2(350, 0)
 layout_mode = 2
 
-[node name="TitleLabel" type="Label" parent="HBoxContainer/LeftPanel"]
+[node name="TitleLabel" type="Label" parent="HBoxContainer/LeftPanel" unique_id=1178948721]
 layout_mode = 2
 text = "MY PAINTINGS"
 horizontal_alignment = 1
 
-[node name="ScrollContainer" type="ScrollContainer" parent="HBoxContainer/LeftPanel"]
+[node name="ScrollContainer" type="ScrollContainer" parent="HBoxContainer/LeftPanel" unique_id=969415548]
 layout_mode = 2
 size_flags_vertical = 3
 follow_focus = true
 
-[node name="PaintingList" type="VBoxContainer" parent="HBoxContainer/LeftPanel/ScrollContainer"]
+[node name="PaintingList" type="VBoxContainer" parent="HBoxContainer/LeftPanel/ScrollContainer" unique_id=2002434877]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 10
 
-[node name="StatsLabel" type="Label" parent="HBoxContainer/LeftPanel"]
+[node name="StatsLabel" type="Label" parent="HBoxContainer/LeftPanel" unique_id=484737731]
 layout_mode = 2
 text = "Paintings: 0"
 
-[node name="RightPanel" type="VBoxContainer" parent="HBoxContainer"]
+[node name="RightPanel" type="VBoxContainer" parent="HBoxContainer" unique_id=748231515]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="PreviewTitleLabel" type="Label" parent="HBoxContainer/RightPanel"]
+[node name="PreviewTitleLabel" type="Label" parent="HBoxContainer/RightPanel" unique_id=2122865285]
 layout_mode = 2
 text = "PAINTING DETAILS"
 horizontal_alignment = 1
 
-[node name="PreviewPanel" type="PanelContainer" parent="HBoxContainer/RightPanel"]
+[node name="PreviewPanel" type="PanelContainer" parent="HBoxContainer/RightPanel" unique_id=2146974402]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer/RightPanel/PreviewPanel"]
+[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer/RightPanel/PreviewPanel" unique_id=3015075]
 layout_mode = 2
 theme_override_constants/margin_left = 15
 theme_override_constants/margin_top = 15
 theme_override_constants/margin_right = 15
 theme_override_constants/margin_bottom = 15
 
-[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer" unique_id=732183968]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="PaintingImage" type="TextureRect" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer"]
+[node name="PaintingImage" type="TextureRect" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer" unique_id=1001707753]
 custom_minimum_size = Vector2(400, 400)
 layout_mode = 2
 size_flags_vertical = 3
 expand_mode = 1
 stretch_mode = 5
 
-[node name="StatusLabel" type="Label" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer"]
+[node name="StatusLabel" type="Label" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer" unique_id=143958508]
 layout_mode = 2
 text = "Status: WIP"
 
-[node name="NameContainer" type="HBoxContainer" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer"]
+[node name="NameContainer" type="HBoxContainer" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer" unique_id=2098356811]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="NameLabel" type="Label" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/NameContainer"]
+[node name="NameLabel" type="Label" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/NameContainer" unique_id=639703863]
 layout_mode = 2
 text = "Name:"
 
-[node name="NameInput" type="LineEdit" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/NameContainer"]
+[node name="NameInput" type="LineEdit" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/NameContainer" unique_id=556631708]
 layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "Enter painting name..."
 
-[node name="StatementLabel" type="Label" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer"]
+[node name="StatementLabel" type="Label" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer" unique_id=317679574]
 layout_mode = 2
 text = "Artist Statement:"
 
-[node name="StatementInput" type="TextEdit" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer"]
+[node name="StatementInput" type="TextEdit" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer" unique_id=1444620906]
 custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
 placeholder_text = "Write about your painting..."
 wrap_mode = 1
 
-[node name="SaveButton" type="Button" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer"]
+[node name="SaveButton" type="Button" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer" unique_id=1256214946]
 layout_mode = 2
 text = "Save"
 
-[node name="EmptyLabel" type="Label" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer"]
+[node name="EmptyLabel" type="Label" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer" unique_id=2084938426]
 visible = false
 layout_mode = 2
-text = "There are no paintings in your Inventory. Pressing the red button will add a painting to your Inventory."
+text = "There are no paintings in your Inventory. Pressing the red button in the studio will add a painting to your Inventory."
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 2

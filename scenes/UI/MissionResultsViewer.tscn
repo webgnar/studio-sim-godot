@@ -83,7 +83,7 @@ custom_minimum_size = Vector2(150, 35)
 layout_mode = 2
 text = "Show Best"
 
-[node name="ImageComparison" type="HBoxContainer" parent="Dialog/MarginContainer/VBoxContainer" unique_id=927547673]
+[node name="ImageComparison" type="VBoxContainer" parent="Dialog/MarginContainer/VBoxContainer" unique_id=927547673]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 20

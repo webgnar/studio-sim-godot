@@ -4,9 +4,27 @@ class_name ValidationResultUI
 ## UI for displaying painting validation results after mission submission
 ## Shows grade, score, and allows retry or return to mission selection
 
+@export var runtime_margin_h: float = 40.0
+@export var runtime_margin_v: float = 20.0
+
+@export_group("Grade Colors")
+@export var grade_s_color: Color = Color(1.0, 0.84, 0.0)
+@export var grade_a_color: Color = Color(0.2, 1.0, 0.2)
+@export var grade_b_color: Color = Color(0.4, 0.8, 1.0)
+@export var grade_c_color: Color = Color(1.0, 1.0, 0.4)
+@export var grade_d_color: Color = Color(1.0, 0.6, 0.2)
+@export var grade_f_color: Color = Color(1.0, 0.3, 0.3)
+
+@export_group("Status Colors")
+@export var pass_color: Color = Color(0.4, 1.0, 0.4)
+@export var fail_color: Color = Color(1.0, 0.4, 0.4)
+
+@export_group("Analysis")
+@export var swatch_size: Vector2i = Vector2i(300, 80)
+
 @onready var dialog = $Dialog
-@onready var grade_label = $Dialog/MarginContainer/ScrollContainer/VBoxContainer/GradeLabel
-@onready var score_label = $Dialog/MarginContainer/ScrollContainer/VBoxContainer/ScoreLabel
+@onready var grade_label = $Dialog/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer/GradeLabel
+@onready var score_label = $Dialog/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer/ScoreLabel
 @onready var status_label = $Dialog/MarginContainer/ScrollContainer/VBoxContainer/StatusLabel
 @onready var message_label = $Dialog/MarginContainer/ScrollContainer/VBoxContainer/MessageLabel
 @onready var comparison_container = $Dialog/MarginContainer/ScrollContainer/VBoxContainer/ComparisonContainer
@@ -15,8 +33,8 @@ class_name ValidationResultUI
 @onready var heatmap_panel = $Dialog/MarginContainer/ScrollContainer/VBoxContainer/HeatmapPanel
 @onready var heatmap_image = $Dialog/MarginContainer/ScrollContainer/VBoxContainer/HeatmapPanel/HeatmapImage
 @onready var histogram_panel = $Dialog/MarginContainer/ScrollContainer/VBoxContainer/HistogramPanel
-@onready var player_swatch_display = $Dialog/MarginContainer/ScrollContainer/VBoxContainer/HistogramPanel/HistogramComparison/PlayerHistPanel/PlayerSwatchDisplay
-@onready var reference_swatch_display = $Dialog/MarginContainer/ScrollContainer/VBoxContainer/HistogramPanel/HistogramComparison/ReferenceHistPanel/ReferenceSwatchDisplay
+@onready var player_swatch_display = $Dialog/MarginContainer/ScrollContainer/VBoxContainer/ComparisonContainer/PlayerSwatchDisplay
+@onready var reference_swatch_display = $Dialog/MarginContainer/ScrollContainer/VBoxContainer/ComparisonContainer/ReferenceSwatchDisplay
 @onready var breakdown_label = $Dialog/MarginContainer/ScrollContainer/VBoxContainer/BreakdownLabel
 @onready var coordinate_label = $Dialog/MarginContainer/ScrollContainer/VBoxContainer/CoordinateLabel
 @onready var visual_label = $Dialog/MarginContainer/ScrollContainer/VBoxContainer/VisualLabel
@@ -31,6 +49,17 @@ var painting_system_2d: PaintingSystem2D = null
 func _ready():
 	retry_button.pressed.connect(_on_retry_mission)
 	back_button.pressed.connect(_on_back_to_missions)
+
+	# At runtime, anchor the Dialog to fill the screen with margins
+	# (In the editor it uses a large fixed size so all content is visible)
+	dialog.anchor_left = 0.0
+	dialog.anchor_top = 0.0
+	dialog.anchor_right = 1.0
+	dialog.anchor_bottom = 1.0
+	dialog.offset_left = runtime_margin_h
+	dialog.offset_top = runtime_margin_v
+	dialog.offset_right = -runtime_margin_h
+	dialog.offset_bottom = -runtime_margin_v
 
 	dialog.visible = false
 
@@ -92,32 +121,18 @@ func show_results(result: ValidationResult, mission: PaintingMission):
 	var grade = result.get_grade()
 	grade_label.text = grade
 
-	match grade:
-		"S":
-			grade_label.modulate = Color(1.0, 0.84, 0.0)
-		"A":
-			grade_label.modulate = Color(0.2, 1.0, 0.2)
-		"B":
-			grade_label.modulate = Color(0.4, 0.8, 1.0)
-		"C":
-			grade_label.modulate = Color(1.0, 1.0, 0.4)
-		"D":
-			grade_label.modulate = Color(1.0, 0.6, 0.2)
-		"F":
-			grade_label.modulate = Color(1.0, 0.3, 0.3)
+	grade_label.modulate = _get_grade_color(grade)
 
 	score_label.text = tr("Score: %.1f%%") % result.match_percentage
 
 	if result.success:
 		status_label.text = tr("PASSED! (%.0f%% required)") % result.pass_threshold
-		status_label.modulate = Color(0.4, 1.0, 0.4)
+		status_label.modulate = pass_color
 	else:
 		status_label.text = tr("Failed (%.0f%% required)") % result.pass_threshold
-		status_label.modulate = Color(1.0, 0.4, 0.4)
+		status_label.modulate = fail_color
 
-	if result.errors.is_empty():
-		message_label.text = tr("Great work! Mission completed.")
-	else:
+	if not result.errors.is_empty():
 		message_label.text = "\n".join(result.errors)
 
 	_display_comparison_images(mission)
@@ -180,11 +195,21 @@ func _display_analysis_visualizations(result: ValidationResult):
 	if debug.has("current_histogram") and debug.has("reference_histogram"):
 		var player_hist = debug["current_histogram"]
 		var ref_hist = debug["reference_histogram"]
-		player_swatch_display.texture = HistogramRenderer.create_top_colors_swatch(player_hist, Vector2i(300, 80))
-		reference_swatch_display.texture = HistogramRenderer.create_top_colors_swatch(ref_hist, Vector2i(300, 80))
+		player_swatch_display.texture = HistogramRenderer.create_top_colors_swatch(player_hist, swatch_size)
+		reference_swatch_display.texture = HistogramRenderer.create_top_colors_swatch(ref_hist, swatch_size)
 		histogram_panel.visible = true
 	else:
 		histogram_panel.visible = false
+
+func _get_grade_color(grade: String) -> Color:
+	match grade:
+		"S": return grade_s_color
+		"A": return grade_a_color
+		"B": return grade_b_color
+		"C": return grade_c_color
+		"D": return grade_d_color
+		"F": return grade_f_color
+		_: return Color.WHITE
 
 func _on_retry_mission():
 	if not current_mission:

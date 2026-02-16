@@ -5,6 +5,23 @@ class_name MissionSelectionUI
 ## Can be standalone or embedded inside PauseMenu
 
 @export var is_embedded: bool = false
+@export_group("Toggle Button Styles")
+@export var active_toggle_bg: Color = Color(0.2, 0.6, 1.0, 0.3)
+@export var active_toggle_border: Color = Color(0.2, 0.6, 1.0)
+@export var inactive_toggle_bg: Color = Color(0.2, 0.2, 0.2, 0.5)
+@export var inactive_toggle_border: Color = Color(0.4, 0.4, 0.4)
+
+@export_group("Grade Colors")
+@export var grade_s_color: Color = Color(1.0, 0.84, 0.0)
+@export var grade_a_color: Color = Color(0.2, 1.0, 0.2)
+@export var grade_b_color: Color = Color(0.4, 0.8, 1.0)
+@export var grade_c_color: Color = Color(1.0, 1.0, 0.4)
+@export var grade_d_color: Color = Color(1.0, 0.6, 0.2)
+@export var grade_f_color: Color = Color(1.0, 0.3, 0.3)
+
+@export_group("Completion Colors")
+@export var completed_color: Color = Color(0.4, 1.0, 0.4)
+@export var not_completed_color: Color = Color(0.8, 0.8, 0.8)
 
 # Preload the mission card scene
 const MissionCardScene = preload("res://scenes/UI/MissionCard.tscn")
@@ -36,14 +53,14 @@ const AbortMissionIcon = preload("res://sprites/ui/abortmission.png")
 
 # Results view nodes
 @onready var results_container = $Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer
-@onready var results_grade_label = $Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer/GradeLabel
-@onready var results_score_label = $Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer/ScoreLabel
-@onready var results_player_image = $Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer/ImageComparison/PlayerPanel/PlayerImage
-@onready var results_target_image = $Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer/ImageComparison/TargetPanel/TargetImage
-@onready var show_latest_button = $Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer/ToggleContainer/ShowLatestButton
-@onready var show_best_button = $Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer/ToggleContainer/ShowBestButton
-@onready var results_retry_button = $Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer/ResultsButtonContainer/RetryButton
-@onready var results_back_button = $Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer/ResultsButtonContainer/BackButton
+@onready var results_grade_label = $Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer/ResultsContent/GradeLabel
+@onready var results_score_label = $Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer/ResultsContent/ScoreLabel
+@onready var results_player_image = $Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer/ResultsContent/ImageComparison/PlayerPanel/PlayerImage
+@onready var results_target_image = $Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer/ResultsContent/ImageComparison/TargetPanel/TargetImage
+@onready var show_latest_button = $Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer/ResultsContent/ToggleContainer/ShowLatestButton
+@onready var show_best_button = $Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer/ResultsContent/ToggleContainer/ShowBestButton
+@onready var results_retry_button = $Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer/ResultsContent/ResultsButtonContainer/RetryButton
+@onready var results_back_button = $Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer/ResultsContent/ResultsButtonContainer/BackButton
 
 var selected_mission: PaintingMission = null
 var selected_index: int = 0
@@ -103,14 +120,14 @@ func _ready():
 
 func _create_toggle_styles():
 	active_toggle_style = StyleBoxFlat.new()
-	active_toggle_style.bg_color = Color(0.2, 0.6, 1.0, 0.3)
-	active_toggle_style.border_color = Color(0.2, 0.6, 1.0)
+	active_toggle_style.bg_color = active_toggle_bg
+	active_toggle_style.border_color = active_toggle_border
 	active_toggle_style.set_border_width_all(2)
 	active_toggle_style.set_corner_radius_all(4)
 
 	inactive_toggle_style = StyleBoxFlat.new()
-	inactive_toggle_style.bg_color = Color(0.2, 0.2, 0.2, 0.5)
-	inactive_toggle_style.border_color = Color(0.4, 0.4, 0.4)
+	inactive_toggle_style.bg_color = inactive_toggle_bg
+	inactive_toggle_style.border_color = inactive_toggle_border
 	inactive_toggle_style.set_border_width_all(1)
 	inactive_toggle_style.set_corner_radius_all(4)
 
@@ -579,7 +596,7 @@ func _update_preview_panel():
 			completion_data["grade"],
 			completion_data["best_score"]
 		]
-		completion_label.modulate = Color(0.4, 1.0, 0.4)  # Green
+		completion_label.modulate = completed_color
 		completion_label.visible = true
 
 		# Show View Results button
@@ -595,7 +612,7 @@ func _update_preview_panel():
 			view_results_button.tooltip_text = ""
 	else:
 		completion_label.text = tr("Not completed")
-		completion_label.modulate = Color(0.8, 0.8, 0.8)
+		completion_label.modulate = not_completed_color
 		completion_label.visible = true
 
 		# Hide View Results button
@@ -628,6 +645,7 @@ func _on_view_results():
 	# Swap preview content for results
 	preview_content.visible = false
 	results_container.visible = true
+	results_container.queue_sort()
 
 	# Populate results
 	_set_grade_color(completion_data["grade"])
@@ -658,20 +676,13 @@ func _hide_results_view():
 
 func _set_grade_color(grade: String):
 	match grade:
-		"S":
-			results_grade_label.modulate = Color(1.0, 0.84, 0.0)
-		"A":
-			results_grade_label.modulate = Color(0.2, 1.0, 0.2)
-		"B":
-			results_grade_label.modulate = Color(0.4, 0.8, 1.0)
-		"C":
-			results_grade_label.modulate = Color(1.0, 1.0, 0.4)
-		"D":
-			results_grade_label.modulate = Color(1.0, 0.6, 0.2)
-		"F":
-			results_grade_label.modulate = Color(1.0, 0.3, 0.3)
-		_:
-			results_grade_label.modulate = Color(1.0, 1.0, 1.0)
+		"S": results_grade_label.modulate = grade_s_color
+		"A": results_grade_label.modulate = grade_a_color
+		"B": results_grade_label.modulate = grade_b_color
+		"C": results_grade_label.modulate = grade_c_color
+		"D": results_grade_label.modulate = grade_d_color
+		"F": results_grade_label.modulate = grade_f_color
+		_: results_grade_label.modulate = Color.WHITE
 
 func _load_results_painting(completion_data: Dictionary):
 	"""Load the player's saved painting based on latest/best toggle"""

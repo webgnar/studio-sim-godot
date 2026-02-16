@@ -143,90 +143,96 @@ custom_minimum_size = Vector2(130, 60)
 layout_mode = 2
 icon = ExtResource("3_startmission")
 
-[node name="ResultsContainer" type="VBoxContainer" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer"]
+[node name="ResultsContainer" type="ScrollContainer" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer"]
 visible = false
 layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="ResultsContent" type="VBoxContainer" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
 theme_override_constants/separation = 8
 
-[node name="ResultsTitle" type="Label" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer"]
+[node name="ResultsTitle" type="Label" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer/ResultsContent"]
 layout_mode = 2
 text = "Mission Results"
 horizontal_alignment = 1
 
-[node name="GradeLabel" type="Label" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer"]
+[node name="GradeLabel" type="Label" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer/ResultsContent"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 48
 text = "A"
 horizontal_alignment = 1
 
-[node name="ScoreLabel" type="Label" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer"]
+[node name="ScoreLabel" type="Label" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer/ResultsContent"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 16
 text = "Best Score: 85.5%"
 horizontal_alignment = 1
 
-[node name="ImageComparison" type="HBoxContainer" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer"]
+[node name="ImageComparison" type="HBoxContainer" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer/ResultsContent"]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 10
 alignment = 1
 
-[node name="PlayerPanel" type="VBoxContainer" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer/ImageComparison"]
+[node name="PlayerPanel" type="VBoxContainer" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer/ResultsContent/ImageComparison"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 4
 
-[node name="PlayerLabel" type="Label" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer/ImageComparison/PlayerPanel"]
+[node name="PlayerLabel" type="Label" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer/ResultsContent/ImageComparison/PlayerPanel"]
 layout_mode = 2
 text = "Your Painting"
 horizontal_alignment = 1
 
-[node name="PlayerImage" type="TextureRect" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer/ImageComparison/PlayerPanel"]
+[node name="PlayerImage" type="TextureRect" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer/ResultsContent/ImageComparison/PlayerPanel"]
+custom_minimum_size = Vector2(200, 200)
 layout_mode = 2
-size_flags_vertical = 3
 expand_mode = 1
 stretch_mode = 5
 
-[node name="TargetPanel" type="VBoxContainer" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer/ImageComparison"]
+[node name="TargetPanel" type="VBoxContainer" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer/ResultsContent/ImageComparison"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 4
 
-[node name="TargetLabel" type="Label" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer/ImageComparison/TargetPanel"]
+[node name="TargetLabel" type="Label" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer/ResultsContent/ImageComparison/TargetPanel"]
 layout_mode = 2
 text = "Target"
 horizontal_alignment = 1
 
-[node name="TargetImage" type="TextureRect" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer/ImageComparison/TargetPanel"]
+[node name="TargetImage" type="TextureRect" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer/ResultsContent/ImageComparison/TargetPanel"]
+custom_minimum_size = Vector2(200, 200)
 layout_mode = 2
-size_flags_vertical = 3
 expand_mode = 1
 stretch_mode = 5
 
-[node name="ToggleContainer" type="HBoxContainer" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer"]
+[node name="ToggleContainer" type="HBoxContainer" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer/ResultsContent"]
 layout_mode = 2
 alignment = 1
 
-[node name="ShowLatestButton" type="Button" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer/ToggleContainer"]
+[node name="ShowLatestButton" type="Button" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer/ResultsContent/ToggleContainer"]
 custom_minimum_size = Vector2(120, 35)
 layout_mode = 2
 text = "Show Latest"
 
-[node name="ShowBestButton" type="Button" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer/ToggleContainer"]
+[node name="ShowBestButton" type="Button" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer/ResultsContent/ToggleContainer"]
 custom_minimum_size = Vector2(120, 35)
 layout_mode = 2
 text = "Show Best"
 
-[node name="ResultsButtonContainer" type="HBoxContainer" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer"]
+[node name="ResultsButtonContainer" type="HBoxContainer" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer/ResultsContent"]
 layout_mode = 2
 alignment = 1
 
-[node name="RetryButton" type="Button" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer/ResultsButtonContainer"]
+[node name="RetryButton" type="Button" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer/ResultsContent/ResultsButtonContainer"]
 custom_minimum_size = Vector2(120, 40)
 layout_mode = 2
 text = "Retry"
 
-[node name="BackButton" type="Button" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer/ResultsButtonContainer"]
+[node name="BackButton" type="Button" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer/ResultsContent/ResultsButtonContainer"]
 custom_minimum_size = Vector2(120, 40)
 layout_mode = 2
 text = "Back"

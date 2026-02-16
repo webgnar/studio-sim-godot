@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://ddgwjor2tb3jg"
-path.s3tc="res://.godot/imported/zack1_ref.png-733e2b4b9f7cb8264704a39dda5c6574.s3tc.ctex"
-path.etc2="res://.godot/imported/zack1_ref.png-733e2b4b9f7cb8264704a39dda5c6574.etc2.ctex"
+path.s3tc="res://.godot/imported/crazy display.png-8661ad9ae01f291f7432b32421405d19.s3tc.ctex"
+path.etc2="res://.godot/imported/crazy display.png-8661ad9ae01f291f7432b32421405d19.etc2.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -12,8 +12,8 @@ metadata={
 
 [deps]
 
-source_file="res://resources/missions/zack1_ref.png"
-dest_files=["res://.godot/imported/zack1_ref.png-733e2b4b9f7cb8264704a39dda5c6574.s3tc.ctex", "res://.godot/imported/zack1_ref.png-733e2b4b9f7cb8264704a39dda5c6574.etc2.ctex"]
+source_file="res://resources/missions/crazy display.png"
+dest_files=["res://.godot/imported/crazy display.png-8661ad9ae01f291f7432b32421405d19.s3tc.ctex", "res://.godot/imported/crazy display.png-8661ad9ae01f291f7432b32421405d19.etc2.ctex"]
 
 [params]
 
