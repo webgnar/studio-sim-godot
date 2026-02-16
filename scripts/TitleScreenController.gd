@@ -215,12 +215,16 @@ func _on_quit_pressed():
 
 func _wipe_save_data():
 	"""Delete all save files and directories"""
-	# Delete player data JSON
+	# Clear player data (in-memory + on disk)
+	if UIManager:
+		UIManager.clear_player_data()
 	if FileAccess.file_exists("user://player_data.json"):
 		DirAccess.remove_absolute("user://player_data.json")
 		print("TitleScreen: Deleted player_data.json")
 
-	# Delete mission progression JSON
+	# Clear mission progression (in-memory + on disk)
+	if MissionManager:
+		MissionManager.clear_progression()
 	if FileAccess.file_exists("user://mission_progression.json"):
 		DirAccess.remove_absolute("user://mission_progression.json")
 		print("TitleScreen: Deleted mission_progression.json")

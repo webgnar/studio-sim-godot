@@ -5,19 +5,6 @@ class_name MissionSelectionUI
 ## Can be standalone or embedded inside PauseMenu
 
 @export var is_embedded: bool = false
-@export_group("Toggle Button Styles")
-@export var active_toggle_bg: Color = Color(0.2, 0.6, 1.0, 0.3)
-@export var active_toggle_border: Color = Color(0.2, 0.6, 1.0)
-@export var inactive_toggle_bg: Color = Color(0.2, 0.2, 0.2, 0.5)
-@export var inactive_toggle_border: Color = Color(0.4, 0.4, 0.4)
-
-@export_group("Grade Colors")
-@export var grade_s_color: Color = Color(1.0, 0.84, 0.0)
-@export var grade_a_color: Color = Color(0.2, 1.0, 0.2)
-@export var grade_b_color: Color = Color(0.4, 0.8, 1.0)
-@export var grade_c_color: Color = Color(1.0, 1.0, 0.4)
-@export var grade_d_color: Color = Color(1.0, 0.6, 0.2)
-@export var grade_f_color: Color = Color(1.0, 0.3, 0.3)
 
 @export_group("Completion Colors")
 @export var completed_color: Color = Color(0.4, 1.0, 0.4)
@@ -51,16 +38,8 @@ const AbortMissionIcon = preload("res://sprites/ui/abortmission.png")
 # Preview content container (the normal mission detail view)
 @onready var preview_content = $Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer
 
-# Results view nodes
-@onready var results_container = $Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer
-@onready var results_grade_label = $Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer/ResultsContent/GradeLabel
-@onready var results_score_label = $Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer/ResultsContent/ScoreLabel
-@onready var results_player_image = $Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer/ResultsContent/ImageComparison/PlayerPanel/PlayerImage
-@onready var results_target_image = $Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer/ResultsContent/ImageComparison/TargetPanel/TargetImage
-@onready var show_latest_button = $Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer/ResultsContent/ToggleContainer/ShowLatestButton
-@onready var show_best_button = $Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer/ResultsContent/ToggleContainer/ShowBestButton
-@onready var results_retry_button = $Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer/ResultsContent/ResultsButtonContainer/RetryButton
-@onready var results_back_button = $Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer/ResultsContent/ResultsButtonContainer/BackButton
+# Results display component
+@onready var results_display: MissionResultsDisplay = $Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/MissionResultsDisplay
 
 var selected_mission: PaintingMission = null
 var selected_index: int = 0
@@ -77,20 +56,15 @@ var input_cooldown_time: float = 0.15
 
 # Results view state
 var showing_results: bool = false
-var showing_latest: bool = true
-
-# Toggle button styles
-var active_toggle_style: StyleBoxFlat
-var inactive_toggle_style: StyleBoxFlat
 
 func _ready():
 	# Connect button signals
 	view_results_button.pressed.connect(_on_view_results)
 	start_button.pressed.connect(_on_start_or_abort_mission)
-	show_latest_button.pressed.connect(_on_show_latest)
-	show_best_button.pressed.connect(_on_show_best)
-	results_retry_button.pressed.connect(_on_results_retry)
-	results_back_button.pressed.connect(_on_results_back)
+
+	# Connect results display signals
+	results_display.retry_pressed.connect(_on_results_retry)
+	results_display.back_pressed.connect(_on_results_back)
 
 	# Setup preview button navigation array (View Results, Start)
 	preview_buttons = [view_results_button, start_button]
@@ -112,24 +86,8 @@ func _ready():
 	# Update stats display
 	_update_stats_display()
 
-	# Create toggle button styles
-	_create_toggle_styles()
-
 	# Disable input processing by default (PauseMenu manages activation via process_mode)
 	process_mode = Node.PROCESS_MODE_DISABLED
-
-func _create_toggle_styles():
-	active_toggle_style = StyleBoxFlat.new()
-	active_toggle_style.bg_color = active_toggle_bg
-	active_toggle_style.border_color = active_toggle_border
-	active_toggle_style.set_border_width_all(2)
-	active_toggle_style.set_corner_radius_all(4)
-
-	inactive_toggle_style = StyleBoxFlat.new()
-	inactive_toggle_style.bg_color = inactive_toggle_bg
-	inactive_toggle_style.border_color = inactive_toggle_border
-	inactive_toggle_style.set_border_width_all(1)
-	inactive_toggle_style.set_corner_radius_all(4)
 
 func _process(delta):
 	if not dialog.visible:
@@ -640,31 +598,10 @@ func _on_view_results():
 		return
 
 	showing_results = true
-	showing_latest = true
 
-	# Swap preview content for results
+	# Swap preview content for results display
 	preview_content.visible = false
-	results_container.visible = true
-	results_container.queue_sort()
-
-	# Populate results
-	_set_grade_color(completion_data["grade"])
-	results_grade_label.text = completion_data["grade"]
-	results_score_label.text = tr("Best Score: %.1f%%") % completion_data["best_score"]
-
-	# Load target image
-	if selected_mission.reference_image_path and selected_mission.reference_image_path != "":
-		var texture = load(selected_mission.reference_image_path) as Texture2D
-		results_target_image.texture = texture
-	else:
-		results_target_image.texture = null
-
-	# Load player painting
-	_update_toggle_styles()
-	_load_results_painting(completion_data)
-
-	# Focus back button
-	results_back_button.grab_focus()
+	results_display.show_saved_results(selected_mission, completion_data)
 
 	print("MissionSelectionUI: Viewing results for mission '%s'" % selected_mission.title)
 
@@ -672,63 +609,11 @@ func _hide_results_view():
 	"""Switch back to normal preview content"""
 	showing_results = false
 	preview_content.visible = true
-	results_container.visible = false
+	results_display.visible = false
 
-func _set_grade_color(grade: String):
-	match grade:
-		"S": results_grade_label.modulate = grade_s_color
-		"A": results_grade_label.modulate = grade_a_color
-		"B": results_grade_label.modulate = grade_b_color
-		"C": results_grade_label.modulate = grade_c_color
-		"D": results_grade_label.modulate = grade_d_color
-		"F": results_grade_label.modulate = grade_f_color
-		_: results_grade_label.modulate = Color.WHITE
-
-func _load_results_painting(completion_data: Dictionary):
-	"""Load the player's saved painting based on latest/best toggle"""
-	var painting_path = ""
-	if showing_latest:
-		painting_path = completion_data.get("latest_painting_path", "")
-	else:
-		painting_path = completion_data.get("best_painting_path", "")
-
-	if painting_path != "" and FileAccess.file_exists(painting_path):
-		var image = Image.load_from_file(painting_path)
-		if image:
-			results_player_image.texture = ImageTexture.create_from_image(image)
-			return
-
-	results_player_image.texture = null
-
-func _update_toggle_styles():
-	if showing_latest:
-		show_latest_button.add_theme_stylebox_override("normal", active_toggle_style)
-		show_best_button.add_theme_stylebox_override("normal", inactive_toggle_style)
-	else:
-		show_latest_button.add_theme_stylebox_override("normal", inactive_toggle_style)
-		show_best_button.add_theme_stylebox_override("normal", active_toggle_style)
-
-func _on_show_latest():
-	if showing_latest:
-		return
-	showing_latest = true
-	_update_toggle_styles()
-	if selected_mission:
-		var completion_data = MissionManager.get_mission_completion(selected_mission.mission_id)
-		_load_results_painting(completion_data)
-
-func _on_show_best():
-	if not showing_latest:
-		return
-	showing_latest = false
-	_update_toggle_styles()
-	if selected_mission:
-		var completion_data = MissionManager.get_mission_completion(selected_mission.mission_id)
-		_load_results_painting(completion_data)
-
-func _on_results_retry():
+func _on_results_retry(mission: PaintingMission):
 	"""Retry the mission from results view"""
-	if not selected_mission:
+	if not mission:
 		return
 
 	var painting_system = PaintingModeManager.painting_system_2d
@@ -736,8 +621,8 @@ func _on_results_retry():
 		push_error("MissionSelectionUI: No painting system found!")
 		return
 
-	MissionManager.start_mission(selected_mission)
-	painting_system.start_mission(selected_mission)
+	MissionManager.start_mission(mission)
+	painting_system.start_mission(mission)
 
 	nav_mode = NavMode.MISSION_LIST
 	_clear_button_focus()

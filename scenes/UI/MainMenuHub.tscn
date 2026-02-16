@@ -94,11 +94,6 @@ custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 text = "Missions"
 
-[node name="ShopButton" type="Button" parent="Dialog/MarginContainer/HBoxContainer/RightPanel"]
-custom_minimum_size = Vector2(0, 50)
-layout_mode = 2
-text = "Shop (Coming Soon)"
-
 [node name="Spacer" type="Control" parent="Dialog/MarginContainer/HBoxContainer/RightPanel"]
 layout_mode = 2
 size_flags_vertical = 3

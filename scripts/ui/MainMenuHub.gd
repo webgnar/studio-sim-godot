@@ -10,7 +10,6 @@ class_name MainMenuHub
 @onready var total_earnings_label = $Dialog/MarginContainer/HBoxContainer/LeftPanel/StatsContainer/TotalEarningsLabel
 @onready var paintings_created_label = $Dialog/MarginContainer/HBoxContainer/LeftPanel/StatsContainer/PaintingsCreatedLabel
 @onready var missions_button = $Dialog/MarginContainer/HBoxContainer/RightPanel/MissionsButton
-@onready var shop_button = $Dialog/MarginContainer/HBoxContainer/RightPanel/ShopButton
 @onready var quit_button = $Dialog/MarginContainer/HBoxContainer/RightPanel/QuitButton
 
 func _ready():
@@ -28,7 +27,6 @@ func _ready():
 
 	# Connect button signals
 	missions_button.pressed.connect(_on_missions_pressed)
-	shop_button.pressed.connect(_on_shop_pressed)
 	quit_button.pressed.connect(_on_quit_pressed)
 
 	# Update quit button text
@@ -79,8 +77,6 @@ func _navigate_menu(direction: int):
 	var buttons = []
 	if not missions_button.disabled:
 		buttons.append(missions_button)
-	if not shop_button.disabled:
-		buttons.append(shop_button)
 	if not quit_button.disabled:
 		buttons.append(quit_button)
 
@@ -105,7 +101,6 @@ func _setup_focus_navigation():
 	"""Set up gamepad/keyboard focus navigation for menu buttons"""
 	# Enable focus mode for all buttons
 	missions_button.focus_mode = Control.FOCUS_ALL
-	shop_button.focus_mode = Control.FOCUS_ALL
 	quit_button.focus_mode = Control.FOCUS_ALL
 
 	# Don't set up focus neighbors - we handle navigation manually
@@ -148,11 +143,6 @@ func _on_missions_pressed():
 	"""Open mission selection screen"""
 	if UIManager:
 		UIManager.change_state(UIManager.GameState.PAUSE_MENU)
-
-func _on_shop_pressed():
-	"""Open shop screen"""
-	if UIManager:
-		UIManager.change_state(UIManager.GameState.SHOP)
 
 func _on_quit_pressed():
 	"""Return to title screen"""

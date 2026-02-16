@@ -4,53 +4,22 @@ class_name MissionCard
 ## Reusable mission card component for mission selection UI
 ## Displays mission thumbnail, title, difficulty, and completion status
 
-var thumbnail: TextureRect
-var title_label: Label
-var completion_label: Label
+@export var default_style: StyleBoxFlat
+@export var selected_style: StyleBoxFlat
+
+@onready var thumbnail: TextureRect = $MarginContainer/HBoxContainer/Thumbnail
+@onready var title_label: Label = $MarginContainer/HBoxContainer/InfoContainer/TitleLabel
+@onready var completion_label: Label = $MarginContainer/HBoxContainer/InfoContainer/CompletionLabel
 
 var mission: PaintingMission = null
 var card_index: int = 0
 var is_selected: bool = false
 
-# Styling
-var default_style: StyleBoxFlat
-var selected_style: StyleBoxFlat
-
 signal card_clicked(index: int)
 
 func _ready():
-	# Get child nodes
-	thumbnail = $MarginContainer/HBoxContainer/Thumbnail
-	title_label = $MarginContainer/HBoxContainer/InfoContainer/TitleLabel
-	completion_label = $MarginContainer/HBoxContainer/InfoContainer/CompletionLabel
-
-	# Check if there's already a theme stylebox override (from scene file)
-	# If not, create default styles
-	var existing_panel = get_theme_stylebox("panel")
-	if existing_panel:
-		# Clone the existing style for default and selected states
-		default_style = existing_panel.duplicate() as StyleBoxFlat
-		selected_style = existing_panel.duplicate() as StyleBoxFlat
-
-		# Modify selected style to have blue border
-		if selected_style is StyleBoxFlat:
-			selected_style.border_color = Color(0.2, 0.6, 1.0)  # Bright blue
-			selected_style.set_border_width_all(3)
-	else:
-		# No theme override, create default styles
-		default_style = StyleBoxFlat.new()
-		default_style.bg_color = Color(0.2, 0.2, 0.2, 0.9)
-		default_style.border_color = Color(0.4, 0.4, 0.4)
-		default_style.set_border_width_all(2)
-		default_style.set_corner_radius_all(4)
-
-		selected_style = StyleBoxFlat.new()
-		selected_style.bg_color = Color(0.2, 0.3, 0.4, 0.9)
-		selected_style.border_color = Color(0.2, 0.6, 1.0)  # Bright blue
-		selected_style.set_border_width_all(3)
-		selected_style.set_corner_radius_all(4)
-
-		# Set initial style
+	# Apply initial style
+	if default_style:
 		add_theme_stylebox_override("panel", default_style)
 
 	# Connect click event
@@ -93,9 +62,9 @@ func setup(mission_data: PaintingMission, index: int):
 func set_selected(selected: bool):
 	"""Update visual state based on selection"""
 	is_selected = selected
-	if selected:
+	if selected and selected_style:
 		add_theme_stylebox_override("panel", selected_style)
-	else:
+	elif default_style:
 		add_theme_stylebox_override("panel", default_style)
 
 func _on_gui_input(event: InputEvent):

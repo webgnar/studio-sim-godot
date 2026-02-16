@@ -1,0 +1,210 @@
+[gd_scene format=3 uid="uid://cvtxaw8dw07fw"]
+
+[ext_resource type="Theme" uid="uid://cbtaxh5m7udor" path="res://themes/ui_theme.tres" id="1_theme"]
+[ext_resource type="Script" uid="uid://d3kwcino13arc" path="res://scripts/ui/MissionResultsDisplay.gd" id="2_script"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_active"]
+bg_color = Color(0.2, 0.6, 1, 0.3)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.2, 0.6, 1, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_inactive"]
+bg_color = Color(0.2, 0.2, 0.2, 0.5)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.4, 0.4, 0.4, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[node name="MissionResultsDisplay" type="Control" unique_id=148469436]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme = ExtResource("1_theme")
+script = ExtResource("2_script")
+active_toggle_style = SubResource("StyleBoxFlat_active")
+inactive_toggle_style = SubResource("StyleBoxFlat_inactive")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="." unique_id=1168325724]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_bottom = 838.0
+grow_horizontal = 2
+grow_vertical = 2
+horizontal_scroll_mode = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer" unique_id=1946819325]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 10
+
+[node name="ScoreHeader" type="HBoxContainer" parent="ScrollContainer/VBoxContainer" unique_id=960029249]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 30
+alignment = 1
+
+[node name="GradeLabel" type="Label" parent="ScrollContainer/VBoxContainer/ScoreHeader" unique_id=335243836]
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+text = "A"
+horizontal_alignment = 1
+
+[node name="ScoreLabel" type="Label" parent="ScrollContainer/VBoxContainer/ScoreHeader" unique_id=1624076384]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "Score: 85.5%"
+vertical_alignment = 1
+
+[node name="StatusLabel" type="Label" parent="ScrollContainer/VBoxContainer" unique_id=1336449816]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "PASSED! (60% required)"
+horizontal_alignment = 1
+
+[node name="MessageLabel" type="Label" parent="ScrollContainer/VBoxContainer" unique_id=72256686]
+layout_mode = 2
+text = "Nice work! Commission complete."
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="ToggleContainer" type="HBoxContainer" parent="ScrollContainer/VBoxContainer" unique_id=1630853419]
+visible = false
+layout_mode = 2
+alignment = 1
+
+[node name="ShowLatestButton" type="Button" parent="ScrollContainer/VBoxContainer/ToggleContainer" unique_id=1799154966]
+custom_minimum_size = Vector2(150, 35)
+layout_mode = 2
+text = "Show Latest"
+
+[node name="ShowBestButton" type="Button" parent="ScrollContainer/VBoxContainer/ToggleContainer" unique_id=1187300806]
+custom_minimum_size = Vector2(150, 35)
+layout_mode = 2
+text = "Show Best"
+
+[node name="ComparisonContainer" type="HBoxContainer" parent="ScrollContainer/VBoxContainer" unique_id=65937227]
+layout_mode = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="PlayerSwatchDisplay" type="TextureRect" parent="ScrollContainer/VBoxContainer/ComparisonContainer" unique_id=586800437]
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 2
+size_flags_horizontal = 4
+expand_mode = 1
+stretch_mode = 5
+
+[node name="PlayerPaintingPanel" type="VBoxContainer" parent="ScrollContainer/VBoxContainer/ComparisonContainer" unique_id=665619817]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 5
+alignment = 1
+
+[node name="PlayerLabel" type="Label" parent="ScrollContainer/VBoxContainer/ComparisonContainer/PlayerPaintingPanel" unique_id=1404065674]
+layout_mode = 2
+text = "Your Painting"
+horizontal_alignment = 1
+
+[node name="PlayerImage" type="TextureRect" parent="ScrollContainer/VBoxContainer/ComparisonContainer/PlayerPaintingPanel" unique_id=91488174]
+custom_minimum_size = Vector2(1000, 1000)
+layout_mode = 2
+size_flags_vertical = 3
+expand_mode = 1
+stretch_mode = 5
+
+[node name="TargetPaintingPanel" type="VBoxContainer" parent="ScrollContainer/VBoxContainer/ComparisonContainer" unique_id=1082339932]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 5
+alignment = 1
+
+[node name="TargetLabel" type="Label" parent="ScrollContainer/VBoxContainer/ComparisonContainer/TargetPaintingPanel" unique_id=548377090]
+layout_mode = 2
+text = "Target"
+horizontal_alignment = 1
+
+[node name="TargetImage" type="TextureRect" parent="ScrollContainer/VBoxContainer/ComparisonContainer/TargetPaintingPanel" unique_id=1468647445]
+custom_minimum_size = Vector2(1000, 1000)
+layout_mode = 2
+size_flags_vertical = 3
+expand_mode = 1
+stretch_mode = 5
+
+[node name="ReferenceSwatchDisplay" type="TextureRect" parent="ScrollContainer/VBoxContainer/ComparisonContainer" unique_id=1588462838]
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 2
+size_flags_horizontal = 4
+expand_mode = 1
+stretch_mode = 5
+
+[node name="HeatmapPanel" type="VBoxContainer" parent="ScrollContainer/VBoxContainer" unique_id=1869454860]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="HeatmapTitle" type="Label" parent="ScrollContainer/VBoxContainer/HeatmapPanel" unique_id=764167184]
+layout_mode = 2
+text = "Pixel Matching Analysis"
+horizontal_alignment = 1
+
+[node name="HeatmapImage" type="TextureRect" parent="ScrollContainer/VBoxContainer/HeatmapPanel" unique_id=1806998918]
+custom_minimum_size = Vector2(1000, 1000)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="HeatmapLegend" type="Label" parent="ScrollContainer/VBoxContainer/HeatmapPanel" unique_id=843586732]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Green = Matched | Red = Mismatched"
+horizontal_alignment = 1
+
+[node name="BreakdownLabel" type="Label" parent="ScrollContainer/VBoxContainer" unique_id=229631869]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "Score Breakdown"
+horizontal_alignment = 1
+
+[node name="VisualLabel" type="Label" parent="ScrollContainer/VBoxContainer" unique_id=227549562]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Precision: 90.0% (weight: 30%)"
+horizontal_alignment = 1
+
+[node name="ColorLabel" type="Label" parent="ScrollContainer/VBoxContainer" unique_id=811074746]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Color Field: 88.0% (weight: 70%)"
+horizontal_alignment = 1
+
+[node name="ButtonContainer" type="HBoxContainer" parent="ScrollContainer/VBoxContainer" unique_id=2081971833]
+layout_mode = 2
+theme_override_constants/separation = 30
+alignment = 1
+
+[node name="RetryButton" type="Button" parent="ScrollContainer/VBoxContainer/ButtonContainer" unique_id=1682530854]
+custom_minimum_size = Vector2(150, 50)
+layout_mode = 2
+text = "Retry"
+
+[node name="BackButton" type="Button" parent="ScrollContainer/VBoxContainer/ButtonContainer" unique_id=2130788601]
+custom_minimum_size = Vector2(150, 50)
+layout_mode = 2
+text = "Back"

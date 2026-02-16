@@ -1,33 +1,33 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene format=3 uid="uid://cy5eig01jllxm"]
 
-[ext_resource type="Script" path="res://scripts/ui/PaintingCard.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://dlnclqbfhvihf" path="res://scripts/ui/PaintingCard.gd" id="1_script"]
 
-[node name="PaintingCard" type="PanelContainer"]
+[node name="PaintingCard" type="PanelContainer" unique_id=1072215898]
 custom_minimum_size = Vector2(0, 80)
 script = ExtResource("1_script")
 
-[node name="MarginContainer" type="MarginContainer" parent="."]
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1735883261]
 layout_mode = 2
 theme_override_constants/margin_left = 8
 theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 8
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer" unique_id=1156349966]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="Thumbnail" type="TextureRect" parent="MarginContainer/HBoxContainer"]
+[node name="Thumbnail" type="TextureRect" parent="MarginContainer/HBoxContainer" unique_id=1255388214]
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 expand_mode = 1
 stretch_mode = 5
 
-[node name="InfoContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer"]
+[node name="InfoContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer" unique_id=1838629893]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="TitleLabel" type="Label" parent="MarginContainer/HBoxContainer/InfoContainer"]
+[node name="TitleLabel" type="Label" parent="MarginContainer/HBoxContainer/InfoContainer" unique_id=326828920]
 layout_mode = 2
 text = "Untitled"
 vertical_alignment = 1

@@ -1659,6 +1659,7 @@ frame_progress = 0.7735107
 transform = Transform3D(14.285714, 0, 0, 0, 14.285714, 0, 0, 0, 14.285714, 0, -5.8067646, 0)
 stream = ExtResource("92_8xaka")
 volume_db = -40.0
+bus = &"SFX"
 max_distance = 2.0
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="berkey2/waterdrop" unique_id=1932296436]
@@ -1683,6 +1684,7 @@ frame_progress = 0.55477065
 transform = Transform3D(14.285714, 0, 0, 0, 14.285714, 0, 0, 0, 14.285714, -0.011131287, -5.9911175, 0)
 stream = ExtResource("92_8xaka")
 volume_db = -40.0
+bus = &"SFX"
 max_distance = 2.0
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="berkey2/waterdrop2" unique_id=136730085]

@@ -240,6 +240,12 @@ func is_mission_completed(mission_id: String) -> bool:
 	"""Check if a mission has been completed"""
 	return progression.has(mission_id) and progression[mission_id]["completed"]
 
+func clear_progression():
+	"""Clear all mission progression (called on New Game)"""
+	progression.clear()
+	current_mission = null
+	print("MissionManager: Progression cleared")
+
 func save_progression():
 	"""Save progression data to user data"""
 	var save_path = "user://mission_progression.json"

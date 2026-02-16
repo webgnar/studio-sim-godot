@@ -1,9 +1,9 @@
-[gd_scene format=3 uid="uid://isbwb03yee7n"]
+[gd_scene load_steps=3 format=3 uid="uid://isbwb03yee7n"]
 
 [ext_resource type="Script" uid="uid://ci6lixgsw804b" path="res://scripts/ui/ValidationResultUI.gd" id="1_result"]
-[ext_resource type="Theme" uid="uid://cbtaxh5m7udor" path="res://themes/ui_theme.tres" id="2_nh6ge"]
+[ext_resource type="PackedScene" path="res://scenes/UI/MissionResultsDisplay.tscn" id="2_results_display"]
 
-[node name="ValidationResultUI" type="Control" unique_id=494895736]
+[node name="ValidationResultUI" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -13,228 +13,25 @@ grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("1_result")
 
-[node name="Dialog" type="PanelContainer" parent="." unique_id=885019802]
+[node name="Dialog" type="PanelContainer" parent="."]
 layout_mode = 1
-anchors_preset = -1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 offset_left = 40.0
 offset_top = 20.0
-offset_right = 2417.0
-offset_bottom = 3489.0
+offset_right = -40.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 1
-theme = ExtResource("2_nh6ge")
 
-[node name="MarginContainer" type="MarginContainer" parent="Dialog" unique_id=1401953974]
+[node name="MarginContainer" type="MarginContainer" parent="Dialog"]
 layout_mode = 2
 theme_override_constants/margin_left = 20
 theme_override_constants/margin_top = 15
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 15
 
-[node name="ScrollContainer" type="ScrollContainer" parent="Dialog/MarginContainer" unique_id=88912216]
+[node name="MissionResultsDisplay" parent="Dialog/MarginContainer" instance=ExtResource("2_results_display")]
 layout_mode = 2
-
-[node name="VBoxContainer" type="VBoxContainer" parent="Dialog/MarginContainer/ScrollContainer" unique_id=1377021296]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/separation = 10
-alignment = 1
-
-[node name="TitleLabel" type="Label" parent="Dialog/MarginContainer/ScrollContainer/VBoxContainer" unique_id=467898715]
-layout_mode = 2
-text = "Comission Results"
-horizontal_alignment = 1
-
-[node name="HBoxContainer" type="HBoxContainer" parent="Dialog/MarginContainer/ScrollContainer/VBoxContainer" unique_id=1263594704]
-layout_mode = 2
-size_flags_horizontal = 4
-theme_override_constants/separation = 50
-alignment = 1
-
-[node name="ScoreLabel" type="Label" parent="Dialog/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer" unique_id=852876254]
-layout_mode = 2
-theme_override_font_sizes/font_size = 32
-text = "Score: 85.5%"
-horizontal_alignment = 1
-
-[node name="GradeLabel" type="Label" parent="Dialog/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer" unique_id=1861600400]
-layout_mode = 2
-theme_override_font_sizes/font_size = 48
-text = "A"
-horizontal_alignment = 1
-
-[node name="StatusLabel" type="Label" parent="Dialog/MarginContainer/ScrollContainer/VBoxContainer" unique_id=256565660]
-layout_mode = 2
-theme_override_font_sizes/font_size = 32
-text = "PASSED!"
-horizontal_alignment = 1
-
-[node name="MessageLabel" type="Label" parent="Dialog/MarginContainer/ScrollContainer/VBoxContainer" unique_id=238442854]
-layout_mode = 2
-text = "Nice work! Comission complete."
-horizontal_alignment = 1
-autowrap_mode = 3
-
-[node name="ComparisonContainer" type="HBoxContainer" parent="Dialog/MarginContainer/ScrollContainer/VBoxContainer" unique_id=167978402]
-layout_mode = 2
-theme_override_constants/separation = 30
-alignment = 1
-
-[node name="PlayerSwatchDisplay" type="TextureRect" parent="Dialog/MarginContainer/ScrollContainer/VBoxContainer/ComparisonContainer" unique_id=492300708]
-custom_minimum_size = Vector2(200, 200)
-layout_mode = 2
-size_flags_horizontal = 4
-expand_mode = 1
-stretch_mode = 5
-
-[node name="PlayerHistTitle" type="Label" parent="Dialog/MarginContainer/ScrollContainer/VBoxContainer/ComparisonContainer/PlayerSwatchDisplay" unique_id=1230754331]
-layout_mode = 0
-offset_left = 4.0
-offset_top = -58.0
-offset_right = 200.0
-offset_bottom = 2.0
-text = "Your Colors"
-horizontal_alignment = 1
-
-[node name="YourPaintingPanel" type="VBoxContainer" parent="Dialog/MarginContainer/ScrollContainer/VBoxContainer/ComparisonContainer" unique_id=24873111]
-layout_mode = 2
-theme_override_constants/separation = 5
-alignment = 1
-
-[node name="YourLabel" type="Label" parent="Dialog/MarginContainer/ScrollContainer/VBoxContainer/ComparisonContainer/YourPaintingPanel" unique_id=1046836952]
-layout_mode = 2
-text = "Your Painting"
-horizontal_alignment = 1
-
-[node name="YourImage" type="TextureRect" parent="Dialog/MarginContainer/ScrollContainer/VBoxContainer/ComparisonContainer/YourPaintingPanel" unique_id=175879290]
-custom_minimum_size = Vector2(1000, 1000)
-layout_mode = 2
-expand_mode = 1
-stretch_mode = 5
-
-[node name="TargetPaintingPanel" type="VBoxContainer" parent="Dialog/MarginContainer/ScrollContainer/VBoxContainer/ComparisonContainer" unique_id=856791231]
-layout_mode = 2
-theme_override_constants/separation = 5
-alignment = 1
-
-[node name="TargetLabel" type="Label" parent="Dialog/MarginContainer/ScrollContainer/VBoxContainer/ComparisonContainer/TargetPaintingPanel" unique_id=516001529]
-layout_mode = 2
-text = "Target"
-horizontal_alignment = 1
-
-[node name="TargetImage" type="TextureRect" parent="Dialog/MarginContainer/ScrollContainer/VBoxContainer/ComparisonContainer/TargetPaintingPanel" unique_id=304310641]
-custom_minimum_size = Vector2(1000, 1000)
-layout_mode = 2
-expand_mode = 1
-stretch_mode = 5
-
-[node name="ReferenceSwatchDisplay" type="TextureRect" parent="Dialog/MarginContainer/ScrollContainer/VBoxContainer/ComparisonContainer" unique_id=748409069]
-custom_minimum_size = Vector2(200, 200)
-layout_mode = 2
-size_flags_horizontal = 4
-expand_mode = 1
-stretch_mode = 5
-
-[node name="ReferenceHistTitle" type="Label" parent="Dialog/MarginContainer/ScrollContainer/VBoxContainer/ComparisonContainer/ReferenceSwatchDisplay" unique_id=2049113999]
-layout_mode = 0
-offset_left = -202.0
-offset_top = -57.0
-offset_right = 29.0
-offset_bottom = 3.0
-text = "Target Colors"
-horizontal_alignment = 1
-
-[node name="HistogramPanel" type="VBoxContainer" parent="Dialog/MarginContainer/ScrollContainer/VBoxContainer" unique_id=1758977722]
-layout_mode = 2
-theme_override_constants/separation = 5
-
-[node name="HistogramTitle" type="Label" parent="Dialog/MarginContainer/ScrollContainer/VBoxContainer/HistogramPanel" unique_id=1459425736]
-layout_mode = 2
-text = "Color Distribution Comparison"
-horizontal_alignment = 1
-
-[node name="HistogramComparison" type="HBoxContainer" parent="Dialog/MarginContainer/ScrollContainer/VBoxContainer/HistogramPanel" unique_id=627194276]
-layout_mode = 2
-theme_override_constants/separation = 20
-alignment = 1
-
-[node name="PlayerHistPanel" type="VBoxContainer" parent="Dialog/MarginContainer/ScrollContainer/VBoxContainer/HistogramPanel/HistogramComparison" unique_id=388836606]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/separation = 5
-
-[node name="PlayerHistogramDisplay" type="TextureRect" parent="Dialog/MarginContainer/ScrollContainer/VBoxContainer/HistogramPanel/HistogramComparison/PlayerHistPanel" unique_id=87938819]
-custom_minimum_size = Vector2(150, 75)
-layout_mode = 2
-expand_mode = 1
-stretch_mode = 5
-
-[node name="ReferenceHistPanel" type="VBoxContainer" parent="Dialog/MarginContainer/ScrollContainer/VBoxContainer/HistogramPanel/HistogramComparison" unique_id=1403557789]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/separation = 5
-
-[node name="ReferenceHistogramDisplay" type="TextureRect" parent="Dialog/MarginContainer/ScrollContainer/VBoxContainer/HistogramPanel/HistogramComparison/ReferenceHistPanel" unique_id=1051332670]
-custom_minimum_size = Vector2(150, 75)
-layout_mode = 2
-expand_mode = 1
-stretch_mode = 5
-
-[node name="HeatmapPanel" type="VBoxContainer" parent="Dialog/MarginContainer/ScrollContainer/VBoxContainer" unique_id=681769162]
-layout_mode = 2
-theme_override_constants/separation = 5
-
-[node name="HeatmapTitle" type="Label" parent="Dialog/MarginContainer/ScrollContainer/VBoxContainer/HeatmapPanel" unique_id=1189134211]
-layout_mode = 2
-text = "Pixel Matching Analysis"
-horizontal_alignment = 1
-
-[node name="HeatmapImage" type="TextureRect" parent="Dialog/MarginContainer/ScrollContainer/VBoxContainer/HeatmapPanel" unique_id=931649975]
-custom_minimum_size = Vector2(1000, 1000)
-layout_mode = 2
-expand_mode = 1
-stretch_mode = 5
-
-[node name="HeatmapLegend" type="Label" parent="Dialog/MarginContainer/ScrollContainer/VBoxContainer/HeatmapPanel" unique_id=945508732]
-layout_mode = 2
-theme_override_font_sizes/font_size = 32
-text = "Green = Matched | Red = Mismatched"
-horizontal_alignment = 1
-
-[node name="BreakdownLabel" type="Label" parent="Dialog/MarginContainer/ScrollContainer/VBoxContainer" unique_id=244667654]
-layout_mode = 2
-theme_override_font_sizes/font_size = 42
-text = "Score Breakdown"
-horizontal_alignment = 1
-
-[node name="CoordinateLabel" type="Label" parent="Dialog/MarginContainer/ScrollContainer/VBoxContainer" unique_id=404901220]
-layout_mode = 2
-theme_override_font_sizes/font_size = 32
-text = "Placement: 85.0%"
-horizontal_alignment = 1
-
-[node name="VisualLabel" type="Label" parent="Dialog/MarginContainer/ScrollContainer/VBoxContainer" unique_id=1200933260]
-layout_mode = 2
-theme_override_font_sizes/font_size = 32
-text = "Visual: 90.0%"
-horizontal_alignment = 1
-
-[node name="ColorLabel" type="Label" parent="Dialog/MarginContainer/ScrollContainer/VBoxContainer" unique_id=685181500]
-layout_mode = 2
-theme_override_font_sizes/font_size = 32
-text = "Color: 88.0%"
-horizontal_alignment = 1
-
-[node name="ButtonContainer" type="HBoxContainer" parent="Dialog/MarginContainer/ScrollContainer/VBoxContainer" unique_id=1523949210]
-layout_mode = 2
-theme_override_constants/separation = 45
-alignment = 1
-
-[node name="RetryButton" type="Button" parent="Dialog/MarginContainer/ScrollContainer/VBoxContainer/ButtonContainer" unique_id=1981150816]
-custom_minimum_size = Vector2(150, 50)
-layout_mode = 2
-text = "Retry"
-
-[node name="BackButton" type="Button" parent="Dialog/MarginContainer/ScrollContainer/VBoxContainer/ButtonContainer" unique_id=1026983954]
-custom_minimum_size = Vector2(150, 50)
-layout_mode = 2
-text = "Back"

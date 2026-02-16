@@ -1,8 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://dxe3m5p8yk1vq"]
+[gd_scene format=3 uid="uid://c0lgl43nldhr2"]
 
 [ext_resource type="Script" path="res://scripts/ui/ShopUI.gd" id="1_shop"]
 
-[node name="ShopUI" type="Control"]
+[node name="ShopUI" type="Control" unique_id=1049605969]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -12,7 +12,7 @@ grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("1_shop")
 
-[node name="Dialog" type="PanelContainer" parent="."]
+[node name="Dialog" type="PanelContainer" parent="." unique_id=2057461904]
 visible = false
 layout_mode = 1
 anchors_preset = 8
@@ -28,34 +28,34 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 1
 
-[node name="MarginContainer" type="MarginContainer" parent="Dialog"]
+[node name="MarginContainer" type="MarginContainer" parent="Dialog" unique_id=351951616]
 layout_mode = 2
 theme_override_constants/margin_left = 20
 theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 20
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Dialog/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Dialog/MarginContainer" unique_id=1193338044]
 layout_mode = 2
 theme_override_constants/separation = 20
 alignment = 1
 
-[node name="TitleLabel" type="Label" parent="Dialog/MarginContainer/VBoxContainer"]
+[node name="TitleLabel" type="Label" parent="Dialog/MarginContainer/VBoxContainer" unique_id=757682460]
 layout_mode = 2
 theme_override_font_sizes/font_size = 32
 text = "Shop - Coming Soon"
 horizontal_alignment = 1
 
-[node name="PlaceholderLabel" type="Label" parent="Dialog/MarginContainer/VBoxContainer"]
+[node name="PlaceholderLabel" type="Label" parent="Dialog/MarginContainer/VBoxContainer" unique_id=1390941579]
 layout_mode = 2
 text = "Purchase canvases, stickers, and studio upgrades"
 horizontal_alignment = 1
 
-[node name="Spacer" type="Control" parent="Dialog/MarginContainer/VBoxContainer"]
+[node name="Spacer" type="Control" parent="Dialog/MarginContainer/VBoxContainer" unique_id=1659864224]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="BackButton" type="Button" parent="Dialog/MarginContainer/VBoxContainer"]
+[node name="BackButton" type="Button" parent="Dialog/MarginContainer/VBoxContainer" unique_id=1819585246]
 custom_minimum_size = Vector2(200, 50)
 layout_mode = 2
 size_flags_horizontal = 4

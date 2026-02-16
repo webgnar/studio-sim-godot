@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://ctv5r4f51ufg3"]
+[gd_scene load_steps=9 format=3 uid="uid://ctv5r4f51ufg3"]
 
 [ext_resource type="Theme" uid="uid://cbtaxh5m7udor" path="res://themes/ui_theme.tres" id="1_3lj1f"]
 [ext_resource type="Script" uid="uid://cv2b3i1u2t6le" path="res://scripts/ui/MissionSelectionUI.gd" id="1_select"]
@@ -7,6 +7,7 @@
 [ext_resource type="AudioStream" path="res://sounds/picotron/closemenu.ogg" id="5_closemenu"]
 [ext_resource type="AudioStream" path="res://sounds/picotron/buttonnav.ogg" id="6_buttonnav"]
 [ext_resource type="AudioStream" path="res://sounds/picotron/buttonhit.ogg" id="7_buttonhit"]
+[ext_resource type="PackedScene" path="res://scenes/UI/MissionResultsDisplay.tscn" id="8_results_display"]
 
 [node name="MissionSelectionUI" type="Control"]
 layout_mode = 3
@@ -45,7 +46,7 @@ layout_mode = 2
 
 [node name="TitleLabel" type="Label" parent="Dialog/MarginContainer/HBoxContainer/LeftPanel"]
 layout_mode = 2
-text = "SELECT A COMMISION"
+text = "SELECT A COMMISSION"
 horizontal_alignment = 1
 
 [node name="ScrollContainer" type="ScrollContainer" parent="Dialog/MarginContainer/HBoxContainer/LeftPanel"]
@@ -86,7 +87,7 @@ size_flags_horizontal = 3
 
 [node name="PreviewTitleLabel" type="Label" parent="Dialog/MarginContainer/HBoxContainer/RightPanel"]
 layout_mode = 2
-text = "COMISSION REQUEST"
+text = "COMMISSION REQUEST"
 horizontal_alignment = 1
 
 [node name="PreviewPanel" type="PanelContainer" parent="Dialog/MarginContainer/HBoxContainer/RightPanel"]
@@ -143,99 +144,9 @@ custom_minimum_size = Vector2(130, 60)
 layout_mode = 2
 icon = ExtResource("3_startmission")
 
-[node name="ResultsContainer" type="ScrollContainer" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer"]
+[node name="MissionResultsDisplay" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer" instance=ExtResource("8_results_display")]
 visible = false
 layout_mode = 2
-size_flags_vertical = 3
-horizontal_scroll_mode = 0
-
-[node name="ResultsContent" type="VBoxContainer" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/separation = 8
-
-[node name="ResultsTitle" type="Label" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer/ResultsContent"]
-layout_mode = 2
-text = "Mission Results"
-horizontal_alignment = 1
-
-[node name="GradeLabel" type="Label" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer/ResultsContent"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 48
-text = "A"
-horizontal_alignment = 1
-
-[node name="ScoreLabel" type="Label" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer/ResultsContent"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 16
-text = "Best Score: 85.5%"
-horizontal_alignment = 1
-
-[node name="ImageComparison" type="HBoxContainer" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer/ResultsContent"]
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_constants/separation = 10
-alignment = 1
-
-[node name="PlayerPanel" type="VBoxContainer" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer/ResultsContent/ImageComparison"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/separation = 4
-
-[node name="PlayerLabel" type="Label" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer/ResultsContent/ImageComparison/PlayerPanel"]
-layout_mode = 2
-text = "Your Painting"
-horizontal_alignment = 1
-
-[node name="PlayerImage" type="TextureRect" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer/ResultsContent/ImageComparison/PlayerPanel"]
-custom_minimum_size = Vector2(200, 200)
-layout_mode = 2
-expand_mode = 1
-stretch_mode = 5
-
-[node name="TargetPanel" type="VBoxContainer" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer/ResultsContent/ImageComparison"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/separation = 4
-
-[node name="TargetLabel" type="Label" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer/ResultsContent/ImageComparison/TargetPanel"]
-layout_mode = 2
-text = "Target"
-horizontal_alignment = 1
-
-[node name="TargetImage" type="TextureRect" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer/ResultsContent/ImageComparison/TargetPanel"]
-custom_minimum_size = Vector2(200, 200)
-layout_mode = 2
-expand_mode = 1
-stretch_mode = 5
-
-[node name="ToggleContainer" type="HBoxContainer" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer/ResultsContent"]
-layout_mode = 2
-alignment = 1
-
-[node name="ShowLatestButton" type="Button" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer/ResultsContent/ToggleContainer"]
-custom_minimum_size = Vector2(120, 35)
-layout_mode = 2
-text = "Show Latest"
-
-[node name="ShowBestButton" type="Button" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer/ResultsContent/ToggleContainer"]
-custom_minimum_size = Vector2(120, 35)
-layout_mode = 2
-text = "Show Best"
-
-[node name="ResultsButtonContainer" type="HBoxContainer" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer/ResultsContent"]
-layout_mode = 2
-alignment = 1
-
-[node name="RetryButton" type="Button" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer/ResultsContent/ResultsButtonContainer"]
-custom_minimum_size = Vector2(120, 40)
-layout_mode = 2
-text = "Retry"
-
-[node name="BackButton" type="Button" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/ResultsContainer/ResultsContent/ResultsButtonContainer"]
-custom_minimum_size = Vector2(120, 40)
-layout_mode = 2
-text = "Back"
 
 [node name="ConfirmationDialog" type="ConfirmationDialog" parent="."]
 oversampling_override = 1.0
@@ -248,12 +159,16 @@ cancel_button_text = "Continue Mission"
 
 [node name="OpenMenuSound" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("4_openmenu")
+bus = &"SFX"
 
 [node name="CloseMenuSound" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("5_closemenu")
+bus = &"SFX"
 
 [node name="ButtonNavSound" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("6_buttonnav")
+bus = &"SFX"
 
 [node name="ButtonHitSound" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("7_buttonhit")
+bus = &"SFX"

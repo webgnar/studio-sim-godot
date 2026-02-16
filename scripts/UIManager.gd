@@ -13,7 +13,6 @@ enum GameState {
 	MISSION_SELECT, # Mission browser open (deprecated, use PAUSE_MENU)
 	IN_MISSION,     # Actively painting/working on mission
 	VALIDATION,     # Viewing mission results
-	SHOP,           # Shop interface (placeholder)
 	PAUSE_MENU      # Pause menu with tabs (Commissions, Inventory, Options)
 }
 
@@ -31,7 +30,6 @@ var _platform_name: String = ""
 var main_menu: Control = null
 var mission_selection: Control = null
 var validation_result: Control = null
-var shop_ui: Control = null
 var pause_menu: Control = null
 var hud: CanvasLayer = null
 
@@ -96,7 +94,7 @@ func _input(event):
 				else:
 					change_state(GameState.GAMEPLAY)
 			_:
-				# In other states (validation, shop), do nothing
+				# In other states (validation, etc.), do nothing
 				pass
 		get_viewport().set_input_as_handled()
 
@@ -151,13 +149,6 @@ func change_state(new_state: GameState):
 			if CameraManager:
 				CameraManager.set_player_input(false)
 
-		GameState.SHOP:
-			if shop_ui:
-				shop_ui.call("show_screen")
-			_set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
-			if CameraManager:
-				CameraManager.set_player_input(false)
-
 		GameState.PAUSE_MENU:
 			if pause_menu:
 				pause_menu.call("show_screen")
@@ -179,8 +170,6 @@ func _hide_all_screens():
 		mission_selection.call("hide_screen")
 	if validation_result and validation_result.has_method("hide_screen"):
 		validation_result.call("hide_screen")
-	if shop_ui and shop_ui.has_method("hide_screen"):
-		shop_ui.call("hide_screen")
 	if pause_menu and pause_menu.has_method("hide_screen"):
 		pause_menu.call("hide_screen")
 
@@ -234,9 +223,6 @@ func register_screen(screen_type: String, screen: Node):
 		"validation":
 			validation_result = screen
 			print("UIManager: Registered validation result")
-		"shop":
-			shop_ui = screen
-			print("UIManager: Registered shop")
 		"pause_menu":
 			pause_menu = screen
 			print("UIManager: Registered pause menu")
@@ -245,6 +231,11 @@ func register_screen(screen_type: String, screen: Node):
 			print("UIManager: Registered HUD")
 		_:
 			push_warning("UIManager: Unknown screen type '%s'" % screen_type)
+
+func clear_player_data():
+	"""Clear player data in memory (called on New Game)"""
+	missions_completed = 0
+	print("UIManager: Player data cleared")
 
 func save_player_data():
 	"""Save player data to disk"""

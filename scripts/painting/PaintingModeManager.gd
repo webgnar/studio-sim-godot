@@ -34,18 +34,21 @@ func _ready():
 	tick_sound = AudioStreamPlayer.new()
 	tick_sound.stream = load("res://sounds/picotron/sine.ogg")
 	tick_sound.volume_db = -5.0
+	tick_sound.bus = "SFX"
 	add_child(tick_sound)
 
 	# Second layer for chord effect
 	tick_sound_layer2 = AudioStreamPlayer.new()
 	tick_sound_layer2.stream = load("res://sounds/picotron/sine.ogg")
 	tick_sound_layer2.volume_db = -5.0
+	tick_sound_layer2.bus = "SFX"
 	add_child(tick_sound_layer2)
 
 	# Third layer for lower octave
 	tick_sound_layer3 = AudioStreamPlayer.new()
 	tick_sound_layer3.stream = load("res://sounds/picotron/sine.ogg")
 	tick_sound_layer3.volume_db = -5.0
+	tick_sound_layer3.bus = "SFX"
 	add_child(tick_sound_layer3)
 
 func _process(_delta):

@@ -213,7 +213,6 @@ func _on_return_to_title_pressed():
 	UIManager.main_menu = null
 	UIManager.mission_selection = null
 	UIManager.validation_result = null
-	UIManager.shop_ui = null
 	UIManager.hud = null
 
 	# Reset CameraManager so its transition camera doesn't override the title screen camera
