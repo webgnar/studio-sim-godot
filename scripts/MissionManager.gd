@@ -106,7 +106,7 @@ func start_mission(mission: PaintingMission):
 	if UIManager:
 		UIManager.change_state(UIManager.GameState.IN_MISSION)
 
-func complete_mission(result: ValidationResult, latest_painting_path: String = "", best_painting_path: String = ""):
+func complete_mission(result: ValidationResult, latest_painting_path: String = "", best_painting_path: String = "", analysis_paths: Dictionary = {}):
 	"""Mark current mission as completed with the given result"""
 	if not current_mission:
 		push_error("MissionManager: No active mission to complete!")
@@ -129,7 +129,12 @@ func complete_mission(result: ValidationResult, latest_painting_path: String = "
 			"latest_score": 0.0,
 			"latest_grade": "F",
 			"latest_visual_match": 0.0,
-			"latest_color_distribution": 0.0
+			"latest_color_distribution": 0.0,
+			"latest_heatmap_path": "",
+			"best_heatmap_path": "",
+			"latest_player_swatch_path": "",
+			"best_player_swatch_path": "",
+			"ref_swatch_path": ""
 		}
 
 	var mission_data = progression[mission_id]
@@ -142,6 +147,10 @@ func complete_mission(result: ValidationResult, latest_painting_path: String = "
 	mission_data["latest_color_distribution"] = result.color_distribution_score
 	if latest_painting_path != "":
 		mission_data["latest_painting_path"] = latest_painting_path
+
+	# Store analysis image paths
+	for key in analysis_paths:
+		mission_data[key] = analysis_paths[key]
 
 	# Update if this is a better score
 	if score > mission_data["best_score"]:
@@ -243,7 +252,12 @@ func get_mission_completion(mission_id: String) -> Dictionary:
 			"latest_score": 0.0,
 			"latest_grade": "F",
 			"latest_visual_match": 0.0,
-			"latest_color_distribution": 0.0
+			"latest_color_distribution": 0.0,
+			"latest_heatmap_path": "",
+			"best_heatmap_path": "",
+			"latest_player_swatch_path": "",
+			"best_player_swatch_path": "",
+			"ref_swatch_path": ""
 		}
 		for key in defaults:
 			if not data.has(key):
@@ -260,7 +274,12 @@ func get_mission_completion(mission_id: String) -> Dictionary:
 		"latest_score": 0.0,
 		"latest_grade": "F",
 		"latest_visual_match": 0.0,
-		"latest_color_distribution": 0.0
+		"latest_color_distribution": 0.0,
+		"latest_heatmap_path": "",
+		"best_heatmap_path": "",
+		"latest_player_swatch_path": "",
+		"best_player_swatch_path": "",
+		"ref_swatch_path": ""
 	}
 
 func is_mission_completed(mission_id: String) -> bool:

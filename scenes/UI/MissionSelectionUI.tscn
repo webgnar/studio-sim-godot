@@ -137,12 +137,12 @@ theme_override_constants/separation = 60
 alignment = 1
 
 [node name="ViewResultsButton" type="Button" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ButtonContainer" unique_id=78812732]
-custom_minimum_size = Vector2(150, 40)
+custom_minimum_size = Vector2(300, 150)
 layout_mode = 2
 text = "View Results"
 
 [node name="StartButton" type="Button" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ButtonContainer" unique_id=1450903185]
-custom_minimum_size = Vector2(130, 60)
+custom_minimum_size = Vector2(300, 150)
 layout_mode = 2
 icon = ExtResource("3_startmission")
 icon_alignment = 1

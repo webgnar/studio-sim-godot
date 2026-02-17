@@ -120,7 +120,7 @@ func _generate_heatmap_with_tolerance(current: Image, reference: Image, toleranc
 
 func _refresh_heatmap():
 	"""Regenerate heatmap with new multiplier"""
-	if not current_validation_result or not current_validation_result.debug_enabled:
+	if not current_validation_result or current_validation_result.debug_data.is_empty():
 		return
 
 	var debug = current_validation_result.debug_data
@@ -157,7 +157,7 @@ func _on_multiplier_changed(new_value: float):
 
 func update_display(result: ValidationResult):
 	"""Populate all UI elements from ValidationResult"""
-	if not result or not result.debug_enabled or result.debug_data.is_empty():
+	if not result or result.debug_data.is_empty():
 		push_warning("ValidationDebugOverlay: No debug data available")
 		return
 

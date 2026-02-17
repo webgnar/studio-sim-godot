@@ -3,3 +3,8 @@ res://scripts/MissionManager.gd
 res://scripts/painting/HistogramRenderer.gd
 res://scenes/UI/MissionResultsDisplay.tscn
 res://themes/ui_theme.tres
+res://scripts/painting/PaintingSystem2D.gd
+res://scripts/painting/ValidationResult.gd
+res://scripts/ui/ValidationDebugOverlay.gd
+res://scenes/UI/PauseMenu.tscn
+res://scenes/UI/MissionSelectionUI.tscn

@@ -594,9 +594,6 @@ func verify_painting(target: PaintingMission) -> ValidationResult:
 	"""Check if current canvas matches the target painting using visual similarity"""
 	var result = ValidationResult.new()
 
-	# Always enable debug data capture for heatmap and histogram visualizations
-	result.debug_enabled = true
-
 	# Perform visual validation using pixel comparison and color distribution
 	var visual_percentage: float = 0.0
 	var color_distribution_percentage: float = 0.0
@@ -622,30 +619,24 @@ func verify_painting(target: PaintingMission) -> ValidationResult:
 
 					if current_image and reference_image:
 						# Rotate current image to match reference orientation
-						# (Reference images are rotated 90° clockwise during capture)
 						current_image.rotate_90(CLOCKWISE)
 
 						# Store images for heatmap regeneration
-						if result.debug_enabled:
-							result.debug_data["current_image"] = current_image.duplicate()
-							result.debug_data["reference_image"] = reference_image.duplicate()
+						result.debug_data["current_image"] = current_image.duplicate()
+						result.debug_data["reference_image"] = reference_image.duplicate()
 
 						# Get color tolerance based on difficulty
 						var color_tolerance = target.get_color_tolerance()
-
-						# Store color tolerance
-						if result.debug_enabled:
-							result.debug_data["color_tolerance"] = color_tolerance
+						result.debug_data["color_tolerance"] = color_tolerance
 
 						# Perform pixel-by-pixel comparison
 						var visual_result = VisualValidator.compare_images(current_image, reference_image, color_tolerance)
 						visual_percentage = visual_result["visual_score"]
 
 						# Generate and store heatmap for visualization
-						if result.debug_enabled:
-							result.debug_data["heatmap_data"] = _generate_heatmap_data(current_image, reference_image, color_tolerance)
-							result.debug_data["total_pixels"] = visual_result["total_pixels"]
-							result.debug_data["matching_pixels"] = visual_result["matching_pixels"]
+						result.debug_data["heatmap_data"] = _generate_heatmap_data(current_image, reference_image, color_tolerance)
+						result.debug_data["total_pixels"] = visual_result["total_pixels"]
+						result.debug_data["matching_pixels"] = visual_result["matching_pixels"]
 
 						# Compare color distributions
 						var current_hist = VisualValidator.calculate_color_distribution(current_image)
@@ -653,9 +644,8 @@ func verify_painting(target: PaintingMission) -> ValidationResult:
 						color_distribution_percentage = VisualValidator.compare_color_distributions(current_hist, reference_hist)
 
 						# Store histogram data for visualization
-						if result.debug_enabled:
-							result.debug_data["current_histogram"] = current_hist
-							result.debug_data["reference_histogram"] = reference_hist
+						result.debug_data["current_histogram"] = current_hist
+						result.debug_data["reference_histogram"] = reference_hist
 					else:
 						push_warning("PaintingSystem2D: Could not extract images for visual validation")
 				else:
@@ -667,18 +657,16 @@ func verify_painting(target: PaintingMission) -> ValidationResult:
 	var pass_threshold = target.get_pass_threshold()
 
 	# Store all scores for visualization
-	if result.debug_enabled:
-		result.debug_data["visual_score"] = visual_percentage
-		result.debug_data["color_score"] = color_distribution_percentage
-		result.debug_data["pass_threshold"] = pass_threshold
+	result.debug_data["visual_score"] = visual_percentage
+	result.debug_data["color_score"] = color_distribution_percentage
+	result.debug_data["pass_threshold"] = pass_threshold
 
 	# Set simple score (blends visual and color scores)
 	result.set_simple_score(visual_percentage, color_distribution_percentage, pass_threshold)
 
 	# Store final results for visualization
-	if result.debug_enabled:
-		result.debug_data["blended_score"] = result.match_percentage
-		result.debug_data["grade"] = result.get_grade()
+	result.debug_data["blended_score"] = result.match_percentage
+	result.debug_data["grade"] = result.get_grade()
 
 	# Add detailed feedback if not passing
 	if not result.success:
@@ -697,9 +685,6 @@ func verify_painting_async(target: PaintingMission, loading_overlay) -> Validati
 	"""Async version of verify_painting() with loading overlay progress updates"""
 	var result = ValidationResult.new()
 
-	# Always enable debug data capture for heatmap and histogram visualizations
-	result.debug_enabled = true
-
 	# Perform visual validation using pixel comparison and color distribution
 	var visual_percentage: float = 0.0
 	var color_distribution_percentage: float = 0.0
@@ -725,20 +710,15 @@ func verify_painting_async(target: PaintingMission, loading_overlay) -> Validati
 
 					if current_image and reference_image:
 						# Rotate current image to match reference orientation
-						# (Reference images are rotated 90° clockwise during capture)
 						current_image.rotate_90(CLOCKWISE)
 
 						# Store images for heatmap regeneration
-						if result.debug_enabled:
-							result.debug_data["current_image"] = current_image.duplicate()
-							result.debug_data["reference_image"] = reference_image.duplicate()
+						result.debug_data["current_image"] = current_image.duplicate()
+						result.debug_data["reference_image"] = reference_image.duplicate()
 
 						# Get color tolerance based on difficulty
 						var color_tolerance = target.get_color_tolerance()
-
-						# Store color tolerance
-						if result.debug_enabled:
-							result.debug_data["color_tolerance"] = color_tolerance
+						result.debug_data["color_tolerance"] = color_tolerance
 
 						# Step 1: Perform pixel-by-pixel comparison
 						if loading_overlay:
@@ -753,10 +733,9 @@ func verify_painting_async(target: PaintingMission, loading_overlay) -> Validati
 							loading_overlay.update_step(3, 5, "Generating heatmap...")
 							await get_tree().process_frame
 
-						if result.debug_enabled:
-							result.debug_data["heatmap_data"] = _generate_heatmap_data(current_image, reference_image, color_tolerance)
-							result.debug_data["total_pixels"] = visual_result["total_pixels"]
-							result.debug_data["matching_pixels"] = visual_result["matching_pixels"]
+						result.debug_data["heatmap_data"] = _generate_heatmap_data(current_image, reference_image, color_tolerance)
+						result.debug_data["total_pixels"] = visual_result["total_pixels"]
+						result.debug_data["matching_pixels"] = visual_result["matching_pixels"]
 
 						# Step 3: Compare color distributions
 						if loading_overlay:
@@ -768,9 +747,8 @@ func verify_painting_async(target: PaintingMission, loading_overlay) -> Validati
 						color_distribution_percentage = VisualValidator.compare_color_distributions(current_hist, reference_hist)
 
 						# Store histogram data for visualization
-						if result.debug_enabled:
-							result.debug_data["current_histogram"] = current_hist
-							result.debug_data["reference_histogram"] = reference_hist
+						result.debug_data["current_histogram"] = current_hist
+						result.debug_data["reference_histogram"] = reference_hist
 					else:
 						push_warning("PaintingSystem2D: Could not extract images for visual validation")
 				else:
@@ -782,18 +760,16 @@ func verify_painting_async(target: PaintingMission, loading_overlay) -> Validati
 	var pass_threshold = target.get_pass_threshold()
 
 	# Store all scores for visualization
-	if result.debug_enabled:
-		result.debug_data["visual_score"] = visual_percentage
-		result.debug_data["color_score"] = color_distribution_percentage
-		result.debug_data["pass_threshold"] = pass_threshold
+	result.debug_data["visual_score"] = visual_percentage
+	result.debug_data["color_score"] = color_distribution_percentage
+	result.debug_data["pass_threshold"] = pass_threshold
 
 	# Set simple score (blends visual and color scores)
 	result.set_simple_score(visual_percentage, color_distribution_percentage, pass_threshold)
 
 	# Store final results for visualization
-	if result.debug_enabled:
-		result.debug_data["blended_score"] = result.match_percentage
-		result.debug_data["grade"] = result.get_grade()
+	result.debug_data["blended_score"] = result.match_percentage
+	result.debug_data["grade"] = result.get_grade()
 
 	# Add detailed feedback if not passing
 	if not result.success:
@@ -956,7 +932,7 @@ func submit_painting():
 	var result = await verify_painting_async(MissionManager.current_mission, ValidationLoadingOverlay)
 
 	# Update debug overlay if active
-	if ValidationDebugOverlay and result.debug_enabled:
+	if ValidationDebugOverlay and not result.debug_data.is_empty():
 		ValidationDebugOverlay.update_display(result)
 
 	# Save paintings to disk (await to ensure preview sprite is hidden during capture)
@@ -975,12 +951,15 @@ func submit_painting():
 		best_path = await save_painting_image(mission_id, true)  # Save as best too
 		print("PaintingSystem2D: New best score! Saved best painting.")
 
+	# Save analysis images (heatmap, swatches) to disk
+	var analysis_paths = _save_analysis_images(mission_id, result, is_new_best)
+
 	# Hide loading overlay
 	if ValidationLoadingOverlay:
 		ValidationLoadingOverlay.hide_loading()
 
 	# Save the result to mission manager with painting paths
-	MissionManager.complete_mission(result, latest_path, best_path)
+	MissionManager.complete_mission(result, latest_path, best_path, analysis_paths)
 
 	# Find and show the validation result UI
 	var validation_ui = _find_validation_ui()
@@ -989,6 +968,49 @@ func submit_painting():
 	else:
 		push_error("PaintingSystem2D: Could not find ValidationResultUI!")
 		print("Validation result: %s, Score: %.1f%%" % [result.get_grade(), result.match_percentage])
+
+func _save_analysis_images(mission_id: String, result: ValidationResult, is_new_best: bool) -> Dictionary:
+	"""Save heatmap and swatch images to disk for later viewing"""
+	var paths = {}
+	var dir_path = "user://mission_paintings"
+	DirAccess.make_dir_recursive_absolute(dir_path)
+
+	var debug = result.debug_data
+
+	# Save heatmap (always latest, also best if new best)
+	if debug.has("heatmap_data"):
+		var heatmap: Image = debug["heatmap_data"]
+		var latest_heatmap_path = "%s/%s_heatmap_latest.png" % [dir_path, mission_id]
+		heatmap.save_png(latest_heatmap_path)
+		paths["latest_heatmap_path"] = latest_heatmap_path
+		if is_new_best:
+			var best_heatmap_path = "%s/%s_heatmap_best.png" % [dir_path, mission_id]
+			heatmap.save_png(best_heatmap_path)
+			paths["best_heatmap_path"] = best_heatmap_path
+
+	# Save player color swatch
+	if debug.has("current_histogram"):
+		var swatch_texture = HistogramRenderer.create_top_colors_swatch(debug["current_histogram"], Vector2i(60, 300))
+		if swatch_texture:
+			var swatch_image = swatch_texture.get_image()
+			var latest_swatch_path = "%s/%s_player_swatch_latest.png" % [dir_path, mission_id]
+			swatch_image.save_png(latest_swatch_path)
+			paths["latest_player_swatch_path"] = latest_swatch_path
+			if is_new_best:
+				var best_swatch_path = "%s/%s_player_swatch_best.png" % [dir_path, mission_id]
+				swatch_image.save_png(best_swatch_path)
+				paths["best_player_swatch_path"] = best_swatch_path
+
+	# Save reference color swatch
+	if debug.has("reference_histogram"):
+		var swatch_texture = HistogramRenderer.create_top_colors_swatch(debug["reference_histogram"], Vector2i(60, 300))
+		if swatch_texture:
+			var swatch_image = swatch_texture.get_image()
+			var ref_swatch_path = "%s/%s_ref_swatch.png" % [dir_path, mission_id]
+			swatch_image.save_png(ref_swatch_path)
+			paths["ref_swatch_path"] = ref_swatch_path
+
+	return paths
 
 func _find_validation_ui() -> ValidationResultUI:
 	"""Find the ValidationResultUI in the scene tree"""

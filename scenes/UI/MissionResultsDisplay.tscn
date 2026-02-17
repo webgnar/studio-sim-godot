@@ -62,18 +62,17 @@ horizontal_alignment = 1
 autowrap_mode = 3
 
 [node name="ToggleContainer" type="HBoxContainer" parent="ScrollContainer/VBoxContainer" unique_id=1630853419]
-visible = false
 layout_mode = 2
 theme_override_constants/separation = 60
 alignment = 1
 
 [node name="ShowLatestButton" type="Button" parent="ScrollContainer/VBoxContainer/ToggleContainer" unique_id=1799154966]
-custom_minimum_size = Vector2(150, 35)
+custom_minimum_size = Vector2(300, 35)
 layout_mode = 2
 text = "Show Latest"
 
 [node name="ShowBestButton" type="Button" parent="ScrollContainer/VBoxContainer/ToggleContainer" unique_id=1187300806]
-custom_minimum_size = Vector2(150, 35)
+custom_minimum_size = Vector2(300, 35)
 layout_mode = 2
 text = "Show Best"
 

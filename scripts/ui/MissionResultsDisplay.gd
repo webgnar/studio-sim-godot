@@ -79,16 +79,12 @@ func show_saved_results(mission: PaintingMission, completion_data: Dictionary):
 	current_mission = mission
 	showing_latest = true
 
-	# Hide sections not available for saved results
-	heatmap_panel.visible = false
-	player_swatch_display.visible = false
-	reference_swatch_display.visible = false
 	message_label.visible = false
 
 	# Show saved-results toggle
 	toggle_container.visible = true
 
-	# Display scores for current view (latest by default)
+	# Display scores and analysis images for current view (latest by default)
 	_update_saved_display(completion_data)
 
 	# Load target image
@@ -106,6 +102,7 @@ func show_saved_results(mission: PaintingMission, completion_data: Dictionary):
 	back_button.grab_focus()
 
 func _update_saved_display(completion_data: Dictionary):
+	var prefix = "latest" if showing_latest else "best"
 	if showing_latest:
 		grade_label.text = completion_data.get("latest_grade", completion_data["grade"])
 		score_label.text = tr("Score: %.1f%%") % completion_data.get("latest_score", completion_data["best_score"])
@@ -121,6 +118,42 @@ func _update_saved_display(completion_data: Dictionary):
 	status_label.visible = true
 	visual_label.visible = true
 	color_label.visible = true
+
+	# Load saved heatmap
+	var heatmap_path = completion_data.get(prefix + "_heatmap_path", "")
+	if heatmap_path != "" and FileAccess.file_exists(heatmap_path):
+		var img = Image.load_from_file(heatmap_path)
+		if img:
+			heatmap_image.texture = ImageTexture.create_from_image(img)
+			heatmap_panel.visible = true
+		else:
+			heatmap_panel.visible = false
+	else:
+		heatmap_panel.visible = false
+
+	# Load saved player swatch
+	var player_swatch_path = completion_data.get(prefix + "_player_swatch_path", "")
+	if player_swatch_path != "" and FileAccess.file_exists(player_swatch_path):
+		var img = Image.load_from_file(player_swatch_path)
+		if img:
+			player_swatch_display.texture = ImageTexture.create_from_image(img)
+			player_swatch_display.visible = true
+		else:
+			player_swatch_display.visible = false
+	else:
+		player_swatch_display.visible = false
+
+	# Load saved reference swatch (same for both latest/best)
+	var ref_swatch_path = completion_data.get("ref_swatch_path", "")
+	if ref_swatch_path != "" and FileAccess.file_exists(ref_swatch_path):
+		var img = Image.load_from_file(ref_swatch_path)
+		if img:
+			reference_swatch_display.texture = ImageTexture.create_from_image(img)
+			reference_swatch_display.visible = true
+		else:
+			reference_swatch_display.visible = false
+	else:
+		reference_swatch_display.visible = false
 
 func _display_live_comparison(mission: PaintingMission, painting_system: PaintingSystem2D):
 	if not mission or not painting_system:
@@ -153,7 +186,7 @@ func _display_live_comparison(mission: PaintingMission, painting_system: Paintin
 			push_warning("MissionResultsDisplay: Could not load reference image from '%s'" % mission.reference_image_path)
 
 func _display_analysis(result: ValidationResult):
-	if not result or not result.debug_enabled or result.debug_data.is_empty():
+	if not result or result.debug_data.is_empty():
 		heatmap_panel.visible = false
 		player_swatch_display.visible = false
 		reference_swatch_display.visible = false
