@@ -1,19 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://card123456"]
+[gd_scene format=3 uid="uid://card123456"]
 
 [ext_resource type="Theme" uid="uid://cbtaxh5m7udor" path="res://themes/ui_theme.tres" id="1_8voxv"]
 [ext_resource type="Script" uid="uid://dwqkmoohl71o1" path="res://scripts/ui/MissionCard.gd" id="1_card"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_default"]
-bg_color = Color(0.2, 0.2, 0.2, 0.9)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.4, 0.4, 0.4, 1)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_selected"]
 bg_color = Color(0.2, 0.3, 0.4, 0.9)
@@ -27,40 +15,41 @@ corner_radius_top_right = 4
 corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
 
-[node name="MissionCard" type="PanelContainer"]
-custom_minimum_size = Vector2(300, 80)
+[node name="MissionCard" type="PanelContainer" unique_id=1367433817]
+custom_minimum_size = Vector2(400, 200)
+offset_right = 500.0
+offset_bottom = 226.0
 theme = ExtResource("1_8voxv")
 script = ExtResource("1_card")
-default_style = SubResource("StyleBoxFlat_default")
 selected_style = SubResource("StyleBoxFlat_selected")
 
-[node name="MarginContainer" type="MarginContainer" parent="."]
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=919708953]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
+[node name="HBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=1216744900]
 layout_mode = 2
 
-[node name="Thumbnail" type="TextureRect" parent="MarginContainer/HBoxContainer"]
-custom_minimum_size = Vector2(80, 80)
+[node name="Thumbnail" type="TextureRect" parent="MarginContainer/HBoxContainer" unique_id=531032648]
+custom_minimum_size = Vector2(400, 400)
 layout_mode = 2
 expand_mode = 1
 stretch_mode = 5
 
-[node name="InfoContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer"]
+[node name="InfoContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer" unique_id=1488582140]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="TitleLabel" type="Label" parent="MarginContainer/HBoxContainer/InfoContainer"]
+[node name="TitleLabel" type="Label" parent="MarginContainer/HBoxContainer/InfoContainer" unique_id=960913988]
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
 text = "Mission Title"
+horizontal_alignment = 1
 
-[node name="CompletionLabel" type="Label" parent="MarginContainer/HBoxContainer/InfoContainer"]
+[node name="CompletionLabel" type="Label" parent="MarginContainer/HBoxContainer/InfoContainer" unique_id=205498143]
 modulate = Color(0.4, 1, 0.4, 1)
 layout_mode = 2
-theme_override_font_sizes/font_size = 18
 text = "Completed - Grade: A"
+horizontal_alignment = 1

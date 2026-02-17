@@ -1,3 +1,4 @@
+VBoxContainer
 HBoxContainer
 AnimationPlayer
 Node3D
@@ -12,4 +13,3 @@ MeshInstance3D
 CSGBox3D
 CSGMesh3D
 DirectionalLight3D
-SpotLight3D

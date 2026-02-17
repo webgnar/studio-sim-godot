@@ -73,26 +73,26 @@ static func create_top_colors_swatch(histogram: Dictionary, size: Vector2i = Vec
 
 	var image = Image.create(size.x, size.y, false, Image.FORMAT_RGBA8)
 
-	# Divide into 5 vertical sections for diverse color palette
-	var section_width = int(size.x / 5.0)
+	# Divide into 5 horizontal sections stacked vertically
+	var section_height = int(size.y / 5.0)
 
 	for i in range(min(5, top_colors.size())):
-		var x_start = int(i * section_width)
-		var x_end = int((i + 1) * section_width) if i < 4 else size.x
+		var y_start = int(i * section_height)
+		var y_end = int((i + 1) * section_height) if i < 4 else size.y
 		var color = top_colors[i]["color"]
 
 		# Fill section
-		for y in range(size.y):
-			for x in range(x_start, x_end):
+		for y in range(y_start, y_end):
+			for x in range(size.x):
 				image.set_pixel(x, y, color)
 
 	# If fewer than 5 colors, fill remaining with dark gray
 	if top_colors.size() < 5:
 		for i in range(top_colors.size(), 5):
-			var x_start = int(i * section_width)
-			var x_end = int((i + 1) * section_width) if i < 4 else size.x
-			for y in range(size.y):
-				for x in range(x_start, x_end):
+			var y_start = int(i * section_height)
+			var y_end = int((i + 1) * section_height) if i < 4 else size.y
+			for y in range(y_start, y_end):
+				for x in range(size.x):
 					image.set_pixel(x, y, Color(0.2, 0.2, 0.2, 1.0))
 
 	return ImageTexture.create_from_image(image)

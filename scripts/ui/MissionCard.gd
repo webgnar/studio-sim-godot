@@ -4,7 +4,6 @@ class_name MissionCard
 ## Reusable mission card component for mission selection UI
 ## Displays mission thumbnail, title, difficulty, and completion status
 
-@export var default_style: StyleBoxFlat
 @export var selected_style: StyleBoxFlat
 
 @onready var thumbnail: TextureRect = $MarginContainer/HBoxContainer/Thumbnail
@@ -18,11 +17,6 @@ var is_selected: bool = false
 signal card_clicked(index: int)
 
 func _ready():
-	# Apply initial style
-	if default_style:
-		add_theme_stylebox_override("panel", default_style)
-
-	# Connect click event
 	gui_input.connect(_on_gui_input)
 
 func setup(mission_data: PaintingMission, index: int):
@@ -64,8 +58,8 @@ func set_selected(selected: bool):
 	is_selected = selected
 	if selected and selected_style:
 		add_theme_stylebox_override("panel", selected_style)
-	elif default_style:
-		add_theme_stylebox_override("panel", default_style)
+	else:
+		remove_theme_stylebox_override("panel")
 
 func _on_gui_input(event: InputEvent):
 	"""Handle mouse clicks"""

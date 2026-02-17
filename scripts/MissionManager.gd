@@ -123,13 +123,23 @@ func complete_mission(result: ValidationResult, latest_painting_path: String = "
 			"grade": "F",
 			"best_score": 0.0,
 			"latest_painting_path": "",
-			"best_painting_path": ""
+			"best_painting_path": "",
+			"visual_match": 0.0,
+			"color_distribution": 0.0,
+			"latest_score": 0.0,
+			"latest_grade": "F",
+			"latest_visual_match": 0.0,
+			"latest_color_distribution": 0.0
 		}
 
 	var mission_data = progression[mission_id]
 	var was_completed_before = mission_data["completed"]  # Track for Steam achievements
 
-	# Always update latest painting path
+	# Always update latest
+	mission_data["latest_score"] = score
+	mission_data["latest_grade"] = grade
+	mission_data["latest_visual_match"] = result.visual_match_percentage
+	mission_data["latest_color_distribution"] = result.color_distribution_score
 	if latest_painting_path != "":
 		mission_data["latest_painting_path"] = latest_painting_path
 
@@ -137,6 +147,8 @@ func complete_mission(result: ValidationResult, latest_painting_path: String = "
 	if score > mission_data["best_score"]:
 		mission_data["best_score"] = score
 		mission_data["grade"] = grade
+		mission_data["visual_match"] = result.visual_match_percentage
+		mission_data["color_distribution"] = result.color_distribution_score
 		# Update best painting path only if this is the new best
 		if best_painting_path != "":
 			mission_data["best_painting_path"] = best_painting_path
@@ -222,18 +234,33 @@ func get_mission_completion(mission_id: String) -> Dictionary:
 	"""Get completion data for a specific mission"""
 	if progression.has(mission_id):
 		var data = progression[mission_id]
-		# Ensure painting path fields exist (backward compatibility)
-		if not data.has("latest_painting_path"):
-			data["latest_painting_path"] = ""
-		if not data.has("best_painting_path"):
-			data["best_painting_path"] = ""
+		# Ensure fields exist (backward compatibility)
+		var defaults = {
+			"latest_painting_path": "",
+			"best_painting_path": "",
+			"visual_match": 0.0,
+			"color_distribution": 0.0,
+			"latest_score": 0.0,
+			"latest_grade": "F",
+			"latest_visual_match": 0.0,
+			"latest_color_distribution": 0.0
+		}
+		for key in defaults:
+			if not data.has(key):
+				data[key] = defaults[key]
 		return data
 	return {
 		"completed": false,
 		"grade": "F",
 		"best_score": 0.0,
 		"latest_painting_path": "",
-		"best_painting_path": ""
+		"best_painting_path": "",
+		"visual_match": 0.0,
+		"color_distribution": 0.0,
+		"latest_score": 0.0,
+		"latest_grade": "F",
+		"latest_visual_match": 0.0,
+		"latest_color_distribution": 0.0
 	}
 
 func is_mission_completed(mission_id: String) -> bool:

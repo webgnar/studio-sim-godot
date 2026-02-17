@@ -4,9 +4,7 @@ class_name MissionResultsDisplay
 ## Unified mission results display component
 ## Works in two modes: LIVE_VALIDATION (post-submission) and SAVED_RESULTS (browsing history)
 
-@export var swatch_size: Vector2i = Vector2i(300, 80)
-@export var active_toggle_style: StyleBoxFlat
-@export var inactive_toggle_style: StyleBoxFlat
+@export var swatch_size: Vector2i = Vector2i(60, 300)
 
 @onready var grade_label: Label = $ScrollContainer/VBoxContainer/ScoreHeader/GradeLabel
 @onready var score_label: Label = $ScrollContainer/VBoxContainer/ScoreHeader/ScoreLabel
@@ -22,7 +20,6 @@ class_name MissionResultsDisplay
 @onready var reference_swatch_display: TextureRect = $ScrollContainer/VBoxContainer/ComparisonContainer/ReferenceSwatchDisplay
 @onready var heatmap_panel: VBoxContainer = $ScrollContainer/VBoxContainer/HeatmapPanel
 @onready var heatmap_image: TextureRect = $ScrollContainer/VBoxContainer/HeatmapPanel/HeatmapImage
-@onready var breakdown_label: Label = $ScrollContainer/VBoxContainer/BreakdownLabel
 @onready var visual_label: Label = $ScrollContainer/VBoxContainer/VisualLabel
 @onready var color_label: Label = $ScrollContainer/VBoxContainer/ColorLabel
 @onready var retry_button: Button = $ScrollContainer/VBoxContainer/ButtonContainer/RetryButton
@@ -70,7 +67,6 @@ func show_live_results(result: ValidationResult, mission: PaintingMission, paint
 	_display_analysis(result)
 
 	# Score breakdown
-	breakdown_label.visible = true
 	visual_label.visible = true
 	color_label.visible = true
 	visual_label.text = tr("Precision: %.1f%% (weight: 30%%)") % result.visual_match_percentage
@@ -83,23 +79,17 @@ func show_saved_results(mission: PaintingMission, completion_data: Dictionary):
 	current_mission = mission
 	showing_latest = true
 
-	# Grade and score
-	grade_label.text = completion_data["grade"]
-	score_label.text = tr("Best Score: %.1f%%") % completion_data["best_score"]
-
-	# Hide live-only sections
-	status_label.visible = false
-	message_label.visible = false
+	# Hide sections not available for saved results
 	heatmap_panel.visible = false
 	player_swatch_display.visible = false
 	reference_swatch_display.visible = false
-	breakdown_label.visible = false
-	visual_label.visible = false
-	color_label.visible = false
+	message_label.visible = false
 
 	# Show saved-results toggle
 	toggle_container.visible = true
-	_update_toggle_styles()
+
+	# Display scores for current view (latest by default)
+	_update_saved_display(completion_data)
 
 	# Load target image
 	if mission.reference_image_path and mission.reference_image_path != "":
@@ -114,6 +104,23 @@ func show_saved_results(mission: PaintingMission, completion_data: Dictionary):
 	comparison_container.visible = true
 	visible = true
 	back_button.grab_focus()
+
+func _update_saved_display(completion_data: Dictionary):
+	if showing_latest:
+		grade_label.text = completion_data.get("latest_grade", completion_data["grade"])
+		score_label.text = tr("Score: %.1f%%") % completion_data.get("latest_score", completion_data["best_score"])
+		status_label.text = "Latest Attempt"
+		visual_label.text = tr("Precision: %.1f%% (weight: 30%%)") % completion_data.get("latest_visual_match", 0.0)
+		color_label.text = tr("Color Field: %.1f%% (weight: 70%%)") % completion_data.get("latest_color_distribution", 0.0)
+	else:
+		grade_label.text = completion_data["grade"]
+		score_label.text = tr("Score: %.1f%%") % completion_data["best_score"]
+		status_label.text = "Best Attempt"
+		visual_label.text = tr("Precision: %.1f%% (weight: 30%%)") % completion_data.get("visual_match", 0.0)
+		color_label.text = tr("Color Field: %.1f%% (weight: 70%%)") % completion_data.get("color_distribution", 0.0)
+	status_label.visible = true
+	visual_label.visible = true
+	color_label.visible = true
 
 func _display_live_comparison(mission: PaintingMission, painting_system: PaintingSystem2D):
 	if not mission or not painting_system:
@@ -186,30 +193,20 @@ func _load_saved_painting(completion_data: Dictionary):
 
 	player_image.texture = null
 
-func _update_toggle_styles():
-	if not active_toggle_style or not inactive_toggle_style:
-		return
-	if showing_latest:
-		show_latest_button.add_theme_stylebox_override("normal", active_toggle_style)
-		show_best_button.add_theme_stylebox_override("normal", inactive_toggle_style)
-	else:
-		show_latest_button.add_theme_stylebox_override("normal", inactive_toggle_style)
-		show_best_button.add_theme_stylebox_override("normal", active_toggle_style)
-
 func _on_show_latest():
 	if showing_latest:
 		return
 	showing_latest = true
-	_update_toggle_styles()
 	if current_mission:
 		var completion_data = MissionManager.get_mission_completion(current_mission.mission_id)
+		_update_saved_display(completion_data)
 		_load_saved_painting(completion_data)
 
 func _on_show_best():
 	if not showing_latest:
 		return
 	showing_latest = false
-	_update_toggle_styles()
 	if current_mission:
 		var completion_data = MissionManager.get_mission_completion(current_mission.mission_id)
+		_update_saved_display(completion_data)
 		_load_saved_painting(completion_data)

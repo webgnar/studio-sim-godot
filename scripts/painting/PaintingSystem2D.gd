@@ -915,6 +915,9 @@ func save_painting_image(mission_id: String, is_best: bool) -> String:
 	var filename = "%s_%s.png" % [mission_id, "best" if is_best else "latest"]
 	var path = "user://mission_paintings/%s" % filename
 
+	# Ensure directory exists
+	DirAccess.make_dir_recursive_absolute("user://mission_paintings")
+
 	# Save image as PNG
 	var error = image.save_png(path)
 
