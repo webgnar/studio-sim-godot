@@ -19,6 +19,14 @@ func _ready():
 	if mission_authoring_ui and painting_system_2d:
 		mission_authoring_ui.set_painting_system(painting_system_2d)
 
+	# Connect lightswitch3 for "Let There Be Light" achievement
+	var lightswitch3 = find_child("lightswitch3", true, false)
+	if lightswitch3:
+		for child in lightswitch3.get_children():
+			if child is LightSwitchInteraction:
+				child.lights_toggled.connect(_on_lightswitch3_toggled)
+				break
+
 	# Connect lightswitch4 to toggle camera zones
 	var lightwitch4 = find_child("lightwitch4", true, false)
 	if lightwitch4:
@@ -35,6 +43,10 @@ func _ready():
 	# Load saved world state (spawn saved carryable paintings)
 	if WorldStateManager:
 		WorldStateManager.load_world_state(self)
+
+func _on_lightswitch3_toggled(_switch_id: String, is_on: bool) -> void:
+	if is_on and SteamManager:
+		SteamManager.unlock_achievement("ACH_LET_THERE_BE_LIGHT")
 
 func _on_camera_zone_switch_toggled(_switch_id: String, is_on: bool) -> void:
 	if CameraManager:

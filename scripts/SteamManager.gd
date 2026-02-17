@@ -94,7 +94,7 @@ func setup_achievements() -> void:
 
 		# Painting / Stickers
 		"ACH_PAINTER": false,  # Place 500 2D stickers in missions
-		"ACH_TAGGER": false,  # Place 500 3D stickers in the world
+		"ACH_TAGGER": false,  # Place 100 3D stickers in the world
 		"ACH_EXPORT_PAINTING": false,  # Export a painting
 		"ACH_EXPORT_5": false,
 		"ACH_EXPORT_10": false,
@@ -106,6 +106,7 @@ func setup_achievements() -> void:
 		"ACH_NAILGUN": false,  # Break a window with the nailgun
 		"ACH_ELEVATOR": false,  # Lock yourself in the elevator
 		"ACH_DIE": false,  # Cause the player to die
+		"ACH_LET_THERE_BE_LIGHT": false,  # Turn on lightswitch3 in light switch box2
 	}
 
 func setup_statistics() -> void:

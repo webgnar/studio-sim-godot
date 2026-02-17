@@ -1480,6 +1480,19 @@ transform = Transform3D(0.9981081, -0.012753857, 0.060146708, -1.2652144e-08, 0.
 [node name="Label3D" parent="CameraZone3 inside2" index="3"]
 visible = false
 
+[node name="CameraZone3 inside4" parent="." unique_id=278286510 instance=ExtResource("71_dyafi")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 8.396066, 2.0894096, 1.224266)
+visible = false
+
+[node name="CollisionShape3D" parent="CameraZone3 inside4" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.32366848, -0.1977706, -0.07887745)
+
+[node name="SecurityCamera1" parent="CameraZone3 inside4" index="1"]
+transform = Transform3D(-0.7243389, -0.4437286, 0.5276722, -0.092755705, 0.82112026, 0.56316775, -0.68317604, 0.35897982, -0.6359277, 1.6144035, 2.0265296, -4.0301986)
+
+[node name="Label3D" parent="CameraZone3 inside4" index="3"]
+visible = false
+
 [node name="CameraZone3 inside3" parent="." unique_id=1815166673 instance=ExtResource("71_dyafi")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0.5240599, 2.4187667, -5.2538548)
 visible = false
@@ -1727,4 +1740,5 @@ spot_attenuation = 3.79
 [editable path="CameraZone"]
 [editable path="CameraZone3 inside"]
 [editable path="CameraZone3 inside2"]
+[editable path="CameraZone3 inside4"]
 [editable path="CameraZone3 inside3"]

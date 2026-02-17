@@ -424,7 +424,7 @@ func spawn_sticker(world_position: Vector3, normal: Vector3, raycast_result: Dic
 	# Track 3D sticker placement in Steam
 	if SteamManager:
 		SteamManager.increment_stat("STAT_STICKERS_PLACED_3D")
-		if SteamManager.get_stat("STAT_STICKERS_PLACED_3D") >= 500:
+		if SteamManager.get_stat("STAT_STICKERS_PLACED_3D") >= 100:
 			SteamManager.unlock_achievement("ACH_TAGGER")
 
 func cycle_sticker(direction: int):
