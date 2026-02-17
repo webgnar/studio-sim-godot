@@ -16,7 +16,7 @@ signal closed
 @onready var hue_value_label: Label = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/VisualSettings/HueHeader/HueValue
 @onready var saturation_slider: HSlider = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/VisualSettings/SaturationSlider
 @onready var saturation_value_label: Label = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/VisualSettings/SaturationHeader/SaturationValue
-@onready var close_button: Button = $PanelContainer/MarginContainer/VBoxContainer/CloseButton
+var close_button: Button = null  # Removed from scene; closing handled by go_back/ESC
 @onready var controls_list: VBoxContainer = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Controls/ControlsList
 @onready var panel_container: PanelContainer = $PanelContainer
 @onready var button_nav_sound: AudioStreamPlayer = $ButtonNavSound
@@ -79,13 +79,6 @@ func _ready():
 		hue_slider.value_changed.connect(_on_hue_slider_changed)
 	if saturation_slider:
 		saturation_slider.value_changed.connect(_on_saturation_slider_changed)
-	
-	close_button.pressed.connect(_on_close_pressed)
-
-	# Hide close button when embedded (PauseMenu handles closing)
-	if is_embedded:
-		close_button.visible = false
-	
 	# Get theme panel style
 	var theme_res = load("res://themes/ui_theme.tres")
 	if theme_res:
@@ -627,6 +620,8 @@ func _update_tab_mode_visual():
 
 func _update_close_button_focus():
 	"""Update close button focus navigation based on current tab"""
+	if close_button == null:
+		return
 	if tab_container.current_tab == 0:  # Audio tab
 		close_button.focus_previous = close_button.get_path_to(music_slider)
 	elif tab_container.current_tab == 1 and saturation_slider:  # Visual tab
@@ -657,17 +652,18 @@ func _setup_focus_navigation():
 		saturation_slider.focus_previous = saturation_slider.get_path_to(hue_slider)
 		saturation_slider.focus_neighbor_top = saturation_slider.get_path_to(hue_slider)
 
-	if is_embedded:
-		# When embedded, close button is hidden - don't include in focus chain
-		close_button.focus_mode = Control.FOCUS_NONE
-	else:
-		# Standalone: include close button in focus chain
-		close_button.focus_mode = Control.FOCUS_ALL
-		music_slider.focus_next = music_slider.get_path_to(close_button)
-		music_slider.focus_neighbor_bottom = music_slider.get_path_to(close_button)
-		close_button.focus_previous = close_button.get_path_to(music_slider)
-		close_button.focus_neighbor_top = close_button.get_path_to(music_slider)
-		if saturation_slider:
-			saturation_slider.focus_next = saturation_slider.get_path_to(close_button)
-			saturation_slider.focus_neighbor_bottom = saturation_slider.get_path_to(close_button)
-		_update_close_button_focus()
+	if close_button != null:
+		if is_embedded:
+			# When embedded, close button is hidden - don't include in focus chain
+			close_button.focus_mode = Control.FOCUS_NONE
+		else:
+			# Standalone: include close button in focus chain
+			close_button.focus_mode = Control.FOCUS_ALL
+			music_slider.focus_next = music_slider.get_path_to(close_button)
+			music_slider.focus_neighbor_bottom = music_slider.get_path_to(close_button)
+			close_button.focus_previous = close_button.get_path_to(music_slider)
+			close_button.focus_neighbor_top = close_button.get_path_to(music_slider)
+			if saturation_slider:
+				saturation_slider.focus_next = saturation_slider.get_path_to(close_button)
+				saturation_slider.focus_neighbor_bottom = saturation_slider.get_path_to(close_button)
+			_update_close_button_focus()

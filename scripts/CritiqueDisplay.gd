@@ -40,11 +40,10 @@ const SCROLL_SPEED = 10.0 # pixels per second
 const SCROLL_PAUSE = 10.0 # seconds to pause at top and bottom
 
 func _ready() -> void:
-	# Set up ViewportTexture from SubViewport.get_texture() (most reliable method)
+	# Apply the TV shader material and feed it the SubViewport texture
 	if _screen and _sub_viewport:
-		var mat = StandardMaterial3D.new()
-		mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-		mat.albedo_texture = _sub_viewport.get_texture()
+		var mat: ShaderMaterial = preload("res://materials/tv.tres").duplicate()
+		mat.set_shader_parameter("tv_tex", _sub_viewport.get_texture())
 		_screen.material_override = mat
 
 	_critique_request = HTTPRequest.new()

@@ -3,7 +3,6 @@
 [ext_resource type="Script" uid="uid://c8va3jufkln28" path="res://scripts/OptionsMenu.gd" id="1_options"]
 [ext_resource type="Theme" uid="uid://cbtaxh5m7udor" path="res://themes/ui_theme.tres" id="2_theme"]
 [ext_resource type="AudioStream" uid="uid://ht7rkfvqubdm" path="res://sounds/picotron/buttonnav.ogg" id="3_nav_sound"]
-[ext_resource type="Texture2D" uid="uid://dor0d4yiulgi5" path="res://sprites/ui/arrow.png" id="3_vlbhp"]
 [ext_resource type="AudioStream" uid="uid://cobqa7fyriw4h" path="res://sounds/picotron/openmenu.ogg" id="4_open_sound"]
 [ext_resource type="AudioStream" uid="uid://cyvlgci21yq6s" path="res://sounds/picotron/closemenu.ogg" id="5_close_sound"]
 [ext_resource type="AudioStream" uid="uid://cakrgermhdo0f" path="res://sounds/picotron/tick.ogg" id="6_tick_sound"]
@@ -175,12 +174,6 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 4
-
-[node name="CloseButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=295302642]
-layout_mode = 2
-text = "Back"
-icon = ExtResource("3_vlbhp")
-expand_icon = true
 
 [node name="ButtonNavSound" type="AudioStreamPlayer" parent="." unique_id=1505501763]
 stream = ExtResource("3_nav_sound")

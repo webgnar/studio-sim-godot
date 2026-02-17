@@ -1,0 +1,15 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://bl43iap4a4kjl"]
+
+[ext_resource type="Shader" uid="uid://dpauf2xqr6u2e" path="res://materials/tv.gdshader" id="1_nvkav"]
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_llmxe"]
+viewport_path = NodePath("SubViewport")
+
+[resource]
+resource_local_to_scene = true
+render_priority = 0
+shader = ExtResource("1_nvkav")
+shader_parameter/tv_tex = SubResource("ViewportTexture_llmxe")
+shader_parameter/scanline_strength = 6.8100000000000005
+shader_parameter/noise_strength = 1.04
+shader_parameter/flicker_strength = 0.0

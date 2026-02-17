@@ -22,3 +22,10 @@ res://scripts/ui/MissionSelectionUI.gd
 res://scripts/ui/PauseMenu.gd
 res://scenes/UI/TitleScreenUI.tscn
 res://scenes/UI/PaintingPromptDialog.tscn
+res://scenes/UI/OptionsMenu.tscn
+res://scenes/CritiqueTV.tscn
+res://materials/world_environ.tres
+res://materials/brickwhite.tres
+res://materials/tv.gdshader
+res://materials/tv.tres
+res://scripts/CritiqueDisplay.gd
