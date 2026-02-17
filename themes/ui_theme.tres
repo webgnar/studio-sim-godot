@@ -7,6 +7,18 @@
 [ext_resource type="Texture2D" uid="uid://d3o7cns418oil" path="res://sprites/ui/sliderplain.png" id="4_l5g8p"]
 [ext_resource type="Texture2D" uid="uid://c5rhf1e60dj00" path="res://sprites/ui/sliderhover.png" id="5_6hnno"]
 [ext_resource type="Texture2D" uid="uid://wpv42ndg7j5o" path="res://sprites/ui/sliderpressed.png" id="6_ntpv8"]
+[ext_resource type="Texture2D" uid="uid://dlupaeaiwaght" path="res://sprites/ui/scroll background.png" id="7_6hnno"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6hnno"]
+bg_color = Color(0.59721893, 0.7161294, 1, 1)
+skew = Vector2(0, 0.05)
+border_width_left = 10
+border_width_top = 10
+border_width_right = 10
+border_width_bottom = 10
+border_color = Color(0.48766214, 0.48766226, 0.4876619, 1)
+corner_radius_bottom_right = 54
+corner_radius_bottom_left = 50
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xxbg1"]
 bg_color = Color(1, 0.22015908, 0.7032731, 1)
@@ -19,6 +31,16 @@ expand_margin_left = 10.0
 expand_margin_right = 10.0
 shadow_size = 10
 shadow_offset = Vector2(1.5, 5.75)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ntpv8"]
+bg_color = Color(1, 0.627451, 0.81960785, 1)
+skew = Vector2(0.11, 0)
+border_width_left = 10
+border_width_top = 10
+border_width_right = 10
+border_width_bottom = 10
+border_color = Color(7.70092e-07, 0.95090836, 0.81423587, 1)
+shadow_size = 28
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qa7hf"]
 bg_color = Color(0.883255, 0.84437096, 0.7086742, 1)
@@ -96,6 +118,12 @@ texture = ExtResource("5_6hnno")
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ntpv8"]
 texture = ExtResource("6_ntpv8")
 
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_j8bgu"]
+texture = ExtResource("7_6hnno")
+texture_margin_left = 20.0
+texture_margin_right = 20.0
+axis_stretch_horizontal = 1
+
 [resource]
 default_font = ExtResource("1_xxbg1")
 default_font_size = 47
@@ -106,7 +134,9 @@ Button/colors/font_hover_color = Color(0.95, 0.95, 0.95, 1)
 Button/colors/font_outline_color = Color(0, 0, 0, 1)
 Button/colors/icon_disabled_color = Color(1, 1, 1, 0.4)
 Button/constants/outline_size = 20
+Button/styles/disabled = SubResource("StyleBoxFlat_6hnno")
 Button/styles/focus = SubResource("StyleBoxFlat_xxbg1")
+Button/styles/hover = SubResource("StyleBoxFlat_ntpv8")
 Button/styles/normal = SubResource("StyleBoxFlat_qa7hf")
 HSlider/icons/grabber = ExtResource("2_ep62g")
 HSlider/icons/grabber_disabled = ExtResource("2_ep62g")
@@ -125,8 +155,9 @@ TabContainer/styles/panel = SubResource("StyleBoxFlat_tab_panel")
 TabContainer/styles/tab_focus = null
 TabContainer/styles/tab_selected = SubResource("StyleBoxFlat_tab_selected")
 TabContainer/styles/tab_unselected = SubResource("StyleBoxFlat_tab_unselected")
-VScrollBar/constants/padding_left = 13
-VScrollBar/constants/padding_right = 13
+VScrollBar/constants/padding_left = 3
+VScrollBar/constants/padding_right = 5
 VScrollBar/styles/grabber = SubResource("StyleBoxTexture_l5g8p")
 VScrollBar/styles/grabber_highlight = SubResource("StyleBoxTexture_6hnno")
 VScrollBar/styles/grabber_pressed = SubResource("StyleBoxTexture_ntpv8")
+VScrollBar/styles/scroll = SubResource("StyleBoxTexture_j8bgu")
