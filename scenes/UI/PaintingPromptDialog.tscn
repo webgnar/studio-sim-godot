@@ -43,7 +43,7 @@ theme_override_constants/separation = 20
 
 [node name="MessageLabel" type="Label" parent="Overlay/CenterContainer/Panel/MarginContainer/VBoxContainer" unique_id=467427195]
 layout_mode = 2
-text = "You haven't named or given your painting an artist statement. Studio Sim encourages you to provide context to viewers and critics about your painting, to help them understand your work."
+text = "You haven't named or included an artist statement with your painting. Studio Sim encourages you to provide context-- to viewers and critics, to help them understand your work."
 horizontal_alignment = 1
 autowrap_mode = 3
 
@@ -52,9 +52,10 @@ layout_mode = 2
 theme_override_constants/separation = 10
 
 [node name="DismissButton" type="Button" parent="Overlay/CenterContainer/Panel/MarginContainer/VBoxContainer/ButtonBox" unique_id=224926318]
+custom_minimum_size = Vector2(1000, 0)
 layout_mode = 2
-text = "That's okay, I want my artwork to speak for itself"
+text = "That's okay, I want my art to speak for itself"
 
 [node name="AddButton" type="Button" parent="Overlay/CenterContainer/Panel/MarginContainer/VBoxContainer/ButtonBox" unique_id=392779628]
 layout_mode = 2
-text = "Add title and artist statement"
+text = "Oh! I'll add a title and artist statement..."

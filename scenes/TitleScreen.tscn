@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://bn5a584271aim" path="res://scripts/TitleScreenController.gd" id="1_2ktle"]
 [ext_resource type="Material" uid="uid://wwlsotlotycw" path="res://materials/wood.tres" id="1_hjcsb"]
-[ext_resource type="PackedScene" path="res://scenes/UI/TitleScreenUI.tscn" id="1_ui_layer"]
+[ext_resource type="PackedScene" uid="uid://dmrwgxfaod0t7" path="res://scenes/UI/TitleScreenUI.tscn" id="1_ui_layer"]
 [ext_resource type="Texture2D" uid="uid://cbn0d3riillev" path="res://sprites/wood.jpg" id="2_2ktle"]
 [ext_resource type="Texture2D" uid="uid://dyuvtxhp260rj" path="res://sprites/normals/wood_ambient.png" id="3_l7b4h"]
 [ext_resource type="Texture2D" uid="uid://3smflfln5x7y" path="res://sprites/normals/wood_specular.png" id="4_3mdse"]
@@ -50,15 +50,17 @@
 [ext_resource type="AudioStream" uid="uid://ht7rkfvqubdm" path="res://sounds/picotron/buttonnav.ogg" id="52_08dc8"]
 [ext_resource type="AudioStream" uid="uid://dgbcn8tq2wrkt" path="res://sounds/picotron/gamestart.ogg" id="53_bb24d"]
 
-[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_888yl"]
-sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
-ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_n78cu"]
+sky_top_color = Color(0.2162182, 0.61953396, 1, 1)
+sky_horizon_color = Color(0.88278586, 0.79607755, 0.7517986, 1)
+sky_curve = 0.037500024
 
 [sub_resource type="Sky" id="Sky_rwgxs"]
-sky_material = SubResource("ProceduralSkyMaterial_888yl")
+sky_material = SubResource("ProceduralSkyMaterial_n78cu")
 
-[sub_resource type="Environment" id="Environment_qyuap"]
+[sub_resource type="Environment" id="Environment_cr31u"]
 background_mode = 2
+background_energy_multiplier = 0.5
 sky = SubResource("Sky_rwgxs")
 tonemap_mode = 2
 glow_enabled = true
@@ -362,7 +364,7 @@ transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545
 shadow_enabled = true
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1269380869]
-environment = SubResource("Environment_qyuap")
+environment = SubResource("Environment_cr31u")
 
 [node name="StudioEnvironment" type="Node3D" parent="." unique_id=743645245]
 
@@ -693,7 +695,7 @@ size = Vector2i(256, 256)
 transform = Transform3D(1.2796953e-07, 0.21836469, 0.9758673, -2.8635068e-08, 0.9758673, -0.21836469, -1, 0, 1.3113417e-07, 4.2467685, 1.1345179, 6.6101465)
 
 [node name="cardboard box" parent="." unique_id=1079908987 instance=ExtResource("25_hvy54")]
-transform = Transform3D(0.30011263, 0, -0.13723126, 0, 0.33, 0, 0.13723126, 0, 0.30011263, -1.0337448, 0.29857874, 3.2631254)
+transform = Transform3D(0.30011263, 0, -0.13723126, 0, 0.33, 0, 0.13723126, 0, 0.30011263, -1.0337448, 0.2883954, 3.2631254)
 
 [node name="lid1" parent="cardboard box" unique_id=696356962 instance=ExtResource("26_dchwh")]
 transform = Transform3D(7.54979e-08, 0, -1, 0, 1, 0, 1, 0, 7.54979e-08, 0.0021412373, 1.230222, 0.9953356)
@@ -745,7 +747,7 @@ shape = SubResource("CylinderShape3D_q22b5")
 debug_color = Color(0.9490196, 0, 0.58431375, 0.8117647)
 
 [node name="FAN" type="RigidBody3D" parent="." unique_id=2045683840]
-transform = Transform3D(-0.58981663, 0, 0.80753714, 0, 1, 0, -0.80753714, 0, -0.58981663, 1.7479172, 0.17234671, 5.985759)
+transform = Transform3D(-0.58981663, 0, 0.80753714, 0, 1, 0, -0.80753714, 0, -0.58981663, 1.7479172, 0.08996761, 5.985759)
 collision_layer = 8
 collision_mask = 3
 
@@ -782,7 +784,7 @@ transform = Transform3D(-0.06961743, 0, 0.0073084896, 0, 0.07000696, 0, -0.00730
 shape = SubResource("BoxShape3D_u3ctg")
 
 [node name="humanrig" parent="." unique_id=400842112 instance=ExtResource("38_3yl86")]
-transform = Transform3D(-0.29999998, 0, 2.6226832e-08, 0, 0.29999998, 0, -2.6226832e-08, 0, -0.29999998, 0, 0, 8.204904)
+transform = Transform3D(-0.29999998, 0, 2.6226832e-08, 0, 0.29999998, 0, -2.6226832e-08, 0, -0.29999998, 0, 0, 7.5253544)
 script = ExtResource("40_5h1vy")
 idle_duration = 2.0
 
@@ -875,6 +877,42 @@ transform = Transform3D(0.1481093, 0.134401, 0, -0.134401, 0.1481093, 0, 0, 0, 0
 spot_range = 6.371
 spot_attenuation = 0.16
 spot_angle = 59.56
+
+[node name="SpotLight3D" type="SpotLight3D" parent="." unique_id=1707224694]
+transform = Transform3D(1, 0, 0, 0, 0.20997697, 0.9777064, 0, -0.9777064, 0.20997697, 0, 3.3764446, 7.834524)
+light_color = Color(0.27450982, 1, 1, 1)
+light_energy = 0.107
+shadow_enabled = true
+spot_range = 5.324
+spot_attenuation = 0.48
+spot_angle = 51.11
+
+[node name="SpotLight3D4" type="SpotLight3D" parent="." unique_id=1169039013]
+transform = Transform3D(-0.87135077, 0.47972184, -0.10302739, 0, 0.20997696, 0.9777063, 0.4906605, 0.85192525, -0.18296361, 1.2917732, 1.4700565, 7.834524)
+light_color = Color(0.27450982, 1, 1, 1)
+light_energy = 0.107
+shadow_enabled = true
+spot_range = 5.324
+spot_attenuation = 0.48
+spot_angle = 51.11
+
+[node name="SpotLight3D3" type="SpotLight3D" parent="." unique_id=1179110901]
+transform = Transform3D(-0.21105331, -0.82549983, 0.5234564, 0.6194269, 0.30131525, 0.72492725, -0.75615263, 0.47724128, 0.44774324, -1.740962, 1.4091241, 7.152073)
+light_color = Color(0.27450982, 1, 1, 1)
+light_energy = 0.107
+shadow_enabled = true
+spot_range = 5.324
+spot_attenuation = 0.48
+spot_angle = 51.11
+
+[node name="SpotLight3D2" type="SpotLight3D" parent="." unique_id=1596436601]
+transform = Transform3D(0.9775522, 0.13977769, -0.15765145, 0, 0.7482499, 0.66341704, 0.21069357, -0.6485247, 0.73145336, 1.2192783, 1.1912425, 6.5450354)
+light_color = Color(0.27450982, 1, 1, 1)
+light_energy = 0.107
+shadow_enabled = true
+spot_range = 5.324
+spot_attenuation = 0.48
+spot_angle = 51.11
 
 [editable path="PaintingProp2"]
 [editable path="PaintingProp3"]

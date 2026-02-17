@@ -59,6 +59,14 @@ grow_begin = 0.0
 grow_end = 0.0
 thickness = 7
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_j8bgu"]
+bg_color = Color(0.9416745, 0.86228746, 0.79595697, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rnfg8"]
+bg_color = Color(0.9829121, 0.9785263, 0.8839967, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ku3ou"]
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
 bg_color = Color(0.25664788, 0.18905699, 0.011071853, 0.9019608)
 border_width_left = 3
@@ -146,6 +154,17 @@ HSlider/styles/grabber_area = null
 HSlider/styles/grabber_area_highlight = null
 HSlider/styles/slider = SubResource("StyleBoxLine_l5g8p")
 Label/colors/font_color = Color(0.37254903, 1, 0.99215686, 1)
+LineEdit/colors/caret_color = Color(0.95374864, 0.63054395, 0.65144414, 1)
+LineEdit/colors/font_color = Color(0.84219646, 0.86505246, 0.9005652, 1)
+LineEdit/colors/font_placeholder_color = Color(0.8509804, 0.90588236, 1, 1)
+LineEdit/colors/selection_color = Color(0.18127888, 1, 0.82361966, 1)
+LineEdit/constants/caret_width = 10
+LineEdit/constants/minimum_character_width = 4
+LineEdit/constants/outline_size = 32
+LineEdit/font_sizes/font_size = 72
+LineEdit/styles/focus = SubResource("StyleBoxFlat_j8bgu")
+LineEdit/styles/normal = SubResource("StyleBoxFlat_rnfg8")
+LineEdit/styles/read_only = SubResource("StyleBoxFlat_ku3ou")
 PanelContainer/styles/panel = SubResource("StyleBoxFlat_panel")
 StickerSlotDefault/styles/panel = SubResource("StyleBoxFlat_gfhtu")
 StickerSlotEquipped/styles/panel = SubResource("StyleBoxFlat_jkgan")

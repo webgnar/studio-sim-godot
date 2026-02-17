@@ -1,7 +1,7 @@
-[gd_resource type="Resource" script_class="PaintingMission" load_steps=37 format=3]
+[gd_resource type="Resource" script_class="PaintingMission" format=3 uid="uid://d2i6xidtqpauj"]
 
-[ext_resource type="Script" path="res://scripts/painting/PaintingMission.gd" id="1_rbvai"]
-[ext_resource type="Script" path="res://scripts/painting/PlacedStickerData.gd" id="2_srvox"]
+[ext_resource type="Script" uid="uid://b8846po2cv0jq" path="res://scripts/painting/PaintingMission.gd" id="1_rbvai"]
+[ext_resource type="Script" uid="uid://c5u6lwuvv83fw" path="res://scripts/painting/PlacedStickerData.gd" id="2_srvox"]
 
 [sub_resource type="Resource" id="Resource_l7f2t"]
 script = ExtResource("2_srvox")

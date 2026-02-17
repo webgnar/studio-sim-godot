@@ -146,6 +146,7 @@ custom_minimum_size = Vector2(300, 150)
 layout_mode = 2
 icon = ExtResource("3_startmission")
 icon_alignment = 1
+expand_icon = true
 
 [node name="MissionResultsDisplay" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer" unique_id=233099724 instance=ExtResource("8_results_display")]
 visible = false

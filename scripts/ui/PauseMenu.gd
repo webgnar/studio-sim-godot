@@ -56,6 +56,10 @@ func _ready():
 	# Build tab buttons array
 	tab_buttons = [commissions_tab_button, inventory_tab_button, options_tab_button]
 
+	# Disable Godot focus on tab buttons (navigation is script-driven via modulate)
+	for button in tab_buttons:
+		button.focus_mode = Control.FOCUS_NONE
+
 	# Connect tab button signals
 	commissions_tab_button.pressed.connect(func(): _switch_tab(Tab.COMMISSIONS))
 	inventory_tab_button.pressed.connect(func(): _switch_tab(Tab.INVENTORY))
@@ -143,11 +147,41 @@ func _input(event):
 	# The children will consume events they handle via set_input_as_handled()
 	# If go_back is not consumed by children, we catch it here
 	elif nav_mode == NavMode.TAB_CONTENT:
+		# Check if ReturnToTitleButton is focused (Options tab bottom)
+		var focused = viewport.gui_get_focus_owner()
+		if focused == return_to_title_button:
+			if event.is_action_pressed("ui_up") or event.is_action_pressed("move_forward"):
+				return_to_title_button.release_focus()
+				# Re-enter options content at bottom
+				if options_menu:
+					options_menu.keyboard_nav_enabled = true
+					options_menu.is_in_tab_mode = false
+					options_menu._focus_last_content_item()
+				viewport.set_input_as_handled()
+			elif event.is_action_pressed("jump") or event.is_action_pressed("ui_accept"):
+				_on_return_to_title_pressed()
+				viewport.set_input_as_handled()
+			elif event.is_action_pressed("go_back"):
+				return_to_title_button.release_focus()
+				_enter_tab_bar_mode()
+				viewport.set_input_as_handled()
+			return
+
+		# Child didn't consume these events — we're at a boundary
 		if event.is_action_pressed("go_back"):
-			# Only intercept if child didn't consume it
-			# (child scripts call set_input_as_handled when they handle go_back)
 			_enter_tab_bar_mode()
 			viewport.set_input_as_handled()
+		elif event.is_action_pressed("ui_up") or event.is_action_pressed("move_forward"):
+			_enter_tab_bar_mode()
+			viewport.set_input_as_handled()
+		elif event.is_action_pressed("ui_down") or event.is_action_pressed("move_back"):
+			# At bottom boundary — focus ReturnToTitleButton on Options tab
+			if current_tab == Tab.OPTIONS:
+				# Disable options keyboard nav so it doesn't consume input while button is focused
+				if options_menu:
+					options_menu.keyboard_nav_enabled = false
+				return_to_title_button.grab_focus()
+				viewport.set_input_as_handled()
 
 func _handle_tab_bar_input(event, viewport):
 	"""Handle input when navigating the tab bar"""

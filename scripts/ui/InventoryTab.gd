@@ -93,16 +93,23 @@ func _handle_painting_list_input(event):
 	"""Handle input when navigating the painting list"""
 	var viewport = get_viewport()
 
-	if event.is_action_pressed("move_back") or event.is_action_pressed("ui_down"):
-		if input_cooldown <= 0:
-			_select_next_painting()
-			input_cooldown = input_cooldown_time
-		viewport.set_input_as_handled()
-		return
-
+	# Up - clamp at top; don't consume at boundary so PauseMenu returns to tab bar
 	if event.is_action_pressed("move_forward") or event.is_action_pressed("ui_up"):
 		if input_cooldown <= 0:
-			_select_previous_painting()
+			if selected_index > 0:
+				_select_previous_painting()
+				input_cooldown = input_cooldown_time
+				viewport.set_input_as_handled()
+			# At top: don't consume → PauseMenu catches and enters tab bar
+		else:
+			viewport.set_input_as_handled()
+		return
+
+	# Down - clamp at bottom, always consume
+	if event.is_action_pressed("move_back") or event.is_action_pressed("ui_down"):
+		if input_cooldown <= 0:
+			if selected_index < painting_entries.size() - 1:
+				_select_next_painting()
 			input_cooldown = input_cooldown_time
 		viewport.set_input_as_handled()
 		return
@@ -217,21 +224,19 @@ func _show_detail_panel(should_show: bool):
 # ============================================================================
 
 func _select_next_painting():
-	"""Select the next painting in the list"""
+	"""Select the next painting in the list (clamped, no wrapping)"""
 	if painting_entries.size() == 0:
 		return
-	selected_index = (selected_index + 1) % painting_entries.size()
+	selected_index = mini(selected_index + 1, painting_entries.size() - 1)
 	_update_selection()
 	if button_nav_sound:
 		button_nav_sound.play()
 
 func _select_previous_painting():
-	"""Select the previous painting in the list"""
+	"""Select the previous painting in the list (clamped, no wrapping)"""
 	if painting_entries.size() == 0:
 		return
-	selected_index = (selected_index - 1) % painting_entries.size()
-	if selected_index < 0:
-		selected_index = painting_entries.size() - 1
+	selected_index = maxi(selected_index - 1, 0)
 	_update_selection()
 	if button_nav_sound:
 		button_nav_sound.play()

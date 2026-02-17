@@ -116,7 +116,8 @@ func _process(delta):
 
 	# Reset tab nav held when stick returns to center
 	if _tab_nav_held:
-		if not Input.is_action_pressed("ui_left") and not Input.is_action_pressed("ui_right"):
+		if not Input.is_action_pressed("ui_left") and not Input.is_action_pressed("ui_right") \
+			and not Input.is_action_pressed("move_left") and not Input.is_action_pressed("move_right"):
 			_tab_nav_held = false
 
 	if not is_holding_slider:
@@ -160,20 +161,20 @@ func _input(event):
 		_on_close_pressed()
 		get_viewport().set_input_as_handled()
 		return
-	
+
 	if is_in_tab_mode:
 		# Tab mode: left/right switches tabs, down enters content
-		if event.is_action_pressed("ui_left"):
+		if event.is_action_pressed("ui_left") or event.is_action_pressed("move_left"):
 			if not _tab_nav_held:
 				_switch_tab(-1)
 				_tab_nav_held = true
 			get_viewport().set_input_as_handled()
-		elif event.is_action_pressed("ui_right"):
+		elif event.is_action_pressed("ui_right") or event.is_action_pressed("move_right"):
 			if not _tab_nav_held:
 				_switch_tab(1)
 				_tab_nav_held = true
 			get_viewport().set_input_as_handled()
-		elif event.is_action_pressed("ui_down"):
+		elif event.is_action_pressed("ui_down") or event.is_action_pressed("move_back"):
 			if input_cooldown <= 0:
 				# Enter content mode
 				is_in_tab_mode = false
@@ -181,42 +182,44 @@ func _input(event):
 				_focus_first_content_item()
 				input_cooldown = input_cooldown_time
 			get_viewport().set_input_as_handled()
-		elif event.is_action_pressed("ui_up"):
-			# In tab mode, up does nothing (stay at tabs, no looping)
-			get_viewport().set_input_as_handled()
+		elif event.is_action_pressed("ui_up") or event.is_action_pressed("move_forward"):
+			if is_embedded:
+				# Don't consume → PauseMenu catches and enters tab bar
+				pass
+			else:
+				# Standalone: stay at tabs, no looping
+				get_viewport().set_input_as_handled()
 	else:
-		# Content mode: navigate within content, up from first slider returns to tabs
-		if event.is_action_pressed("ui_up"):
+		# Content mode: navigate within content, up from first item returns to tabs
+		if event.is_action_pressed("ui_up") or event.is_action_pressed("move_forward"):
 			if input_cooldown <= 0:
 				var focused_control = get_viewport().gui_get_focus_owner()
-				# Check if we're at the first focusable in current tab, if so return to tab mode
+				# Check if we're at the first focusable in current tab
 				var is_first_in_tab = (focused_control == sfx_slider or focused_control == hue_slider
 					or tab_container.current_tab == 2
 					or (tab_container.current_tab == 3 and language_buttons.size() > 0 and focused_control == language_buttons[0]))
 				if is_first_in_tab:
 					is_in_tab_mode = true
 					_update_tab_mode_visual()
-					# Play navigation sound
 					if button_nav_sound:
 						button_nav_sound.play()
 				else:
-					# Navigate up (from music slider, hue slider, or Back button)
 					_navigate_focus(-1)
-					# Play navigation sound
 					if button_nav_sound:
 						button_nav_sound.play()
 				input_cooldown = input_cooldown_time
 			get_viewport().set_input_as_handled()
-		elif event.is_action_pressed("ui_down"):
+		elif event.is_action_pressed("ui_down") or event.is_action_pressed("move_back"):
 			if input_cooldown <= 0:
 				var focused_control = get_viewport().gui_get_focus_owner()
-				# Navigate from sliders to buttons, but stop at bottom-most button
-				if focused_control == close_button:
-					# Already at bottom, don't navigate further
-					pass
+				# Check if we're at the last focusable in current tab
+				if _is_last_in_tab(focused_control):
+					if is_embedded:
+						# Don't consume → PauseMenu focuses ReturnToTitleButton
+						return
+					# Standalone: stay at bottom
 				else:
 					_navigate_focus(1)
-					# Play navigation sound
 					if button_nav_sound:
 						button_nav_sound.play()
 				input_cooldown = input_cooldown_time
@@ -225,19 +228,20 @@ func _input(event):
 		# Handle slider adjustment with left/right in content mode
 		var focused = get_viewport().gui_get_focus_owner()
 		if focused is HSlider:
-			if event.is_action_pressed("ui_left"):
+			if event.is_action_pressed("ui_left") or event.is_action_pressed("move_left"):
 				focused.value -= focused.step
 				is_holding_slider = true
 				slider_direction = -1
 				slider_hold_timer = 0.0
 				get_viewport().set_input_as_handled()
-			elif event.is_action_pressed("ui_right"):
+			elif event.is_action_pressed("ui_right") or event.is_action_pressed("move_right"):
 				focused.value += focused.step
 				is_holding_slider = true
 				slider_direction = 1
 				slider_hold_timer = 0.0
 				get_viewport().set_input_as_handled()
-			elif event.is_action_released("ui_left") or event.is_action_released("ui_right"):
+			elif event.is_action_released("ui_left") or event.is_action_released("ui_right") \
+				or event.is_action_released("move_left") or event.is_action_released("move_right"):
 				is_holding_slider = false
 				slider_hold_timer = 0.0
 				get_viewport().set_input_as_handled()
@@ -542,6 +546,32 @@ func _update_language_buttons():
 		else:
 			btn.modulate = Color(1.0, 1.0, 1.0, 1.0)
 
+func _is_last_in_tab(focused_control: Control) -> bool:
+	"""Check if the focused control is the last focusable item in the current tab"""
+	match tab_container.current_tab:
+		0:  # Audio
+			return focused_control == music_slider
+		1:  # Visual
+			return focused_control == saturation_slider
+		2:  # Controls (read-only)
+			return true
+		3:  # Language
+			return language_buttons.size() > 0 and focused_control == language_buttons[-1]
+	return false
+
+func _focus_last_content_item():
+	"""Focus the last focusable item in current tab (called by PauseMenu)"""
+	_update_tab_mode_visual()
+	match tab_container.current_tab:
+		0:  # Audio
+			music_slider.grab_focus()
+		1:  # Visual
+			if saturation_slider:
+				saturation_slider.grab_focus()
+		3:  # Language
+			if language_buttons.size() > 0:
+				language_buttons[-1].grab_focus()
+
 func _navigate_focus(direction: int):
 	"""Navigate focus up/down through controls"""
 	var focused = get_viewport().gui_get_focus_owner()
@@ -606,37 +636,38 @@ func _update_close_button_focus():
 
 func _setup_focus_navigation():
 	"""Set up focus navigation for controls"""
-	# Enable focus for sliders and buttons
+	# Enable focus for sliders
 	sfx_slider.focus_mode = Control.FOCUS_ALL
 	music_slider.focus_mode = Control.FOCUS_ALL
-	close_button.focus_mode = Control.FOCUS_ALL
 
 	# Set up focus neighbors for Audio tab
-	sfx_slider.focus_neighbor_bottom = sfx_slider.get_path_to(music_slider)
-	sfx_slider.focus_neighbor_top = sfx_slider.get_path_to(close_button)
 	sfx_slider.focus_next = sfx_slider.get_path_to(music_slider)
+	sfx_slider.focus_neighbor_bottom = sfx_slider.get_path_to(music_slider)
 
-	music_slider.focus_neighbor_top = music_slider.get_path_to(sfx_slider)
-	music_slider.focus_neighbor_bottom = music_slider.get_path_to(close_button)
 	music_slider.focus_previous = music_slider.get_path_to(sfx_slider)
-	music_slider.focus_next = music_slider.get_path_to(close_button)
+	music_slider.focus_neighbor_top = music_slider.get_path_to(sfx_slider)
 
 	# Set up focus for Visual tab only if sliders exist
 	if hue_slider and saturation_slider:
 		hue_slider.focus_mode = Control.FOCUS_ALL
-		hue_slider.focus_neighbor_bottom = hue_slider.get_path_to(saturation_slider)
 		hue_slider.focus_next = hue_slider.get_path_to(saturation_slider)
+		hue_slider.focus_neighbor_bottom = hue_slider.get_path_to(saturation_slider)
 
 		saturation_slider.focus_mode = Control.FOCUS_ALL
-		saturation_slider.focus_neighbor_top = saturation_slider.get_path_to(hue_slider)
-		saturation_slider.focus_neighbor_bottom = saturation_slider.get_path_to(close_button)
 		saturation_slider.focus_previous = saturation_slider.get_path_to(hue_slider)
-		saturation_slider.focus_next = saturation_slider.get_path_to(close_button)
+		saturation_slider.focus_neighbor_top = saturation_slider.get_path_to(hue_slider)
 
-	# Close button navigation (will be updated per tab)
-	close_button.focus_neighbor_top = close_button.get_path_to(music_slider)
-	close_button.focus_neighbor_bottom = close_button.get_path_to(sfx_slider)
-	close_button.focus_previous = close_button.get_path_to(music_slider)
-
-	# Update close button focus for current tab
-	_update_close_button_focus()
+	if is_embedded:
+		# When embedded, close button is hidden - don't include in focus chain
+		close_button.focus_mode = Control.FOCUS_NONE
+	else:
+		# Standalone: include close button in focus chain
+		close_button.focus_mode = Control.FOCUS_ALL
+		music_slider.focus_next = music_slider.get_path_to(close_button)
+		music_slider.focus_neighbor_bottom = music_slider.get_path_to(close_button)
+		close_button.focus_previous = close_button.get_path_to(music_slider)
+		close_button.focus_neighbor_top = close_button.get_path_to(music_slider)
+		if saturation_slider:
+			saturation_slider.focus_next = saturation_slider.get_path_to(close_button)
+			saturation_slider.focus_neighbor_bottom = saturation_slider.get_path_to(close_button)
+		_update_close_button_focus()

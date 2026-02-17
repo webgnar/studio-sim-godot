@@ -119,6 +119,7 @@ layout_mode = 1
 is_embedded = true
 
 [node name="ReturnToTitleButton" type="Button" parent="Dialog/MarginContainer/VBoxContainer/TabContent/OptionsContent" unique_id=1837623103]
+custom_minimum_size = Vector2(600, 0)
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5

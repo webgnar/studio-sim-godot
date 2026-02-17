@@ -114,6 +114,10 @@ func _play_animation(anim_name: String) -> void:
 		return
 
 	if animation_player.has_animation(anim_name):
+		# Ensure looping animations have correct loop mode set at runtime
+		if anim_name in ["idle", "meditate"]:
+			var anim = animation_player.get_animation(anim_name)
+			anim.loop_mode = Animation.LOOP_LINEAR
 		animation_player.play(anim_name)
 	else:
 		var available_anims = animation_player.get_animation_list()

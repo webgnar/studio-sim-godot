@@ -8,3 +8,17 @@ res://scripts/painting/ValidationResult.gd
 res://scripts/ui/ValidationDebugOverlay.gd
 res://scenes/UI/PauseMenu.tscn
 res://scenes/UI/MissionSelectionUI.tscn
+res://resources/missions/crazy display.tres
+res://scripts/TitleScreenCharacter.gd
+res://scripts/TitleScreenController.gd
+res://scenes/TitleScreen.tscn
+res://models/particles/new_array_mesh.tres
+res://models/particles/new_array_mesh2.tres
+res://models/particles/new_array_mesh3.tres
+res://scenes/world.tscn
+res://scripts/OptionsMenu.gd
+res://scripts/ui/InventoryTab.gd
+res://scripts/ui/MissionSelectionUI.gd
+res://scripts/ui/PauseMenu.gd
+res://scenes/UI/TitleScreenUI.tscn
+res://scenes/UI/PaintingPromptDialog.tscn

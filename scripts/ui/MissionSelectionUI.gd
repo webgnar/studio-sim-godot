@@ -150,17 +150,23 @@ func _handle_results_input(event, viewport):
 
 func _handle_mission_list_input(event, viewport):
 	"""Handle input when navigating the mission list"""
-	# WASD / stick / D-pad to navigate mission list
-	if event.is_action_pressed("move_back") or event.is_action_pressed("ui_down"):
-		if input_cooldown <= 0:
-			_select_next_mission()
-			input_cooldown = input_cooldown_time
-		viewport.set_input_as_handled()
-		return
-
+	# Up - clamp at top; don't consume at boundary so PauseMenu returns to tab bar
 	if event.is_action_pressed("move_forward") or event.is_action_pressed("ui_up"):
 		if input_cooldown <= 0:
-			_select_previous_mission()
+			if selected_index > 0:
+				_select_previous_mission()
+				input_cooldown = input_cooldown_time
+				viewport.set_input_as_handled()
+			# At top: don't consume → PauseMenu catches and enters tab bar
+		else:
+			viewport.set_input_as_handled()
+		return
+
+	# Down - clamp at bottom, always consume
+	if event.is_action_pressed("move_back") or event.is_action_pressed("ui_down"):
+		if input_cooldown <= 0:
+			if selected_index < MissionManager.available_missions.size() - 1:
+				_select_next_mission()
 			input_cooldown = input_cooldown_time
 		viewport.set_input_as_handled()
 		return
@@ -175,6 +181,19 @@ func _handle_mission_list_input(event, viewport):
 
 func _handle_preview_buttons_input(event, viewport):
 	"""Handle input when navigating preview buttons"""
+	# Up - exit preview mode, don't consume so PauseMenu enters tab bar
+	if event.is_action_pressed("ui_up") or event.is_action_pressed("move_forward"):
+		if input_cooldown <= 0:
+			_exit_preview_mode()
+			input_cooldown = input_cooldown_time
+		# Don't consume → falls through to PauseMenu → enters tab bar
+		return
+
+	# Down - nowhere to go, just consume
+	if event.is_action_pressed("ui_down") or event.is_action_pressed("move_back"):
+		viewport.set_input_as_handled()
+		return
+
 	# Left / D-pad left to navigate buttons or exit to mission list
 	if event.is_action_pressed("move_left") or event.is_action_pressed("ui_left"):
 		if input_cooldown <= 0:
@@ -448,11 +467,11 @@ func _on_card_clicked(index: int):
 			pause_menu._enter_tab_content_mode(true)
 
 func _select_next_mission():
-	"""Select the next mission in the list"""
+	"""Select the next mission in the list (clamped, no wrapping)"""
 	if MissionManager.available_missions.size() == 0:
 		return
 
-	selected_index = (selected_index + 1) % MissionManager.available_missions.size()
+	selected_index = mini(selected_index + 1, MissionManager.available_missions.size() - 1)
 	_update_selection()
 
 	# If we were showing results, go back to preview
@@ -464,13 +483,11 @@ func _select_next_mission():
 		button_nav_sound.play()
 
 func _select_previous_mission():
-	"""Select the previous mission in the list"""
+	"""Select the previous mission in the list (clamped, no wrapping)"""
 	if MissionManager.available_missions.size() == 0:
 		return
 
-	selected_index = (selected_index - 1) % MissionManager.available_missions.size()
-	if selected_index < 0:
-		selected_index = MissionManager.available_missions.size() - 1
+	selected_index = maxi(selected_index - 1, 0)
 	_update_selection()
 
 	# If we were showing results, go back to preview

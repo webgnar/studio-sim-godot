@@ -13,8 +13,13 @@ extends Node3D
 @onready var fan_animation_player: AnimationPlayer = $"FAN/fan legs/cage/blade/AnimationPlayer"
 @onready var camera_anim: AnimationPlayer = $Camera3D/AnimationPlayer
 @onready var camera: Camera3D = $Camera3D
+@onready var title_screen_ui: Control = $UI_Layer/TitleScreenUI
+@onready var confirm_panel: PanelContainer = $UI_Layer/TitleScreenUI/ConfirmPanel
+@onready var confirm_yes_button: Button = $UI_Layer/TitleScreenUI/ConfirmPanel/MarginContainer/VBoxContainer/HBoxContainer/YesButton
+@onready var confirm_no_button: Button = $UI_Layer/TitleScreenUI/ConfirmPanel/MarginContainer/VBoxContainer/HBoxContainer/NoButton
 
 var is_transitioning: bool = false
+var is_confirming: bool = false
 var options_menu: Control = null
 var input_cooldown: float = 0.0
 var input_cooldown_time: float = 0.15  # Cooldown between navigation inputs
@@ -41,6 +46,10 @@ func _ready():
 	new_game_button.pressed.connect(_on_new_game_pressed)
 	options_button.pressed.connect(_on_options_pressed)
 	quit_button.pressed.connect(_on_quit_pressed)
+
+	# Connect confirmation buttons
+	confirm_yes_button.pressed.connect(_on_confirm_yes)
+	confirm_no_button.pressed.connect(_on_confirm_no)
 	
 	# Instantiate options menu
 	options_menu = OPTIONS_MENU_SCENE.instantiate()
@@ -77,6 +86,10 @@ func _input(_event):
 	if not viewport:
 		return  # Scene is transitioning, viewport is null
 
+	if is_confirming:
+		_handle_confirm_input(viewport)
+		return
+
 	# Handle menu navigation with ui_up/ui_down
 	if Input.is_action_just_pressed("ui_up"):
 		if input_cooldown <= 0:
@@ -93,7 +106,7 @@ func _input(_event):
 		var focused = viewport.gui_get_focus_owner()
 		if focused is Button and not focused.disabled:
 			focused.pressed.emit()
-			# Don't set_input_as_handled here - scene might transition immediately
+			viewport.set_input_as_handled()
 
 func _navigate_menu(direction: int):
 	"""Navigate menu up (-1) or down (1)"""
@@ -146,11 +159,55 @@ func _on_continue_pressed():
 	_transition_to_game("res://scenes/world.tscn", false)
 
 func _on_new_game_pressed():
-	"""Wipe all save data before loading world scene"""
-	# Play game start sound
+	"""Start new game - confirm only if there's existing save data to overwrite"""
+	if not _check_save_exists():
+		# No save data, start immediately without confirmation
+		if game_start_sound:
+			game_start_sound.play()
+		_transition_to_game("res://scenes/world.tscn", true)
+		return
+	is_confirming = true
+	confirm_panel.visible = true
+	confirm_no_button.grab_focus()
+
+func _handle_confirm_input(viewport: Viewport):
+	"""Handle gamepad input while confirmation dialog is open"""
+	if Input.is_action_just_pressed("ui_left") or Input.is_action_just_pressed("ui_right"):
+		if input_cooldown <= 0:
+			# Toggle between Yes and No
+			var focused = viewport.gui_get_focus_owner()
+			if focused == confirm_yes_button:
+				confirm_no_button.grab_focus()
+			else:
+				confirm_yes_button.grab_focus()
+			if button_nav_sound:
+				button_nav_sound.play()
+			input_cooldown = input_cooldown_time
+		viewport.set_input_as_handled()
+	elif Input.is_action_just_pressed("jump"):
+		var focused = viewport.gui_get_focus_owner()
+		if focused is Button:
+			focused.pressed.emit()
+		viewport.set_input_as_handled()
+	elif Input.is_action_just_pressed("go_back"):
+		_on_confirm_no()
+		viewport.set_input_as_handled()
+	elif Input.is_action_just_pressed("ui_up") or Input.is_action_just_pressed("ui_down"):
+		viewport.set_input_as_handled()
+
+func _on_confirm_yes():
+	"""Player confirmed new game - wipe data and transition"""
+	is_confirming = false
+	confirm_panel.visible = false
 	if game_start_sound:
 		game_start_sound.play()
 	_transition_to_game("res://scenes/world.tscn", true)
+
+func _on_confirm_no():
+	"""Player cancelled new game"""
+	is_confirming = false
+	confirm_panel.visible = false
+	new_game_button.grab_focus()
 
 func _on_options_pressed():
 	"""Open the options menu"""
@@ -173,11 +230,10 @@ func _transition_to_game(scene_path: String, wipe_data: bool) -> void:
 
 	is_transitioning = true
 
-	# Disable input and buttons
+	# Disable input and fade out the menu UI
 	set_process_input(false)
-	continue_button.disabled = true
-	new_game_button.disabled = true
-	quit_button.disabled = true
+	var tween = create_tween()
+	tween.tween_property(title_screen_ui, "modulate:a", 0.0, 0.5)
 
 	# Wipe save data if needed (before animation to ensure it completes)
 	if wipe_data:

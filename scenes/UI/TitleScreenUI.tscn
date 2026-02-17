@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://cd3ehqy3x4v4w"]
+[gd_scene format=3 uid="uid://dmrwgxfaod0t7"]
 
 [ext_resource type="Theme" uid="uid://cbtaxh5m7udor" path="res://themes/ui_theme.tres" id="1_theme"]
 [ext_resource type="Texture2D" uid="uid://ciyp25tao4x8l" path="res://sprites/ui/studio sim title.png" id="2_logo"]
@@ -32,7 +32,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0, 7.5, 15.066667),
 "transitions": PackedFloat32Array(1, 1, 1),
 "update": 0,
-"values": [Vector2(1, 1), Vector2(1.2, 1.2), Vector2(1, 1)]
+"values": [Vector2(1.8, 1.8), Vector2(3, 3), Vector2(2, 2)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_bhnaj"]
@@ -41,9 +41,9 @@ _data = {
 &"scale": SubResource("Animation_sn2o6")
 }
 
-[node name="UI_Layer" type="CanvasLayer"]
+[node name="UI_Layer" type="CanvasLayer" unique_id=1329327757]
 
-[node name="TitleScreenUI" type="Control" parent="."]
+[node name="TitleScreenUI" type="Control" parent="." unique_id=161906971]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -52,7 +52,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_theme")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="TitleScreenUI"]
+[node name="VBoxContainer" type="VBoxContainer" parent="TitleScreenUI" unique_id=1128351160]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -65,37 +65,81 @@ offset_right = 89.5
 grow_horizontal = 2
 grow_vertical = 0
 
-[node name="ContinueButton" type="Button" parent="TitleScreenUI/VBoxContainer"]
+[node name="ContinueButton" type="Button" parent="TitleScreenUI/VBoxContainer" unique_id=192184619]
 layout_mode = 2
 text = "Continue"
 
-[node name="NewGameButton" type="Button" parent="TitleScreenUI/VBoxContainer"]
+[node name="NewGameButton" type="Button" parent="TitleScreenUI/VBoxContainer" unique_id=704577963]
 layout_mode = 2
 text = "New Game"
 
-[node name="OptionsButton" type="Button" parent="TitleScreenUI/VBoxContainer"]
+[node name="OptionsButton" type="Button" parent="TitleScreenUI/VBoxContainer" unique_id=81878875]
 layout_mode = 2
 text = "Options"
 
-[node name="QuitButton" type="Button" parent="TitleScreenUI/VBoxContainer"]
+[node name="QuitButton" type="Button" parent="TitleScreenUI/VBoxContainer" unique_id=552815102]
 layout_mode = 2
 text = "Quit"
 
-[node name="TextureRect" type="TextureRect" parent="TitleScreenUI"]
+[node name="TextureRect" type="TextureRect" parent="TitleScreenUI" unique_id=1156126019]
+texture_filter = 1
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
 offset_left = -400.0
-offset_top = 48.0
+offset_top = 209.0
 offset_right = 400.0
-offset_bottom = 198.0
+offset_bottom = 359.0
 grow_horizontal = 2
 pivot_offset = Vector2(400, 75)
 texture = ExtResource("2_logo")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="TitleScreenUI/TextureRect"]
-libraries = {
-&"": SubResource("AnimationLibrary_bhnaj")
-}
-autoplay = "scale"
+[node name="AnimationPlayer" type="AnimationPlayer" parent="TitleScreenUI/TextureRect" unique_id=1419999838]
+libraries/ = SubResource("AnimationLibrary_bhnaj")
+autoplay = &"scale"
+
+[node name="ConfirmPanel" type="PanelContainer" parent="TitleScreenUI" unique_id=1487351117]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -60.0
+offset_right = 200.0
+offset_bottom = 60.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="TitleScreenUI/ConfirmPanel" unique_id=853469827]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TitleScreenUI/ConfirmPanel/MarginContainer" unique_id=270781822]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Label" type="Label" parent="TitleScreenUI/ConfirmPanel/MarginContainer/VBoxContainer" unique_id=1158855716]
+layout_mode = 2
+text = "This will erase your old game, continue?"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="TitleScreenUI/ConfirmPanel/MarginContainer/VBoxContainer" unique_id=1187823186]
+layout_mode = 2
+theme_override_constants/separation = 24
+alignment = 1
+
+[node name="YesButton" type="Button" parent="TitleScreenUI/ConfirmPanel/MarginContainer/VBoxContainer/HBoxContainer" unique_id=622426974]
+layout_mode = 2
+text = "Yes"
+
+[node name="NoButton" type="Button" parent="TitleScreenUI/ConfirmPanel/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1997193830]
+layout_mode = 2
+text = "No"
