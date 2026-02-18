@@ -18,6 +18,9 @@ signal closed
 @onready var saturation_value_label: Label = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/VisualSettings/SaturationHeader/SaturationValue
 var close_button: Button = null  # Removed from scene; closing handled by go_back/ESC
 @onready var controls_list: VBoxContainer = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Controls/ControlsList
+@onready var language_button_container: VBoxContainer = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Language/ButtonContainer
+@onready var save_glb_checkbox: CheckBox = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/SaveGLBCheckbox
+@onready var save_png_checkbox: CheckBox = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/SavePNGCheckbox
 @onready var panel_container: PanelContainer = $PanelContainer
 @onready var button_nav_sound: AudioStreamPlayer = $ButtonNavSound
 @onready var open_menu_sound: AudioStreamPlayer = $OpenMenuSound
@@ -95,6 +98,9 @@ func _ready():
 
 	# Build language selector tab
 	_create_language_tab()
+
+	# Build game settings tab
+	_create_game_tab()
 
 	# Set up focus navigation
 	_setup_focus_navigation()
@@ -190,7 +196,8 @@ func _input(event):
 				# Check if we're at the first focusable in current tab
 				var is_first_in_tab = (focused_control == sfx_slider or focused_control == hue_slider
 					or tab_container.current_tab == 2
-					or (tab_container.current_tab == 3 and language_buttons.size() > 0 and focused_control == language_buttons[0]))
+					or (tab_container.current_tab == 3 and language_buttons.size() > 0 and focused_control == language_buttons[0])
+					or (tab_container.current_tab == 4 and game_checkboxes.size() > 0 and focused_control == game_checkboxes[0]))
 				if is_first_in_tab:
 					is_in_tab_mode = true
 					_update_tab_mode_visual()
@@ -280,22 +287,12 @@ func _on_sfx_slider_changed(value: float):
 	"""Handle SFX volume slider change"""
 	AudioManager.set_sfx_volume(value)
 	sfx_value_label.text = "%d%%" % int(value)
-
-	# Play tick sound (but don't play for initial load)
-	if tick_sound and is_node_ready():
-		tick_sound.play()
-
 	save_settings()
 
 func _on_music_slider_changed(value: float):
 	"""Handle Music volume slider change"""
 	AudioManager.set_music_volume(value)
 	music_value_label.text = "%d%%" % int(value)
-
-	# Play tick sound (but don't play for initial load)
-	if tick_sound and is_node_ready():
-		tick_sound.play()
-
 	save_settings()
 
 func _on_hue_slider_changed(value: float):
@@ -310,10 +307,6 @@ func _on_hue_slider_changed(value: float):
 	if theme_panel_style:
 		theme_panel_style.bg_color = current_bg_color
 
-	# Play tick sound (but don't play for initial load)
-	if tick_sound and is_node_ready():
-		tick_sound.play()
-
 	save_settings()
 
 func _on_saturation_slider_changed(value: float):
@@ -327,10 +320,6 @@ func _on_saturation_slider_changed(value: float):
 	# Update the theme panel style
 	if theme_panel_style:
 		theme_panel_style.bg_color = current_bg_color
-
-	# Play tick sound (but don't play for initial load)
-	if tick_sound and is_node_ready():
-		tick_sound.play()
 
 	save_settings()
 
@@ -372,6 +361,10 @@ func save_settings():
 	# Update visual settings - save hue and saturation
 	settings["bg_hue"] = current_hue
 	settings["bg_saturation"] = current_saturation
+
+	# Save game settings
+	settings["save_glb_on_ship"] = save_glb_on_ship
+	settings["save_png_on_ship"] = save_png_on_ship
 
 	# Also save audio settings (in case AudioManager.save_settings() wasn't called)
 	settings["sfx_volume"] = AudioManager.sfx_volume
@@ -449,6 +442,14 @@ func load_settings():
 	if theme_panel_style:
 		theme_panel_style.bg_color = current_bg_color
 
+	# Load game settings
+	if settings.has("save_glb_on_ship"):
+		save_glb_on_ship = bool(settings["save_glb_on_ship"])
+	if settings.has("save_png_on_ship"):
+		save_png_on_ship = bool(settings["save_png_on_ship"])
+	save_glb_checkbox.button_pressed = save_glb_on_ship
+	save_png_checkbox.button_pressed = save_png_on_ship
+
 func _populate_controls_display():
 	"""Build the controls list with label rows"""
 	binding_labels.clear()
@@ -483,25 +484,19 @@ func _on_device_changed(_new_device):
 
 var language_buttons: Array[Button] = []
 
+var save_glb_on_ship: bool = true
+var save_png_on_ship: bool = true
+var game_checkboxes: Array[CheckBox] = []
+
 func _create_language_tab():
-	"""Create a Language tab with locale selection buttons"""
-	var language_container = VBoxContainer.new()
-	language_container.name = "Language"
-	language_container.add_theme_constant_override("separation", 20)
-
-	var button_container = VBoxContainer.new()
-	button_container.add_theme_constant_override("separation", 10)
-
+	"""Populate the Language tab (scene container) with locale selection buttons"""
 	for locale in LocaleManager.SUPPORTED_LOCALES:
 		var btn = Button.new()
 		btn.text = LocaleManager.LOCALE_NAMES[locale]
 		btn.focus_mode = Control.FOCUS_ALL
 		btn.pressed.connect(_on_language_selected.bind(locale))
-		button_container.add_child(btn)
+		language_button_container.add_child(btn)
 		language_buttons.append(btn)
-
-	language_container.add_child(button_container)
-	tab_container.add_child(language_container)
 
 	# Set up focus chain for language buttons
 	for i in range(language_buttons.size()):
@@ -539,6 +534,33 @@ func _update_language_buttons():
 		else:
 			btn.modulate = Color(1.0, 1.0, 1.0, 1.0)
 
+func _create_game_tab():
+	"""Set up the Game tab (scene nodes) with signals and focus chain"""
+	save_glb_checkbox.button_pressed = save_glb_on_ship
+	save_glb_checkbox.focus_mode = Control.FOCUS_ALL
+	save_png_checkbox.button_pressed = save_png_on_ship
+	save_png_checkbox.focus_mode = Control.FOCUS_ALL
+
+	# Wire focus chain between the two checkboxes
+	save_glb_checkbox.focus_next = save_glb_checkbox.get_path_to(save_png_checkbox)
+	save_glb_checkbox.focus_neighbor_bottom = save_glb_checkbox.get_path_to(save_png_checkbox)
+	save_png_checkbox.focus_previous = save_png_checkbox.get_path_to(save_glb_checkbox)
+	save_png_checkbox.focus_neighbor_top = save_png_checkbox.get_path_to(save_glb_checkbox)
+
+	# Connect signals after setting button_pressed to avoid triggering save_settings()
+	save_glb_checkbox.toggled.connect(_on_save_glb_toggled)
+	save_png_checkbox.toggled.connect(_on_save_png_toggled)
+
+	game_checkboxes = [save_glb_checkbox, save_png_checkbox]
+
+func _on_save_glb_toggled(pressed: bool):
+	save_glb_on_ship = pressed
+	save_settings()
+
+func _on_save_png_toggled(pressed: bool):
+	save_png_on_ship = pressed
+	save_settings()
+
 func _is_last_in_tab(focused_control: Control) -> bool:
 	"""Check if the focused control is the last focusable item in the current tab"""
 	match tab_container.current_tab:
@@ -550,6 +572,8 @@ func _is_last_in_tab(focused_control: Control) -> bool:
 			return true
 		3:  # Language
 			return language_buttons.size() > 0 and focused_control == language_buttons[-1]
+		4:  # Game
+			return game_checkboxes.size() > 0 and focused_control == game_checkboxes[-1]
 	return false
 
 func _focus_last_content_item():
@@ -564,6 +588,9 @@ func _focus_last_content_item():
 		3:  # Language
 			if language_buttons.size() > 0:
 				language_buttons[-1].grab_focus()
+		4:  # Game
+			if game_checkboxes.size() > 0:
+				game_checkboxes[-1].grab_focus()
 
 func _navigate_focus(direction: int):
 	"""Navigate focus up/down through controls"""
@@ -591,6 +618,9 @@ func _focus_first_content_item():
 	elif tab_container.current_tab == 3:  # Language tab
 		if language_buttons.size() > 0:
 			language_buttons[0].grab_focus()
+	elif tab_container.current_tab == 4:  # Game tab
+		if game_checkboxes.size() > 0:
+			game_checkboxes[0].grab_focus()
 
 func _switch_tab(direction: int):
 	"""Switch between tabs (Audio/Visual) - no looping"""

@@ -57,14 +57,34 @@ func export_painting(painting: CarryablePainting) -> Dictionary:
 	else:
 		filename_base = _generate_filename_base()
 
+	# Read game settings to decide whether to save locally (default true if not set)
+	var save_png: bool = true
+	var save_glb: bool = true
+	if FileAccess.file_exists("user://settings.json"):
+		var sf = FileAccess.open("user://settings.json", FileAccess.READ)
+		if sf:
+			var sj = JSON.new()
+			if sj.parse(sf.get_as_text()) == OK and typeof(sj.data) == TYPE_DICTIONARY:
+				if sj.data.has("save_png_on_ship"):
+					save_png = bool(sj.data["save_png_on_ship"])
+				if sj.data.has("save_glb_on_ship"):
+					save_glb = bool(sj.data["save_glb_on_ship"])
+			sf.close()
+
+	# Route to Downloads if saving locally, otherwise temp dir (still needed for gallery upload)
+	var temp_dir = OS.get_user_data_dir().path_join("temp_export")
+	DirAccess.make_dir_recursive_absolute(temp_dir)
+	var png_dest = downloads if save_png else temp_dir
+	var glb_dest = downloads if save_glb else temp_dir
+
 	# Export PNG
-	var png_path = export_painting_png(painting, downloads, filename_base)
+	var png_path = export_painting_png(painting, png_dest, filename_base)
 	if png_path.is_empty():
 		export_failed.emit("Failed to export PNG")
 		return {}
 
 	# Export GLB
-	var glb_path = export_painting_glb(painting, downloads, filename_base)
+	var glb_path = export_painting_glb(painting, glb_dest, filename_base)
 	if glb_path.is_empty():
 		export_failed.emit("Failed to export GLB")
 		return {}
