@@ -2,9 +2,9 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://gdhlf7v0fpx"
-path.s3tc="res://.godot/imported/floor2.jpg-5d9503f47bf52e9ceeb1cfcffcb7dd52.s3tc.ctex"
-path.etc2="res://.godot/imported/floor2.jpg-5d9503f47bf52e9ceeb1cfcffcb7dd52.etc2.ctex"
+uid="uid://ce47asrqn4ajb"
+path.s3tc="res://.godot/imported/brick_diffuse.jpg-5a4b98b7496898d1b2eda5979d1cc9f0.s3tc.ctex"
+path.etc2="res://.godot/imported/brick_diffuse.jpg-5a4b98b7496898d1b2eda5979d1cc9f0.etc2.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -12,8 +12,8 @@ metadata={
 
 [deps]
 
-source_file="res://sprites/floor2.jpg"
-dest_files=["res://.godot/imported/floor2.jpg-5d9503f47bf52e9ceeb1cfcffcb7dd52.s3tc.ctex", "res://.godot/imported/floor2.jpg-5d9503f47bf52e9ceeb1cfcffcb7dd52.etc2.ctex"]
+source_file="res://sprites/textures/brick_diffuse.jpg"
+dest_files=["res://.godot/imported/brick_diffuse.jpg-5a4b98b7496898d1b2eda5979d1cc9f0.s3tc.ctex", "res://.godot/imported/brick_diffuse.jpg-5a4b98b7496898d1b2eda5979d1cc9f0.etc2.ctex"]
 
 [params]
 

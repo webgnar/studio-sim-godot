@@ -1,16 +1,15 @@
 extends InteractionComponent
 class_name MirrorInteraction
-## Mirror interaction component - cycles player skin between human and skeleton
+## Mirror interaction component - cycles player skin between available skins
 ## Extends InteractionComponent to inherit common interaction functionality
 
-signal skin_toggled(is_skeleton: bool)
+signal skin_changed(skin_index: int)
 
 @export_group("Mirror Settings")
-@export var human_skin_material: Material  # The human skin material (humanskin.tres)
-@export var skeleton_skin_material: Material  # The skeleton skin material (skeletonskin.tres)
+@export var skin_materials: Array[Material] = []  # Ordered list of skin materials to cycle through
 @export var toggle_sound: AudioStream
 
-var _is_skeleton: bool = false
+var _current_skin_index: int = 0
 var _player_node: CharacterBody3D = null
 var _player_meshes: Array[MeshInstance3D] = []
 
@@ -19,11 +18,9 @@ func _on_ready() -> void:
 	_ensure_audio_player()
 	_find_player()
 	_find_meshes()
-	
-	if not human_skin_material:
-		push_warning("⚠️ No human skin material set for mirror!")
-	if not skeleton_skin_material:
-		push_warning("⚠️ No skeleton skin material set for mirror!")
+
+	if skin_materials.is_empty():
+		push_warning("No skin materials set for mirror!")
 
 func _ensure_audio_player() -> void:
 	if toggle_sound and not _audio_player:
@@ -67,31 +64,35 @@ func _find_all_mesh_instances(node: Node) -> Array[MeshInstance3D]:
 	return meshes
 
 func _on_interacted(_player_interaction_component: PlayerInteractionComponent) -> void:
-	_toggle_skin()
+	_cycle_skin()
 
-func _toggle_skin() -> void:
+func _cycle_skin() -> void:
 	if not _player_node:
-		push_error("❌ Cannot toggle skin - player not found!")
+		push_error("Cannot cycle skin - player not found!")
 		return
-	
+
 	if _player_meshes.is_empty():
-		push_error("❌ Cannot toggle skin - no meshes found!")
+		push_error("Cannot cycle skin - no meshes found!")
 		return
-	
-	# Toggle between human and skeleton
-	_is_skeleton = not _is_skeleton
-	
-	var target_material = skeleton_skin_material if _is_skeleton else human_skin_material
+
+	if skin_materials.is_empty():
+		push_error("Cannot cycle skin - no materials configured!")
+		return
+
+	# Advance to next skin, wrapping around
+	_current_skin_index = (_current_skin_index + 1) % skin_materials.size()
+
+	var target_material = skin_materials[_current_skin_index]
 
 	# Apply the material to all player meshes
 	for mesh in _player_meshes:
 		_apply_material_to_mesh(mesh, target_material)
-	
+
 	# Play sound
 	if toggle_sound:
 		_play_sound(toggle_sound)
 
-	skin_toggled.emit(_is_skeleton)
+	skin_changed.emit(_current_skin_index)
 
 func _apply_material_to_mesh(mesh: MeshInstance3D, material: Material) -> void:
 	if not mesh or not material:
@@ -108,13 +109,15 @@ func _apply_material_to_mesh(mesh: MeshInstance3D, material: Material) -> void:
 		mesh.set_surface_override_material(i, material)
 
 # Public methods
-func is_skeleton_skin() -> bool:
-	return _is_skeleton
+func get_current_skin_index() -> int:
+	return _current_skin_index
 
-func reset_to_human() -> void:
-	if _is_skeleton:
-		_toggle_skin()
-
-func reset_to_skeleton() -> void:
-	if not _is_skeleton:
-		_toggle_skin()
+func set_skin(index: int) -> void:
+	if index < 0 or index >= skin_materials.size():
+		push_warning("Skin index %d out of range" % index)
+		return
+	_current_skin_index = index
+	var target_material = skin_materials[_current_skin_index]
+	for mesh in _player_meshes:
+		_apply_material_to_mesh(mesh, target_material)
+	skin_changed.emit(_current_skin_index)

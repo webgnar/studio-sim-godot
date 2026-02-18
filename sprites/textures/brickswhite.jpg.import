@@ -2,9 +2,9 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://djd4xqb57hhr7"
-path.s3tc="res://.godot/imported/brick_bump.jpg-e109f37b2b87e2f26ecda5f0e9cff7ff.s3tc.ctex"
-path.etc2="res://.godot/imported/brick_bump.jpg-e109f37b2b87e2f26ecda5f0e9cff7ff.etc2.ctex"
+uid="uid://iucb8t01gwth"
+path.s3tc="res://.godot/imported/brickswhite.jpg-546899004cb76856ae08c1e52c34c6e4.s3tc.ctex"
+path.etc2="res://.godot/imported/brickswhite.jpg-546899004cb76856ae08c1e52c34c6e4.etc2.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -12,8 +12,8 @@ metadata={
 
 [deps]
 
-source_file="res://sprites/brick_bump.jpg"
-dest_files=["res://.godot/imported/brick_bump.jpg-e109f37b2b87e2f26ecda5f0e9cff7ff.s3tc.ctex", "res://.godot/imported/brick_bump.jpg-e109f37b2b87e2f26ecda5f0e9cff7ff.etc2.ctex"]
+source_file="res://sprites/textures/brickswhite.jpg"
+dest_files=["res://.godot/imported/brickswhite.jpg-546899004cb76856ae08c1e52c34c6e4.s3tc.ctex", "res://.godot/imported/brickswhite.jpg-546899004cb76856ae08c1e52c34c6e4.etc2.ctex"]
 
 [params]
 

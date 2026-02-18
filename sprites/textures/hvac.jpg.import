@@ -2,9 +2,9 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ce47asrqn4ajb"
-path.s3tc="res://.godot/imported/brick_diffuse.jpg-bab9fb7c0b6137326e8893ff33801de5.s3tc.ctex"
-path.etc2="res://.godot/imported/brick_diffuse.jpg-bab9fb7c0b6137326e8893ff33801de5.etc2.ctex"
+uid="uid://b3ty4ce0xhyow"
+path.s3tc="res://.godot/imported/hvac.jpg-47fdb68b46bff284fd9f2990748f21a5.s3tc.ctex"
+path.etc2="res://.godot/imported/hvac.jpg-47fdb68b46bff284fd9f2990748f21a5.etc2.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -12,8 +12,8 @@ metadata={
 
 [deps]
 
-source_file="res://sprites/brick_diffuse.jpg"
-dest_files=["res://.godot/imported/brick_diffuse.jpg-bab9fb7c0b6137326e8893ff33801de5.s3tc.ctex", "res://.godot/imported/brick_diffuse.jpg-bab9fb7c0b6137326e8893ff33801de5.etc2.ctex"]
+source_file="res://sprites/textures/hvac.jpg"
+dest_files=["res://.godot/imported/hvac.jpg-47fdb68b46bff284fd9f2990748f21a5.s3tc.ctex", "res://.godot/imported/hvac.jpg-47fdb68b46bff284fd9f2990748f21a5.etc2.ctex"]
 
 [params]
 

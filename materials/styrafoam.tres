@@ -1,6 +1,6 @@
-[gd_resource type="StandardMaterial3D" load_steps=3 format=3 uid="uid://fdlsxcxabv2k"]
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://fdlsxcxabv2k"]
 
-[ext_resource type="Texture2D" uid="uid://xjei2i2hgmlp" path="res://sprites/foam.png" id="1_ljar7"]
+[ext_resource type="Texture2D" uid="uid://xjei2i2hgmlp" path="res://sprites/textures/foam.png" id="1_ljar7"]
 [ext_resource type="Texture2D" uid="uid://cllrrouj62ony" path="res://sprites/normals/foam_normal.png" id="2_6eo45"]
 
 [resource]

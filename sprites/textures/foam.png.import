@@ -2,9 +2,9 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://iucb8t01gwth"
-path.s3tc="res://.godot/imported/brickswhite.jpg-2ef5dd5939b6d64fae0101b6da7744e6.s3tc.ctex"
-path.etc2="res://.godot/imported/brickswhite.jpg-2ef5dd5939b6d64fae0101b6da7744e6.etc2.ctex"
+uid="uid://xjei2i2hgmlp"
+path.s3tc="res://.godot/imported/foam.png-1a7d54f6f694b9846234590fbbc3345e.s3tc.ctex"
+path.etc2="res://.godot/imported/foam.png-1a7d54f6f694b9846234590fbbc3345e.etc2.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -12,8 +12,8 @@ metadata={
 
 [deps]
 
-source_file="res://sprites/brickswhite.jpg"
-dest_files=["res://.godot/imported/brickswhite.jpg-2ef5dd5939b6d64fae0101b6da7744e6.s3tc.ctex", "res://.godot/imported/brickswhite.jpg-2ef5dd5939b6d64fae0101b6da7744e6.etc2.ctex"]
+source_file="res://sprites/textures/foam.png"
+dest_files=["res://.godot/imported/foam.png-1a7d54f6f694b9846234590fbbc3345e.s3tc.ctex", "res://.godot/imported/foam.png-1a7d54f6f694b9846234590fbbc3345e.etc2.ctex"]
 
 [params]
 

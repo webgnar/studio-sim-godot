@@ -4,19 +4,20 @@
 [ext_resource type="Material" uid="uid://wwlsotlotycw" path="res://materials/wood.tres" id="1_hjcsb"]
 [ext_resource type="PackedScene" uid="uid://dmrwgxfaod0t7" path="res://scenes/UI/TitleScreenUI.tscn" id="1_ui_layer"]
 [ext_resource type="Texture2D" uid="uid://cbn0d3riillev" path="res://sprites/wood.jpg" id="2_2ktle"]
+[ext_resource type="Texture2D" uid="uid://c60o1eresxu3j" path="res://sprites/sky.jpg" id="2_pe36d"]
 [ext_resource type="Texture2D" uid="uid://dyuvtxhp260rj" path="res://sprites/normals/wood_ambient.png" id="3_l7b4h"]
 [ext_resource type="Texture2D" uid="uid://3smflfln5x7y" path="res://sprites/normals/wood_specular.png" id="4_3mdse"]
 [ext_resource type="Texture2D" uid="uid://bifvpuur5heg3" path="res://sprites/normals/wood_normal.png" id="5_f48o8"]
 [ext_resource type="Material" uid="uid://s7aanj1sph6l" path="res://materials/floor.tres" id="7_v0xar"]
 [ext_resource type="Material" uid="uid://re8gmfn1nbgt" path="res://materials/wall.tres" id="8_vq22d"]
 [ext_resource type="Material" uid="uid://48uded6h5otx" path="res://materials/brickwhite.tres" id="9_q7lne"]
-[ext_resource type="Texture2D" uid="uid://bke1xjp3mdreb" path="res://sprites/door.jpg" id="10_ijstc"]
+[ext_resource type="Texture2D" uid="uid://bke1xjp3mdreb" path="res://sprites/textures/door.jpg" id="10_ijstc"]
 [ext_resource type="PackedScene" uid="uid://kraxm2alr635" path="res://scenes/old stuff/breakable_window.tscn" id="11_y4bqf"]
 [ext_resource type="PackedScene" uid="uid://clyqlnamf1d2w" path="res://scenes/old stuff/wall_outlet.tscn" id="13_l7b4h"]
 [ext_resource type="PackedScene" uid="uid://xeaph8bqk1j1" path="res://models/props/pipe_red.glb" id="15_ijstc"]
 [ext_resource type="PackedScene" uid="uid://fjppju80c5ic" path="res://models/props/pipe_yellow.glb" id="16_y4bqf"]
 [ext_resource type="PackedScene" uid="uid://cmaavrflrf4d4" path="res://models/props/pipe_gray.glb" id="17_1nrh6"]
-[ext_resource type="Texture2D" uid="uid://b3ty4ce0xhyow" path="res://sprites/hvac.jpg" id="18_08fpa"]
+[ext_resource type="Texture2D" uid="uid://b3ty4ce0xhyow" path="res://sprites/textures/hvac.jpg" id="18_08fpa"]
 [ext_resource type="PackedScene" uid="uid://44g07prjgs5x" path="res://models/props/pipe_gray bent.glb" id="19_bdpe2"]
 [ext_resource type="Shader" uid="uid://br4qh8mg5yosn" path="res://shaders/mirror.gdshader" id="24_bdpe2"]
 [ext_resource type="PackedScene" uid="uid://d0y6fk05wn5dc" path="res://models/interactables/cardboard box/box.glb" id="25_hvy54"]
@@ -49,14 +50,22 @@
 [ext_resource type="AudioStream" uid="uid://ddn5s1tg3jt8p" path="res://sounds/picotron/ambient.ogg" id="51_ffc86"]
 [ext_resource type="AudioStream" uid="uid://ht7rkfvqubdm" path="res://sounds/picotron/buttonnav.ogg" id="52_08dc8"]
 [ext_resource type="AudioStream" uid="uid://dgbcn8tq2wrkt" path="res://sounds/picotron/gamestart.ogg" id="53_bb24d"]
+[ext_resource type="Shader" uid="uid://c2ljpwtvw5fwg" path="res://shaders/sky_custom.gdshader" id="54_skyshader"]
+[ext_resource type="Script" uid="uid://bunyklibu48s2" path="res://scripts/SkyRotator.gd" id="55_skyrot"]
 
-[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_n78cu"]
-sky_top_color = Color(0.2162182, 0.61953396, 1, 1)
-sky_horizon_color = Color(0.88278586, 0.79607755, 0.7517986, 1)
-sky_curve = 0.037500024
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_sky"]
+shader = ExtResource("54_skyshader")
+shader_parameter/sky_top_color = Color(0.2162182, 0.61953396, 1, 1)
+shader_parameter/sky_horizon_color = Color(0.88278586, 0.79607755, 0.7517986, 1)
+shader_parameter/sky_curve = 0.0375
+shader_parameter/sky_cover = ExtResource("2_pe36d")
+shader_parameter/cover_scale = 0.10000000149012
+shader_parameter/cover_modulate = Color(0.2901961, 0.2784314, 1, 1)
+shader_parameter/ground_bottom_color = Color(0.040938452, 0.02977152, 0.019598706, 1)
+shader_parameter/ground_horizon_color = Color(0.81732345, 0.50142115, 0.794899, 1)
 
 [sub_resource type="Sky" id="Sky_rwgxs"]
-sky_material = SubResource("ProceduralSkyMaterial_n78cu")
+sky_material = SubResource("ShaderMaterial_sky")
 
 [sub_resource type="Environment" id="Environment_cr31u"]
 background_mode = 2
@@ -365,6 +374,7 @@ shadow_enabled = true
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1269380869]
 environment = SubResource("Environment_cr31u")
+script = ExtResource("55_skyrot")
 
 [node name="StudioEnvironment" type="Node3D" parent="." unique_id=743645245]
 

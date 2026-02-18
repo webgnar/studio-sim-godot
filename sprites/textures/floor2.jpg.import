@@ -2,9 +2,9 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b3ty4ce0xhyow"
-path.s3tc="res://.godot/imported/hvac.jpg-baab1f859a495efe5bc536520cea0c0a.s3tc.ctex"
-path.etc2="res://.godot/imported/hvac.jpg-baab1f859a495efe5bc536520cea0c0a.etc2.ctex"
+uid="uid://gdhlf7v0fpx"
+path.s3tc="res://.godot/imported/floor2.jpg-9629e31040e06a62ae90cfdbbfe2664c.s3tc.ctex"
+path.etc2="res://.godot/imported/floor2.jpg-9629e31040e06a62ae90cfdbbfe2664c.etc2.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -12,8 +12,8 @@ metadata={
 
 [deps]
 
-source_file="res://sprites/hvac.jpg"
-dest_files=["res://.godot/imported/hvac.jpg-baab1f859a495efe5bc536520cea0c0a.s3tc.ctex", "res://.godot/imported/hvac.jpg-baab1f859a495efe5bc536520cea0c0a.etc2.ctex"]
+source_file="res://sprites/textures/floor2.jpg"
+dest_files=["res://.godot/imported/floor2.jpg-9629e31040e06a62ae90cfdbbfe2664c.s3tc.ctex", "res://.godot/imported/floor2.jpg-9629e31040e06a62ae90cfdbbfe2664c.etc2.ctex"]
 
 [params]
 

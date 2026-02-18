@@ -2,9 +2,9 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://xjei2i2hgmlp"
-path.s3tc="res://.godot/imported/foam.png-1a6d74fbd596fdcffc3f606d7279a0e8.s3tc.ctex"
-path.etc2="res://.godot/imported/foam.png-1a6d74fbd596fdcffc3f606d7279a0e8.etc2.ctex"
+uid="uid://bke1xjp3mdreb"
+path.s3tc="res://.godot/imported/door.jpg-c6001625ed5b2ef31b1960cc63eaa028.s3tc.ctex"
+path.etc2="res://.godot/imported/door.jpg-c6001625ed5b2ef31b1960cc63eaa028.etc2.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -12,8 +12,8 @@ metadata={
 
 [deps]
 
-source_file="res://sprites/foam.png"
-dest_files=["res://.godot/imported/foam.png-1a6d74fbd596fdcffc3f606d7279a0e8.s3tc.ctex", "res://.godot/imported/foam.png-1a6d74fbd596fdcffc3f606d7279a0e8.etc2.ctex"]
+source_file="res://sprites/textures/door.jpg"
+dest_files=["res://.godot/imported/door.jpg-c6001625ed5b2ef31b1960cc63eaa028.s3tc.ctex", "res://.godot/imported/door.jpg-c6001625ed5b2ef31b1960cc63eaa028.etc2.ctex"]
 
 [params]
 

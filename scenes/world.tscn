@@ -10,7 +10,7 @@
 [ext_resource type="Texture2D" uid="uid://bifvpuur5heg3" path="res://sprites/normals/wood_normal.png" id="4_xo05s"]
 [ext_resource type="Theme" uid="uid://cbtaxh5m7udor" path="res://themes/ui_theme.tres" id="4_ygn2i"]
 [ext_resource type="Material" uid="uid://re8gmfn1nbgt" path="res://materials/wall.tres" id="5_71j4m"]
-[ext_resource type="Texture2D" uid="uid://b3ty4ce0xhyow" path="res://sprites/hvac.jpg" id="14_o8fc1"]
+[ext_resource type="Texture2D" uid="uid://b3ty4ce0xhyow" path="res://sprites/textures/hvac.jpg" id="14_o8fc1"]
 [ext_resource type="PackedScene" uid="uid://xeaph8bqk1j1" path="res://models/props/pipe_red.glb" id="16_oo54l"]
 [ext_resource type="PackedScene" uid="uid://fjppju80c5ic" path="res://models/props/pipe_yellow.glb" id="17_kpybi"]
 [ext_resource type="PackedScene" uid="uid://44g07prjgs5x" path="res://models/props/pipe_gray bent.glb" id="19_kpybi"]
@@ -29,7 +29,7 @@
 [ext_resource type="Script" uid="uid://cftd54g3pgkr1" path="res://scripts/old stuff/LightSwitchInteraction.gd" id="29_lightswitch_new"]
 [ext_resource type="PackedScene" uid="uid://clxnamuc6vov8" path="res://scenes/elevator.tscn" id="29_xgy6y"]
 [ext_resource type="Texture2D" uid="uid://uyikjs5uvqxf" path="res://textures/512 cementbrick.png" id="30_kvmu4"]
-[ext_resource type="Texture2D" uid="uid://daneppyy5y8cp" path="res://sprites/floor-cement-2.jpg" id="31_c15v2"]
+[ext_resource type="Texture2D" uid="uid://daneppyy5y8cp" path="res://sprites/textures/floor-cement-2.jpg" id="31_c15v2"]
 [ext_resource type="PackedScene" uid="uid://br0ke8na4oeqj" path="res://scenes/button_green.tscn" id="31_grmox"]
 [ext_resource type="Script" uid="uid://hlurbym3vcmr" path="res://scripts/components/StudioAssistantPurchaseButton.gd" id="32_xgy6y"]
 [ext_resource type="Script" uid="uid://c8uap2yk1tjju" path="res://scripts/components/StudioAssistantStatusPanel.gd" id="33_kvmu4"]
@@ -77,12 +77,12 @@
 [ext_resource type="Script" uid="uid://byo8qed1v1rkt" path="res://scripts/components/PaintingConvertButton.gd" id="81_n78cu"]
 [ext_resource type="PackedScene" uid="uid://ctu3xtbhbgtub" path="res://scenes/objects/NailGun.tscn" id="81_oexs8"]
 [ext_resource type="PackedScene" uid="uid://bryic0ubsrfjn" path="res://models/interactables/buttonGreen.glb" id="81_swu3i"]
-[ext_resource type="Texture2D" uid="uid://djd4xqb57hhr7" path="res://sprites/brick_bump.jpg" id="83_c15v2"]
+[ext_resource type="Texture2D" uid="uid://djd4xqb57hhr7" path="res://sprites/textures/brick_bump.jpg" id="83_c15v2"]
 [ext_resource type="PackedScene" uid="uid://c8mhk3sajq2fn" path="res://scenes/UI/MissionHUD.tscn" id="83_hud"]
 [ext_resource type="PackedScene" uid="uid://do5j2we5toj7h" path="res://scenes/objects/door.tscn" id="83_kcpaj"]
 [ext_resource type="PackedScene" uid="uid://culyhivorlo83" path="res://scenes/objects/key.tscn" id="83_n78cu"]
-[ext_resource type="Texture2D" uid="uid://dv58j61xl61oc" path="res://sprites/brick_diffuse_ambient.png" id="84_grmox"]
-[ext_resource type="Texture2D" uid="uid://bqkunprbwvn68" path="res://sprites/brick_diffuse_normal.png" id="85_xgy6y"]
+[ext_resource type="Texture2D" uid="uid://dv58j61xl61oc" path="res://sprites/textures/brick_diffuse_ambient.png" id="84_grmox"]
+[ext_resource type="Texture2D" uid="uid://bqkunprbwvn68" path="res://sprites/textures/brick_diffuse_normal.png" id="85_xgy6y"]
 [ext_resource type="PackedScene" uid="uid://dca7mypiho8qy" path="res://scenes/Spotlight.tscn" id="86_grmox"]
 [ext_resource type="PackedScene" uid="uid://c8iqeb7qfo8rl" path="res://scenes/objects/Fluorescent.tscn" id="87_kvmu4"]
 [ext_resource type="PackedScene" uid="uid://b4nwg0q6ash8e" path="res://scenes/objects/cardboardBox.tscn" id="87_xgy6y"]
@@ -99,6 +99,7 @@
 [ext_resource type="AudioStream" uid="uid://84rjpuccue2i" path="res://sounds/boomboxSwitch.ogg" id="boombox_switch"]
 [ext_resource type="AudioStream" uid="uid://bukro42figtah" path="res://sounds/fan switch.ogg" id="fan_switch"]
 [ext_resource type="AudioStream" uid="uid://bw0ig22tombxc" path="res://sounds/ministudio.ogg" id="ministudio_audio"]
+[ext_resource type="Script" uid="uid://bunyklibu48s2" path="res://scripts/SkyRotator.gd" id="sky_rotator"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dss4m"]
 albedo_texture = ExtResource("1_q5onr")
@@ -641,6 +642,8 @@ script = ExtResource("1_qaasp")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=34147071]
 environment = ExtResource("2_pb8sg")
+script = ExtResource("sky_rotator")
+rotation_speed = 0.03
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=583888582]
 transform = Transform3D(1, 0, 0, 0, 0.024990592, -0.9996877, 0, 0.9996877, 0.024990592, 0, 9.141167, 0)
@@ -946,10 +949,10 @@ size = Vector3(0.77761596, 12.45, 0.6328125)
 material = SubResource("StandardMaterial3D_grmox")
 
 [node name="floor2" type="CSGBox3D" parent="studio" unique_id=799769230]
-transform = Transform3D(-9.797052e-07, 0, -49.782604, 0, 0.00801068, 0, 0.45538867, 0, -4.421337e-08, 10.873473, -0.5213924, -0.37418643)
+transform = Transform3D(-9.797052e-07, 0, -49.782604, 0, 0.00801068, 0, 0.45538867, 0, -4.421337e-08, 10.873473, -0.5213924, -0.32749128)
 use_collision = true
 collision_mask = 0
-size = Vector3(1, 12.34, 0.34796143)
+size = Vector3(0.7949219, 12.34, 0.34796143)
 material = SubResource("StandardMaterial3D_oexs8")
 
 [node name="wall" type="CSGBox3D" parent="studio" unique_id=601196792]
@@ -1622,7 +1625,7 @@ transform = Transform3D(0.3, 0, 0, 0, -1.3113417e-08, 0.3, 0, -0.3, -1.3113417e-
 transform = Transform3D(0.12734991, 1.1873254e-08, -0.2716284, 0.2716284, -5.566641e-09, 0.12734991, -6.3527474e-23, -0.29999998, -1.3113415e-08, -8.879927, 3.5963254, -0.13437462)
 
 [node name="Door" parent="." unique_id=1914412036 groups=["no_outline"] instance=ExtResource("83_kcpaj")]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 3.8344553, 1.6604776, 0.50646925)
+transform = Transform3D(-4.196293e-08, 0, -0.95, 0, 0.95, 0, 0.96, 0, -4.152582e-08, 3.8344553, 1.6471603, 0.54472053)
 
 [node name="Fluorescent" parent="." unique_id=864907143 instance=ExtResource("87_kvmu4")]
 transform = Transform3D(-1.3113417e-08, 0, -0.3, 0, 0.3, 0, 0.3, 0, -1.3113417e-08, 8.539603, 4.685627, 2.1567757)

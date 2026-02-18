@@ -5,9 +5,9 @@
 [ext_resource type="Material" uid="uid://bl43iap4a4kjl" path="res://materials/tv.tres" id="2_llmxe"]
 [ext_resource type="AudioStream" uid="uid://cnjld2r5btwho" path="res://sounds/dial up.ogg" id="3_dialup"]
 [ext_resource type="Material" uid="uid://48uded6h5otx" path="res://materials/brickwhite.tres" id="4_pd0kh"]
-[ext_resource type="Texture2D" uid="uid://djd4xqb57hhr7" path="res://sprites/brick_bump.jpg" id="4_tgbr6"]
-[ext_resource type="Texture2D" uid="uid://dv58j61xl61oc" path="res://sprites/brick_diffuse_ambient.png" id="5_a3r00"]
-[ext_resource type="Texture2D" uid="uid://bqkunprbwvn68" path="res://sprites/brick_diffuse_normal.png" id="6_llmxe"]
+[ext_resource type="Texture2D" uid="uid://djd4xqb57hhr7" path="res://sprites/textures/brick_bump.jpg" id="4_tgbr6"]
+[ext_resource type="Texture2D" uid="uid://dv58j61xl61oc" path="res://sprites/textures/brick_diffuse_ambient.png" id="5_a3r00"]
+[ext_resource type="Texture2D" uid="uid://bqkunprbwvn68" path="res://sprites/textures/brick_diffuse_normal.png" id="6_llmxe"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_tv"]
 size = Vector2(1.6, 0.9)

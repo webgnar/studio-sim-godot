@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://clxnamuc6vov8"]
 
 [ext_resource type="Material" uid="uid://wwlsotlotycw" path="res://materials/wood.tres" id="1_8lbij"]
-[ext_resource type="Texture2D" uid="uid://gdhlf7v0fpx" path="res://sprites/floor2.jpg" id="2_jmdsd"]
+[ext_resource type="Texture2D" uid="uid://gdhlf7v0fpx" path="res://sprites/textures/floor2.jpg" id="2_jmdsd"]
 [ext_resource type="Texture2D" uid="uid://dcarqsvmjsak4" path="res://textures/512 sewer 2.PNG" id="2_pr5mj"]
 [ext_resource type="PackedScene" uid="uid://dca7mypiho8qy" path="res://scenes/Spotlight.tscn" id="4_xslfi"]
 [ext_resource type="Texture2D" uid="uid://cgy7cjvpoahj8" path="res://textures/256 bridge wood.png" id="5_s8m3u"]

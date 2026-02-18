@@ -1,8 +1,8 @@
 [gd_resource type="StandardMaterial3D" format=3 uid="uid://48uded6h5otx"]
 
-[ext_resource type="Texture2D" uid="uid://djd4xqb57hhr7" path="res://sprites/brick_bump.jpg" id="1_nsivn"]
-[ext_resource type="Texture2D" uid="uid://dv58j61xl61oc" path="res://sprites/brick_diffuse_ambient.png" id="2_4uj3d"]
-[ext_resource type="Texture2D" uid="uid://bqkunprbwvn68" path="res://sprites/brick_diffuse_normal.png" id="3_ovhg2"]
+[ext_resource type="Texture2D" uid="uid://djd4xqb57hhr7" path="res://sprites/textures/brick_bump.jpg" id="1_nsivn"]
+[ext_resource type="Texture2D" uid="uid://dv58j61xl61oc" path="res://sprites/textures/brick_diffuse_ambient.png" id="2_4uj3d"]
+[ext_resource type="Texture2D" uid="uid://bqkunprbwvn68" path="res://sprites/textures/brick_diffuse_normal.png" id="3_ovhg2"]
 
 [resource]
 albedo_texture = ExtResource("1_nsivn")
