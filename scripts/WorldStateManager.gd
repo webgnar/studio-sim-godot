@@ -610,11 +610,7 @@ func _load_sticker_3d(sticker_data: Dictionary) -> bool:
 		return false
 
 	# Find sticker definition in library
-	var definition: PaintingLayerDefinition = null
-	for def in _painting_system_3d.sticker_library:
-		if def.id == sticker_id:
-			definition = def
-			break
+	var definition: PaintingLayerDefinition = StickerLibrary.get_definition_by_id(sticker_id)
 
 	if not definition:
 		push_warning("Sticker definition not found for id: " + sticker_id + " (library may have changed)")

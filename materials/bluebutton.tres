@@ -1,0 +1,8 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://cue6nrle5awtl"]
+
+[ext_resource type="Texture2D" uid="uid://bd6svkdls6guq" path="res://models/interactables/buttonGreen_0.png" id="1_pvkyk"]
+
+[resource]
+albedo_color = Color(0.060069926, 0, 0.8790432, 1)
+albedo_texture = ExtResource("1_pvkyk")
+texture_filter = 0

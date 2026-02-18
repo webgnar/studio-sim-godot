@@ -13,9 +13,6 @@ signal layer_equipped(index: int)  # Emitted when Q/E changes the equipped stick
 @export var plane_collision: CollisionObject3D  # StaticBody3D for raycasting
 @export var canvas_viewport: SubViewport  # The SubViewport containing this Node2D
 
-# Sticker library - available stickers to place
-var sticker_library: Array[PaintingLayerDefinition] = []
-
 # Currently placed layers on canvas
 var placed_layers: Array[PlacedLayer2D] = []
 
@@ -86,9 +83,6 @@ func _ready():
 	# Add visible background to SubViewport
 	# _setup_viewport_background()  # Commented out for transparent background
 
-	# Load sticker library from folder
-	_load_sticker_library()
-
 	# Create preview sprite
 	_setup_preview_sprite()
 
@@ -136,68 +130,8 @@ func _setup_preview_sprite():
 	add_child(preview_sprite)
 
 	# Set initial texture if sticker library is loaded
-	if not sticker_library.is_empty():
+	if not StickerLibrary.sticker_library.is_empty():
 		_update_preview_texture()
-
-func _load_sticker_library():
-	"""Load all sticker textures from the sprites/painting layers folder"""
-	var folder_path = "res://sprites/painting layers/"
-	var file_names: Array[String] = []
-
-	# Platform builds (Windows, macOS, Linux, Steam Deck) can't scan res:// directories dynamically
-	# Use a predefined list for all exported builds to ensure reliability across platforms
-	if not OS.has_feature("editor"):
-		file_names = [
-			"1.png", "2.png", "3.png", "4.png", "5.png",
-			"6.png", "7.png", "8.png", "9.png", "10.png",
-			"11.png", "12.png", "13.png", "14.png", "15.png",
-			"16.png", "17.png", "18.png", "19.png", "20.png",
-			"21.png", "22.png", "23.png", "24.png", "25.png",
-			"26.png", "27.png", "28.png", "29.png", "30.png",
-			"31.png"
-		]
-	else:
-		# Editor only: scan directory dynamically for development convenience
-		var dir = DirAccess.open(folder_path)
-
-		if not dir:
-			push_error("Failed to open sticker folder: %s" % folder_path)
-			return
-
-		# Get all PNG files in the folder
-		dir.list_dir_begin()
-		var file_name = dir.get_next()
-
-		while file_name != "":
-			if not dir.current_is_dir() and file_name.ends_with(".png"):
-				file_names.append(file_name)
-			file_name = dir.get_next()
-
-		dir.list_dir_end()
-
-		# Natural sort (1, 2, 3... 10 instead of 1, 10, 2...)
-		file_names.sort_custom(func(a, b):
-			var num_a = a.get_basename().to_int()
-			var num_b = b.get_basename().to_int()
-			return num_a < num_b
-		)
-
-	# Load each texture
-	for i in range(file_names.size()):
-		var path = folder_path + file_names[i]
-		var texture = load(path) as Texture2D
-		if texture:
-			var sticker_name = file_names[i].get_basename()  # Remove .png extension
-			var definition = PaintingLayerDefinition.new(sticker_name, texture, 0)
-			definition.unlocked = true
-			sticker_library.append(definition)
-		else:
-			push_error("Failed to load sticker texture: %s" % path)
-			if DebugLogger and not OS.has_feature("editor"):
-				DebugLogger.write_log("[PaintingSystem2D] Failed to load sticker: %s" % path)
-
-	if DebugLogger and not OS.has_feature("editor"):
-		DebugLogger.write_log("[PaintingSystem2D] Loaded %d stickers into library" % sticker_library.size())
 
 func _process(delta):
 	if not camera:
@@ -358,10 +292,10 @@ func _update_preview_fade(delta: float):
 
 func _update_preview_texture():
 	"""Update the preview sprite's texture to match currently selected sticker"""
-	if not preview_sprite or sticker_library.is_empty():
+	if not preview_sprite or StickerLibrary.sticker_library.is_empty():
 		return
 
-	var definition = sticker_library[selected_sticker_index]
+	var definition = StickerLibrary.sticker_library[selected_sticker_index]
 	preview_sprite.texture = definition.texture
 
 	# Update scale using the new function
@@ -407,10 +341,10 @@ func scale_preview(delta: float, direction: int):
 
 func _update_preview_scale():
 	"""Update preview sprite scale based on current multiplier"""
-	if not preview_sprite or sticker_library.is_empty():
+	if not preview_sprite or StickerLibrary.sticker_library.is_empty():
 		return
 
-	var definition = sticker_library[selected_sticker_index]
+	var definition = StickerLibrary.sticker_library[selected_sticker_index]
 	var texture_size = definition.texture.get_size()
 
 	# Apply base scale calculation with multiplier
@@ -423,18 +357,18 @@ func spawn_sticker(world_position: Vector3):
 	"""Spawn a new sticker at the given world position"""
 	if DebugLogger and not OS.has_feature("editor"):
 		DebugLogger.write_log("[PaintingSystem2D] spawn_sticker called at world position: %s" % world_position)
-		DebugLogger.write_log("[PaintingSystem2D] sticker_library size: %d" % sticker_library.size())
+		DebugLogger.write_log("[PaintingSystem2D] StickerLibrary.sticker_library size: %d" % StickerLibrary.sticker_library.size())
 		DebugLogger.write_log("[PaintingSystem2D] selected_sticker_index: %d" % selected_sticker_index)
 		DebugLogger.write_log("[PaintingSystem2D] painting_plane: %s" % painting_plane)
 		DebugLogger.write_log("[PaintingSystem2D] canvas_viewport: %s" % canvas_viewport)
 
-	if sticker_library.is_empty():
+	if StickerLibrary.sticker_library.is_empty():
 		push_error("No stickers in library!")
 		if DebugLogger and not OS.has_feature("editor"):
 			DebugLogger.write_log("[PaintingSystem2D] ERROR: No stickers in library!")
 		return
 
-	var definition = sticker_library[selected_sticker_index]
+	var definition = StickerLibrary.sticker_library[selected_sticker_index]
 
 	# Convert world position to viewport coordinates
 	var viewport_pos = _world_to_viewport_coords(world_position)
@@ -500,12 +434,12 @@ func spawn_sticker(world_position: Vector3):
 
 func cycle_sticker(direction: int):
 	"""Cycle through available stickers in library (deprecated - use PaintingModeManager)"""
-	if sticker_library.is_empty():
+	if StickerLibrary.sticker_library.is_empty():
 		return
 
-	selected_sticker_index = (selected_sticker_index + direction) % sticker_library.size()
+	selected_sticker_index = (selected_sticker_index + direction) % StickerLibrary.sticker_library.size()
 	if selected_sticker_index < 0:
-		selected_sticker_index = sticker_library.size() - 1
+		selected_sticker_index = StickerLibrary.sticker_library.size() - 1
 
 	# Update preview to show new sticker
 	_update_preview_texture()

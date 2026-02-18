@@ -65,7 +65,7 @@ func _ready():
 
 func _build_carousel():
 	"""Create all the slot UI elements dynamically"""
-	if not active_system or active_system.sticker_library.is_empty():
+	if StickerLibrary.sticker_library.is_empty():
 		push_error("PaintingUI: Cannot build carousel - no stickers loaded")
 		return
 
@@ -75,8 +75,8 @@ func _build_carousel():
 	slot_nodes.clear()
 
 	# Create a slot for each sticker in the library
-	for i in range(active_system.sticker_library.size()):
-		var sticker = active_system.sticker_library[i]
+	for i in range(StickerLibrary.sticker_library.size()):
+		var sticker = StickerLibrary.sticker_library[i]
 
 		# Instantiate slot from scene
 		var slot = StickerSlotScene.instantiate() as StickerSlot

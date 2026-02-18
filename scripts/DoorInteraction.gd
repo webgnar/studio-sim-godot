@@ -128,12 +128,19 @@ func _release_door() -> void:
 
 func _update_prompt() -> void:
 	if is_locked:
-		interaction_text = locked_text
+		if WorldStateManager.has_flag(required_key_flag):
+			interaction_text = "Unlock"
+		else:
+			interaction_text = locked_text
 	else:
 		interaction_text = grab_text if not is_grabbed else "Release Door"
 
 func _physics_process(delta: float) -> void:
-	if not door_body or not hinge_joint or is_locked:
+	# Keep prompt text in sync while locked (flag may change after load)
+	if is_locked:
+		_update_prompt()
+		return
+	if not door_body or not hinge_joint:
 		return
 
 	# Update creak timer

@@ -1,8 +1,9 @@
-[gd_scene format=3 uid="uid://br0ke8na4oeqj"]
+[gd_scene format=3 uid="uid://5neft563t1yw"]
 
 [ext_resource type="PackedScene" uid="uid://db8764j2674fq" path="res://models/props/outlet_box.glb" id="1_w3unl"]
 [ext_resource type="PackedScene" uid="uid://bryic0ubsrfjn" path="res://models/interactables/buttonGreen.glb" id="2_w1yl1"]
-[ext_resource type="Script" uid="uid://bsdnronq274dp" path="res://scripts/components/PaintingSubmitButton.gd" id="3_ifk8f"]
+[ext_resource type="Material" uid="uid://cue6nrle5awtl" path="res://materials/bluebutton.tres" id="3_8hx4r"]
+[ext_resource type="Script" uid="uid://vqcinf3tqalc" path="res://scripts/components/OpenStickerFolderButton.gd" id="3_script"]
 
 [sub_resource type="Animation" id="Animation_c15v2"]
 length = 0.001
@@ -48,27 +49,32 @@ _data = {
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_kvmu4"]
 radius = 1.0
 
-[node name="buttonGreen" type="Node3D" unique_id=295096737]
+[node name="OpenStickerFolderButton" type="Node3D" unique_id=2056059285]
 transform = Transform3D(-4.371139e-09, 0.1, 0, -0.1, -4.371139e-09, 0, 0, 0, 0.1, 0, 0, 0)
 
-[node name="outletbox" parent="." unique_id=771274501 instance=ExtResource("1_w3unl")]
+[node name="outletbox" parent="." unique_id=1604618071 instance=ExtResource("1_w3unl")]
 transform = Transform3D(-4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0, 1, 0, 0, 0)
 
-[node name="green button" parent="." unique_id=1386671482 instance=ExtResource("2_w1yl1")]
+[node name="green button" parent="." unique_id=1552169966 instance=ExtResource("2_w1yl1")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5275917, 0)
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="green button" unique_id=1336102046]
+[node name="buttonGreen" parent="green button" index="0"]
+surface_material_override/0 = ExtResource("3_8hx4r")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="green button" unique_id=897427385]
 libraries/ = SubResource("AnimationLibrary_xgy6y")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=644470363]
+[node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=223387873]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9999999, 0)
 collision_layer = 8
 collision_mask = 0
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" unique_id=1464124602]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" unique_id=1241953838]
 shape = SubResource("CylinderShape3D_kvmu4")
 
-[node name="Node3D" type="Node3D" parent="." unique_id=886778282]
-script = ExtResource("3_ifk8f")
-interaction_text = "Submit Painting"
-custom_interaction_distance = 15.0
+[node name="Node3D" type="Node3D" parent="." unique_id=1995852367]
+script = ExtResource("3_script")
+interaction_text = "Open Sticker Folder"
+custom_interaction_distance = 5.0
+
+[editable path="green button"]

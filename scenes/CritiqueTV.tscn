@@ -40,7 +40,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.14525682, 0.14527923, 0.19994625, 1)
+color = Color(0.07295022, 0.07293732, 0.10834237, 1)
 
 [node name="MarginContainer" type="MarginContainer" parent="SubViewport" unique_id=1264582242]
 anchors_preset = 15
@@ -56,7 +56,7 @@ theme_override_constants/margin_bottom = 20
 [node name="RichTextLabel" type="RichTextLabel" parent="SubViewport/MarginContainer" unique_id=310604522]
 texture_filter = 1
 layout_mode = 2
-theme_override_colors/default_color = Color(0.9, 0.95, 0.9, 1)
+theme_override_colors/default_color = Color(0.8728172, 0.90766454, 0.6322265, 1)
 text = "Awaiting next painting..."
 
 [node name="Screen" type="MeshInstance3D" parent="." unique_id=1207183709]

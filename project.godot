@@ -21,7 +21,7 @@ boot_splash/bg_color=Color(0, 0, 0, 1)
 boot_splash/stretch_mode=0
 boot_splash/use_filter=false
 boot_splash/image="uid://c2dm0vx6wbeg1"
-config/icon="uid://cqiw0qxli55ih"
+config/icon="uid://ch1yuq51ghyde"
 
 [audio]
 
@@ -64,6 +64,7 @@ LaunchOptionsHandler="*res://scripts/LaunchOptionsHandler.gd"
 PaintingExporter="*res://scripts/PaintingExporter.gd"
 GalleryUploader="*res://scripts/GalleryUploader.gd"
 LocaleManager="*res://scripts/LocaleManager.gd"
+StickerLibrary="*res://scripts/painting/StickerLibrary.gd"
 
 [display]
 

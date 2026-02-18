@@ -248,6 +248,9 @@ func _update_interactable() -> void:
 				_clear_interactable()
 				return
 		_set_interactable(interactable)
+	else:
+		# Same interactable - refresh prompt in case interaction_text changed dynamically
+		_update_interaction_prompt()
 
 func _find_interactable_root(node: Node) -> Node3D:
 	# Walk up the tree to find the node in "interactable" group

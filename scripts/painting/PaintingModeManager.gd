@@ -68,16 +68,19 @@ func _process(_delta):
 
 func cycle_sticker(direction: int):
 	"""Cycle through stickers and sync both systems"""
-	# Use whichever system is available to get library size
+	if StickerLibrary.sticker_library.is_empty():
+		return
+
+	# Use whichever system is available to get current index
 	var system: Node = (painting_system_2d as Node) if painting_system_2d else (painting_system_3d as Node)
-	if not system or system.sticker_library.is_empty():
+	if not system:
 		return
 
 	# Calculate new index
 	var current_index = system.selected_sticker_index
-	var new_index = (current_index + direction) % system.sticker_library.size()
+	var new_index = (current_index + direction) % StickerLibrary.sticker_library.size()
 	if new_index < 0:
-		new_index = system.sticker_library.size() - 1
+		new_index = StickerLibrary.sticker_library.size() - 1
 
 	# Sync to both systems
 	sync_sticker_selection(new_index)
