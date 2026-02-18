@@ -27,3 +27,4 @@ res://scripts/HUD.gd
 res://scripts/PaintingExporter.gd
 res://scripts/CritiqueDisplay.gd
 res://scripts/ui/InventoryTab.gd
+res://scenes/UI/InventoryTab.tscn

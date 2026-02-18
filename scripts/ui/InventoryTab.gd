@@ -12,9 +12,9 @@ const PaintingCardScene = preload("res://scenes/UI/PaintingCard.tscn")
 @onready var stats_label: Label = $HBoxContainer/LeftPanel/StatsLabel
 @onready var preview_image: TextureRect = $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/PaintingImage
 @onready var status_label: Label = $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/StatusLabel
-@onready var name_input: LineEdit = $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/NameContainer/NameInput
-@onready var statement_label: Label = $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/StatementLabel
-@onready var statement_input: TextEdit = $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/StatementInput
+@onready var name_input: LineEdit = $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/NameContainer/NameInput
+@onready var statement_label: Label = $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/StatementLabel
+@onready var statement_input: TextEdit = $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/StatementInput
 @onready var save_button: Button = $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/SaveButton
 @onready var empty_label: Label = $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/EmptyLabel
 
@@ -30,8 +30,8 @@ var keyboard_nav_enabled: bool = false
 var input_cooldown: float = 0.0
 var input_cooldown_time: float = 0.15
 
-var _critique_header: Label = null
-var _critique_display: TextEdit = null
+@onready var _critique_header: Label = $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2/CritiqueHeader
+@onready var _critique_display: TextEdit = $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2/CritiqueDisplay
 
 # Sound (reuse parent PauseMenu sounds)
 var button_nav_sound: AudioStreamPlayer = null
@@ -51,20 +51,6 @@ func _ready():
 	if pause_menu:
 		button_nav_sound = pause_menu.get_node_or_null("ButtonNavSound")
 		button_hit_sound = pause_menu.get_node_or_null("ButtonHitSound")
-
-	# Add critique section (shown only for SHIPPED paintings that have a critique)
-	var vbox = $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer
-	_critique_header = Label.new()
-	_critique_header.text = tr("Critique:")
-	_critique_header.visible = false
-	vbox.add_child(_critique_header)
-
-	_critique_display = TextEdit.new()
-	_critique_display.editable = false
-	_critique_display.wrap_mode = TextEdit.LINE_WRAPPING_BOUNDARY
-	_critique_display.custom_minimum_size = Vector2(0, 100)
-	_critique_display.visible = false
-	vbox.add_child(_critique_display)
 
 	# Disable input processing by default (PauseMenu manages activation via process_mode)
 	process_mode = Node.PROCESS_MODE_DISABLED

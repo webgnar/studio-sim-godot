@@ -1,11 +1,11 @@
+VBoxContainer
+HBoxContainer
 AnimationPlayer
 AnimationTree
 MeshInstance3D
 TextureRect
 CSGBox3D
 SpotLight3D
-VBoxContainer
-HBoxContainer
 Node3D
 AudioStreamPlayer3D
 CollisionShape3D
