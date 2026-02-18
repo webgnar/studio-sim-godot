@@ -173,6 +173,7 @@ func export_painting_glb(painting: CarryablePainting, downloads_path: String, fi
 	# Create canvas plane with baked texture
 	var canvas_mesh = MeshInstance3D.new()
 	canvas_mesh.name = "Canvas"
+	canvas_mesh.scale = Vector3(1.01, 1.01, 1.01)  # Match CarryablePainting MeshInstance3D scale
 	var plane_mesh = PlaneMesh.new()
 	plane_mesh.size = Vector2(3, 3)  # Match CarryablePainting canvas size
 	canvas_mesh.mesh = plane_mesh

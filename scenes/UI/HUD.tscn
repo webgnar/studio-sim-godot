@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://cmkthatew8dv2"]
+[gd_scene format=3 uid="uid://cmkthatew8dv2"]
 
 [ext_resource type="Script" uid="uid://d2t2wfmgd2wmn" path="res://scripts/HUD.gd" id="1"]
 [ext_resource type="Theme" uid="uid://cbtaxh5m7udor" path="res://themes/ui_theme.tres" id="2"]
@@ -9,32 +9,38 @@
 [ext_resource type="Texture2D" uid="uid://g4asi3np5tvu" path="res://sprites/ui/rb.png" id="6_e8ns6"]
 [ext_resource type="Texture2D" uid="uid://canne3e2geuxw" path="res://sprites/ui/rt.png" id="7_m51yh"]
 [ext_resource type="Texture2D" uid="uid://bkayr38ljn01r" path="res://sprites/ui/lt.png" id="8_8d6le"]
-[ext_resource type="Texture2D" path="res://sprites/vxicon.png" id="9_vxicon"]
+[ext_resource type="Texture2D" uid="uid://b2k3q4m0fbw8e" path="res://sprites/vxicon.png" id="9_vxicon"]
 
-[node name="HUD" type="CanvasLayer"]
+[node name="HUD" type="CanvasLayer" unique_id=1092373394]
 script = ExtResource("1")
 
-[node name="CenterContainer" type="CenterContainer" parent="."]
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=976094575]
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -203.0
-offset_bottom = 100.0
+offset_left = -323.81
+offset_top = 14.16
+offset_right = -15.809326
+offset_bottom = 142.16
 grow_horizontal = 0
 
-[node name="InteractionPrompt" type="HBoxContainer" parent="CenterContainer"]
+[node name="InteractionPrompt" type="HBoxContainer" parent="CenterContainer" unique_id=903854434]
 layout_mode = 2
 theme = ExtResource("2")
 
-[node name="TextureRect" type="TextureRect" parent="CenterContainer/InteractionPrompt"]
+[node name="TextureRect" type="TextureRect" parent="CenterContainer/InteractionPrompt" unique_id=34380264]
 layout_mode = 2
 texture = ExtResource("3_gawfp")
 
-[node name="Label" type="Label" parent="CenterContainer/InteractionPrompt"]
+[node name="Label" type="Label" parent="CenterContainer/InteractionPrompt" unique_id=147868346]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.37254903, 1, 0.19607843, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 57
 text = "Interact"
 
-[node name="Crosshair" type="Control" parent="."]
+[node name="Crosshair" type="Control" parent="." unique_id=2141946565]
 layout_mode = 3
 anchors_preset = 8
 anchor_left = 0.5
@@ -48,7 +54,7 @@ offset_bottom = 2.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Center" type="ColorRect" parent="Crosshair"]
+[node name="Center" type="ColorRect" parent="Crosshair" unique_id=497681997]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -63,7 +69,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(1, 1, 1, 0.8)
 
-[node name="Top" type="ColorRect" parent="Crosshair"]
+[node name="Top" type="ColorRect" parent="Crosshair" unique_id=995454176]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -78,7 +84,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(1, 1, 1, 0.8)
 
-[node name="Bottom" type="ColorRect" parent="Crosshair"]
+[node name="Bottom" type="ColorRect" parent="Crosshair" unique_id=426689441]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -93,7 +99,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(1, 1, 1, 0.8)
 
-[node name="Left" type="ColorRect" parent="Crosshair"]
+[node name="Left" type="ColorRect" parent="Crosshair" unique_id=909775570]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -108,7 +114,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(1, 1, 1, 0.8)
 
-[node name="Right" type="ColorRect" parent="Crosshair"]
+[node name="Right" type="ColorRect" parent="Crosshair" unique_id=2010450781]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -123,7 +129,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(1, 1, 1, 0.8)
 
-[node name="PaintingHint" type="VBoxContainer" parent="."]
+[node name="PaintingHint" type="VBoxContainer" parent="." unique_id=806102846]
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
@@ -134,89 +140,88 @@ offset_bottom = 200.0
 grow_horizontal = 0
 theme_override_constants/separation = 4
 
-[node name="RotateLine" type="HBoxContainer" parent="PaintingHint"]
+[node name="RotateLine" type="HBoxContainer" parent="PaintingHint" unique_id=1855572682]
 layout_mode = 2
 alignment = 2
 
-[node name="RotateRightIcon" type="TextureRect" parent="PaintingHint/RotateLine"]
+[node name="RotateRightIcon" type="TextureRect" parent="PaintingHint/RotateLine" unique_id=1539713680]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 texture = ExtResource("3_a0qax")
 stretch_mode = 5
 
-[node name="RotateLabel" type="Label" parent="PaintingHint/RotateLine"]
+[node name="RotateLabel" type="Label" parent="PaintingHint/RotateLine" unique_id=1877327158]
 layout_mode = 2
 theme = ExtResource("2")
 text = " Rotate"
 
-[node name="ScaleLine" type="HBoxContainer" parent="PaintingHint"]
+[node name="ScaleLine" type="HBoxContainer" parent="PaintingHint" unique_id=140751471]
 layout_mode = 2
 alignment = 2
 
-[node name="ScaleDownIcon" type="TextureRect" parent="PaintingHint/ScaleLine"]
+[node name="ScaleDownIcon" type="TextureRect" parent="PaintingHint/ScaleLine" unique_id=875419796]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 texture = ExtResource("4_gawfp")
 stretch_mode = 5
 
-[node name="ScaleLabel" type="Label" parent="PaintingHint/ScaleLine"]
+[node name="ScaleLabel" type="Label" parent="PaintingHint/ScaleLine" unique_id=1485998373]
 layout_mode = 2
 theme = ExtResource("2")
 text = " Scale"
 
-[node name="CycleLine" type="HBoxContainer" parent="PaintingHint"]
+[node name="CycleLine" type="HBoxContainer" parent="PaintingHint" unique_id=1130289020]
 layout_mode = 2
 alignment = 2
 
-[node name="CyclePrevIcon" type="TextureRect" parent="PaintingHint/CycleLine"]
+[node name="CyclePrevIcon" type="TextureRect" parent="PaintingHint/CycleLine" unique_id=1446865686]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 texture = ExtResource("5_tohwf")
 stretch_mode = 5
 
-[node name="CycleLabel" type="Label" parent="PaintingHint/CycleLine"]
+[node name="CycleLabel" type="Label" parent="PaintingHint/CycleLine" unique_id=988563025]
 layout_mode = 2
 theme = ExtResource("2")
 text = " Cycle"
 
-[node name="CycleNextIcon" type="TextureRect" parent="PaintingHint/CycleLine"]
+[node name="CycleNextIcon" type="TextureRect" parent="PaintingHint/CycleLine" unique_id=234186105]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 texture = ExtResource("6_e8ns6")
 stretch_mode = 5
 
-[node name="PlaceUndoLine" type="HBoxContainer" parent="PaintingHint"]
+[node name="PlaceUndoLine" type="HBoxContainer" parent="PaintingHint" unique_id=713504903]
 layout_mode = 2
 alignment = 2
 
-[node name="PlaceIcon" type="TextureRect" parent="PaintingHint/PlaceUndoLine"]
+[node name="PlaceIcon" type="TextureRect" parent="PaintingHint/PlaceUndoLine" unique_id=996579038]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 texture = ExtResource("7_m51yh")
 stretch_mode = 5
 
-[node name="PlaceText" type="Label" parent="PaintingHint/PlaceUndoLine"]
+[node name="PlaceText" type="Label" parent="PaintingHint/PlaceUndoLine" unique_id=75297682]
 layout_mode = 2
 theme = ExtResource("2")
 text = " Place"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="PaintingHint"]
+[node name="HBoxContainer" type="HBoxContainer" parent="PaintingHint" unique_id=1953142721]
 layout_mode = 2
 alignment = 2
 
-[node name="UndoIcon" type="TextureRect" parent="PaintingHint/HBoxContainer"]
+[node name="UndoIcon" type="TextureRect" parent="PaintingHint/HBoxContainer" unique_id=442450924]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 texture = ExtResource("8_8d6le")
 stretch_mode = 5
 
-[node name="UndoText" type="Label" parent="PaintingHint/HBoxContainer"]
+[node name="UndoText" type="Label" parent="PaintingHint/HBoxContainer" unique_id=442161430]
 layout_mode = 2
 theme = ExtResource("2")
 text = " Undo"
 
-[node name="CarryHint" type="VBoxContainer" parent="."]
-visible = false
+[node name="CarryHint" type="VBoxContainer" parent="." unique_id=876946278]
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
@@ -227,128 +232,128 @@ offset_bottom = 200.0
 grow_horizontal = 0
 theme_override_constants/separation = 4
 
-[node name="RotateYLine" type="HBoxContainer" parent="CarryHint"]
+[node name="RotateYLine" type="HBoxContainer" parent="CarryHint" unique_id=1589696870]
 layout_mode = 2
 alignment = 2
 
-[node name="RotateYLeftIcon" type="TextureRect" parent="CarryHint/RotateYLine"]
+[node name="RotateYLeftIcon" type="TextureRect" parent="CarryHint/RotateYLine" unique_id=436856253]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 stretch_mode = 5
 
-[node name="RotateYLeftLabel" type="Label" parent="CarryHint/RotateYLine"]
+[node name="RotateYLeftLabel" type="Label" parent="CarryHint/RotateYLine" unique_id=1174129607]
 layout_mode = 2
 theme = ExtResource("2")
 text = "[R]"
 
-[node name="Slash1" type="Label" parent="CarryHint/RotateYLine"]
+[node name="Slash1" type="Label" parent="CarryHint/RotateYLine" unique_id=406141099]
 layout_mode = 2
 theme = ExtResource("2")
 text = " / "
 
-[node name="RotateYRightIcon" type="TextureRect" parent="CarryHint/RotateYLine"]
+[node name="RotateYRightIcon" type="TextureRect" parent="CarryHint/RotateYLine" unique_id=1231917492]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 stretch_mode = 5
 
-[node name="RotateYRightLabel" type="Label" parent="CarryHint/RotateYLine"]
+[node name="RotateYRightLabel" type="Label" parent="CarryHint/RotateYLine" unique_id=2131654650]
 layout_mode = 2
 theme = ExtResource("2")
 text = "[T]"
 
-[node name="RotateYLabel" type="Label" parent="CarryHint/RotateYLine"]
+[node name="RotateYLabel" type="Label" parent="CarryHint/RotateYLine" unique_id=1514168073]
 layout_mode = 2
 theme = ExtResource("2")
 text = " Rotate Y"
 
-[node name="RotateXLine" type="HBoxContainer" parent="CarryHint"]
+[node name="RotateXLine" type="HBoxContainer" parent="CarryHint" unique_id=629641791]
 layout_mode = 2
 alignment = 2
 
-[node name="RotateXDownIcon" type="TextureRect" parent="CarryHint/RotateXLine"]
+[node name="RotateXDownIcon" type="TextureRect" parent="CarryHint/RotateXLine" unique_id=295981647]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 stretch_mode = 5
 
-[node name="RotateXDownLabel" type="Label" parent="CarryHint/RotateXLine"]
+[node name="RotateXDownLabel" type="Label" parent="CarryHint/RotateXLine" unique_id=1675517113]
 layout_mode = 2
 theme = ExtResource("2")
 text = "[X]"
 
-[node name="Slash2" type="Label" parent="CarryHint/RotateXLine"]
+[node name="Slash2" type="Label" parent="CarryHint/RotateXLine" unique_id=1933584397]
 layout_mode = 2
 theme = ExtResource("2")
 text = " / "
 
-[node name="RotateXUpIcon" type="TextureRect" parent="CarryHint/RotateXLine"]
+[node name="RotateXUpIcon" type="TextureRect" parent="CarryHint/RotateXLine" unique_id=1946504323]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 stretch_mode = 5
 
-[node name="RotateXUpLabel" type="Label" parent="CarryHint/RotateXLine"]
+[node name="RotateXUpLabel" type="Label" parent="CarryHint/RotateXLine" unique_id=1285959938]
 layout_mode = 2
 theme = ExtResource("2")
 text = "[Z]"
 
-[node name="RotateXLabel" type="Label" parent="CarryHint/RotateXLine"]
+[node name="RotateXLabel" type="Label" parent="CarryHint/RotateXLine" unique_id=1604116472]
 layout_mode = 2
 theme = ExtResource("2")
 text = " Rotate X"
 
-[node name="InteractLine" type="HBoxContainer" parent="CarryHint"]
+[node name="InteractLine" type="HBoxContainer" parent="CarryHint" unique_id=980744027]
 layout_mode = 2
 alignment = 2
 
-[node name="InteractLabel" type="Label" parent="CarryHint/InteractLine"]
+[node name="InteractLabel" type="Label" parent="CarryHint/InteractLine" unique_id=921467148]
 layout_mode = 2
 theme = ExtResource("2")
 text = "[E]"
 
-[node name="InteractText" type="Label" parent="CarryHint/InteractLine"]
+[node name="InteractText" type="Label" parent="CarryHint/InteractLine" unique_id=346746633]
 layout_mode = 2
 theme = ExtResource("2")
 text = " Place"
 
-[node name="DropThrowLine" type="HBoxContainer" parent="CarryHint"]
+[node name="DropThrowLine" type="HBoxContainer" parent="CarryHint" unique_id=432209643]
 layout_mode = 2
 alignment = 2
 
-[node name="DropIcon" type="TextureRect" parent="CarryHint/DropThrowLine"]
+[node name="DropIcon" type="TextureRect" parent="CarryHint/DropThrowLine" unique_id=586234118]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 stretch_mode = 5
 
-[node name="DropLabel" type="Label" parent="CarryHint/DropThrowLine"]
+[node name="DropLabel" type="Label" parent="CarryHint/DropThrowLine" unique_id=120759873]
 layout_mode = 2
 theme = ExtResource("2")
 text = "[Right Click]"
 
-[node name="DropText" type="Label" parent="CarryHint/DropThrowLine"]
+[node name="DropText" type="Label" parent="CarryHint/DropThrowLine" unique_id=1682503532]
 layout_mode = 2
 theme = ExtResource("2")
 text = " Drop"
 
-[node name="Separator" type="Label" parent="CarryHint/DropThrowLine"]
+[node name="Separator" type="Label" parent="CarryHint/DropThrowLine" unique_id=213210502]
 layout_mode = 2
 theme = ExtResource("2")
 text = "  |  "
 
-[node name="ThrowIcon" type="TextureRect" parent="CarryHint/DropThrowLine"]
+[node name="ThrowIcon" type="TextureRect" parent="CarryHint/DropThrowLine" unique_id=47668273]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 stretch_mode = 5
 
-[node name="ThrowLabel" type="Label" parent="CarryHint/DropThrowLine"]
+[node name="ThrowLabel" type="Label" parent="CarryHint/DropThrowLine" unique_id=1462432856]
 layout_mode = 2
 theme = ExtResource("2")
 text = "[Left Click]"
 
-[node name="ThrowText" type="Label" parent="CarryHint/DropThrowLine"]
+[node name="ThrowText" type="Label" parent="CarryHint/DropThrowLine" unique_id=1625261266]
 layout_mode = 2
 theme = ExtResource("2")
 text = " Throw"
 
-[node name="CameraIcon" type="TextureRect" parent="."]
+[node name="CameraIcon" type="TextureRect" parent="." unique_id=794988331]
 visible = false
 anchors_preset = 3
 anchor_left = 1.0

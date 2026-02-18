@@ -16,6 +16,9 @@ extends CanvasLayer
 var _player: CharacterBody3D
 var _player_interaction_component: PlayerInteractionComponent
 var _current_prompt_text: String = ""  # Store current prompt for device switching
+var _prompt_panel: PanelContainer  # Background panel wrapping interaction prompt
+var _carry_panel: PanelContainer  # Background panel wrapping carry hint
+var _painting_panel: PanelContainer  # Background panel wrapping painting hint
 
 # --- GODOT METHODS ---
 
@@ -31,17 +34,13 @@ func _ready() -> void:
 		push_error("HUD: No player found as parent!")
 		return
 
-	# Hide interaction prompt initially
+	# Wrap HUD elements in PanelContainers with semi-transparent backgrounds
 	if interaction_prompt:
-		interaction_prompt.hide()
-
-	# Hide carry hint initially
+		_prompt_panel = _wrap_in_panel(interaction_prompt)
 	if carry_hint:
-		carry_hint.hide()
-
-	# Hide painting hint initially
+		_carry_panel = _wrap_in_panel(carry_hint)
 	if painting_hint:
-		painting_hint.hide()
+		_painting_panel = _wrap_in_panel(painting_hint)
 
 	# Connect to UIManager state changes
 	if UIManager:
@@ -63,6 +62,46 @@ func _ready() -> void:
 		DebugLogger.write_log("[HUD] Mouse filter set to IGNORE on all UI elements")
 
 # --- SETUP METHODS ---
+
+func _wrap_in_panel(content: Control) -> PanelContainer:
+	var panel = PanelContainer.new()
+	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var style = StyleBoxFlat.new()
+	style.bg_color = Color(0, 0, 0, 0.5)
+	style.set_corner_radius_all(0)
+	style.content_margin_left = 12
+	style.content_margin_right = 12
+	style.content_margin_top = 8
+	style.content_margin_bottom = 8
+	panel.add_theme_stylebox_override("panel", style)
+	var parent = content.get_parent()
+	# Copy anchors/offsets so the panel takes the same position
+	panel.anchors_preset = content.anchors_preset
+	panel.anchor_left = content.anchor_left
+	panel.anchor_top = content.anchor_top
+	panel.anchor_right = content.anchor_right
+	panel.anchor_bottom = content.anchor_bottom
+	panel.offset_left = content.offset_left
+	panel.offset_top = content.offset_top
+	panel.offset_right = content.offset_right
+	panel.offset_bottom = content.offset_bottom
+	panel.grow_horizontal = content.grow_horizontal
+	panel.grow_vertical = content.grow_vertical
+	# Reset content positioning since panel handles it now
+	content.anchors_preset = 0
+	content.anchor_left = 0
+	content.anchor_top = 0
+	content.anchor_right = 0
+	content.anchor_bottom = 0
+	content.offset_left = 0
+	content.offset_top = 0
+	content.offset_right = 0
+	content.offset_bottom = 0
+	parent.remove_child(content)
+	panel.add_child(content)
+	parent.add_child(panel)
+	panel.hide()
+	return panel
 
 func _setup_mouse_filters() -> void:
 	"""Set mouse_filter to IGNORE on all HUD Control nodes to prevent consuming mouse motion"""
@@ -139,16 +178,16 @@ func _on_nothing_detected() -> void:
 
 func _update_interaction_prompt() -> void:
 	"""Update the interaction prompt based on current device and prompt text"""
-	if not interaction_label or not interaction_prompt or not interaction_icon:
+	if not interaction_label or not interaction_prompt or not interaction_icon or not _prompt_panel:
 		return
 
 	# Don't show interaction prompt if painting or carrying
 	if _is_2d_painting_active() or (_player_interaction_component and _player_interaction_component.is_carrying):
-		interaction_prompt.hide()
+		_prompt_panel.hide()
 		return
 
 	if _current_prompt_text == "":
-		interaction_prompt.hide()
+		_prompt_panel.hide()
 		return
 
 	# Check if we're in gamepad mode
@@ -172,11 +211,11 @@ func _update_interaction_prompt() -> void:
 		interaction_icon.hide()
 		interaction_label.text = _current_prompt_text
 
-	interaction_prompt.show()
+	_prompt_panel.show()
 
 func _update_carry_hint() -> void:
 	"""Update the carry controls hint based on whether player is carrying something"""
-	if not _player_interaction_component or not carry_hint:
+	if not _player_interaction_component or not carry_hint or not _carry_panel:
 		return
 
 	if _player_interaction_component.is_carrying:
@@ -241,15 +280,15 @@ func _update_carry_hint() -> void:
 		)
 		drop_throw_line.show()
 
-		carry_hint.show()
+		_carry_panel.show()
 
 		# Hide other prompts while carrying
 		if interaction_prompt:
-			interaction_prompt.hide()
+			_prompt_panel.hide()
 		if painting_hint:
-			painting_hint.hide()
+			_painting_panel.hide()
 	else:
-		carry_hint.hide()
+		_carry_panel.hide()
 
 func _is_2d_painting_active() -> bool:
 	"""Check if player is currently in 2D painting mode"""
@@ -283,7 +322,7 @@ func _update_button_display(icon_node: TextureRect, label_node: Label, action_na
 
 func _update_painting_hint() -> void:
 	"""Update painting controls hint when in 2D painting mode"""
-	if not painting_hint:
+	if not painting_hint or not _painting_panel:
 		return
 
 	var is_painting = _is_2d_painting_active()
@@ -344,13 +383,13 @@ func _update_painting_hint() -> void:
 			undo_icon.hide()
 			undo_text.text = "[Right Click] " + tr("Undo")
 
-		painting_hint.show()
+		_painting_panel.show()
 
 		# Hide normal interaction prompt (replace mode)
 		if interaction_prompt:
-			interaction_prompt.hide()
+			_prompt_panel.hide()
 	else:
-		painting_hint.hide()
+		_painting_panel.hide()
 
 # --- PUBLIC METHODS ---
 
@@ -360,11 +399,11 @@ func show_message(message: String, duration: float = 2.0) -> void:
 		return
 	
 	interaction_label.text = message
-	interaction_prompt.show()
+	_prompt_panel.show()
 	
 	if duration > 0:
 		await get_tree().create_timer(duration).timeout
-		interaction_prompt.hide()
+		_prompt_panel.hide()
 
 ## Update crosshair visibility
 func set_crosshair_visible(show_crosshair: bool) -> void:

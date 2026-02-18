@@ -22,3 +22,6 @@ res://materials/bluebutton.tres
 res://scenes/OpenStickerFolderButton.tscn
 res://scripts/DoorInteraction.gd
 res://scripts/PlayerInteractionComponent.gd
+res://scenes/UI/HUD.tscn
+res://scripts/HUD.gd
+res://scripts/PaintingExporter.gd
