@@ -25,3 +25,5 @@ res://scripts/PlayerInteractionComponent.gd
 res://scenes/UI/HUD.tscn
 res://scripts/HUD.gd
 res://scripts/PaintingExporter.gd
+res://scripts/CritiqueDisplay.gd
+res://scripts/ui/InventoryTab.gd

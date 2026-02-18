@@ -30,6 +30,9 @@ var keyboard_nav_enabled: bool = false
 var input_cooldown: float = 0.0
 var input_cooldown_time: float = 0.15
 
+var _critique_header: Label = null
+var _critique_display: TextEdit = null
+
 # Sound (reuse parent PauseMenu sounds)
 var button_nav_sound: AudioStreamPlayer = null
 var button_hit_sound: AudioStreamPlayer = null
@@ -48,6 +51,20 @@ func _ready():
 	if pause_menu:
 		button_nav_sound = pause_menu.get_node_or_null("ButtonNavSound")
 		button_hit_sound = pause_menu.get_node_or_null("ButtonHitSound")
+
+	# Add critique section (shown only for SHIPPED paintings that have a critique)
+	var vbox = $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer
+	_critique_header = Label.new()
+	_critique_header.text = tr("Critique:")
+	_critique_header.visible = false
+	vbox.add_child(_critique_header)
+
+	_critique_display = TextEdit.new()
+	_critique_display.editable = false
+	_critique_display.wrap_mode = TextEdit.LINE_WRAPPING_BOUNDARY
+	_critique_display.custom_minimum_size = Vector2(0, 100)
+	_critique_display.visible = false
+	vbox.add_child(_critique_display)
 
 	# Disable input processing by default (PauseMenu manages activation via process_mode)
 	process_mode = Node.PROCESS_MODE_DISABLED
@@ -219,6 +236,13 @@ func _show_detail_panel(should_show: bool):
 	if empty_label:
 		empty_label.visible = not should_show
 
+	# Always hide critique when hiding the panel; _update_preview handles showing it
+	if not should_show:
+		if _critique_header:
+			_critique_header.visible = false
+		if _critique_display:
+			_critique_display.visible = false
+
 # ============================================================================
 # Navigation
 # ============================================================================
@@ -314,6 +338,15 @@ func _update_preview(data: Dictionary):
 	# Set name and statement fields
 	name_input.text = data.get("name", "")
 	statement_input.text = data.get("artist_statement", "")
+
+	# Show critique for SHIPPED paintings that have one
+	var critique = data.get("critique", "")
+	if _critique_header and _critique_display:
+		var show_critique = (is_shipped and critique != "")
+		_critique_header.visible = show_critique
+		_critique_display.visible = show_critique
+		if show_critique:
+			_critique_display.text = critique
 
 # ============================================================================
 # Detail Panel Navigation

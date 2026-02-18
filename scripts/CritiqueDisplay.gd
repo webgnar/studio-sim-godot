@@ -18,6 +18,7 @@ const REQUEST_TIMEOUT = 15.0
 enum State { IDLE, WAITING_FOR_UPLOAD, LOADING_CRITIQUE, DISPLAYING }
 var _state: State = State.IDLE
 
+var _cached_painting_id: String = ""
 var _cached_painting_name: String = ""
 var _cached_artist_statement: String = ""
 var _cached_artist_name: String = ""
@@ -97,6 +98,7 @@ func _process(delta: float) -> void:
 
 func _on_export_started(painting: CarryablePainting) -> void:
 	print("CritiqueDisplay: Export started for painting: ", painting.painting_name)
+	_cached_painting_id = painting.painting_id
 	_cached_painting_name = painting.painting_name
 	_cached_artist_statement = painting.artist_statement
 	_cached_artist_name = SteamManager.persona_name
@@ -151,6 +153,8 @@ func _on_critique_response(result: int, response_code: int, _headers: PackedStri
 	_state = State.DISPLAYING
 	_show_critic()
 	_set_text(critique_text)
+	if _cached_painting_id != "":
+		WorldStateManager.save_critique_for_painting(_cached_painting_id, critique_text)
 
 func _show_critic() -> void:
 	if _current_critic.is_empty():

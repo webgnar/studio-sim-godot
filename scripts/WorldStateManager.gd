@@ -106,6 +106,16 @@ func ship_painting(painting: Node) -> void:
 	})
 	print("WorldStateManager: Painting '%s' shipped" % meta.get("name", meta["id"]))
 
+func save_critique_for_painting(painting_id: String, critique: String) -> void:
+	"""Store the AI critique text on a shipped painting and persist to disk."""
+	for i in range(_shipped_paintings.size()):
+		if _shipped_paintings[i]["id"] == painting_id:
+			_shipped_paintings[i]["critique"] = critique
+			print("WorldStateManager: Critique saved for '%s'" % _shipped_paintings[i].get("name", painting_id))
+			save_world_state()
+			return
+	push_warning("WorldStateManager: No shipped painting found with id: " + painting_id)
+
 func get_all_paintings() -> Array:
 	"""Returns array of painting data dicts for the inventory UI (includes shipped paintings)"""
 	var result = []
@@ -128,7 +138,8 @@ func get_all_paintings() -> Array:
 			"texture_path": shipped["texture_path"],
 			"name": shipped.get("name", ""),
 			"artist_statement": shipped.get("artist_statement", ""),
-			"status": "SHIPPED"
+			"status": "SHIPPED",
+			"critique": shipped.get("critique", "")
 		})
 	return result
 
