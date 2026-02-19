@@ -21,6 +21,7 @@ var close_button: Button = null  # Removed from scene; closing handled by go_bac
 @onready var language_button_container: VBoxContainer = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Language/ButtonContainer
 @onready var save_glb_checkbox: CheckBox = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/SaveGLBCheckbox
 @onready var save_png_checkbox: CheckBox = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/SavePNGCheckbox
+@onready var generate_critique_checkbox: CheckBox = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/GenerateCritiqueCheckbox
 @onready var panel_container: PanelContainer = $PanelContainer
 @onready var button_nav_sound: AudioStreamPlayer = $ButtonNavSound
 @onready var open_menu_sound: AudioStreamPlayer = $OpenMenuSound
@@ -365,6 +366,7 @@ func save_settings():
 	# Save game settings
 	settings["save_glb_on_ship"] = save_glb_on_ship
 	settings["save_png_on_ship"] = save_png_on_ship
+	settings["generate_npc_critique"] = generate_npc_critique
 
 	# Also save audio settings (in case AudioManager.save_settings() wasn't called)
 	settings["sfx_volume"] = AudioManager.sfx_volume
@@ -447,8 +449,11 @@ func load_settings():
 		save_glb_on_ship = bool(settings["save_glb_on_ship"])
 	if settings.has("save_png_on_ship"):
 		save_png_on_ship = bool(settings["save_png_on_ship"])
+	if settings.has("generate_npc_critique"):
+		generate_npc_critique = bool(settings["generate_npc_critique"])
 	save_glb_checkbox.button_pressed = save_glb_on_ship
 	save_png_checkbox.button_pressed = save_png_on_ship
+	generate_critique_checkbox.button_pressed = generate_npc_critique
 
 func _populate_controls_display():
 	"""Build the controls list with label rows"""
@@ -486,6 +491,7 @@ var language_buttons: Array[Button] = []
 
 var save_glb_on_ship: bool = true
 var save_png_on_ship: bool = true
+var generate_npc_critique: bool = true
 var game_checkboxes: Array[CheckBox] = []
 
 func _create_language_tab():
@@ -540,18 +546,25 @@ func _create_game_tab():
 	save_glb_checkbox.focus_mode = Control.FOCUS_ALL
 	save_png_checkbox.button_pressed = save_png_on_ship
 	save_png_checkbox.focus_mode = Control.FOCUS_ALL
+	generate_critique_checkbox.button_pressed = generate_npc_critique
+	generate_critique_checkbox.focus_mode = Control.FOCUS_ALL
 
-	# Wire focus chain between the two checkboxes
+	# Wire focus chain: glb → png → critique
 	save_glb_checkbox.focus_next = save_glb_checkbox.get_path_to(save_png_checkbox)
 	save_glb_checkbox.focus_neighbor_bottom = save_glb_checkbox.get_path_to(save_png_checkbox)
 	save_png_checkbox.focus_previous = save_png_checkbox.get_path_to(save_glb_checkbox)
 	save_png_checkbox.focus_neighbor_top = save_png_checkbox.get_path_to(save_glb_checkbox)
+	save_png_checkbox.focus_next = save_png_checkbox.get_path_to(generate_critique_checkbox)
+	save_png_checkbox.focus_neighbor_bottom = save_png_checkbox.get_path_to(generate_critique_checkbox)
+	generate_critique_checkbox.focus_previous = generate_critique_checkbox.get_path_to(save_png_checkbox)
+	generate_critique_checkbox.focus_neighbor_top = generate_critique_checkbox.get_path_to(save_png_checkbox)
 
 	# Connect signals after setting button_pressed to avoid triggering save_settings()
 	save_glb_checkbox.toggled.connect(_on_save_glb_toggled)
 	save_png_checkbox.toggled.connect(_on_save_png_toggled)
+	generate_critique_checkbox.toggled.connect(_on_generate_critique_toggled)
 
-	game_checkboxes = [save_glb_checkbox, save_png_checkbox]
+	game_checkboxes = [save_glb_checkbox, save_png_checkbox, generate_critique_checkbox]
 
 func _on_save_glb_toggled(pressed: bool):
 	save_glb_on_ship = pressed
@@ -559,6 +572,10 @@ func _on_save_glb_toggled(pressed: bool):
 
 func _on_save_png_toggled(pressed: bool):
 	save_png_on_ship = pressed
+	save_settings()
+
+func _on_generate_critique_toggled(pressed: bool):
+	generate_npc_critique = pressed
 	save_settings()
 
 func _is_last_in_tab(focused_control: Control) -> bool:

@@ -201,6 +201,11 @@ layout_mode = 2
 button_pressed = true
 text = "Save PNG when shipping the painting"
 
+[node name="GenerateCritiqueCheckbox" type="CheckBox" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game" unique_id=1111111106]
+layout_mode = 2
+button_pressed = true
+text = "Generate NPC critique"
+
 [node name="ButtonNavSound" type="AudioStreamPlayer" parent="." unique_id=1505501763]
 stream = ExtResource("3_nav_sound")
 bus = &"SFX"
