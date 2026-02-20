@@ -25,10 +25,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -244.38501
+offset_left = -445.0
 offset_top = -235.0
-offset_right = 498.0
-offset_bottom = 235.0
+offset_right = 439.0
+offset_bottom = 402.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -171,26 +171,26 @@ layout_mode = 2
 theme_override_constants/separation = 15
 metadata/_tab_index = 2
 
-[node name="SensitivitySection" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Controls" unique_id=2222222201]
+[node name="SensitivitySection" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Controls" unique_id=-2072745095]
 layout_mode = 2
 theme_override_constants/separation = 6
 
-[node name="SensitivityHeader" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Controls/SensitivitySection" unique_id=2222222202]
+[node name="SensitivityHeader" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Controls/SensitivitySection" unique_id=-2072745094]
 layout_mode = 2
 
-[node name="SensitivityLabel" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Controls/SensitivitySection/SensitivityHeader" unique_id=2222222203]
+[node name="SensitivityLabel" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Controls/SensitivitySection/SensitivityHeader" unique_id=-2072745093]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 32
 text = "Right Stick Sensitivity"
 
-[node name="SensitivityValue" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Controls/SensitivitySection/SensitivityHeader" unique_id=2222222204]
+[node name="SensitivityValue" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Controls/SensitivitySection/SensitivityHeader" unique_id=-2072745092]
 layout_mode = 2
 theme_override_font_sizes/font_size = 28
 text = "100%"
 horizontal_alignment = 2
 
-[node name="SensitivitySlider" type="HSlider" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Controls/SensitivitySection" unique_id=2222222205]
+[node name="SensitivitySlider" type="HSlider" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Controls/SensitivitySection" unique_id=-2072745091]
 layout_mode = 2
 size_flags_vertical = 1
 min_value = 50.0

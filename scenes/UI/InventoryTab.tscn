@@ -1,5 +1,6 @@
 [gd_scene format=3 uid="uid://c6huchrcnqsod"]
 
+[ext_resource type="Theme" uid="uid://cbtaxh5m7udor" path="res://themes/ui_theme.tres" id="1_7cwdt"]
 [ext_resource type="Script" uid="uid://bl0hqa8lmagvs" path="res://scripts/ui/InventoryTab.gd" id="1_script"]
 
 [node name="InventoryTab" type="Control" unique_id=1843316344]
@@ -9,6 +10,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("1_7cwdt")
 script = ExtResource("1_script")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=66023317]
@@ -21,7 +23,7 @@ grow_vertical = 2
 theme_override_constants/separation = 20
 
 [node name="LeftPanel" type="VBoxContainer" parent="HBoxContainer" unique_id=1275129141]
-custom_minimum_size = Vector2(350, 0)
+custom_minimum_size = Vector2(600, 0)
 layout_mode = 2
 
 [node name="TitleLabel" type="Label" parent="HBoxContainer/LeftPanel" unique_id=1178948721]
@@ -41,7 +43,7 @@ theme_override_constants/separation = 10
 
 [node name="StatsLabel" type="Label" parent="HBoxContainer/LeftPanel" unique_id=484737731]
 layout_mode = 2
-text = "Paintings: 0"
+text = "Paintings: 3"
 
 [node name="RightPanel" type="VBoxContainer" parent="HBoxContainer" unique_id=748231515]
 layout_mode = 2
@@ -104,7 +106,7 @@ layout_mode = 2
 text = "Artist Statement:"
 
 [node name="StatementInput" type="TextEdit" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=1444620906]
-custom_minimum_size = Vector2(0, 100)
+custom_minimum_size = Vector2(0, 500)
 layout_mode = 2
 placeholder_text = "Write about your painting..."
 wrap_mode = 1
@@ -126,7 +128,9 @@ editable = false
 wrap_mode = 1
 
 [node name="SaveButton" type="Button" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer" unique_id=1256214946]
+custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
+size_flags_horizontal = 4
 text = "Save"
 
 [node name="EmptyLabel" type="Label" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer" unique_id=2084938426]

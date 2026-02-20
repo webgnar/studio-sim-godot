@@ -56,16 +56,23 @@ expand_margin_right = 10.0
 shadow_size = 10
 shadow_offset = Vector2(1.5, 5.75)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3exg8"]
+bg_color = Color(0.8944376, 0.890025, 0.08243894, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qwk3i"]
+bg_color = Color(0.16824856, 0.61646754, 0.99999994, 1)
+
 [sub_resource type="StyleBoxLine" id="StyleBoxLine_l5g8p"]
+color = Color(0.9607843, 0, 0, 1)
 grow_begin = 0.0
 grow_end = 0.0
 thickness = 7
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_j8bgu"]
-bg_color = Color(0.9416745, 0.86228746, 0.79595697, 1)
+bg_color = Color(0.97385913, 0.9385577, 0.90884495, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rnfg8"]
-bg_color = Color(0.9829121, 0.9785263, 0.8839967, 1)
+bg_color = Color(0.89176005, 0.91459197, 0.71859854, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ku3ou"]
 
@@ -100,6 +107,9 @@ border_width_left = 3
 border_width_right = 3
 border_width_bottom = 3
 border_color = Color(0.32164988, 0.5622579, 0.43069953, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_thhn4"]
+bg_color = Color(0.5294118, 0.7058824, 0.22352941, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tab_selected"]
 bg_color = Color(1, 0.22015908, 0.7032731, 1)
@@ -156,8 +166,8 @@ HSlider/icons/grabber = ExtResource("2_ep62g")
 HSlider/icons/grabber_disabled = ExtResource("2_ep62g")
 HSlider/icons/grabber_highlight = ExtResource("1_jkgan")
 HSlider/icons/tick = ExtResource("3_to61q")
-HSlider/styles/grabber_area = null
-HSlider/styles/grabber_area_highlight = null
+HSlider/styles/grabber_area = SubResource("StyleBoxFlat_3exg8")
+HSlider/styles/grabber_area_highlight = SubResource("StyleBoxFlat_qwk3i")
 HSlider/styles/slider = SubResource("StyleBoxLine_l5g8p")
 Label/colors/font_color = Color(0.37254903, 1, 0.99215686, 1)
 LineEdit/colors/caret_color = Color(0.95374864, 0.63054395, 0.65144414, 1)
@@ -174,10 +184,16 @@ LineEdit/styles/read_only = SubResource("StyleBoxFlat_ku3ou")
 PanelContainer/styles/panel = SubResource("StyleBoxFlat_panel")
 StickerSlotDefault/styles/panel = SubResource("StyleBoxFlat_gfhtu")
 StickerSlotEquipped/styles/panel = SubResource("StyleBoxFlat_jkgan")
+TabContainer/colors/font_outline_color = Color(0, 0, 0, 1)
 TabContainer/colors/font_selected_color = Color(2.887845e-06, 0.9824384, 0.7705699, 1)
 TabContainer/colors/font_unselected_color = Color(0.8745098, 0.8745098, 0.3137255, 1)
+TabContainer/constants/outline_size = 7
+TabContainer/constants/side_margin = 8
+TabContainer/constants/tab_separation = 9
+TabContainer/font_sizes/font_size = 57
 TabContainer/styles/panel = SubResource("StyleBoxFlat_tab_panel")
 TabContainer/styles/tab_focus = null
+TabContainer/styles/tab_hovered = SubResource("StyleBoxFlat_thhn4")
 TabContainer/styles/tab_selected = SubResource("StyleBoxFlat_tab_selected")
 TabContainer/styles/tab_unselected = SubResource("StyleBoxFlat_tab_unselected")
 TextEdit/colors/background_color = Color(0.9581782, 0.862201, 0.6076636, 1)

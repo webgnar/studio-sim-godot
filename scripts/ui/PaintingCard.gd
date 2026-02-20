@@ -1,3 +1,4 @@
+@tool
 extends PanelContainer
 class_name PaintingCard
 
@@ -32,8 +33,17 @@ func _ready():
 
 	# Create status label
 	status_label = Label.new()
-	status_label.add_theme_font_size_override("font_size", 14)
+	status_label.add_theme_font_size_override("font_size", 48)
 	info_container.add_child(status_label)
+
+	if Engine.is_editor_hint():
+		title_label.text = "Example Painting"
+		status_label.text = "WIP"
+		status_label.modulate = Color(1.0, 0.9, 0.3)
+		var img = Image.create(64, 64, false, Image.FORMAT_RGB8)
+		img.fill(Color(0.35, 0.35, 0.35))
+		thumbnail.texture = ImageTexture.create_from_image(img)
+		return
 
 	# Connect click
 	gui_input.connect(_on_gui_input)

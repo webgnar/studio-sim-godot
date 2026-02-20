@@ -15,3 +15,7 @@ res://scripts/WorldStateManager.gd
 res://scripts/DoorInteraction.gd
 res://scenes/UI/OptionsMenu.tscn
 res://scripts/OptionsMenu.gd
+res://scenes/UI/InventoryTab.tscn
+res://scripts/ui/PaintingCard.gd
+res://scenes/UI/PaintingCard.tscn
+res://scenes/UI/MissionSelectionUI.tscn

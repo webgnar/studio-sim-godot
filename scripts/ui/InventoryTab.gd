@@ -1,3 +1,4 @@
+@tool
 extends Control
 class_name InventoryTab
 
@@ -40,6 +41,10 @@ var button_nav_sound: AudioStreamPlayer = null
 var button_hit_sound: AudioStreamPlayer = null
 
 func _ready():
+	if Engine.is_editor_hint():
+		_populate_editor_preview()
+		return
+
 	# Connect save button
 	save_button.pressed.connect(_on_save_pressed)
 	save_button.focus_mode = Control.FOCUS_ALL
@@ -536,6 +541,16 @@ func select_painting_by_node(painting_node: CarryablePainting) -> void:
 			_update_selection()
 			_show_detail_panel(true)
 			return
+
+func _populate_editor_preview():
+	"""Populate the painting list with placeholder cards for editor visualization"""
+	if not painting_list_container:
+		return
+	for i in range(3):
+		var card = PaintingCardScene.instantiate()
+		painting_list_container.add_child(card)
+	if stats_label:
+		stats_label.text = "Paintings: 3"
 
 func _find_parent_pause_menu() -> Node:
 	"""Find the PauseMenu parent node"""

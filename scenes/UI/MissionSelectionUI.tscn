@@ -142,6 +142,7 @@ layout_mode = 2
 text = "View Results"
 
 [node name="StartButton" type="Button" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ButtonContainer" unique_id=1450903185]
+texture_filter = 1
 custom_minimum_size = Vector2(300, 150)
 layout_mode = 2
 icon = ExtResource("3_startmission")
