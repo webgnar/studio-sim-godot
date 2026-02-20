@@ -18,6 +18,8 @@ signal closed
 @onready var saturation_value_label: Label = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/VisualSettings/SaturationHeader/SaturationValue
 var close_button: Button = null  # Removed from scene; closing handled by go_back/ESC
 @onready var controls_list: VBoxContainer = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Controls/ControlsList
+@onready var stick_sensitivity_slider: HSlider = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Controls/SensitivitySection/SensitivitySlider
+@onready var stick_sensitivity_value_label: Label = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Controls/SensitivitySection/SensitivityHeader/SensitivityValue
 @onready var language_button_container: VBoxContainer = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Language/ButtonContainer
 @onready var save_glb_checkbox: CheckBox = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/SaveGLBCheckbox
 @onready var save_png_checkbox: CheckBox = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/SavePNGCheckbox
@@ -83,6 +85,7 @@ func _ready():
 		hue_slider.value_changed.connect(_on_hue_slider_changed)
 	if saturation_slider:
 		saturation_slider.value_changed.connect(_on_saturation_slider_changed)
+	stick_sensitivity_slider.value_changed.connect(_on_stick_sensitivity_changed)
 	# Get theme panel style
 	var theme_res = load("res://themes/ui_theme.tres")
 	if theme_res:
@@ -196,7 +199,7 @@ func _input(event):
 				var focused_control = get_viewport().gui_get_focus_owner()
 				# Check if we're at the first focusable in current tab
 				var is_first_in_tab = (focused_control == sfx_slider or focused_control == hue_slider
-					or tab_container.current_tab == 2
+					or (tab_container.current_tab == 2 and focused_control == stick_sensitivity_slider)
 					or (tab_container.current_tab == 3 and language_buttons.size() > 0 and focused_control == language_buttons[0])
 					or (tab_container.current_tab == 4 and game_checkboxes.size() > 0 and focused_control == game_checkboxes[0]))
 				if is_first_in_tab:
@@ -273,6 +276,11 @@ func show_menu():
 	if not is_embedded:
 		keyboard_nav_enabled = true
 
+	# Apply current sensitivity to player (reliable since player is in scene by now)
+	var players = get_tree().get_nodes_in_group("player")
+	if players.size() > 0:
+		players[0].joystick_sensitivity_multiplier = joystick_sensitivity
+
 	# Reset input cooldown
 	input_cooldown = 0.0
 	_tab_nav_held = false
@@ -324,6 +332,15 @@ func _on_saturation_slider_changed(value: float):
 
 	save_settings()
 
+func _on_stick_sensitivity_changed(value: float):
+	"""Handle right stick sensitivity slider change"""
+	joystick_sensitivity = value
+	stick_sensitivity_value_label.text = "%d%%" % int(value / 5.0)
+	var players = get_tree().get_nodes_in_group("player")
+	if players.size() > 0:
+		players[0].joystick_sensitivity_multiplier = value
+	save_settings()
+
 func _on_close_pressed():
 	"""Close the options menu"""
 	hide()
@@ -367,6 +384,7 @@ func save_settings():
 	settings["save_glb_on_ship"] = save_glb_on_ship
 	settings["save_png_on_ship"] = save_png_on_ship
 	settings["generate_npc_critique"] = generate_npc_critique
+	settings["joystick_sensitivity"] = joystick_sensitivity
 
 	# Also save audio settings (in case AudioManager.save_settings() wasn't called)
 	settings["sfx_volume"] = AudioManager.sfx_volume
@@ -455,6 +473,15 @@ func load_settings():
 	save_png_checkbox.button_pressed = save_png_on_ship
 	generate_critique_checkbox.button_pressed = generate_npc_critique
 
+	# Load sensitivity setting
+	if settings.has("joystick_sensitivity"):
+		joystick_sensitivity = float(settings["joystick_sensitivity"])
+		stick_sensitivity_slider.value = joystick_sensitivity
+		stick_sensitivity_value_label.text = "%d%%" % int(joystick_sensitivity / 5.0)
+		var players = get_tree().get_nodes_in_group("player")
+		if players.size() > 0:
+			players[0].joystick_sensitivity_multiplier = joystick_sensitivity
+
 func _populate_controls_display():
 	"""Build the controls list with label rows"""
 	binding_labels.clear()
@@ -493,6 +520,7 @@ var save_glb_on_ship: bool = true
 var save_png_on_ship: bool = true
 var generate_npc_critique: bool = true
 var game_checkboxes: Array[CheckBox] = []
+var joystick_sensitivity: float = 500.0
 
 func _create_language_tab():
 	"""Populate the Language tab (scene container) with locale selection buttons"""
@@ -585,8 +613,8 @@ func _is_last_in_tab(focused_control: Control) -> bool:
 			return focused_control == music_slider
 		1:  # Visual
 			return focused_control == saturation_slider
-		2:  # Controls (read-only)
-			return true
+		2:  # Controls
+			return focused_control == stick_sensitivity_slider
 		3:  # Language
 			return language_buttons.size() > 0 and focused_control == language_buttons[-1]
 		4:  # Game
@@ -602,6 +630,8 @@ func _focus_last_content_item():
 		1:  # Visual
 			if saturation_slider:
 				saturation_slider.grab_focus()
+		2:  # Controls
+			stick_sensitivity_slider.grab_focus()
 		3:  # Language
 			if language_buttons.size() > 0:
 				language_buttons[-1].grab_focus()
@@ -631,7 +661,7 @@ func _focus_first_content_item():
 		if hue_slider:
 			hue_slider.grab_focus()
 	elif tab_container.current_tab == 2:  # Controls tab
-		pass  # Read-only controls display, no focusable items
+		stick_sensitivity_slider.grab_focus()
 	elif tab_container.current_tab == 3:  # Language tab
 		if language_buttons.size() > 0:
 			language_buttons[0].grab_focus()
@@ -681,6 +711,7 @@ func _setup_focus_navigation():
 	# Enable focus for sliders
 	sfx_slider.focus_mode = Control.FOCUS_ALL
 	music_slider.focus_mode = Control.FOCUS_ALL
+	stick_sensitivity_slider.focus_mode = Control.FOCUS_ALL
 
 	# Set up focus neighbors for Audio tab
 	sfx_slider.focus_next = sfx_slider.get_path_to(music_slider)

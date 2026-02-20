@@ -168,7 +168,38 @@ ticks_position = 2
 [node name="Controls" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer" unique_id=2061308574]
 visible = false
 layout_mode = 2
+theme_override_constants/separation = 15
 metadata/_tab_index = 2
+
+[node name="SensitivitySection" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Controls" unique_id=2222222201]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="SensitivityHeader" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Controls/SensitivitySection" unique_id=2222222202]
+layout_mode = 2
+
+[node name="SensitivityLabel" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Controls/SensitivitySection/SensitivityHeader" unique_id=2222222203]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 32
+text = "Right Stick Sensitivity"
+
+[node name="SensitivityValue" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Controls/SensitivitySection/SensitivityHeader" unique_id=2222222204]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "100%"
+horizontal_alignment = 2
+
+[node name="SensitivitySlider" type="HSlider" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Controls/SensitivitySection" unique_id=2222222205]
+layout_mode = 2
+size_flags_vertical = 1
+min_value = 50.0
+max_value = 1000.0
+step = 50.0
+value = 500.0
+tick_count = 10
+ticks_on_borders = true
+ticks_position = 2
 
 [node name="ControlsList" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Controls" unique_id=408859871]
 layout_mode = 2

@@ -12,6 +12,7 @@ class_name DoorInteraction
 @export_group("Physics")
 @export var drag_force: float = 800.0  # Force applied when dragging
 @export var mouse_sensitivity: float = 2.0  # How responsive to mouse movement
+@export var controller_sensitivity: float = 3.0  # How responsive to controller stick input
 
 @export_group("Sounds")
 @export var unlock_sound: AudioStream  # Sound played when door is unlocked
@@ -142,6 +143,17 @@ func _physics_process(delta: float) -> void:
 		return
 	if not door_body or not hinge_joint:
 		return
+
+	# --- CONTROLLER DOOR SWING ---
+	# Poll both sticks so the player can swing the door while grabbed.
+	# Left stick X = body movement feel, right stick X = look/rotate feel.
+	if is_grabbed:
+		var move_input = SteamInput.get_analog_action("move")
+		var camera_input = SteamInput.get_analog_action("camera")
+		var stick_x = clamp(move_input.x + camera_input.x, -1.0, 1.0)
+		if abs(stick_x) > 0.1:  # dead zone
+			var torque_strength = stick_x * drag_force * controller_sensitivity * delta
+			door_body.apply_torque(Vector3(0, torque_strength, 0))
 
 	# Update creak timer
 	creak_timer -= delta
