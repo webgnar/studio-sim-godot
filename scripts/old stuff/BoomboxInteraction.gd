@@ -18,9 +18,7 @@ signal audio_stopped
 @export var auto_play_on_start: bool = false  # Auto-play song 1 when scene loads
 
 @export_group("Audio Settings")
-@export var song_1: AudioStream  # First song
-@export var song_2: AudioStream  # Second song
-@export var song_3: AudioStream  # Third song
+@export var songs: Array[AudioStream]  # Add any number of songs in the inspector
 @export var switch_sound: AudioStream
 @export var default_volume: float = 0.5
 @export var max_hearing_distance: float = 15.0
@@ -109,24 +107,18 @@ func _toggle_radio() -> void:
 
 func _start_next_song() -> void:
 	# Advance to the next song in the cycle
-	_current_song_index = (_current_song_index + 1) % 3
+	if songs.is_empty():
+		return
+	_current_song_index = (_current_song_index + 1) % songs.size()
 	_start_audio()
 
 func _start_audio() -> void:
-	var song_to_play: AudioStream = null
-	var song_name: String = ""
+	if songs.is_empty() or _current_song_index >= songs.size():
+		print("No song assigned to slot " + str(_current_song_index + 1))
+		return
 
-	# Get the current song based on index
-	match _current_song_index:
-		0:
-			song_to_play = song_1
-			song_name = "Song 1"
-		1:
-			song_to_play = song_2
-			song_name = "Song 2"
-		2:
-			song_to_play = song_3
-			song_name = "Song 3"
+	var song_to_play: AudioStream = songs[_current_song_index]
+	var song_name: String = "Song " + str(_current_song_index + 1)
 
 	if not song_to_play:
 		print("No song assigned to slot " + str(_current_song_index + 1))
@@ -174,15 +166,6 @@ func set_volume(volume: float) -> void:
 		_radio_audio_player.volume_db = linear_to_db(clamp(volume, 0.0, 1.0))
 
 func get_current_audio_name() -> String:
-	var current_song: AudioStream = null
-	match _current_song_index:
-		0:
-			current_song = song_1
-		1:
-			current_song = song_2
-		2:
-			current_song = song_3
-
-	if current_song:
-		return current_song.resource_path.get_file()
+	if not songs.is_empty() and _current_song_index < songs.size() and songs[_current_song_index]:
+		return songs[_current_song_index].resource_path.get_file()
 	return "No Audio File"

@@ -29,6 +29,8 @@ var is_editing_text: bool = false
 var keyboard_nav_enabled: bool = false
 var input_cooldown: float = 0.0
 var input_cooldown_time: float = 0.15
+var _last_input_was_gamepad: bool = false
+var _steam_editing_field: Control = null  # tracks which field the Steam keyboard is editing
 
 @onready var _critique_header: Label = $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2/CritiqueHeader
 @onready var _critique_display: TextEdit = $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2/CritiqueDisplay
@@ -45,6 +47,10 @@ func _ready():
 	# Auto-enter text editing when mouse clicks a text field
 	name_input.gui_input.connect(_on_text_gui_input.bind(name_input))
 	statement_input.gui_input.connect(_on_text_gui_input.bind(statement_input))
+
+	# Connect Steam gamepad text input callback (for controller text entry)
+	if SteamManager.is_steam_available:
+		Steam.gamepad_text_input_dismissed.connect(_on_gamepad_text_input_dismissed)
 
 	# Find sounds from parent PauseMenu
 	var pause_menu = _find_parent_pause_menu()
@@ -65,6 +71,12 @@ func _process(delta):
 func _input(event):
 	if not visible:
 		return
+
+	# Track whether last input came from a gamepad (for Steam keyboard routing)
+	if event is InputEventJoypadButton or event is InputEventJoypadMotion:
+		_last_input_was_gamepad = true
+	elif event is InputEventKey or event is InputEventMouseButton:
+		_last_input_was_gamepad = false
 
 	# Only process keyboard/gamepad input when enabled (mouse works via gui_input signals)
 	if not keyboard_nav_enabled:
@@ -388,11 +400,17 @@ func _activate_detail_item():
 	"""Activate the currently focused detail item"""
 	match detail_focus_index:
 		0:
-			# Enter text editing for name
-			_enter_text_editing(name_input)
+			# Enter text editing for name — use Steam overlay keyboard for controllers
+			if _last_input_was_gamepad and SteamManager.is_steam_available:
+				_show_steam_keyboard(name_input, false)
+			else:
+				_enter_text_editing(name_input)
 		1:
-			# Enter text editing for statement
-			_enter_text_editing(statement_input)
+			# Enter text editing for statement — use Steam overlay keyboard for controllers
+			if _last_input_was_gamepad and SteamManager.is_steam_available:
+				_show_steam_keyboard(statement_input, true)
+			else:
+				_enter_text_editing(statement_input)
 		2:
 			# Save
 			_on_save_pressed()
@@ -414,6 +432,27 @@ func _exit_text_editing():
 	# Release focus from text fields so stray keys don't type into them
 	_clear_detail_focus()
 	_update_detail_focus()
+
+func _show_steam_keyboard(control: Control, multiline: bool) -> void:
+	"""Show the Steam overlay keyboard for controller text input"""
+	_steam_editing_field = control
+	var existing_text := control.text if control is LineEdit else (control as TextEdit).text
+	var line_mode := 1 if multiline else 0  # 0=single line, 1=multi-line
+	var max_chars := 500 if multiline else 50
+	var description := "Artist Statement" if multiline else "Painting Name"
+	Steam.showGamepadTextInput(0, line_mode, description, max_chars, existing_text)
+
+func _on_gamepad_text_input_dismissed(submitted: bool, char_count: int) -> void:
+	"""Called when the Steam overlay keyboard is closed"""
+	if not submitted or _steam_editing_field == null:
+		_steam_editing_field = null
+		return
+	var entered_text: String = Steam.getEnteredGamepadTextInput(char_count)
+	if _steam_editing_field is LineEdit:
+		(_steam_editing_field as LineEdit).text = entered_text
+	elif _steam_editing_field is TextEdit:
+		(_steam_editing_field as TextEdit).text = entered_text
+	_steam_editing_field = null
 
 # ============================================================================
 # Actions

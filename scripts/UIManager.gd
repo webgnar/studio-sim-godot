@@ -26,6 +26,10 @@ var missions_completed: int = 0
 # Platform detection for mouse mode
 var _platform_name: String = ""
 
+# Steam overlay auto-pause tracking
+var _overlay_triggered_pause: bool = false
+var _state_before_overlay: GameState = GameState.GAMEPLAY
+
 # Registered UI screens
 var main_menu: Control = null
 var mission_selection: Control = null
@@ -80,6 +84,13 @@ func _ready():
 
 	# Start in gameplay state so player can move immediately
 	change_state(GameState.GAMEPLAY)
+
+	# Pause when Steam overlay opens
+	if SteamManager:
+		SteamManager.steam_initialized.connect(_on_steam_initialized_for_overlay)
+
+	# Pause when a controller is disconnected mid-game
+	Input.joy_connection_changed.connect(_on_joy_connection_changed)
 
 func _input(event):
 	# "start" button (backtick) toggles mission selection menu
@@ -210,6 +221,29 @@ func _set_mouse_mode(mode: Input.MouseMode):
 				push_error("UIManager: Mouse mode still failed after retry! Mode: %d (0=VISIBLE, 2=CAPTURED, 5=CONFINED_HIDDEN)" % Input.mouse_mode)
 		else:
 			print("UIManager: Mouse mode successfully set to %d (0=VISIBLE, 2=CAPTURED, 5=CONFINED_HIDDEN)" % mode)
+
+func _on_steam_initialized_for_overlay(success: bool) -> void:
+	"""Connect Steam overlay signal once Steam is ready"""
+	if success:
+		Steam.overlay_toggled.connect(_on_steam_overlay_toggled)
+
+func _on_steam_overlay_toggled(active: bool, _user_initiated: bool = false, _app_id: int = 0) -> void:
+	"""Pause the game when the Steam overlay opens; resume when it closes"""
+	if active:
+		if current_state == GameState.GAMEPLAY or current_state == GameState.IN_MISSION:
+			_state_before_overlay = current_state
+			_overlay_triggered_pause = true
+			change_state(GameState.PAUSE_MENU)
+	else:
+		if _overlay_triggered_pause:
+			_overlay_triggered_pause = false
+			change_state(_state_before_overlay)
+
+func _on_joy_connection_changed(_device: int, connected: bool) -> void:
+	"""Pause the game when a controller is disconnected during gameplay"""
+	if not connected:
+		if current_state == GameState.GAMEPLAY or current_state == GameState.IN_MISSION:
+			change_state(GameState.PAUSE_MENU)
 
 func register_screen(screen_type: String, screen: Node):
 	"""Register UI screens with the manager"""

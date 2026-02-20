@@ -1,6 +1,8 @@
+AnimationPlayer
+CollisionShape3D
+StaticBody3D
 VBoxContainer
 HBoxContainer
-AnimationPlayer
 AnimationTree
 MeshInstance3D
 TextureRect
@@ -8,7 +10,5 @@ CSGBox3D
 SpotLight3D
 Node3D
 AudioStreamPlayer3D
-CollisionShape3D
 Area3D
 AnimatedSprite3D
-Sprite3D

@@ -1,6 +1,10 @@
 [gd_scene format=3 uid="uid://bhkq7ey7ljkdj"]
 
 [ext_resource type="PackedScene" uid="uid://c8d0mte4y4eg6" path="res://models/props/skatehive_phone.glb" id="1_08mii"]
+[ext_resource type="Script" uid="uid://3320omnivi1" path="res://scripts/PhoneInteraction.gd" id="2_phone"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_08mii"]
+size = Vector3(40.31, 5, 83)
 
 [sub_resource type="Animation" id="Animation_ewalk"]
 length = 0.001
@@ -26,11 +30,12 @@ tracks/1/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector3(0, 0, 0)]
+"values": [Vector3(1.5707964, -1.7484554e-07, 0)]
 }
 
-[sub_resource type="Animation" id="Animation_08mii"]
+[sub_resource type="Animation" id="Animation_eud1m"]
 resource_name = "kickflip"
+length = 2.0
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -38,10 +43,10 @@ tracks/0/path = NodePath(".:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.5069982, 1),
+"times": PackedFloat32Array(0, 1.04, 2),
 "transitions": PackedFloat32Array(1, 1, 1),
 "update": 0,
-"values": [Vector3(0, 0, 0), Vector3(0, 43.82, 0), Vector3(0, 0, 0)]
+"values": [Vector3(0, 0, 0), Vector3(0, 4, 0), Vector3(0, 0, 0)]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -50,23 +55,36 @@ tracks/1/path = NodePath(".:rotation")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.9930652),
-"transitions": PackedFloat32Array(1, 1),
+"times": PackedFloat32Array(0, 1.04, 2),
+"transitions": PackedFloat32Array(1, 1, 1),
 "update": 0,
-"values": [Vector3(0, 0, 0), Vector3(0, 0, 6.2831855)]
+"values": [Vector3(1.5707964, -1.7484554e-07, 0), Vector3(-1.5707964, -3.1415925, 0), Vector3(1.5707964, -1.5099575e-07, 0)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_8nsb0"]
 _data = {
 &"RESET": SubResource("Animation_ewalk"),
-&"kickflip": SubResource("Animation_08mii")
+&"kickflip": SubResource("Animation_eud1m")
 }
 
 [node name="Phone" type="Node3D" unique_id=1687195098]
 transform = Transform3D(0.99999994, 0, 0, 0, 1, 0, 0, 0, 0.9999999, 0, 0, 0)
 
 [node name="default" parent="." unique_id=1250398872 instance=ExtResource("1_08mii")]
-transform = Transform3D(0.99999976, 0, 0, 0, -4.3711413e-08, -0.9999996, 0, 1.0000006, -4.371137e-08, 0, 0, 0)
+transform = Transform3D(0.050000023, -8.742275e-09, 3.82137e-16, 0, -2.185569e-09, -0.049999993, 8.742281e-09, 0.04999999, -2.185569e-09, 0, 0, 0)
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=2129730571]
+[node name="StaticBody3D" type="StaticBody3D" parent="default" unique_id=729410680]
+transform = Transform3D(1.0000002, 0, 0, 0, -4.3711367e-08, 0.9999995, 0, -1.0000005, -4.371141e-08, 0, 0, 0)
+collision_layer = 8
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="default/StaticBody3D" unique_id=996685389]
+transform = Transform3D(1, 2.6716407e-12, 0, -2.6716407e-12, 1, 1.0164395e-20, 0, 0, 1, 8.6686203e-13, 0.39499998, -0.069999695)
+shape = SubResource("BoxShape3D_08mii")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="default" unique_id=1408257275]
 libraries/ = SubResource("AnimationLibrary_8nsb0")
+
+[node name="PhoneInteraction" type="Node3D" parent="." unique_id=392847561]
+script = ExtResource("2_phone")
+interaction_text = "Check Phone"
