@@ -99,7 +99,11 @@ Files ending with _n.png are treated as normal maps only, not as separate skin e
 
 UV LAYOUT:
 UV_TEMPLATE.png in this folder shows the UV layout of the player model.
-Paint over it at 512x256 pixels to create your skin.
+Paint over it to create your skin. The base size is 512x256 pixels.
+
+You can work at a larger size (e.g. 1024x512, 2048x1024) for more detail --
+the UV mapping is resolution-independent, so any size will fit correctly.
+Just keep the same 2:1 aspect ratio.
 """)
 			file.close()
 

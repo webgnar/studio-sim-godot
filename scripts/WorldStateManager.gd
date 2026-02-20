@@ -82,13 +82,17 @@ func register_painting_system_3d(system: PaintingSystem3D) -> void:
 
 func update_painting_metadata(painting: Node, painting_name: String, statement: String, status: String = "") -> void:
 	"""Update a painting's name, artist statement, and optionally status"""
+	# Always update node properties directly — elevator reads these at export time
+	painting.painting_name = painting_name
+	painting.artist_statement = statement
+
 	if painting in _registered_paintings:
 		_registered_paintings[painting]["name"] = painting_name
 		_registered_paintings[painting]["artist_statement"] = statement
 		if status != "":
 			_registered_paintings[painting]["status"] = status
-		painting.painting_name = painting_name
-		painting.artist_statement = statement
+	else:
+		push_warning("WorldStateManager: update_painting_metadata called for unregistered painting - node properties updated, registry skipped")
 
 func ship_painting(painting: Node) -> void:
 	"""Move a painting to shipped status (preserves metadata after node is freed)"""

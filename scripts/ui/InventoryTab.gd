@@ -436,7 +436,7 @@ func _exit_text_editing():
 func _show_steam_keyboard(control: Control, multiline: bool) -> void:
 	"""Show the Steam overlay keyboard for controller text input"""
 	_steam_editing_field = control
-	var existing_text := control.text if control is LineEdit else (control as TextEdit).text
+	var existing_text: String = control.text if control is LineEdit else (control as TextEdit).text
 	var line_mode := 1 if multiline else 0  # 0=single line, 1=multi-line
 	var max_chars := 500 if multiline else 50
 	var description := "Artist Statement" if multiline else "Painting Name"
@@ -447,7 +447,8 @@ func _on_gamepad_text_input_dismissed(submitted: bool, char_count: int) -> void:
 	if not submitted or _steam_editing_field == null:
 		_steam_editing_field = null
 		return
-	var entered_text: String = Steam.getEnteredGamepadTextInput(char_count)
+	# Use dynamic call to avoid static analysis mismatch with GodotSteam GDExtension type
+	var entered_text: String = Engine.get_singleton("Steam").call("getEnteredGamepadTextInput", char_count)
 	if _steam_editing_field is LineEdit:
 		(_steam_editing_field as LineEdit).text = entered_text
 	elif _steam_editing_field is TextEdit:
@@ -485,6 +486,9 @@ func _on_save_pressed():
 	# Can't save shipped paintings (no node, read-only)
 	if painting_node == null or not is_instance_valid(painting_node):
 		push_warning("InventoryTab: Painting node no longer valid")
+		if status_label:
+			status_label.text = tr("Error: painting unavailable")
+			status_label.modulate = Color(1.0, 0.3, 0.3)
 		return
 
 	var new_name = name_input.text.strip_edges()

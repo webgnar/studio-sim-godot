@@ -14,7 +14,8 @@ var signature_system: PaintingSignatureSystem = null
 func _ready():
 	signature_system = get_node_or_null("PaintingSignatureSystem") as PaintingSignatureSystem
 
-	# Auto-register with save system if metadata exists
+func _enter_tree():
+	# Register every time node enters the scene tree (handles reparenting / re-entry)
 	if painting_id != "" and texture_path != "":
 		WorldStateManager.register_painting(self, painting_id, texture_path)
 
