@@ -1,2 +1,4 @@
 res://scripts/ui/InventoryTab.gd
 res://scripts/UIManager.gd
+res://scripts/old stuff/MirrorInteraction.gd
+res://scripts/SkinLibrary.gd

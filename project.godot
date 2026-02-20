@@ -65,6 +65,7 @@ PaintingExporter="*res://scripts/PaintingExporter.gd"
 GalleryUploader="*res://scripts/GalleryUploader.gd"
 LocaleManager="*res://scripts/LocaleManager.gd"
 StickerLibrary="*res://scripts/painting/StickerLibrary.gd"
+SkinLibrary="*res://scripts/SkinLibrary.gd"
 
 [display]
 

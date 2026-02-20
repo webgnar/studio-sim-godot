@@ -12,15 +12,26 @@ signal skin_changed(skin_index: int)
 var _current_skin_index: int = 0
 var _player_node: CharacterBody3D = null
 var _player_meshes: Array[MeshInstance3D] = []
+var _all_skin_materials: Array[Material] = []
 
 func _on_ready() -> void:
 	# interaction_text set via inspector
 	_ensure_audio_player()
 	_find_player()
 	_find_meshes()
+	_build_materials_list()
 
-	if skin_materials.is_empty():
+	if SkinLibrary.has_signal("library_changed"):
+		SkinLibrary.library_changed.connect(_build_materials_list)
+
+	if _all_skin_materials.is_empty():
 		push_warning("No skin materials set for mirror!")
+
+func _build_materials_list() -> void:
+	_all_skin_materials = skin_materials.duplicate()
+	_all_skin_materials.append_array(SkinLibrary.custom_skin_materials)
+	# Clamp index in case the list shrank
+	_current_skin_index = clampi(_current_skin_index, 0, max(0, _all_skin_materials.size() - 1))
 
 func _ensure_audio_player() -> void:
 	if toggle_sound and not _audio_player:
@@ -75,14 +86,14 @@ func _cycle_skin() -> void:
 		push_error("Cannot cycle skin - no meshes found!")
 		return
 
-	if skin_materials.is_empty():
+	if _all_skin_materials.is_empty():
 		push_error("Cannot cycle skin - no materials configured!")
 		return
 
-	# Advance to next skin, wrapping around
-	_current_skin_index = (_current_skin_index + 1) % skin_materials.size()
+	# Advance to next skin, wrapping around (built-ins first, then custom)
+	_current_skin_index = (_current_skin_index + 1) % _all_skin_materials.size()
 
-	var target_material = skin_materials[_current_skin_index]
+	var target_material = _all_skin_materials[_current_skin_index]
 
 	# Apply the material to all player meshes
 	for mesh in _player_meshes:
@@ -113,11 +124,11 @@ func get_current_skin_index() -> int:
 	return _current_skin_index
 
 func set_skin(index: int) -> void:
-	if index < 0 or index >= skin_materials.size():
+	if index < 0 or index >= _all_skin_materials.size():
 		push_warning("Skin index %d out of range" % index)
 		return
 	_current_skin_index = index
-	var target_material = skin_materials[_current_skin_index]
+	var target_material = _all_skin_materials[_current_skin_index]
 	for mesh in _player_meshes:
 		_apply_material_to_mesh(mesh, target_material)
 	skin_changed.emit(_current_skin_index)
