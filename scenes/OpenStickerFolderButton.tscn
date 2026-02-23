@@ -75,6 +75,6 @@ shape = SubResource("CylinderShape3D_kvmu4")
 [node name="Node3D" type="Node3D" parent="." unique_id=1995852367]
 script = ExtResource("3_script")
 interaction_text = "Open Sticker Folder"
-custom_interaction_distance = 5.0
+custom_interaction_distance = 1.5
 
 [editable path="green button"]

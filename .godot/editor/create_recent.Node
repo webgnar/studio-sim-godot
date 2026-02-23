@@ -1,5 +1,5 @@
-AnimationPlayer
 CollisionShape3D
+AnimationPlayer
 StaticBody3D
 VBoxContainer
 HBoxContainer

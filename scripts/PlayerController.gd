@@ -6,10 +6,14 @@ extends CharacterBody3D
 @export_group("Movement Stats")
 @export var walk_speed: float = 5.0
 @export var sprint_speed: float = 8.0
+@export var crouch_speed: float = 2.0
 @export var jump_velocity: float = 4.5
 @export var gravity: float = 9.8
 @export var air_control: float = 2.0
 @export var inertia: float = 10.0
+@export var standing_height: float = 2.0
+@export var crouch_height: float = 1.0
+@export var crouch_head_y: float = 0.0
 
 @export_group("Camera Stats")
 @export var sensitivity: float = 0.003
@@ -56,9 +60,18 @@ var _footstep_streams: Array[AudioStream] = []
 # FOV variables
 var _current_fov: float
 
-# Current speed property - returns walk or sprint speed based on sprint input
+# Crouch state
+var _is_crouching: bool = false
+var _head_node: Node3D
+var _capsule_shape: CapsuleShape3D
+var _collision_shape_node: CollisionShape3D
+var _standing_head_y: float
+
+# Current speed property - returns appropriate speed based on movement state
 var current_speed: float:
 	get:
+		if _is_crouching:
+			return crouch_speed
 		return sprint_speed if _is_sprinting() else walk_speed
 
 # --- GODOT METHODS ---
@@ -99,6 +112,14 @@ func _ready() -> void:
 	if _camera:
 		CameraManager.register_player_camera(_camera)
 	
+	# Get crouch-related references
+	_head_node = get_node_or_null("Head")
+	if _head_node:
+		_standing_head_y = _head_node.position.y
+	_collision_shape_node = get_node_or_null("CollisionShape3D")
+	if _collision_shape_node:
+		_capsule_shape = _collision_shape_node.shape as CapsuleShape3D
+
 	# Get reference to animation controller (try common paths)
 	if has_node("Model/PlayerAnimation"):
 		_player_animation = get_node("Model/PlayerAnimation")
@@ -200,7 +221,22 @@ func _physics_process(delta: float) -> void:
 	# --- JUMPING ---
 	# Handle the jump action.
 	if SteamInput.is_action_just_pressed("jump") and is_on_floor():
-		velocity.y = jump_velocity
+		if _is_crouching:
+			# Un-crouch instead of jumping
+			_is_crouching = false
+			_apply_crouch_shape()
+		else:
+			velocity.y = jump_velocity
+
+	# --- CROUCH TOGGLE ---
+	if SteamInput.is_action_just_pressed("crouch"):
+		_is_crouching = !_is_crouching
+		_apply_crouch_shape()
+
+	# --- SMOOTH CAMERA CROUCH ---
+	if _head_node:
+		var target_head_y := crouch_head_y if _is_crouching else _standing_head_y
+		_head_node.position.y = lerp(_head_node.position.y, target_head_y, 10.0 * delta)
 
 	# --- MOVEMENT ---
 	# Get the input direction vector from the input actions.
@@ -319,7 +355,7 @@ func _physics_process(delta: float) -> void:
 	# --- UPDATE ANIMATIONS ---
 	# Send movement data to animation controller
 	if _player_animation != null:
-		_player_animation.update_animation_state(velocity, is_on_floor(), _is_sprinting())
+		_player_animation.update_animation_state(velocity, is_on_floor(), _is_sprinting(), _is_crouching)
 
 func _unhandled_input(event: InputEvent) -> void:
 	# Skip input if CameraManager has disabled it (e.g., during cinematic cameras)
@@ -374,6 +410,14 @@ func _exit_tree() -> void:
 func _is_sprinting() -> bool:
 	"""Check if player is sprinting via keyboard Shift or controller sprint button"""
 	return Input.is_key_pressed(KEY_SHIFT) or SteamInput.is_action_pressed("sprint")
+
+func _apply_crouch_shape() -> void:
+	if _capsule_shape == null:
+		return
+	var h := crouch_height if _is_crouching else standing_height
+	_capsule_shape.height = h
+	# Shift the shape down so the bottom stays at the same floor level
+	_collision_shape_node.position.y = (h - standing_height) / 2.0
 
 func _play_footstep() -> void:
 	_footstep_player.stream = _footstep_streams.pick_random()
