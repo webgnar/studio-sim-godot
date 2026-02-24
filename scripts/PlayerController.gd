@@ -411,6 +411,15 @@ func _is_sprinting() -> bool:
 	"""Check if player is sprinting via keyboard Shift or controller sprint button"""
 	return Input.is_key_pressed(KEY_SHIFT) or SteamInput.is_action_pressed("sprint")
 
+func play_death_animation() -> void:
+	if _player_animation:
+		_player_animation.play_animation("fall", 1.0)
+
+func reset_animation() -> void:
+	if _player_animation:
+		_player_animation.play_animation("idle", 1.0)
+		_player_animation._is_jumping = false
+
 func _apply_crouch_shape() -> void:
 	if _capsule_shape == null:
 		return

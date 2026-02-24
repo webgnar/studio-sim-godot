@@ -39,6 +39,10 @@ func _respawn(player):
 	# Disable player input (gravity still applies)
 	CameraManager.set_player_input(false)
 
+	# Play fall animation during the watch window
+	if player.has_method("play_death_animation"):
+		player.play_death_animation()
+
 	# Create a temp camera at the player's current eye position
 	_death_camera = Camera3D.new()
 	_death_camera.fov = CameraManager.player_camera.fov
@@ -61,6 +65,10 @@ func _respawn(player):
 	# Teleport player and reset velocity
 	player.velocity = Vector3.ZERO
 	player.global_position = spawn_position
+
+	# Reset animation while screen is black so player appears in idle on fade-in
+	if player.has_method("reset_animation"):
+		player.reset_animation()
 
 	# Restore player camera
 	_death_camera.queue_free()

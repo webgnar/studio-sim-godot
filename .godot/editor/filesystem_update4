@@ -13,3 +13,5 @@ res://scripts/PaintingExporter.gd
 res://scenes/PaintingRoot2D.tscn
 res://scenes/CarryablePainting.tscn
 res://scripts/PlayerAnimation.gd
+res://scripts/DeathZone.gd
+res://scripts/PlayerController.gd

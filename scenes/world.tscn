@@ -1097,7 +1097,7 @@ transform = Transform3D(-1.1175871e-08, 0, -0.14, 0, 0.14, 0, 0.14, 0, -1.117587
 [node name="wall outlet7" parent="outlets" unique_id=1820465902 instance=ExtResource("66_8lgfd")]
 transform = Transform3D(-6.119594e-09, 0, -0.14, 0, 0.14, 0, 0.14, 0, -6.119594e-09, -3.5728824, 1.6572046, 3.6067662)
 
-[node name="Player" parent="." unique_id=1729532435 instance=ExtResource("27_l137e")]
+[node name="Player" parent="." unique_id=1378579681 instance=ExtResource("27_l137e")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.946882, 1.2067637, 12.445705)
 
 [node name="hvac group" type="Node3D" parent="." unique_id=179664338]
@@ -1349,7 +1349,6 @@ metadata/_custom_type_script = "uid://cdcxs0jsffsfb"
 transform = Transform3D(0.9301743, 0, 0.3671182, 0, 1, 0, -0.3671182, 0, 0.9301743, 0.26508617, 0.070207834, -4.700662)
 collision_layer = 8
 collision_mask = 11
-mass = 1.975
 
 [node name="Brute_L_NoMaterial" parent="trash can" unique_id=1299747660 instance=ExtResource("46_18clu")]
 
@@ -1368,7 +1367,6 @@ debug_color = Color(0.9490196, 0, 0.58431375, 0.8117647)
 transform = Transform3D(0.70710677, 0, -0.70710677, 0, 1, 0, 0.70710677, 0, 0.70710677, 2.4920397, 0.17234671, -0.74469566)
 collision_layer = 8
 collision_mask = 3
-mass = 6.567
 
 [node name="CarryableComponent" type="Node3D" parent="FAN" unique_id=1937995114 node_paths=PackedStringArray("powered_device")]
 script = ExtResource("46_fan_carry")
@@ -1406,7 +1404,7 @@ shape = SubResource("BoxShape3D_iexy4")
 [node name="plug" type="RigidBody3D" parent="." unique_id=376580827]
 transform = Transform3D(-0.10440699, 0, -0.9945347, 0, 1, 0, 0.9945347, 0, -0.10440699, 1.3309984, 0.37396324, -0.8511305)
 collision_layer = 8
-collision_mask = 2
+collision_mask = 3
 continuous_cd = true
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="plug" unique_id=1010500768]
@@ -1748,7 +1746,7 @@ spot_range = 37.272
 spot_attenuation = 3.79
 
 [node name="OpenStickerFolderButton" parent="." unique_id=2053236324 instance=ExtResource("101_odf6h")]
-transform = Transform3D(0.1, 8.742278e-09, 3.8213706e-16, 8.742278e-09, -0.1, -8.742278e-09, -3.8213717e-16, 8.742278e-09, -0.1, 2.333071, 0.8481685, 8.865791)
+transform = Transform3D(-0.1, -3.7024988e-30, 3.8213717e-16, -3.2368273e-37, 0.1, 8.742278e-09, -3.8213717e-16, 8.742278e-09, -0.1, 3.08797, 1.0130374, 8.865791)
 
 [editable path="Spotlight1"]
 [editable path="Spotlight2"]
