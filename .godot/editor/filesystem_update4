@@ -9,3 +9,5 @@ res://models/particles/new_array_mesh3.tres
 res://scenes/UI/OptionsMenu.tscn
 res://scripts/ElevatorController.gd
 res://scripts/OptionsMenu.gd
+res://scripts/PaintingExporter.gd
+res://scenes/PaintingRoot2D.tscn

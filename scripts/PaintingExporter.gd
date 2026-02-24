@@ -175,6 +175,7 @@ func export_painting_glb(painting: CarryablePainting, downloads_path: String, fi
 	# Create a temporary scene for export
 	var export_root = Node3D.new()
 	export_root.name = "ExportedPainting"
+	export_root.rotation_degrees = Vector3(90, 0, 0)  # Stand painting upright for export
 
 	# Clone stretcher bar model
 	var stretcher = stretcher_scene.instantiate()
