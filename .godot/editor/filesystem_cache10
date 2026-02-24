@@ -1,5 +1,5 @@
 72322a848ab928aa5c89f0cb78209805
-::res://::1771912564
+::res://::1771916694
 CAMERA_SYSTEM_SETUP.md::TextFile::-1::1762247192::0::1::::<><><>0<>0<><>::
 DEBUG_EXPORT.md::TextFile::-1::1767209587::0::1::::<><><>0<>0<><>::
 default.tscn::PackedScene::4365866954318602301::1762583134::0::1::::<><><>0<>0<><>::uid://sx0bao2oqis7::::res://models/player/human skeleton rewrite.glb
@@ -96,9 +96,9 @@ cube_full_2.png::CompressedTexture2D::8020523631721481283::1761637710::177056605
 cube_full_3.png::CompressedTexture2D::5621435126292450646::1761637710::1770566055::1::::<><><>0<>0<>6bf169580aaa6c39c0cce5bc3059042c<>res://.godot/imported/cube_full_3.png-2dadf42060c3492a60d0c5266a32389f.s3tc.ctex<*>res://.godot/imported/cube_full_3.png-2dadf42060c3492a60d0c5266a32389f.etc2.ctex::
 cube_full_4.png::CompressedTexture2D::5379237190578598070::1761637710::1770566055::1::::<><><>0<>0<>61020dc4d864dfe8990ff8b7ce2767f5<>res://.godot/imported/cube_full_4.png-2b2a8a8e334deb7c81ecb57ed6d99cff.s3tc.ctex<*>res://.godot/imported/cube_full_4.png-2b2a8a8e334deb7c81ecb57ed6d99cff.etc2.ctex::
 cube_full_5.png::CompressedTexture2D::8550743911448765214::1761637710::1770566055::1::::<><><>0<>0<>970f4236fe34f615be8723f2d6edc704<>res://.godot/imported/cube_full_5.png-124382756187ab7fea92e1468202b8e9.s3tc.ctex<*>res://.godot/imported/cube_full_5.png-124382756187ab7fea92e1468202b8e9.etc2.ctex::
-::res://models/blender/::1771916266
+::res://models/blender/::1771916276
 humanrig.blend::PackedScene::130607420480918248::1771916266::1771916276::1::::<><><>0<>0<>c192982d0502a6768f8bc81b5245551d<>res://.godot/imported/humanrig.blend-223624ccdde19de52993f7e9e20614c4.scn::uid://bnv1lpe2pst51::::res://models/blender/textures/Image_0.png<>uid://bq8qp4vst5d0h::::res://models/blender/textures/Image_2.png<>uid://b1p50f6u7ynl2::::res://models/blender/textures/Image_1.png
-::res://models/blender/textures/::1771908797
+::res://models/blender/textures/::1771916274
 Image_0.png::CompressedTexture2D::3343826664644661058::1765138497::1771916274::1::::<><><>0<>0<>b7bb5e70d0d66c359b7b6da65052998b<>res://.godot/imported/Image_0.png-daefec75d73b84c557a2b77bcc8b5b05.s3tc.ctex<*>res://.godot/imported/Image_0.png-daefec75d73b84c557a2b77bcc8b5b05.etc2.ctex::
 Image_1.png::CompressedTexture2D::4244162750681573573::1765138497::1771916274::1::::<><><>0<>0<>6515f2d6dc2801c65016be1305785914<>res://.godot/imported/Image_1.png-a03e36221f9e2a4a5ac0f9479dbd7959.s3tc.ctex<*>res://.godot/imported/Image_1.png-a03e36221f9e2a4a5ac0f9479dbd7959.etc2.ctex::
 Image_2.png::CompressedTexture2D::3578566463040887045::1765138497::1771916274::1::::<><><>0<>0<>f56a9e5f5cfe3ce1c3ecc11e001a5839<>res://.godot/imported/Image_2.png-94328d0ec98a9ccde2ed0632f031a1a1.s3tc.ctex<*>res://.godot/imported/Image_2.png-94328d0ec98a9ccde2ed0632f031a1a1.etc2.ctex::
@@ -459,7 +459,7 @@ TitleScreenUI.tscn::PackedScene::8037970300938931138::1771344301::0::1::::<><><>
 ValidationDebugOverlay.tscn::PackedScene::-1::1765350053::0::1::::<><><>0<>0<><>::res://scripts/ui/ValidationDebugOverlay.gd
 ValidationLoadingOverlay.tscn::PackedScene::5033299275984382255::1771171809::0::1::::<><><>0<>0<><>::uid://bxwgdijhlxjvo::::res://scripts/ui/ValidationLoadingOverlay.gd<>uid://cbtaxh5m7udor::::res://themes/ui_theme.tres
 ValidationResultUI.tscn::PackedScene::598769645583896637::1771278444::0::1::::<><><>0<>0<><>::uid://ci6lixgsw804b::::res://scripts/ui/ValidationResultUI.gd<>res://scenes/UI/MissionResultsDisplay.tscn<>uid://cbtaxh5m7udor::::res://themes/ui_theme.tres
-::res://scripts/::1771913519
+::res://scripts/::1771916609
 AudioManager.gd::GDScript::1683297059755285547::1766349912::0::1::::<>Node<><>0<>0<><>::
 Bullet.gd::GDScript::4494185522286921364::1765049008::0::1::::Bullet<>RigidBody3D<><>0<>0<><>::
 CameraManager.gd::GDScript::5090965087567803578::1767640563::0::1::::<>Node<><>0<>0<><>::
@@ -468,7 +468,7 @@ CarryablePainting.gd::GDScript::8654589551705045776::1771626648::0::1::::Carryab
 ControllerDebugOverlay.gd::GDScript::5829514318379726784::1767838876::0::1::::<>CanvasLayer<><>0<>0<><>::
 ControllerMapper.gd::GDScript::1571345890455605991::1767214384::0::1::::<>Node<><>0<>0<><>::
 CritiqueDisplay.gd::GDScript::2528788451277119289::1771458105::0::1::::<>Node3D<><>0<>0<><>::
-DeathZone.gd::GDScript::909936525954762588::1770670896::0::1::::<>Area3D<><>0<>0<><>::
+DeathZone.gd::GDScript::909936525954762588::1771916609::0::1::::<>Area3D<><>0<>0<><>::
 DebugLogger.gd::GDScript::515986937051626152::1767653968::0::1::::<>Node<><>0<>0<><>::
 DebugPaintingConverter.gd::GDScript::6359550447124289428::1764786410::0::1::::<>Node<><>0<>0<><>::
 DoorInteraction.gd::GDScript::6898727207115013066::1771627884::0::1::::DoorInteraction<>InteractionComponent<><>0<>0<><>::
@@ -488,7 +488,7 @@ PaintingExporter.gd::GDScript::3765254846967518743::1771912938::0::1::::<>Node<>
 PaintingSpawner.gd::GDScript::4348115639158510571::1766449609::0::1::::<>Node<><>0<>0<><>::
 PhoneInteraction.gd::GDScript::59552204620518798::1771518336::0::1::::PhoneInteraction<>InteractionComponent<><>0<>0<><>::
 PlayerAnimation.gd::GDScript::3994514209863087763::1771913519::0::1::::PlayerAnimation<>Node<><>0<>0<><>::
-PlayerController.gd::GDScript::9198226878400670027::1771823864::0::1::::<>CharacterBody3D<><>0<>0<><>::
+PlayerController.gd::GDScript::9198226878400670027::1771916605::0::1::::<>CharacterBody3D<><>0<>0<><>::
 PlayerInteractionComponent.gd::GDScript::7370778824892455188::1771449028::0::1::::PlayerInteractionComponent<>Node3D<><>0<>0<><>::
 PlayerLaserBeam.gd::GDScript::5626436999992710999::1767419123::0::1::::<>Node3D<><>0<>0<><>::
 ProjectileNail.gd::GDScript::4871427963888925413::1770670891::0::1::::ProjectileNail<>RigidBody3D<><>0<>0<><>::
