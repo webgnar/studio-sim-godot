@@ -69,7 +69,7 @@ grow_end = 0.0
 thickness = 7
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_j8bgu"]
-bg_color = Color(0.97385913, 0.9385577, 0.90884495, 1)
+bg_color = Color(0.9121951, 0.8040016, 0.71834236, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rnfg8"]
 bg_color = Color(0.89176005, 0.91459197, 0.71859854, 1)
@@ -173,6 +173,8 @@ Label/colors/font_color = Color(0.37254903, 1, 0.99215686, 1)
 LineEdit/colors/caret_color = Color(0.95374864, 0.63054395, 0.65144414, 1)
 LineEdit/colors/font_color = Color(0.84219646, 0.86505246, 0.9005652, 1)
 LineEdit/colors/font_placeholder_color = Color(0.8509804, 0.90588236, 1, 1)
+LineEdit/colors/font_selected_color = Color(0.46454316, 0.79222447, 0.2367239, 1)
+LineEdit/colors/font_uneditable_color = Color(1, 0.40392157, 0.57254905, 1)
 LineEdit/colors/selection_color = Color(0.18127888, 1, 0.82361966, 1)
 LineEdit/constants/caret_width = 10
 LineEdit/constants/minimum_character_width = 4
@@ -200,6 +202,7 @@ TextEdit/colors/background_color = Color(0.9581782, 0.862201, 0.6076636, 1)
 TextEdit/colors/caret_color = Color(0.5764706, 0, 0.38431373, 1)
 TextEdit/colors/font_color = Color(0.875, 0.875, 0.875, 1)
 TextEdit/colors/font_outline_color = Color(0, 0, 0, 1)
+TextEdit/colors/font_readonly_color = Color(0.9314108, 0.8432826, 0.9239321, 1)
 TextEdit/constants/caret_width = 8
 TextEdit/constants/line_spacing = -13
 TextEdit/constants/outline_size = 17

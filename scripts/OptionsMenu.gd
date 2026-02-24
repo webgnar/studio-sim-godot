@@ -24,6 +24,7 @@ var close_button: Button = null  # Removed from scene; closing handled by go_bac
 @onready var save_glb_checkbox: CheckBox = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/SaveGLBCheckbox
 @onready var save_png_checkbox: CheckBox = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/SavePNGCheckbox
 @onready var generate_critique_checkbox: CheckBox = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/GenerateCritiqueCheckbox
+@onready var publish_online_checkbox: CheckBox = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/PublishOnlineCheckbox
 @onready var panel_container: PanelContainer = $PanelContainer
 @onready var button_nav_sound: AudioStreamPlayer = $ButtonNavSound
 @onready var open_menu_sound: AudioStreamPlayer = $OpenMenuSound
@@ -384,6 +385,7 @@ func save_settings():
 	settings["save_glb_on_ship"] = save_glb_on_ship
 	settings["save_png_on_ship"] = save_png_on_ship
 	settings["generate_npc_critique"] = generate_npc_critique
+	settings["publish_online_on_ship"] = publish_online_on_ship
 	settings["joystick_sensitivity"] = joystick_sensitivity
 
 	# Also save audio settings (in case AudioManager.save_settings() wasn't called)
@@ -469,9 +471,12 @@ func load_settings():
 		save_png_on_ship = bool(settings["save_png_on_ship"])
 	if settings.has("generate_npc_critique"):
 		generate_npc_critique = bool(settings["generate_npc_critique"])
+	if settings.has("publish_online_on_ship"):
+		publish_online_on_ship = bool(settings["publish_online_on_ship"])
 	save_glb_checkbox.button_pressed = save_glb_on_ship
 	save_png_checkbox.button_pressed = save_png_on_ship
 	generate_critique_checkbox.button_pressed = generate_npc_critique
+	publish_online_checkbox.button_pressed = publish_online_on_ship
 
 	# Load sensitivity setting
 	if settings.has("joystick_sensitivity"):
@@ -519,6 +524,7 @@ var language_buttons: Array[Button] = []
 var save_glb_on_ship: bool = true
 var save_png_on_ship: bool = true
 var generate_npc_critique: bool = true
+var publish_online_on_ship: bool = true
 var game_checkboxes: Array[CheckBox] = []
 var joystick_sensitivity: float = 500.0
 
@@ -577,7 +583,10 @@ func _create_game_tab():
 	generate_critique_checkbox.button_pressed = generate_npc_critique
 	generate_critique_checkbox.focus_mode = Control.FOCUS_ALL
 
-	# Wire focus chain: glb → png → critique
+	publish_online_checkbox.button_pressed = publish_online_on_ship
+	publish_online_checkbox.focus_mode = Control.FOCUS_ALL
+
+	# Wire focus chain: glb → png → critique → publish
 	save_glb_checkbox.focus_next = save_glb_checkbox.get_path_to(save_png_checkbox)
 	save_glb_checkbox.focus_neighbor_bottom = save_glb_checkbox.get_path_to(save_png_checkbox)
 	save_png_checkbox.focus_previous = save_png_checkbox.get_path_to(save_glb_checkbox)
@@ -586,13 +595,18 @@ func _create_game_tab():
 	save_png_checkbox.focus_neighbor_bottom = save_png_checkbox.get_path_to(generate_critique_checkbox)
 	generate_critique_checkbox.focus_previous = generate_critique_checkbox.get_path_to(save_png_checkbox)
 	generate_critique_checkbox.focus_neighbor_top = generate_critique_checkbox.get_path_to(save_png_checkbox)
+	generate_critique_checkbox.focus_next = generate_critique_checkbox.get_path_to(publish_online_checkbox)
+	generate_critique_checkbox.focus_neighbor_bottom = generate_critique_checkbox.get_path_to(publish_online_checkbox)
+	publish_online_checkbox.focus_previous = publish_online_checkbox.get_path_to(generate_critique_checkbox)
+	publish_online_checkbox.focus_neighbor_top = publish_online_checkbox.get_path_to(generate_critique_checkbox)
 
 	# Connect signals after setting button_pressed to avoid triggering save_settings()
 	save_glb_checkbox.toggled.connect(_on_save_glb_toggled)
 	save_png_checkbox.toggled.connect(_on_save_png_toggled)
 	generate_critique_checkbox.toggled.connect(_on_generate_critique_toggled)
+	publish_online_checkbox.toggled.connect(_on_publish_online_toggled)
 
-	game_checkboxes = [save_glb_checkbox, save_png_checkbox, generate_critique_checkbox]
+	game_checkboxes = [save_glb_checkbox, save_png_checkbox, generate_critique_checkbox, publish_online_checkbox]
 
 func _on_save_glb_toggled(pressed: bool):
 	save_glb_on_ship = pressed
@@ -604,6 +618,10 @@ func _on_save_png_toggled(pressed: bool):
 
 func _on_generate_critique_toggled(pressed: bool):
 	generate_npc_critique = pressed
+	save_settings()
+
+func _on_publish_online_toggled(pressed: bool):
+	publish_online_on_ship = pressed
 	save_settings()
 
 func _is_last_in_tab(focused_control: Control) -> bool:

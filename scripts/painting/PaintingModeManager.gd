@@ -24,6 +24,9 @@ var last_placement_time: float = 0.0
 var _is_signing: bool = false
 var _active_signature: PaintingSignatureSystem = null
 
+# Undo consumed flag — prevents analog left trigger from undoing multiple times per press in 2D
+var _secondary_consumed: bool = false
+
 # Audio
 var tick_sound: AudioStreamPlayer
 var tick_sound_layer2: AudioStreamPlayer
@@ -115,6 +118,10 @@ func _unhandled_input(event):
 	var should_place = false
 	var should_undo = false
 
+	# Reset undo consumed flag when left trigger is released
+	if event.is_action_released("action_secondary"):
+		_secondary_consumed = false
+
 	# Detect painting actions
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
@@ -131,7 +138,8 @@ func _unhandled_input(event):
 		should_undo = true
 
 	# Check for signing on painting back face (before sticker logic)
-	if should_place:
+	# Guard against re-triggering while already signing (analog trigger fires multiple events)
+	if should_place and not _is_signing:
 		var back_face_result = _check_back_face_raycast()
 		if back_face_result:
 			var sig_system = _find_signature_system(back_face_result.collider)
@@ -184,12 +192,13 @@ func _unhandled_input(event):
 	if should_undo:
 		var raycast_result = _perform_unified_raycast()
 		if _is_canvas_plane(raycast_result):
-			# Undo from 2D system
-			if painting_system_2d:
+			# Undo from 2D system — consumed flag ensures only one undo per trigger press
+			if painting_system_2d and not _secondary_consumed:
 				painting_system_2d.handle_secondary_action()
+				_secondary_consumed = true
 				get_viewport().set_input_as_handled()
 		else:
-			# Undo from 3D system
+			# Undo from 3D system — no consumed guard (multi-fire while held is intentional)
 			if painting_system_3d:
 				painting_system_3d.handle_secondary_action(raycast_result)
 				get_viewport().set_input_as_handled()

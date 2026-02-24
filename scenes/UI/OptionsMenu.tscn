@@ -237,6 +237,11 @@ layout_mode = 2
 button_pressed = true
 text = "Generate NPC critique"
 
+[node name="PublishOnlineCheckbox" type="CheckBox" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game" unique_id=1111111107]
+layout_mode = 2
+button_pressed = true
+text = "Publish online when shipping to Studio Sim Gallery"
+
 [node name="ButtonNavSound" type="AudioStreamPlayer" parent="." unique_id=1505501763]
 stream = ExtResource("3_nav_sound")
 bus = &"SFX"

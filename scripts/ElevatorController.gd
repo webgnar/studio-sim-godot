@@ -235,8 +235,19 @@ func start_export() -> void:
 		png_path = result.get("png", "")
 		glb_path = result.get("glb", "")
 
-	# Upload to gallery (non-blocking)
-	if not png_path.is_empty() and not glb_path.is_empty():
+	# Check publish_online_on_ship setting (default true)
+	var publish_online: bool = true
+	if FileAccess.file_exists("user://settings.json"):
+		var sj_file = FileAccess.open("user://settings.json", FileAccess.READ)
+		if sj_file:
+			var sj_json = JSON.new()
+			if sj_json.parse(sj_file.get_as_text()) == OK and typeof(sj_json.data) == TYPE_DICTIONARY:
+				if sj_json.data.has("publish_online_on_ship"):
+					publish_online = bool(sj_json.data["publish_online_on_ship"])
+			sj_file.close()
+
+	# Upload to gallery (non-blocking) — only if publish_online is enabled
+	if publish_online and not png_path.is_empty() and not glb_path.is_empty():
 		GalleryUploader.upload_painting(png_path, glb_path, painting.painting_name, painting.artist_statement, SteamManager.persona_name)
 
 	# Ship painting (preserves metadata in inventory as SHIPPED) then remove from world
