@@ -11,3 +11,5 @@ res://scripts/ElevatorController.gd
 res://scripts/OptionsMenu.gd
 res://scripts/PaintingExporter.gd
 res://scenes/PaintingRoot2D.tscn
+res://scenes/CarryablePainting.tscn
+res://scripts/PlayerAnimation.gd
