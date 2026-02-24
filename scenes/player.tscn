@@ -64,4 +64,5 @@ script = ExtResource("5_ur7pv")
 
 [node name="PlayerCameraFade" type="Node" parent="." unique_id=282278761]
 script = ExtResource("6_camerafade")
-fade_inner_radius = 0.35
+fade_outer_radius = 0.4
+dither_strength = 0.698

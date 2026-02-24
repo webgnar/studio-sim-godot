@@ -3,8 +3,20 @@ class_name PlayerCameraFade
 ## Applies a dithered camera-proximity fade to all player mesh surfaces.
 ## Prevents the player body from visibly clipping through the first-person camera.
 
-@export var fade_inner_radius: float = 0.3
-@export var fade_outer_radius: float = 0.6
+@export var fade_inner_radius: float = 0.3:
+	set(v):
+		fade_inner_radius = v
+		_set_param("fade_inner_radius", v)
+
+@export var fade_outer_radius: float = 0.6:
+	set(v):
+		fade_outer_radius = v
+		_set_param("fade_outer_radius", v)
+
+@export_range(0.0, 1.0) var dither_strength: float = 1.0:
+	set(v):
+		dither_strength = v
+		_set_param("dither_strength", v)
 
 const SHADER_PATH = "res://shaders/player_fade.gdshader"
 var _shader: Shader
@@ -48,6 +60,7 @@ func _make_fade_mat(source: Material) -> ShaderMaterial:
 	mat.shader = _shader
 	mat.set_shader_parameter("fade_inner_radius", fade_inner_radius)
 	mat.set_shader_parameter("fade_outer_radius", fade_outer_radius)
+	mat.set_shader_parameter("dither_strength", dither_strength)
 	_copy_textures(mat, source)
 	return mat
 
@@ -60,3 +73,12 @@ func _copy_textures(target: ShaderMaterial, source: Material) -> void:
 		target.set_shader_parameter("normal_enabled", s.normal_enabled)
 		target.set_shader_parameter("ao_enabled",     s.ao_enabled)
 	# If source is null or another type, shader uses its default textures
+
+func _set_param(param: String, value: Variant) -> void:
+	for mesh in _meshes:
+		if not mesh.mesh:
+			continue
+		for i in range(mesh.mesh.get_surface_count()):
+			var mat = mesh.get_surface_override_material(i)
+			if mat is ShaderMaterial:
+				mat.set_shader_parameter(param, value)

@@ -5,3 +5,4 @@ res://models/particles/new_array_mesh2.tres
 res://models/particles/new_array_mesh3.tres
 res://materials/tv.gdshader
 res://materials/tv.tres
+res://scripts/PlayerCameraFade.gd
