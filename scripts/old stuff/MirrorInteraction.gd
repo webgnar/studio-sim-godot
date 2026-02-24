@@ -109,15 +109,26 @@ func _apply_material_to_mesh(mesh: MeshInstance3D, material: Material) -> void:
 	if not mesh or not material:
 		push_warning("⚠️ Cannot apply material - mesh or material is null")
 		return
-	
+
 	if not mesh.mesh:
 		push_warning("⚠️ Mesh instance has no mesh")
 		return
-	
+
 	var surface_count = mesh.mesh.get_surface_count()
-	
+
 	for i in range(surface_count):
-		mesh.set_surface_override_material(i, material)
+		var existing = mesh.get_surface_override_material(i)
+		if existing is ShaderMaterial and material is StandardMaterial3D:
+			# Fade shader is active — update textures only, don't replace it
+			var sm := existing as ShaderMaterial
+			var std := material as StandardMaterial3D
+			sm.set_shader_parameter("albedo_texture", std.albedo_texture)
+			sm.set_shader_parameter("normal_texture",  std.normal_texture)
+			sm.set_shader_parameter("ao_texture",      std.ao_texture)
+			sm.set_shader_parameter("normal_enabled",  std.normal_enabled)
+			sm.set_shader_parameter("ao_enabled",      std.ao_enabled)
+		else:
+			mesh.set_surface_override_material(i, material)
 
 # Public methods
 func get_current_skin_index() -> int:

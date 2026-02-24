@@ -1,18 +1,18 @@
-[gd_scene load_steps=8 format=3 uid="uid://cugtdfp4dt78m"]
+[gd_scene format=3 uid="uid://cugtdfp4dt78m"]
 
 [ext_resource type="Script" uid="uid://d4bxpnphvld1d" path="res://scripts/PlayerController.gd" id="1_qlg0r"]
 [ext_resource type="PackedScene" uid="uid://gv6172d2ngws" path="res://scenes/humanrig_blender.tscn" id="2_tuyoq"]
 [ext_resource type="Script" uid="uid://bw58chvxj0io6" path="res://scripts/PlayerAnimation.gd" id="3_fjrip"]
 [ext_resource type="PackedScene" uid="uid://cmkthatew8dv2" path="res://scenes/UI/HUD.tscn" id="4_smehm"]
 [ext_resource type="Script" uid="uid://cmfquih6gna04" path="res://scripts/PlayerLaserBeam.gd" id="5_ur7pv"]
+[ext_resource type="Script" uid="uid://tox1q6x23gbc" path="res://scripts/PlayerCameraFade.gd" id="6_camerafade"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_k0juu"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_player"]
 radius = 0.4
-height = 2.0
 
-[node name="Player" type="CharacterBody3D"]
+[node name="Player" type="CharacterBody3D" unique_id=1291817473]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 0, 0)
 collision_mask = 11
 script = ExtResource("1_qlg0r")
@@ -26,15 +26,15 @@ bob_amplitude = 0.07
 max_fov_increase = 10.0
 interaction_distance = 2.0
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=68893668]
 visible = false
 mesh = SubResource("CapsuleMesh_k0juu")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=255909828]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.22185904)
 shape = SubResource("CapsuleShape3D_player")
 
-[node name="human" parent="." instance=ExtResource("2_tuyoq")]
+[node name="human" parent="." unique_id=329390392 instance=ExtResource("2_tuyoq")]
 transform = Transform3D(0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, -4.858423e-09, -0.94919425, 0.24366075)
 script = ExtResource("3_fjrip")
 idle_speed = 3.0
@@ -42,22 +42,26 @@ walk_speed = 3.0
 run_speed = 3.0
 jump_speed = 2.0
 
-[node name="Head" type="Node3D" parent="."]
+[node name="Head" type="Node3D" parent="." unique_id=1785393483]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.64091873, 0)
 
-[node name="Camera3D" type="Camera3D" parent="Head"]
+[node name="Camera3D" type="Camera3D" parent="Head" unique_id=1311986832]
 current = true
 
-[node name="CarryMarker" type="Marker3D" parent="Head/Camera3D"]
+[node name="CarryMarker" type="Marker3D" parent="Head/Camera3D" unique_id=1060863119]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.1372799e-08, 0, -1.5110474)
 
-[node name="GunMarker" type="Marker3D" parent="Head/Camera3D"]
+[node name="GunMarker" type="Marker3D" parent="Head/Camera3D" unique_id=1440722615]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0.24126537, -0.27371883, -0.71358347)
 
-[node name="HUD" parent="." instance=ExtResource("4_smehm")]
+[node name="HUD" parent="." unique_id=1051644280 instance=ExtResource("4_smehm")]
 
-[node name="FootstepSound" type="AudioStreamPlayer" parent="."]
+[node name="FootstepSound" type="AudioStreamPlayer" parent="." unique_id=1215326069]
 bus = &"SFX"
 
-[node name="LaserBeamVisualizer" type="Node3D" parent="."]
+[node name="LaserBeamVisualizer" type="Node3D" parent="." unique_id=404532841]
 script = ExtResource("5_ur7pv")
+
+[node name="PlayerCameraFade" type="Node" parent="." unique_id=282278761]
+script = ExtResource("6_camerafade")
+fade_inner_radius = 0.35
