@@ -6,3 +6,12 @@ res://models/particles/new_array_mesh3.tres
 res://materials/tv.gdshader
 res://materials/tv.tres
 res://scripts/PlayerCameraFade.gd
+res://scripts/ui/InventoryTab.gd
+res://scenes/UI/InventoryTab.tscn
+res://scenes/UI/MissionSelectionUI.tscn
+res://scenes/UI/PauseMenu.tscn
+res://scenes/UI/TitleScreenUI.tscn
+res://scenes/UI/OptionsMenu.tscn
+res://scripts/OptionsMenu.gd
+res://scenes/UI/PaintingCard.tscn
+res://scripts/ui/PaintingCard.gd

@@ -23,7 +23,7 @@ grow_vertical = 2
 theme_override_constants/separation = 20
 
 [node name="LeftPanel" type="VBoxContainer" parent="HBoxContainer" unique_id=1275129141]
-custom_minimum_size = Vector2(600, 0)
+custom_minimum_size = Vector2(420, 0)
 layout_mode = 2
 
 [node name="TitleLabel" type="Label" parent="HBoxContainer/LeftPanel" unique_id=1178948721]
@@ -49,11 +49,6 @@ text = "Paintings: 3"
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="PreviewTitleLabel" type="Label" parent="HBoxContainer/RightPanel" unique_id=2122865285]
-layout_mode = 2
-text = "PAINTING DETAILS"
-horizontal_alignment = 1
-
 [node name="PreviewPanel" type="PanelContainer" parent="HBoxContainer/RightPanel" unique_id=2146974402]
 layout_mode = 2
 size_flags_vertical = 3
@@ -67,62 +62,70 @@ theme_override_constants/margin_bottom = 15
 
 [node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer" unique_id=732183968]
 layout_mode = 2
-theme_override_constants/separation = 10
+size_flags_horizontal = 3
+theme_override_constants/separation = 12
 
 [node name="PaintingImage" type="TextureRect" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer" unique_id=1001707753]
-custom_minimum_size = Vector2(400, 400)
+custom_minimum_size = Vector2(0, 250)
 layout_mode = 2
-size_flags_vertical = 3
+size_flags_horizontal = 3
 expand_mode = 1
 stretch_mode = 5
 
-[node name="StatusLabel" type="Label" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer" unique_id=143958508]
-layout_mode = 2
-text = "Status: WIP"
-
-[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer" unique_id=843837310]
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1689938817]
+[node name="ContentHBox" type="HBoxContainer" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer" unique_id=843837310]
 layout_mode = 2
 size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 12
 
-[node name="NameContainer" type="HBoxContainer" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=2098356811]
+[node name="LeftVBox" type="VBoxContainer" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ContentHBox" unique_id=1689938817]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="NameContainer" type="HBoxContainer" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ContentHBox/LeftVBox" unique_id=2098356811]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="NameLabel" type="Label" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/NameContainer" unique_id=639703863]
+[node name="NameLabel" type="Label" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ContentHBox/LeftVBox/NameContainer" unique_id=639703863]
 layout_mode = 2
 text = "Name:"
 
-[node name="NameInput" type="LineEdit" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/NameContainer" unique_id=556631708]
+[node name="NameInput" type="LineEdit" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ContentHBox/LeftVBox/NameContainer" unique_id=556631708]
 layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "Enter painting name..."
 
-[node name="StatementLabel" type="Label" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=317679574]
+[node name="StatusLabel" type="Label" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ContentHBox/LeftVBox" unique_id=143958508]
+layout_mode = 2
+text = "Status: WIP"
+
+[node name="StatementLabel" type="Label" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ContentHBox/LeftVBox" unique_id=317679574]
 layout_mode = 2
 text = "Artist Statement:"
 
-[node name="StatementInput" type="TextEdit" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=1444620906]
-custom_minimum_size = Vector2(0, 500)
+[node name="StatementInput" type="TextEdit" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ContentHBox/LeftVBox" unique_id=1444620906]
+custom_minimum_size = Vector2(0, 150)
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 placeholder_text = "Write about your painting..."
 wrap_mode = 1
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/HBoxContainer" unique_id=758512274]
+[node name="RightVBox" type="VBoxContainer" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ContentHBox" unique_id=758512274]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_constants/separation = 8
 
-[node name="CritiqueHeader" type="Label" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2" unique_id=1111111101]
-visible = false
+[node name="CritiqueHeader" type="Label" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ContentHBox/RightVBox" unique_id=1111111101]
 layout_mode = 2
 text = "Critique:"
 
-[node name="CritiqueDisplay" type="TextEdit" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2" unique_id=1111111102]
-visible = false
+[node name="CritiqueDisplay" type="TextEdit" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ContentHBox/RightVBox" unique_id=1111111102]
+custom_minimum_size = Vector2(0, 150)
 layout_mode = 2
+size_flags_horizontal = 3
 size_flags_vertical = 3
 editable = false
 wrap_mode = 1
@@ -136,6 +139,7 @@ text = "Save"
 [node name="EmptyLabel" type="Label" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer" unique_id=2084938426]
 visible = false
 layout_mode = 2
+size_flags_horizontal = 3
 text = "There are no paintings in your Inventory. Pressing the red button in the studio will add a painting to your Inventory."
 horizontal_alignment = 1
 vertical_alignment = 1

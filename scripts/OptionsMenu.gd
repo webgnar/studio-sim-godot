@@ -17,7 +17,8 @@ signal closed
 @onready var saturation_slider: HSlider = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/VisualSettings/SaturationSlider
 @onready var saturation_value_label: Label = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/VisualSettings/SaturationHeader/SaturationValue
 var close_button: Button = null  # Removed from scene; closing handled by go_back/ESC
-@onready var controls_list: VBoxContainer = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Controls/ControlsList
+@onready var controls_list: VBoxContainer = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Controls/ScrollContainer/ControlsList
+@onready var controls_scroll_container: ScrollContainer = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Controls/ScrollContainer
 @onready var stick_sensitivity_slider: HSlider = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Controls/SensitivitySection/SensitivitySlider
 @onready var stick_sensitivity_value_label: Label = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Controls/SensitivitySection/SensitivityHeader/SensitivityValue
 @onready var language_button_container: VBoxContainer = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Language/ButtonContainer
@@ -47,6 +48,8 @@ var input_cooldown: float = 0.0
 var input_cooldown_time: float = 0.15  # Cooldown between navigation inputs
 var _tab_nav_held: bool = false  # Prevent rapid tab cycling from held analog stick
 var binding_labels: Array[Label] = []  # Labels showing current bindings in Controls tab
+const CONTROLS_SCROLL_STEP: int = 60
+var _in_controls_scroll: bool = false
 
 # Controls to display: [display_name, action_name_in_glyph_map]
 var controls_entries: Array = [
@@ -197,6 +200,17 @@ func _input(event):
 		# Content mode: navigate within content, up from first item returns to tabs
 		if event.is_action_pressed("ui_up") or event.is_action_pressed("move_forward"):
 			if input_cooldown <= 0:
+				if _in_controls_scroll:
+					if controls_scroll_container.scroll_vertical <= 0:
+						_in_controls_scroll = false
+						stick_sensitivity_slider.grab_focus()
+					else:
+						controls_scroll_container.scroll_vertical -= CONTROLS_SCROLL_STEP
+					if button_nav_sound:
+						button_nav_sound.play()
+					input_cooldown = input_cooldown_time
+					get_viewport().set_input_as_handled()
+					return
 				var focused_control = get_viewport().gui_get_focus_owner()
 				# Check if we're at the first focusable in current tab
 				var is_first_in_tab = (focused_control == sfx_slider or focused_control == hue_slider
@@ -217,8 +231,23 @@ func _input(event):
 		elif event.is_action_pressed("ui_down") or event.is_action_pressed("move_back"):
 			if input_cooldown <= 0:
 				var focused_control = get_viewport().gui_get_focus_owner()
-				# Check if we're at the last focusable in current tab
-				if _is_last_in_tab(focused_control):
+				if tab_container.current_tab == 2 and (focused_control == stick_sensitivity_slider or _in_controls_scroll):
+					if _in_controls_scroll:
+						var sb = controls_scroll_container.get_v_scroll_bar()
+						if controls_scroll_container.scroll_vertical >= sb.max_value - sb.page:
+							_in_controls_scroll = false
+							if is_embedded:
+								return
+						else:
+							controls_scroll_container.scroll_vertical += CONTROLS_SCROLL_STEP
+							if button_nav_sound:
+								button_nav_sound.play()
+					else:
+						_in_controls_scroll = true
+						stick_sensitivity_slider.release_focus()
+						if button_nav_sound:
+							button_nav_sound.play()
+				elif _is_last_in_tab(focused_control):
 					if is_embedded:
 						# Don't consume → PauseMenu focuses ReturnToTitleButton
 						return
@@ -632,7 +661,10 @@ func _is_last_in_tab(focused_control: Control) -> bool:
 		1:  # Visual
 			return focused_control == saturation_slider
 		2:  # Controls
-			return focused_control == stick_sensitivity_slider
+			if _in_controls_scroll:
+				var sb = controls_scroll_container.get_v_scroll_bar()
+				return controls_scroll_container.scroll_vertical >= sb.max_value - sb.page
+			return false
 		3:  # Language
 			return language_buttons.size() > 0 and focused_control == language_buttons[-1]
 		4:  # Game
@@ -649,7 +681,9 @@ func _focus_last_content_item():
 			if saturation_slider:
 				saturation_slider.grab_focus()
 		2:  # Controls
-			stick_sensitivity_slider.grab_focus()
+			_in_controls_scroll = true
+			stick_sensitivity_slider.release_focus()
+			controls_scroll_container.scroll_vertical = 999999
 		3:  # Language
 			if language_buttons.size() > 0:
 				language_buttons[-1].grab_focus()
@@ -679,6 +713,8 @@ func _focus_first_content_item():
 		if hue_slider:
 			hue_slider.grab_focus()
 	elif tab_container.current_tab == 2:  # Controls tab
+		_in_controls_scroll = false
+		controls_scroll_container.scroll_vertical = 0
 		stick_sensitivity_slider.grab_focus()
 	elif tab_container.current_tab == 3:  # Language tab
 		if language_buttons.size() > 0:
@@ -696,6 +732,7 @@ func _switch_tab(direction: int):
 	new_tab = clamp(new_tab, 0, tab_container.get_tab_count() - 1)
 
 	# Only change tab and play sound if we actually moved
+	_in_controls_scroll = false
 	if new_tab != current_tab:
 		tab_container.current_tab = new_tab
 		# Update close button focus for new tab

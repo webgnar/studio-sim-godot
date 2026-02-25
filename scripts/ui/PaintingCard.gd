@@ -8,10 +8,7 @@ class_name PaintingCard
 signal card_clicked(index: int)
 
 @onready var thumbnail: TextureRect = $MarginContainer/HBoxContainer/Thumbnail
-@onready var title_label: Label = $MarginContainer/HBoxContainer/InfoContainer/TitleLabel
-@onready var info_container: VBoxContainer = $MarginContainer/HBoxContainer/InfoContainer
 
-var status_label: Label = null
 var card_index: int = 0
 var painting_data: Dictionary = {}
 var is_selected: bool = false
@@ -23,23 +20,13 @@ func _ready():
 	# Create styles
 	default_style = StyleBoxFlat.new()
 	default_style.bg_color = Color(0.15, 0.15, 0.15, 0.8)
-	default_style.set_corner_radius_all(4)
 
 	selected_style = StyleBoxFlat.new()
-	selected_style.bg_color = Color(0.3, 0.5, 0.7, 0.9)
-	selected_style.set_corner_radius_all(4)
+	selected_style.bg_color = Color(0.95, 0.9, 0.6, 0.9)
 
 	add_theme_stylebox_override("panel", default_style)
 
-	# Create status label
-	status_label = Label.new()
-	status_label.add_theme_font_size_override("font_size", 48)
-	info_container.add_child(status_label)
-
 	if Engine.is_editor_hint():
-		title_label.text = "Example Painting"
-		status_label.text = "WIP"
-		status_label.modulate = Color(1.0, 0.9, 0.3)
 		var img = Image.create(64, 64, false, Image.FORMAT_RGB8)
 		img.fill(Color(0.35, 0.35, 0.35))
 		thumbnail.texture = ImageTexture.create_from_image(img)
@@ -53,12 +40,6 @@ func setup(data: Dictionary, index: int):
 	painting_data = data
 	card_index = index
 
-	# Set title
-	var display_name = data.get("name", "")
-	if display_name == "":
-		display_name = "Untitled"
-	title_label.text = display_name
-
 	# Set status
 	update_status(data.get("status", "WIP"))
 
@@ -70,24 +51,11 @@ func set_selected(selected: bool):
 	is_selected = selected
 	add_theme_stylebox_override("panel", selected_style if selected else default_style)
 
-func update_name(new_name: String):
-	"""Update the displayed name"""
-	title_label.text = new_name if new_name != "" else "Untitled"
+func update_name(_new_name: String):
+	pass
 
-func update_status(status: String):
-	"""Update the displayed status with color coding"""
-	if not status_label:
-		return
-	status_label.text = status
-	match status:
-		"WIP":
-			status_label.modulate = Color(1.0, 0.9, 0.3)  # Yellow
-		"DONE":
-			status_label.modulate = Color(0.4, 1.0, 0.4)  # Green
-		"SHIPPED":
-			status_label.modulate = Color(0.4, 0.8, 1.0)  # Cyan
-		_:
-			status_label.modulate = Color.WHITE
+func update_status(_status: String):
+	pass
 
 func _load_thumbnail(texture_path: String):
 	"""Load and display the painting thumbnail"""

@@ -12,10 +12,10 @@ const PaintingCardScene = preload("res://scenes/UI/PaintingCard.tscn")
 @onready var painting_list_container: VBoxContainer = $HBoxContainer/LeftPanel/ScrollContainer/PaintingList
 @onready var stats_label: Label = $HBoxContainer/LeftPanel/StatsLabel
 @onready var preview_image: TextureRect = $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/PaintingImage
-@onready var status_label: Label = $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/StatusLabel
-@onready var name_input: LineEdit = $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/NameContainer/NameInput
-@onready var statement_label: Label = $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/StatementLabel
-@onready var statement_input: TextEdit = $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/StatementInput
+@onready var status_label: Label = $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ContentHBox/LeftVBox/StatusLabel
+@onready var name_input: LineEdit = $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ContentHBox/LeftVBox/NameContainer/NameInput
+@onready var statement_label: Label = $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ContentHBox/LeftVBox/StatementLabel
+@onready var statement_input: TextEdit = $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ContentHBox/LeftVBox/StatementInput
 @onready var save_button: Button = $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/SaveButton
 @onready var empty_label: Label = $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/EmptyLabel
 
@@ -33,8 +33,9 @@ var input_cooldown_time: float = 0.15
 var _last_input_was_gamepad: bool = false
 var _steam_editing_field: Control = null  # tracks which field the Steam keyboard is editing
 
-@onready var _critique_header: Label = $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2/CritiqueHeader
-@onready var _critique_display: TextEdit = $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2/CritiqueDisplay
+@onready var _critique_panel: VBoxContainer = $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ContentHBox/RightVBox
+@onready var _critique_header: Label = $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ContentHBox/RightVBox/CritiqueHeader
+@onready var _critique_display: TextEdit = $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ContentHBox/RightVBox/CritiqueDisplay
 
 # Sound (reuse parent PauseMenu sounds)
 var button_nav_sound: AudioStreamPlayer = null
@@ -239,12 +240,9 @@ func _show_detail_panel(should_show: bool):
 	if empty_label:
 		empty_label.visible = not should_show
 
-	# Always hide critique when hiding the panel; _update_preview handles showing it
-	if not should_show:
-		if _critique_header:
-			_critique_header.visible = false
-		if _critique_display:
-			_critique_display.visible = false
+	# Always hide critique panel when hiding the detail; _update_preview handles showing it
+	if not should_show and _critique_panel:
+		_critique_panel.visible = false
 
 # ============================================================================
 # Navigation
@@ -342,13 +340,12 @@ func _update_preview(data: Dictionary):
 	name_input.text = data.get("name", "")
 	statement_input.text = data.get("artist_statement", "")
 
-	# Show critique for SHIPPED paintings that have one
+	# Show critique panel (right column) only for SHIPPED paintings that have one
 	var critique = data.get("critique", "")
-	if _critique_header and _critique_display:
+	if _critique_panel:
 		var show_critique = (is_shipped and critique != "")
-		_critique_header.visible = show_critique
-		_critique_display.visible = show_critique
-		if show_critique:
+		_critique_panel.visible = show_critique
+		if show_critique and _critique_display:
 			_critique_display.text = critique
 
 # ============================================================================

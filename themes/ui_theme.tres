@@ -83,6 +83,7 @@ border_width_top = 3
 border_width_right = 3
 border_width_bottom = 3
 border_color = Color(0.701188, 0.43148756, 0.07110313, 1)
+shadow_size = 16
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gfhtu"]
 bg_color = Color(0.6, 0.6, 0.6, 0.38039216)
@@ -146,7 +147,7 @@ axis_stretch_horizontal = 1
 
 [resource]
 default_font = ExtResource("1_xxbg1")
-default_font_size = 47
+default_font_size = 32
 Button/colors/font_color = Color(0.875, 0.875, 0.875, 1)
 Button/colors/font_disabled_color = Color(0.875, 0.875, 0.875, 0.5)
 Button/colors/font_focus_color = Color(2.887845e-06, 0.9824384, 0.7705699, 1)
@@ -179,7 +180,7 @@ LineEdit/colors/selection_color = Color(0.18127888, 1, 0.82361966, 1)
 LineEdit/constants/caret_width = 10
 LineEdit/constants/minimum_character_width = 4
 LineEdit/constants/outline_size = 32
-LineEdit/font_sizes/font_size = 72
+LineEdit/font_sizes/font_size = 42
 LineEdit/styles/focus = SubResource("StyleBoxFlat_j8bgu")
 LineEdit/styles/normal = SubResource("StyleBoxFlat_rnfg8")
 LineEdit/styles/read_only = SubResource("StyleBoxFlat_ku3ou")
@@ -206,7 +207,7 @@ TextEdit/colors/font_readonly_color = Color(0.9314108, 0.8432826, 0.9239321, 1)
 TextEdit/constants/caret_width = 8
 TextEdit/constants/line_spacing = -13
 TextEdit/constants/outline_size = 17
-TextEdit/font_sizes/font_size = 52
+TextEdit/font_sizes/font_size = 32
 VScrollBar/constants/padding_left = 3
 VScrollBar/constants/padding_right = 5
 VScrollBar/styles/grabber = SubResource("StyleBoxTexture_l5g8p")
