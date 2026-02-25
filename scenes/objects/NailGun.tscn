@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://ctu3xtbhbgtub"]
+[gd_scene format=3 uid="uid://ctu3xtbhbgtub"]
 
 [ext_resource type="Script" uid="uid://e8axlibrd18j" path="res://scripts/components/NailGunComponent.gd" id="1_nailgun"]
 [ext_resource type="Script" uid="uid://cbwg344irqecy" path="res://scripts/components/CarryableComponent.gd" id="2_tih70"]
@@ -88,15 +88,16 @@ _data = {
 &"shoot": SubResource("Animation_sgy3n")
 }
 
-[node name="NailGun" type="RigidBody3D"]
+[node name="NailGun" type="RigidBody3D" unique_id=2070673259]
 collision_layer = 8
 collision_mask = 2
-mass = 2.0
+mass = 0.174
+gravity_scale = 5.081
 continuous_cd = true
 contact_monitor = true
 max_contacts_reported = 4
 
-[node name="NailGunComponent" type="Node3D" parent="."]
+[node name="NailGunComponent" type="Node3D" parent="." unique_id=955614081]
 script = ExtResource("1_nailgun")
 nail_scene = ExtResource("4_wallnail")
 projectile_nail_scene = ExtResource("5_projectilenail")
@@ -104,23 +105,21 @@ equipped_position = Vector3(0.18, 0, -0.1)
 equipped_rotation = Vector3(0, 20, 0)
 shoot_sound = ExtResource("4_7rh32")
 
-[node name="CarryableComponent" type="Node3D" parent="."]
+[node name="CarryableComponent" type="Node3D" parent="." unique_id=498251370]
 script = ExtResource("2_tih70")
 throw_power = 5.0
 drop_power = 0.5
 metadata/_custom_type_script = "uid://cbwg344irqecy"
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1862356627]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.009521484, -0.040725708, -0.012268066)
 shape = SubResource("BoxShape3D_7rh32")
 
-[node name="model" parent="." instance=ExtResource("3_83it2")]
+[node name="model" parent="." unique_id=1915446110 instance=ExtResource("3_83it2")]
 transform = Transform3D(0.08000001, 0, 0, 0, 0.08, 0, 0, 0, 0.08000001, 0, 0, 0)
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="model"]
-libraries = {
-&"": SubResource("AnimationLibrary_sgy3n")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="model" unique_id=1834809230]
+libraries/ = SubResource("AnimationLibrary_sgy3n")
 
-[node name="nail_spawn" type="Marker3D" parent="."]
+[node name="nail_spawn" type="Marker3D" parent="." unique_id=829318636]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3648618, 0.18065749, -0.087259084)

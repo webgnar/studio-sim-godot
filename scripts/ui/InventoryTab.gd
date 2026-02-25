@@ -32,6 +32,8 @@ var input_cooldown: float = 0.0
 var input_cooldown_time: float = 0.15
 var _last_input_was_gamepad: bool = false
 var _steam_editing_field: Control = null  # tracks which field the Steam keyboard is editing
+var _current_is_shipped: bool = false
+var _detail_col: int = 0  # 0=left (statement), 1=right (critique) — shipped only
 
 @onready var _critique_panel: VBoxContainer = $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ContentHBox/RightVBox
 @onready var _critique_header: Label = $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ContentHBox/RightVBox/CritiqueHeader
@@ -147,6 +149,10 @@ func _handle_painting_list_input(event):
 
 func _handle_detail_panel_input(event):
 	"""Handle input when navigating the detail panel"""
+	if _current_is_shipped:
+		_handle_shipped_detail_input(event)
+		return
+
 	var viewport = get_viewport()
 
 	if event.is_action_pressed("ui_down") or event.is_action_pressed("move_back"):
@@ -181,6 +187,62 @@ func _handle_detail_panel_input(event):
 
 	if event.is_action_pressed("go_back"):
 		_exit_detail_mode()
+		viewport.set_input_as_handled()
+		return
+
+func _handle_shipped_detail_input(event):
+	"""Handle input for shipped (read-only) paintings.
+	Left/right switches between statement (left) and critique (right).
+	Up/down scrolls the focused TextEdit if its content overflows."""
+	var viewport = get_viewport()
+	var has_right_col = _critique_panel != null and _critique_panel.visible
+
+	# Right: switch to critique column
+	if event.is_action_pressed("move_right") or event.is_action_pressed("ui_right"):
+		if input_cooldown <= 0 and has_right_col and _detail_col == 0:
+			_detail_col = 1
+			_update_detail_focus()
+			input_cooldown = input_cooldown_time
+			if button_nav_sound:
+				button_nav_sound.play()
+		viewport.set_input_as_handled()
+		return
+
+	# Left: switch to statement column, or exit back to painting list
+	if event.is_action_pressed("move_left") or event.is_action_pressed("ui_left"):
+		if input_cooldown <= 0:
+			if _detail_col == 1:
+				_detail_col = 0
+				_update_detail_focus()
+				if button_nav_sound:
+					button_nav_sound.play()
+			else:
+				_exit_detail_mode()
+			input_cooldown = input_cooldown_time
+		viewport.set_input_as_handled()
+		return
+
+	if event.is_action_pressed("go_back"):
+		_exit_detail_mode()
+		viewport.set_input_as_handled()
+		return
+
+	# Up/down: scroll the focused TextEdit (only if it actually overflows)
+	var focused_te: TextEdit = statement_input if _detail_col == 0 else _critique_display
+	if focused_te == null or not _text_overflows(focused_te):
+		return
+
+	if event.is_action_pressed("ui_down") or event.is_action_pressed("move_back"):
+		if input_cooldown <= 0:
+			focused_te.scroll_vertical += 1
+			input_cooldown = input_cooldown_time * 0.5
+		viewport.set_input_as_handled()
+		return
+
+	if event.is_action_pressed("ui_up") or event.is_action_pressed("move_forward"):
+		if input_cooldown <= 0:
+			focused_te.scroll_vertical -= 1
+			input_cooldown = input_cooldown_time * 0.5
 		viewport.set_input_as_handled()
 		return
 
@@ -332,6 +394,8 @@ func _update_preview(data: Dictionary):
 
 	# For SHIPPED paintings, make fields read-only
 	var is_shipped = (status == "SHIPPED")
+	_current_is_shipped = is_shipped
+	_detail_col = 0
 	name_input.editable = not is_shipped
 	statement_input.editable = not is_shipped
 	save_button.visible = not is_shipped
@@ -356,6 +420,7 @@ func _enter_detail_mode():
 	"""Enter the detail panel navigation mode"""
 	nav_mode = NavMode.DETAIL_PANEL
 	detail_focus_index = 0
+	_detail_col = 0
 	_update_detail_focus()
 	if button_hit_sound:
 		button_hit_sound.play()
@@ -382,6 +447,12 @@ func _update_detail_focus():
 	Text fields are NOT given focus during navigation (that would let stray keys type into them).
 	Focus is only granted when entering editing mode via _enter_text_editing()."""
 	_clear_detail_focus()
+	if _current_is_shipped:
+		if _detail_col == 0:
+			statement_input.modulate = Color(1.2, 1.2, 1.0, 1.0)
+		elif _critique_display:
+			_critique_display.modulate = Color(1.2, 1.2, 1.0, 1.0)
+		return
 	match detail_focus_index:
 		0:
 			name_input.modulate = Color(1.2, 1.2, 1.0, 1.0)
@@ -397,6 +468,13 @@ func _clear_detail_focus():
 	statement_input.release_focus()
 	statement_input.modulate = Color.WHITE
 	save_button.release_focus()
+	if _critique_display:
+		_critique_display.modulate = Color.WHITE
+
+func _text_overflows(te: TextEdit) -> bool:
+	"""Returns true if the TextEdit content is tall enough to require scrolling"""
+	var bar = te.get_v_scroll_bar()
+	return bar.max_value > bar.page
 
 func _activate_detail_item():
 	"""Activate the currently focused detail item"""

@@ -28,7 +28,7 @@ layout_mode = 2
 
 [node name="TitleLabel" type="Label" parent="HBoxContainer/LeftPanel" unique_id=1178948721]
 layout_mode = 2
-text = "MY PAINTINGS"
+text = "YOUR PAINTINGS"
 horizontal_alignment = 1
 
 [node name="ScrollContainer" type="ScrollContainer" parent="HBoxContainer/LeftPanel" unique_id=969415548]
@@ -43,6 +43,10 @@ theme_override_constants/separation = 10
 
 [node name="StatsLabel" type="Label" parent="HBoxContainer/LeftPanel" unique_id=484737731]
 layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.16078432, 0.43529412, 1)
+theme_override_colors/font_shadow_color = Color(0.90509945, 0.9050992, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 48
 text = "Paintings: 3"
 
 [node name="RightPanel" type="VBoxContainer" parent="HBoxContainer" unique_id=748231515]

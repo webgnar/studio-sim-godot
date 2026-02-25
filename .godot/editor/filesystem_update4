@@ -15,3 +15,4 @@ res://scenes/UI/OptionsMenu.tscn
 res://scripts/OptionsMenu.gd
 res://scenes/UI/PaintingCard.tscn
 res://scripts/ui/PaintingCard.gd
+res://scenes/objects/NailGun.tscn
