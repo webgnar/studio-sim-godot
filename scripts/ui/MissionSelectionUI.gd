@@ -2,9 +2,7 @@ extends Control
 class_name MissionSelectionUI
 
 ## UI for browsing and selecting painting missions
-## Can be standalone or embedded inside PauseMenu
-
-@export var is_embedded: bool = false
+## Embedded inside PauseMenu (CommissionsContent)
 
 @export_group("Completion Colors")
 @export var completed_color: Color = Color(0.4, 1.0, 0.4)
@@ -17,29 +15,22 @@ const MissionCardScene = preload("res://scenes/UI/MissionCard.tscn")
 const StartMissionIcon = preload("res://sprites/ui/startmission.png")
 const AbortMissionIcon = preload("res://sprites/ui/abortmission.png")
 
-@onready var dialog = $Dialog
-@onready var scroll_container = $Dialog/MarginContainer/HBoxContainer/LeftPanel/ScrollContainer
-@onready var mission_list_container = $Dialog/MarginContainer/HBoxContainer/LeftPanel/ScrollContainer/MissionList
-@onready var preview_image = $Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/PreviewImage
-@onready var mission_title = $Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/MissionTitle
-@onready var mission_description = $Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/DescriptionLabel
-@onready var difficulty_label = $Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/DifficultyLabel
-@onready var completion_label = $Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/CompletionLabel
-@onready var view_results_button = $Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ButtonContainer/ViewResultsButton
-@onready var start_button = $Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ButtonContainer/StartButton
-@onready var completed_missions_label = $Dialog/MarginContainer/HBoxContainer/LeftPanel/StatsPanel/MarginContainer/VBoxContainer/CompletedMissionsLabel
-@onready var paintings_created_label = $Dialog/MarginContainer/HBoxContainer/LeftPanel/StatsPanel/MarginContainer/VBoxContainer/PaintingsCreatedLabel
-@onready var confirmation_dialog = $ConfirmationDialog
-@onready var open_menu_sound = $OpenMenuSound
-@onready var close_menu_sound = $CloseMenuSound
-@onready var button_nav_sound = $ButtonNavSound
-@onready var button_hit_sound = $ButtonHitSound
+@onready var scroll_container = $MarginContainer/HBoxContainer/LeftPanel/ScrollContainer
+@onready var mission_list_container = $MarginContainer/HBoxContainer/LeftPanel/ScrollContainer/MissionList
+@onready var preview_image = $MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/PreviewImage
+@onready var mission_title = $MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/MissionTitle
+@onready var mission_description = $MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/DescriptionLabel
+@onready var difficulty_label = $MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/DifficultyLabel
+@onready var completion_label = $MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/CompletionLabel
+@onready var view_results_button = $MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ButtonContainer/ViewResultsButton
+@onready var start_button = $MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ButtonContainer/StartButton
+@onready var completed_missions_label = $MarginContainer/HBoxContainer/LeftPanel/StatsPanel/MarginContainer/VBoxContainer/CompletedMissionsLabel
 
 # Preview content container (the normal mission detail view)
-@onready var preview_content = $Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer
+@onready var preview_content = $MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer
 
 # Results display component
-@onready var results_display: MissionResultsDisplay = $Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/MissionResultsDisplay
+@onready var results_display: MissionResultsDisplay = $MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/MissionResultsDisplay
 
 var selected_mission: PaintingMission = null
 var selected_index: int = 0
@@ -57,6 +48,10 @@ var input_cooldown_time: float = 0.15
 # Results view state
 var showing_results: bool = false
 
+# Sound (reuse parent PauseMenu sounds)
+var button_nav_sound: AudioStreamPlayer = null
+var button_hit_sound: AudioStreamPlayer = null
+
 func _ready():
 	# Connect button signals
 	view_results_button.pressed.connect(_on_view_results)
@@ -69,28 +64,23 @@ func _ready():
 	# Setup preview button navigation array (View Results, Start)
 	preview_buttons = [view_results_button, start_button]
 
-	# Hide dialog initially
-	dialog.visible = false
-
-	# Register with UIManager (only if standalone, not embedded in PauseMenu)
-	if not is_embedded and UIManager:
-		UIManager.register_screen("mission_selection", self)
-
-	# Connect to PaintingSpawner
-	if PaintingSpawner:
-		PaintingSpawner.painting_created.connect(_on_painting_created)
-
 	# Set up focus navigation
 	_setup_focus_navigation()
 
 	# Update stats display
 	_update_stats_display()
 
+	# Find sounds from parent PauseMenu
+	var pause_menu = _find_parent_pause_menu()
+	if pause_menu:
+		button_nav_sound = pause_menu.get_node_or_null("ButtonNavSound")
+		button_hit_sound = pause_menu.get_node_or_null("ButtonHitSound")
+
 	# Disable input processing by default (PauseMenu manages activation via process_mode)
 	process_mode = Node.PROCESS_MODE_DISABLED
 
 func _process(delta):
-	if not dialog.visible:
+	if not visible:
 		return
 
 	# Update input cooldown
@@ -98,8 +88,8 @@ func _process(delta):
 		input_cooldown -= delta
 
 func _input(event):
-	# Only handle input when dialog is visible
-	if not dialog.visible:
+	# Only handle input when visible
+	if not visible:
 		return
 
 	# Only process keyboard/gamepad input when enabled (mouse works via gui_input signals)
@@ -115,24 +105,12 @@ func _input(event):
 		_handle_results_input(event, viewport)
 		return
 
-	# Start button closes menu entirely (even when embedded, PauseMenu handles start separately)
-	if event.is_action_pressed("start") and not is_embedded:
-		if nav_mode == NavMode.PREVIEW_BUTTONS:
-			_exit_preview_mode()
-		else:
-			_close_dialog()
-		viewport.set_input_as_handled()
-		return
-
-	# go_back navigates back through nav modes; when embedded, stop at MISSION_LIST
+	# go_back navigates back through nav modes; stop at MISSION_LIST and let PauseMenu handle it
 	if event.is_action_pressed("go_back"):
 		if nav_mode == NavMode.PREVIEW_BUTTONS:
 			_exit_preview_mode()
 			viewport.set_input_as_handled()
-		elif not is_embedded:
-			_close_dialog()
-			viewport.set_input_as_handled()
-		# When embedded and in MISSION_LIST, don't consume - let PauseMenu handle it
+		# When in MISSION_LIST, don't consume - let PauseMenu handle it (return to tab bar)
 		return
 
 	# Handle input based on navigation mode
@@ -349,16 +327,11 @@ func _setup_focus_navigation():
 	start_button.focus_neighbor_left = start_button.get_path_to(view_results_button)
 	start_button.focus_previous = start_button.get_path_to(view_results_button)
 
-func _open_dialog():
-	"""Show the mission selection dialog"""
+func activate():
+	"""Called when the commissions tab becomes active (called by PauseMenu)"""
 	if not MissionManager:
 		push_error("MissionSelectionUI: MissionManager not found!")
 		return
-
-	# Disable painting system input while dialog is open
-	var painting_system = PaintingModeManager.painting_system_2d
-	if painting_system:
-		painting_system.set_input_enabled(false)
 
 	# Reset navigation mode to mission list
 	nav_mode = NavMode.MISSION_LIST
@@ -367,31 +340,18 @@ func _open_dialog():
 	# Make sure we're showing the preview, not results
 	_hide_results_view()
 
-	# Enable keyboard nav (standalone always has it; embedded waits for PauseMenu)
-	if not is_embedded:
-		keyboard_nav_enabled = true
-
 	# Reset input cooldown
 	input_cooldown = 0.0
 
 	# Populate mission list
 	_populate_mission_list()
 
-	# Show dialog
-	dialog.visible = true
-
-	# Play menu open sound (skip when embedded - PauseMenu handles sounds)
-	if open_menu_sound and not is_embedded:
-		open_menu_sound.play()
-
-	# Disable player input
-	if CameraManager:
-		CameraManager.set_player_input(false)
+	# Update stats
+	_update_stats_display()
 
 	# Select current mission if there is one, otherwise select first mission
 	if MissionManager.available_missions.size() > 0:
 		if MissionManager.current_mission:
-			# Find the index of the current mission
 			for i in range(MissionManager.available_missions.size()):
 				if MissionManager.available_missions[i] == MissionManager.current_mission:
 					selected_index = i
@@ -401,34 +361,15 @@ func _open_dialog():
 		_update_selection()
 
 func show_screen():
-	"""Show the mission selection screen (called by UIManager)"""
-	_open_dialog()
-	_update_stats_display()
+	"""Show the mission selection screen (called by UIManager or PauseMenu)"""
+	activate()
 
 func hide_screen():
 	"""Hide the mission selection screen (called by UIManager)"""
-	dialog.visible = false
-
 	# Re-enable painting system input
 	var painting_system = PaintingModeManager.painting_system_2d
 	if painting_system:
 		painting_system.set_input_enabled(true)
-
-func _close_dialog():
-	"""Hide the dialog and return to gameplay"""
-	if is_embedded:
-		return  # PauseMenu handles closing
-
-	# Play menu close sound
-	if close_menu_sound:
-		close_menu_sound.play()
-
-	# Reset navigation mode
-	nav_mode = NavMode.MISSION_LIST
-	_clear_button_focus()
-
-	if UIManager:
-		UIManager.change_state(UIManager.GameState.GAMEPLAY)
 
 func _populate_mission_list():
 	"""Create mission cards for all available missions"""
@@ -437,19 +378,14 @@ func _populate_mission_list():
 		child.queue_free()
 	mission_cards.clear()
 
-	# Create a card for each mission
+	# add_child before setup so @onready vars are resolved when setup() runs
 	for i in range(MissionManager.available_missions.size()):
 		var mission = MissionManager.available_missions[i]
-		var card = _create_mission_card(mission, i)
+		var card = MissionCardScene.instantiate() as MissionCard
 		mission_list_container.add_child(card)
+		card.setup(mission, i)
+		card.card_clicked.connect(_on_card_clicked)
 		mission_cards.append(card)
-
-func _create_mission_card(mission: PaintingMission, index: int) -> MissionCard:
-	"""Create a visual card for a mission"""
-	var card = MissionCardScene.instantiate() as MissionCard
-	card.setup(mission, index)
-	card.card_clicked.connect(_on_card_clicked)
-	return card
 
 func _on_card_clicked(index: int):
 	"""Handle mission card click"""
@@ -461,10 +397,9 @@ func _on_card_clicked(index: int):
 		_hide_results_view()
 
 	# Notify parent PauseMenu to enter TAB_CONTENT mode (mouse entry)
-	if is_embedded:
-		var pause_menu = _find_parent_pause_menu()
-		if pause_menu and pause_menu.nav_mode == PauseMenuUI.NavMode.TAB_BAR:
-			pause_menu._enter_tab_content_mode(true)
+	var pause_menu = _find_parent_pause_menu()
+	if pause_menu and pause_menu.nav_mode == PauseMenuUI.NavMode.TAB_BAR:
+		pause_menu._enter_tab_content_mode(true)
 
 func _select_next_mission():
 	"""Select the next mission in the list (clamped, no wrapping)"""
@@ -644,7 +579,11 @@ func _on_results_retry(mission: PaintingMission):
 	nav_mode = NavMode.MISSION_LIST
 	_clear_button_focus()
 	_hide_results_view()
-	dialog.visible = false
+
+	# Close the pause menu
+	var pause_menu = _find_parent_pause_menu()
+	if pause_menu:
+		pause_menu._close_menu()
 
 func _on_results_back():
 	"""Return to mission preview from results view"""
@@ -676,10 +615,14 @@ func _on_start_or_abort_mission():
 	MissionManager.start_mission(selected_mission)
 	painting_system.start_mission(selected_mission)
 
-	# Reset navigation mode and hide dialog
+	# Reset navigation mode
 	nav_mode = NavMode.MISSION_LIST
 	_clear_button_focus()
-	dialog.visible = false
+
+	# Close the pause menu
+	var pause_menu = _find_parent_pause_menu()
+	if pause_menu:
+		pause_menu._close_menu()
 
 	print("MissionSelectionUI: Starting mission '%s'" % selected_mission.title)
 
@@ -691,7 +634,7 @@ func _abort_mission_immediate():
 	# Abort the mission (this will emit mission_aborted signal and clear current_mission)
 	MissionManager.abort_mission()
 
-	# Reset navigation mode and close dialog
+	# Reset navigation mode and close menu
 	nav_mode = NavMode.MISSION_LIST
 	_clear_button_focus()
 
@@ -701,17 +644,10 @@ func _abort_mission_immediate():
 
 	print("MissionSelectionUI: Mission aborted")
 
-func _on_painting_created(_count: int):
-	"""Update stats display when a painting is created"""
-	_update_stats_display()
-
 func _update_stats_display():
-	"""Update mission completion statistics"""
+	"""Update commission completion statistics"""
 	if UIManager and completed_missions_label:
-		completed_missions_label.text = tr("Missions Completed: %d") % UIManager.missions_completed
-
-	if PaintingSpawner and paintings_created_label:
-		paintings_created_label.text = tr("Paintings Created: %d") % PaintingSpawner.paintings_created
+		completed_missions_label.text = tr("Commissions Completed: %d") % UIManager.missions_completed
 
 func _find_parent_pause_menu() -> Node:
 	"""Find the PauseMenu parent node"""

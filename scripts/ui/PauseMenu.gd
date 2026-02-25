@@ -380,9 +380,8 @@ func _hide_all_tab_content():
 	inventory_content.visible = false
 	options_content.visible = false
 
-	# Disable input and hide internal content
+	# Disable input processing
 	if mission_selection_ui:
-		mission_selection_ui.dialog.visible = false
 		mission_selection_ui.process_mode = Node.PROCESS_MODE_DISABLED
 	if inventory_tab:
 		inventory_tab.process_mode = Node.PROCESS_MODE_DISABLED
@@ -396,7 +395,7 @@ func _show_tab_content(tab: Tab):
 		Tab.COMMISSIONS:
 			commissions_content.visible = true
 			if mission_selection_ui:
-				mission_selection_ui.show_screen()
+				mission_selection_ui.activate()
 				# Enable process_mode so mouse works, but disable keyboard nav
 				mission_selection_ui.process_mode = Node.PROCESS_MODE_INHERIT
 				mission_selection_ui.keyboard_nav_enabled = false

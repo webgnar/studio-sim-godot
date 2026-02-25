@@ -3,10 +3,6 @@
 [ext_resource type="Theme" uid="uid://cbtaxh5m7udor" path="res://themes/ui_theme.tres" id="1_3lj1f"]
 [ext_resource type="Script" uid="uid://cv2b3i1u2t6le" path="res://scripts/ui/MissionSelectionUI.gd" id="1_select"]
 [ext_resource type="Texture2D" uid="uid://dgf58oxfs3km7" path="res://sprites/ui/startmission.png" id="3_startmission"]
-[ext_resource type="AudioStream" uid="uid://cobqa7fyriw4h" path="res://sounds/picotron/openmenu.ogg" id="4_openmenu"]
-[ext_resource type="AudioStream" uid="uid://cyvlgci21yq6s" path="res://sounds/picotron/closemenu.ogg" id="5_closemenu"]
-[ext_resource type="AudioStream" uid="uid://ht7rkfvqubdm" path="res://sounds/picotron/buttonnav.ogg" id="6_buttonnav"]
-[ext_resource type="AudioStream" uid="uid://dae4sj3nmur45" path="res://sounds/picotron/buttonhit.ogg" id="7_buttonhit"]
 [ext_resource type="PackedScene" uid="uid://cvtxaw8dw07fw" path="res://scenes/UI/MissionResultsDisplay.tscn" id="8_results_display"]
 
 [node name="MissionSelectionUI" type="Control" unique_id=169453292]
@@ -20,131 +16,115 @@ mouse_filter = 2
 theme = ExtResource("1_3lj1f")
 script = ExtResource("1_select")
 
-[node name="Dialog" type="PanelContainer" parent="." unique_id=1120515018]
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=140265372]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = -85.5
-offset_right = -4.0
-offset_bottom = 85.5
 grow_horizontal = 2
 grow_vertical = 2
-mouse_filter = 1
-
-[node name="MarginContainer" type="MarginContainer" parent="Dialog" unique_id=140265372]
-layout_mode = 2
 theme_override_constants/margin_left = 20
 theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 20
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Dialog/MarginContainer" unique_id=1217947802]
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer" unique_id=1217947802]
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="LeftPanel" type="VBoxContainer" parent="Dialog/MarginContainer/HBoxContainer" unique_id=1031602176]
-custom_minimum_size = Vector2(300, 0)
+[node name="LeftPanel" type="VBoxContainer" parent="MarginContainer/HBoxContainer" unique_id=1031602176]
+custom_minimum_size = Vector2(420, 0)
 layout_mode = 2
 
-[node name="TitleLabel" type="Label" parent="Dialog/MarginContainer/HBoxContainer/LeftPanel" unique_id=830121203]
+[node name="TitleLabel" type="Label" parent="MarginContainer/HBoxContainer/LeftPanel" unique_id=830121203]
 layout_mode = 2
 text = "SELECT A COMMISSION"
 horizontal_alignment = 1
 
-[node name="ScrollContainer" type="ScrollContainer" parent="Dialog/MarginContainer/HBoxContainer/LeftPanel" unique_id=1920428539]
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/HBoxContainer/LeftPanel" unique_id=1920428539]
 layout_mode = 2
 size_flags_vertical = 3
 follow_focus = true
 
-[node name="MissionList" type="VBoxContainer" parent="Dialog/MarginContainer/HBoxContainer/LeftPanel/ScrollContainer" unique_id=371204682]
+[node name="MissionList" type="VBoxContainer" parent="MarginContainer/HBoxContainer/LeftPanel/ScrollContainer" unique_id=371204682]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 10
 
-[node name="StatsPanel" type="PanelContainer" parent="Dialog/MarginContainer/HBoxContainer/LeftPanel" unique_id=584551375]
+[node name="StatsPanel" type="PanelContainer" parent="MarginContainer/HBoxContainer/LeftPanel" unique_id=584551375]
 layout_mode = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="Dialog/MarginContainer/HBoxContainer/LeftPanel/StatsPanel" unique_id=1616491581]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer/LeftPanel/StatsPanel" unique_id=1616491581]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Dialog/MarginContainer/HBoxContainer/LeftPanel/StatsPanel/MarginContainer" unique_id=426851798]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer/LeftPanel/StatsPanel/MarginContainer" unique_id=426851798]
 layout_mode = 2
 theme_override_constants/separation = 5
 
-[node name="CompletedMissionsLabel" type="Label" parent="Dialog/MarginContainer/HBoxContainer/LeftPanel/StatsPanel/MarginContainer/VBoxContainer" unique_id=551205981]
+[node name="CompletedMissionsLabel" type="Label" parent="MarginContainer/HBoxContainer/LeftPanel/StatsPanel/MarginContainer/VBoxContainer" unique_id=551205981]
 layout_mode = 2
-text = "Missions Completed: 0"
+text = "Commissions Completed: 0"
 
-[node name="PaintingsCreatedLabel" type="Label" parent="Dialog/MarginContainer/HBoxContainer/LeftPanel/StatsPanel/MarginContainer/VBoxContainer" unique_id=898404836]
-layout_mode = 2
-text = "Paintings Created: 0"
-
-[node name="RightPanel" type="VBoxContainer" parent="Dialog/MarginContainer/HBoxContainer" unique_id=534849643]
+[node name="RightPanel" type="VBoxContainer" parent="MarginContainer/HBoxContainer" unique_id=534849643]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="PreviewTitleLabel" type="Label" parent="Dialog/MarginContainer/HBoxContainer/RightPanel" unique_id=1815638343]
-layout_mode = 2
-text = "COMMISSION REQUEST"
-horizontal_alignment = 1
-
-[node name="PreviewPanel" type="PanelContainer" parent="Dialog/MarginContainer/HBoxContainer/RightPanel" unique_id=1705764080]
+[node name="PreviewPanel" type="PanelContainer" parent="MarginContainer/HBoxContainer/RightPanel" unique_id=1705764080]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="MarginContainer" type="MarginContainer" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel" unique_id=629156101]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer/RightPanel/PreviewPanel" unique_id=629156101]
 layout_mode = 2
 theme_override_constants/margin_left = 15
 theme_override_constants/margin_top = 15
 theme_override_constants/margin_right = 15
 theme_override_constants/margin_bottom = 15
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer" unique_id=1394333951]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer" unique_id=1394333951]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="MissionTitle" type="Label" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer" unique_id=911460648]
+[node name="MissionTitle" type="Label" parent="MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer" unique_id=911460648]
 layout_mode = 2
 text = "Mission Name"
 horizontal_alignment = 1
 
-[node name="PreviewImage" type="TextureRect" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer" unique_id=1538148098]
+[node name="PreviewImage" type="TextureRect" parent="MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer" unique_id=1538148098]
 custom_minimum_size = Vector2(400, 400)
 layout_mode = 2
 size_flags_vertical = 3
 expand_mode = 1
 stretch_mode = 5
 
-[node name="DescriptionLabel" type="Label" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer" unique_id=1509409673]
+[node name="DescriptionLabel" type="Label" parent="MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer" unique_id=1509409673]
 layout_mode = 2
 text = "Description..."
 autowrap_mode = 3
 
-[node name="DifficultyLabel" type="Label" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer" unique_id=27079889]
+[node name="DifficultyLabel" type="Label" parent="MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer" unique_id=27079889]
 layout_mode = 2
 text = "Difficulty: -"
 
-[node name="CompletionLabel" type="Label" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer" unique_id=799900249]
+[node name="CompletionLabel" type="Label" parent="MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer" unique_id=799900249]
 layout_mode = 2
 text = "Not completed"
 
-[node name="ButtonContainer" type="HBoxContainer" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer" unique_id=229625779]
+[node name="ButtonContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer" unique_id=229625779]
 custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
 theme_override_constants/separation = 60
 alignment = 1
 
-[node name="ViewResultsButton" type="Button" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ButtonContainer" unique_id=78812732]
+[node name="ViewResultsButton" type="Button" parent="MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ButtonContainer" unique_id=78812732]
 custom_minimum_size = Vector2(300, 150)
 layout_mode = 2
 text = "View Results"
 
-[node name="StartButton" type="Button" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ButtonContainer" unique_id=1450903185]
+[node name="StartButton" type="Button" parent="MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ButtonContainer" unique_id=1450903185]
 texture_filter = 1
 custom_minimum_size = Vector2(300, 150)
 layout_mode = 2
@@ -152,31 +132,6 @@ icon = ExtResource("3_startmission")
 icon_alignment = 1
 expand_icon = true
 
-[node name="MissionResultsDisplay" parent="Dialog/MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer" unique_id=233099724 instance=ExtResource("8_results_display")]
+[node name="MissionResultsDisplay" parent="MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer" unique_id=233099724 instance=ExtResource("8_results_display")]
 visible = false
 layout_mode = 2
-
-[node name="ConfirmationDialog" type="ConfirmationDialog" parent="." unique_id=869779821]
-oversampling_override = 1.0
-title = "Abort Mission?"
-initial_position = 2
-size = Vector2i(664, 150)
-ok_button_text = "Abort Mission"
-dialog_text = "Abort this mission? Your canvas will be saved but the mission will not be completed."
-cancel_button_text = "Continue Mission"
-
-[node name="OpenMenuSound" type="AudioStreamPlayer" parent="." unique_id=1660460066]
-stream = ExtResource("4_openmenu")
-bus = &"SFX"
-
-[node name="CloseMenuSound" type="AudioStreamPlayer" parent="." unique_id=1372624127]
-stream = ExtResource("5_closemenu")
-bus = &"SFX"
-
-[node name="ButtonNavSound" type="AudioStreamPlayer" parent="." unique_id=1603857292]
-stream = ExtResource("6_buttonnav")
-bus = &"SFX"
-
-[node name="ButtonHitSound" type="AudioStreamPlayer" parent="." unique_id=206730648]
-stream = ExtResource("7_buttonhit")
-bus = &"SFX"

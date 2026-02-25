@@ -16,3 +16,7 @@ res://scripts/OptionsMenu.gd
 res://scenes/UI/PaintingCard.tscn
 res://scripts/ui/PaintingCard.gd
 res://scenes/objects/NailGun.tscn
+res://scripts/ui/MissionSelectionUI.gd
+res://scripts/ui/PauseMenu.gd
+res://scenes/UI/MissionCard.tscn
+res://scripts/ui/MissionCard.gd
