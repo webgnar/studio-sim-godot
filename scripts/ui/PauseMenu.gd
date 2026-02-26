@@ -288,6 +288,13 @@ func open_to_painting(painting_node: CarryablePainting) -> void:
 	if open_menu_sound:
 		open_menu_sound.play()
 
+func show_mission_results(result: ValidationResult, mission: PaintingMission) -> void:
+	"""Show live results in the Commissions tab after a painting is submitted"""
+	_switch_tab(Tab.COMMISSIONS)
+	_enter_tab_content_mode()
+	if mission_selection_ui:
+		mission_selection_ui.show_live_results_for_mission(result, mission)
+
 func _close_menu():
 	"""Close the pause menu and return to gameplay"""
 	if close_menu_sound:

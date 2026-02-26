@@ -68,7 +68,6 @@
 [ext_resource type="PackedScene" uid="uid://cerojl5wo53gx" path="res://models/outside/skyscraper.gltf" id="75_qaasp"]
 [ext_resource type="PackedScene" uid="uid://c7vk8n8k7j8k8" path="res://scenes/UI/MissionAuthoringUI.tscn" id="76_author"]
 [ext_resource type="PackedScene" uid="uid://cc268ul382nus" path="res://scenes/UI/PauseMenu.tscn" id="77_pause_menu"]
-[ext_resource type="PackedScene" uid="uid://isbwb03yee7n" path="res://scenes/UI/ValidationResultUI.tscn" id="78_result"]
 [ext_resource type="PackedScene" uid="uid://cpuv8jn4hm5gn" path="res://scenes/UI/SaveNotification.tscn" id="78_save_notif"]
 [ext_resource type="PackedScene" uid="uid://bv4237ec57bk2" path="res://scenes/objects/SaveComputer.tscn" id="79_l137e"]
 [ext_resource type="PackedScene" uid="uid://db8764j2674fq" path="res://models/props/outlet_box.glb" id="79_swu3i"]
@@ -673,9 +672,6 @@ painting_system_2d = NodePath("../../PaintingRoot2d/CanvasViewport/CanvasRoot")
 [node name="GameplayUI_Layer" type="CanvasLayer" parent="." unique_id=497812470]
 
 [node name="PauseMenu" parent="GameplayUI_Layer" unique_id=1200484280 instance=ExtResource("77_pause_menu")]
-
-[node name="ValidationResultUI" parent="GameplayUI_Layer" unique_id=1071964797 instance=ExtResource("78_result")]
-theme = ExtResource("4_ygn2i")
 
 [node name="MissionHUD" parent="GameplayUI_Layer" unique_id=1077091467 instance=ExtResource("83_hud")]
 

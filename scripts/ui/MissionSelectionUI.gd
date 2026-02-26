@@ -47,6 +47,7 @@ var input_cooldown_time: float = 0.15
 
 # Results view state
 var showing_results: bool = false
+var is_showing_live_results: bool = false
 
 # Sound (reuse parent PauseMenu sounds)
 var button_nav_sound: AudioStreamPlayer = null
@@ -59,7 +60,6 @@ func _ready():
 
 	# Connect results display signals
 	results_display.retry_pressed.connect(_on_results_retry)
-	results_display.back_pressed.connect(_on_results_back)
 
 	# Setup preview button navigation array (View Results, Start)
 	preview_buttons = [view_results_button, start_button]
@@ -336,6 +336,7 @@ func activate():
 	# Reset navigation mode to mission list
 	nav_mode = NavMode.MISSION_LIST
 	_clear_button_focus()
+	is_showing_live_results = false
 
 	# Make sure we're showing the preview, not results
 	_hide_results_view()
@@ -501,32 +502,31 @@ func _update_preview_panel():
 
 	# Update completion status and buttons
 	var completion_data = MissionManager.get_mission_completion(selected_mission.mission_id)
+	var has_any_attempt = MissionManager.progression.has(selected_mission.mission_id) \
+		and (completion_data.get("latest_painting_path", "") != "" \
+			or completion_data.get("best_painting_path", "") != "")
+
 	if completion_data["completed"]:
 		completion_label.text = tr("Completed - Grade: %s (%.1f%%)") % [
 			completion_data["grade"],
 			completion_data["best_score"]
 		]
 		completion_label.modulate = completed_color
-		completion_label.visible = true
-
-		# Show View Results button
-		view_results_button.visible = true
-
-		# Enable/disable View Results based on saved painting availability
-		var has_saved_painting = completion_data.get("latest_painting_path", "") != "" or completion_data.get("best_painting_path", "") != ""
-		view_results_button.disabled = not has_saved_painting
-
-		if not has_saved_painting:
-			view_results_button.tooltip_text = "No saved painting available"
-		else:
-			view_results_button.tooltip_text = ""
-	else:
-		completion_label.text = tr("Not completed")
+	elif has_any_attempt:
+		completion_label.text = tr("Attempted - Latest: %s (%.1f%%)") % [
+			completion_data["latest_grade"],
+			completion_data["latest_score"]
+		]
 		completion_label.modulate = not_completed_color
-		completion_label.visible = true
+	else:
+		completion_label.text = tr("Not attempted")
+		completion_label.modulate = not_completed_color
+	completion_label.visible = true
 
-		# Hide View Results button
-		view_results_button.visible = false
+	# Show View Results button for any mission with a stored attempt
+	view_results_button.visible = has_any_attempt
+	view_results_button.disabled = not has_any_attempt
+	view_results_button.tooltip_text = "" if has_any_attempt else "No saved attempt available"
 
 	# Update preview image
 	if selected_mission.reference_image_path and selected_mission.reference_image_path != "":
@@ -546,16 +546,33 @@ func _on_view_results():
 		return
 
 	var completion_data = MissionManager.get_mission_completion(selected_mission.mission_id)
-	if not completion_data["completed"]:
-		return
 
+	is_showing_live_results = false
 	showing_results = true
-
-	# Swap preview content for results display
 	preview_content.visible = false
 	results_display.show_saved_results(selected_mission, completion_data)
 
 	print("MissionSelectionUI: Viewing results for mission '%s'" % selected_mission.title)
+
+func show_live_results_for_mission(result: ValidationResult, mission: PaintingMission) -> void:
+	"""Show live results immediately after submission (called by PauseMenu)"""
+	# Clear current_mission — painting has been submitted, mission is no longer active
+	if MissionManager:
+		MissionManager.current_mission = null
+
+	# Select the submitted mission in the list
+	for i in range(MissionManager.available_missions.size()):
+		if MissionManager.available_missions[i] == mission:
+			selected_index = i
+			break
+	_update_selection()
+
+	# Show live results
+	is_showing_live_results = true
+	showing_results = true
+	preview_content.visible = false
+	var painting_system = PaintingModeManager.painting_system_2d
+	results_display.show_live_results(result, mission, painting_system)
 
 func _hide_results_view():
 	"""Switch back to normal preview content"""
@@ -587,6 +604,7 @@ func _on_results_retry(mission: PaintingMission):
 
 func _on_results_back():
 	"""Return to mission preview from results view"""
+	is_showing_live_results = false
 	_hide_results_view()
 	nav_mode = NavMode.MISSION_LIST
 	_clear_button_focus()

@@ -8,7 +8,6 @@ layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_bottom = 2049.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
@@ -61,22 +60,6 @@ text = "Nice work! Commission complete."
 horizontal_alignment = 1
 autowrap_mode = 3
 
-[node name="ToggleContainer" type="HBoxContainer" parent="ScrollContainer/VBoxContainer" unique_id=1630853419]
-visible = false
-layout_mode = 2
-theme_override_constants/separation = 60
-alignment = 1
-
-[node name="ShowLatestButton" type="Button" parent="ScrollContainer/VBoxContainer/ToggleContainer" unique_id=1799154966]
-custom_minimum_size = Vector2(300, 35)
-layout_mode = 2
-text = "Show Latest"
-
-[node name="ShowBestButton" type="Button" parent="ScrollContainer/VBoxContainer/ToggleContainer" unique_id=1187300806]
-custom_minimum_size = Vector2(300, 35)
-layout_mode = 2
-text = "Show Best"
-
 [node name="ComparisonContainer" type="HBoxContainer" parent="ScrollContainer/VBoxContainer" unique_id=65937227]
 layout_mode = 2
 theme_override_constants/separation = 20
@@ -101,7 +84,7 @@ text = "Your Painting"
 horizontal_alignment = 1
 
 [node name="PlayerImage" type="TextureRect" parent="ScrollContainer/VBoxContainer/ComparisonContainer/PlayerPaintingPanel" unique_id=91488174]
-custom_minimum_size = Vector2(1000, 1000)
+custom_minimum_size = Vector2(300, 300)
 layout_mode = 2
 size_flags_vertical = 3
 expand_mode = 1
@@ -119,7 +102,7 @@ text = "Target"
 horizontal_alignment = 1
 
 [node name="TargetImage" type="TextureRect" parent="ScrollContainer/VBoxContainer/ComparisonContainer/TargetPaintingPanel" unique_id=1468647445]
-custom_minimum_size = Vector2(1000, 1000)
+custom_minimum_size = Vector2(300, 300)
 layout_mode = 2
 size_flags_vertical = 3
 expand_mode = 1
@@ -142,7 +125,7 @@ text = "Pixel Matching Analysis"
 horizontal_alignment = 1
 
 [node name="HeatmapImage" type="TextureRect" parent="ScrollContainer/VBoxContainer/HeatmapPanel" unique_id=1806998918]
-custom_minimum_size = Vector2(1000, 1000)
+custom_minimum_size = Vector2(300, 300)
 layout_mode = 2
 expand_mode = 1
 stretch_mode = 5
@@ -175,7 +158,3 @@ custom_minimum_size = Vector2(150, 50)
 layout_mode = 2
 text = "Retry"
 
-[node name="BackButton" type="Button" parent="ScrollContainer/VBoxContainer/ButtonContainer" unique_id=2130788601]
-custom_minimum_size = Vector2(150, 50)
-layout_mode = 2
-text = "Back"

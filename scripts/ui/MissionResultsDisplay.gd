@@ -6,13 +6,11 @@ class_name MissionResultsDisplay
 
 @export var swatch_size: Vector2i = Vector2i(60, 300)
 
+@onready var scroll_container: ScrollContainer = $ScrollContainer
 @onready var grade_label: Label = $ScrollContainer/VBoxContainer/ScoreHeader/GradeLabel
 @onready var score_label: Label = $ScrollContainer/VBoxContainer/ScoreHeader/ScoreLabel
 @onready var status_label: Label = $ScrollContainer/VBoxContainer/StatusLabel
 @onready var message_label: Label = $ScrollContainer/VBoxContainer/MessageLabel
-@onready var toggle_container: HBoxContainer = $ScrollContainer/VBoxContainer/ToggleContainer
-@onready var show_latest_button: Button = $ScrollContainer/VBoxContainer/ToggleContainer/ShowLatestButton
-@onready var show_best_button: Button = $ScrollContainer/VBoxContainer/ToggleContainer/ShowBestButton
 @onready var comparison_container: HBoxContainer = $ScrollContainer/VBoxContainer/ComparisonContainer
 @onready var player_swatch_display: TextureRect = $ScrollContainer/VBoxContainer/ComparisonContainer/PlayerSwatchDisplay
 @onready var player_image: TextureRect = $ScrollContainer/VBoxContainer/ComparisonContainer/PlayerPaintingPanel/PlayerImage
@@ -23,22 +21,52 @@ class_name MissionResultsDisplay
 @onready var visual_label: Label = $ScrollContainer/VBoxContainer/VisualLabel
 @onready var color_label: Label = $ScrollContainer/VBoxContainer/ColorLabel
 @onready var retry_button: Button = $ScrollContainer/VBoxContainer/ButtonContainer/RetryButton
-@onready var back_button: Button = $ScrollContainer/VBoxContainer/ButtonContainer/BackButton
 
 var current_mission: PaintingMission = null
-var showing_latest: bool = true
+var _retry_button_selected: bool = false
 
 signal retry_pressed(mission: PaintingMission)
-signal back_pressed()
 
 func _ready():
 	retry_button.pressed.connect(func(): retry_pressed.emit(current_mission))
-	back_button.pressed.connect(func(): back_pressed.emit())
-	show_latest_button.pressed.connect(_on_show_latest)
-	show_best_button.pressed.connect(_on_show_best)
+
+func _input(event: InputEvent) -> void:
+	if not visible:
+		return
+	var viewport = get_viewport()
+
+	if event.is_action_pressed("ui_up") or event.is_action_pressed("move_forward"):
+		if _retry_button_selected:
+			_retry_button_selected = false
+			_update_retry_highlight()
+		else:
+			scroll_container.scroll_vertical -= 100
+		viewport.set_input_as_handled()
+
+	elif event.is_action_pressed("ui_down") or event.is_action_pressed("move_back"):
+		var scroll_bar = scroll_container.get_v_scroll_bar()
+		var at_bottom = scroll_container.scroll_vertical >= scroll_bar.max_value - scroll_container.size.y
+		if not _retry_button_selected and at_bottom:
+			_retry_button_selected = true
+			_update_retry_highlight()
+		elif not _retry_button_selected:
+			scroll_container.scroll_vertical += 100
+		viewport.set_input_as_handled()
+
+	elif event.is_action_pressed("jump") or event.is_action_pressed("ui_accept"):
+		if _retry_button_selected and retry_button.visible:
+			retry_pressed.emit(current_mission)
+			viewport.set_input_as_handled()
+	# go_back: intentionally NOT consumed — MissionSelectionUI handles it
+
+func _update_retry_highlight():
+	retry_button.modulate = Color(1.2, 1.2, 1.0) if _retry_button_selected else Color(1, 1, 1)
 
 func show_live_results(result: ValidationResult, mission: PaintingMission, painting_system: PaintingSystem2D):
 	current_mission = mission
+	_retry_button_selected = false
+	_update_retry_highlight()
+	scroll_container.scroll_vertical = 0
 
 	# Grade and score
 	var grade = result.get_grade()
@@ -59,9 +87,6 @@ func show_live_results(result: ValidationResult, mission: PaintingMission, paint
 	else:
 		message_label.visible = false
 
-	# Hide saved-results toggle
-	toggle_container.visible = false
-
 	# Comparison images
 	_display_live_comparison(mission, painting_system)
 	_display_analysis(result)
@@ -73,18 +98,16 @@ func show_live_results(result: ValidationResult, mission: PaintingMission, paint
 	color_label.text = tr("Color Field: %.1f%% (weight: 70%%)") % result.color_distribution_score
 
 	visible = true
-	retry_button.grab_focus()
 
 func show_saved_results(mission: PaintingMission, completion_data: Dictionary):
 	current_mission = mission
-	showing_latest = true
+	_retry_button_selected = false
+	_update_retry_highlight()
+	scroll_container.scroll_vertical = 0
 
 	message_label.visible = false
 
-	# Show saved-results toggle
-	toggle_container.visible = true
-
-	# Display scores and analysis images for current view (latest by default)
+	# Display scores and analysis images (always latest)
 	_update_saved_display(completion_data)
 
 	# Load target image
@@ -99,28 +122,19 @@ func show_saved_results(mission: PaintingMission, completion_data: Dictionary):
 
 	comparison_container.visible = true
 	visible = true
-	back_button.grab_focus()
 
 func _update_saved_display(completion_data: Dictionary):
-	var prefix = "latest" if showing_latest else "best"
-	if showing_latest:
-		grade_label.text = completion_data.get("latest_grade", completion_data["grade"])
-		score_label.text = tr("Score: %.1f%%") % completion_data.get("latest_score", completion_data["best_score"])
-		status_label.text = "Latest Attempt"
-		visual_label.text = tr("Precision: %.1f%% (weight: 30%%)") % completion_data.get("latest_visual_match", 0.0)
-		color_label.text = tr("Color Field: %.1f%% (weight: 70%%)") % completion_data.get("latest_color_distribution", 0.0)
-	else:
-		grade_label.text = completion_data["grade"]
-		score_label.text = tr("Score: %.1f%%") % completion_data["best_score"]
-		status_label.text = "Best Attempt"
-		visual_label.text = tr("Precision: %.1f%% (weight: 30%%)") % completion_data.get("visual_match", 0.0)
-		color_label.text = tr("Color Field: %.1f%% (weight: 70%%)") % completion_data.get("color_distribution", 0.0)
+	grade_label.text = completion_data.get("latest_grade", completion_data["grade"])
+	score_label.text = tr("Score: %.1f%%") % completion_data.get("latest_score", completion_data["best_score"])
+	status_label.text = "Latest Attempt"
 	status_label.visible = true
+	visual_label.text = tr("Precision: %.1f%% (weight: 30%%)") % completion_data.get("latest_visual_match", 0.0)
+	color_label.text = tr("Color Field: %.1f%% (weight: 70%%)") % completion_data.get("latest_color_distribution", 0.0)
 	visual_label.visible = true
 	color_label.visible = true
 
-	# Load saved heatmap
-	var heatmap_path = completion_data.get(prefix + "_heatmap_path", "")
+	# Load saved heatmap (always latest)
+	var heatmap_path = completion_data.get("latest_heatmap_path", "")
 	if heatmap_path != "" and FileAccess.file_exists(heatmap_path):
 		var img = Image.load_from_file(heatmap_path)
 		if img:
@@ -131,8 +145,8 @@ func _update_saved_display(completion_data: Dictionary):
 	else:
 		heatmap_panel.visible = false
 
-	# Load saved player swatch
-	var player_swatch_path = completion_data.get(prefix + "_player_swatch_path", "")
+	# Load saved player swatch (always latest)
+	var player_swatch_path = completion_data.get("latest_player_swatch_path", "")
 	if player_swatch_path != "" and FileAccess.file_exists(player_swatch_path):
 		var img = Image.load_from_file(player_swatch_path)
 		if img:
@@ -143,7 +157,7 @@ func _update_saved_display(completion_data: Dictionary):
 	else:
 		player_swatch_display.visible = false
 
-	# Load saved reference swatch (same for both latest/best)
+	# Load saved reference swatch (same for all attempts)
 	var ref_swatch_path = completion_data.get("ref_swatch_path", "")
 	if ref_swatch_path != "" and FileAccess.file_exists(ref_swatch_path):
 		var img = Image.load_from_file(ref_swatch_path)
@@ -212,34 +226,10 @@ func _display_analysis(result: ValidationResult):
 		reference_swatch_display.visible = false
 
 func _load_saved_painting(completion_data: Dictionary):
-	var painting_path = ""
-	if showing_latest:
-		painting_path = completion_data.get("latest_painting_path", "")
-	else:
-		painting_path = completion_data.get("best_painting_path", "")
-
+	var painting_path = completion_data.get("latest_painting_path", "")
 	if painting_path != "" and FileAccess.file_exists(painting_path):
 		var image = Image.load_from_file(painting_path)
 		if image:
 			player_image.texture = ImageTexture.create_from_image(image)
 			return
-
 	player_image.texture = null
-
-func _on_show_latest():
-	if showing_latest:
-		return
-	showing_latest = true
-	if current_mission:
-		var completion_data = MissionManager.get_mission_completion(current_mission.mission_id)
-		_update_saved_display(completion_data)
-		_load_saved_painting(completion_data)
-
-func _on_show_best():
-	if not showing_latest:
-		return
-	showing_latest = false
-	if current_mission:
-		var completion_data = MissionManager.get_mission_completion(current_mission.mission_id)
-		_update_saved_display(completion_data)
-		_load_saved_painting(completion_data)

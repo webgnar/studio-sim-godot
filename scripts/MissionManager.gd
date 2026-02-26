@@ -223,9 +223,9 @@ func complete_mission(result: ValidationResult, latest_painting_path: String = "
 
 	save_progression()
 
-	# Transition to VALIDATION state
+	# Transition to PAUSE_MENU state to show results inline
 	if UIManager:
-		UIManager.change_state(UIManager.GameState.VALIDATION)
+		UIManager.change_state(UIManager.GameState.PAUSE_MENU)
 
 func abort_mission():
 	"""Abort the current mission without saving progress"""

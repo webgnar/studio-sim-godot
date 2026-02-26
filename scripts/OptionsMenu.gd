@@ -235,9 +235,10 @@ func _input(event):
 					if _in_controls_scroll:
 						var sb = controls_scroll_container.get_v_scroll_bar()
 						if controls_scroll_container.scroll_vertical >= sb.max_value - sb.page:
-							_in_controls_scroll = false
 							if is_embedded:
+								_in_controls_scroll = false
 								return
+							# Standalone: keep _in_controls_scroll = true so UP can scroll back up
 						else:
 							controls_scroll_container.scroll_vertical += CONTROLS_SCROLL_STEP
 							if button_nav_sound:

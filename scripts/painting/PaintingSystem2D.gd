@@ -895,12 +895,11 @@ func submit_painting():
 	# Save the result to mission manager with painting paths
 	MissionManager.complete_mission(result, latest_path, best_path, analysis_paths)
 
-	# Find and show the validation result UI
-	var validation_ui = _find_validation_ui()
-	if validation_ui:
-		validation_ui.show_results(result, MissionManager.current_mission)
+	# Show results inside the pause menu (Commissions tab)
+	if UIManager.pause_menu and UIManager.pause_menu.has_method("show_mission_results"):
+		UIManager.pause_menu.show_mission_results(result, MissionManager.current_mission)
 	else:
-		push_error("PaintingSystem2D: Could not find ValidationResultUI!")
+		push_error("PaintingSystem2D: Could not find PauseMenu to show results!")
 		print("Validation result: %s, Score: %.1f%%" % [result.get_grade(), result.match_percentage])
 
 func _save_analysis_images(mission_id: String, result: ValidationResult, is_new_best: bool) -> Dictionary:
@@ -945,20 +944,3 @@ func _save_analysis_images(mission_id: String, result: ValidationResult, is_new_
 			paths["ref_swatch_path"] = ref_swatch_path
 
 	return paths
-
-func _find_validation_ui() -> ValidationResultUI:
-	"""Find the ValidationResultUI in the scene tree"""
-	var root = get_tree().root
-	return _search_for_validation_ui(root)
-
-func _search_for_validation_ui(node: Node) -> ValidationResultUI:
-	"""Recursively search for ValidationResultUI"""
-	if node is ValidationResultUI:
-		return node
-
-	for child in node.get_children():
-		var result = _search_for_validation_ui(child)
-		if result:
-			return result
-
-	return null

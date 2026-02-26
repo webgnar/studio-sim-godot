@@ -20,3 +20,8 @@ res://scripts/ui/MissionSelectionUI.gd
 res://scripts/ui/PauseMenu.gd
 res://scenes/UI/MissionCard.tscn
 res://scripts/ui/MissionCard.gd
+res://scripts/MissionManager.gd
+res://scripts/painting/PaintingSystem2D.gd
+res://scenes/UI/MissionResultsDisplay.tscn
+res://scripts/ui/MissionResultsDisplay.gd
+res://scenes/UI/HUD.tscn
