@@ -51,7 +51,16 @@ theme_override_constants/separation = 10
 [node name="TabBar" type="HBoxContainer" parent="Dialog/MarginContainer/VBoxContainer" unique_id=1992921398]
 layout_mode = 2
 theme_override_constants/separation = 50
-alignment = 1
+alignment = 0
+
+[node name="MoneyLabel" type="Label" parent="Dialog/MarginContainer/VBoxContainer/TabBar" unique_id=2010000001]
+layout_mode = 2
+size_flags_vertical = 4
+text = "$0"
+
+[node name="Spacer" type="Control" parent="Dialog/MarginContainer/VBoxContainer/TabBar" unique_id=2010000002]
+layout_mode = 2
+size_flags_horizontal = 3
 
 [node name="TextureRect" type="TextureRect" parent="Dialog/MarginContainer/VBoxContainer/TabBar" unique_id=1693687554]
 visible = false
@@ -82,6 +91,10 @@ texture = ExtResource("3_rgmlj")
 visible = false
 layout_mode = 2
 texture = ExtResource("5_adhrm")
+
+[node name="SpacerRight" type="Control" parent="Dialog/MarginContainer/VBoxContainer/TabBar" unique_id=2010000003]
+layout_mode = 2
+size_flags_horizontal = 3
 
 [node name="TabContent" type="Control" parent="Dialog/MarginContainer/VBoxContainer" unique_id=1835759430]
 layout_mode = 2

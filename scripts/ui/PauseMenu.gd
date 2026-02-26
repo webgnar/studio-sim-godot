@@ -38,6 +38,9 @@ var options_menu: Control = null
 # Key icon (placed in TabBar in scene)
 @onready var key_icon: TextureRect = $Dialog/MarginContainer/VBoxContainer/TabBar/KeyIcon
 
+# Money display (placed in TabBar in scene)
+@onready var money_label: Label = $Dialog/MarginContainer/VBoxContainer/TabBar/MoneyLabel
+
 # State
 var current_tab: Tab = Tab.COMMISSIONS
 var nav_mode: NavMode = NavMode.TAB_BAR
@@ -76,6 +79,11 @@ func _ready():
 	# Hide key icon initially
 	if key_icon:
 		key_icon.visible = false
+
+	# Connect money display
+	if EconomyManager:
+		EconomyManager.money_changed.connect(_on_money_changed)
+		_update_money_display()
 
 	# Register with UIManager
 	if UIManager:
@@ -229,6 +237,9 @@ func show_screen():
 
 	# Update key icon visibility
 	_update_key_icon()
+
+	# Refresh money display
+	_update_money_display()
 
 	# Play open sound
 	if open_menu_sound:
@@ -457,6 +468,14 @@ func _release_text_focus():
 func _update_key_icon():
 	if key_icon:
 		key_icon.visible = WorldStateManager.has_flag("studio_key")
+
+func _update_money_display():
+	if money_label and EconomyManager:
+		money_label.text = "$%d" % EconomyManager.get_money()
+
+func _on_money_changed(new_amount: int):
+	if money_label:
+		money_label.text = "$%d" % new_amount
 
 # ============================================================================
 # Child finding helpers
