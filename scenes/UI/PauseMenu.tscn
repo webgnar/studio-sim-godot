@@ -54,11 +54,12 @@ theme_override_constants/separation = 50
 alignment = 1
 
 [node name="TextureRect" type="TextureRect" parent="Dialog/MarginContainer/VBoxContainer/TabBar" unique_id=1693687554]
+visible = false
 layout_mode = 2
 texture = ExtResource("3_ecia5")
 
 [node name="CommissionsTab" type="Button" parent="Dialog/MarginContainer/VBoxContainer/TabBar" unique_id=1763618734]
-custom_minimum_size = Vector2(300, 40)
+custom_minimum_size = Vector2(300, 100)
 layout_mode = 2
 text = "COMMISSIONS"
 
@@ -78,6 +79,7 @@ size_flags_vertical = 4
 texture = ExtResource("3_rgmlj")
 
 [node name="TextureRect2" type="TextureRect" parent="Dialog/MarginContainer/VBoxContainer/TabBar" unique_id=280591683]
+visible = false
 layout_mode = 2
 texture = ExtResource("5_adhrm")
 

@@ -129,18 +129,17 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(1, 1, 1, 0.8)
 
-[node name="PaintingHint" type="VBoxContainer" parent="." unique_id=806102846]
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -356.0
-offset_top = 20.0
-offset_right = -20.0
-offset_bottom = 676.0
-grow_horizontal = 0
+[node name="PaintingHint" type="VBoxContainer" parent="." unique_id=1047929687]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = 606.89
+offset_right = 942.89014
+offset_bottom = 701.0
+grow_horizontal = 2
 theme_override_constants/separation = 4
 
-[node name="RotateLine" type="HBoxContainer" parent="PaintingHint" unique_id=1855572682]
+[node name="RotateLine" type="HBoxContainer" parent="PaintingHint" unique_id=1618512792]
 layout_mode = 2
 alignment = 2
 
@@ -154,8 +153,9 @@ stretch_mode = 5
 layout_mode = 2
 theme = ExtResource("2")
 text = " Rotate"
+horizontal_alignment = 1
 
-[node name="ScaleLine" type="HBoxContainer" parent="PaintingHint" unique_id=140751471]
+[node name="ScaleLine" type="HBoxContainer" parent="PaintingHint" unique_id=1114447611]
 layout_mode = 2
 alignment = 2
 
@@ -169,8 +169,9 @@ stretch_mode = 5
 layout_mode = 2
 theme = ExtResource("2")
 text = " Scale"
+horizontal_alignment = 1
 
-[node name="CycleLine" type="HBoxContainer" parent="PaintingHint" unique_id=1130289020]
+[node name="CycleLine" type="HBoxContainer" parent="PaintingHint" unique_id=1491883034]
 layout_mode = 2
 alignment = 2
 
@@ -184,6 +185,7 @@ stretch_mode = 5
 layout_mode = 2
 theme = ExtResource("2")
 text = " Cycle"
+horizontal_alignment = 1
 
 [node name="CycleNextIcon" type="TextureRect" parent="PaintingHint/CycleLine" unique_id=234186105]
 custom_minimum_size = Vector2(20, 20)
@@ -191,7 +193,7 @@ layout_mode = 2
 texture = ExtResource("6_e8ns6")
 stretch_mode = 5
 
-[node name="PlaceUndoLine" type="HBoxContainer" parent="PaintingHint" unique_id=713504903]
+[node name="PlaceUndoLine" type="HBoxContainer" parent="PaintingHint" unique_id=88497604]
 layout_mode = 2
 alignment = 2
 
@@ -205,6 +207,7 @@ stretch_mode = 5
 layout_mode = 2
 theme = ExtResource("2")
 text = " Place"
+horizontal_alignment = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="PaintingHint" unique_id=1953142721]
 layout_mode = 2

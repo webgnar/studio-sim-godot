@@ -25,3 +25,7 @@ res://scripts/painting/PaintingSystem2D.gd
 res://scenes/UI/MissionResultsDisplay.tscn
 res://scripts/ui/MissionResultsDisplay.gd
 res://scenes/UI/HUD.tscn
+res://scenes/CarryablePainting.tscn
+res://scripts/components/CarryableComponent.gd
+res://scripts/components/PaintingHangingComponent.gd
+res://scripts/HUD.gd

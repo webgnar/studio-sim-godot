@@ -12,6 +12,14 @@ extends CanvasLayer
 @onready var painting_hint: VBoxContainer = $PaintingHint  # Will show painting controls when in 2D painting mode
 @onready var camera_icon: TextureRect = $CameraIcon  # Shows when camera zones are active
 
+# --- PANEL APPEARANCE (editable in Inspector) ---
+@export var panel_bg_color: Color = Color(0, 0, 0, 0.5)
+@export var panel_corner_radius: int = 0
+@export var panel_padding_h: int = 12
+@export var panel_padding_v: int = 8
+@export var painting_panel_min_size_gamepad: Vector2 = Vector2(0, 0)
+@export var painting_panel_min_size_keyboard: Vector2 = Vector2(0, 0)
+
 # --- PRIVATE VARIABLES ---
 var _player: CharacterBody3D
 var _player_interaction_component: PlayerInteractionComponent
@@ -67,12 +75,12 @@ func _wrap_in_panel(content: Control) -> PanelContainer:
 	var panel = PanelContainer.new()
 	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var style = StyleBoxFlat.new()
-	style.bg_color = Color(0, 0, 0, 0.5)
-	style.set_corner_radius_all(0)
-	style.content_margin_left = 12
-	style.content_margin_right = 12
-	style.content_margin_top = 8
-	style.content_margin_bottom = 8
+	style.bg_color = panel_bg_color
+	style.set_corner_radius_all(panel_corner_radius)
+	style.content_margin_left = panel_padding_h
+	style.content_margin_right = panel_padding_h
+	style.content_margin_top = panel_padding_v
+	style.content_margin_bottom = panel_padding_v
 	panel.add_theme_stylebox_override("panel", style)
 	var parent = content.get_parent()
 	# Copy anchors/offsets so the panel takes the same position
@@ -329,6 +337,9 @@ func _update_painting_hint() -> void:
 
 	if is_painting:
 		var is_gamepad = InputDeviceManager.current_device == InputDeviceManager.DeviceType.GAMEPAD
+
+		if _painting_panel:
+			_painting_panel.custom_minimum_size = painting_panel_min_size_gamepad if is_gamepad else painting_panel_min_size_keyboard
 
 		# Update Rotate line
 		var rotate_icon = painting_hint.get_node("RotateLine/RotateRightIcon")

@@ -120,8 +120,10 @@ func _input(event):
 			viewport.set_input_as_handled()
 		return
 
-	# LB/RB for instant tab switching from any mode
+	# LB/RB for instant tab switching from any mode (not mouse scroll wheel)
 	if event.is_action_pressed("cycle_prev"):
+		if event is InputEventMouseButton:
+			return  # Let scroll wheel propagate to scroll containers
 		if input_cooldown <= 0:
 			_cycle_tab(-1)
 			input_cooldown = input_cooldown_time
@@ -129,6 +131,8 @@ func _input(event):
 		return
 
 	if event.is_action_pressed("cycle_next"):
+		if event is InputEventMouseButton:
+			return  # Let scroll wheel propagate to scroll containers
 		if input_cooldown <= 0:
 			_cycle_tab(1)
 			input_cooldown = input_cooldown_time

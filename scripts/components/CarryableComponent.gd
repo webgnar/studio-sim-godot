@@ -239,7 +239,11 @@ func drop() -> void:
 	# Reset velocities BEFORE restoring physics to prevent tunneling
 	parent_rigid_body.linear_velocity = Vector3.ZERO
 	parent_rigid_body.angular_velocity = Vector3.ZERO
-	
+
+	# Allow body to sleep after landing (contact_monitor = true prevents sleep in Godot 4)
+	# _on_sleeping_state_changed will re-enable it if the body is woken by an impact
+	parent_rigid_body.contact_monitor = false
+
 	# Restore physics state
 	if lock_rotation_when_carried:
 		parent_rigid_body.lock_rotation = false  # Allow natural rotation again

@@ -301,6 +301,10 @@ func _update_preview_texture():
 	# Update scale using the new function
 	_update_preview_scale()
 
+	# Reset fade timer so cycling keeps the preview visible
+	preview_idle_time = 0.0
+	preview_target_opacity = preview_base_opacity
+
 func rotate_preview(delta: float, direction: int):
 	"""Rotate the preview sprite continuously while button is held"""
 	if not preview_sprite:
