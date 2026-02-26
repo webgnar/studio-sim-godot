@@ -8,7 +8,6 @@
 [ext_resource type="Texture2D" uid="uid://3smflfln5x7y" path="res://sprites/normals/wood_specular.png" id="3_o8fc1"]
 [ext_resource type="Material" uid="uid://48uded6h5otx" path="res://materials/brickwhite.tres" id="3_qfnet"]
 [ext_resource type="Texture2D" uid="uid://bifvpuur5heg3" path="res://sprites/normals/wood_normal.png" id="4_xo05s"]
-[ext_resource type="Theme" uid="uid://cbtaxh5m7udor" path="res://themes/ui_theme.tres" id="4_ygn2i"]
 [ext_resource type="Material" uid="uid://re8gmfn1nbgt" path="res://materials/wall.tres" id="5_71j4m"]
 [ext_resource type="Texture2D" uid="uid://b3ty4ce0xhyow" path="res://sprites/textures/hvac.jpg" id="14_o8fc1"]
 [ext_resource type="PackedScene" uid="uid://xeaph8bqk1j1" path="res://models/props/pipe_red.glb" id="16_oo54l"]
@@ -31,7 +30,6 @@
 [ext_resource type="Texture2D" uid="uid://uyikjs5uvqxf" path="res://textures/512 cementbrick.png" id="30_kvmu4"]
 [ext_resource type="Texture2D" uid="uid://daneppyy5y8cp" path="res://sprites/textures/floor-cement-2.jpg" id="31_c15v2"]
 [ext_resource type="PackedScene" uid="uid://br0ke8na4oeqj" path="res://scenes/button_green.tscn" id="31_grmox"]
-[ext_resource type="Script" uid="uid://hlurbym3vcmr" path="res://scripts/components/StudioAssistantPurchaseButton.gd" id="32_xgy6y"]
 [ext_resource type="Script" uid="uid://c8uap2yk1tjju" path="res://scripts/components/StudioAssistantStatusPanel.gd" id="33_kvmu4"]
 [ext_resource type="Script" uid="uid://cdcxs0jsffsfb" path="res://scripts/old stuff/BoomboxInteraction.gd" id="36_boombox_new"]
 [ext_resource type="PackedScene" uid="uid://bxi8jlwr1acc4" path="res://scenes/mirror.tscn" id="39_qaasp"]
@@ -75,7 +73,6 @@
 [ext_resource type="PackedScene" uid="uid://d2hcs1m04uvg7" path="res://models/interactables/button.glb" id="80_oexs8"]
 [ext_resource type="Script" uid="uid://byo8qed1v1rkt" path="res://scripts/components/PaintingConvertButton.gd" id="81_n78cu"]
 [ext_resource type="PackedScene" uid="uid://ctu3xtbhbgtub" path="res://scenes/objects/NailGun.tscn" id="81_oexs8"]
-[ext_resource type="PackedScene" uid="uid://bryic0ubsrfjn" path="res://models/interactables/buttonGreen.glb" id="81_swu3i"]
 [ext_resource type="Texture2D" uid="uid://bd6svkdls6guq" path="res://models/interactables/buttonGreen_0.png" id="82_mu18u"]
 [ext_resource type="Texture2D" uid="uid://djd4xqb57hhr7" path="res://sprites/textures/brick_bump.jpg" id="83_c15v2"]
 [ext_resource type="PackedScene" uid="uid://c8mhk3sajq2fn" path="res://scenes/UI/MissionHUD.tscn" id="83_hud"]
@@ -135,8 +132,8 @@ albedo_texture = ExtResource("30_kvmu4")
 uv1_scale = Vector3(10.68, 1, 1)
 texture_filter = 0
 
-[sub_resource type="CylinderShape3D" id="CylinderShape3D_xgy6y"]
-radius = 1.0146484
+[sub_resource type="BoxShape3D" id="BoxShape3D_ce70q"]
+size = Vector3(1.644928, 1, 0.17285156)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_grmox"]
 albedo_texture = ExtResource("31_c15v2")
@@ -343,17 +340,17 @@ albedo_color = Color(1.0734373, 1.0734373, 0.15063755, 1)
 albedo_texture = ExtResource("82_mu18u")
 texture_filter = 0
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_wui3h"]
+[sub_resource type="PlaneMesh" id="PlaneMesh_mu18u"]
 resource_local_to_scene = true
 size = Vector2(2.5, 3)
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_qetcs"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_7b7y8"]
 resource_name = "_albedo"
 viewport_path = NodePath("../MirrorNew/SubViewport")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gw1vw"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wui3h"]
 resource_local_to_scene = true
-albedo_texture = SubResource("ViewportTexture_qetcs")
+albedo_texture = SubResource("ViewportTexture_7b7y8")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_1v02h"]
 size = Vector2(2.5, 3)
@@ -922,23 +919,19 @@ status_label = NodePath("Label3D")
 billboard = 1
 text = "TEST TEXT"
 
-[node name="StudioAssistantPurchaseButton" type="Node3D" parent="AssistantStudio" unique_id=414616416]
-transform = Transform3D(0.2, 0, 0, 0, -8.742278e-09, -0.2, 0, 0.2, -8.742278e-09, 0, 0, 7.5525)
-script = ExtResource("32_xgy6y")
-
-[node name="button model" parent="AssistantStudio/StudioAssistantPurchaseButton" unique_id=1664323841 instance=ExtResource("81_swu3i")]
-
-[node name="StaticBody3D" type="StaticBody3D" parent="AssistantStudio/StudioAssistantPurchaseButton" unique_id=953600258]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="AssistantStudio/StudioAssistantPurchaseButton/StaticBody3D" unique_id=1012593972]
-shape = SubResource("CylinderShape3D_xgy6y")
-
 [node name="Elevator" parent="." unique_id=904124064 instance=ExtResource("29_xgy6y")]
 transform = Transform3D(1.44, 0, 0, 0, 1.44, 0, 0, 0, 1.44, 5.356282, 0.43740082, -4.5508404)
 
 [node name="CritiqueTV" parent="." unique_id=1552722384 node_paths=PackedStringArray("elevator_controller") instance=ExtResource("97_crtq")]
 transform = Transform3D(-2.8167248, 0, -1.0325029, 0, 3, 0, 1.0325029, 0, -2.8167248, 10.0047655, 2, 5.076686)
 elevator_controller = NodePath("../Elevator")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="CritiqueTV" unique_id=1844537]
+collision_layer = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CritiqueTV/StaticBody3D" unique_id=2119509083]
+transform = Transform3D(1, 0, -5.9604645e-08, 0, 1, 0, 5.9604645e-08, 0, 1, -0.00046610832, 0, -0.020832539)
+shape = SubResource("BoxShape3D_ce70q")
 
 [node name="studio" type="CSGCombiner3D" parent="." unique_id=2031648802]
 transform = Transform3D(0.46, 0, 0, 0, 7.49, 0, 0, 0, 22.64, -4.9423933, 3.544661, 4)
@@ -957,7 +950,7 @@ material = SubResource("StandardMaterial3D_grmox")
 transform = Transform3D(-9.797052e-07, 0, -49.782604, 0, 0.00801068, 0, 0.45538867, 0, -4.421337e-08, 10.873473, -0.5213924, -0.32749128)
 use_collision = true
 collision_mask = 0
-size = Vector3(0.7949219, 12.34, 0.34796143)
+size = Vector3(0.795, 12.27, 0.348)
 material = SubResource("StandardMaterial3D_oexs8")
 
 [node name="wall" type="CSGBox3D" parent="studio" unique_id=601196792]
@@ -1108,7 +1101,7 @@ transform = Transform3D(3.7252903e-09, 0.88005006, 0, -0.10005001, 2.9802322e-08
 transform = Transform3D(-1.3943933e-08, -1.578, 0, 0.319, -6.897657e-08, 0, 0, 0, 0.319, 0.12, 4.532, 6.547)
 
 [node name="pipe gray" parent="hvac group" unique_id=1719024730 instance=ExtResource("19_xgqkh")]
-transform = Transform3D(0.25155005, -3.96611e-08, 7.450581e-09, -7.450581e-09, -7.2522084e-08, 0.25155005, -5.0629247e-09, -1.9705498, -9.257785e-09, -3.37526, 4.862561, 4.2031384)
+transform = Transform3D(0.25155005, -3.96611e-08, 7.450581e-09, -7.450581e-09, -7.2522084e-08, 0.25155005, -5.0629247e-09, -1.9705498, -9.257785e-09, -3.232133, 4.862561, 4.2031384)
 
 [node name="CSGCombiner3D" type="CSGCombiner3D" parent="hvac group" unique_id=1851367579]
 transform = Transform3D(1, 0, 0, 0, -1.3419395e-07, 1, 0, -3.07, -4.371139e-08, 1.4474611, 3.9866352, 8)
@@ -1555,8 +1548,8 @@ surface_material_override/0 = SubResource("StandardMaterial3D_7b7y8")
 
 [node name="mirror" parent="." unique_id=1626491013 instance=ExtResource("39_qaasp")]
 transform = Transform3D(-4.7902194e-08, -0.99488777, 0.10098683, -3.9073655e-08, 0.10098683, 0.99488777, -1, 4.3711392e-08, -4.3711385e-08, 2.8, 1.497, 5.232)
-mesh = SubResource("PlaneMesh_wui3h")
-surface_material_override/0 = SubResource("StandardMaterial3D_gw1vw")
+mesh = SubResource("PlaneMesh_mu18u")
+surface_material_override/0 = SubResource("StandardMaterial3D_wui3h")
 show_debug_logs = false
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="mirror" unique_id=399456008]
@@ -1602,6 +1595,7 @@ transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 0, 0, 0)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.19449, 0, 19.21788)
 
 [node name="CSGCombiner3D" type="CSGCombiner3D" parent="greenhouse" unique_id=825022234]
+use_collision = true
 
 [node name="CSGBox3D" type="CSGBox3D" parent="greenhouse/CSGCombiner3D" unique_id=696301624]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3527112, 0.66528314, 3.7265244)
@@ -1742,7 +1736,7 @@ spot_range = 37.272
 spot_attenuation = 3.79
 
 [node name="OpenStickerFolderButton" parent="." unique_id=2053236324 instance=ExtResource("101_odf6h")]
-transform = Transform3D(-0.1, -3.7024988e-30, 3.8213717e-16, -3.2368273e-37, 0.1, 8.742278e-09, -3.8213717e-16, 8.742278e-09, -0.1, 3.08797, 1.0130374, 8.865791)
+transform = Transform3D(-0.1, -3.7024988e-30, 3.8213717e-16, 3.3407493e-23, -0.1, 0, 3.8213717e-16, 0, 0.1, 2.3091419, 0.85161436, 8.755586)
 
 [editable path="Spotlight1"]
 [editable path="Spotlight2"]

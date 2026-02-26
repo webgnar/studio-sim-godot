@@ -1,8 +1,8 @@
+CollisionShape3D
+StaticBody3D
 VBoxContainer
 HBoxContainer
-CollisionShape3D
 AnimationPlayer
-StaticBody3D
 AnimationTree
 MeshInstance3D
 TextureRect
