@@ -15,7 +15,7 @@ func set_painting_system(system_2d: PaintingSystem2D):
 	"""Set the 2D painting system to capture from"""
 	painting_system_2d = system_2d
 
-func capture_current_canvas(mission_id: String, title: String, description: String, reward: int, difficulty: int) -> PaintingMission:
+func capture_current_canvas(mission_id: String, title: String, description: String, reward: int) -> PaintingMission:
 	"""Capture current canvas state as a mission"""
 	if not painting_system_2d:
 		push_error("MissionAuthoringTool: No painting system assigned!")
@@ -31,7 +31,6 @@ func capture_current_canvas(mission_id: String, title: String, description: Stri
 	mission.title = title
 	mission.description = description
 	mission.reward = reward
-	mission.difficulty = difficulty
 
 	# Sort layers by z-order (back to front)
 	var sorted_layers = painting_system_2d.placed_layers.duplicate()
@@ -143,9 +142,9 @@ func _generate_screenshot(mission_path: String) -> String:
 	print("MissionAuthoringTool: Saved reference screenshot to %s" % screenshot_path)
 	return screenshot_path
 
-func create_and_save_mission(mission_id: String, title: String, description: String, reward: int, difficulty: int, file_path: String) -> bool:
+func create_and_save_mission(mission_id: String, title: String, description: String, reward: int, file_path: String) -> bool:
 	"""Convenience function to capture and save in one call"""
-	var mission = capture_current_canvas(mission_id, title, description, reward, difficulty)
+	var mission = capture_current_canvas(mission_id, title, description, reward)
 	if not mission:
 		return false
 

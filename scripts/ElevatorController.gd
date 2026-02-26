@@ -252,6 +252,8 @@ func start_export() -> void:
 
 	# Ship painting (preserves metadata in inventory as SHIPPED) then remove from world
 	WorldStateManager.ship_painting(painting)
+	if has_node("/root/EconomyManager"):
+		EconomyManager.add_money(50, "shipped: " + painting.painting_name)
 	paintings_inside.erase(painting)
 	painting.queue_free()  # This will auto-unregister from WorldStateManager via _exit_tree()
 

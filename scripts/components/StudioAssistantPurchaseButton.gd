@@ -29,13 +29,11 @@ func _on_interacted(_player_interaction_component: PlayerInteractionComponent) -
 	if not AutomationManager.can_purchase_assistant():
 		var status = AutomationManager.get_assistant_status()
 		var money = EconomyManager.get_money()
-		var level = ReputationManager.get_reputation_level()
 
 		print("StudioAssistantPurchaseButton: Cannot afford!")
 		print("  Cost: $%d (you have $%d)" % [status.cost, money])
-		print("  Requires: Rep Level %d (you are Level %d)" % [status.rep_required, level])
 
-		# TODO: Show "not enough money/reputation" UI feedback
+		# TODO: Show "not enough money" UI feedback
 		return
 
 	# Attempt purchase
@@ -73,12 +71,9 @@ func _update_interaction_text():
 		is_disabled = false
 	else:
 		var money = EconomyManager.get_money() if has_node("/root/EconomyManager") else 0
-		var level = ReputationManager.get_reputation_level() if has_node("/root/ReputationManager") else 0
 
 		if money < status.cost:
 			interaction_text = "Hire Assistant ($%d) - Need $%d more" % [status.cost, status.cost - money]
-		elif level < status.rep_required:
-			interaction_text = "Hire Assistant - Need Rep Level %d" % status.rep_required
 		else:
 			interaction_text = "Hire Assistant ($%d)" % status.cost
 

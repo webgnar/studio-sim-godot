@@ -8,7 +8,6 @@ extends Control
 @onready var title_input = $Dialog/MarginContainer/VBoxContainer/TitleInput
 @onready var desc_input = $Dialog/MarginContainer/VBoxContainer/DescInput
 @onready var reward_input = $Dialog/MarginContainer/VBoxContainer/HBoxContainer/RewardInput
-@onready var difficulty_input = $Dialog/MarginContainer/VBoxContainer/HBoxContainer/DifficultyInput
 @onready var save_button = $Dialog/MarginContainer/VBoxContainer/ButtonContainer/SaveButton
 @onready var cancel_button = $Dialog/MarginContainer/VBoxContainer/ButtonContainer/CancelButton
 
@@ -90,7 +89,6 @@ func _save_mission():
 	var title = title_input.text
 	var description = desc_input.text
 	var reward = int(reward_input.value)
-	var difficulty = int(difficulty_input.value)
 
 	# Validate inputs
 	if mission_id.is_empty():
@@ -110,7 +108,6 @@ func _save_mission():
 		title,
 		description,
 		reward,
-		difficulty,
 		file_path
 	)
 
@@ -127,7 +124,6 @@ func _close_dialog():
 	title_input.text = ""
 	desc_input.text = ""
 	reward_input.value = 100
-	difficulty_input.value = 1
 
 	# Re-enable painting system input
 	if painting_system_2d:
@@ -144,8 +140,6 @@ func _focus_next_field():
 	elif focused == desc_input:
 		reward_input.get_line_edit().grab_focus()
 	elif focused == reward_input.get_line_edit():
-		difficulty_input.get_line_edit().grab_focus()
-	elif focused == difficulty_input.get_line_edit():
 		save_button.grab_focus()
 	elif focused == save_button:
 		cancel_button.grab_focus()
@@ -163,8 +157,6 @@ func _focus_previous_field():
 	elif focused == cancel_button:
 		save_button.grab_focus()
 	elif focused == save_button:
-		difficulty_input.get_line_edit().grab_focus()
-	elif focused == difficulty_input.get_line_edit():
 		reward_input.get_line_edit().grab_focus()
 	elif focused == reward_input.get_line_edit():
 		desc_input.grab_focus()

@@ -9,7 +9,6 @@ var assistant_timer: float = 0.0
 
 # Studio Assistant constants
 const ASSISTANT_COST: int = 1200
-const ASSISTANT_REP_REQUIREMENT: int = 1  # Reputation level 1 (10 points)
 const ASSISTANT_INTERVAL: float = 300.0  # 5 minutes in seconds
 const ASSISTANT_PAYOUT: int = 40  # $40 per painting
 
@@ -66,22 +65,19 @@ func _complete_assistant_painting():
 		audio_player.play()
 
 func can_purchase_assistant() -> bool:
-	"""Check if player can afford and unlock studio assistant"""
+	"""Check if player can afford studio assistant"""
 	if studio_assistant_active:
 		return false  # Already purchased
 
-	if not has_node("/root/EconomyManager") or not has_node("/root/ReputationManager"):
+	if not has_node("/root/EconomyManager"):
 		return false
 
-	var has_money = EconomyManager.get_money() >= ASSISTANT_COST
-	var has_reputation = ReputationManager.get_reputation_level() >= ASSISTANT_REP_REQUIREMENT
-
-	return has_money and has_reputation
+	return EconomyManager.get_money() >= ASSISTANT_COST
 
 func purchase_studio_assistant() -> bool:
 	"""Purchase the studio assistant upgrade"""
 	if not can_purchase_assistant():
-		push_warning("AutomationManager: Cannot purchase studio assistant (insufficient funds or reputation)")
+		push_warning("AutomationManager: Cannot purchase studio assistant (insufficient funds)")
 		return false
 
 	if not has_node("/root/EconomyManager"):
@@ -105,16 +101,11 @@ func get_assistant_status() -> Dictionary:
 	return {
 		"active": studio_assistant_active,
 		"cost": ASSISTANT_COST,
-		"rep_required": ASSISTANT_REP_REQUIREMENT,
 		"interval": ASSISTANT_INTERVAL,
 		"payout": ASSISTANT_PAYOUT,
 		"time_remaining": ASSISTANT_INTERVAL - assistant_timer if studio_assistant_active else 0.0,
 		"progress_percent": (assistant_timer / ASSISTANT_INTERVAL) * 100.0 if studio_assistant_active else 0.0
 	}
-
-func get_reputation_penalty() -> float:
-	"""Get reputation multiplier (0.9 if assistant active, 1.0 otherwise)"""
-	return 0.9 if studio_assistant_active else 1.0
 
 func is_assistant_active() -> bool:
 	"""Check if studio assistant is active"""

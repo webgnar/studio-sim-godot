@@ -28,10 +28,5 @@ theme_type_variation = &"HeaderLarge"
 text = "$0"
 horizontal_alignment = 2
 
-[node name="ReputationLabel" type="Label" parent="MarginContainer/VBoxContainer"]
-layout_mode = 2
-theme = ExtResource("2")
-text = "Rep Level 0 (0.0)"
-horizontal_alignment = 2
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]

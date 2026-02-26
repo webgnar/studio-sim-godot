@@ -394,14 +394,6 @@ func _unhandled_input(event: InputEvent) -> void:
 				get_viewport().set_input_as_handled()  # Stop event propagation
 				return  # Don't process other interactions while recapturing
 
-	# You can also handle other inputs here, like pausing the game.
-	if SteamInput.is_action_just_pressed("ui_cancel"): # ESC key or controller back button
-		# Only release mouse, never capture it (UIManager handles capture)
-		var mouse_locked = (Input.mouse_mode == Input.MOUSE_MODE_CAPTURED or
-							Input.mouse_mode == Input.MOUSE_MODE_CONFINED_HIDDEN)
-		if mouse_locked:
-			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-
 func _exit_tree() -> void:
 	# Make sure to release the mouse when the player object is removed.
 	# This is good practice for when changing scenes or quitting the game.

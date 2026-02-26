@@ -87,9 +87,6 @@ func load_all_missions():
 		else:
 			push_error("MissionManager: Failed to load mission: %s" % path)
 
-	# Sort by difficulty (easiest first)
-	available_missions.sort_custom(func(a, b): return a.difficulty < b.difficulty)
-
 	print("MissionManager: Loaded %d missions from manifest" % available_missions.size())
 
 func start_mission(mission: PaintingMission):
@@ -173,32 +170,22 @@ func complete_mission(result: ValidationResult, latest_painting_path: String = "
 			mission_duration_sec = (Time.get_ticks_msec() - mission_start_time) / 1000.0
 
 		# === PHASE 0: Economy Integration ===
-		# Calculate payout based on reputation and repetition
-		var base_price = 100  # $100 base
+		# Calculate payout based on commission reward
+		var base_price = current_mission.reward
 		var commission_bonus = 1.5  # +50% for commissioned work
-		var rep_multiplier = 1.0
 		var repetition_penalty = 1.0
-
-		# Get reputation multiplier if ReputationManager exists
-		if has_node("/root/ReputationManager"):
-			rep_multiplier = ReputationManager.get_price_multiplier()
 
 		# Get repetition penalty if StyleTracker exists
 		if has_node("/root/StyleTracker"):
 			repetition_penalty = StyleTracker.get_repetition_penalty()
 
 		# Calculate final payout
-		var payout = int(base_price * commission_bonus * rep_multiplier * repetition_penalty)
+		var payout = int(base_price * commission_bonus * repetition_penalty)
 		payout = max(payout, int(base_price * 0.2))  # Floor at 20% of base
 
 		# Award money if EconomyManager exists
 		if has_node("/root/EconomyManager"):
 			EconomyManager.add_money(payout, "mission: " + current_mission.title)
-
-		# Award reputation (0.5-2.0 points based on validation score)
-		if has_node("/root/ReputationManager"):
-			var rep_gain = (result.match_percentage / 100.0) * 2.0
-			ReputationManager.add_reputation(rep_gain, "mission")
 
 		# Track painting style for repetition detection
 		if has_node("/root/StyleTracker") and has_node("/root/PaintingSystem2D"):

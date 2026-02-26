@@ -729,11 +729,6 @@ func _save_economic_state() -> Dictionary:
 	if has_node("/root/EconomyManager"):
 		economy_data["money"] = EconomyManager.get_money()
 
-	# Save reputation if ReputationManager exists
-	if has_node("/root/ReputationManager"):
-		economy_data["reputation_level"] = ReputationManager.get_reputation_level()
-		economy_data["reputation_points"] = ReputationManager.get_reputation_points()
-
 	# Save recent paintings if StyleTracker exists
 	if has_node("/root/StyleTracker"):
 		economy_data["recent_paintings"] = StyleTracker.get_recent_paintings()
@@ -750,13 +745,6 @@ func _load_economic_state(economy_data: Dictionary):
 	if has_node("/root/EconomyManager") and economy_data.has("money"):
 		EconomyManager.set_money(economy_data["money"])
 		print("Loaded economy: $%d" % economy_data["money"])
-
-	# Load reputation if ReputationManager exists
-	if has_node("/root/ReputationManager"):
-		var rep_level = economy_data.get("reputation_level", 0)
-		var rep_points = economy_data.get("reputation_points", 0.0)
-		ReputationManager.set_reputation(rep_points, rep_level)
-		print("Loaded reputation: Level %d (%.1f points)" % [rep_level, rep_points])
 
 	# Load recent paintings if StyleTracker exists
 	if has_node("/root/StyleTracker") and economy_data.has("recent_paintings"):

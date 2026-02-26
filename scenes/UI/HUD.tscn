@@ -133,7 +133,7 @@ color = Color(1, 1, 1, 0.8)
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = 606.89
+offset_left = 655.89014
 offset_right = 942.89014
 offset_bottom = 701.0
 grow_horizontal = 2
@@ -176,10 +176,11 @@ layout_mode = 2
 alignment = 2
 
 [node name="CyclePrevIcon" type="TextureRect" parent="PaintingHint/CycleLine" unique_id=1446865686]
-custom_minimum_size = Vector2(20, 20)
+custom_minimum_size = Vector2(104.15, -12.74)
 layout_mode = 2
 texture = ExtResource("5_tohwf")
-stretch_mode = 5
+expand_mode = 1
+stretch_mode = 3
 
 [node name="CycleLabel" type="Label" parent="PaintingHint/CycleLine" unique_id=988563025]
 layout_mode = 2
@@ -188,20 +189,22 @@ text = " Cycle"
 horizontal_alignment = 1
 
 [node name="CycleNextIcon" type="TextureRect" parent="PaintingHint/CycleLine" unique_id=234186105]
-custom_minimum_size = Vector2(20, 20)
+custom_minimum_size = Vector2(103.82, 114.18)
 layout_mode = 2
 texture = ExtResource("6_e8ns6")
-stretch_mode = 5
+expand_mode = 1
+stretch_mode = 3
 
 [node name="PlaceUndoLine" type="HBoxContainer" parent="PaintingHint" unique_id=88497604]
 layout_mode = 2
 alignment = 2
 
 [node name="PlaceIcon" type="TextureRect" parent="PaintingHint/PlaceUndoLine" unique_id=996579038]
-custom_minimum_size = Vector2(20, 20)
+custom_minimum_size = Vector2(108.29, 131.37)
 layout_mode = 2
 texture = ExtResource("7_m51yh")
-stretch_mode = 5
+expand_mode = 1
+stretch_mode = 2
 
 [node name="PlaceText" type="Label" parent="PaintingHint/PlaceUndoLine" unique_id=75297682]
 layout_mode = 2

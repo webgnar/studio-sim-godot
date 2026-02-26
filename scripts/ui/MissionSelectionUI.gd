@@ -487,9 +487,6 @@ func _update_preview_panel():
 	# Update description
 	mission_description.text = selected_mission.description
 
-	# Update difficulty
-	difficulty_label.text = tr("Difficulty: %d/10") % selected_mission.difficulty
-
 	# Check if this is the current mission
 	var is_current_mission = (MissionManager and MissionManager.current_mission == selected_mission)
 
