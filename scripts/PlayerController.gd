@@ -213,6 +213,14 @@ func _physics_process(delta: float) -> void:
 		move_and_slide()
 		return
 	
+	# --- SPEED STATE (single source of truth) ---
+	# Compute sprint and move speed once per frame so both floor and air
+	# movement use the same value — no state conflict mid-jump.
+	var sprinting := _is_sprinting()
+	var move_speed := sprint_speed if sprinting else walk_speed
+	if _is_crouching:
+		move_speed = crouch_speed
+
 	# --- GRAVITY ---
 	# Add gravity. If the character is on the floor, we don't apply gravity.
 	if not is_on_floor():
@@ -248,8 +256,8 @@ func _physics_process(delta: float) -> void:
 	if is_on_floor():
 		# Full control when on the ground
 		if direction != Vector3.ZERO:
-			velocity.x = direction.x * current_speed
-			velocity.z = direction.z * current_speed
+			velocity.x = direction.x * move_speed
+			velocity.z = direction.z * move_speed
 		else:
 			# If no input, apply inertia-based friction to stop the character smoothly.
 			var horizontal_velocity := Vector3(velocity.x, 0, velocity.z)
@@ -257,12 +265,12 @@ func _physics_process(delta: float) -> void:
 			velocity.x = horizontal_velocity.x
 			velocity.z = horizontal_velocity.z
 	else:
-		# Limited air control - lerp velocity towards input direction
+		# Limited air control - uses same move_speed as ground so sprint carries through jumps
 		if direction != Vector3.ZERO:
-			var target_velocity := Vector3(direction.x * current_speed, velocity.y, direction.z * current_speed)
+			var target_velocity := Vector3(direction.x * move_speed, velocity.y, direction.z * move_speed)
 			var current_horizontal := Vector3(velocity.x, 0, velocity.z)
 			var target_horizontal := Vector3(target_velocity.x, 0, target_velocity.z)
-			
+
 			# Lerp horizontal velocity towards target with limited air control
 			var new_horizontal := current_horizontal.lerp(target_horizontal, air_control * delta * 3.0)
 			velocity.x = new_horizontal.x
@@ -355,7 +363,7 @@ func _physics_process(delta: float) -> void:
 	# --- UPDATE ANIMATIONS ---
 	# Send movement data to animation controller
 	if _player_animation != null:
-		_player_animation.update_animation_state(velocity, is_on_floor(), _is_sprinting(), _is_crouching)
+		_player_animation.update_animation_state(velocity, is_on_floor(), sprinting, _is_crouching)
 
 func _unhandled_input(event: InputEvent) -> void:
 	# Skip input if CameraManager has disabled it (e.g., during cinematic cameras)
@@ -400,8 +408,9 @@ func _exit_tree() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
 func _is_sprinting() -> bool:
-	"""Check if player is sprinting via keyboard Shift or controller sprint button"""
-	return Input.is_key_pressed(KEY_SHIFT) or SteamInput.is_action_pressed("sprint")
+	"""Check if player is sprinting. Routes through SteamInput which handles both
+	keyboard fallback (Input.is_action_pressed) and Steam controller input."""
+	return SteamInput.is_action_pressed("sprint")
 
 func play_death_animation() -> void:
 	if _player_animation:
