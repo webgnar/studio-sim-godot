@@ -185,20 +185,22 @@ func _update_selection() -> void:
 
 	var purchased := ShopManager.is_purchased(item["id"])
 	if purchased:
-		item_price_label.text = "Owned"
-		buy_button.disabled = true
-		buy_button.text = "OWNED"
-		status_label.visible = false
+		item_price_label.text = "$%d" % item["price"]
+		buy_button.visible = false
+		status_label.text = "Owned"
+		status_label.visible = true
 	else:
 		item_price_label.text = "$%d" % item["price"]
 		var can_afford := EconomyManager.can_afford(item["price"])
-		buy_button.disabled = not can_afford
-		buy_button.text = "BUY"
-		if not can_afford:
+		if can_afford:
+			buy_button.visible = true
+			buy_button.disabled = false
+			buy_button.text = "BUY"
+			status_label.visible = false
+		else:
+			buy_button.visible = false
 			status_label.text = "Not enough money"
 			status_label.visible = true
-		else:
-			status_label.visible = false
 
 	# Scroll the list to keep selected card visible
 	_scroll_to_selected()
