@@ -20,3 +20,6 @@ res://scripts/tools/MissionAuthoringTool.gd
 res://scripts/ui/MissionAuthoringUI.gd
 res://scripts/ui/MissionSelectionUI.gd
 res://resources/missions/crazy display.tres
+res://scripts/TitleScreenController.gd
+res://scripts/ui/InventoryTab.gd
+res://scripts/ui/MissionHUD.gd

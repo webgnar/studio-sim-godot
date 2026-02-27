@@ -95,23 +95,25 @@ func update_painting_metadata(painting: Node, painting_name: String, statement: 
 		push_warning("WorldStateManager: update_painting_metadata called for unregistered painting - node properties updated, registry skipped")
 
 func ship_painting(painting: Node) -> void:
-	"""Move a painting to shipped status (preserves metadata after node is freed)"""
+	"""Mark a painting as shipped to the gallery (node stays alive in gallery room)"""
 	if painting not in _registered_paintings:
 		push_warning("Attempted to ship unregistered painting")
 		return
 
 	var meta = _registered_paintings[painting]
-	_shipped_paintings.append({
-		"id": meta["id"],
-		"texture_path": meta["texture_path"],
-		"name": meta.get("name", ""),
-		"artist_statement": meta.get("artist_statement", ""),
-		"status": "SHIPPED"
-	})
-	print("WorldStateManager: Painting '%s' shipped" % meta.get("name", meta["id"]))
+	_registered_paintings[painting]["status"] = "SHIPPED"
+	print("WorldStateManager: Painting '%s' shipped to gallery" % meta.get("name", meta["id"]))
 
 func save_critique_for_painting(painting_id: String, critique: String) -> void:
 	"""Store the AI critique text on a shipped painting and persist to disk."""
+	# Check gallery paintings (live nodes in _registered_paintings with status SHIPPED)
+	for painting in _registered_paintings.keys():
+		if _registered_paintings[painting]["id"] == painting_id:
+			_registered_paintings[painting]["critique"] = critique
+			print("WorldStateManager: Critique saved for '%s'" % _registered_paintings[painting].get("name", painting_id))
+			save_world_state()
+			return
+	# Fallback: check legacy _shipped_paintings (old saves)
 	for i in range(_shipped_paintings.size()):
 		if _shipped_paintings[i]["id"] == painting_id:
 			_shipped_paintings[i]["critique"] = critique
@@ -132,7 +134,8 @@ func get_all_paintings() -> Array:
 				"texture_path": meta["texture_path"],
 				"name": meta.get("name", ""),
 				"artist_statement": meta.get("artist_statement", ""),
-				"status": meta.get("status", "WIP")
+				"status": meta.get("status", "WIP"),
+				"critique": meta.get("critique", "")
 			})
 	# Append shipped paintings (no node reference)
 	for shipped in _shipped_paintings:
@@ -232,6 +235,7 @@ func save_world_state() -> bool:
 			"name": metadata.get("name", ""),
 			"artist_statement": metadata.get("artist_statement", ""),
 			"status": metadata.get("status", "WIP"),
+			"critique": metadata.get("critique", ""),
 			"position": {
 				"x": painting.global_position.x,
 				"y": painting.global_position.y,
@@ -361,6 +365,14 @@ func load_world_state(world_root: Node3D) -> void:
 	for painting_data in paintings_array:
 		if await _load_painting(world_root, painting_data, nail_id_map):
 			paintings_loaded += 1
+
+	# Remove any _shipped_paintings entries whose ID is now tracked as a live node.
+	# Old save files (created before the gallery was added) may have entries in both
+	# "paintings" (re-spawned above) and "shipped_paintings", causing inventory duplicates.
+	var live_ids: Array = []
+	for p in _registered_paintings.keys():
+		live_ids.append(_registered_paintings[p]["id"])
+	_shipped_paintings = _shipped_paintings.filter(func(s): return not s["id"] in live_ids)
 
 	# Load 3D stickers THIRD (after nails and paintings)
 	var stickers_array = save_data.get("stickers_3d", [])
@@ -541,9 +553,12 @@ func _load_painting(world_root: Node3D, painting_data: Dictionary, nail_id_map: 
 	# Add to world (triggers _ready → register_painting with default "WIP" status)
 	world_root.add_child(painting)
 
-	# Apply saved status (overrides the default "WIP" set during registration)
+	# Apply saved status and critique (overrides the default "WIP" set during registration)
 	if painting in _registered_paintings:
 		_registered_paintings[painting]["status"] = saved_status
+		var saved_critique = painting_data.get("critique", "")
+		if saved_critique != "":
+			_registered_paintings[painting]["critique"] = saved_critique
 
 	# Set transform
 	painting.global_position = Vector3(

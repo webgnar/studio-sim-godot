@@ -36,7 +36,6 @@ var _current_is_shipped: bool = false
 var _detail_col: int = 0  # 0=left (statement), 1=right (critique) — shipped only
 
 @onready var _critique_panel: VBoxContainer = $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ContentHBox/RightVBox
-@onready var _critique_header: Label = $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ContentHBox/RightVBox/CritiqueHeader
 @onready var _critique_display: TextEdit = $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ContentHBox/RightVBox/CritiqueDisplay
 
 # Sound (reuse parent PauseMenu sounds)

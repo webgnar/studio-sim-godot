@@ -17,6 +17,7 @@ enum GateState { OPEN, CLOSED, ANIMATING }
 @export var detection_area: Area3D
 @export var gate_animation_player: AnimationPlayer
 @export var moving_parts: Node3D  ## The node that descends during export
+@export var gallery_spawn_point: Node3D  ## Drop point in gallery room for shipped paintings
 
 @export_group("Export Settings")
 @export var descent_duration: float = 1.5  ## Duration of descent animation
@@ -49,6 +50,10 @@ func _ready() -> void:
 
 	if not gate_animation_player:
 		gate_animation_player = get_node_or_null("MovingParts/gate/AnimationPlayer")
+
+	# NOTE: gallery_spawn_point lookup is deferred to start_export() because GallerySpawnPoint
+	# (a sibling in world.tscn) may not be in the scene tree yet when _ready() runs on
+	# instanced subscenes. If assigned via the Inspector, this block is skipped.
 
 	# Connect Area3D signals if found
 	if detection_area:
@@ -221,9 +226,10 @@ func start_export() -> void:
 	var painting = paintings_inside[0]
 	export_started.emit(painting)
 
-	# Play descent animation with sound
+	# Freeze painting before descent so it rides with the elevator, not physics
+	painting.freeze = true
 	_export_sound.play()
-	await _play_descent_effect()
+	await _play_descent_effect(painting)
 
 	# Perform export
 	var result = PaintingExporter.export_painting(painting)
@@ -250,12 +256,30 @@ func start_export() -> void:
 	if publish_online and not png_path.is_empty() and not glb_path.is_empty():
 		GalleryUploader.upload_painting(png_path, glb_path, painting.painting_name, painting.artist_statement, SteamManager.persona_name)
 
-	# Ship painting (preserves metadata in inventory as SHIPPED) then remove from world
+	# Ship painting to gallery — mark as SHIPPED and teleport to gallery room
 	WorldStateManager.ship_painting(painting)
 	if has_node("/root/EconomyManager"):
 		EconomyManager.add_money(50, "shipped: " + painting.painting_name)
 	paintings_inside.erase(painting)
-	painting.queue_free()  # This will auto-unregister from WorldStateManager via _exit_tree()
+
+	# Late lookup: find GallerySpawnPoint now if not already set via Inspector.
+	# Done here (not in _ready) because sibling nodes aren't guaranteed to be in the
+	# tree yet when an instanced subscene's _ready() fires.
+	if not gallery_spawn_point:
+		gallery_spawn_point = get_parent().find_child("GallerySpawnPoint", true, false) as Node3D
+
+	# Teleport painting to gallery spawn point (scatter slightly so multiple don't stack)
+	# painting.freeze is already true from before descent
+	if gallery_spawn_point:
+		var offset = Vector3(randf_range(-3.0, 3.0), 0.5, randf_range(-3.0, 3.0))
+		painting.global_position = gallery_spawn_point.global_position + offset
+		painting.global_rotation = Vector3(0, randf_range(-PI * 0.1, PI * 0.1), 0)
+		painting.freeze = false
+		painting.linear_velocity = Vector3.ZERO
+		painting.angular_velocity = Vector3.ZERO
+	else:
+		push_warning("ElevatorController: gallery_spawn_point not set — painting freed instead")
+		painting.queue_free()
 
 	# Save game state after shipping
 	await WorldStateManager.save_world_state()
@@ -275,8 +299,8 @@ func start_export() -> void:
 	export_completed.emit(png_path, glb_path)
 
 
-func _play_descent_effect() -> void:
-	"""Animate the elevator descending"""
+func _play_descent_effect(painting: RigidBody3D = null) -> void:
+	"""Animate the elevator descending. Pass painting to have it ride along."""
 	if not moving_parts:
 		await get_tree().create_timer(descent_duration).timeout
 		return
@@ -288,6 +312,14 @@ func _play_descent_effect() -> void:
 	tween.set_ease(Tween.EASE_IN)
 	tween.set_trans(Tween.TRANS_QUAD)
 	tween.tween_property(moving_parts, "position", end_pos, descent_duration)
+
+	if painting:
+		# Mirror the painting's world-space position to match moving_parts' descent.
+		# moving_parts moves (0, -descent_distance, 0) in its parent's local space;
+		# multiply by the parent's basis to get the equivalent world-space delta.
+		var world_delta = moving_parts.get_parent().global_transform.basis * Vector3(0, -descent_distance, 0)
+		tween.parallel().tween_property(painting, "global_position", painting.global_position + world_delta, descent_duration)
+
 	await tween.finished
 
 func _play_ascent_effect() -> void:

@@ -29,9 +29,10 @@ func _ready():
 	# Set mouse mode to visible
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
-	# Fade in from black
-	SceneTransition.set_fade_visible(true)
-	SceneTransition.fade_in()
+	# Fade in from black (skip if SceneTransition is already handling a fade-in)
+	if not SceneTransition.is_transitioning:
+		SceneTransition.set_fade_visible(true)
+		SceneTransition.fade_in()
 
 	# Start fan animation
 	if fan_animation_player:
