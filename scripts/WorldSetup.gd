@@ -40,9 +40,20 @@ func _ready():
 	# Wait one frame for scene tree to fully initialize
 	await get_tree().process_frame
 
-	# Load saved world state (spawn saved carryable paintings)
+	# Hide all shop-gated props before loading (purchased ones are revealed by ShopManager
+	# inside load_world_state via WorldStateManager.reveal_purchased_items)
+	_hide_all_shop_props()
+
+	# Load saved world state (spawn saved carryable paintings, reveal purchased shop items)
 	if WorldStateManager:
 		WorldStateManager.load_world_state(self)
+
+func _hide_all_shop_props() -> void:
+	"""Hide and freeze all shop-gated props. ShopManager reveals purchased ones after load."""
+	for node in get_tree().get_nodes_in_group("shop_prop"):
+		node.visible = false
+		if node is RigidBody3D:
+			node.freeze = true
 
 func _on_lightswitch3_toggled(_switch_id: String, is_on: bool) -> void:
 	if is_on and SteamManager:

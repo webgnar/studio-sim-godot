@@ -4,7 +4,7 @@ class_name PauseMenuUI
 ## Pause menu with horizontal tabs: Commissions, Inventory, Options
 ## Handles top-level tab switching and delegates input to active tab content
 
-enum Tab { COMMISSIONS, INVENTORY, OPTIONS }
+enum Tab { COMMISSIONS, INVENTORY, OPTIONS, SHOP }
 enum NavMode { TAB_BAR, TAB_CONTENT }
 
 @onready var dialog: PanelContainer = $Dialog
@@ -15,11 +15,13 @@ enum NavMode { TAB_BAR, TAB_CONTENT }
 @onready var commissions_tab_button: Button = $Dialog/MarginContainer/VBoxContainer/TabBar/CommissionsTab
 @onready var inventory_tab_button: Button = $Dialog/MarginContainer/VBoxContainer/TabBar/InventoryTab
 @onready var options_tab_button: Button = $Dialog/MarginContainer/VBoxContainer/TabBar/OptionsTab
+@onready var shop_tab_button: Button = $Dialog/MarginContainer/VBoxContainer/TabBar/ShopTabButton
 
 # Tab content containers
 @onready var commissions_content: Control = $Dialog/MarginContainer/VBoxContainer/TabContent/CommissionsContent
 @onready var inventory_content: Control = $Dialog/MarginContainer/VBoxContainer/TabContent/InventoryContent
 @onready var options_content: Control = $Dialog/MarginContainer/VBoxContainer/TabContent/OptionsContent
+@onready var shop_content: Control = $Dialog/MarginContainer/VBoxContainer/TabContent/ShopContent
 
 # Return to title button (in Options tab)
 @onready var return_to_title_button: Button = $Dialog/MarginContainer/VBoxContainer/TabContent/OptionsContent/ReturnToTitleButton
@@ -34,6 +36,7 @@ enum NavMode { TAB_BAR, TAB_CONTENT }
 var mission_selection_ui: MissionSelectionUI = null
 var inventory_tab: Control = null
 var options_menu: Control = null
+var shop_tab: ShopTab = null
 
 # Key icon (placed in TabBar in scene)
 @onready var key_icon: TextureRect = $Dialog/MarginContainer/VBoxContainer/TabBar/KeyIcon
@@ -57,7 +60,7 @@ func _ready():
 	dialog.visible = false
 
 	# Build tab buttons array
-	tab_buttons = [commissions_tab_button, inventory_tab_button, options_tab_button]
+	tab_buttons = [commissions_tab_button, inventory_tab_button, options_tab_button, shop_tab_button]
 
 	# Disable Godot focus on tab buttons (navigation is script-driven via modulate)
 	for button in tab_buttons:
@@ -67,11 +70,13 @@ func _ready():
 	commissions_tab_button.pressed.connect(func(): _switch_tab(Tab.COMMISSIONS))
 	inventory_tab_button.pressed.connect(func(): _switch_tab(Tab.INVENTORY))
 	options_tab_button.pressed.connect(func(): _switch_tab(Tab.OPTIONS))
+	shop_tab_button.pressed.connect(func(): _switch_tab(Tab.SHOP))
 
 	# Find embedded child UIs
 	mission_selection_ui = _find_child_of_type(commissions_content, "MissionSelectionUI") as MissionSelectionUI
 	inventory_tab = _find_child_by_class_name(inventory_content, "InventoryTab")
 	options_menu = _find_child_by_script_name(options_content, "OptionsMenu")
+	shop_tab = _find_child_by_class_name(shop_content, "ShopTab") as ShopTab
 
 	# Connect return to title button
 	return_to_title_button.pressed.connect(_on_return_to_title_pressed)
@@ -336,7 +341,7 @@ func _switch_tab(tab: Tab):
 
 func _cycle_tab(direction: int):
 	"""Cycle through tabs with clamping (no wrap)"""
-	var new_tab = clampi(current_tab + direction, 0, Tab.OPTIONS)
+	var new_tab = clampi(current_tab + direction, 0, Tab.SHOP)
 	if new_tab != current_tab:
 		# If we were in content mode, enter tab bar first
 		if nav_mode == NavMode.TAB_CONTENT:
@@ -379,6 +384,12 @@ func _enter_tab_content_mode(from_mouse: bool = false):
 					options_menu.is_in_tab_mode = true
 					options_menu._update_tab_mode_visual()
 					options_menu.input_cooldown = 0.0
+		Tab.SHOP:
+			if shop_tab:
+				shop_tab.keyboard_nav_enabled = true
+				if not from_mouse:
+					shop_tab.nav_mode = ShopTab.NavMode.ITEM_LIST
+					shop_tab.input_cooldown = 0.0
 
 	if not from_mouse and button_hit_sound:
 		button_hit_sound.play()
@@ -395,12 +406,16 @@ func _deactivate_tab_content(tab: Tab):
 		Tab.OPTIONS:
 			if options_menu:
 				options_menu.keyboard_nav_enabled = false
+		Tab.SHOP:
+			if shop_tab:
+				shop_tab.keyboard_nav_enabled = false
 
 func _hide_all_tab_content():
 	"""Hide all tab content areas and disable input processing"""
 	commissions_content.visible = false
 	inventory_content.visible = false
 	options_content.visible = false
+	shop_content.visible = false
 
 	# Disable input processing
 	if mission_selection_ui:
@@ -410,6 +425,8 @@ func _hide_all_tab_content():
 	if options_menu:
 		options_menu.hide()
 		options_menu.process_mode = Node.PROCESS_MODE_DISABLED
+	if shop_tab:
+		shop_tab.process_mode = Node.PROCESS_MODE_DISABLED
 
 func _show_tab_content(tab: Tab):
 	"""Show the content area for a specific tab (mouse-interactive immediately, keyboard nav controlled by flag)"""
@@ -435,6 +452,12 @@ func _show_tab_content(tab: Tab):
 				# Enable process_mode so mouse works, but disable keyboard nav
 				options_menu.process_mode = Node.PROCESS_MODE_INHERIT
 				options_menu.keyboard_nav_enabled = false
+		Tab.SHOP:
+			shop_content.visible = true
+			if shop_tab:
+				shop_tab.activate()
+				shop_tab.process_mode = Node.PROCESS_MODE_INHERIT
+				shop_tab.keyboard_nav_enabled = false
 
 func _update_tab_button_styles():
 	"""Update tab button visual states"""

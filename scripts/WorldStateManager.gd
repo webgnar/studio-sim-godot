@@ -3,7 +3,7 @@ extends Node
 # WorldStateManager - Singleton for managing persistent world state (carryable paintings)
 # Handles saving/loading painting positions, rotations, and textures to disk
 
-const SAVE_VERSION = 3
+const SAVE_VERSION = 4
 const WORLD_STATE_PATH = "user://world_state.json"
 const TEXTURES_DIR = "user://world_paintings"
 
@@ -27,6 +27,9 @@ var _painting_system_3d: PaintingSystem3D = null
 
 # Player state flags (keys, unlocks, etc.)
 var _player_flags: Dictionary = {}
+
+# IDs of shop items the player has purchased (e.g. "nail_gun", "trash_can")
+var _purchased_items: Array[String] = []
 
 func _ready():
 	_ensure_directories()
@@ -167,6 +170,19 @@ func clear_flag(flag_name: String) -> void:
 	_player_flags.erase(flag_name)
 
 # ============================================================================
+# Shop Purchased Items
+# ============================================================================
+
+func add_purchased_item(item_id: String) -> void:
+	"""Mark a shop item as purchased. Called by ShopManager on purchase."""
+	if item_id not in _purchased_items:
+		_purchased_items.append(item_id)
+
+func get_purchased_items() -> Array[String]:
+	"""Return a copy of the purchased item IDs list."""
+	return _purchased_items.duplicate()
+
+# ============================================================================
 # Save/Load
 # ============================================================================
 
@@ -190,7 +206,8 @@ func save_world_state() -> bool:
 		"nails": [],
 		"stickers_3d": [],
 		"economy": _save_economic_state(),  # PHASE 0: Economy save
-		"player_flags": _player_flags  # Player state flags (keys, unlocks, etc.)
+		"player_flags": _player_flags,  # Player state flags (keys, unlocks, etc.)
+		"purchased_items": _purchased_items.duplicate()  # Shop items bought by player
 	}
 
 	var valid_painting_ids = []
@@ -392,6 +409,14 @@ func load_world_state(world_root: Node3D) -> void:
 	# Load player state flags
 	_player_flags = save_data.get("player_flags", {})
 
+	# Load purchased shop items and reveal them in the world
+	var purchased_raw = save_data.get("purchased_items", [])
+	_purchased_items.clear()
+	for id in purchased_raw:
+		_purchased_items.append(str(id))
+	if has_node("/root/ShopManager"):
+		ShopManager.reveal_purchased_items()
+
 	print("World state loaded: %d/%d nails, %d/%d paintings, %d/%d stickers" % [nails_loaded, nails_array.size(), paintings_loaded, paintings_array.size(), stickers_loaded, stickers_array.size()])
 
 func clear_world_state() -> void:
@@ -418,6 +443,9 @@ func clear_world_state() -> void:
 
 	# Clear player flags
 	_player_flags.clear()
+
+	# Clear shop purchases
+	_purchased_items.clear()
 
 	print("World state cleared")
 

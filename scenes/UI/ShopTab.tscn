@@ -1,0 +1,72 @@
+[gd_scene format=3 uid="uid://shop_tab_scene_001"]
+
+[ext_resource type="Script" uid="uid://shop_tab_script_001" path="res://scripts/ui/ShopTab.gd" id="1_script"]
+
+[node name="ShopTab" type="Control"]
+script = ExtResource("1_script")
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 20
+
+[node name="LeftPanel" type="VBoxContainer" parent="HBoxContainer"]
+custom_minimum_size = Vector2(320, 0)
+layout_mode = 2
+
+[node name="LeftHeader" type="Label" parent="HBoxContainer/LeftPanel"]
+layout_mode = 2
+text = "SHOP"
+theme_override_font_sizes/font_size = 22
+
+[node name="ScrollContainer" type="ScrollContainer" parent="HBoxContainer/LeftPanel"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ItemList" type="VBoxContainer" parent="HBoxContainer/LeftPanel/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 4
+
+[node name="RightPanel" type="VBoxContainer" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 16
+
+[node name="ItemName" type="Label" parent="HBoxContainer/RightPanel"]
+layout_mode = 2
+text = "Select an item"
+theme_override_font_sizes/font_size = 24
+autowrap_mode = 1
+
+[node name="ItemDescription" type="Label" parent="HBoxContainer/RightPanel"]
+layout_mode = 2
+text = ""
+autowrap_mode = 3
+size_flags_vertical = 3
+
+[node name="ItemPrice" type="Label" parent="HBoxContainer/RightPanel"]
+layout_mode = 2
+text = ""
+theme_override_font_sizes/font_size = 20
+
+[node name="StatusLabel" type="Label" parent="HBoxContainer/RightPanel"]
+visible = false
+layout_mode = 2
+text = ""
+modulate = Color(1, 0.4, 0.4, 1)
+
+[node name="BuyButton" type="Button" parent="HBoxContainer/RightPanel"]
+custom_minimum_size = Vector2(200, 50)
+layout_mode = 2
+text = "BUY"

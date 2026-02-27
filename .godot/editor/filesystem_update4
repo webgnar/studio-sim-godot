@@ -1,1 +1,13 @@
 res://scripts/PlayerController.gd
+res://scripts/WorldSetup.gd
+res://scripts/WorldStateManager.gd
+res://scripts/ui/PauseMenu.gd
+res://scenes/world.tscn
+res://themes/ui_theme.tres
+res://materials/tv.gdshader
+res://materials/tv.tres
+res://materials/world_environ.tres
+res://models/particles/new_array_mesh.tres
+res://models/particles/new_array_mesh2.tres
+res://models/particles/new_array_mesh3.tres
+res://scripts/economy/ShopManager.gd

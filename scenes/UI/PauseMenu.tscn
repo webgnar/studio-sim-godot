@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://bw6qndm8f0bap" path="res://scenes/UI/OptionsMenu.tscn" id="4_options"]
 [ext_resource type="Texture2D" uid="uid://g4asi3np5tvu" path="res://sprites/ui/rb.png" id="5_adhrm"]
 [ext_resource type="PackedScene" uid="uid://c6huchrcnqsod" path="res://scenes/UI/InventoryTab.tscn" id="5_inventory"]
+[ext_resource type="PackedScene" path="res://scenes/UI/ShopTab.tscn" id="10_shoptab"]
 [ext_resource type="AudioStream" uid="uid://cobqa7fyriw4h" path="res://sounds/picotron/openmenu.ogg" id="6_open"]
 [ext_resource type="AudioStream" uid="uid://cyvlgci21yq6s" path="res://sounds/picotron/closemenu.ogg" id="7_close"]
 [ext_resource type="AudioStream" uid="uid://ht7rkfvqubdm" path="res://sounds/picotron/buttonnav.ogg" id="8_nav"]
@@ -82,6 +83,11 @@ custom_minimum_size = Vector2(300, 40)
 layout_mode = 2
 text = "OPTIONS"
 
+[node name="ShopTabButton" type="Button" parent="Dialog/MarginContainer/VBoxContainer/TabBar" unique_id=2010000010]
+custom_minimum_size = Vector2(300, 40)
+layout_mode = 2
+text = "SHOP"
+
 [node name="KeyIcon" type="TextureRect" parent="Dialog/MarginContainer/VBoxContainer/TabBar" unique_id=1630929932]
 layout_mode = 2
 size_flags_vertical = 4
@@ -154,6 +160,18 @@ offset_right = 150.0
 grow_horizontal = 2
 grow_vertical = 0
 text = "Quit and Return to Title Screen"
+
+[node name="ShopContent" type="Control" parent="Dialog/MarginContainer/VBoxContainer/TabContent" unique_id=2010000011]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ShopTab" parent="Dialog/MarginContainer/VBoxContainer/TabContent/ShopContent" unique_id=2010000012 instance=ExtResource("10_shoptab")]
+layout_mode = 1
 
 [node name="OpenMenuSound" type="AudioStreamPlayer" parent="." unique_id=331198535]
 stream = ExtResource("6_open")
