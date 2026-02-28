@@ -30,6 +30,7 @@
 [ext_resource type="Texture2D" uid="uid://uyikjs5uvqxf" path="res://textures/512 cementbrick.png" id="30_kvmu4"]
 [ext_resource type="Texture2D" uid="uid://daneppyy5y8cp" path="res://sprites/textures/floor-cement-2.jpg" id="31_c15v2"]
 [ext_resource type="PackedScene" uid="uid://br0ke8na4oeqj" path="res://scenes/button_green.tscn" id="31_grmox"]
+[ext_resource type="FontFile" uid="uid://tmjyio0w6cu0" path="res://fonts/studio-sim.ttf" id="31_qetcs"]
 [ext_resource type="Script" uid="uid://c8uap2yk1tjju" path="res://scripts/components/StudioAssistantStatusPanel.gd" id="33_kvmu4"]
 [ext_resource type="Script" uid="uid://cdcxs0jsffsfb" path="res://scripts/old stuff/BoomboxInteraction.gd" id="36_boombox_new"]
 [ext_resource type="PackedScene" uid="uid://bxi8jlwr1acc4" path="res://scenes/mirror.tscn" id="39_qaasp"]
@@ -95,14 +96,15 @@
 [ext_resource type="PackedScene" uid="uid://bs7m75lssp7qx" path="res://scenes/CritiqueTV.tscn" id="97_crtq"]
 [ext_resource type="Texture2D" uid="uid://iwkinqup0swt" path="res://textures/256 wood floor.png" id="101_mu18u"]
 [ext_resource type="PackedScene" uid="uid://5neft563t1yw" path="res://scenes/OpenStickerFolderButton.tscn" id="101_odf6h"]
+[ext_resource type="PackedScene" uid="uid://dak4p8mdryt52" path="res://scenes/StudioAssistantCharacter.tscn" id="102_asst"]
+[ext_resource type="PackedScene" uid="uid://buoprlo6hvckr" path="res://scenes/StickerWall.tscn" id="103_swall"]
+[ext_resource type="PackedScene" path="res://scenes/objects/HireAssistantButton.tscn" id="104_hire"]
 [ext_resource type="AudioStream" uid="uid://84rjpuccue2i" path="res://sounds/boomboxSwitch.ogg" id="boombox_switch"]
 [ext_resource type="AudioStream" uid="uid://cfuo8ydnxfi66" path="res://sounds/convenient ear pleasure.ogg" id="ear_ogg"]
 [ext_resource type="AudioStream" uid="uid://bukro42figtah" path="res://sounds/fan switch.ogg" id="fan_switch"]
 [ext_resource type="AudioStream" uid="uid://bw0ig22tombxc" path="res://sounds/ministudio.ogg" id="ministudio_audio"]
 [ext_resource type="AudioStream" uid="uid://cldonhpncb00b" path="res://sounds/(First Trip) To The Moon copy.ogg" id="moon_ogg"]
 [ext_resource type="Script" uid="uid://bunyklibu48s2" path="res://scripts/SkyRotator.gd" id="sky_rotator"]
-[ext_resource type="PackedScene" uid="uid://c9k4p8mdryt52" path="res://scenes/StudioAssistantCharacter.tscn" id="102_asst"]
-[ext_resource type="PackedScene" uid="uid://d2e5f8g1h4j7k0" path="res://scenes/StickerWall.tscn" id="103_swall"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dss4m"]
 albedo_texture = ExtResource("1_q5onr")
@@ -343,17 +345,17 @@ albedo_color = Color(1.0734373, 1.0734373, 0.15063755, 1)
 albedo_texture = ExtResource("82_mu18u")
 texture_filter = 0
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_odf6h"]
+[sub_resource type="PlaneMesh" id="PlaneMesh_gw1vw"]
 resource_local_to_scene = true
 size = Vector2(2.5, 3)
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_mu18u"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_xiw03"]
 resource_name = "_albedo"
 viewport_path = NodePath("../MirrorNew/SubViewport")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wui3h"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pwx6t"]
 resource_local_to_scene = true
-albedo_texture = SubResource("ViewportTexture_mu18u")
+albedo_texture = SubResource("ViewportTexture_xiw03")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_1v02h"]
 size = Vector2(2.5, 3)
@@ -669,6 +671,39 @@ uv1_scale = Vector3(0.1, 0.84, 1.09)
 uv1_offset = Vector3(1.43, 0, 0)
 texture_filter = 0
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wui3h"]
+albedo_texture = ExtResource("31_c15v2")
+normal_enabled = true
+normal_scale = 0.24
+normal_texture = ExtResource("23_swu3i")
+ao_enabled = true
+ao_light_affect = 0.08
+ao_texture = ExtResource("22_ygn2i")
+uv1_scale = Vector3(0.27, 2.87, 2.89)
+uv1_offset = Vector3(0, -1, 0)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xiw03"]
+albedo_texture = ExtResource("31_c15v2")
+normal_enabled = true
+normal_scale = 0.24
+normal_texture = ExtResource("23_swu3i")
+ao_enabled = true
+ao_light_affect = 0.08
+ao_texture = ExtResource("22_ygn2i")
+uv1_scale = Vector3(0.77, 2.21, 2.89)
+uv1_offset = Vector3(0, -1, 0)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xullu"]
+albedo_texture = ExtResource("31_c15v2")
+normal_enabled = true
+normal_scale = 0.24
+normal_texture = ExtResource("23_swu3i")
+ao_enabled = true
+ao_light_affect = 0.08
+ao_texture = ExtResource("22_ygn2i")
+uv1_scale = Vector3(1.39, 1.15, 2.89)
+uv1_offset = Vector3(0, -1, 0)
+
 [node name="World" type="Node3D" unique_id=81477]
 script = ExtResource("1_qaasp")
 
@@ -749,7 +784,7 @@ transform = Transform3D(-0.204136, 0, 0.38978007, 0, 0.44, 0, -0.38978007, 0, -0
 transform = Transform3D(-3.8946845e-07, 2.97, 2.5964567e-07, 2.97, 3.8946845e-07, -2.2698936e-14, -5.674736e-14, 2.5964567e-07, -2.97, -58.9851, -8.151672, 17.451527)
 
 [node name="skyscraper" parent="outside Background" unique_id=1622378402 instance=ExtResource("75_qaasp")]
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 16.419205, 47.451096, 54.40395)
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 16.498226, 47.451096, 54.408978)
 
 [node name="Spotlight1" parent="." unique_id=468801462 instance=ExtResource("86_grmox")]
 transform = Transform3D(0.19553687, 0.04201586, 0, -0.04201586, 0.19553687, 0, 0, 0, 0.2, -2.5281055, 4.97409, -1.6068956)
@@ -938,19 +973,29 @@ operation = 2
 size = Vector3(1.5938721, 0.42700195, 0.14248657)
 
 [node name="Status Panel" type="Node3D" parent="AssistantStudio" unique_id=321856961 node_paths=PackedStringArray("status_label")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1006398, 6.7947483)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.949214, 2.5629182, -2.5327654)
 script = ExtResource("33_kvmu4")
 status_label = NodePath("Label3D")
 
 [node name="Label3D" type="Label3D" parent="AssistantStudio/Status Panel" unique_id=1565086804]
 billboard = 1
 text = "TEST TEXT"
+font = ExtResource("31_qetcs")
 
-[node name="StudioAssistantCharacter" parent="AssistantStudio" instance=ExtResource("102_asst")]
+[node name="StudioAssistantCharacter" parent="AssistantStudio" unique_id=421565499 instance=ExtResource("102_asst")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.5, 1.5)
 
-[node name="StickerWall" parent="AssistantStudio" instance=ExtResource("103_swall")]
-transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -3.5, 0.5, 0.5)
+[node name="StickerWall" parent="AssistantStudio" unique_id=1083857710 instance=ExtResource("103_swall")]
+transform = Transform3D(0.93857735, 0, 0.34506887, 0, 1, 0, -0.34506887, 0, 0.93857735, -1.0653248, 0.5, -3.3040338)
+
+[node name="SpotLight3D" type="SpotLight3D" parent="AssistantStudio" unique_id=1042600019]
+transform = Transform3D(0.96502125, -0.10872111, 0.23856667, -0.07238324, 0.7641048, 0.64101857, -0.25198224, -0.6358647, 0.7295077, 0, 2.098744, 0)
+spot_range = 7.702
+spot_attenuation = 0.87
+spot_angle = 88.83
+
+[node name="HireAssistantButton" parent="AssistantStudio" unique_id=47708941 instance=ExtResource("104_hire")]
+transform = Transform3D(-4.371139e-09, 0.1, 0, -0.1, -4.371139e-09, 0, 0, 0, 0.1, -3.925264, -0.24193168, 1.6015806)
 
 [node name="Elevator" parent="." unique_id=904124064 instance=ExtResource("29_xgy6y")]
 transform = Transform3D(1.44, 0, 0, 0, 1.44, 0, 0, 0, 1.44, 5.356282, 0.43740082, -4.5508404)
@@ -1592,8 +1637,8 @@ surface_material_override/0 = SubResource("StandardMaterial3D_7b7y8")
 
 [node name="mirror" parent="." unique_id=1626491013 groups=["shop_prop"] instance=ExtResource("39_qaasp")]
 transform = Transform3D(-4.7902194e-08, -0.99488777, 0.10098683, -3.9073655e-08, 0.10098683, 0.99488777, -1, 4.3711392e-08, -4.3711385e-08, 2.8, 1.497, 5.232)
-mesh = SubResource("PlaneMesh_odf6h")
-surface_material_override/0 = SubResource("StandardMaterial3D_wui3h")
+mesh = SubResource("PlaneMesh_gw1vw")
+surface_material_override/0 = SubResource("StandardMaterial3D_pwx6t")
 show_debug_logs = false
 metadata/mirror = "mirror"
 metadata/shop_item_id = "mirror"
@@ -1748,7 +1793,7 @@ autoplay = &"drop"
 transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 6.655397, 0.7673063, 7.165266)
 
 [node name="baricade 2" parent="." unique_id=1127012402 instance=ExtResource("94_n6seq")]
-transform = Transform3D(-0.1, 0, 1.509958e-08, 0, 0.1, 0, -1.509958e-08, 0, -0.1, 5.797236, 0.6591382, 8.597177)
+transform = Transform3D(-1.0728441e-08, 0, -0.1, 0, 0.1, 0, 0.1, 0, -1.0728441e-08, 5.797236, 0.6591382, 8.597177)
 
 [node name="StaticBody3D" type="StaticBody3D" parent="baricade 2" unique_id=440754542]
 collision_layer = 2
@@ -1862,14 +1907,17 @@ material = SubResource("StandardMaterial3D_gw1vw")
 [node name="CSGBox3D5" type="CSGBox3D" parent="gallery" unique_id=1455443260]
 transform = Transform3D(0.7344291, -0.6786854, 0, 0.6786854, 0.7344291, 0, 0, 0, 1, 0.050621986, 1.8103878, 8.670744)
 size = Vector3(8.559082, 0.36865234, 2.2436523)
+material = SubResource("StandardMaterial3D_wui3h")
 
 [node name="CSGBox3D7" type="CSGBox3D" parent="gallery" unique_id=1361886888]
-transform = Transform3D(1.0430813e-07, -8.940697e-08, -0.99999994, 0.581541, 0.8135171, -6.2326055e-10, 0.81351703, -0.58154094, 1.2007347e-07, -5.810877, -6.5673466, -0.056494713)
-size = Vector3(18.948006, 0.45007324, 6.267456)
+transform = Transform3D(1.0430813e-07, -8.940697e-08, -0.99999994, 0.581541, 0.8135171, -6.2326055e-10, 0.81351703, -0.58154094, 1.2007347e-07, -5.810877, -6.5570307, -0.05550289)
+size = Vector3(18.950443, 0.45007324, 6.267456)
+material = SubResource("StandardMaterial3D_xiw03")
 
 [node name="CSGBox3D6" type="CSGBox3D" parent="gallery" unique_id=1796157694]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.8282504, -1.0484972, 11.517204)
 size = Vector3(6.1931763, 0.37182617, 7.990631)
+material = SubResource("StandardMaterial3D_xullu")
 
 [node name="CSGBox3D8" type="CSGBox3D" parent="gallery" unique_id=120670611]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.3636584, -1.1210938, -9.3975115)

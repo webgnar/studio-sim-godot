@@ -3,18 +3,19 @@
 [ext_resource type="Script" uid="uid://bh6w3xnvq5t21" path="res://scripts/StickerWallManager.gd" id="1_swmgr"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_wall"]
-size = Vector2(2.0, 2.5)
+size = Vector2(5, 3)
 
-[node name="StickerWall" type="Node3D"]
+[node name="StickerWall" type="Node3D" unique_id=450126892]
 script = ExtResource("1_swmgr")
+canvas_size = Vector2(1280, 768)
 
-[node name="SubViewport" type="SubViewport" parent="."]
+[node name="SubViewport" type="SubViewport" parent="." unique_id=1494825580]
 transparent_bg = true
-size = Vector2i(512, 512)
+size = Vector2i(1280, 768)
 render_target_update_mode = 4
 
-[node name="StickerCanvas" type="Node2D" parent="SubViewport"]
+[node name="StickerCanvas" type="Node2D" parent="SubViewport" unique_id=1280090165]
 
-[node name="WallPlane" type="MeshInstance3D" parent="."]
+[node name="WallPlane" type="MeshInstance3D" parent="." unique_id=1654693605]
 transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0)
 mesh = SubResource("PlaneMesh_wall")

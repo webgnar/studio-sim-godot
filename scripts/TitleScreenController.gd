@@ -297,6 +297,28 @@ func _wipe_save_data():
 		WorldStateManager.clear_world_state()
 		print("TitleScreen: Cleared world state")
 
+	# Reset economy (DEBUG: start with $1600)
+	if EconomyManager:
+		EconomyManager.set_money(1600)
+		print("TitleScreen: Reset economy to $1600 [DEBUG]")
+
+	# Reset studio assistant
+	if AutomationManager:
+		AutomationManager.clear_state()
+		print("TitleScreen: Reset automation state")
+
+	# Clear sticker wall saves
+	var user_dir = DirAccess.open("user://")
+	if user_dir:
+		user_dir.list_dir_begin()
+		var fname = user_dir.get_next()
+		while fname != "":
+			if fname.begins_with("sticker_wall_") and fname.ends_with(".json"):
+				DirAccess.remove_absolute("user://" + fname)
+				print("TitleScreen: Deleted %s" % fname)
+			fname = user_dir.get_next()
+		user_dir.list_dir_end()
+
 func _delete_directory_recursive(path: String):
 	"""Recursively delete a directory and all its contents"""
 	var dir = DirAccess.open(path)

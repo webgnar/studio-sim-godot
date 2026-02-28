@@ -129,3 +129,9 @@ func load_save_data(data: Dictionary):
 
 	if studio_assistant_active:
 		print("AutomationManager: Studio Assistant restored (%.1fs until next payout)" % (ASSISTANT_INTERVAL - assistant_timer))
+
+func clear_state():
+	"""Reset all automation state (called on new game)"""
+	studio_assistant_active = false
+	assistant_timer = 0.0
+	print("AutomationManager: State cleared")

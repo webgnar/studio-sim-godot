@@ -2,13 +2,16 @@ extends Node3D
 
 ## Procedural sticker wall for the Studio Assistant room.
 ## Spawns a new sticker on the canvas every sticker_interval seconds.
-## Sticker placements are saved persistently via WorldStateManager.
+## Use wall_id to differentiate multiple instances — each saves independently.
 
-const SAVE_KEY = "sticker_wall_placements"
-const CANVAS_SIZE = Vector2(512, 512)
 const MARGIN = 40.0  # px from canvas edge
 
+## Unique ID for this wall's save file. Change per-instance for multiple walls.
+@export var wall_id: String = "wall_a"
+## How often a new sticker appears (seconds).
 @export var sticker_interval: float = 6.0
+## Canvas resolution. Match this to your SubViewport size.
+@export var canvas_size: Vector2 = Vector2(512, 512)
 
 @onready var sticker_canvas: Node2D = $SubViewport/StickerCanvas
 @onready var sub_viewport: SubViewport = $SubViewport
@@ -32,13 +35,23 @@ func _ready():
 		_spawn_sticker_sprite(data)
 	_placements = saved.duplicate(true)
 
-	# Start the interval timer
+	# Start the interval timer — only if Studio Assistant is already active
 	_timer = Timer.new()
 	_timer.wait_time = sticker_interval
-	_timer.autostart = true
+	_timer.autostart = false
 	_timer.one_shot = false
 	_timer.timeout.connect(_on_timer_timeout)
 	add_child(_timer)
+
+	if has_node("/root/AutomationManager"):
+		if AutomationManager.is_assistant_active():
+			_timer.start()
+		else:
+			AutomationManager.assistant_purchased.connect(_on_assistant_purchased)
+
+
+func _on_assistant_purchased() -> void:
+	_timer.start()
 
 
 func _on_timer_timeout() -> void:
@@ -50,8 +63,8 @@ func _on_timer_timeout() -> void:
 		return
 
 	var idx = randi() % library.size()
-	var x = randf_range(MARGIN, CANVAS_SIZE.x - MARGIN)
-	var y = randf_range(MARGIN, CANVAS_SIZE.y - MARGIN)
+	var x = randf_range(MARGIN, canvas_size.x - MARGIN)
+	var y = randf_range(MARGIN, canvas_size.y - MARGIN)
 	var rot = randf_range(-PI, PI)
 	var scl = randf_range(0.15, 0.45)
 
@@ -59,27 +72,25 @@ func _on_timer_timeout() -> void:
 	_spawn_sticker_sprite(data)
 	_placements.append(data)
 
-	# Persist sticker data only (avoid full world save every 6s)
-	if has_node("/root/WorldStateManager"):
-		WorldStateManager.set_data(SAVE_KEY, _placements.duplicate(true))
-		_save_stickers_only()
+	_save_stickers_only()
 
 	# Force viewport update so the new sticker renders
 	sub_viewport.render_target_update_mode = SubViewport.UPDATE_ONCE
 
 
+func _save_file_path() -> String:
+	return "user://sticker_wall_%s.json" % wall_id
+
+
 func _save_stickers_only() -> void:
-	"""Write just the sticker placement array to a lightweight JSON file, not the full world save."""
-	var path = "user://sticker_wall.json"
-	var file = FileAccess.open(path, FileAccess.WRITE)
+	var file = FileAccess.open(_save_file_path(), FileAccess.WRITE)
 	if file:
 		file.store_string(JSON.stringify(_placements))
 		file.close()
 
 
 func _load_stickers_from_file() -> Array:
-	"""Load sticker placements from the lightweight file, fallback to WorldStateManager misc_data."""
-	var path = "user://sticker_wall.json"
+	var path = _save_file_path()
 	if not FileAccess.file_exists(path):
 		return []
 	var file = FileAccess.open(path, FileAccess.READ)

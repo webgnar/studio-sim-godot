@@ -1,0 +1,72 @@
+[gd_scene format=3 uid="uid://urnnip80nb2n"]
+
+[ext_resource type="PackedScene" uid="uid://db8764j2674fq" path="res://models/props/outlet_box.glb" id="1_w3unl"]
+[ext_resource type="PackedScene" uid="uid://bryic0ubsrfjn" path="res://models/interactables/buttonGreen.glb" id="2_w1yl1"]
+[ext_resource type="Script" uid="uid://hlurbym3vcmr" path="res://scripts/components/StudioAssistantPurchaseButton.gd" id="3_hire"]
+
+[sub_resource type="Animation" id="Animation_reset"]
+length = 0.001
+
+[sub_resource type="Animation" id="Animation_press"]
+resource_name = "press"
+length = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, 0.5275917, 0), Vector3(0, -0.42874074, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_release"]
+resource_name = "release"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, -0.42874074, 0), Vector3(0, 0.5275917, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_hire"]
+_data = {
+&"RESET": SubResource("Animation_reset"),
+&"press": SubResource("Animation_press"),
+&"release": SubResource("Animation_release")
+}
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_hire"]
+radius = 1.0
+
+[node name="HireAssistantButton" type="Node3D"]
+transform = Transform3D(-4.371139e-09, 0.1, 0, -0.1, -4.371139e-09, 0, 0, 0, 0.1, 0, 0, 0)
+
+[node name="outletbox" parent="." instance=ExtResource("1_w3unl")]
+transform = Transform3D(-4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0, 1, 0, 0, 0)
+
+[node name="green button" parent="." instance=ExtResource("2_w1yl1")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5275917, 0)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="green button"]
+libraries/ = SubResource("AnimationLibrary_hire")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9999999, 0)
+collision_layer = 8
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+shape = SubResource("CylinderShape3D_hire")
+
+[node name="HireInteraction" type="Node3D" parent="."]
+script = ExtResource("3_hire")
