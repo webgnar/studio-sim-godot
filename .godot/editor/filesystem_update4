@@ -1,4 +1,4 @@
-res://scenes/world.tscn
+res://scenes/StudioAssistantCharacter.tscn
 res://themes/ui_theme.tres
 res://materials/world_environ.tres
 res://models/particles/new_array_mesh.tres
@@ -6,11 +6,3 @@ res://models/particles/new_array_mesh2.tres
 res://models/particles/new_array_mesh3.tres
 res://materials/tv.gdshader
 res://materials/tv.tres
-res://scripts/StickerWallManager.gd
-res://scenes/StickerWall.tscn
-res://scripts/TitleScreenController.gd
-res://scripts/economy/EconomyManager.gd
-res://scripts/economy/AutomationManager.gd
-res://scripts/WorldSetup.gd
-res://scripts/economy/ShopManager.gd
-res://scripts/ui/ShopTab.gd

@@ -345,17 +345,17 @@ albedo_color = Color(1.0734373, 1.0734373, 0.15063755, 1)
 albedo_texture = ExtResource("82_mu18u")
 texture_filter = 0
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_gw1vw"]
+[sub_resource type="PlaneMesh" id="PlaneMesh_qetcs"]
 resource_local_to_scene = true
 size = Vector2(2.5, 3)
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_xiw03"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_gw1vw"]
 resource_name = "_albedo"
 viewport_path = NodePath("../MirrorNew/SubViewport")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pwx6t"]
 resource_local_to_scene = true
-albedo_texture = SubResource("ViewportTexture_xiw03")
+albedo_texture = SubResource("ViewportTexture_gw1vw")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_1v02h"]
 size = Vector2(2.5, 3)
@@ -1637,7 +1637,7 @@ surface_material_override/0 = SubResource("StandardMaterial3D_7b7y8")
 
 [node name="mirror" parent="." unique_id=1626491013 groups=["shop_prop"] instance=ExtResource("39_qaasp")]
 transform = Transform3D(-4.7902194e-08, -0.99488777, 0.10098683, -3.9073655e-08, 0.10098683, 0.99488777, -1, 4.3711392e-08, -4.3711385e-08, 2.8, 1.497, 5.232)
-mesh = SubResource("PlaneMesh_gw1vw")
+mesh = SubResource("PlaneMesh_qetcs")
 surface_material_override/0 = SubResource("StandardMaterial3D_pwx6t")
 show_debug_logs = false
 metadata/mirror = "mirror"

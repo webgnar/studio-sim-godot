@@ -41,7 +41,7 @@ func _update_display():
 	var status = AutomationManager.get_assistant_status()
 
 	if not status.active:
-		status_label.text = "Studio Assistant\n\nNot Hired\n\nHire at front desk"
+		status_label.text = "Studio Assistant\n\nAwaiting Employment"
 		return
 
 	var time_remaining = status.time_remaining

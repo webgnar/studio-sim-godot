@@ -1,3 +1,4 @@
+AnimationPlayer
 SpotLight3D
 CSGBox3D
 CSGCombiner3D
@@ -5,7 +6,6 @@ CollisionShape3D
 StaticBody3D
 VBoxContainer
 HBoxContainer
-AnimationPlayer
 AnimationTree
 MeshInstance3D
 TextureRect

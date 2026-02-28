@@ -8,11 +8,11 @@
 [ext_resource type="PackedScene" uid="uid://bw6qndm8f0bap" path="res://scenes/UI/OptionsMenu.tscn" id="4_options"]
 [ext_resource type="Texture2D" uid="uid://g4asi3np5tvu" path="res://sprites/ui/rb.png" id="5_adhrm"]
 [ext_resource type="PackedScene" uid="uid://c6huchrcnqsod" path="res://scenes/UI/InventoryTab.tscn" id="5_inventory"]
-[ext_resource type="PackedScene" path="res://scenes/UI/ShopTab.tscn" id="10_shoptab"]
 [ext_resource type="AudioStream" uid="uid://cobqa7fyriw4h" path="res://sounds/picotron/openmenu.ogg" id="6_open"]
 [ext_resource type="AudioStream" uid="uid://cyvlgci21yq6s" path="res://sounds/picotron/closemenu.ogg" id="7_close"]
 [ext_resource type="AudioStream" uid="uid://ht7rkfvqubdm" path="res://sounds/picotron/buttonnav.ogg" id="8_nav"]
 [ext_resource type="AudioStream" uid="uid://dae4sj3nmur45" path="res://sounds/picotron/buttonhit.ogg" id="9_hit"]
+[ext_resource type="PackedScene" path="res://scenes/UI/ShopTab.tscn" id="10_shoptab"]
 
 [node name="PauseMenu" type="Control" unique_id=1561803109]
 layout_mode = 3
@@ -52,11 +52,9 @@ theme_override_constants/separation = 10
 [node name="TabBar" type="HBoxContainer" parent="Dialog/MarginContainer/VBoxContainer" unique_id=1992921398]
 layout_mode = 2
 theme_override_constants/separation = 50
-alignment = 0
 
 [node name="MoneyLabel" type="Label" parent="Dialog/MarginContainer/VBoxContainer/TabBar" unique_id=2010000001]
 layout_mode = 2
-size_flags_vertical = 4
 text = "$0"
 
 [node name="Spacer" type="Control" parent="Dialog/MarginContainer/VBoxContainer/TabBar" unique_id=2010000002]
@@ -68,25 +66,25 @@ visible = false
 layout_mode = 2
 texture = ExtResource("3_ecia5")
 
-[node name="CommissionsTab" type="Button" parent="Dialog/MarginContainer/VBoxContainer/TabBar" unique_id=1763618734]
-custom_minimum_size = Vector2(300, 100)
-layout_mode = 2
-text = "COMMISSIONS"
-
 [node name="InventoryTab" type="Button" parent="Dialog/MarginContainer/VBoxContainer/TabBar" unique_id=1450620378]
 custom_minimum_size = Vector2(300, 40)
 layout_mode = 2
 text = "INVENTORY"
 
-[node name="OptionsTab" type="Button" parent="Dialog/MarginContainer/VBoxContainer/TabBar" unique_id=481085732]
-custom_minimum_size = Vector2(300, 40)
+[node name="CommissionsTab" type="Button" parent="Dialog/MarginContainer/VBoxContainer/TabBar" unique_id=1763618734]
+custom_minimum_size = Vector2(300, 100)
 layout_mode = 2
-text = "OPTIONS"
+text = "COMMISSIONS"
 
 [node name="ShopTabButton" type="Button" parent="Dialog/MarginContainer/VBoxContainer/TabBar" unique_id=2010000010]
 custom_minimum_size = Vector2(300, 40)
 layout_mode = 2
 text = "SHOP"
+
+[node name="OptionsTab" type="Button" parent="Dialog/MarginContainer/VBoxContainer/TabBar" unique_id=481085732]
+custom_minimum_size = Vector2(300, 40)
+layout_mode = 2
+text = "OPTIONS"
 
 [node name="KeyIcon" type="TextureRect" parent="Dialog/MarginContainer/VBoxContainer/TabBar" unique_id=1630929932]
 layout_mode = 2
