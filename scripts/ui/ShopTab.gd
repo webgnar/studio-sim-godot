@@ -245,6 +245,10 @@ func _on_buy_pressed() -> void:
 	if selected_index < 0 or selected_index >= catalog.size():
 		return
 	var item = catalog[selected_index]
+	if ShopManager.is_player_blocking_spawn(item["id"]):
+		status_label.text = "Move out of the item's spawn zone first"
+		status_label.visible = true
+		return
 	if ShopManager.purchase(item["id"]):
 		_play_hit_sound()
 		_update_selection()  # Refresh to show "Owned" state

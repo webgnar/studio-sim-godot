@@ -9,6 +9,12 @@ signal item_purchased(item_id: String)
 # Item catalog: Array of Dictionaries with keys: id, display_name, description, price
 var _catalog: Array = []
 
+const _DEFAULT_SPAWN_RADIUS := 1.2
+const _SPAWN_CHECK_RADII := {
+	"mirror": 2.0,           # large prop + palette stack child, against a wall
+	"customstickerbutton": 1.5,  # raised button with cylinder static body
+}
+
 
 func _ready() -> void:
 	_build_catalog()
@@ -43,6 +49,9 @@ func purchase(item_id: String) -> bool:
 		return false
 
 	if not EconomyManager.can_afford(item["price"]):
+		return false
+
+	if is_player_blocking_spawn(item_id):
 		return false
 
 	# Deduct money
@@ -102,6 +111,20 @@ func _reveal_prop(node: Node) -> void:
 					node.apply_central_impulse(Vector3.UP * 1.5),
 			CONNECT_ONE_SHOT
 		)
+
+
+func is_player_blocking_spawn(item_id: String) -> bool:
+	"""Returns true if the player is standing inside the spawn zone of the given item."""
+	var player = get_tree().get_first_node_in_group("player")
+	if not is_instance_valid(player):
+		return false
+	var player_pos: Vector3 = player.global_position
+	for node in get_tree().get_nodes_in_group("shop_prop"):
+		if node.get_meta("shop_item_id", "") == item_id:
+			var radius: float = _SPAWN_CHECK_RADII.get(item_id, _DEFAULT_SPAWN_RADIUS)
+			if player_pos.distance_to(node.global_position) < radius:
+				return true
+	return false
 
 
 func _get_item(item_id: String) -> Dictionary:
