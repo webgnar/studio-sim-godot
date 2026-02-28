@@ -54,6 +54,10 @@ func _hide_all_shop_props() -> void:
 		node.visible = false
 		if node is RigidBody3D:
 			node.freeze = true
+		# Disable all descendant collision shapes so StaticBody3D children (e.g. the
+		# mirror's palette stack, phone GLB body, sticker button base) don't block the player
+		for shape in node.find_children("*", "CollisionShape3D", true, false):
+			shape.disabled = true
 
 func _on_lightswitch3_toggled(_switch_id: String, is_on: bool) -> void:
 	if is_on and SteamManager:

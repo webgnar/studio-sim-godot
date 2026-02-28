@@ -11,3 +11,5 @@ res://scenes/StickerWall.tscn
 res://scripts/TitleScreenController.gd
 res://scripts/economy/EconomyManager.gd
 res://scripts/economy/AutomationManager.gd
+res://scripts/WorldSetup.gd
+res://scripts/economy/ShopManager.gd

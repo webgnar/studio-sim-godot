@@ -89,6 +89,9 @@ func _reveal_item_props(item_id: String) -> void:
 func _reveal_prop(node: Node) -> void:
 	"""Make a prop visible and active. Applies upward impulse to avoid player overlap."""
 	node.visible = true
+	# Re-enable all descendant collision shapes that were disabled before purchase
+	for shape in node.find_children("*", "CollisionShape3D", true, false):
+		shape.disabled = false
 	if node is RigidBody3D:
 		node.freeze = false
 		# Apply a small upward impulse on the next physics frame so the engine
