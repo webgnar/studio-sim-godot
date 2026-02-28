@@ -28,6 +28,9 @@ var _painting_system_3d: PaintingSystem3D = null
 # Player state flags (keys, unlocks, etc.)
 var _player_flags: Dictionary = {}
 
+# Generic misc data for arbitrary persistent values (e.g. sticker placements)
+var _misc_data: Dictionary = {}
+
 # IDs of shop items the player has purchased (e.g. "nail_gun", "trash_can")
 var _purchased_items: Array[String] = []
 
@@ -169,6 +172,14 @@ func clear_flag(flag_name: String) -> void:
 	"""Remove a player flag"""
 	_player_flags.erase(flag_name)
 
+func set_data(key: String, value: Variant) -> void:
+	"""Store arbitrary persistent data (arrays, dicts, etc.) by key"""
+	_misc_data[key] = value
+
+func get_data(key: String, default: Variant = null) -> Variant:
+	"""Retrieve arbitrary persistent data by key"""
+	return _misc_data.get(key, default)
+
 # ============================================================================
 # Shop Purchased Items
 # ============================================================================
@@ -207,6 +218,7 @@ func save_world_state() -> bool:
 		"stickers_3d": [],
 		"economy": _save_economic_state(),  # PHASE 0: Economy save
 		"player_flags": _player_flags,  # Player state flags (keys, unlocks, etc.)
+		"misc_data": _misc_data.duplicate(true),  # Generic arbitrary persistent data
 		"purchased_items": _purchased_items.duplicate()  # Shop items bought by player
 	}
 
@@ -409,6 +421,9 @@ func load_world_state(world_root: Node3D) -> void:
 	# Load player state flags
 	_player_flags = save_data.get("player_flags", {})
 
+	# Load generic misc data
+	_misc_data = save_data.get("misc_data", {})
+
 	# Load purchased shop items and reveal them in the world
 	var purchased_raw = save_data.get("purchased_items", [])
 	_purchased_items.clear()
@@ -443,6 +458,9 @@ func clear_world_state() -> void:
 
 	# Clear player flags
 	_player_flags.clear()
+
+	# Clear misc data
+	_misc_data.clear()
 
 	# Clear shop purchases
 	_purchased_items.clear()

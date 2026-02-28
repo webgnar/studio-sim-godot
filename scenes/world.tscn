@@ -101,6 +101,8 @@
 [ext_resource type="AudioStream" uid="uid://bw0ig22tombxc" path="res://sounds/ministudio.ogg" id="ministudio_audio"]
 [ext_resource type="AudioStream" uid="uid://cldonhpncb00b" path="res://sounds/(First Trip) To The Moon copy.ogg" id="moon_ogg"]
 [ext_resource type="Script" uid="uid://bunyklibu48s2" path="res://scripts/SkyRotator.gd" id="sky_rotator"]
+[ext_resource type="PackedScene" uid="uid://c9k4p8mdryt52" path="res://scenes/StudioAssistantCharacter.tscn" id="102_asst"]
+[ext_resource type="PackedScene" uid="uid://d2e5f8g1h4j7k0" path="res://scenes/StickerWall.tscn" id="103_swall"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dss4m"]
 albedo_texture = ExtResource("1_q5onr")
@@ -944,6 +946,12 @@ status_label = NodePath("Label3D")
 billboard = 1
 text = "TEST TEXT"
 
+[node name="StudioAssistantCharacter" parent="AssistantStudio" instance=ExtResource("102_asst")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.5, 1.5)
+
+[node name="StickerWall" parent="AssistantStudio" instance=ExtResource("103_swall")]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -3.5, 0.5, 0.5)
+
 [node name="Elevator" parent="." unique_id=904124064 instance=ExtResource("29_xgy6y")]
 transform = Transform3D(1.44, 0, 0, 0, 1.44, 0, 0, 0, 1.44, 5.356282, 0.43740082, -4.5508404)
 
@@ -1740,7 +1748,7 @@ autoplay = &"drop"
 transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 6.655397, 0.7673063, 7.165266)
 
 [node name="baricade 2" parent="." unique_id=1127012402 instance=ExtResource("94_n6seq")]
-transform = Transform3D(-1.0728441e-08, 0, -0.1, 0, 0.1, 0, 0.1, 0, -1.0728441e-08, 6.797236, 0.6591382, 8.597177)
+transform = Transform3D(-0.1, 0, 1.509958e-08, 0, 0.1, 0, -1.509958e-08, 0, -0.1, 5.797236, 0.6591382, 8.597177)
 
 [node name="StaticBody3D" type="StaticBody3D" parent="baricade 2" unique_id=440754542]
 collision_layer = 2

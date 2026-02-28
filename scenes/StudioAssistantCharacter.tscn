@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://dak4p8mdryt52"]
+
+[ext_resource type="PackedScene" uid="uid://gv6172d2ngws" path="res://scenes/humanrig_blender.tscn" id="1_hrig"]
+[ext_resource type="Script" uid="uid://c3j7m2nqpxr81" path="res://scripts/StudioAssistantCharacter.gd" id="2_asst"]
+
+[node name="StudioAssistantCharacter" type="Node3D"]
+script = ExtResource("2_asst")
+
+[node name="humanrig" parent="." instance=ExtResource("1_hrig")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
