@@ -10,3 +10,7 @@ res://scripts/StudioAssistantCharacter.gd
 res://scenes/UI/TitleScreenUI.tscn
 res://scripts/components/StudioAssistantPurchaseButton.gd
 res://scenes/world.tscn
+res://scripts/WorldSetup.gd
+res://scripts/economy/AutomationManager.gd
+res://scripts/economy/ShopManager.gd
+res://scripts/ui/ShopTab.gd
