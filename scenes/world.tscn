@@ -32,10 +32,12 @@
 [ext_resource type="PackedScene" uid="uid://br0ke8na4oeqj" path="res://scenes/button_green.tscn" id="31_grmox"]
 [ext_resource type="FontFile" uid="uid://tmjyio0w6cu0" path="res://fonts/studio-sim.ttf" id="31_qetcs"]
 [ext_resource type="Script" uid="uid://c8uap2yk1tjju" path="res://scripts/components/StudioAssistantStatusPanel.gd" id="33_kvmu4"]
+[ext_resource type="PackedScene" uid="uid://cfkagid03erei" path="res://models/props/rug.gltf" id="35_gw1vw"]
 [ext_resource type="Script" uid="uid://cdcxs0jsffsfb" path="res://scripts/old stuff/BoomboxInteraction.gd" id="36_boombox_new"]
 [ext_resource type="PackedScene" uid="uid://bxi8jlwr1acc4" path="res://scenes/mirror.tscn" id="39_qaasp"]
 [ext_resource type="Texture2D" uid="uid://bild23fm2syjw" path="res://sprites/textures/middle of wall.png" id="40_pb8sg"]
 [ext_resource type="PackedScene" uid="uid://ddornft2ln8sq" path="res://models/interactables/boomBox.glb" id="41_rga7q"]
+[ext_resource type="Material" uid="uid://s7aanj1sph6l" path="res://materials/floor.tres" id="43_xiw03"]
 [ext_resource type="PackedScene" uid="uid://bhsyl3tj8hblj" path="res://scenes/old stuff/brute trash can.tscn" id="46_18clu"]
 [ext_resource type="Script" uid="uid://cbwg344irqecy" path="res://scripts/components/CarryableComponent.gd" id="46_e68xj"]
 [ext_resource type="Script" uid="uid://dski42rg3yjwf" path="res://scripts/components/FanCarryableComponent.gd" id="46_fan_carry"]
@@ -98,7 +100,7 @@
 [ext_resource type="PackedScene" uid="uid://5neft563t1yw" path="res://scenes/OpenStickerFolderButton.tscn" id="101_odf6h"]
 [ext_resource type="PackedScene" uid="uid://dak4p8mdryt52" path="res://scenes/StudioAssistantCharacter.tscn" id="102_asst"]
 [ext_resource type="PackedScene" uid="uid://buoprlo6hvckr" path="res://scenes/StickerWall.tscn" id="103_swall"]
-[ext_resource type="PackedScene" path="res://scenes/objects/HireAssistantButton.tscn" id="104_hire"]
+[ext_resource type="PackedScene" uid="uid://urnnip80nb2n" path="res://scenes/objects/HireAssistantButton.tscn" id="104_hire"]
 [ext_resource type="AudioStream" uid="uid://84rjpuccue2i" path="res://sounds/boomboxSwitch.ogg" id="boombox_switch"]
 [ext_resource type="AudioStream" uid="uid://cfuo8ydnxfi66" path="res://sounds/convenient ear pleasure.ogg" id="ear_ogg"]
 [ext_resource type="AudioStream" uid="uid://bukro42figtah" path="res://sounds/fan switch.ogg" id="fan_switch"]
@@ -345,17 +347,17 @@ albedo_color = Color(1.0734373, 1.0734373, 0.15063755, 1)
 albedo_texture = ExtResource("82_mu18u")
 texture_filter = 0
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_qetcs"]
+[sub_resource type="PlaneMesh" id="PlaneMesh_xiw03"]
 resource_local_to_scene = true
 size = Vector2(2.5, 3)
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_gw1vw"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_xullu"]
 resource_name = "_albedo"
 viewport_path = NodePath("../MirrorNew/SubViewport")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pwx6t"]
 resource_local_to_scene = true
-albedo_texture = SubResource("ViewportTexture_gw1vw")
+albedo_texture = SubResource("ViewportTexture_xullu")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_1v02h"]
 size = Vector2(2.5, 3)
@@ -983,7 +985,6 @@ text = "TEST TEXT"
 font = ExtResource("31_qetcs")
 
 [node name="StudioAssistantCharacter" parent="AssistantStudio" unique_id=421565499 instance=ExtResource("102_asst")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.5, 1.5)
 
 [node name="StickerWall" parent="AssistantStudio" unique_id=1083857710 instance=ExtResource("103_swall")]
 transform = Transform3D(0.93857735, 0, 0.34506887, 0, 1, 0, -0.34506887, 0, 0.93857735, -1.0653248, 0.5, -3.3040338)
@@ -996,6 +997,9 @@ spot_angle = 88.83
 
 [node name="HireAssistantButton" parent="AssistantStudio" unique_id=47708941 instance=ExtResource("104_hire")]
 transform = Transform3D(-4.371139e-09, 0.1, 0, -0.1, -4.371139e-09, 0, 0, 0, 0.1, -3.925264, -0.24193168, 1.6015806)
+
+[node name="rug" parent="AssistantStudio" unique_id=1144089093 instance=ExtResource("35_gw1vw")]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, -1.5944289, 0)
 
 [node name="Elevator" parent="." unique_id=904124064 instance=ExtResource("29_xgy6y")]
 transform = Transform3D(1.44, 0, 0, 0, 1.44, 0, 0, 0, 1.44, 5.356282, 0.43740082, -4.5508404)
@@ -1116,6 +1120,7 @@ material = SubResource("StandardMaterial3D_xgy6y")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.474817, -0.5084185, 0.5788443)
 operation = 2
 size = Vector3(11.904175, 0.20263672, 0.09765625)
+material = ExtResource("43_xiw03")
 
 [node name="WINDOWS" type="Node3D" parent="." unique_id=303418723]
 
@@ -1637,7 +1642,7 @@ surface_material_override/0 = SubResource("StandardMaterial3D_7b7y8")
 
 [node name="mirror" parent="." unique_id=1626491013 groups=["shop_prop"] instance=ExtResource("39_qaasp")]
 transform = Transform3D(-4.7902194e-08, -0.99488777, 0.10098683, -3.9073655e-08, 0.10098683, 0.99488777, -1, 4.3711392e-08, -4.3711385e-08, 2.8, 1.497, 5.232)
-mesh = SubResource("PlaneMesh_qetcs")
+mesh = SubResource("PlaneMesh_xiw03")
 surface_material_override/0 = SubResource("StandardMaterial3D_pwx6t")
 show_debug_logs = false
 metadata/mirror = "mirror"

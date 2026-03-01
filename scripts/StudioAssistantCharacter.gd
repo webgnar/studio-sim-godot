@@ -1,70 +1,109 @@
 extends Node3D
 
-## Studio Assistant NPC character controller
-## Starts in meditation pose. When hired via AutomationManager, stands up and loops work animation.
+## Studio Assistant NPC character controller.
+## Uses Tweens (not AnimationPlayer) for position/scale transitions to avoid
+## snap-jumping from absolute keyframe values.
+##
+## States:
+##   Before hired — sit → meditate (rig AP)
+##   On hire — Phase 1: shrink tween + sit-backwards simultaneously
+##              Phase 2: walk tween (position) + rig walk simultaneously
+##              Phase 3: rig idle (looping)
 
-var animation_player: AnimationPlayer
+@export var shrink_scale: float = 0.25  ## Scale when working
+
+# Walk values baked from scene AP walk animation
+const WALK_POSITION_DELTA := Vector3(-0.7672639, 0, -2.819965)  ## Position offset over 3s
+const WALK_ROTATION_DELTA := Vector3(0, 0.25043726, 0)           ## Rotation offset over 1.5s
+const WALK_DURATION := 3.0
+const WALK_TURN_DURATION := 1.5
+const SHRINK_DURATION := 3.0
+
+var rig_anim_player: AnimationPlayer
 var _is_hired: bool = false
 
-func _ready():
-	animation_player = _find_animation_player(self)
 
-	if not animation_player:
-		push_warning("StudioAssistantCharacter: No AnimationPlayer found!")
-		return
+func _ready() -> void:
+	if has_node("humanrig"):
+		rig_anim_player = _find_animation_player($humanrig)
+	else:
+		push_warning("StudioAssistantCharacter: humanrig node not found!")
 
-	# Check if already hired (game loaded with assistant active)
+	if not rig_anim_player:
+		push_warning("StudioAssistantCharacter: Rig AnimationPlayer not found inside humanrig!")
+
 	if has_node("/root/AutomationManager") and AutomationManager.is_assistant_active():
 		_start_work_immediately()
 	else:
 		_start_meditation_sequence()
 
-	# Connect to hire signal
 	if has_node("/root/AutomationManager"):
 		AutomationManager.assistant_purchased.connect(_on_assistant_purchased)
 
 
 func _start_meditation_sequence() -> void:
-	"""Play sit then loop meditate — default idle state before hiring"""
-	_play_animation("sit")
-	await animation_player.animation_finished
-	_play_animation("meditate")
+	"""Play sit then loop meditate — default state before hiring"""
+	if not rig_anim_player:
+		return
+	_play_rig_animation("sit")
+	await rig_anim_player.animation_finished
+	_play_rig_animation("meditate")
 
 
 func _start_work_immediately() -> void:
-	"""Skip sit-down sequence and go straight to work (used on load when already hired)"""
+	"""Skip hire sequence, jump to final working state (game loaded with assistant active)"""
 	_is_hired = true
-	_play_animation("walk")
+	scale = Vector3(shrink_scale, shrink_scale, shrink_scale)
+	position += WALK_POSITION_DELTA
+	rotation += WALK_ROTATION_DELTA
+	_play_rig_animation("idle")
 
 
 func _on_assistant_purchased() -> void:
-	"""Stand up and begin working"""
+	"""Three-phase on-hire animation: stand up → walk → idle"""
 	if _is_hired:
 		return
 	_is_hired = true
 
-	# Stand up: play sit backwards
-	if animation_player.has_animation("sit"):
-		animation_player.play_backwards("sit")
-		await animation_player.animation_finished
+	# --- Phase 1: Shrink (tween) + stand up from sit (rig AP) simultaneously ---
+	# Tween from current scale — no snap, no absolute keyframe issues
+	var shrink_tween = create_tween()
+	shrink_tween.tween_property(self, "scale",
+		Vector3(shrink_scale, shrink_scale, shrink_scale), SHRINK_DURATION)
 
-	# Brief idle moment
-	_play_animation("idle")
-	await get_tree().create_timer(1.5).timeout
+	if rig_anim_player and rig_anim_player.has_animation("sit"):
+		rig_anim_player.play_backwards("sit")
+		await rig_anim_player.animation_finished
+	else:
+		await shrink_tween.finished  # fallback if no sit animation
 
-	# Begin looping work animation
-	_play_animation("walk")
+	# Brief idle pause to let shrink finish before walking
+	_play_rig_animation("idle")
+	await get_tree().create_timer(2.0).timeout
+
+	# --- Phase 2: Walk forward (tween from current position) + bone walk simultaneously ---
+	# Both tracks run in parallel: position over 3s, rotation (turn) over 1.06s
+	var walk_tween = create_tween().set_parallel(true)
+	walk_tween.tween_property(self, "position", position + WALK_POSITION_DELTA, WALK_DURATION)
+	walk_tween.tween_property(self, "rotation", rotation + WALK_ROTATION_DELTA, WALK_TURN_DURATION)
+
+	_play_rig_animation("walk")
+	await walk_tween.finished
+
+	# --- Phase 3: Idle at destination ---
+	_play_rig_animation("idle")
 
 
-func _play_animation(anim_name: String) -> void:
-	if not animation_player:
+func _play_rig_animation(anim_name: String) -> void:
+	if not rig_anim_player:
 		return
-	if not animation_player.has_animation(anim_name):
-		push_warning("StudioAssistantCharacter: Animation '%s' not found. Available: %s" % [anim_name, str(animation_player.get_animation_list())])
+	if not rig_anim_player.has_animation(anim_name):
+		push_warning("StudioAssistantCharacter: Rig animation '%s' not found. Available: %s" % [
+			anim_name, str(rig_anim_player.get_animation_list())])
 		return
 	if anim_name in ["idle", "walk", "meditate"]:
-		animation_player.get_animation(anim_name).loop_mode = Animation.LOOP_LINEAR
-	animation_player.play(anim_name)
+		rig_anim_player.get_animation(anim_name).loop_mode = Animation.LOOP_LINEAR
+	rig_anim_player.play(anim_name)
 
 
 func _find_animation_player(node: Node) -> AnimationPlayer:

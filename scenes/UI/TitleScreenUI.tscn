@@ -56,8 +56,8 @@ theme = ExtResource("1_theme")
 layout_mode = 0
 offset_left = 872.54
 offset_top = 852.97
-offset_right = 980.54
-offset_bottom = 1068.9705
+offset_right = 993.94995
+offset_bottom = 1068.97
 pivot_offset = Vector2(98.01001, 102)
 
 [node name="ContinueButton" type="Button" parent="TitleScreenUI/VBoxContainer" unique_id=192184619]
