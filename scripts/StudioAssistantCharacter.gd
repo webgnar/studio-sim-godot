@@ -11,10 +11,9 @@ extends Node3D
 ##              Phase 3: rig idle (looping)
 
 @export var shrink_scale: float = 0.25  ## Scale when working
+@export var walk_position_delta: Vector3 = Vector3(-0.7672639, 0, -2.819965)  ## Position offset from rest to desk
+@export var walk_rotation_delta: Vector3 = Vector3(0, 0.25043726, 0)           ## Rotation offset over walk
 
-# Walk values baked from scene AP walk animation
-const WALK_POSITION_DELTA := Vector3(-0.7672639, 0, -2.819965)  ## Position offset over 3s
-const WALK_ROTATION_DELTA := Vector3(0, 0.25043726, 0)           ## Rotation offset over 1.5s
 const WALK_DURATION := 3.0
 const WALK_TURN_DURATION := 1.5
 const SHRINK_DURATION := 3.0
@@ -54,8 +53,8 @@ func _start_work_immediately() -> void:
 	"""Skip hire sequence, jump to final working state (game loaded with assistant active)"""
 	_is_hired = true
 	scale = Vector3(shrink_scale, shrink_scale, shrink_scale)
-	position += WALK_POSITION_DELTA
-	rotation += WALK_ROTATION_DELTA
+	position += walk_position_delta
+	rotation += walk_rotation_delta
 	_play_rig_animation("idle")
 
 
@@ -84,8 +83,8 @@ func _on_assistant_purchased() -> void:
 	# --- Phase 2: Walk forward (tween from current position) + bone walk simultaneously ---
 	# Both tracks run in parallel: position over 3s, rotation (turn) over 1.06s
 	var walk_tween = create_tween().set_parallel(true)
-	walk_tween.tween_property(self, "position", position + WALK_POSITION_DELTA, WALK_DURATION)
-	walk_tween.tween_property(self, "rotation", rotation + WALK_ROTATION_DELTA, WALK_TURN_DURATION)
+	walk_tween.tween_property(self, "position", position + walk_position_delta, WALK_DURATION)
+	walk_tween.tween_property(self, "rotation", rotation + walk_rotation_delta, WALK_TURN_DURATION)
 
 	_play_rig_animation("walk")
 	await walk_tween.finished

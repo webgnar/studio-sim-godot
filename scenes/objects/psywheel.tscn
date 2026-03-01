@@ -46,7 +46,7 @@ _data = {
 [node name="base" parent="." unique_id=685622942 instance=ExtResource("1_ll4u0")]
 
 [node name="spinner" parent="." unique_id=1464347876 instance=ExtResource("2_w6k35")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.617153, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.7504396, 0)
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=2089119188]
 libraries/ = SubResource("AnimationLibrary_cgd27")

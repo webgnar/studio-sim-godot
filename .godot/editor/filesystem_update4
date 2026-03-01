@@ -1,4 +1,4 @@
-res://scenes/objects/geet.tscn
+res://scenes/world.tscn
 res://themes/ui_theme.tres
 res://materials/world_environ.tres
 res://models/particles/new_array_mesh.tres
@@ -8,5 +8,5 @@ res://materials/tv.gdshader
 res://materials/tv.tres
 res://shaders/water_tank.gdshader
 res://shaders/oscilloscope.gdshader
-res://scenes/world.tscn
-res://scripts/objects/ElectronFollow.gd
+res://scenes/objects/psywheel.tscn
+res://models/props/plant_stand_0.png

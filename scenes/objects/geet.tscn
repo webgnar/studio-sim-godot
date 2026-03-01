@@ -4,7 +4,7 @@
 [ext_resource type="Shader" uid="uid://b8bluat74wt4g" path="res://shaders/electron_wire.gdshader" id="2_aa0ap"]
 [ext_resource type="Script" uid="uid://be2usoqb1eoxh" path="res://scripts/objects/ElectronFollow.gd" id="2_electron"]
 [ext_resource type="Shader" uid="uid://dk6qv0dbk43m2" path="res://shaders/electron_bead.gdshader" id="3_bead_shader"]
-[ext_resource type="PackedScene" uid="uid://chrwviitu8ng7" path="res://models/geet_tubes.glb" id="5_0uxwt"]
+[ext_resource type="PackedScene" uid="uid://chrwviitu8ng7" path="res://models/props/geet_tubes.glb" id="5_0uxwt"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_0uxwt"]
 render_priority = 0

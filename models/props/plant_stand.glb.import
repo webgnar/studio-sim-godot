@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://chrwviitu8ng7"
-path="res://.godot/imported/geet_tubes.glb-4b3b70cd39f1b2540dac13534ea625c6.scn"
+uid="uid://qgkty3mym310"
+path="res://.godot/imported/plant_stand.glb-28c4061fe24546c41d3dac11f15cbf60.scn"
 
 [deps]
 
-source_file="res://models/geet_tubes.glb"
-dest_files=["res://.godot/imported/geet_tubes.glb-4b3b70cd39f1b2540dac13534ea625c6.scn"]
+source_file="res://models/props/plant_stand.glb"
+dest_files=["res://.godot/imported/plant_stand.glb-28c4061fe24546c41d3dac11f15cbf60.scn"]
 
 [params]
 

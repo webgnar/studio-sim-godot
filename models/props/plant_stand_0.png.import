@@ -2,21 +2,21 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cpbrciuo54u2n"
-path.s3tc="res://.godot/imported/geet_tubes_0.png-b17058759347a8d0c584f95d6e7663bd.s3tc.ctex"
-path.etc2="res://.godot/imported/geet_tubes_0.png-b17058759347a8d0c584f95d6e7663bd.etc2.ctex"
+uid="uid://cfmugyigi58c1"
+path.s3tc="res://.godot/imported/plant_stand_0.png-9157704ce9630044253b5b513c2e368c.s3tc.ctex"
+path.etc2="res://.godot/imported/plant_stand_0.png-9157704ce9630044253b5b513c2e368c.etc2.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 generator_parameters={
-"md5": "6535355774440c7cc7cc61f0ad12139e"
+"md5": "e024304ca2c2297663d181f2b7f1e50c"
 }
 
 [deps]
 
-source_file="res://models/geet_tubes_0.png"
-dest_files=["res://.godot/imported/geet_tubes_0.png-b17058759347a8d0c584f95d6e7663bd.s3tc.ctex", "res://.godot/imported/geet_tubes_0.png-b17058759347a8d0c584f95d6e7663bd.etc2.ctex"]
+source_file="res://models/props/plant_stand_0.png"
+dest_files=["res://.godot/imported/plant_stand_0.png-9157704ce9630044253b5b513c2e368c.s3tc.ctex", "res://.godot/imported/plant_stand_0.png-9157704ce9630044253b5b513c2e368c.etc2.ctex"]
 
 [params]
 
