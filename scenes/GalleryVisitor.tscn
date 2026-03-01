@@ -15,7 +15,7 @@ script = ExtResource("1_gvis")
 shape = SubResource("CapsuleShape3D_gvis")
 
 [node name="humanrig" parent="." instance=ExtResource("2_hrig")]
-transform = Transform3D(0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, 0, -0.94919425, 0.24366075)
+transform = Transform3D(0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, 0, -1.0, 0.24366075)
 
 [node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
 path_desired_distance = 2.0
