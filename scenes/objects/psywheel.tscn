@@ -1,0 +1,53 @@
+[gd_scene format=3 uid="uid://dg4dh5bn60pel"]
+
+[ext_resource type="PackedScene" uid="uid://flnu7no41hl5" path="res://models/props/psywheel_base.glb" id="1_ll4u0"]
+[ext_resource type="PackedScene" uid="uid://bvatni7gx0vgs" path="res://models/props/psywheel_spinner.glb" id="2_w6k35"]
+
+[sub_resource type="Animation" id="Animation_rsx13"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("spinner:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_lejk7"]
+resource_name = "spin"
+length = 10.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("spinner:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 10),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, 6.2831855, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_cgd27"]
+_data = {
+&"RESET": SubResource("Animation_rsx13"),
+&"spin": SubResource("Animation_lejk7")
+}
+
+[node name="Psywheel" type="Node3D" unique_id=1850560820]
+
+[node name="base" parent="." unique_id=685622942 instance=ExtResource("1_ll4u0")]
+
+[node name="spinner" parent="." unique_id=1464347876 instance=ExtResource("2_w6k35")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.617153, 0)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=2089119188]
+libraries/ = SubResource("AnimationLibrary_cgd27")
+autoplay = &"spin"

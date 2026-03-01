@@ -1,4 +1,3 @@
-res://scenes/StudioAssistantCharacter.tscn
 res://themes/ui_theme.tres
 res://materials/world_environ.tres
 res://models/particles/new_array_mesh.tres
@@ -6,11 +5,7 @@ res://models/particles/new_array_mesh2.tres
 res://models/particles/new_array_mesh3.tres
 res://materials/tv.gdshader
 res://materials/tv.tres
-res://scripts/StudioAssistantCharacter.gd
-res://scenes/UI/TitleScreenUI.tscn
-res://scripts/components/StudioAssistantPurchaseButton.gd
+res://scenes/objects/psywheel.tscn
 res://scenes/world.tscn
-res://scripts/WorldSetup.gd
-res://scripts/economy/AutomationManager.gd
-res://scripts/economy/ShopManager.gd
-res://scripts/ui/ShopTab.gd
+res://scenes/objects/SEG.tscn
+res://materials/rainbow_grid.tres

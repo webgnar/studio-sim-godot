@@ -1,6 +1,8 @@
+CSGTorus3D
 AnimationPlayer
-SpotLight3D
+Node3D
 CSGBox3D
+SpotLight3D
 CSGCombiner3D
 CollisionShape3D
 StaticBody3D
@@ -9,6 +11,5 @@ HBoxContainer
 AnimationTree
 MeshInstance3D
 TextureRect
-Node3D
 AudioStreamPlayer3D
 Area3D

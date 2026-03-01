@@ -1,0 +1,118 @@
+[gd_scene format=3 uid="uid://bmsbijuu4g8jd"]
+
+[ext_resource type="PackedScene" uid="uid://86ihl4d88fe6" path="res://models/props/seg_base.glb" id="1_2j0ls"]
+[ext_resource type="PackedScene" uid="uid://cktgfydkh0m4k" path="res://models/props/seg_spinner.glb" id="2_8boqg"]
+[ext_resource type="PackedScene" uid="uid://djm34ub63781g" path="res://models/props/seg_magnet.glb" id="3_s5jut"]
+[ext_resource type="Material" path="res://materials/rainbow_grid.tres" id="4_8boqg"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_b5wil"]
+albedo_color = Color(0.11858138, 0.11858138, 0.11858138, 1)
+
+[sub_resource type="Animation" id="Animation_tom74"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("spinnerparent:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_6mkcn"]
+resource_name = "spin"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("spinnerparent:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, 6.2831855, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_mhrg8"]
+_data = {
+&"RESET": SubResource("Animation_tom74"),
+&"spin": SubResource("Animation_6mkcn")
+}
+
+[node name="Seg" type="Node3D" unique_id=1485231188]
+
+[node name="CSGBox3D" type="CSGBox3D" parent="." unique_id=1239243660]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.1043167, -3.4372559, -0.4751053)
+size = Vector3(52, 2.1953125, 50)
+material = SubResource("StandardMaterial3D_b5wil")
+
+[node name="core" parent="." unique_id=330036567 instance=ExtResource("1_2j0ls")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.046298, 0)
+
+[node name="spinnerparent" type="Node3D" parent="." unique_id=651702515]
+
+[node name="default" parent="spinnerparent" unique_id=1607643174 instance=ExtResource("2_8boqg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.785079, -13.247806)
+
+[node name="default2" parent="spinnerparent" unique_id=1549047030 instance=ExtResource("2_8boqg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.385376, 0.785079, 0)
+
+[node name="default3" parent="spinnerparent" unique_id=1333359969 instance=ExtResource("2_8boqg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.507188, 0.785079, 0)
+
+[node name="default4" parent="spinnerparent" unique_id=835639259 instance=ExtResource("2_8boqg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.785079, 12.938554)
+
+[node name="default5" parent="spinnerparent" unique_id=1734195665 instance=ExtResource("2_8boqg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.159597, 0.785079, 9.007157)
+
+[node name="default6" parent="spinnerparent" unique_id=1269707917 instance=ExtResource("2_8boqg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.545337, 0.785079, -9.213085)
+
+[node name="default7" parent="spinnerparent" unique_id=76667613 instance=ExtResource("2_8boqg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.880154, 0.785079, 8.65234)
+
+[node name="default8" parent="spinnerparent" unique_id=2042991553 instance=ExtResource("2_8boqg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.43084, 0.785079, -8.600271)
+
+[node name="default" parent="." unique_id=549310787 instance=ExtResource("3_s5jut")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -19.179285)
+
+[node name="default9" parent="." unique_id=2128602449 instance=ExtResource("3_s5jut")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -20, 0, 0)
+
+[node name="default10" parent="." unique_id=1037474196 instance=ExtResource("3_s5jut")]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0, 0, 19)
+
+[node name="default11" parent="." unique_id=1433598494 instance=ExtResource("3_s5jut")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 19, 0, 0)
+
+[node name="default12" parent="." unique_id=1097501285 instance=ExtResource("3_s5jut")]
+transform = Transform3D(-0.7071068, 0, -0.7071067, 0, 1, 0, 0.7071067, 0, -0.7071068, 13, 0, 14)
+
+[node name="default13" parent="." unique_id=321081296 instance=ExtResource("3_s5jut")]
+transform = Transform3D(0.70710677, 0, -0.70710677, 0, 1, 0, 0.70710677, 0, 0.70710677, 14, 0, -14)
+
+[node name="default14" parent="." unique_id=1097038567 instance=ExtResource("3_s5jut")]
+transform = Transform3D(0.49999997, 0, 0.8660253, 0, 1, 0, -0.8660253, 0, 0.49999997, -15, 0, -12)
+
+[node name="default15" parent="." unique_id=1388652712 instance=ExtResource("3_s5jut")]
+transform = Transform3D(-0.7071067, 0, 0.7071068, 0, 1, 0, -0.7071068, 0, -0.7071067, -14, 0, 13)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1036331683]
+libraries/ = SubResource("AnimationLibrary_mhrg8")
+autoplay = &"spin"
+
+[node name="CSGTorus3D" type="CSGTorus3D" parent="." unique_id=2118748199]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.10241413, 5, 0)
+inner_radius = 1.038
+outer_radius = 19.62
+sides = 28
+ring_sides = 30
+material = ExtResource("4_8boqg")
