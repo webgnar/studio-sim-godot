@@ -16,3 +16,5 @@ res://scripts/objects/cyclone_button.gd
 res://materials/cyclone/default_material.tres
 res://materials/cyclone/light_on.tres
 res://scenes/objects/cyclone.tscn
+res://scripts/GalleryVisitor.gd
+res://scenes/GalleryVisitor.tscn

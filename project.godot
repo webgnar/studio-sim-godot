@@ -288,6 +288,10 @@ initialization/initialize_on_startup=false
 initialization/embed_callbacks=false
 multiplayer_peer/max_channels=4
 
+[global_group]
+
+gallery_attraction="Gallery attraction — GalleryVisitor NPC will walk to and observe this node"
+
 [steam_server]
 
 initialization/embed_callbacks=false
