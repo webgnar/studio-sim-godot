@@ -6,6 +6,7 @@ uniform float line_width : hint_range(0.001, 0.5) = 0.02;
 uniform float glow_strength : hint_range(0.0, 10.0) = 3.0;
 uniform float rainbow_speed : hint_range(0.0, 5.0) = 1.0;
 uniform float alpha : hint_range(0.0, 1.0) = 1.0;
+uniform vec4 background_color : source_color = vec4(0.0, 0.0, 0.0, 0.3);
 
 void fragment() {
 	vec2 uv = UV * grid_scale;
@@ -22,9 +23,9 @@ void fragment() {
 	);
 	color = clamp(color, 0.0, 1.0);
 
-	vec3 final_color = color * grid_mask;
+	vec3 line_color = color * grid_mask;
 
-	ALBEDO = final_color;
-	EMISSION = final_color * glow_strength;
-	ALPHA = grid_mask * alpha;
+	ALBEDO = mix(background_color.rgb, line_color, grid_mask);
+	EMISSION = line_color * glow_strength;
+	ALPHA = mix(background_color.a, alpha, grid_mask);
 }

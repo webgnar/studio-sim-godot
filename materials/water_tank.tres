@@ -1,0 +1,16 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://bivhmxyal2g73"]
+
+[ext_resource type="Shader" uid="uid://cltesymv7gl4c" path="res://shaders/water_tank.gdshader" id="1"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1")
+shader_parameter/water_color = Color(0.5626003, 0.7471855, 0.9922604, 0.3019608)
+shader_parameter/wave_speed = 0.09600000456
+shader_parameter/wave_scale = 17.5970007883575
+shader_parameter/refraction_strength = 0.0
+shader_parameter/fresnel_power = 3.046000097185
+shader_parameter/fresnel_opacity = 0.582000027645
+shader_parameter/caustic_strength = 1.0
+shader_parameter/caustic_speed = 1.2310000584725
+shader_parameter/caustic_scale = 11.614000504165

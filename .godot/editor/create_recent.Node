@@ -1,7 +1,9 @@
+MeshInstance3D
+CSGCylinder3D
+CSGBox3D
 CSGTorus3D
 AnimationPlayer
 Node3D
-CSGBox3D
 SpotLight3D
 CSGCombiner3D
 CollisionShape3D
@@ -9,7 +11,4 @@ StaticBody3D
 VBoxContainer
 HBoxContainer
 AnimationTree
-MeshInstance3D
 TextureRect
-AudioStreamPlayer3D
-Area3D

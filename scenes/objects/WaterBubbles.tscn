@@ -1,0 +1,44 @@
+[gd_scene format=3 uid="uid://bjckxxif458mv"]
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_bubbles"]
+lifetime_randomness = 0.35
+emission_shape_scale = Vector3(3, 1, 3)
+emission_shape = 1
+emission_sphere_radius = 1.0
+direction = Vector3(0, 1, 0)
+spread = 5.0
+initial_velocity_min = 0.2
+initial_velocity_max = 0.6
+gravity = Vector3(0, 0, 0)
+damping_min = 0.05
+damping_max = 0.05
+scale_min = 0.049999997
+scale_max = 0.099999994
+collision_mode = 1
+collision_friction = 0.1
+collision_bounce = 0.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bubble"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(0.82, 0.93, 1, 0.28)
+disable_receive_shadows = true
+
+[sub_resource type="SphereMesh" id="SphereMesh_bubble"]
+material = SubResource("StandardMaterial3D_bubble")
+radial_segments = 6
+rings = 3
+
+[node name="WaterBubbles" type="Node3D" unique_id=65821622]
+
+[node name="GPUParticles3D" type="GPUParticles3D" parent="." unique_id=1874580675]
+local_coords = true
+amount = 5000
+lifetime = 4.0
+randomness = 0.3
+process_material = SubResource("ParticleProcessMaterial_bubbles")
+draw_pass_1 = SubResource("SphereMesh_bubble")
+
+[node name="Ceiling" type="GPUParticlesCollisionBox3D" parent="." unique_id=1399654642]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.11483765, 1.6065538, 0.3183136)
+size = Vector3(6.2616577, 0.05, 6.0066223)

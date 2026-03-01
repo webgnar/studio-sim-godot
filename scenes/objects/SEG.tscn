@@ -3,7 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://86ihl4d88fe6" path="res://models/props/seg_base.glb" id="1_2j0ls"]
 [ext_resource type="PackedScene" uid="uid://cktgfydkh0m4k" path="res://models/props/seg_spinner.glb" id="2_8boqg"]
 [ext_resource type="PackedScene" uid="uid://djm34ub63781g" path="res://models/props/seg_magnet.glb" id="3_s5jut"]
-[ext_resource type="Material" path="res://materials/rainbow_grid.tres" id="4_8boqg"]
+[ext_resource type="Material" uid="uid://c5t1on3p85e80" path="res://materials/rainbow_grid.tres" id="4_8boqg"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_b5wil"]
 albedo_color = Color(0.11858138, 0.11858138, 0.11858138, 1)
@@ -110,7 +110,7 @@ libraries/ = SubResource("AnimationLibrary_mhrg8")
 autoplay = &"spin"
 
 [node name="CSGTorus3D" type="CSGTorus3D" parent="." unique_id=2118748199]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.10241413, 5, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.10241413, 2.8487587, 0)
 inner_radius = 1.038
 outer_radius = 19.62
 sides = 28

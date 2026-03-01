@@ -102,6 +102,8 @@
 [ext_resource type="PackedScene" uid="uid://dak4p8mdryt52" path="res://scenes/StudioAssistantCharacter.tscn" id="102_asst"]
 [ext_resource type="PackedScene" uid="uid://buoprlo6hvckr" path="res://scenes/StickerWall.tscn" id="103_swall"]
 [ext_resource type="PackedScene" uid="uid://urnnip80nb2n" path="res://scenes/objects/HireAssistantButton.tscn" id="104_hire"]
+[ext_resource type="PackedScene" uid="uid://bmsbijuu4g8jd" path="res://scenes/objects/SEG.tscn" id="109_pwx6t"]
+[ext_resource type="PackedScene" uid="uid://cfhlpeapjydro" path="res://scenes/stanmeyerWF.tscn" id="110_tjdyg"]
 [ext_resource type="AudioStream" uid="uid://84rjpuccue2i" path="res://sounds/boomboxSwitch.ogg" id="boombox_switch"]
 [ext_resource type="AudioStream" uid="uid://cfuo8ydnxfi66" path="res://sounds/convenient ear pleasure.ogg" id="ear_ogg"]
 [ext_resource type="AudioStream" uid="uid://bukro42figtah" path="res://sounds/fan switch.ogg" id="fan_switch"]
@@ -348,17 +350,17 @@ albedo_color = Color(1.0734373, 1.0734373, 0.15063755, 1)
 albedo_texture = ExtResource("82_mu18u")
 texture_filter = 0
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_pwx6t"]
+[sub_resource type="PlaneMesh" id="PlaneMesh_tjdyg"]
 resource_local_to_scene = true
 size = Vector2(2.5, 3)
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_tjdyg"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_0fl76"]
 resource_name = "_albedo"
 viewport_path = NodePath("../MirrorNew/SubViewport")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0fl76"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ld7xo"]
 resource_local_to_scene = true
-albedo_texture = SubResource("ViewportTexture_tjdyg")
+albedo_texture = SubResource("ViewportTexture_0fl76")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_1v02h"]
 size = Vector2(2.5, 3)
@@ -1646,8 +1648,8 @@ surface_material_override/0 = SubResource("StandardMaterial3D_7b7y8")
 
 [node name="mirror" parent="." unique_id=1626491013 groups=["shop_prop"] instance=ExtResource("39_qaasp")]
 transform = Transform3D(-4.7902194e-08, -0.99488777, 0.10098683, -3.9073655e-08, 0.10098683, 0.99488777, -1, 4.3711392e-08, -4.3711385e-08, 2.8, 1.497, 5.232)
-mesh = SubResource("PlaneMesh_pwx6t")
-surface_material_override/0 = SubResource("StandardMaterial3D_0fl76")
+mesh = SubResource("PlaneMesh_tjdyg")
+surface_material_override/0 = SubResource("StandardMaterial3D_ld7xo")
 show_debug_logs = false
 metadata/mirror = "mirror"
 metadata/shop_item_id = "mirror"
@@ -1958,6 +1960,22 @@ transform = Transform3D(0.66, 0, 0, 0, -1.6173214e-08, -0.66, 0, 0.37, -2.884951
 
 [node name="StaticBody3D2" parent="gallery" unique_id=1945467411 instance=ExtResource("66_4kmvx")]
 transform = Transform3D(-5.7699033e-08, 0.19, -2.8849517e-08, 0, -8.305164e-09, -0.66, -1.32, -8.305164e-09, 1.2610525e-15, -6.300403, 4.0961657, 2.4920044)
+
+[node name="pedestal" type="CSGBox3D" parent="gallery" unique_id=1193496576]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21.823, -10.341164, 4.0606384)
+size = Vector3(1, 0.63879395, 1)
+
+[node name="pedestal2" type="CSGBox3D" parent="gallery" unique_id=592594387]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25.91828, -10.160561, 11.182066)
+
+[node name="pedestal3" type="CSGBox3D" parent="gallery" unique_id=1008526256]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 32.934937, -10.160561, 6.7548046)
+
+[node name="Seg" parent="gallery" unique_id=1485231188 instance=ExtResource("109_pwx6t")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 32.96471, -9.571679, 6.756235)
+
+[node name="StanmeyerWf" parent="gallery" unique_id=1772342250 instance=ExtResource("110_tjdyg")]
+transform = Transform3D(-0.010534158, 0, -0.010678551, 0, 0.014999997, 0, 0.010678551, 0, -0.010534158, 21.829754, -9.489093, 3.8498173)
 
 [node name="GallerySpawnPoint" type="Node3D" parent="." unique_id=837462901]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.722805, -9.6, 15.43)

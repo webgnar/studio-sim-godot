@@ -10,3 +10,4 @@ shader_parameter/line_width = 0.025000001187500002
 shader_parameter/glow_strength = 3.0
 shader_parameter/rainbow_speed = 0.4970000236075
 shader_parameter/alpha = 1.0
+shader_parameter/background_color = Color(0.29803923, 0.5764706, 1, 0.05490196)
