@@ -1,0 +1,6 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://dftupkqp265f"]
+
+[ext_resource type="Texture2D" uid="uid://bmhyfx0k8q5vl" path="res://sprites/textures/drywall.jpg" id="1_lquk4"]
+
+[resource]
+albedo_texture = ExtResource("1_lquk4")

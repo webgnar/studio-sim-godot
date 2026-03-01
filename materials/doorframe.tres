@@ -1,0 +1,17 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://caobbtious4tq"]
+
+[ext_resource type="Texture2D" uid="uid://bild23fm2syjw" path="res://sprites/textures/middle of wall.png" id="1_2e680"]
+[ext_resource type="Texture2D" uid="uid://dyuvtxhp260rj" path="res://sprites/normals/wood_ambient.png" id="2_8sulu"]
+[ext_resource type="Texture2D" uid="uid://3smflfln5x7y" path="res://sprites/normals/wood_specular.png" id="3_6xnv3"]
+[ext_resource type="Texture2D" uid="uid://bifvpuur5heg3" path="res://sprites/normals/wood_normal.png" id="4_kui4v"]
+
+[resource]
+albedo_texture = ExtResource("1_2e680")
+metallic = 1.0
+metallic_texture = ExtResource("3_6xnv3")
+normal_texture = ExtResource("4_kui4v")
+ao_enabled = true
+ao_texture = ExtResource("2_8sulu")
+uv1_scale = Vector3(2.43, 1, 1)
+uv1_offset = Vector3(1.41, 0.03, 0)
+texture_filter = 0

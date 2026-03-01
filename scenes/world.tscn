@@ -27,6 +27,7 @@
 [ext_resource type="PackedScene" uid="uid://cugtdfp4dt78m" path="res://scenes/player.tscn" id="27_l137e"]
 [ext_resource type="Script" uid="uid://cftd54g3pgkr1" path="res://scripts/old stuff/LightSwitchInteraction.gd" id="29_lightswitch_new"]
 [ext_resource type="PackedScene" uid="uid://clxnamuc6vov8" path="res://scenes/elevator.tscn" id="29_xgy6y"]
+[ext_resource type="Material" uid="uid://caobbtious4tq" path="res://materials/doorframe.tres" id="30_3t06w"]
 [ext_resource type="Texture2D" uid="uid://uyikjs5uvqxf" path="res://textures/512 cementbrick.png" id="30_kvmu4"]
 [ext_resource type="Texture2D" uid="uid://daneppyy5y8cp" path="res://sprites/textures/floor-cement-2.jpg" id="31_c15v2"]
 [ext_resource type="PackedScene" uid="uid://br0ke8na4oeqj" path="res://scenes/button_green.tscn" id="31_grmox"]
@@ -37,7 +38,6 @@
 [ext_resource type="PackedScene" uid="uid://dg4dh5bn60pel" path="res://scenes/objects/psywheel.tscn" id="36_xullu"]
 [ext_resource type="PackedScene" uid="uid://qgkty3mym310" path="res://models/props/plant_stand.glb" id="37_ld7xo"]
 [ext_resource type="PackedScene" uid="uid://bxi8jlwr1acc4" path="res://scenes/mirror.tscn" id="39_qaasp"]
-[ext_resource type="Texture2D" uid="uid://bild23fm2syjw" path="res://sprites/textures/middle of wall.png" id="40_pb8sg"]
 [ext_resource type="PackedScene" uid="uid://ddornft2ln8sq" path="res://models/interactables/boomBox.glb" id="41_rga7q"]
 [ext_resource type="Material" uid="uid://s7aanj1sph6l" path="res://materials/floor.tres" id="43_xiw03"]
 [ext_resource type="PackedScene" uid="uid://bhsyl3tj8hblj" path="res://scenes/old stuff/brute trash can.tscn" id="46_18clu"]
@@ -101,14 +101,17 @@
 [ext_resource type="PackedScene" uid="uid://ds2ejyer6uqfg" path="res://models/props/plant_table.glb" id="98_l4n3p"]
 [ext_resource type="PackedScene" uid="uid://cufbbupst6wne" path="res://scenes/objects/cyclone.tscn" id="100_fmmry"]
 [ext_resource type="Texture2D" uid="uid://iwkinqup0swt" path="res://textures/256 wood floor.png" id="101_mu18u"]
+[ext_resource type="PackedScene" uid="uid://c7yc38ibg8khq" path="res://models/props/plant3.gltf" id="101_nbuqd"]
 [ext_resource type="PackedScene" uid="uid://5neft563t1yw" path="res://scenes/OpenStickerFolderButton.tscn" id="101_odf6h"]
+[ext_resource type="PackedScene" uid="uid://dn1lo3fos5a07" path="res://models/poleCurvedEnds.gltf" id="101_tp6af"]
 [ext_resource type="PackedScene" uid="uid://dak4p8mdryt52" path="res://scenes/StudioAssistantCharacter.tscn" id="102_asst"]
 [ext_resource type="PackedScene" uid="uid://buoprlo6hvckr" path="res://scenes/StickerWall.tscn" id="103_swall"]
 [ext_resource type="PackedScene" uid="uid://urnnip80nb2n" path="res://scenes/objects/HireAssistantButton.tscn" id="104_hire"]
 [ext_resource type="PackedScene" uid="uid://bmsbijuu4g8jd" path="res://scenes/objects/SEG.tscn" id="109_pwx6t"]
 [ext_resource type="PackedScene" uid="uid://cfhlpeapjydro" path="res://scenes/stanmeyerWF.tscn" id="110_tjdyg"]
 [ext_resource type="PackedScene" uid="uid://c7cot7g0c5wmb" path="res://scenes/objects/geet.tscn" id="111_0fl76"]
-[ext_resource type="PackedScene" path="res://scenes/GalleryVisitor.tscn" id="115_26qbd"]
+[ext_resource type="PackedScene" uid="uid://bvg5r8kqnmx3c" path="res://scenes/GalleryVisitor.tscn" id="115_26qbd"]
+[ext_resource type="Material" uid="uid://dftupkqp265f" path="res://materials/pedestal.tres" id="115_optxr"]
 [ext_resource type="AudioStream" uid="uid://84rjpuccue2i" path="res://sounds/boomboxSwitch.ogg" id="boombox_switch"]
 [ext_resource type="AudioStream" uid="uid://cfuo8ydnxfi66" path="res://sounds/convenient ear pleasure.ogg" id="ear_ogg"]
 [ext_resource type="AudioStream" uid="uid://bukro42figtah" path="res://sounds/fan switch.ogg" id="fan_switch"]
@@ -171,17 +174,6 @@ ao_light_affect = 0.08
 ao_texture = ExtResource("22_ygn2i")
 uv1_scale = Vector3(3.353, 3.481, 3.131)
 uv1_offset = Vector3(0, -1, 0)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ce70q"]
-albedo_texture = ExtResource("40_pb8sg")
-metallic = 1.0
-metallic_texture = ExtResource("3_o8fc1")
-normal_texture = ExtResource("4_xo05s")
-ao_enabled = true
-ao_texture = ExtResource("2_jhx03")
-uv1_scale = Vector3(2.43, 1, 1)
-uv1_offset = Vector3(1.41, 0.03, 0)
-texture_filter = 0
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xo05s"]
 albedo_texture = ExtResource("14_o8fc1")
@@ -990,10 +982,11 @@ collision_mask = 0
 size = Vector3(1, 0.8, 0.5739746)
 material = ExtResource("5_71j4m")
 
-[node name="CSGBox3D" type="CSGBox3D" parent="AssistantStudio/CSGCombiner3D/wall8" unique_id=1104246239]
+[node name="cutout" type="CSGBox3D" parent="AssistantStudio/CSGCombiner3D/wall8" unique_id=1104246239]
 transform = Transform3D(0.9999287, 0, 2.8550625e-05, 0, 0.99993384, 0, 6.7520887e-09, 0, 0.99995494, -0.012174606, -0.17199509, -0.08685863)
 operation = 2
 size = Vector3(1.5938721, 0.42700195, 0.14248657)
+material = ExtResource("30_3t06w")
 
 [node name="Status Panel" type="Node3D" parent="AssistantStudio" unique_id=321856961 node_paths=PackedStringArray("status_label")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.949214, 2.5629182, -2.5327654)
@@ -1028,9 +1021,6 @@ transform = Transform3D(0.042939056, 0, 0.02561713, 0, 0.05, 0, -0.02561713, 0, 
 
 [node name="stand" parent="AssistantStudio" unique_id=1282393607 instance=ExtResource("37_ld7xo")]
 transform = Transform3D(0.05, 0, 0, 0, 0.05, 0, 0, 0, 0.05, 1.4236965, -1.2685578, 0.41327953)
-
-[node name="Door" parent="AssistantStudio" unique_id=751489978 groups=["no_outline"] instance=ExtResource("83_kcpaj")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.1462793, 0, 3.6827316)
 
 [node name="Elevator" parent="." unique_id=904124064 instance=ExtResource("29_xgy6y")]
 transform = Transform3D(1.44, 0, 0, 0, 1.44, 0, 0, 0, 1.44, 5.356282, 0.43740082, -4.5508404)
@@ -1067,10 +1057,10 @@ size = Vector3(0.795, 12.27, 0.348)
 material = SubResource("StandardMaterial3D_oexs8")
 
 [node name="wall" type="CSGBox3D" parent="studio" unique_id=601196792]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.173913, -0.099999994, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.173913, -0.099999994, -0.0018920898)
 use_collision = true
 collision_mask = 0
-size = Vector3(1, 0.8, 1)
+size = Vector3(1, 0.8, 0.9962158)
 material = ExtResource("5_71j4m")
 
 [node name="wall2" type="CSGBox3D" parent="studio" unique_id=1227082846]
@@ -1084,13 +1074,13 @@ material = ExtResource("5_71j4m")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 0.9999999, 0, -0.16516119, -0.09741212)
 operation = 2
 size = Vector3(1, 0.44067383, 0.072753906)
-material = SubResource("StandardMaterial3D_ce70q")
+material = ExtResource("30_3t06w")
 
 [node name="wall3" type="CSGBox3D" parent="studio" unique_id=154693461]
-transform = Transform3D(-4.371139e-08, 0, 24.108696, 0, 1, 0, -0.020318022, 0, -2.1411632e-08, 9.24275, -0.099999994, 0.48586574)
+transform = Transform3D(-4.371139e-08, 0, 24.108696, 0, 1, 0, -0.020318022, 0, -2.1411632e-08, 10.764258, -0.099999994, 0.48586574)
 use_collision = true
 collision_mask = 0
-size = Vector3(1, 0.8, 0.8676758)
+size = Vector3(1, 0.8, 0.7414551)
 material = ExtResource("5_71j4m")
 
 [node name="pillar" type="CSGBox3D" parent="studio" unique_id=1141610114]
@@ -1779,6 +1769,30 @@ spot_angle = 77.14
 [node name="Cyclone" parent="greenhouse" unique_id=630081305 instance=ExtResource("100_fmmry")]
 transform = Transform3D(0.52014846, 0, 0.29907447, 0, 0.59999996, 0, -0.29907447, 0, 0.52014846, 6.7079988, 1.2168989, -2.2006588)
 
+[node name="monstera" parent="greenhouse" unique_id=1294440789 instance=ExtResource("101_nbuqd")]
+transform = Transform3D(0.17047878, 0, 0.10458006, 0, 0.2, 0, -0.10458006, 0, 0.17047878, 5.1224084, 2.0549254, 1.4117355)
+
+[node name="rail" parent="greenhouse" unique_id=1758800207 instance=ExtResource("101_tp6af")]
+transform = Transform3D(-8.742278e-09, -0.2, 0, -1.4901161e-08, 8.881784e-16, 0.2, -0.2, 8.742278e-09, -1.4901161e-08, -5.29385, 0.4946152, -0.8551159)
+
+[node name="rail5" parent="greenhouse" unique_id=2087673068 instance=ExtResource("101_tp6af")]
+transform = Transform3D(-0.2, 3.019916e-08, 1.3200473e-15, 0, -8.742278e-09, 0.2, 3.019916e-08, 0.2, 8.742278e-09, -8.027277, -5.2124486, 2.3244915)
+
+[node name="rail6" parent="greenhouse" unique_id=1630591427 instance=ExtResource("101_tp6af")]
+transform = Transform3D(3.8941437e-08, 0.18, 8.742278e-09, 0, -7.86805e-09, 0.2, 0.2, -3.5047293e-08, -1.7021842e-15, -10.604155, -5.2124486, 4.3244915)
+
+[node name="rail7" parent="greenhouse" unique_id=1833567962 instance=ExtResource("101_tp6af")]
+transform = Transform3D(0.2, -1.3806337e-07, -4.378878e-08, -2.0205947e-08, -0.28289896, 0.4735703, -5.4729426e-08, -0.40008518, -0.33485994, -8.179258, -9.670702, -11.124024)
+
+[node name="rail2" parent="greenhouse" unique_id=1767175531 instance=ExtResource("101_tp6af")]
+transform = Transform3D(-8.742278e-09, -0.2, 0, -1.4901161e-08, 8.881784e-16, 0.2, -0.2, 8.742278e-09, -1.4901161e-08, -5.29385, 0.4946152, -3.3394203)
+
+[node name="rail3" parent="greenhouse" unique_id=309506196 instance=ExtResource("101_tp6af")]
+transform = Transform3D(3.6787704e-09, -0.14699711, -0.13561653, -1.6880124e-08, -0.13561653, 0.14699711, -0.19999999, 8.742277e-09, -1.4901161e-08, -5.879779, -2.7400055, -3.0877113)
+
+[node name="rail4" parent="greenhouse" unique_id=294468469 instance=ExtResource("101_tp6af")]
+transform = Transform3D(3.6787704e-09, -0.14699711, -0.13561653, -1.6880124e-08, -0.13561653, 0.14699711, -0.19999999, 8.742277e-09, -1.4901161e-08, -5.879779, -2.7400055, -1.1056767)
+
 [node name="Door" parent="." unique_id=1914412036 groups=["no_outline"] instance=ExtResource("83_kcpaj")]
 transform = Transform3D(-4.196293e-08, 0, -0.95, 0, 0.95, 0, 0.96, 0, -4.152582e-08, 3.8344553, 1.6471603, 0.54472053)
 
@@ -2043,16 +2057,19 @@ material = SubResource("StandardMaterial3D_odf6h")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21.801332, -10.18548, 4.035714)
 use_collision = true
 size = Vector3(1, 1.0113811, 1)
+material = ExtResource("115_optxr")
 
 [node name="pedestal2" type="CSGBox3D" parent="gallery/NavigationRegion3D" unique_id=592594387]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25.896612, -10.185218, 11.157142)
 use_collision = true
 size = Vector3(1, 1.0493164, 1)
+material = ExtResource("115_optxr")
 
 [node name="pedestal3" type="CSGBox3D" parent="gallery/NavigationRegion3D" unique_id=1008526256]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 32.91327, -10.183143, 6.7298803)
 use_collision = true
 size = Vector3(1, 1.045166, 1)
+material = ExtResource("115_optxr")
 
 [node name="GalleryVisitor" parent="." unique_id=365969341 instance=ExtResource("115_26qbd")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.7506719, -14.57428, 24.977468)
