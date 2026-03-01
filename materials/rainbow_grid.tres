@@ -6,7 +6,7 @@
 render_priority = 0
 shader = ExtResource("1")
 shader_parameter/grid_scale = 25.786001177335
-shader_parameter/line_width = 0.025000001187500002
+shader_parameter/line_width = 0.0250000011875
 shader_parameter/glow_strength = 3.0
 shader_parameter/rainbow_speed = 0.4970000236075
 shader_parameter/alpha = 1.0

@@ -1,0 +1,65 @@
+[gd_scene format=3 uid="uid://c7cot7g0c5wmb"]
+
+[ext_resource type="PackedScene" uid="uid://dpfg3hm6irewb" path="res://models/props/GEET.glb" id="1_j2083"]
+[ext_resource type="Shader" uid="uid://b8bluat74wt4g" path="res://shaders/electron_wire.gdshader" id="2_aa0ap"]
+[ext_resource type="Script" uid="uid://be2usoqb1eoxh" path="res://scripts/objects/ElectronFollow.gd" id="2_electron"]
+[ext_resource type="Shader" uid="uid://dk6qv0dbk43m2" path="res://shaders/electron_bead.gdshader" id="3_bead_shader"]
+[ext_resource type="PackedScene" uid="uid://chrwviitu8ng7" path="res://models/geet_tubes.glb" id="5_0uxwt"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_0uxwt"]
+render_priority = 0
+shader = ExtResource("2_aa0ap")
+shader_parameter/color = Color(0, 0.8, 1, 1)
+shader_parameter/speed = 2.0
+shader_parameter/stripe_density = 10.0
+shader_parameter/intensity = 3.0
+
+[sub_resource type="Curve3D" id="Curve3D_j2083"]
+_data = {
+"points": PackedVector3Array(0, 0, 0, 0, 0, 0, 0.1069994, -1.4238725, 0.41892132, 0, 0, 0, 0, 0, 0, -1.8390532, -1.5998356, 2.4508307, 0, 0, 0, 0, 0, 0, -6.44662, -1.5188388, 0.47615793, 0, 0, 0, 0, 0, 0, -7.104844, -1.5896897, -4.560684, 0, 0, 0, 0, 0, 0, -6.3893824, -1.722728, -8.939303, 0, 0, 0, 0, 0, 0, -4.099908, -0.86536914, -9.740619, 0, 0, 0, 0, 0, 0, -1.6387243, -0.79755574, -8.481409, 0, 0, 0, 0, 0, 0, -2.2397108, 0, -3.272855, 0, 0, 0, 0, 0, 0, -3.6133966, 0.66951275, 0.8481972, 0, 0, 0, 0, 0, 0, -5.2160273, 0.7335434, 2.3077378, 0, 0, 0, 0, 0, 0, -7.5913553, 0.6690142, 0.44754115, 0, 0, 0, 0, 0, 0, -8.79333, 0.95085883, -3.2442367, 0, 0, 0, 0, 0, 0, -8.449908, 0.6744884, -7.9090395, 0, 0, 0, 0, 0, 0, -6.2176714, 3.4329004, -13.461015),
+"tilts": PackedFloat32Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+}
+point_count = 14
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_aa0ap"]
+render_priority = 0
+shader = ExtResource("3_bead_shader")
+shader_parameter/color = Color(0.2, 1, 1, 1)
+shader_parameter/pulse_speed = 10.9800004978
+shader_parameter/glow = 3.8390001348525002
+
+[sub_resource type="SphereMesh" id="SphereMesh_32akf"]
+material = SubResource("ShaderMaterial_aa0ap")
+radial_segments = 5
+rings = 1
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_bead"]
+render_priority = 0
+shader = ExtResource("3_bead_shader")
+shader_parameter/color = Color(0.2, 1, 1, 1)
+shader_parameter/pulse_speed = 6.0
+shader_parameter/glow = 5.0
+
+[node name="Geet" type="Node3D" unique_id=1339356402]
+
+[node name="model" parent="." unique_id=1857251344 instance=ExtResource("1_j2083")]
+
+[node name="GEET" parent="model" index="0" unique_id=747883048]
+surface_material_override/1 = SubResource("ShaderMaterial_0uxwt")
+
+[node name="Path3D" type="Path3D" parent="." unique_id=852081976]
+curve = SubResource("Curve3D_j2083")
+
+[node name="PathFollow3D" type="PathFollow3D" parent="Path3D" unique_id=1001131454]
+transform = Transform3D(-0.7221992, -0.043175112, 0.69033426, 0, 0.9980463, 0.06242041, -0.69168323, 0.04507993, -0.72079074, 0.1069994, -1.4238725, 0.41892132)
+script = ExtResource("2_electron")
+speed = 0.9
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Path3D/PathFollow3D" unique_id=1906491027]
+mesh = SubResource("SphereMesh_32akf")
+surface_material_override/0 = SubResource("ShaderMaterial_bead")
+
+[node name="geet tubes" parent="." unique_id=457913245 instance=ExtResource("5_0uxwt")]
+transform = Transform3D(1, 0, 0, 0, 0.91, 0, 0, 0, 0.99, -2.955236, -1.4426413, 0.8611951)
+
+[editable path="model"]

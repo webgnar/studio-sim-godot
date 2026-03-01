@@ -1,3 +1,4 @@
+res://scenes/objects/geet.tscn
 res://themes/ui_theme.tres
 res://materials/world_environ.tres
 res://models/particles/new_array_mesh.tres
@@ -5,13 +6,7 @@ res://models/particles/new_array_mesh2.tres
 res://models/particles/new_array_mesh3.tres
 res://materials/tv.gdshader
 res://materials/tv.tres
-res://scenes/objects/psywheel.tscn
-res://scenes/world.tscn
-res://scenes/objects/SEG.tscn
-res://materials/rainbow_grid.tres
-res://shaders/rainbow_grid.gdshader
-res://scenes/stanmeyerWF.tscn
-res://shaders/oscilloscope.gdshader
 res://shaders/water_tank.gdshader
-res://materials/water_tank.tres
-res://scenes/objects/WaterBubbles.tscn
+res://shaders/oscilloscope.gdshader
+res://scenes/world.tscn
+res://scripts/objects/ElectronFollow.gd

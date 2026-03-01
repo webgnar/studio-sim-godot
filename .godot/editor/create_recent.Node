@@ -1,4 +1,6 @@
 MeshInstance3D
+PathFollow3D
+Path3D
 CSGCylinder3D
 CSGBox3D
 CSGTorus3D
@@ -10,5 +12,3 @@ CollisionShape3D
 StaticBody3D
 VBoxContainer
 HBoxContainer
-AnimationTree
-TextureRect
