@@ -1,0 +1,59 @@
+[gd_scene format=3 uid="uid://cufbbupst6wne"]
+
+[ext_resource type="PackedScene" uid="uid://dmfqnrejt221r" path="res://models/props/UpdatedCyclone.glb" id="1_ipdbj"]
+[ext_resource type="Script" uid="uid://bxohs1n10x0sf" path="res://scripts/objects/cyclone.gd" id="2_052mr"]
+[ext_resource type="Script" uid="uid://d26dcxjkrbr8x" path="res://scripts/objects/cyclone_button.gd" id="3_052mr"]
+[ext_resource type="FontFile" uid="uid://tmjyio0w6cu0" path="res://fonts/studio-sim.ttf" id="4_7a1v1"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_7a1v1"]
+size = Vector3(0.22827148, 0.10437012, 0.24414063)
+
+[node name="Cyclone" type="Node3D" unique_id=630081305]
+
+[node name="UpdatedCyclone" parent="." unique_id=21331279 node_paths=PackedStringArray("light_parent", "result_label") instance=ExtResource("1_ipdbj")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.4651785, 0, 23.942663)
+script = ExtResource("2_052mr")
+light_parent = NodePath("Cyclone/LightParent")
+result_label = NodePath("../Label3D")
+
+[node name="button" type="StaticBody3D" parent="." unique_id=376741156]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="button" unique_id=100489945]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.45929146, 0.04144287, -0.6929265)
+shape = SubResource("BoxShape3D_7a1v1")
+
+[node name="CycloneButton" type="Node3D" parent="button" unique_id=492851757 node_paths=PackedStringArray("cyclone")]
+script = ExtResource("3_052mr")
+cyclone = NodePath("../../UpdatedCyclone")
+
+[node name="button3" type="StaticBody3D" parent="." unique_id=1505768989]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.80164164, 0, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="button3" unique_id=1108980034]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.03568381, 0.04144287, 0.10659522)
+shape = SubResource("BoxShape3D_7a1v1")
+
+[node name="CycloneButton" type="Node3D" parent="button3" unique_id=620092966 node_paths=PackedStringArray("cyclone")]
+script = ExtResource("3_052mr")
+cyclone = NodePath("../../UpdatedCyclone")
+button_number = 3
+
+[node name="button2" type="StaticBody3D" parent="." unique_id=1056744048]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.9787343)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="button2" unique_id=757845130]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.45929146, 0.04144287, -0.113382995)
+shape = SubResource("BoxShape3D_7a1v1")
+
+[node name="CycloneButton" type="Node3D" parent="button2" unique_id=140850082 node_paths=PackedStringArray("cyclone")]
+script = ExtResource("3_052mr")
+cyclone = NodePath("../../UpdatedCyclone")
+button_number = 2
+
+[node name="Label3D" type="Label3D" parent="." unique_id=836091663]
+transform = Transform3D(0.885418, 0, 0.46479568, 0, 1, 0, -0.46479568, 0, 0.885418, 0.0010669231, 0.40238494, 0.080770314)
+billboard = 1
+text = ""
+font = ExtResource("4_7a1v1")
+
+[editable path="UpdatedCyclone"]

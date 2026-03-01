@@ -99,6 +99,7 @@
 [ext_resource type="Script" uid="uid://m71r0arc8vb5" path="res://scripts/DeathZone.gd" id="96_ufs10"]
 [ext_resource type="PackedScene" uid="uid://bs7m75lssp7qx" path="res://scenes/CritiqueTV.tscn" id="97_crtq"]
 [ext_resource type="PackedScene" uid="uid://ds2ejyer6uqfg" path="res://models/props/plant_table.glb" id="98_l4n3p"]
+[ext_resource type="PackedScene" uid="uid://cufbbupst6wne" path="res://scenes/objects/cyclone.tscn" id="100_fmmry"]
 [ext_resource type="Texture2D" uid="uid://iwkinqup0swt" path="res://textures/256 wood floor.png" id="101_mu18u"]
 [ext_resource type="PackedScene" uid="uid://5neft563t1yw" path="res://scenes/OpenStickerFolderButton.tscn" id="101_odf6h"]
 [ext_resource type="PackedScene" uid="uid://dak4p8mdryt52" path="res://scenes/StudioAssistantCharacter.tscn" id="102_asst"]
@@ -180,17 +181,6 @@ ao_texture = ExtResource("2_jhx03")
 uv1_scale = Vector3(2.43, 1, 1)
 uv1_offset = Vector3(1.41, 0.03, 0)
 texture_filter = 0
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xgy6y"]
-albedo_texture = ExtResource("31_c15v2")
-normal_enabled = true
-normal_scale = 0.24
-normal_texture = ExtResource("23_swu3i")
-ao_enabled = true
-ao_light_affect = 0.08
-ao_texture = ExtResource("22_ygn2i")
-uv1_scale = Vector3(3.18, 2.11, 2.89)
-uv1_offset = Vector3(0, -1, 0)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xo05s"]
 albedo_texture = ExtResource("14_o8fc1")
@@ -353,17 +343,17 @@ albedo_color = Color(1.0734373, 1.0734373, 0.15063755, 1)
 albedo_texture = ExtResource("82_mu18u")
 texture_filter = 0
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_fmmry"]
+[sub_resource type="PlaneMesh" id="PlaneMesh_26qbd"]
 resource_local_to_scene = true
 size = Vector2(2.5, 3)
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_26qbd"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_optxr"]
 resource_name = "_albedo"
 viewport_path = NodePath("../MirrorNew/SubViewport")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_optxr"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3t06w"]
 resource_local_to_scene = true
-albedo_texture = SubResource("ViewportTexture_26qbd")
+albedo_texture = SubResource("ViewportTexture_optxr")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_1v02h"]
 size = Vector2(2.5, 3)
@@ -387,6 +377,28 @@ uv1_offset = Vector3(-0.12, 0.01, 1.34)
 uv1_triplanar = true
 uv1_world_triplanar = true
 texture_filter = 1
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xgy6y"]
+albedo_texture = ExtResource("31_c15v2")
+normal_enabled = true
+normal_scale = 0.24
+normal_texture = ExtResource("23_swu3i")
+ao_enabled = true
+ao_light_affect = 0.08
+ao_texture = ExtResource("22_ygn2i")
+uv1_scale = Vector3(3.18, 2.11, 2.89)
+uv1_offset = Vector3(0, -1, 0)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nbuqd"]
+albedo_texture = ExtResource("31_c15v2")
+normal_enabled = true
+normal_scale = 0.24
+normal_texture = ExtResource("23_swu3i")
+ao_enabled = true
+ao_light_affect = 0.08
+ao_texture = ExtResource("22_ygn2i")
+uv1_scale = Vector3(3.18, 3.43, 2.89)
+uv1_offset = Vector3(0, -1, 0)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_n6seq"]
 atlas = ExtResource("91_ebmc1")
@@ -1016,8 +1028,8 @@ transform = Transform3D(0.042939056, 0, 0.02561713, 0, 0.05, 0, -0.02561713, 0, 
 [node name="stand" parent="AssistantStudio" unique_id=1282393607 instance=ExtResource("37_ld7xo")]
 transform = Transform3D(0.05, 0, 0, 0, 0.05, 0, 0, 0, 0.05, 1.4236965, -1.2685578, 0.41327953)
 
-[node name="Door" parent="AssistantStudio" unique_id=751489978 instance=ExtResource("83_kcpaj")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.1462793, 0, 3.7181072)
+[node name="Door" parent="AssistantStudio" unique_id=751489978 groups=["no_outline"] instance=ExtResource("83_kcpaj")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.1462793, 0, 3.6827316)
 
 [node name="Elevator" parent="." unique_id=904124064 instance=ExtResource("29_xgy6y")]
 transform = Transform3D(1.44, 0, 0, 0, 1.44, 0, 0, 0, 1.44, 5.356282, 0.43740082, -4.5508404)
@@ -1121,24 +1133,11 @@ size = Vector3(0.50341797, 1, 1)
 material = ExtResource("3_qfnet")
 
 [node name="floor3" type="CSGBox3D" parent="studio" unique_id=1441053147]
-transform = Transform3D(22.413044, 0, 0, 0, 0.008010681, 0, 0, 0, 1.0114841, 30.00969, -0.5221257, 0.2987898)
+transform = Transform3D(22.413044, 0, 0, 0, 0.008010681, 0, 0, 0, 1.0114841, 30.00969, -0.5221257, 0.010929808)
 use_collision = true
 collision_mask = 0
-size = Vector3(0.9383885, 12.45, 1.0341797)
+size = Vector3(0.9383885, 12.45, 0.46499634)
 material = SubResource("StandardMaterial3D_grmox")
-
-[node name="floor4" type="CSGBox3D" parent="studio" unique_id=118544702]
-transform = Transform3D(22.413044, 0, 0, 0, 0.008010681, 0, 0, 0, 1.0114841, 10.269602, -0.5221257, 0.65374136)
-use_collision = true
-collision_mask = 0
-size = Vector3(0.8251733, 12.45, 0.33233643)
-material = SubResource("StandardMaterial3D_xgy6y")
-
-[node name="stairwell cut" type="CSGBox3D" parent="studio" unique_id=1152142603]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.474817, -0.5084185, 0.5788443)
-operation = 2
-size = Vector3(11.904175, 0.20263672, 0.09765625)
-material = ExtResource("43_xiw03")
 
 [node name="WINDOWS" type="Node3D" parent="." unique_id=303418723]
 
@@ -1660,8 +1659,8 @@ surface_material_override/0 = SubResource("StandardMaterial3D_7b7y8")
 
 [node name="mirror" parent="." unique_id=1626491013 groups=["shop_prop"] instance=ExtResource("39_qaasp")]
 transform = Transform3D(-4.7902194e-08, -0.99488777, 0.10098683, -3.9073655e-08, 0.10098683, 0.99488777, -1, 4.3711392e-08, -4.3711385e-08, 2.8, 1.497, 5.232)
-mesh = SubResource("PlaneMesh_fmmry")
-surface_material_override/0 = SubResource("StandardMaterial3D_optxr")
+mesh = SubResource("PlaneMesh_26qbd")
+surface_material_override/0 = SubResource("StandardMaterial3D_3t06w")
 show_debug_logs = false
 metadata/mirror = "mirror"
 metadata/shop_item_id = "mirror"
@@ -1723,6 +1722,26 @@ transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -9.4
 size = Vector3(9.222351, 2.3305664, 0.7774658)
 material = SubResource("StandardMaterial3D_kvmu4")
 
+[node name="floor4" type="CSGBox3D" parent="greenhouse/CSGCombiner3D" unique_id=118544702]
+transform = Transform3D(10.31, 0, 0, 0, 0.06, 0, 0, 0, 22.9, -5.412866, -0.3660605, -0.4171753)
+use_collision = true
+collision_mask = 0
+size = Vector3(0.8251733, 12.45, 0.33233643)
+material = SubResource("StandardMaterial3D_xgy6y")
+
+[node name="floor5" type="CSGBox3D" parent="greenhouse/CSGCombiner3D" unique_id=702312259]
+transform = Transform3D(10.31, 0, 0, 0, 0.06, 0, 0, 0, 22.9, 3.7250714, -0.3660605, -3.1275291)
+use_collision = true
+collision_mask = 0
+size = Vector3(0.94774294, 12.45, 0.5690485)
+material = SubResource("StandardMaterial3D_nbuqd")
+
+[node name="stairwell cut" type="CSGBox3D" parent="greenhouse/CSGCombiner3D" unique_id=1152142603]
+transform = Transform3D(0.46, 0, 0, 0, 7.49, 0, 0, 0, 22.64, -4.858467, -0.2633934, -2.1128464)
+operation = 2
+size = Vector3(11.904175, 0.20263672, 0.09765625)
+material = ExtResource("43_xiw03")
+
 [node name="StaticBody3D" parent="greenhouse" unique_id=1288370841 instance=ExtResource("66_4kmvx")]
 transform = Transform3D(0.3, 0, 0, 0, -1.3113417e-08, 0.3, 0, -0.3, -1.3113417e-08, 5.8766484, 5.896938, -0.13437462)
 
@@ -1749,6 +1768,15 @@ transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -3.314674, 0.7030182, 1
 
 [node name="plant table3" parent="greenhouse" unique_id=1693421543 instance=ExtResource("98_l4n3p")]
 transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -6.8099914, 0.7030182, 1.3129082)
+
+[node name="SpotLight3D" type="SpotLight3D" parent="greenhouse" unique_id=1611432724]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 5.3414903, 5.6152506, -2)
+spot_range = 15.544
+spot_attenuation = 0.74
+spot_angle = 77.14
+
+[node name="Cyclone" parent="greenhouse" unique_id=630081305 instance=ExtResource("100_fmmry")]
+transform = Transform3D(0.52014846, 0, 0.29907447, 0, 0.59999996, 0, -0.29907447, 0, 0.52014846, 6.7079988, 1.2168989, -2.2006588)
 
 [node name="Door" parent="." unique_id=1914412036 groups=["no_outline"] instance=ExtResource("83_kcpaj")]
 transform = Transform3D(-4.196293e-08, 0, -0.95, 0, 0.95, 0, 0.96, 0, -4.152582e-08, 3.8344553, 1.6471603, 0.54472053)
@@ -2011,6 +2039,7 @@ transform = Transform3D(-0.010534158, 0, -0.010678551, 0, 0.014999997, 0, 0.0106
 transform = Transform3D(0.012876094, 0, 0.027096238, 0, 0.029999997, 0, -0.027096238, 0, 0.012876094, 25.911594, -9.433397, 11.302803)
 
 [node name="NavigationRegion3D" type="NavigationRegion3D" parent="gallery" unique_id=1969757967]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.021667004, -9.536743e-07, 0.024924278)
 navigation_mesh = SubResource("NavigationMesh_fmmry")
 
 [node name="floor" type="CSGBox3D" parent="gallery/NavigationRegion3D" unique_id=1848299723]
