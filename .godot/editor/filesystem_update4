@@ -12,3 +12,7 @@ res://materials/cyclone/cyclone_purple.tres
 res://scenes/objects/skateboard.tscn
 res://scripts/GalleryVisitor.gd
 res://scripts/economy/ShopManager.gd
+res://scenes/UI/ShopTab.tscn
+res://scripts/ui/ShopTab.gd
+res://scripts/ui/ShopItemCard.gd
+res://scenes/UI/ShopItemCard.tscn

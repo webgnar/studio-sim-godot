@@ -1882,7 +1882,7 @@ autoplay = &"drop"
 transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 6.655397, 0.7673063, 7.165266)
 
 [node name="baricade 2" parent="." unique_id=1127012402 instance=ExtResource("94_n6seq")]
-transform = Transform3D(-1.0728441e-08, 0, -0.1, 0, 0.1, 0, 0.1, 0, -1.0728441e-08, 5.797236, 0.6591382, 8.597177)
+transform = Transform3D(-0.1, 0, 1.509958e-08, 0, 0.1, 0, -1.509958e-08, 0, -0.1, 5.797236, 0.6591382, 8.597177)
 
 [node name="StaticBody3D" type="StaticBody3D" parent="baricade 2" unique_id=440754542]
 collision_layer = 2

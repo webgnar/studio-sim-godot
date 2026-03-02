@@ -2,22 +2,24 @@ extends Control
 class_name ShopTab
 
 ## Shop tab content for purchasing studio props.
-## Left panel: scrollable list of purchasable items.
+## Left panel: scrollable list of purchasable items (scene-instanced ShopItemCard).
 ## Right panel: item name, description, price, and BUY button.
 ## Follows the same input/activation contract as InventoryTab and MissionSelectionUI.
 
+const ITEM_CARD_SCENE = preload("res://scenes/UI/ShopItemCard.tscn")
+
 @onready var item_list_container: VBoxContainer = $HBoxContainer/LeftPanel/ScrollContainer/ItemList
 @onready var scroll_container: ScrollContainer = $HBoxContainer/LeftPanel/ScrollContainer
-@onready var item_name_label: Label = $HBoxContainer/RightPanel/ItemName
-@onready var item_desc_label: Label = $HBoxContainer/RightPanel/ItemDescription
-@onready var item_price_label: Label = $HBoxContainer/RightPanel/ItemPrice
-@onready var buy_button: Button = $HBoxContainer/RightPanel/BuyButton
-@onready var status_label: Label = $HBoxContainer/RightPanel/StatusLabel
+@onready var item_name_label: Label = $HBoxContainer/RightPanel/DetailPanel/MarginContainer/VBoxContainer/ItemName
+@onready var item_desc_label: Label = $HBoxContainer/RightPanel/DetailPanel/MarginContainer/VBoxContainer/ItemDescription
+@onready var item_price_label: Label = $HBoxContainer/RightPanel/DetailPanel/MarginContainer/VBoxContainer/ItemPrice
+@onready var buy_button: Button = $HBoxContainer/RightPanel/DetailPanel/MarginContainer/VBoxContainer/BuyButton
+@onready var status_label: Label = $HBoxContainer/RightPanel/DetailPanel/MarginContainer/VBoxContainer/StatusLabel
 
 enum NavMode { ITEM_LIST, BUY_BUTTON }
 var nav_mode: NavMode = NavMode.ITEM_LIST
 var selected_index: int = 0
-var item_cards: Array[Button] = []
+var item_cards: Array[ShopItemCard] = []
 var keyboard_nav_enabled: bool = false
 var input_cooldown: float = 0.0
 var input_cooldown_time: float = 0.15
@@ -152,11 +154,8 @@ func _populate_item_list() -> void:
 	var catalog := ShopManager.get_catalog()
 	for i in range(catalog.size()):
 		var item = catalog[i]
-		var card := Button.new()
-		card.text = item["display_name"]
-		card.alignment = HORIZONTAL_ALIGNMENT_LEFT
-		card.focus_mode = Control.FOCUS_NONE
-		card.custom_minimum_size = Vector2(0, 40)
+		var card: ShopItemCard = ITEM_CARD_SCENE.instantiate()
+		card.setup(item["display_name"])
 		# Connect mouse click to select this card
 		var idx := i
 		card.pressed.connect(func(): _on_card_mouse_pressed(idx))
