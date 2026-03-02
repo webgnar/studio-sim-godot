@@ -4,7 +4,7 @@ class_name PauseMenuUI
 ## Pause menu with horizontal tabs: Commissions, Inventory, Options
 ## Handles top-level tab switching and delegates input to active tab content
 
-enum Tab { COMMISSIONS, INVENTORY, OPTIONS, SHOP }
+enum Tab { INVENTORY, COMMISSIONS, SHOP, OPTIONS }
 enum NavMode { TAB_BAR, TAB_CONTENT }
 
 @onready var dialog: PanelContainer = $Dialog
@@ -60,17 +60,17 @@ func _ready():
 	dialog.visible = false
 
 	# Build tab buttons array
-	tab_buttons = [commissions_tab_button, inventory_tab_button, options_tab_button, shop_tab_button]
+	tab_buttons = [inventory_tab_button, commissions_tab_button, shop_tab_button, options_tab_button]
 
 	# Disable Godot focus on tab buttons (navigation is script-driven via modulate)
 	for button in tab_buttons:
 		button.focus_mode = Control.FOCUS_NONE
 
-	# Connect tab button signals
-	commissions_tab_button.pressed.connect(func(): _switch_tab(Tab.COMMISSIONS))
-	inventory_tab_button.pressed.connect(func(): _switch_tab(Tab.INVENTORY))
-	options_tab_button.pressed.connect(func(): _switch_tab(Tab.OPTIONS))
-	shop_tab_button.pressed.connect(func(): _switch_tab(Tab.SHOP))
+	# Connect tab button signals (guard against re-clicking the active tab)
+	commissions_tab_button.pressed.connect(func(): if current_tab != Tab.COMMISSIONS: _switch_tab(Tab.COMMISSIONS))
+	inventory_tab_button.pressed.connect(func(): if current_tab != Tab.INVENTORY: _switch_tab(Tab.INVENTORY))
+	options_tab_button.pressed.connect(func(): if current_tab != Tab.OPTIONS: _switch_tab(Tab.OPTIONS))
+	shop_tab_button.pressed.connect(func(): if current_tab != Tab.SHOP: _switch_tab(Tab.SHOP))
 
 	# Find embedded child UIs
 	mission_selection_ui = _find_child_of_type(commissions_content, "MissionSelectionUI") as MissionSelectionUI
@@ -341,7 +341,7 @@ func _switch_tab(tab: Tab):
 
 func _cycle_tab(direction: int):
 	"""Cycle through tabs with clamping (no wrap)"""
-	var new_tab = clampi(current_tab + direction, 0, Tab.SHOP)
+	var new_tab = clampi(current_tab + direction, 0, Tab.OPTIONS)
 	if new_tab != current_tab:
 		# If we were in content mode, enter tab bar first
 		if nav_mode == NavMode.TAB_CONTENT:
@@ -465,10 +465,8 @@ func _update_tab_button_styles():
 		var button = tab_buttons[i]
 		if i == current_tab:
 			button.modulate = Color(1.0, 1.0, 1.0, 1.0)
-			button.disabled = true  # Prevent re-clicking active tab
 		else:
 			button.modulate = Color(0.6, 0.6, 0.6, 1.0)
-			button.disabled = false
 
 func _update_tab_bar_visual():
 	"""Update tab bar highlight for tab mode"""

@@ -16,3 +16,7 @@ res://scenes/UI/ShopTab.tscn
 res://scripts/ui/ShopTab.gd
 res://scripts/ui/ShopItemCard.gd
 res://scenes/UI/ShopItemCard.tscn
+res://scripts/ui/PauseMenu.gd
+res://scripts/ElevatorController.gd
+res://scripts/economy/AutomationManager.gd
+res://scripts/painting/PaintingMission.gd

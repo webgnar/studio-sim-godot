@@ -259,7 +259,7 @@ func start_export() -> void:
 	# Ship painting to gallery — mark as SHIPPED and teleport to gallery room
 	WorldStateManager.ship_painting(painting)
 	if has_node("/root/EconomyManager"):
-		EconomyManager.add_money(50, "shipped: " + painting.painting_name)
+		EconomyManager.add_money(275, "shipped: " + painting.painting_name)
 	paintings_inside.erase(painting)
 
 	# Late lookup: find GallerySpawnPoint now if not already set via Inspector.

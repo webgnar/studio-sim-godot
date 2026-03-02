@@ -3,15 +3,21 @@ class_name ShopTab
 
 ## Shop tab content for purchasing studio props.
 ## Left panel: scrollable list of purchasable items (scene-instanced ShopItemCard).
-## Right panel: item name, description, price, and BUY button.
+## Right panel: item name, image + description side by side, price, and BUY button.
 ## Follows the same input/activation contract as InventoryTab and MissionSelectionUI.
 
 const ITEM_CARD_SCENE = preload("res://scenes/UI/ShopItemCard.tscn")
+## Drop hand-drawn PNGs here named after the catalog item id, e.g. nail_gun.png
+const PREVIEW_IMAGE_DIR = "res://sprites/shop_previews/%s.png"
+const DESC_SCROLL_STEP := 60.0
+const PREVIEW_PLACEHOLDER = preload("res://sprites/shop_previews/nail_gun.png")
 
-@onready var item_list_container: VBoxContainer = $HBoxContainer/LeftPanel/ScrollContainer/ItemList
+@onready var item_list_container: VBoxContainer = $HBoxContainer/LeftPanel/ScrollContainer/ListMargin/ItemList
 @onready var scroll_container: ScrollContainer = $HBoxContainer/LeftPanel/ScrollContainer
 @onready var item_name_label: Label = $HBoxContainer/RightPanel/DetailPanel/MarginContainer/VBoxContainer/ItemName
-@onready var item_desc_label: Label = $HBoxContainer/RightPanel/DetailPanel/MarginContainer/VBoxContainer/ItemDescription
+@onready var item_image: TextureRect = $HBoxContainer/RightPanel/DetailPanel/MarginContainer/VBoxContainer/MediaRow/ItemImage
+@onready var desc_scroll: ScrollContainer = $HBoxContainer/RightPanel/DetailPanel/MarginContainer/VBoxContainer/MediaRow/DescriptionScroll
+@onready var item_desc_label: Label = $HBoxContainer/RightPanel/DetailPanel/MarginContainer/VBoxContainer/MediaRow/DescriptionScroll/ItemDescription
 @onready var item_price_label: Label = $HBoxContainer/RightPanel/DetailPanel/MarginContainer/VBoxContainer/ItemPrice
 @onready var buy_button: Button = $HBoxContainer/RightPanel/DetailPanel/MarginContainer/VBoxContainer/BuyButton
 @onready var status_label: Label = $HBoxContainer/RightPanel/DetailPanel/MarginContainer/VBoxContainer/StatusLabel
@@ -117,6 +123,16 @@ func _handle_item_list_input(event: InputEvent) -> void:
 		viewport.set_input_as_handled()
 		return
 
+	# Bumpers scroll the description text
+	if event.is_action_pressed("cycle_prev"):
+		desc_scroll.scroll_vertical = max(0, desc_scroll.scroll_vertical - int(DESC_SCROLL_STEP))
+		viewport.set_input_as_handled()
+		return
+	if event.is_action_pressed("cycle_next"):
+		desc_scroll.scroll_vertical += int(DESC_SCROLL_STEP)
+		viewport.set_input_as_handled()
+		return
+
 	# go_back not consumed here — PauseMenu handles tab bar return
 
 
@@ -179,17 +195,21 @@ func _update_selection() -> void:
 				else Color(0.6, 0.6, 0.6, 1.0)
 
 	var item = catalog[selected_index]
-	item_name_label.text = item["display_name"]
+	item_name_label.text = item.get("title", item["display_name"])
 	item_desc_label.text = item["description"]
+	desc_scroll.scroll_vertical = 0
 
+	var path := PREVIEW_IMAGE_DIR % item["id"]
+	item_image.texture = load(path) if ResourceLoader.exists(path) else PREVIEW_PLACEHOLDER
+
+	item_price_label.text = "$%d" % item["price"]
 	var purchased := ShopManager.is_purchased(item["id"])
 	if purchased:
-		item_price_label.text = "$%d" % item["price"]
-		buy_button.visible = false
-		status_label.text = "Owned"
-		status_label.visible = true
+		buy_button.visible = true
+		buy_button.disabled = true
+		buy_button.text = "OWNED"
+		status_label.visible = false
 	else:
-		item_price_label.text = "$%d" % item["price"]
 		var can_afford := EconomyManager.can_afford(item["price"])
 		if can_afford:
 			buy_button.visible = true

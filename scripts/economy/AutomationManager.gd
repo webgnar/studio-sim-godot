@@ -8,9 +8,9 @@ var studio_assistant_active: bool = false
 var assistant_timer: float = 0.0
 
 # Studio Assistant constants
-const ASSISTANT_COST: int = 1200
+const ASSISTANT_COST: int = 2000
 const ASSISTANT_INTERVAL: float = 300.0  # 5 minutes in seconds
-const ASSISTANT_PAYOUT: int = 40  # $40 per painting
+const ASSISTANT_PAYOUT: int = 100  # $100 per painting
 
 # Audio
 @export var payout_sound: AudioStream  # Sound played when assistant completes painting
