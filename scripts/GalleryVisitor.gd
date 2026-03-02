@@ -140,7 +140,7 @@ func _get_attraction_nodes() -> Array[Node3D]:
 
 	# Source 2: anything else explicitly tagged as a gallery attraction
 	for node in get_tree().get_nodes_in_group("gallery_attraction"):
-		if is_instance_valid(node) and node not in result:
+		if is_instance_valid(node) and node.is_visible_in_tree() and node not in result:
 			result.append(node as Node3D)
 
 	return result

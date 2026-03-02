@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://b37nwl2dgl5ff"]
+
+[ext_resource type="PackedScene" uid="uid://chy2sf3ttc770" path="res://models/props/skateboard.gltf" id="1_jyu2t"]
+
+[node name="Skateboard" type="Node3D" unique_id=1008444628]
+
+[node name="default" parent="." unique_id=1728967857 instance=ExtResource("1_jyu2t")]

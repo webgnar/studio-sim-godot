@@ -1,0 +1,11 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://dh3p7sqe8m1p4"]
+
+[ext_resource type="Texture2D" uid="uid://c37lxdmx3wou4" path="res://sprites/textures/plastic.jpg" id="1_14k17"]
+[ext_resource type="Texture2D" uid="uid://c8yew0mlsq32n" path="res://sprites/normals/plastic_normal.png" id="2_xcocu"]
+
+[resource]
+albedo_color = Color(0.6306494, 0.000297063, 0.63146263, 1)
+albedo_texture = ExtResource("1_14k17")
+normal_enabled = true
+normal_scale = -0.19
+normal_texture = ExtResource("2_xcocu")

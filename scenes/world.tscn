@@ -112,6 +112,7 @@
 [ext_resource type="PackedScene" uid="uid://c7cot7g0c5wmb" path="res://scenes/objects/geet.tscn" id="111_0fl76"]
 [ext_resource type="PackedScene" uid="uid://bvg5r8kqnmx3c" path="res://scenes/GalleryVisitor.tscn" id="115_26qbd"]
 [ext_resource type="Material" uid="uid://dftupkqp265f" path="res://materials/pedestal.tres" id="115_optxr"]
+[ext_resource type="PackedScene" uid="uid://chy2sf3ttc770" path="res://models/props/skateboard.gltf" id="119_tp6af"]
 [ext_resource type="AudioStream" uid="uid://84rjpuccue2i" path="res://sounds/boomboxSwitch.ogg" id="boombox_switch"]
 [ext_resource type="AudioStream" uid="uid://cfuo8ydnxfi66" path="res://sounds/convenient ear pleasure.ogg" id="ear_ogg"]
 [ext_resource type="AudioStream" uid="uid://bukro42figtah" path="res://sounds/fan switch.ogg" id="fan_switch"]
@@ -336,17 +337,17 @@ albedo_color = Color(1.0734373, 1.0734373, 0.15063755, 1)
 albedo_texture = ExtResource("82_mu18u")
 texture_filter = 0
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_26qbd"]
+[sub_resource type="PlaneMesh" id="PlaneMesh_tp6af"]
 resource_local_to_scene = true
 size = Vector2(2.5, 3)
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_optxr"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_kegyo"]
 resource_name = "_albedo"
 viewport_path = NodePath("../MirrorNew/SubViewport")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3t06w"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hi2pd"]
 resource_local_to_scene = true
-albedo_texture = SubResource("ViewportTexture_optxr")
+albedo_texture = SubResource("ViewportTexture_kegyo")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_1v02h"]
 size = Vector2(2.5, 3)
@@ -392,6 +393,9 @@ ao_light_affect = 0.08
 ao_texture = ExtResource("22_ygn2i")
 uv1_scale = Vector3(3.18, 3.43, 2.89)
 uv1_offset = Vector3(0, -1, 0)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_gyxkx"]
+size = Vector3(2.065918, 2.5327148, 1.9875488)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_n6seq"]
 atlas = ExtResource("91_ebmc1")
@@ -1016,8 +1020,9 @@ transform = Transform3D(-4.371139e-09, 0.1, 0, -0.1, -4.371139e-09, 0, 0, 0, 0.1
 [node name="rug" parent="AssistantStudio" unique_id=1144089093 instance=ExtResource("35_gw1vw")]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -0.24134922, -1.5990667, 0)
 
-[node name="Psywheel" parent="AssistantStudio" unique_id=1850560820 instance=ExtResource("36_xullu")]
+[node name="Psywheel" parent="AssistantStudio" unique_id=1850560820 groups=["shop_prop"] instance=ExtResource("36_xullu")]
 transform = Transform3D(0.042939056, 0, 0.02561713, 0, 0.05, 0, -0.02561713, 0, 0.042939056, 1.4280376, -0.6426747, 0.44645023)
+metadata/shop_item_id = "psywheel"
 
 [node name="stand" parent="AssistantStudio" unique_id=1282393607 instance=ExtResource("37_ld7xo")]
 transform = Transform3D(0.05, 0, 0, 0, 0.05, 0, 0, 0, 0.05, 1.4236965, -1.2685578, 0.41327953)
@@ -1650,8 +1655,8 @@ surface_material_override/0 = SubResource("StandardMaterial3D_7b7y8")
 
 [node name="mirror" parent="." unique_id=1626491013 groups=["shop_prop"] instance=ExtResource("39_qaasp")]
 transform = Transform3D(-4.7902194e-08, -0.99488777, 0.10098683, -3.9073655e-08, 0.10098683, 0.99488777, -1, 4.3711392e-08, -4.3711385e-08, 2.8, 1.497, 5.232)
-mesh = SubResource("PlaneMesh_26qbd")
-surface_material_override/0 = SubResource("StandardMaterial3D_3t06w")
+mesh = SubResource("PlaneMesh_tp6af")
+surface_material_override/0 = SubResource("StandardMaterial3D_hi2pd")
 show_debug_logs = false
 metadata/mirror = "mirror"
 metadata/shop_item_id = "mirror"
@@ -1714,10 +1719,10 @@ size = Vector3(9.222351, 2.3305664, 0.7774658)
 material = SubResource("StandardMaterial3D_kvmu4")
 
 [node name="floor4" type="CSGBox3D" parent="greenhouse/CSGCombiner3D" unique_id=118544702]
-transform = Transform3D(10.31, 0, 0, 0, 0.06, 0, 0, 0, 22.9, -5.412866, -0.3660605, -0.4171753)
+transform = Transform3D(10.31, 0, 0, 0, 0.06, 0, 0, 0, 22.9, -5.412866, -0.3660605, -0.3371563)
 use_collision = true
 collision_mask = 0
-size = Vector3(0.8251733, 12.45, 0.33233643)
+size = Vector3(0.8251733, 12.45, 0.3253479)
 material = SubResource("StandardMaterial3D_xgy6y")
 
 [node name="floor5" type="CSGBox3D" parent="greenhouse/CSGCombiner3D" unique_id=702312259]
@@ -1766,11 +1771,20 @@ spot_range = 15.544
 spot_attenuation = 0.74
 spot_angle = 77.14
 
-[node name="Cyclone" parent="greenhouse" unique_id=630081305 instance=ExtResource("100_fmmry")]
+[node name="Cyclone" parent="greenhouse" unique_id=630081305 groups=["shop_prop"] instance=ExtResource("100_fmmry")]
 transform = Transform3D(0.52014846, 0, 0.29907447, 0, 0.59999996, 0, -0.29907447, 0, 0.52014846, 6.7079988, 1.2168989, -2.2006588)
+metadata/shop_item_id = "cyclone"
 
-[node name="monstera" parent="greenhouse" unique_id=1294440789 instance=ExtResource("101_nbuqd")]
-transform = Transform3D(0.17047878, 0, 0.10458006, 0, 0.2, 0, -0.10458006, 0, 0.17047878, 5.1224084, 2.0549254, 1.4117355)
+[node name="monstera" parent="greenhouse" unique_id=1294440789 groups=["shop_prop"] instance=ExtResource("101_nbuqd")]
+transform = Transform3D(0.17047878, 0, 0.10458006, 0, 0.2, 0, -0.10458006, 0, 0.17047878, 6.2763324, 1.0547712, 1.4117355)
+metadata/shop_item_id = "monstera"
+
+[node name="StaticBody3D" type="StaticBody3D" parent="greenhouse/monstera" unique_id=1352949432]
+collision_layer = 8
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="greenhouse/monstera/StaticBody3D" unique_id=756692235]
+transform = Transform3D(0.99993044, 0, -2.2441149e-05, 0, 0.9999095, 0, 2.2441149e-05, 0, 0.99993044, -0.05638504, -3.898034, -0.09364319)
+shape = SubResource("BoxShape3D_gyxkx")
 
 [node name="rail" parent="greenhouse" unique_id=1758800207 instance=ExtResource("101_tp6af")]
 transform = Transform3D(-8.742278e-09, -0.2, 0, -1.4901161e-08, 8.881784e-16, 0.2, -0.2, 8.742278e-09, -1.4901161e-08, -5.29385, 0.4946152, -0.8551159)
@@ -2030,16 +2044,19 @@ size = Vector3(1.2297363, 3.0019531, 1)
 transform = Transform3D(0.66, 0, 0, 0, -1.6173214e-08, -0.66, 0, 0.37, -2.8849517e-08, -2.7078075, 4.0961657, 19.02516)
 
 [node name="StaticBody3D2" parent="gallery" unique_id=1945467411 instance=ExtResource("66_4kmvx")]
-transform = Transform3D(-5.7699033e-08, 0.19, -2.8849517e-08, 0, -8.305164e-09, -0.66, -1.32, -8.305164e-09, 1.2610525e-15, -6.300403, 4.0961657, 2.4920044)
+transform = Transform3D(-5.7699033e-08, 0.19, -2.8849517e-08, 0, -8.305164e-09, -0.66, -1.32, -8.305164e-09, 1.2610525e-15, -6.300403, 4.0961657, 2.0468483)
 
-[node name="Seg" parent="gallery" unique_id=1485231188 groups=["gallery_attraction"] instance=ExtResource("109_pwx6t")]
+[node name="Seg" parent="gallery" unique_id=1485231188 groups=["gallery_attraction", "shop_prop"] instance=ExtResource("109_pwx6t")]
 transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 32.96471, -9.571679, 6.756235)
+metadata/shop_item_id = "seg"
 
-[node name="StanmeyerWf" parent="gallery" unique_id=1772342250 groups=["gallery_attraction"] instance=ExtResource("110_tjdyg")]
+[node name="StanmeyerWf" parent="gallery" unique_id=1772342250 groups=["gallery_attraction", "shop_prop"] instance=ExtResource("110_tjdyg")]
 transform = Transform3D(-0.010534158, 0, -0.010678551, 0, 0.014999997, 0, 0.010678551, 0, -0.010534158, 21.829754, -9.135181, 3.8498173)
+metadata/shop_item_id = "stankeyer_wf"
 
-[node name="Geet" parent="gallery" unique_id=1339356402 groups=["gallery_attraction"] instance=ExtResource("111_0fl76")]
+[node name="Geet" parent="gallery" unique_id=1339356402 groups=["gallery_attraction", "shop_prop"] instance=ExtResource("111_0fl76")]
 transform = Transform3D(0.012876094, 0, 0.027096238, 0, 0.029999997, 0, -0.027096238, 0, 0.012876094, 25.911594, -9.433397, 11.302803)
+metadata/shop_item_id = "geet"
 
 [node name="NavigationRegion3D" type="NavigationRegion3D" parent="gallery" unique_id=1969757967]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.021667004, -9.536743e-07, 0.024924278)
@@ -2076,6 +2093,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.7506719, -14.57428, 24.9774
 
 [node name="GallerySpawnPoint" type="Node3D" parent="." unique_id=837462901]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.722805, -9.6, 15.43)
+
+[node name="skateboard" parent="." unique_id=1728967857 groups=["shop_prop"] instance=ExtResource("119_tp6af")]
+transform = Transform3D(0.0193909, -0.09810195, 0, 0.09810195, 0.0193909, 0, 0, 0, 0.1, 3.5680401, 0.72198987, 3.6144242)
+metadata/shop_item_id = "skateboard"
 
 [editable path="Spotlight1"]
 [editable path="Spotlight2"]

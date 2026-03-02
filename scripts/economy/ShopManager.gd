@@ -192,4 +192,46 @@ func _build_catalog() -> void:
 			"description": "Print your own custom stickers to put on paintings.",
 			"price": 250,
 		},
+		{
+			"id": "skateboard",
+			"display_name": "Skateboard",
+			"description": "A beat-up board leaning against the wall. Old habits.",
+			"price": 125,
+		},
+		{
+			"id": "monstera",
+			"display_name": "Monstera Plant",
+			"description": "Big leafy vibes. Every studio needs one.",
+			"price": 75,
+		},
+		{
+			"id": "psywheel",
+			"display_name": "Psywheel",
+			"description": "A spinning kinetic art piece. Meditative, hypnotic.",
+			"price": 175,
+		},
+		{
+			"id": "cyclone",
+			"display_name": "Cyclone",
+			"description": "An interactive light-sequencing installation. Challenge accepted.",
+			"price": 400,
+		},
+		{
+			"id": "seg",
+			"display_name": "Seg",
+			"description": "A towering gallery sculpture. Makes visitors stop and stare.",
+			"price": 300,
+		},
+		{
+			"id": "geet",
+			"display_name": "Geet",
+			"description": "Electron wire sculpture with live particle animation.",
+			"price": 275,
+		},
+		{
+			"id": "stankeyer_wf",
+			"display_name": "StankeyerWF",
+			"description": "A gallery-grade display piece. Gallery-ready on arrival.",
+			"price": 250,
+		},
 	]
