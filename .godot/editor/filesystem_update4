@@ -13,3 +13,5 @@ res://models/particles/new_array_mesh2.tres
 res://models/particles/new_array_mesh3.tres
 res://scripts/ElevatorController.gd
 res://scripts/components/ElevatorGateButton.gd
+res://scripts/UIManager.gd
+res://scripts/economy/EconomyManager.gd

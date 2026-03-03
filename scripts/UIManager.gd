@@ -82,8 +82,13 @@ func _ready():
 	print("UIManager: Final window mode: %d (3=FULLSCREEN)" % current_mode)
 	print("UIManager: Current mouse mode before capture: %d (0=VISIBLE, 2=CAPTURED, 5=CONFINED_HIDDEN)" % Input.mouse_mode)
 
-	# Start in gameplay state so player can move immediately
-	change_state(GameState.GAMEPLAY)
+	# Start in the appropriate state based on which scene loaded
+	# By this point (after all awaits), current_scene is set
+	var scene_path = get_tree().current_scene.scene_file_path if get_tree().current_scene else ""
+	if "TitleScreen" in scene_path:
+		change_state(GameState.MAIN_MENU)
+	else:
+		change_state(GameState.GAMEPLAY)  # dev workflow: direct world scene loading
 
 	# Pause when Steam overlay opens
 	if SteamManager:

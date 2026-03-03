@@ -26,9 +26,8 @@ var input_cooldown_time: float = 0.15  # Cooldown between navigation inputs
 const OPTIONS_MENU_SCENE = preload("res://scenes/UI/OptionsMenu.tscn")
 
 func _ready():
-	# Connect device change signal and set initial cursor state based on current device
+	# Connect device change signal (initial state applied at end of _ready, after grab_focus)
 	InputDeviceManager.device_changed.connect(_on_input_device_changed)
-	_on_input_device_changed(InputDeviceManager.current_device)
 
 	# Fade in from black (skip if SceneTransition is already handling a fade-in)
 	if not SceneTransition.is_transitioning:
@@ -53,10 +52,11 @@ func _ready():
 	confirm_yes_button.pressed.connect(_on_confirm_yes)
 	confirm_no_button.pressed.connect(_on_confirm_no)
 	
-	# Instantiate options menu
+	# Instantiate options menu inside UI_Layer (CanvasLayer) so it shares the same
+	# canvas layer as the title screen buttons and receives mouse input correctly
 	options_menu = OPTIONS_MENU_SCENE.instantiate()
 	options_menu.closed.connect(_on_options_closed)
-	add_child(options_menu)
+	$UI_Layer.add_child(options_menu)
 
 	# Ensure our camera is the active one (CameraManager autoload may hold stale state)
 	camera.make_current()
@@ -72,11 +72,14 @@ func _ready():
 	# Set up controller/gamepad focus navigation
 	_setup_focus_navigation()
 
-	# Focus first available button
+	# Focus first available button (for gamepad; keyboard/mouse handler will release it below)
 	if has_save:
 		continue_button.grab_focus()
 	else:
 		new_game_button.grab_focus()
+
+	# Apply initial cursor/focus state based on current input device
+	_on_input_device_changed(InputDeviceManager.current_device)
 
 func _process(delta):
 	# Update input cooldown
@@ -153,8 +156,15 @@ func _check_save_exists() -> bool:
 			FileAccess.file_exists("user://mission_progression.json") or
 			FileAccess.file_exists("user://world_state.json"))
 
+func _close_options_if_open():
+	"""Close options menu and restore title screen input if options was open"""
+	if options_menu and options_menu.visible:
+		options_menu.hide()
+		set_process_input(true)
+
 func _on_continue_pressed():
 	"""Load the world scene - UIManager will load existing save data in its _ready()"""
+	_close_options_if_open()
 	# Play game start sound
 	if game_start_sound:
 		game_start_sound.play()
@@ -162,6 +172,7 @@ func _on_continue_pressed():
 
 func _on_new_game_pressed():
 	"""Start new game - confirm only if there's existing save data to overwrite"""
+	_close_options_if_open()
 	if not _check_save_exists():
 		# No save data, start immediately without confirmation
 		if game_start_sound:
@@ -245,6 +256,10 @@ func _transition_to_game(scene_path: String, wipe_data: bool) -> void:
 	if is_transitioning:
 		return  # Prevent multiple transitions
 
+	# Close options menu if it's open
+	if options_menu and options_menu.visible:
+		options_menu.hide()
+
 	is_transitioning = true
 
 	# Stop listening for device changes during transition
@@ -317,10 +332,9 @@ func _wipe_save_data():
 		WorldStateManager.clear_world_state()
 		print("TitleScreen: Cleared world state")
 
-	# Reset economy (DEBUG: start with $5000)
+	# Reset economy
 	if EconomyManager:
-		EconomyManager.set_money(5000)
-		print("TitleScreen: Reset economy to $5000 [DEBUG]")
+		EconomyManager.set_money(0)
 
 	# Reset studio assistant
 	if AutomationManager:
