@@ -1739,7 +1739,7 @@ size = Vector3(11.904175, 0.20263672, 0.09765625)
 material = ExtResource("43_xiw03")
 
 [node name="StaticBody3D" parent="greenhouse" unique_id=1288370841 instance=ExtResource("66_4kmvx")]
-transform = Transform3D(0.3, 0, 0, 0, -1.3113417e-08, 0.3, 0, -0.3, -1.3113417e-08, 5.8766484, 5.896938, -0.13437462)
+transform = Transform3D(0.3, 0, 0, 0, -1.3113417e-08, 0.3, 0, -0.3, -1.3113417e-08, 5.9624257, 5.896938, -0.13437462)
 
 [node name="StaticBody3D5" parent="greenhouse" unique_id=1618185937 instance=ExtResource("66_4kmvx")]
 transform = Transform3D(-1.3113416e-08, -0.29999998, 8.881784e-16, 0.29999998, -1.3113416e-08, 3.8823512e-23, 0, 8.881784e-16, 0.29999998, 4.790563, 3.0439544, 3.7199364)
@@ -1751,7 +1751,7 @@ transform = Transform3D(-1.3113416e-08, -0.29999998, 8.881784e-16, 0.29999998, -
 transform = Transform3D(0.3, 0, 0, 0, -1.3113417e-08, 0.3, 0, -0.3, -1.3113417e-08, 0.42693853, 5.896938, -0.13437462)
 
 [node name="StaticBody3D3" parent="greenhouse" unique_id=545007317 instance=ExtResource("66_4kmvx")]
-transform = Transform3D(0.3, 0, 0, 0, -1.3113417e-08, 0.3, 0, -0.3, -1.3113417e-08, -5.056928, 5.896938, -0.13437462)
+transform = Transform3D(0.3, 0, 0, 0, -1.3113417e-08, 0.3, 0, -0.3, -1.3113417e-08, -5.1226263, 5.896938, -0.13437462)
 
 [node name="StaticBody3D4" parent="greenhouse" unique_id=1461259810 instance=ExtResource("66_4kmvx")]
 transform = Transform3D(0.12734991, 1.1873254e-08, -0.2716284, 0.2716284, -5.566641e-09, 0.12734991, -6.3527474e-23, -0.29999998, -1.3113415e-08, -8.879927, 3.5963254, -0.13437462)
