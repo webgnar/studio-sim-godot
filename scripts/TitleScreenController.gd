@@ -26,8 +26,9 @@ var input_cooldown_time: float = 0.15  # Cooldown between navigation inputs
 const OPTIONS_MENU_SCENE = preload("res://scenes/UI/OptionsMenu.tscn")
 
 func _ready():
-	# Set mouse mode to visible
-	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	# Connect device change signal and set initial cursor state based on current device
+	InputDeviceManager.device_changed.connect(_on_input_device_changed)
+	_on_input_device_changed(InputDeviceManager.current_device)
 
 	# Fade in from black (skip if SceneTransition is already handling a fade-in)
 	if not SceneTransition.is_transitioning:
@@ -224,12 +225,31 @@ func _on_options_closed():
 	# Return focus to Options button
 	options_button.grab_focus()
 
+func _on_input_device_changed(device: InputDeviceManager.DeviceType) -> void:
+	if device == InputDeviceManager.DeviceType.KEYBOARD_MOUSE:
+		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+		# Release focus ring so mouse hover looks natural
+		var focused = get_viewport().gui_get_focus_owner()
+		if focused:
+			focused.release_focus()
+	else:
+		Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
+		# Restore gamepad focus on first available button
+		if not continue_button.disabled:
+			continue_button.grab_focus()
+		else:
+			new_game_button.grab_focus()
+
 func _transition_to_game(scene_path: String, wipe_data: bool) -> void:
 	"""Handle transition to game with character animation and fade"""
 	if is_transitioning:
 		return  # Prevent multiple transitions
 
 	is_transitioning = true
+
+	# Stop listening for device changes during transition
+	if InputDeviceManager.device_changed.is_connected(_on_input_device_changed):
+		InputDeviceManager.device_changed.disconnect(_on_input_device_changed)
 
 	# Disable input and fade out the menu UI
 	set_process_input(false)

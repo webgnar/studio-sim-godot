@@ -11,3 +11,5 @@ res://materials/world_environ.tres
 res://models/particles/new_array_mesh.tres
 res://models/particles/new_array_mesh2.tres
 res://models/particles/new_array_mesh3.tres
+res://scripts/ElevatorController.gd
+res://scripts/components/ElevatorGateButton.gd

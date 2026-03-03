@@ -99,6 +99,7 @@
 [ext_resource type="Script" uid="uid://m71r0arc8vb5" path="res://scripts/DeathZone.gd" id="96_ufs10"]
 [ext_resource type="PackedScene" uid="uid://bs7m75lssp7qx" path="res://scenes/CritiqueTV.tscn" id="97_crtq"]
 [ext_resource type="PackedScene" uid="uid://ds2ejyer6uqfg" path="res://models/props/plant_table.glb" id="98_l4n3p"]
+[ext_resource type="Script" uid="uid://bwhycy7jdfmq8" path="res://scripts/BaricadeTrigger.gd" id="99_baric2"]
 [ext_resource type="PackedScene" uid="uid://cufbbupst6wne" path="res://scenes/objects/cyclone.tscn" id="100_fmmry"]
 [ext_resource type="Texture2D" uid="uid://iwkinqup0swt" path="res://textures/256 wood floor.png" id="101_mu18u"]
 [ext_resource type="PackedScene" uid="uid://c7yc38ibg8khq" path="res://models/props/plant3.gltf" id="101_nbuqd"]
@@ -337,17 +338,17 @@ albedo_color = Color(1.0734373, 1.0734373, 0.15063755, 1)
 albedo_texture = ExtResource("82_mu18u")
 texture_filter = 0
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_tp6af"]
+[sub_resource type="PlaneMesh" id="PlaneMesh_kegyo"]
 resource_local_to_scene = true
 size = Vector2(2.5, 3)
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_kegyo"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_hi2pd"]
 resource_name = "_albedo"
 viewport_path = NodePath("../MirrorNew/SubViewport")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hi2pd"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gyxkx"]
 resource_local_to_scene = true
-albedo_texture = SubResource("ViewportTexture_kegyo")
+albedo_texture = SubResource("ViewportTexture_hi2pd")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_1v02h"]
 size = Vector2(2.5, 3)
@@ -657,6 +658,70 @@ _data = {
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_pb8sg"]
 size = Vector3(25.251678, 16.538967, 1.7124023)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_tp6af"]
+size = Vector3(32.026398, 24.8461, 4.185547)
+
+[sub_resource type="Animation" id="Animation_kegyo"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(5.797236, 0.6591382, 8.597177)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 3.1415925, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_hi2pd"]
+resource_name = "move"
+length = 2.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(5.797236, 0.6591382, 8.597177), Vector3(6.797236, 0.6591382, 9.597177)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, 3.1415925, 0), Vector3(0, -1.5707965, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_gyxkx"]
+_data = {
+&"RESET": SubResource("Animation_kegyo"),
+&"move": SubResource("Animation_hi2pd")
+}
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ufs10"]
 size = Vector3(53.886887, 2, 16.19952)
@@ -1008,11 +1073,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.5419307, 1.5265388)
 [node name="StickerWall" parent="AssistantStudio" unique_id=1083857710 instance=ExtResource("103_swall")]
 transform = Transform3D(0.93857735, 0, 0.34506887, 0, 1, 0, -0.34506887, 0, 0.93857735, -1.0653248, 0.5, -3.3040338)
 
-[node name="SpotLight3D" type="SpotLight3D" parent="AssistantStudio" unique_id=1042600019]
-transform = Transform3D(0.96502125, -0.10872111, 0.23856667, -0.07238324, 0.7641048, 0.64101857, -0.25198224, -0.6358647, 0.7295077, 0, 2.098744, 0)
-spot_range = 7.702
-spot_attenuation = 0.87
-spot_angle = 88.83
+[node name="SpotLight3D" type="OmniLight3D" parent="AssistantStudio" unique_id=1713332885]
+transform = Transform3D(0.96502113, -0.10872114, 0.23856673, -0.07238323, 0.76410466, 0.64101857, -0.2519822, -0.6358646, 0.72950757, -0.2444439, 0.8378589, -1.6614113)
 
 [node name="HireAssistantButton" parent="AssistantStudio" unique_id=47708941 instance=ExtResource("104_hire")]
 transform = Transform3D(-4.371139e-09, 0.1, 0, -0.1, -4.371139e-09, 0, 0, 0, 0.1, -3.925264, -0.24193168, 1.6015806)
@@ -1655,8 +1717,8 @@ surface_material_override/0 = SubResource("StandardMaterial3D_7b7y8")
 
 [node name="mirror" parent="." unique_id=1626491013 groups=["shop_prop"] instance=ExtResource("39_qaasp")]
 transform = Transform3D(-4.7902194e-08, -0.99488777, 0.10098683, -3.9073655e-08, 0.10098683, 0.99488777, -1, 4.3711392e-08, -4.3711385e-08, 2.8, 1.497, 5.232)
-mesh = SubResource("PlaneMesh_tp6af")
-surface_material_override/0 = SubResource("StandardMaterial3D_hi2pd")
+mesh = SubResource("PlaneMesh_kegyo")
+surface_material_override/0 = SubResource("StandardMaterial3D_gyxkx")
 show_debug_logs = false
 metadata/mirror = "mirror"
 metadata/shop_item_id = "mirror"
@@ -1765,11 +1827,8 @@ transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -3.314674, 0.7030182, 1
 [node name="plant table3" parent="greenhouse" unique_id=1693421543 instance=ExtResource("98_l4n3p")]
 transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -6.8099914, 0.7030182, 1.3129082)
 
-[node name="SpotLight3D" type="SpotLight3D" parent="greenhouse" unique_id=1611432724]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 5.3414903, 5.6152506, -2)
-spot_range = 15.544
-spot_attenuation = 0.74
-spot_angle = 77.14
+[node name="SpotLight3D" type="OmniLight3D" parent="greenhouse" unique_id=1431240099]
+transform = Transform3D(0.8660254, 2.1855694e-08, -0.5, 0.5, -3.7855173e-08, 0.8660254, 0, -1, -4.371139e-08, 5.3414903, 2.6152506, -2)
 
 [node name="Cyclone" parent="greenhouse" unique_id=630081305 groups=["shop_prop"] instance=ExtResource("100_fmmry")]
 transform = Transform3D(0.52014846, 0, 0.29907447, 0, 0.59999996, 0, -0.29907447, 0, 0.52014846, 6.7079988, 1.2168989, -2.2006588)
@@ -1883,6 +1942,7 @@ transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 6.655397, 0.7673063, 7.
 
 [node name="baricade 2" parent="." unique_id=1127012402 instance=ExtResource("94_n6seq")]
 transform = Transform3D(-0.1, 0, 1.509958e-08, 0, 0.1, 0, -1.509958e-08, 0, -0.1, 5.797236, 0.6591382, 8.597177)
+script = ExtResource("99_baric2")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="baricade 2" unique_id=440754542]
 collision_layer = 2
@@ -1890,6 +1950,16 @@ collision_layer = 2
 [node name="CollisionShape3D" type="CollisionShape3D" parent="baricade 2/StaticBody3D" unique_id=2029042886]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.14646912, 1.8250904, 0.35619354)
 shape = SubResource("BoxShape3D_pb8sg")
+
+[node name="Area3D" type="Area3D" parent="baricade 2" unique_id=1319579091]
+collision_layer = 2
+
+[node name="trigger" type="CollisionShape3D" parent="baricade 2/Area3D" unique_id=1342660716]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.4631729, 6.380143, -37.874153)
+shape = SubResource("BoxShape3D_tp6af")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="baricade 2" unique_id=815745019]
+libraries/ = SubResource("AnimationLibrary_gyxkx")
 
 [node name="camera sticker" parent="." unique_id=990435022 instance=ExtResource("95_n6seq")]
 transform = Transform3D(-2.1855695e-09, 0, -0.05, 0, 0.05, 0, 0.05, 0, -2.1855695e-09, 3.6745884, 1.737043, 9.13512)

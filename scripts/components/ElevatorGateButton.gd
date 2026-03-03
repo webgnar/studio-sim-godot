@@ -24,6 +24,8 @@ func _ready() -> void:
 		elevator_controller.gate_closed.connect(_on_gate_closed)
 		elevator_controller.painting_entered.connect(_on_painting_changed)
 		elevator_controller.painting_exited.connect(_on_painting_changed)
+		elevator_controller.foreign_object_entered.connect(_on_foreign_object_changed)
+		elevator_controller.foreign_object_exited.connect(_on_foreign_object_changed)
 		_update_interaction_text()
 	else:
 		push_warning("ElevatorGateButton: Could not find ElevatorController!")
@@ -58,6 +60,9 @@ func _on_gate_closed() -> void:
 func _on_painting_changed(_painting: CarryablePainting) -> void:
 	_update_interaction_text()
 
+func _on_foreign_object_changed(_body: RigidBody3D) -> void:
+	_update_interaction_text()
+
 func _update_interaction_text() -> void:
 	if not elevator_controller:
 		interaction_text = "Close Gate"
@@ -67,7 +72,10 @@ func _update_interaction_text() -> void:
 		interaction_text = "..."
 		is_disabled = true
 	elif elevator_controller.is_gate_open():
-		if elevator_controller.has_too_many_paintings():
+		if elevator_controller.has_foreign_objects():
+			interaction_text = "Remove Items First"
+			is_disabled = true
+		elif elevator_controller.has_too_many_paintings():
 			interaction_text = "Too Many Paintings"
 			is_disabled = true
 		else:
@@ -78,9 +86,10 @@ func _update_interaction_text() -> void:
 		is_disabled = false
 
 func interact(player_interaction_component: PlayerInteractionComponent) -> void:
-	if is_disabled and elevator_controller and elevator_controller.has_too_many_paintings():
-		elevator_controller.play_error_sound()
-		return
+	if is_disabled and elevator_controller:
+		if elevator_controller.has_too_many_paintings() or elevator_controller.has_foreign_objects():
+			elevator_controller.play_error_sound()
+			return
 	super.interact(player_interaction_component)
 
 func _on_interacted(_player_interaction_component: PlayerInteractionComponent) -> void:

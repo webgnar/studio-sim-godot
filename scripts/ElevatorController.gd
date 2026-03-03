@@ -10,6 +10,8 @@ signal gate_opened()
 signal gate_closed()
 signal export_started(painting: CarryablePainting)
 signal export_completed(png_path: String, glb_path: String)
+signal foreign_object_entered(body: RigidBody3D)
+signal foreign_object_exited(body: RigidBody3D)
 
 enum GateState { OPEN, CLOSED, ANIMATING }
 
@@ -31,6 +33,10 @@ var is_exporting: bool = false
 # Player detection for elevator achievement
 var player_detection_area: Area3D
 var player_inside_elevator: bool = false
+
+# Foreign object detection (non-painting items that shouldn't be in elevator)
+var foreign_objects_inside: Array[RigidBody3D] = []
+var foreign_object_detection_area: Area3D
 
 # Audio
 var _export_sound: AudioStreamPlayer3D
@@ -64,6 +70,7 @@ func _ready() -> void:
 
 	# Setup player detection for achievement
 	_setup_player_detection()
+	_setup_foreign_object_detection()
 
 	# Connect gate_closed for elevator achievement
 	gate_closed.connect(_on_gate_closed_check_player)
@@ -126,6 +133,44 @@ func _on_player_exited(body: Node) -> void:
 	if body is CharacterBody3D:
 		player_inside_elevator = false
 
+func _setup_foreign_object_detection() -> void:
+	"""Create an Area3D to detect non-painting objects inside the elevator"""
+	foreign_object_detection_area = Area3D.new()
+	foreign_object_detection_area.name = "ForeignObjectDetectionArea"
+	foreign_object_detection_area.collision_layer = 0
+	# Layer 3 (moving objects/gun) = 1<<2 = 4, Layer 8 (interactables: nailgun, fan, plug, trash can) = 1<<7 = 128
+	foreign_object_detection_area.collision_mask = 132
+	foreign_object_detection_area.monitoring = true
+	foreign_object_detection_area.monitorable = false
+
+	var shape = CollisionShape3D.new()
+	var box = BoxShape3D.new()
+	box.size = Vector3(3.2, 2.5, 3.0)  # Match PaintingDetectionArea dimensions
+	shape.shape = box
+	foreign_object_detection_area.add_child(shape)
+	foreign_object_detection_area.position = Vector3(2.1, 1.0, 0.75)  # Match PaintingDetectionArea position
+
+	if moving_parts:
+		moving_parts.add_child(foreign_object_detection_area)
+	else:
+		add_child(foreign_object_detection_area)
+
+	foreign_object_detection_area.body_entered.connect(_on_foreign_body_entered)
+	foreign_object_detection_area.body_exited.connect(_on_foreign_body_exited)
+
+func _on_foreign_body_entered(body: Node) -> void:
+	if body is CarryablePainting:
+		return  # paintings are handled by PaintingDetectionArea
+	if body is RigidBody3D:
+		if body not in foreign_objects_inside:
+			foreign_objects_inside.append(body)
+			foreign_object_entered.emit(body)
+
+func _on_foreign_body_exited(body: Node) -> void:
+	if body is RigidBody3D and not body is CarryablePainting:
+		foreign_objects_inside.erase(body)
+		foreign_object_exited.emit(body)
+
 func _on_gate_closed_check_player() -> void:
 	"""Check if player is trapped inside when gate closes"""
 	if player_inside_elevator and SteamManager:
@@ -179,6 +224,9 @@ func open_gate() -> void:
 func has_too_many_paintings() -> bool:
 	return paintings_inside.size() > 1
 
+func has_foreign_objects() -> bool:
+	return not foreign_objects_inside.is_empty()
+
 func play_error_sound() -> void:
 	_error_sound.play()
 
@@ -210,7 +258,7 @@ func toggle_gate() -> void:
 
 func can_export() -> bool:
 	"""Check if export is possible (painting inside, gate closed, not already exporting)"""
-	return not paintings_inside.is_empty() and gate_state == GateState.CLOSED and not is_exporting
+	return not paintings_inside.is_empty() and gate_state == GateState.CLOSED and not is_exporting and not has_foreign_objects()
 
 func get_painting_count() -> int:
 	"""Get number of paintings currently inside elevator"""
