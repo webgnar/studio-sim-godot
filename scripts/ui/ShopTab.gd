@@ -18,11 +18,12 @@ const PREVIEW_PLACEHOLDER = preload("res://sprites/shop_previews/nail_gun.png")
 @onready var item_image: TextureRect = $HBoxContainer/RightPanel/DetailPanel/MarginContainer/VBoxContainer/MediaRow/ItemImage
 @onready var desc_scroll: ScrollContainer = $HBoxContainer/RightPanel/DetailPanel/MarginContainer/VBoxContainer/MediaRow/DescriptionScroll
 @onready var item_desc_label: Label = $HBoxContainer/RightPanel/DetailPanel/MarginContainer/VBoxContainer/MediaRow/DescriptionScroll/ItemDescription
+@onready var scroll_hint: Label = $HBoxContainer/RightPanel/DetailPanel/MarginContainer/VBoxContainer/ScrollHint
 @onready var item_price_label: Label = $HBoxContainer/RightPanel/DetailPanel/MarginContainer/VBoxContainer/ItemPrice
 @onready var buy_button: Button = $HBoxContainer/RightPanel/DetailPanel/MarginContainer/VBoxContainer/BuyButton
 @onready var status_label: Label = $HBoxContainer/RightPanel/DetailPanel/MarginContainer/VBoxContainer/StatusLabel
 
-enum NavMode { ITEM_LIST, BUY_BUTTON }
+enum NavMode { ITEM_LIST, DESC_SCROLL, BUY_BUTTON }
 var nav_mode: NavMode = NavMode.ITEM_LIST
 var selected_index: int = 0
 var item_cards: Array[ShopItemCard] = []
@@ -38,6 +39,8 @@ var button_hit_sound: AudioStreamPlayer = null
 func _ready() -> void:
 	buy_button.pressed.connect(_on_buy_pressed)
 	buy_button.focus_mode = Control.FOCUS_ALL
+
+	desc_scroll.self_modulate = Color(0.7, 0.7, 0.7, 1)
 
 	var pause_menu = _find_parent_pause_menu()
 	if pause_menu:
@@ -63,6 +66,8 @@ func _input(event: InputEvent) -> void:
 
 	if nav_mode == NavMode.ITEM_LIST:
 		_handle_item_list_input(event)
+	elif nav_mode == NavMode.DESC_SCROLL:
+		_handle_desc_scroll_input(event)
 	elif nav_mode == NavMode.BUY_BUTTON:
 		_handle_buy_button_input(event)
 
@@ -114,26 +119,54 @@ func _handle_item_list_input(event: InputEvent) -> void:
 		viewport.set_input_as_handled()
 		return
 
-	# Right / Accept: move to buy button
+	# Right / Accept: move to description scroll panel
 	if event.is_action_pressed("jump") or event.is_action_pressed("ui_right") or \
 			event.is_action_pressed("move_right") or event.is_action_pressed("ui_accept"):
 		if input_cooldown <= 0 and catalog.size() > 0:
+			_enter_desc_scroll_mode()
+			input_cooldown = input_cooldown_time
+		viewport.set_input_as_handled()
+		return
+
+	# go_back not consumed here — PauseMenu handles tab bar return
+
+
+func _handle_desc_scroll_input(event: InputEvent) -> void:
+	var viewport := get_viewport()
+
+	# Up: scroll description up
+	if event.is_action_pressed("move_forward") or event.is_action_pressed("ui_up"):
+		if input_cooldown <= 0:
+			desc_scroll.scroll_vertical = max(0, desc_scroll.scroll_vertical - int(DESC_SCROLL_STEP))
+			input_cooldown = input_cooldown_time
+		viewport.set_input_as_handled()
+		return
+
+	# Down: scroll description down
+	if event.is_action_pressed("move_back") or event.is_action_pressed("ui_down"):
+		if input_cooldown <= 0:
+			desc_scroll.scroll_vertical += int(DESC_SCROLL_STEP)
+			input_cooldown = input_cooldown_time
+		viewport.set_input_as_handled()
+		return
+
+	# Right / Accept: move to buy button
+	if event.is_action_pressed("jump") or event.is_action_pressed("ui_right") or \
+			event.is_action_pressed("move_right") or event.is_action_pressed("ui_accept"):
+		if input_cooldown <= 0 and ShopManager.get_catalog().size() > 0:
 			_enter_buy_mode()
 			input_cooldown = input_cooldown_time
 		viewport.set_input_as_handled()
 		return
 
-	# Bumpers scroll the description text
-	if event.is_action_pressed("cycle_prev"):
-		desc_scroll.scroll_vertical = max(0, desc_scroll.scroll_vertical - int(DESC_SCROLL_STEP))
+	# Left / B / go_back: return to item list
+	if event.is_action_pressed("ui_left") or event.is_action_pressed("move_left") or \
+			event.is_action_pressed("go_back"):
+		if input_cooldown <= 0:
+			_exit_desc_scroll_mode()
+			input_cooldown = input_cooldown_time
 		viewport.set_input_as_handled()
 		return
-	if event.is_action_pressed("cycle_next"):
-		desc_scroll.scroll_vertical += int(DESC_SCROLL_STEP)
-		viewport.set_input_as_handled()
-		return
-
-	# go_back not consumed here — PauseMenu handles tab bar return
 
 
 func _handle_buy_button_input(event: InputEvent) -> void:
@@ -147,7 +180,7 @@ func _handle_buy_button_input(event: InputEvent) -> void:
 		viewport.set_input_as_handled()
 		return
 
-	# Left / B / go_back: return to item list
+	# Left / B / go_back: return to description panel
 	if event.is_action_pressed("ui_left") or event.is_action_pressed("move_left") or \
 			event.is_action_pressed("go_back"):
 		if input_cooldown <= 0:
@@ -247,14 +280,32 @@ func _scroll_to_selected() -> void:
 # Buy mode
 # ============================================================================
 
+func _enter_desc_scroll_mode() -> void:
+	nav_mode = NavMode.DESC_SCROLL
+	desc_scroll.self_modulate = Color(1, 1, 1, 1)
+	scroll_hint.visible = true
+	_play_nav_sound()
+
+
+func _exit_desc_scroll_mode() -> void:
+	nav_mode = NavMode.ITEM_LIST
+	desc_scroll.self_modulate = Color(0.7, 0.7, 0.7, 1)
+	scroll_hint.visible = false
+	_play_nav_sound()
+
+
 func _enter_buy_mode() -> void:
 	nav_mode = NavMode.BUY_BUTTON
+	desc_scroll.self_modulate = Color(0.7, 0.7, 0.7, 1)
+	scroll_hint.visible = false
 	buy_button.grab_focus()
 	_play_hit_sound()
 
 
 func _exit_buy_mode() -> void:
-	nav_mode = NavMode.ITEM_LIST
+	nav_mode = NavMode.DESC_SCROLL
+	desc_scroll.self_modulate = Color(1, 1, 1, 1)
+	scroll_hint.visible = true
 	buy_button.release_focus()
 	_play_nav_sound()
 
