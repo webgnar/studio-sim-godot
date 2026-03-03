@@ -1,2 +1,3 @@
 res://scripts/TitleScreenController.gd
 res://scripts/economy/ShopManager.gd
+res://scripts/GalleryVisitor.gd

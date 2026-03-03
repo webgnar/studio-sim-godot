@@ -122,9 +122,14 @@ func _choose_next_attraction() -> void:
 		return
 
 	_last_attraction = candidates.pick_random()
-	# Project target to the navmesh surface so we never send the agent inside an obstacle
+	# Offset target slightly so visitors don't stack on the same navmesh point
 	var map := _nav_agent.get_navigation_map()
-	var nav_target := NavigationServer3D.map_get_closest_point(map, _last_attraction.global_position)
+	var raw_target := _last_attraction.global_position
+	var angle := randf() * TAU
+	var offset_radius := randf_range(0.4, 1.0)
+	raw_target.x += cos(angle) * offset_radius
+	raw_target.z += sin(angle) * offset_radius
+	var nav_target := NavigationServer3D.map_get_closest_point(map, raw_target)
 	_nav_agent.set_target_position(nav_target)
 	_state = State.WALKING
 	_play_animation("walk")
