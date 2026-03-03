@@ -1,2 +1,10 @@
-res://scripts/ui/ShopTab.gd
-res://scenes/UI/ShopTab.tscn
+res://scenes/UI/HUD.tscn
+res://themes/ui_theme.tres
+res://materials/world_environ.tres
+res://models/particles/new_array_mesh.tres
+res://models/particles/new_array_mesh2.tres
+res://models/particles/new_array_mesh3.tres
+res://materials/tv.gdshader
+res://materials/tv.tres
+res://shaders/water_tank.gdshader
+res://shaders/oscilloscope.gdshader

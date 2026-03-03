@@ -4,12 +4,17 @@
 [ext_resource type="Theme" uid="uid://cbtaxh5m7udor" path="res://themes/ui_theme.tres" id="2"]
 [ext_resource type="Texture2D" uid="uid://bnb0x8h7n08xg" path="res://sprites/ui/leftright.png" id="3_a0qax"]
 [ext_resource type="Texture2D" uid="uid://uq3w6yycu034" path="res://sprites/ui/x.png" id="3_gawfp"]
+[ext_resource type="Texture2D" uid="uid://d2kvxbmuirlgq" path="res://sprites/ui/crosshair.png" id="4_e8ns6"]
 [ext_resource type="Texture2D" uid="uid://domflkr6l2qs" path="res://sprites/ui/updown.png" id="4_gawfp"]
 [ext_resource type="Texture2D" uid="uid://dc06s6fukhq2a" path="res://sprites/ui/lb.png" id="5_tohwf"]
 [ext_resource type="Texture2D" uid="uid://g4asi3np5tvu" path="res://sprites/ui/rb.png" id="6_e8ns6"]
 [ext_resource type="Texture2D" uid="uid://canne3e2geuxw" path="res://sprites/ui/rt.png" id="7_m51yh"]
 [ext_resource type="Texture2D" uid="uid://bkayr38ljn01r" path="res://sprites/ui/lt.png" id="8_8d6le"]
 [ext_resource type="Texture2D" uid="uid://b2k3q4m0fbw8e" path="res://sprites/vxicon.png" id="9_vxicon"]
+[ext_resource type="Shader" path="res://shaders/crosshair_invert.gdshader" id="shader_crosshair"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_crosshair"]
+shader = ExtResource("shader_crosshair")
 
 [node name="HUD" type="CanvasLayer" unique_id=1092373394]
 script = ExtResource("1")
@@ -55,6 +60,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Center" type="ColorRect" parent="Crosshair" unique_id=497681997]
+visible = false
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -70,6 +76,7 @@ grow_vertical = 2
 color = Color(1, 1, 1, 0.8)
 
 [node name="Top" type="ColorRect" parent="Crosshair" unique_id=995454176]
+visible = false
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -85,6 +92,7 @@ grow_vertical = 2
 color = Color(1, 1, 1, 0.8)
 
 [node name="Bottom" type="ColorRect" parent="Crosshair" unique_id=426689441]
+visible = false
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -100,6 +108,7 @@ grow_vertical = 2
 color = Color(1, 1, 1, 0.8)
 
 [node name="Left" type="ColorRect" parent="Crosshair" unique_id=909775570]
+visible = false
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -115,6 +124,7 @@ grow_vertical = 2
 color = Color(1, 1, 1, 0.8)
 
 [node name="Right" type="ColorRect" parent="Crosshair" unique_id=2010450781]
+visible = false
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -128,6 +138,23 @@ offset_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(1, 1, 1, 0.8)
+
+[node name="TextureRect" type="TextureRect" parent="Crosshair" unique_id=1681105817]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -8.0
+offset_top = -8.0
+offset_right = 8.0
+offset_bottom = 8.0
+grow_horizontal = 2
+grow_vertical = 2
+material = SubResource("ShaderMaterial_crosshair")
+texture = ExtResource("4_e8ns6")
 
 [node name="PaintingHint" type="VBoxContainer" parent="." unique_id=1047929687]
 anchors_preset = 5
