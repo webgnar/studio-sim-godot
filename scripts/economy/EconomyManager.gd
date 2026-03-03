@@ -12,7 +12,7 @@ signal painting_sold(amount: int, source: String)
 
 func _ready():
 	# DEBUG: Start with test money and reputation
-	money = 1600
+	money = 5000
 	if has_node("/root/ReputationManager"):
 		ReputationManager.set_reputation(10.0, 1)  # Level 1, 10 points
 

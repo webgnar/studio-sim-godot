@@ -297,10 +297,10 @@ func _wipe_save_data():
 		WorldStateManager.clear_world_state()
 		print("TitleScreen: Cleared world state")
 
-	# Reset economy (DEBUG: start with $1600)
+	# Reset economy (DEBUG: start with $5000)
 	if EconomyManager:
-		EconomyManager.set_money(1600)
-		print("TitleScreen: Reset economy to $1600 [DEBUG]")
+		EconomyManager.set_money(5000)
+		print("TitleScreen: Reset economy to $5000 [DEBUG]")
 
 	# Reset studio assistant
 	if AutomationManager:

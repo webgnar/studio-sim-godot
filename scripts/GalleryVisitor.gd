@@ -22,6 +22,7 @@ var _view_duration: float = 0.0
 
 
 func _ready() -> void:
+	add_to_group("gallery_visitors")
 	_nav_agent = $NavigationAgent3D
 	_nav_agent.path_desired_distance = 2.0
 	_nav_agent.target_desired_distance = stop_distance

@@ -15,6 +15,10 @@ const _SPAWN_CHECK_RADII := {
 	"customstickerbutton": 1.5,  # raised button with cylinder static body
 }
 
+const _GALLERY_VISITOR_SCENE = preload("res://scenes/GalleryVisitor.tscn")
+# Approximate center of the gallery room floor (matches the pre-placed visitor position)
+const _GALLERY_VISITOR_SPAWN_CENTER = Vector3(1.75, -14.57, 24.97)
+
 
 func _ready() -> void:
 	_build_catalog()
@@ -40,28 +44,34 @@ func purchase(item_id: String) -> bool:
 	reveals the prop in the world, and saves.
 	Returns true if the purchase succeeded.
 	"""
-	if is_purchased(item_id):
-		return false
-
 	var item = _get_item(item_id)
 	if item.is_empty():
 		push_warning("ShopManager: Unknown item id: " + item_id)
 		return false
 
+	var is_repeatable: bool = item.get("repeatable", false)
+
+	# Non-repeatable items can only be bought once
+	if not is_repeatable and is_purchased(item_id):
+		return false
+
 	if not EconomyManager.can_afford(item["price"]):
 		return false
 
-	if is_player_blocking_spawn(item_id):
+	# Only check for player blocking on one-time prop items
+	if not is_repeatable and is_player_blocking_spawn(item_id):
 		return false
 
 	# Deduct money
 	EconomyManager.spend_money(item["price"], "shop: " + item["display_name"])
 
-	# Mark as purchased in WorldStateManager (persisted to disk on save)
-	WorldStateManager.add_purchased_item(item_id)
-
-	# Reveal the prop(s) in the world immediately
-	_reveal_item_props(item_id)
+	if is_repeatable:
+		_handle_repeatable_purchase(item_id)
+	else:
+		# Mark as purchased in WorldStateManager (persisted to disk on save)
+		WorldStateManager.add_purchased_item(item_id)
+		# Reveal the prop(s) in the world immediately
+		_reveal_item_props(item_id)
 
 	# Save so purchased state isn't lost on crash
 	WorldStateManager.save_world_state()
@@ -78,6 +88,21 @@ func reveal_purchased_items() -> void:
 	"""
 	for item_id in WorldStateManager.get_purchased_items():
 		_reveal_item_props(item_id)
+
+
+func spawn_gallery_visitor() -> void:
+	"""Instantiate a GalleryVisitor NPC in the gallery room. Called on purchase and on save load."""
+	var visitor = _GALLERY_VISITOR_SCENE.instantiate()
+	# Parent to the same node as the pre-placed visitor so it lives in the right scene context
+	var world_root: Node = null
+	var existing = get_tree().get_nodes_in_group("gallery_visitors")
+	if not existing.is_empty():
+		world_root = existing[0].get_parent()
+	else:
+		world_root = get_tree().root
+	world_root.add_child(visitor)
+	var scatter = Vector3(randf_range(-3.0, 3.0), 0.0, randf_range(-3.0, 3.0))
+	visitor.global_position = _GALLERY_VISITOR_SPAWN_CENTER + scatter
 
 
 # ============================================================================
@@ -125,6 +150,14 @@ func is_player_blocking_spawn(item_id: String) -> bool:
 			if player_pos.distance_to(node.global_position) < radius:
 				return true
 	return false
+
+
+func _handle_repeatable_purchase(item_id: String) -> void:
+	"""Handle side effects for items that can be purchased multiple times."""
+	match item_id:
+		"gallery_viewer":
+			WorldStateManager.increment_gallery_visitor_count()
+			spawn_gallery_visitor()
 
 
 func _get_item(item_id: String) -> Dictionary:
@@ -199,13 +232,6 @@ Perfect for off-grid cabins, emergency preparedness, or anyone who enjoys their 
 			"price": 125,
 		},
 		{
-			"id": "customstickerbutton",
-			"display_name": "Custom Sticker Modder",
-			"title": "Custom Sticker Modding button",
-			"description": "Modify Studio Sim by adding your own custom motifs to the painting UI array.",
-			"price": 10000,
-		},
-		{
 			"id": "skateboard",
 			"display_name": "Skateboard",
 			"title": "Skateboard",
@@ -277,5 +303,20 @@ Stanley Meyer collapsed suddenly from a brain aneurysm just an hour after meetin
 
 Meyer himself described the origins of his inventions in deeply personal, spiritual terms. He claimed that during moments between sleep and wakefulness, he received vivid visions of the Water Fuel Cell — images he believed were sent to him by angels. His Christian faith, he said, provided both the moral compass and the inspiration that guided him in turning those visions into mechanical reality.",
 			"price": 300,
+		},
+		{
+			"id": "gallery_viewer",
+			"display_name": "Gallery Viewer",
+			"title": "Gallery Visitor Pass",
+			"description": "Invites another visitor to your gallery. Each visitor increases the sale value of your shipped paintings. The more eyes on your work, the more it's worth.",
+			"price": 500,
+			"repeatable": true,
+		},
+		{
+			"id": "customstickerbutton",
+			"display_name": "Custom Sticker Modder",
+			"title": "Custom Sticker Modding button",
+			"description": "Modify Studio Sim by adding your own custom motifs to the painting UI array.",
+			"price": 10000,
 		},
 	]

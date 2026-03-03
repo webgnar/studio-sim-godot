@@ -193,6 +193,14 @@ func get_purchased_items() -> Array[String]:
 	"""Return a copy of the purchased item IDs list."""
 	return _purchased_items.duplicate()
 
+func get_gallery_visitor_count() -> int:
+	"""Return the number of gallery visitors the player has purchased."""
+	return int(_misc_data.get("gallery_visitor_count", 0))
+
+func increment_gallery_visitor_count() -> void:
+	"""Increment the gallery visitor count by 1. Called by ShopManager on purchase."""
+	_misc_data["gallery_visitor_count"] = get_gallery_visitor_count() + 1
+
 # ============================================================================
 # Save/Load
 # ============================================================================
@@ -431,6 +439,10 @@ func load_world_state(world_root: Node3D) -> void:
 		_purchased_items.append(str(id))
 	if has_node("/root/ShopManager"):
 		ShopManager.reveal_purchased_items()
+		# Respawn gallery visitors purchased in previous sessions
+		var visitor_count = get_gallery_visitor_count()
+		for i in range(visitor_count):
+			ShopManager.spawn_gallery_visitor()
 
 	print("World state loaded: %d/%d nails, %d/%d paintings, %d/%d stickers" % [nails_loaded, nails_array.size(), paintings_loaded, paintings_array.size(), stickers_loaded, stickers_array.size()])
 

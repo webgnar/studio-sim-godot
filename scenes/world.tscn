@@ -2052,7 +2052,7 @@ metadata/shop_item_id = "seg"
 
 [node name="StanmeyerWf" parent="gallery" unique_id=1772342250 groups=["gallery_attraction", "shop_prop"] instance=ExtResource("110_tjdyg")]
 transform = Transform3D(-0.010534158, 0, -0.010678551, 0, 0.014999997, 0, 0.010678551, 0, -0.010534158, 21.829754, -9.135181, 3.8498173)
-metadata/shop_item_id = "stankeyer_wf"
+metadata/shop_item_id = "wfc"
 
 [node name="Geet" parent="gallery" unique_id=1339356402 groups=["gallery_attraction", "shop_prop"] instance=ExtResource("111_0fl76")]
 transform = Transform3D(0.012876094, 0, 0.027096238, 0, 0.029999997, 0, -0.027096238, 0, 0.012876094, 25.911594, -9.433397, 11.302803)
