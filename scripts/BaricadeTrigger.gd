@@ -7,13 +7,17 @@ const SAVE_KEY = "baricade_2_triggered"
 
 
 func _ready() -> void:
+	_area.body_entered.connect(_on_body_entered)
+	WorldStateManager.world_state_loaded.connect(_on_world_state_loaded, CONNECT_ONE_SHOT)
+
+
+func _on_world_state_loaded() -> void:
 	if WorldStateManager.get_data(SAVE_KEY, false):
-		# Already triggered in a previous session — snap to end state instantly
+		if _area.body_entered.is_connected(_on_body_entered):
+			_area.body_entered.disconnect(_on_body_entered)
 		var anim_res = _anim.get_animation("move")
 		_anim.play("move")
 		_anim.seek(anim_res.length, true)
-	else:
-		_area.body_entered.connect(_on_body_entered)
 
 
 func _on_body_entered(body: Node3D) -> void:

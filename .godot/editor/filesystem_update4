@@ -1,4 +1,5 @@
-res://scenes/UI/HUD.tscn
+res://scripts/ui/ShopTab.gd
+res://scenes/UI/ShopTab.tscn
 res://themes/ui_theme.tres
 res://materials/world_environ.tres
 res://models/particles/new_array_mesh.tres
@@ -8,3 +9,6 @@ res://materials/tv.gdshader
 res://materials/tv.tres
 res://shaders/water_tank.gdshader
 res://shaders/oscilloscope.gdshader
+res://scripts/GalleryVisitor.gd
+res://scripts/BaricadeTrigger.gd
+res://scripts/WorldStateManager.gd

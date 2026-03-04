@@ -280,7 +280,15 @@ func _scroll_to_selected() -> void:
 # Buy mode
 # ============================================================================
 
+func _desc_needs_scroll() -> bool:
+	var v_scroll := desc_scroll.get_v_scroll_bar()
+	return v_scroll.max_value > v_scroll.page
+
+
 func _enter_desc_scroll_mode() -> void:
+	if not _desc_needs_scroll():
+		_enter_buy_mode()
+		return
 	nav_mode = NavMode.DESC_SCROLL
 	desc_scroll.self_modulate = Color(1, 1, 1, 1)
 	scroll_hint.visible = true
@@ -303,11 +311,16 @@ func _enter_buy_mode() -> void:
 
 
 func _exit_buy_mode() -> void:
+	buy_button.release_focus()
+	_play_nav_sound()
+	if not _desc_needs_scroll():
+		nav_mode = NavMode.ITEM_LIST
+		desc_scroll.self_modulate = Color(0.7, 0.7, 0.7, 1)
+		scroll_hint.visible = false
+		return
 	nav_mode = NavMode.DESC_SCROLL
 	desc_scroll.self_modulate = Color(1, 1, 1, 1)
 	scroll_hint.visible = true
-	buy_button.release_focus()
-	_play_nav_sound()
 
 
 func _on_buy_pressed() -> void:

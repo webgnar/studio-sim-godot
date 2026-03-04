@@ -10,6 +10,8 @@ enum State { IDLE, CHOOSING, WALKING, VIEWING }
 @export var view_time_min: float = 4.0
 @export var view_time_max: float = 8.0
 @export var stop_distance: float = 2.0
+@export var think_interval_min: float = 2.0
+@export var think_interval_max: float = 5.0
 
 const GRAVITY := 9.8
 
@@ -19,6 +21,8 @@ var _anim_player: AnimationPlayer
 var _last_attraction: Node3D = null
 var _view_timer: float = 0.0
 var _view_duration: float = 0.0
+var _is_thinking: bool = false
+var _think_cooldown: float = 0.0
 
 
 func _ready() -> void:
@@ -31,6 +35,8 @@ func _ready() -> void:
 	_anim_player = _find_animation_player($humanrig)
 	if not _anim_player:
 		push_warning("GalleryVisitor: AnimationPlayer not found inside humanrig!")
+	else:
+		_anim_player.animation_finished.connect(_on_animation_finished)
 
 	_play_animation("idle")
 	get_tree().create_timer(1.0).timeout.connect(_choose_next_attraction, CONNECT_ONE_SHOT)
@@ -93,15 +99,23 @@ func _update_viewing(delta: float) -> void:
 			var target_basis := Basis.looking_at(to_attraction.normalized())
 			transform.basis = transform.basis.slerp(target_basis, rotation_speed * delta)
 
-	_view_timer += delta
-	if _view_timer >= _view_duration:
-		_choose_next_attraction()
+	if not _is_thinking:
+		_think_cooldown -= delta
+		if _think_cooldown <= 0.0:
+			_is_thinking = true
+			_play_animation(["think", "think2"].pick_random())
+		else:
+			_view_timer += delta
+			if _view_timer >= _view_duration:
+				_choose_next_attraction()
 
 
 func _enter_viewing() -> void:
 	_state = State.VIEWING
 	_view_timer = 0.0
 	_view_duration = randf_range(view_time_min, view_time_max)
+	_is_thinking = false
+	_think_cooldown = randf_range(think_interval_min, think_interval_max)
 	_play_animation("idle")
 
 
@@ -150,6 +164,13 @@ func _get_attraction_nodes() -> Array[Node3D]:
 			result.append(node as Node3D)
 
 	return result
+
+
+func _on_animation_finished(anim_name: StringName) -> void:
+	if anim_name in ["think", "think2"]:
+		_is_thinking = false
+		_play_animation("idle")
+		_think_cooldown = randf_range(think_interval_min, think_interval_max)
 
 
 func _play_animation(anim_name: String) -> void:

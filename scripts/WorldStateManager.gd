@@ -3,6 +3,8 @@ extends Node
 # WorldStateManager - Singleton for managing persistent world state (carryable paintings)
 # Handles saving/loading painting positions, rotations, and textures to disk
 
+signal world_state_loaded
+
 const SAVE_VERSION = 4
 const WORLD_STATE_PATH = "user://world_state.json"
 const TEXTURES_DIR = "user://world_paintings"
@@ -356,6 +358,7 @@ func load_world_state(world_root: Node3D) -> void:
 	Silently fails if save file doesn't exist (normal for new games)
 	"""
 	if not FileAccess.file_exists(WORLD_STATE_PATH):
+		world_state_loaded.emit()
 		return  # No save file, nothing to load
 
 	var file = FileAccess.open(WORLD_STATE_PATH, FileAccess.READ)
@@ -445,6 +448,7 @@ func load_world_state(world_root: Node3D) -> void:
 			ShopManager.spawn_gallery_visitor()
 
 	print("World state loaded: %d/%d nails, %d/%d paintings, %d/%d stickers" % [nails_loaded, nails_array.size(), paintings_loaded, paintings_array.size(), stickers_loaded, stickers_array.size()])
+	world_state_loaded.emit()
 
 func clear_world_state() -> void:
 	"""

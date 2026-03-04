@@ -42,8 +42,8 @@ horizontal_scroll_mode = 0
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/margin_left = 6
-theme_override_constants/margin_right = 6
 theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 6
 theme_override_constants/margin_bottom = 4
 
 [node name="ItemList" type="VBoxContainer" parent="HBoxContainer/LeftPanel/ScrollContainer/ListMargin" unique_id=997886655]
@@ -83,6 +83,7 @@ size_flags_vertical = 3
 theme_override_constants/separation = 12
 
 [node name="ItemImage" type="TextureRect" parent="HBoxContainer/RightPanel/DetailPanel/MarginContainer/VBoxContainer/MediaRow" unique_id=797759670]
+texture_filter = 1
 custom_minimum_size = Vector2(180, 180)
 layout_mode = 2
 size_flags_vertical = 3
@@ -102,9 +103,9 @@ autowrap_mode = 3
 
 [node name="ScrollHint" type="Label" parent="HBoxContainer/RightPanel/DetailPanel/MarginContainer/VBoxContainer" unique_id=1234567890]
 visible = false
+modulate = Color(0.7, 0.7, 0.7, 1)
 layout_mode = 2
 theme_override_font_sizes/font_size = 14
-modulate = Color(0.7, 0.7, 0.7, 1)
 text = "↑ ↓  scroll     →  /  A    buy     ←  /  B    back"
 horizontal_alignment = 1
 
