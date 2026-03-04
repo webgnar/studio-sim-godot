@@ -16,3 +16,4 @@ res://scenes/phone.tscn
 res://scenes/CritiqueTV.tscn
 res://scripts/old stuff/LightSwitchInteraction.gd
 res://scripts/ElevatorController.gd
+res://scenes/world.tscn

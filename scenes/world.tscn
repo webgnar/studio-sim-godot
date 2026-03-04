@@ -111,9 +111,9 @@
 [ext_resource type="PackedScene" uid="uid://bmsbijuu4g8jd" path="res://scenes/objects/SEG.tscn" id="109_pwx6t"]
 [ext_resource type="PackedScene" uid="uid://cfhlpeapjydro" path="res://scenes/stanmeyerWF.tscn" id="110_tjdyg"]
 [ext_resource type="PackedScene" uid="uid://c7cot7g0c5wmb" path="res://scenes/objects/geet.tscn" id="111_0fl76"]
-[ext_resource type="PackedScene" uid="uid://bvg5r8kqnmx3c" path="res://scenes/GalleryVisitor.tscn" id="115_26qbd"]
 [ext_resource type="Material" uid="uid://dftupkqp265f" path="res://materials/pedestal.tres" id="115_optxr"]
 [ext_resource type="PackedScene" uid="uid://chy2sf3ttc770" path="res://models/props/skateboard.gltf" id="119_tp6af"]
+[ext_resource type="Script" uid="uid://nvjrcsa5oaqc" path="res://scripts/BerkeyInteraction.gd" id="berkey_interaction"]
 [ext_resource type="AudioStream" uid="uid://84rjpuccue2i" path="res://sounds/boomboxSwitch.ogg" id="boombox_switch"]
 [ext_resource type="AudioStream" uid="uid://cfuo8ydnxfi66" path="res://sounds/convenient ear pleasure.ogg" id="ear_ogg"]
 [ext_resource type="AudioStream" uid="uid://bukro42figtah" path="res://sounds/fan switch.ogg" id="fan_switch"]
@@ -397,6 +397,9 @@ uv1_offset = Vector3(0, -1, 0)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_gyxkx"]
 size = Vector3(2.065918, 2.5327148, 1.9875488)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_berky"]
+size = Vector3(4, 1.1835938, 4.703247)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_n6seq"]
 atlas = ExtResource("91_ebmc1")
@@ -1884,10 +1887,20 @@ transform = Transform3D(-0.05, 0, 4.371139e-09, 0, 0.05, 0, -4.371139e-09, 0, -0
 [node name="sec camera" parent="." unique_id=210338497 instance=ExtResource("89_5p8eo")]
 transform = Transform3D(-0.05, 0, 4.371139e-09, 0, 0.05, 0, -4.371139e-09, 0, -0.05, 3.6587749, 4.041248, 13.682507)
 
-[node name="berkey" parent="." unique_id=574215945 groups=["shop_prop"] instance=ExtResource("91_pb8sg")]
+[node name="berkey" parent="." unique_id=574215945 groups=["no_outline", "shop_prop"] instance=ExtResource("91_pb8sg")]
 transform = Transform3D(-3.059797e-09, 0, -0.07, 0, 0.07, 0, 0.07, 0, -3.059797e-09, 0.8052486, 1.7242677, 8.420579)
 metadata/berkey = "water_filter"
 metadata/shop_item_id = "water_filter"
+
+[node name="BerkeyBody" type="StaticBody3D" parent="berkey" unique_id=850000001]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="berkey/BerkeyBody" unique_id=850000002]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.1280365, -9.016176, 2.1420755)
+shape = SubResource("BoxShape3D_berky")
+
+[node name="BerkeyInteraction" type="Node3D" parent="berkey" unique_id=850000003]
+script = ExtResource("berkey_interaction")
 
 [node name="waterdrop" type="Node3D" parent="berkey" unique_id=319029114]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.2948837, -0.06352234, 0.030564308)
@@ -2160,7 +2173,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 32.91327, -10.183143, 6.72988
 use_collision = true
 size = Vector3(1, 1.045166, 1)
 material = ExtResource("115_optxr")
-
 
 [node name="GallerySpawnPoint" type="Node3D" parent="." unique_id=837462901]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.722805, -9.6, 15.43)
