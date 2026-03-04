@@ -31,6 +31,8 @@ func _on_ready() -> void:
 	_setup_animation_player()
 	_setup_controlled_lights()
 	_initialize_lights_state()
+	if has_node("/root/WorldStateManager"):
+		WorldStateManager.register_light_switch(self)
 
 func _ensure_audio_player() -> void:
 	# Make sure we have an audio player for switch sounds
@@ -146,3 +148,17 @@ func add_controlled_light(light_path: String) -> void:
 
 func set_switch_id(new_id: String) -> void:
 	switch_id = new_id
+
+func restore_switch_state(is_on: bool) -> void:
+	_current_state = SwitchState.ON if is_on else SwitchState.OFF
+	_toggle_controlled_lights(is_on)
+	if _animation_player and _animation_player.has_animation(toggle_animation_name):
+		if is_on:
+			var anim_length = _animation_player.get_animation(toggle_animation_name).length
+			_animation_player.play(toggle_animation_name)
+			_animation_player.seek(anim_length, true)
+			_animation_player.pause()
+		else:
+			_animation_player.play(toggle_animation_name)
+			_animation_player.seek(0.0, true)
+			_animation_player.pause()

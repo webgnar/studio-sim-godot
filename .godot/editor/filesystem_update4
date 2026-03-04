@@ -13,3 +13,5 @@ res://scripts/GalleryVisitor.gd
 res://scripts/BaricadeTrigger.gd
 res://scripts/WorldStateManager.gd
 res://scenes/phone.tscn
+res://scenes/CritiqueTV.tscn
+res://scripts/old stuff/LightSwitchInteraction.gd

@@ -36,6 +36,9 @@ var _misc_data: Dictionary = {}
 # IDs of shop items the player has purchased (e.g. "nail_gun", "trash_can")
 var _purchased_items: Array[String] = []
 
+# Dictionary mapping switch_id -> LightSwitchInteraction node
+var _light_switches: Dictionary = {}
+
 func _ready():
 	_ensure_directories()
 
@@ -74,6 +77,13 @@ func unregister_nail(nail: Node) -> void:
 	"""Unregister a nail when it's removed from scene"""
 	if nail in _registered_nails:
 		_registered_nails.erase(nail)
+
+func register_light_switch(switch_node: LightSwitchInteraction) -> void:
+	"""Register a light switch with the save system"""
+	if not switch_node:
+		push_warning("Attempted to register null light switch")
+		return
+	_light_switches[switch_node.switch_id] = switch_node
 
 func register_painting_system_3d(system: PaintingSystem3D) -> void:
 	"""Register the 3D painting system for sticker persistence"""
@@ -218,6 +228,13 @@ func save_world_state() -> bool:
 	# Wait one frame for physics to settle after force drop
 	await get_tree().process_frame
 
+	# Build light switch states
+	var light_switch_states = {}
+	for switch_id in _light_switches:
+		var switch_node = _light_switches[switch_id]
+		if is_instance_valid(switch_node):
+			light_switch_states[switch_id] = switch_node.is_switch_on()
+
 	# Build save data
 	var save_data = {
 		"version": SAVE_VERSION,
@@ -229,7 +246,8 @@ func save_world_state() -> bool:
 		"economy": _save_economic_state(),  # PHASE 0: Economy save
 		"player_flags": _player_flags,  # Player state flags (keys, unlocks, etc.)
 		"misc_data": _misc_data.duplicate(true),  # Generic arbitrary persistent data
-		"purchased_items": _purchased_items.duplicate()  # Shop items bought by player
+		"purchased_items": _purchased_items.duplicate(),  # Shop items bought by player
+		"light_switches": light_switch_states  # Light switch on/off states
 	}
 
 	var valid_painting_ids = []
@@ -428,6 +446,14 @@ func load_world_state(world_root: Node3D) -> void:
 	# PHASE 0: Load economic state
 	var economy_data = save_data.get("economy", {})
 	_load_economic_state(economy_data)
+
+	# Restore light switch states
+	var light_switch_data = save_data.get("light_switches", {})
+	for switch_id in light_switch_data:
+		if switch_id in _light_switches:
+			var switch_node = _light_switches[switch_id]
+			if is_instance_valid(switch_node):
+				switch_node.restore_switch_state(light_switch_data[switch_id])
 
 	# Load player state flags
 	_player_flags = save_data.get("player_flags", {})
