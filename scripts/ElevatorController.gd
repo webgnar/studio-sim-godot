@@ -334,7 +334,11 @@ func start_export() -> void:
 		painting.queue_free()
 
 	# Save game state after shipping
-	await WorldStateManager.save_world_state()
+	var save_success = await WorldStateManager.save_world_state()
+	if save_success:
+		var save_notification = get_tree().root.get_node_or_null("World/GameplayUI_Layer/SaveNotification")
+		if save_notification and save_notification.has_method("show_notification"):
+			save_notification.show_notification()
 
 	# Ascend back up
 	await _play_ascent_effect()
