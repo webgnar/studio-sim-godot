@@ -12,3 +12,4 @@ res://shaders/oscilloscope.gdshader
 res://scripts/GalleryVisitor.gd
 res://scripts/BaricadeTrigger.gd
 res://scripts/WorldStateManager.gd
+res://scenes/phone.tscn
