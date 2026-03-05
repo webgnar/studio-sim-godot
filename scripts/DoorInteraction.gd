@@ -28,7 +28,7 @@ var player_ref: Node = null
 
 # Physics tracking for sounds
 var previous_velocity: float = 0.0  # Track velocity from last frame for slam detection
-var creak_timer: float = 0.0  # Timer to control creak sound intervals
+var slam_cooldown: float = 0.0  # Prevents re-triggering while door settles
 
 func _on_ready() -> void:
 	# Ensure audio player exists for custom sounds
@@ -123,6 +123,13 @@ func _grab_door(_player: PlayerInteractionComponent) -> void:
 	# Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 func _release_door() -> void:
+	# Play creak if door was swung hard, pitch/speed scaled by swing velocity
+	if creak_sound and door_body and _audio_player:
+		var velocity = abs(door_body.angular_velocity.y)
+		if velocity >= creak_velocity_threshold:
+			var t = clamp((velocity - creak_velocity_threshold) / creak_velocity_threshold, 0.0, 1.0)
+			_audio_player.pitch_scale = lerp(0.7, 1.2, t)
+			_play_sound(creak_sound)
 	is_grabbed = false
 	player_ref = null
 	_update_prompt()
@@ -155,37 +162,24 @@ func _physics_process(delta: float) -> void:
 			var torque_strength = stick_x * drag_force * controller_sensitivity * delta
 			door_body.apply_torque(Vector3(0, torque_strength, 0))
 
-	# Update creak timer
-	creak_timer -= delta
-
 	# Get current angle and angular velocity
 	var angular_velocity = door_body.angular_velocity.y  # Door rotates around Y axis
 	var abs_angular_velocity = abs(angular_velocity)
 	var abs_previous_velocity = abs(previous_velocity)
 
-	# Determine if door is opening (moving toward upper limit) or closing (moving toward lower limit)
-	var is_opening = angular_velocity > 0  # Positive velocity = opening toward upper limit
+	# Count down slam cooldown
+	if slam_cooldown > 0.0:
+		slam_cooldown -= delta
 
-	# Detect door slam by checking if velocity suddenly dropped
-	# This indicates the door hit a limit and stopped/bounced
-	var velocity_drop = abs_previous_velocity - abs_angular_velocity
-	var velocity_drop_threshold = 3.0  # How much velocity must drop to count as impact
-
-	# Door slammed if:
-	# 1. Previous velocity was above slam threshold (door was moving fast)
-	# 2. Velocity suddenly dropped significantly (door hit something)
-	# 3. Current velocity is low (door has stopped or bounced)
-	if abs_previous_velocity >= slam_velocity_threshold and velocity_drop >= velocity_drop_threshold and abs_angular_velocity < 2.0:
-		# Play slam sound
-		if slam_sound and not _is_sound_playing():
+	# Slam: was moving fast AND is at a hinge angular limit (not just naturally slowing)
+	var door_angle = door_body.rotation.y
+	var at_closed = abs(door_angle) < 0.15                # near upper limit (0.0 rad)
+	var at_open = abs(door_angle + 2.6354473) < 0.15      # near lower limit (-2.635 rad)
+	if (at_closed or at_open) and abs_previous_velocity >= slam_velocity_threshold and slam_cooldown <= 0.0:
+		if slam_sound:
+			_audio_player.pitch_scale = 1.0
 			_play_sound(slam_sound)
-
-	# Check for door creak (slow opening motion only)
-	elif is_opening and abs_angular_velocity > 0.1 and abs_angular_velocity < creak_velocity_threshold:
-		# Play creak sound periodically while door is creaking open
-		if creak_sound and creak_timer <= 0.0 and not _is_sound_playing():
-			_play_sound(creak_sound)
-			creak_timer = 0.5  # Play creak sound every 0.5 seconds while creaking
+		slam_cooldown = 1.0  # Prevent re-triggering while door settles
 
 	# Store current state for next frame
 	previous_velocity = angular_velocity

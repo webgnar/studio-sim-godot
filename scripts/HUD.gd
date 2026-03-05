@@ -27,6 +27,10 @@ var _current_prompt_text: String = ""  # Store current prompt for device switchi
 var _prompt_panel: PanelContainer  # Background panel wrapping interaction prompt
 var _carry_panel: PanelContainer  # Background panel wrapping carry hint
 var _painting_panel: PanelContainer  # Background panel wrapping painting hint
+var _interaction_separator: Label  # " | " between two-action prompts
+var _interaction_icon_2: TextureRect  # Second icon for dual-action prompts
+var _interaction_label_2: Label  # Second label for dual-action prompts
+var _interact_line_icon: TextureRect  # Icon for E-key interact line in carry hint
 
 # --- GODOT METHODS ---
 
@@ -49,6 +53,34 @@ func _ready() -> void:
 		_carry_panel = _wrap_in_panel(carry_hint)
 	if painting_hint:
 		_painting_panel = _wrap_in_panel(painting_hint)
+
+	# Dynamically add second icon+label to interaction_prompt for dual-action objects (e.g. boombox)
+	if interaction_prompt:
+		_interaction_separator = Label.new()
+		_interaction_separator.text = " | "
+		_interaction_separator.hide()
+		interaction_prompt.add_child(_interaction_separator)
+
+		_interaction_icon_2 = TextureRect.new()
+		_interaction_icon_2.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		_interaction_icon_2.custom_minimum_size = interaction_icon.custom_minimum_size
+		_interaction_icon_2.hide()
+		interaction_prompt.add_child(_interaction_icon_2)
+
+		_interaction_label_2 = Label.new()
+		_interaction_label_2.hide()
+		interaction_prompt.add_child(_interaction_label_2)
+
+	# Add icon TextureRect to InteractLine in carry_hint so E key shows as sprite
+	if carry_hint:
+		var interact_line = carry_hint.get_node_or_null("InteractLine")
+		if interact_line:
+			_interact_line_icon = TextureRect.new()
+			_interact_line_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+			_interact_line_icon.custom_minimum_size = interaction_icon.custom_minimum_size
+			_interact_line_icon.hide()
+			interact_line.add_child(_interact_line_icon)
+			interact_line.move_child(_interact_line_icon, 0)
 
 	# Connect to UIManager state changes
 	if UIManager:
@@ -198,36 +230,47 @@ func _update_interaction_prompt() -> void:
 		_prompt_panel.hide()
 		return
 
-	# Check if we're in gamepad mode
 	var is_gamepad = InputDeviceManager.current_device == InputDeviceManager.DeviceType.GAMEPAD
+	var icon_key = "gamepad_icon" if is_gamepad else "keyboard_icon"
+	var regex = RegEx.new()
+	regex.compile("^\\[.*?\\]\\s*")
 
-	if is_gamepad:
-		# Show icon, update label (strip the "[X]" prefix from prompt text)
-		var action_data = InputDeviceManager.glyph_map.get("interact", {})
-		if action_data.has("gamepad_icon"):
-			interaction_icon.texture = load(action_data["gamepad_icon"])
-			interaction_icon.show()
+	# Split on " | " to detect dual-action prompts (e.g. "[Left Click] Pick Up | [E] Play Tape")
+	var parts = _current_prompt_text.split(" | ", true, 1)
+	var first_part = parts[0]
+	var second_part = parts[1] if parts.size() > 1 else ""
 
-			# Strip the glyph prefix (e.g., "[X] " or "[E] ") from the text
-			var display_text = _current_prompt_text
-			var regex = RegEx.new()
-			regex.compile("^\\[.*?\\]\\s*")
-			display_text = regex.sub(display_text, "", true)
-			interaction_label.text = display_text
+	# Determine which action the first part represents
+	var primary_glyph = InputDeviceManager.get_formatted_prompt("action_primary")
+	var first_action = "action_primary" if first_part.begins_with(primary_glyph) else "interact"
+
+	# Show first icon + label
+	var first_data = InputDeviceManager.glyph_map.get(first_action, {})
+	if first_data.has(icon_key):
+		interaction_icon.texture = load(first_data[icon_key])
+		interaction_icon.show()
 	else:
-		# Keyboard mode - show keyboard sprite if available, otherwise full text
-		var action_data = InputDeviceManager.glyph_map.get("interact", {})
-		if action_data.has("keyboard_icon"):
-			interaction_icon.texture = load(action_data["keyboard_icon"])
-			interaction_icon.show()
-			var display_text = _current_prompt_text
-			var regex = RegEx.new()
-			regex.compile("^\\[.*?\\]\\s*")
-			display_text = regex.sub(display_text, "", true)
-			interaction_label.text = display_text
+		interaction_icon.hide()
+	interaction_label.text = regex.sub(first_part, "", true)
+
+	# Show second icon + label if present
+	if second_part != "" and _interaction_icon_2 and _interaction_label_2 and _interaction_separator:
+		var second_data = InputDeviceManager.glyph_map.get("interact", {})
+		if second_data.has(icon_key):
+			_interaction_icon_2.texture = load(second_data[icon_key])
+			_interaction_icon_2.show()
 		else:
-			interaction_icon.hide()
-			interaction_label.text = _current_prompt_text
+			_interaction_icon_2.hide()
+		_interaction_label_2.text = regex.sub(second_part.strip_edges(), "", true)
+		_interaction_label_2.show()
+		_interaction_separator.show()
+	else:
+		if _interaction_icon_2:
+			_interaction_icon_2.hide()
+		if _interaction_label_2:
+			_interaction_label_2.hide()
+		if _interaction_separator:
+			_interaction_separator.hide()
 
 	_prompt_panel.show()
 
@@ -278,7 +321,10 @@ func _update_carry_hint() -> void:
 		# Show/hide E-key interaction if available
 		var interact_line = carry_hint.get_node("InteractLine")
 		if carried and carried.has_e_key_interaction and carried.can_interact_while_carried:
-			interact_line.get_node("InteractLabel").text = InputDeviceManager.get_formatted_prompt("interact")
+			if _interact_line_icon:
+				_update_button_display(_interact_line_icon, interact_line.get_node("InteractLabel"), "interact")
+			else:
+				interact_line.get_node("InteractLabel").text = InputDeviceManager.get_formatted_prompt("interact")
 			interact_line.get_node("InteractText").text = " " + carried.e_key_interaction_text
 			interact_line.show()
 		else:
@@ -416,32 +462,32 @@ func _update_painting_hint() -> void:
 		var place_text = painting_hint.get_node("PlaceUndoLine/PlaceText")
 		if is_gamepad:
 			place_icon.show()
-			place_text.text = " " + tr("Place")
+			place_text.text = " " + tr("Paint")
 		else:
 			var d = InputDeviceManager.glyph_map.get("action_primary", {})
 			if d.has("keyboard_icon"):
 				place_icon.texture = load(d["keyboard_icon"])
 				place_icon.show()
-				place_text.text = " " + tr("Place")
+				place_text.text = " " + tr("Paint")
 			else:
 				place_icon.hide()
-				place_text.text = "[Left Click] " + tr("Place")
+				place_text.text = "[Left Click] " + tr("Paint")
 
-		# Update Undo line
+		# Update Erase line
 		var undo_icon = painting_hint.get_node("HBoxContainer/UndoIcon")
 		var undo_text = painting_hint.get_node("HBoxContainer/UndoText")
 		if is_gamepad:
 			undo_icon.show()
-			undo_text.text = " " + tr("Undo")
+			undo_text.text = " " + tr("Erase")
 		else:
 			var d = InputDeviceManager.glyph_map.get("action_secondary", {})
 			if d.has("keyboard_icon"):
 				undo_icon.texture = load(d["keyboard_icon"])
 				undo_icon.show()
-				undo_text.text = " " + tr("Undo")
+				undo_text.text = " " + tr("Erase")
 			else:
 				undo_icon.hide()
-				undo_text.text = "[Right Click] " + tr("Undo")
+				undo_text.text = "[Right Click] " + tr("Erase")
 
 		_painting_panel.show()
 

@@ -8,9 +8,6 @@ class_name PaintingHangingComponent
 const RESTING_VELOCITY_THRESHOLD: float = 0.5  ## Consider "resting" below this speed
 const RESTING_CONTACT_TIME: float = 0.2  ## Must be in contact this long to consider hung
 const NAIL_PEG_LAYER_BIT: int = 5  ## Layer 6 is bit 5 (zero-indexed)
-const FLOOR_REST_VELOCITY_THRESHOLD: float = 0.5   ## Combined speed below this = settled on floor
-const FLOOR_REST_CONFIRM_TIME: float = 0.3          ## Must be settled this long before auto-freezing
-const FLOOR_REST_HARD_TIMEOUT: float = 3.0          ## Always freeze after this many seconds on floor
 
 # --- SIGNALS ---
 signal hung_on_nail(nail: NailComponent)

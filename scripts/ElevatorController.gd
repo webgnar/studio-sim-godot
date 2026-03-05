@@ -41,8 +41,12 @@ var foreign_object_detection_area: Area3D
 # Audio
 var _export_sound: AudioStreamPlayer3D
 var _door_sound: AudioStreamPlayer3D
+var _door_open_sound: AudioStreamPlayer3D
+var _slam_sound: AudioStreamPlayer3D
 var _error_sound: AudioStreamPlayer3D
 var _door_stream: AudioStream = preload("res://sounds/picotron/elevator_door.ogg")
+var _door_open_stream: AudioStream = preload("res://sounds/picotron/elevator_door_rev.ogg")
+var _slam_stream: AudioStream = preload("res://sounds/picotron/doorslam.ogg")
 var _descent_stream: AudioStream = preload("res://sounds/picotron/elevator_down.ogg")
 var _error_stream: AudioStream = preload("res://sounds/picotron/error.ogg")
 
@@ -92,6 +96,20 @@ func _setup_audio() -> void:
 	_door_sound.bus = "SFX"
 	_door_sound.stream = _door_stream
 	add_child(_door_sound)
+
+	_door_open_sound = AudioStreamPlayer3D.new()
+	_door_open_sound.name = "DoorOpenSound"
+	_door_open_sound.max_distance = 15.0
+	_door_open_sound.bus = "SFX"
+	_door_open_sound.stream = _door_open_stream
+	add_child(_door_open_sound)
+
+	_slam_sound = AudioStreamPlayer3D.new()
+	_slam_sound.name = "SlamSound"
+	_slam_sound.max_distance = 15.0
+	_slam_sound.bus = "SFX"
+	_slam_sound.stream = _slam_stream
+	add_child(_slam_sound)
 
 	_error_sound = AudioStreamPlayer3D.new()
 	_error_sound.name = "ErrorSound"
@@ -210,7 +228,7 @@ func open_gate() -> void:
 		return
 
 	gate_state = GateState.ANIMATING
-	_door_sound.play()
+	_door_open_sound.play()
 
 	if gate_animation_player and gate_animation_player.has_animation("open"):
 		gate_animation_player.play("open")
@@ -240,6 +258,7 @@ func close_gate() -> void:
 
 	if gate_animation_player and gate_animation_player.has_animation("close"):
 		gate_animation_player.play("close")
+		get_tree().create_timer(0.24).timeout.connect(func(): _slam_sound.play())
 		await gate_animation_player.animation_finished
 	else:
 		await get_tree().create_timer(0.5).timeout
@@ -345,7 +364,7 @@ func start_export() -> void:
 
 	# Open gate after export
 	gate_state = GateState.ANIMATING
-	_door_sound.play()
+	_door_open_sound.play()
 	if gate_animation_player and gate_animation_player.has_animation("open"):
 		gate_animation_player.play("open")
 		await gate_animation_player.animation_finished

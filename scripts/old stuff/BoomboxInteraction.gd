@@ -38,6 +38,7 @@ func _ready() -> void:
 	# Enable E-key interaction while allowing pickup (AFTER parent ready)
 	has_e_key_interaction = true
 	can_interact_while_carried = true  # Can toggle radio while carrying!
+	enable_floor_freeze = true  # Prevent twitching when resting on floor
 	# e_key_interaction_text set via inspector
 
 	# Adjust carry physics for boombox

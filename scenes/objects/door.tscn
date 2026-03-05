@@ -1,8 +1,10 @@
-[gd_scene load_steps=8 format=3 uid="uid://do5j2we5toj7h"]
+[gd_scene format=3 uid="uid://do5j2we5toj7h"]
 
 [ext_resource type="PackedScene" uid="uid://dlo0d3de5te3f" path="res://models/interactables/door.glb" id="1_yar34"]
 [ext_resource type="Script" uid="uid://c5j2a80cljpeo" path="res://scripts/DoorInteraction.gd" id="2_uw3m6"]
 [ext_resource type="AudioStream" uid="uid://chy7m86hyxfg4" path="res://sounds/picotron/doorunlock.ogg" id="3_w0irj"]
+[ext_resource type="AudioStream" uid="uid://cket0hgpg74q0" path="res://sounds/studiodoorcreak.ogg" id="4_creak"]
+[ext_resource type="AudioStream" uid="uid://cvkdt2e5rtdc6" path="res://sounds/picotron/doorslam.ogg" id="4_w0irj"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_yar34"]
 size = Vector3(1.7891, 3.4317, 0.11)
@@ -15,51 +17,55 @@ points = PackedVector3Array(0.5, 0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, 
 [sub_resource type="BoxShape3D" id="BoxShape3D_interaction"]
 size = Vector3(2, 3.5, 0.3)
 
-[node name="Door" type="Node3D"]
+[node name="Door" type="Node3D" unique_id=430749032]
 
-[node name="DoorBody" type="RigidBody3D" parent="."]
+[node name="DoorBody" type="RigidBody3D" parent="." unique_id=675657723]
 collision_layer = 2
 axis_lock_angular_x = true
 axis_lock_angular_z = true
 mass = 10.0
 angular_damp = 3.0
 
-[node name="model" parent="DoorBody" instance=ExtResource("1_yar34")]
+[node name="model" parent="DoorBody" unique_id=1104266279 instance=ExtResource("1_yar34")]
 transform = Transform3D(0.05, 0, 0, 0, 0.05, 0, 0, 0, 0.05, 0, 0, 0)
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="DoorBody"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="DoorBody" unique_id=707439508]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.875118, -0.067481, 0)
 shape = SubResource("BoxShape3D_yar34")
 
-[node name="DoorFrame" type="StaticBody3D" parent="."]
+[node name="DoorFrame" type="StaticBody3D" parent="." unique_id=1394962660]
 collision_layer = 2
 collision_mask = 0
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="DoorFrame"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="DoorFrame" unique_id=334484015]
 transform = Transform3D(0.1, 0, 0, 0, 3.42, 0, 0, 0, 0.16, 0, -0.06940389, 0)
 visible = false
 mesh = SubResource("BoxMesh_uw3m6")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="DoorFrame"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="DoorFrame" unique_id=1969899129]
 transform = Transform3D(0.1, 0, 0, 0, 3.42, 0, 0, 0, 0.16, 0, -0.06940389, 0)
 visible = false
 shape = SubResource("ConvexPolygonShape3D_xm0wp")
 
-[node name="DoorInteraction" type="Node3D" parent="."]
+[node name="DoorInteraction" type="Node3D" parent="." unique_id=303881840]
 script = ExtResource("2_uw3m6")
 drag_force = 400.0
 mouse_sensitivity = 0.01
 unlock_sound = ExtResource("3_w0irj")
+slam_sound = ExtResource("4_w0irj")
+creak_sound = ExtResource("4_creak")
+slam_velocity_threshold = 2.0
+creak_velocity_threshold = 1.0
 
-[node name="Area3D" type="Area3D" parent="DoorInteraction"]
+[node name="Area3D" type="Area3D" parent="DoorInteraction" unique_id=1585498980]
 collision_layer = 4
 collision_mask = 0
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="DoorInteraction/Area3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="DoorInteraction/Area3D" unique_id=1519513845]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.9, -0.027006388, 0)
 shape = SubResource("BoxShape3D_interaction")
 
-[node name="HingeJoint3D" type="HingeJoint3D" parent="."]
+[node name="HingeJoint3D" type="HingeJoint3D" parent="." unique_id=285196874]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0.07056117, 0, 0)
 node_a = NodePath("../DoorBody")
 node_b = NodePath("../DoorFrame")

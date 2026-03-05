@@ -3,9 +3,38 @@
 [ext_resource type="PackedScene" uid="uid://c8d0mte4y4eg6" path="res://models/props/skatehive_phone.glb" id="1_08mii"]
 [ext_resource type="Script" uid="uid://3320omnivi1" path="res://scripts/PhoneInteraction.gd" id="2_phone"]
 [ext_resource type="Texture2D" uid="uid://i2haqr500eb" path="res://sprites/green_smash.png" id="3_eud1m"]
+[ext_resource type="AudioStream" uid="uid://cnk44gqfgg8v7" path="res://sounds/ollie.ogg" id="4_8moxm"]
+[ext_resource type="AudioStream" uid="uid://cp3pb2myk2o3" path="res://sounds/ollie land.ogg" id="5_jmr6v"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_08mii"]
 size = Vector3(40.31, 5, 83)
+
+[sub_resource type="Animation" id="Animation_sfhd4"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("../../ollie:playing")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("../../land:playing")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
 
 [sub_resource type="Animation" id="Animation_ewalk"]
 length = 2.4
@@ -57,6 +86,30 @@ tracks/3/keys = {
 "update": 0,
 "values": [Vector3(1, 1, 1), Vector3(1, 1, 1), Vector3(9, 9, 9), Vector3(1, 1, 1)]
 }
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("../../ollie:playing")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0.61470056),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("../../land:playing")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(1.7102202),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
 
 [sub_resource type="Animation" id="Animation_eud1m"]
 resource_name = "kickflip"
@@ -100,6 +153,7 @@ tracks/2/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_8nsb0"]
 _data = {
+&"RESET": SubResource("Animation_sfhd4"),
 &"kickflip": SubResource("Animation_ewalk"),
 &"none": SubResource("Animation_eud1m")
 }
@@ -133,3 +187,9 @@ interaction_text = "Check Phone"
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)
 modulate = Color(1, 1, 1, 0)
 texture = ExtResource("3_eud1m")
+
+[node name="ollie" type="AudioStreamPlayer3D" parent="." unique_id=638649947]
+stream = ExtResource("4_8moxm")
+
+[node name="land" type="AudioStreamPlayer3D" parent="." unique_id=689218952]
+stream = ExtResource("5_jmr6v")

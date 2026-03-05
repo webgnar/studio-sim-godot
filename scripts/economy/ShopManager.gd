@@ -236,7 +236,7 @@ Perfect for off-grid cabins, emergency preparedness, or anyone who enjoys their 
 			"display_name": "Skateboard",
 			"title": "Skateboard",
 			"description": "A brand-new board leaning against the wall. Old habits.",
-			"price": 300,
+			"price": 175,
 		},
 		{
 			"id": "monstera",

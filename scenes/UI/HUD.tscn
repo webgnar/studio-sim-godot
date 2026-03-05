@@ -11,7 +11,7 @@
 [ext_resource type="Texture2D" uid="uid://canne3e2geuxw" path="res://sprites/ui/rt.png" id="7_m51yh"]
 [ext_resource type="Texture2D" uid="uid://bkayr38ljn01r" path="res://sprites/ui/lt.png" id="8_8d6le"]
 [ext_resource type="Texture2D" uid="uid://b2k3q4m0fbw8e" path="res://sprites/vxicon.png" id="9_vxicon"]
-[ext_resource type="Shader" path="res://shaders/crosshair_invert.gdshader" id="shader_crosshair"]
+[ext_resource type="Shader" uid="uid://br25jlx3cnm0r" path="res://shaders/crosshair_invert.gdshader" id="shader_crosshair"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_crosshair"]
 shader = ExtResource("shader_crosshair")
@@ -141,6 +141,7 @@ color = Color(1, 1, 1, 0.8)
 
 [node name="TextureRect" type="TextureRect" parent="Crosshair" unique_id=1681105817]
 texture_filter = 1
+material = SubResource("ShaderMaterial_crosshair")
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -153,7 +154,6 @@ offset_right = 8.0
 offset_bottom = 8.0
 grow_horizontal = 2
 grow_vertical = 2
-material = SubResource("ShaderMaterial_crosshair")
 texture = ExtResource("4_e8ns6")
 
 [node name="PaintingHint" type="VBoxContainer" parent="." unique_id=1047929687]
@@ -236,7 +236,7 @@ stretch_mode = 2
 [node name="PlaceText" type="Label" parent="PaintingHint/PlaceUndoLine" unique_id=75297682]
 layout_mode = 2
 theme = ExtResource("2")
-text = " Place"
+text = "Paint"
 horizontal_alignment = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="PaintingHint" unique_id=1953142721]
@@ -252,7 +252,7 @@ stretch_mode = 5
 [node name="UndoText" type="Label" parent="PaintingHint/HBoxContainer" unique_id=442161430]
 layout_mode = 2
 theme = ExtResource("2")
-text = " Undo"
+text = "Erase"
 
 [node name="CarryHint" type="VBoxContainer" parent="." unique_id=876946278]
 anchors_preset = 1

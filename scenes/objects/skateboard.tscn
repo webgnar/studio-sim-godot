@@ -1,7 +1,33 @@
 [gd_scene format=3 uid="uid://b37nwl2dgl5ff"]
 
 [ext_resource type="PackedScene" uid="uid://chy2sf3ttc770" path="res://models/props/skateboard.gltf" id="1_jyu2t"]
+[ext_resource type="Texture2D" uid="uid://c2dm0vx6wbeg1" path="res://sprites/gnar line white.png" id="2_u8f0q"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fd887"]
+transparency = 1
+cull_mode = 2
+albedo_texture = ExtResource("2_u8f0q")
+texture_filter = 0
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_wccl3"]
+material = SubResource("StandardMaterial3D_fd887")
+size = Vector2(5.1, 2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_u8f0q"]
+size = Vector3(14.94104, 2.5020752, 4.4555054)
 
 [node name="Skateboard" type="Node3D" unique_id=1008444628]
 
 [node name="default" parent="." unique_id=1728967857 instance=ExtResource("1_jyu2t")]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=425328432]
+transform = Transform3D(1, 0, 0, 0, -1, 8.742278e-08, 0, -8.742278e-08, -1, 0, -0.5558181, 0)
+mesh = SubResource("PlaneMesh_wccl3")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=544464770]
+collision_layer = 8
+collision_mask = 3
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" unique_id=248613981]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.23797607, -0.41046143, -0.084747314)
+shape = SubResource("BoxShape3D_u8f0q")

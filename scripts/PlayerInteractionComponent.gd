@@ -309,7 +309,9 @@ func _update_interaction_prompt() -> void:
 		if is_carrying:
 			interaction_prompt_changed.emit("")
 			return
-		interaction_prompt_changed.emit("%s Pick Up Gun" % InputDeviceManager.get_formatted_prompt("interact"))
+		var pick_up_glyph = InputDeviceManager.get_formatted_prompt("action_primary")
+		var equip_glyph = InputDeviceManager.get_formatted_prompt("interact")
+		interaction_prompt_changed.emit("%s Pick Up | %s Equip Nailgun" % [pick_up_glyph, equip_glyph])
 		return
 	
 	# Check if object is carryable

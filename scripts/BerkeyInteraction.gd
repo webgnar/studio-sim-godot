@@ -7,6 +7,7 @@ const EFFECT_DURATION := 30.0
 var _original_damping: float = -1.0
 var _player_controller: Node3D = null
 var _timer: Timer
+var _audio: AudioStreamPlayer
 
 
 func _on_ready() -> void:
@@ -15,6 +16,10 @@ func _on_ready() -> void:
 	_timer.one_shot = true
 	_timer.timeout.connect(_on_effect_ended)
 	add_child(_timer)
+	_audio = AudioStreamPlayer.new()
+	_audio.stream = load("res://sounds/berkey.ogg")
+	_audio.bus = "SFX"
+	add_child(_audio)
 
 
 func _on_interacted(player_interaction: PlayerInteractionComponent) -> void:
@@ -23,6 +28,7 @@ func _on_interacted(player_interaction: PlayerInteractionComponent) -> void:
 		return
 	_original_damping = _player_controller.damping
 	_player_controller.damping = SNAPPY_DAMPING
+	_audio.play()
 	is_disabled = true
 	_timer.start(EFFECT_DURATION)
 

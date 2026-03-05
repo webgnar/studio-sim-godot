@@ -35,12 +35,20 @@ signal e_key_interacted(player_interaction_component: PlayerInteractionComponent
 @export var can_interact_while_carried: bool = false ## Allow E-key while carrying
 @export var e_key_interaction_sound: AudioStream ## Sound for E-key interaction
 
+@export_group("Floor Physics")
+@export var enable_floor_freeze: bool = false ## Freeze object when settled on floor (prevents twitching)
+
 @export_group("Audio")
 @export var pickup_sound: AudioStream
 @export var drop_sound: AudioStream
 @export var impact_sound: AudioStream ## Sound when object hits surfaces
 @export var impact_velocity_threshold: float = 2.0 ## Minimum velocity to trigger impact sound
 @export var impact_cooldown: float = 0.1 ## Minimum time between impact sounds (prevents spam)
+
+# --- CONSTANTS ---
+const FLOOR_REST_VELOCITY_THRESHOLD: float = 0.5
+const FLOOR_REST_CONFIRM_TIME: float = 0.3
+const FLOOR_REST_HARD_TIMEOUT: float = 3.0
 
 # --- PRIVATE VARIABLES ---
 var parent_rigid_body: RigidBody3D
@@ -49,6 +57,8 @@ var is_carried: bool = false
 var carry_target: Vector3
 var last_impact_time: float = 0.0 ## Track last impact sound to enforce cooldown
 var original_collision_mask: int = 0 ## Store original collision mask to restore on drop
+var _floor_rest_timer: float = 0.0
+var _floor_time_since_free: float = 0.0
 
 # --- GODOT METHODS ---
 
@@ -79,8 +89,19 @@ func _ready() -> void:
 
 func _physics_process(_delta: float) -> void:
 	if not is_carried or not player_ref:
+		if enable_floor_freeze and not parent_rigid_body.freeze:
+			_floor_time_since_free += _delta
+			var speed = parent_rigid_body.linear_velocity.length() + parent_rigid_body.angular_velocity.length()
+			if speed < FLOOR_REST_VELOCITY_THRESHOLD:
+				_floor_rest_timer += _delta
+			else:
+				_floor_rest_timer = 0.0
+			if _floor_rest_timer >= FLOOR_REST_CONFIRM_TIME or _floor_time_since_free >= FLOOR_REST_HARD_TIMEOUT:
+				parent_rigid_body.linear_velocity = Vector3.ZERO
+				parent_rigid_body.angular_velocity = Vector3.ZERO
+				parent_rigid_body.freeze = true
 		return
-	
+
 	# Update carry target position
 	carry_target = player_ref.get_carry_position(carry_distance_offset)
 
@@ -190,6 +211,11 @@ func pickup(player_interaction: PlayerInteractionComponent) -> void:
 	if player_interaction.is_weapon_equipped:
 		return
 
+	# Reset floor freeze state so physics can resume
+	parent_rigid_body.freeze = false
+	_floor_rest_timer = 0.0
+	_floor_time_since_free = 0.0
+
 	player_ref = player_interaction
 
 	# Store original collision mask so we can restore it on drop
@@ -240,9 +266,10 @@ func drop() -> void:
 	parent_rigid_body.linear_velocity = Vector3.ZERO
 	parent_rigid_body.angular_velocity = Vector3.ZERO
 
-	# Allow body to sleep after landing (contact_monitor = true prevents sleep in Godot 4)
-	# _on_sleeping_state_changed will re-enable it if the body is woken by an impact
-	parent_rigid_body.contact_monitor = false
+	# Enable contact monitoring so landing impact triggers body_shape_entered → plays impact sound
+	# _on_sleeping_state_changed will disable it when body sleeps and re-enable on wake
+	parent_rigid_body.contact_monitor = true
+	parent_rigid_body.max_contacts_reported = 10
 
 	# Restore physics state
 	if lock_rotation_when_carried:
