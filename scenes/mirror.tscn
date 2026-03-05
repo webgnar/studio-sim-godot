@@ -20,7 +20,7 @@ albedo_texture = SubResource("ViewportTexture_ctatt")
 [sub_resource type="BoxShape3D" id="BoxShape3D_mirror"]
 size = Vector3(2, 2, 0.041088868)
 
-[node name="mirror" type="MeshInstance3D" unique_id=1473510251 groups=["no_outline"]]
+[node name="mirror" type="MeshInstance3D" unique_id=1473510251 groups=["no_outline","mirrors"]]
 transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0, 0)
 mesh = SubResource("PlaneMesh_kpybi")
 surface_material_override/0 = SubResource("StandardMaterial3D_xgqkh")

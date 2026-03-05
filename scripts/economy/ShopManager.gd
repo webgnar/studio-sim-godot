@@ -229,7 +229,7 @@ Perfect for off-grid cabins, emergency preparedness, or anyone who enjoys their 
 			"display_name": "Mirror",
 			"title": "Mirror",
 			"description": "For checking yourself out between sessions. Perfect for viewing your work through a different lens.",
-			"price": 125,
+			"price": 220,
 		},
 		{
 			"id": "skateboard",

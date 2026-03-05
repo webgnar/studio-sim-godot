@@ -32,6 +32,11 @@ extends CharacterBody3D
 @export_group("Interaction Settings")
 @export var interaction_distance: float = 5.0
 
+@export_group("Mirror Interaction")
+@export var mirror_trigger_distance: float = 3.0
+@export var mirror_facing_dot: float = 0.5
+@export var mirror_still_delay: float = 1.5
+
 # --- PRIVATE VARIABLES ---
 
 # We get a reference to the camera in _ready().
@@ -66,6 +71,10 @@ var _head_node: Node3D
 var _capsule_shape: CapsuleShape3D
 var _collision_shape_node: CollisionShape3D
 var _standing_head_y: float
+
+# Mirror lindy hop state
+var _still_timer: float = 0.0
+var _near_mirror_facing: bool = false
 
 # Current speed property - returns appropriate speed based on movement state
 var current_speed: float:
@@ -360,10 +369,17 @@ func _physics_process(delta: float) -> void:
 	# This is the core function of CharacterBody3D. It moves the character and handles collisions.
 	move_and_slide()
 	
+	# --- MIRROR STILLNESS DETECTION ---
+	if velocity.length() < 0.1 and is_on_floor():
+		_still_timer += delta
+	else:
+		_still_timer = 0.0
+	_near_mirror_facing = _still_timer >= mirror_still_delay and _check_mirror_facing()
+
 	# --- UPDATE ANIMATIONS ---
 	# Send movement data to animation controller
 	if _player_animation != null:
-		_player_animation.update_animation_state(velocity, is_on_floor(), sprinting, _is_crouching)
+		_player_animation.update_animation_state(velocity, is_on_floor(), sprinting, _is_crouching, _near_mirror_facing)
 
 func _unhandled_input(event: InputEvent) -> void:
 	# Skip input if CameraManager has disabled it (e.g., during cinematic cameras)
@@ -411,6 +427,17 @@ func _is_sprinting() -> bool:
 	"""Check if player is sprinting. Routes through SteamInput which handles both
 	keyboard fallback (Input.is_action_pressed) and Steam controller input."""
 	return SteamInput.is_action_pressed("sprint")
+
+func _check_mirror_facing() -> bool:
+	var mirrors := get_tree().get_nodes_in_group("mirrors")
+	for mirror in mirrors:
+		var to_mirror: Vector3 = mirror.global_position - global_position
+		if to_mirror.length() > mirror_trigger_distance:
+			continue
+		var forward: Vector3 = -global_transform.basis.z
+		if forward.dot(to_mirror.normalized()) >= mirror_facing_dot:
+			return true
+	return false
 
 func play_death_animation() -> void:
 	if _player_animation:

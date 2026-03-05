@@ -9,6 +9,7 @@ class_name PlayerAnimation
 @export var run_speed: float = 2.0
 @export var jump_speed: float = 1.0
 @export var crouch_speed: float = 1.0
+@export var lindy_hop_speed: float = 1.0
 
 var _is_moving: bool = false
 var _is_sprinting: bool = false
@@ -16,6 +17,7 @@ var _is_jumping: bool = false
 var _was_crouching: bool = false
 var _crouch_entered: bool = false  # true after "crouch" transition completes
 var _un_crouching: bool = false    # true while playing "crouch" backwards
+var _lindy_hop_active: bool = false
 
 func _ready() -> void:
 	# Get reference to AnimationPlayer node
@@ -36,7 +38,7 @@ func _ready() -> void:
 	animation_player.animation_finished.connect(_on_animation_finished)
 
 # Called by PlayerController to update animation state
-func update_animation_state(velocity: Vector3, is_on_floor: bool, is_sprinting: bool, is_crouching: bool = false) -> void:
+func update_animation_state(velocity: Vector3, is_on_floor: bool, is_sprinting: bool, is_crouching: bool = false, lindy_hop: bool = false) -> void:
 	if animation_player == null:
 		return
 
@@ -81,7 +83,12 @@ func update_animation_state(velocity: Vector3, is_on_floor: bool, is_sprinting: 
 			else:
 				play_animation("walk", walk_speed)
 		else:
-			play_animation("idle", idle_speed)
+			if lindy_hop:
+				play_animation("lindy hop", lindy_hop_speed)
+				_lindy_hop_active = true
+			else:
+				_lindy_hop_active = false
+				play_animation("idle", idle_speed)
 
 	_was_crouching = is_crouching
 

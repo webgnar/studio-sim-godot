@@ -26,3 +26,5 @@ res://scripts/components/PaintingHangingComponent.gd
 res://scenes/objects/skateboard.tscn
 res://scripts/PlayerInteractionComponent.gd
 res://scripts/economy/ShopManager.gd
+res://scripts/PlayerAnimation.gd
+res://scripts/PlayerController.gd
