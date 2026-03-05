@@ -50,11 +50,13 @@ func _initialize_glyph_map() -> void:
 	"""Initialize the mapping of input actions to display glyphs"""
 	# Icon paths for gamepad glyphs
 	var icon_path = "res://sprites/ui/"
+	var kb_icon_path = "res://sprites/ui/inputs/"
 
 	glyph_map = {
 		# Primary interaction key
 		"interact": {
 			"keyboard": "E",
+			"keyboard_icon": kb_icon_path + "e.png",
 			"gamepad": "X",
 			"gamepad_icon": icon_path + "x.png"
 		},
@@ -62,6 +64,7 @@ func _initialize_glyph_map() -> void:
 		# Primary action (shoot/throw/pick up)
 		"action_primary": {
 			"keyboard": "Left Click",
+			"keyboard_icon": kb_icon_path + "leftclick.png",
 			"gamepad": "RT",
 			"gamepad_icon": icon_path + "rt.png"
 		},
@@ -69,6 +72,7 @@ func _initialize_glyph_map() -> void:
 		# Secondary action (drop)
 		"action_secondary": {
 			"keyboard": "Right Click",
+			"keyboard_icon": kb_icon_path + "rightclick.png",
 			"gamepad": "LT",
 			"gamepad_icon": icon_path + "lt.png"
 		},
@@ -85,6 +89,12 @@ func _initialize_glyph_map() -> void:
 			"gamepad": "LS"  # Left Stick Click (button 7)
 		},
 
+		# Crouch
+		"crouch": {
+			"keyboard": "C",
+			"gamepad": "B"  # Button 1 on Xbox = B
+		},
+
 		# Back/cancel
 		"go_back": {
 			"keyboard": "B",
@@ -94,11 +104,13 @@ func _initialize_glyph_map() -> void:
 		# Rotation controls (used for both 2D painting and 3D carryable rotation)
 		"rotate_clockwise": {
 			"keyboard": "T",
+			"keyboard_icon": kb_icon_path + "t.png",
 			"gamepad": "D-Pad Right",
 			"gamepad_icon": icon_path + "leftright.png"
 		},
 		"rotate_counter": {
 			"keyboard": "R",
+			"keyboard_icon": kb_icon_path + "r.png",
 			"gamepad": "D-Pad Left",
 			"gamepad_icon": icon_path + "leftright.png"
 		},
@@ -106,11 +118,13 @@ func _initialize_glyph_map() -> void:
 		# Scale controls (2D painting size, also used for X-axis rotation on carryables)
 		"scale_sticker_up": {
 			"keyboard": "Z",
+			"keyboard_icon": kb_icon_path + "z.png",
 			"gamepad": "D-Pad Up",
 			"gamepad_icon": icon_path + "updown.png"
 		},
 		"scale_sticker_down": {
 			"keyboard": "X",
+			"keyboard_icon": kb_icon_path + "x.png",
 			"gamepad": "D-Pad Down",
 			"gamepad_icon": icon_path + "updown.png"
 		},
@@ -118,11 +132,13 @@ func _initialize_glyph_map() -> void:
 		# Sticker cycling
 		"cycle_sticker_next": {
 			"keyboard": "2",
+			"keyboard_icon": kb_icon_path + "2.png",
 			"gamepad": "RB",
 			"gamepad_icon": icon_path + "rb.png"
 		},
 		"cycle_sticker_prev": {
 			"keyboard": "1",
+			"keyboard_icon": kb_icon_path + "1.png",
 			"gamepad": "LB",
 			"gamepad_icon": icon_path + "lb.png"
 		},

@@ -57,6 +57,7 @@ var controls_entries: Array = [
 	["Look", "look"],
 	["Jump", "jump"],
 	["Run", "run"],
+	["Crouch", "crouch"],
 	["Interact", "interact"],
 	["Paint", "action_primary"],
 	["Drop", "action_secondary"],

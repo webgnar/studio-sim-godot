@@ -215,9 +215,19 @@ func _update_interaction_prompt() -> void:
 			display_text = regex.sub(display_text, "", true)
 			interaction_label.text = display_text
 	else:
-		# Keyboard mode - hide icon, show full text with keyboard glyph
-		interaction_icon.hide()
-		interaction_label.text = _current_prompt_text
+		# Keyboard mode - show keyboard sprite if available, otherwise full text
+		var action_data = InputDeviceManager.glyph_map.get("interact", {})
+		if action_data.has("keyboard_icon"):
+			interaction_icon.texture = load(action_data["keyboard_icon"])
+			interaction_icon.show()
+			var display_text = _current_prompt_text
+			var regex = RegEx.new()
+			regex.compile("^\\[.*?\\]\\s*")
+			display_text = regex.sub(display_text, "", true)
+			interaction_label.text = display_text
+		else:
+			interaction_icon.hide()
+			interaction_label.text = _current_prompt_text
 
 	_prompt_panel.show()
 
@@ -321,10 +331,15 @@ func _update_button_display(icon_node: TextureRect, label_node: Label, action_na
 		icon_node.texture = load(action_data["gamepad_icon"])
 		icon_node.show()
 		label_node.hide()
+	elif not is_gamepad and action_data.has("keyboard_icon"):
+		# Keyboard mode with sprite icon
+		icon_node.texture = load(action_data["keyboard_icon"])
+		icon_node.show()
+		label_node.hide()
 	else:
-		# Keyboard mode (text)
-		var text = action_data.get("keyboard", "?")
-		label_node.text = "[%s]" % text
+		# Fallback to text
+		var key = "gamepad" if is_gamepad else "keyboard"
+		label_node.text = "[%s]" % action_data.get(key, "?")
 		label_node.show()
 		icon_node.hide()
 
@@ -348,8 +363,14 @@ func _update_painting_hint() -> void:
 			rotate_icon.show()
 			rotate_label.text = " " + tr("Rotate")
 		else:
-			rotate_icon.hide()
-			rotate_label.text = "[T] " + tr("Rotate")
+			var d = InputDeviceManager.glyph_map.get("rotate_clockwise", {})
+			if d.has("keyboard_icon"):
+				rotate_icon.texture = load(d["keyboard_icon"])
+				rotate_icon.show()
+				rotate_label.text = " " + tr("Rotate")
+			else:
+				rotate_icon.hide()
+				rotate_label.text = "[T] " + tr("Rotate")
 
 		# Update Scale line
 		var scale_icon = painting_hint.get_node("ScaleLine/ScaleDownIcon")
@@ -358,8 +379,14 @@ func _update_painting_hint() -> void:
 			scale_icon.show()
 			scale_label.text = " " + tr("Scale")
 		else:
-			scale_icon.hide()
-			scale_label.text = "[X] / [Z] " + tr("Scale")
+			var d = InputDeviceManager.glyph_map.get("scale_sticker_down", {})
+			if d.has("keyboard_icon"):
+				scale_icon.texture = load(d["keyboard_icon"])
+				scale_icon.show()
+				scale_label.text = " " + tr("Scale")
+			else:
+				scale_icon.hide()
+				scale_label.text = "[X] / [Z] " + tr("Scale")
 
 		# Update Cycle line (has two icons)
 		var cycle_prev_icon = painting_hint.get_node("CycleLine/CyclePrevIcon")
@@ -370,9 +397,19 @@ func _update_painting_hint() -> void:
 			cycle_next_icon.show()
 			cycle_label.text = " " + tr("Cycle")
 		else:
-			cycle_prev_icon.hide()
-			cycle_next_icon.hide()
-			cycle_label.text = "[1] / [2] " + tr("Cycle")
+			var d_prev = InputDeviceManager.glyph_map.get("cycle_sticker_prev", {})
+			var d_next = InputDeviceManager.glyph_map.get("cycle_sticker_next", {})
+			if d_prev.has("keyboard_icon"):
+				cycle_prev_icon.texture = load(d_prev["keyboard_icon"])
+				cycle_prev_icon.show()
+			else:
+				cycle_prev_icon.hide()
+			if d_next.has("keyboard_icon"):
+				cycle_next_icon.texture = load(d_next["keyboard_icon"])
+				cycle_next_icon.show()
+			else:
+				cycle_next_icon.hide()
+			cycle_label.text = " " + tr("Cycle")
 
 		# Update Place line
 		var place_icon = painting_hint.get_node("PlaceUndoLine/PlaceIcon")
@@ -381,8 +418,14 @@ func _update_painting_hint() -> void:
 			place_icon.show()
 			place_text.text = " " + tr("Place")
 		else:
-			place_icon.hide()
-			place_text.text = "[Left Click] " + tr("Place")
+			var d = InputDeviceManager.glyph_map.get("action_primary", {})
+			if d.has("keyboard_icon"):
+				place_icon.texture = load(d["keyboard_icon"])
+				place_icon.show()
+				place_text.text = " " + tr("Place")
+			else:
+				place_icon.hide()
+				place_text.text = "[Left Click] " + tr("Place")
 
 		# Update Undo line
 		var undo_icon = painting_hint.get_node("HBoxContainer/UndoIcon")
@@ -391,8 +434,14 @@ func _update_painting_hint() -> void:
 			undo_icon.show()
 			undo_text.text = " " + tr("Undo")
 		else:
-			undo_icon.hide()
-			undo_text.text = "[Right Click] " + tr("Undo")
+			var d = InputDeviceManager.glyph_map.get("action_secondary", {})
+			if d.has("keyboard_icon"):
+				undo_icon.texture = load(d["keyboard_icon"])
+				undo_icon.show()
+				undo_text.text = " " + tr("Undo")
+			else:
+				undo_icon.hide()
+				undo_text.text = "[Right Click] " + tr("Undo")
 
 		_painting_panel.show()
 
