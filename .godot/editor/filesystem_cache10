@@ -513,7 +513,7 @@ TitleScreenUI.tscn::PackedScene::8037970300938931138::1772350785::0::1::::<><><>
 ValidationDebugOverlay.tscn::PackedScene::-1::1765350053::0::1::::<><><>0<>0<><>::res://scripts/ui/ValidationDebugOverlay.gd
 ValidationLoadingOverlay.tscn::PackedScene::5033299275984382255::1771171809::0::1::::<><><>0<>0<><>::uid://bxwgdijhlxjvo::::res://scripts/ui/ValidationLoadingOverlay.gd<>uid://cbtaxh5m7udor::::res://themes/ui_theme.tres
 ValidationResultUI.tscn::PackedScene::7481150193439125933::1772063826::0::1::::<><><>0<>0<><>::res://scripts/ui/ValidationResultUI.gd<>uid://cvtxaw8dw07fw::::res://scenes/UI/MissionResultsDisplay.tscn<>uid://cbtaxh5m7udor::::res://themes/ui_theme.tres
-::res://scripts/::1772670388
+::res://scripts/::1772676585
 AudioManager.gd::GDScript::1683297059755285547::1766349912::0::1::::<>Node<><>0<>0<><>::
 BaricadeTrigger.gd::GDScript::3946487977829720425::1772653987::0::1::::<>Node3D<><>0<>0<><>::
 BerkeyInteraction.gd::GDScript::956383844454778354::1772667258::0::1::::BerkeyInteraction<>InteractionComponent<><>0<>0<><>::
@@ -531,8 +531,8 @@ DoorInteraction.gd::GDScript::6898727207115013066::1771627884::0::1::::DoorInter
 ElevatorController.gd::GDScript::2391595583530783539::1772665967::0::1::::ElevatorController<>Node3D<><>0<>0<><>::
 GalleryUploader.gd::GDScript::9000311306717282131::1770498983::0::1::::<>Node<><>0<>0<><>::
 GalleryVisitor.gd::GDScript::6267658638197602659::1772652550::0::1::::<>CharacterBody3D<><>0<>0<><>::
-HUD.gd::GDScript::9095262934336027845::1772089385::0::1::::<>CanvasLayer<><>0<>0<><>::
-InputDeviceManager.gd::GDScript::6972775828677766391::1772670387::0::1::::<>Node<><>0<>0<><>::
+HUD.gd::GDScript::9095262934336027845::1772676585::0::1::::<>CanvasLayer<><>0<>0<><>::
+InputDeviceManager.gd::GDScript::6972775828677766391::1772676543::0::1::::<>Node<><>0<>0<><>::
 InputValidator.gd::GDScript::6548696200241836167::1767205465::0::1::::<>Node<><>0<>0<><>::
 KeyPickup.gd::GDScript::5093388634358452122::1770658043::0::1::::KeyPickup<>InteractionComponent<><>0<>0<><>::
 LaunchOptionsHandler.gd::GDScript::5466695710007717493::1767205477::0::1::::<>Node<><>0<>0<><>::
@@ -596,10 +596,10 @@ RadioCarryable.gd::GDScript::4525922979392504025::1762128919::0::1::::<>Carryabl
 cyclone.gd::GDScript::4030123926069560213::1772398644::0::1::::Cyclone<>Node3D<><>0<>0<><>::
 cyclone_button.gd::GDScript::9118543484665564885::1772398644::0::1::::CycloneButton<>InteractionComponent<><>0<>0<><>::
 ElectronFollow.gd::GDScript::2724161501874588973::1772353156::0::1::::<>PathFollow3D<><>0<>0<><>::
-::res://scripts/old stuff/::1772665210
+::res://scripts/old stuff/::1772677702
 ArtboxInteraction.gd::GDScript::4557307963735547696::1762156121::0::1::::ArtboxInteraction<>InteractionComponent<><>0<>0<><>::
 BoomboxInteraction.gd::GDScript::4988966616744065771::1771517645::0::1::::BoomboxInteraction<>CarryableComponent<><>0<>0<><>::
-BoxInteraction.gd::GDScript::273279990403006889::1771170002::0::1::::BoxInteraction<>InteractionComponent<><>0<>0<><>::
+BoxInteraction.gd::GDScript::273279990403006889::1772677702::0::1::::BoxInteraction<>InteractionComponent<><>0<>0<><>::
 BoxInteractionManager.gd::GDScript::7387510967602913199::1761798196::0::1::::<>Node3D<><>0<>0<><>::
 BreakableWindow.gd::GDScript::3004887878576599296::1762241265::0::1::::<>StaticBody3D<><>0<>0<><>::
 ClickableArtbox.gd::GDScript::460695635899977091::1761708414::0::1::::ClickableArtbox<>Node3D<><>0<>0<><>::
@@ -614,7 +614,7 @@ MirrorInteraction.gd::GDScript::8819622524409455506::1771949809::0::1::::MirrorI
 mirror_2.gd::GDScript::1296850971002468943::1761113793::0::1::::<>MeshInstance3D<><>0<>0<><>::
 mirror_new.gd::GDScript::3779223385012197752::1761119308::0::1::::<>MeshInstance3D<><>0<>0<><>::
 SimpleInteraction.gd::GDScript::8571012623619763262::1762043942::0::1::::SimpleInteraction<>InteractionComponent<><>0<>0<><>::
-::res://scripts/painting/::1772519584
+::res://scripts/painting/::1772678906
 HistogramRenderer.gd::GDScript::8096184577495570444::1771291643::0::1::::HistogramRenderer<>RefCounted<><>0<>0<><>::
 PaintingLayerDefinition.gd::GDScript::4323075456140053493::1764108643::0::1::::PaintingLayerDefinition<>Resource<><>0<>0<><>::
 PaintingMission.gd::GDScript::4772593952741219278::1772519584::0::1::::PaintingMission<>Resource<><>0<>0<><>::
@@ -622,7 +622,7 @@ PaintingModeManager.gd::GDScript::7917640498477300897::1771902983::0::1::::<>Nod
 PaintingRoot2D.gd::GDScript::7412969537653748795::1764787511::0::1::::<>Node3D<><>0<>0<><>::
 PaintingSignatureSystem.gd::GDScript::6396727409716191489::1770495498::0::1::::PaintingSignatureSystem<>Node3D<><>0<>0<><>::
 PaintingSystem2D.gd::GDScript::6362320871364204246::1772089864::0::1::::PaintingSystem2D<>Node2D<><>0<>0<><>::
-PaintingSystem.gd::GDScript::7827893091696522952::1771443863::0::1::::PaintingSystem3D<>Node3D<><>0<>0<><>::
+PaintingSystem.gd::GDScript::7827893091696522952::1772678906::0::1::::PaintingSystem3D<>Node3D<><>0<>0<><>::
 PaintingUI.gd::GDScript::1068317625049949329::1771443890::0::1::::PaintingUI<>Control<><>0<>0<><>::
 PlacedLayer2D.gd::GDScript::4414825213457623402::1765265438::0::1::::PlacedLayer2D<>RefCounted<><>0<>0<><>::
 PlacedLayer.gd::GDScript::1047604470423822422::1767600625::0::1::::PlacedLayer<>RefCounted<><>0<>0<><>::
@@ -663,7 +663,7 @@ player_fade.gdshader::Shader::1981011087847399266::1771950139::0::1::::<><><>0<>
 rainbow_grid.gdshader::Shader::3847594274492884082::1772351047::0::1::::<><><>0<>0<><>::
 sky_custom.gdshader::Shader::6691222726600921654::1771442471::0::1::::<><><>0<>0<><>::
 water_tank.gdshader::Shader::5584418117088260696::1772652477::0::1::::<><><>0<>0<><>::
-::res://sounds/::1771517139
+::res://sounds/::1772679132
 (First Trip) To The Moon copy.ogg::AudioStreamOggVorbis::5551985425315151295::1771517134::1771517134::1::::<><><>0<>0<>76cb06de07559c4dc63710143850882c<>res://.godot/imported/(First Trip) To The Moon copy.ogg-b1ee7f0b13dbaf9e7f577ab30df4b8a4.oggvorbisstr::
 boomboxSwitch.ogg::AudioStreamOggVorbis::2377147874785651758::1761723976::1764320741::1::::<><><>0<>0<>b230ab4b35fd5b2938b1ce9d859478e7<>res://.godot/imported/boomboxSwitch.ogg-326bdc10ed46ea0a74a5427f74abc8db.oggvorbisstr::
 box open 1.ogg::AudioStreamOggVorbis::2354287764046325199::1761720683::1764320741::1::::<><><>0<>0<>87fde55430ef7f4548077b749ac75a72<>res://.godot/imported/box open 1.ogg-9461a55a1907cf128562cd9f23a60e53.oggvorbisstr::
@@ -688,7 +688,7 @@ lightswitchON.ogg::AudioStreamOggVorbis::5157554999956366221::1761718882::176432
 ministudio.ogg::AudioStreamOggVorbis::3982682599009497460::1761723698::1764320741::1::::<><><>0<>0<>922fa579fb620da0aa8e7cdd26379610<>res://.godot/imported/ministudio.ogg-c0bf66e222bb7b0cd773c16823eac7e4.oggvorbisstr::
 plugIn.ogg::AudioStreamOggVorbis::4195966990803464657::1762064280::1764320741::1::::<><><>0<>0<>502295e6e3608de220b828d6af91a76f<>res://.godot/imported/plugIn.ogg-4546bd6eed562b289d9420644fc65463.oggvorbisstr::
 plugOut.ogg::AudioStreamOggVorbis::2362873068258311919::1762064284::1764320741::1::::<><><>0<>0<>b7a65a6ce4ab1f231112eb944317ea05<>res://.godot/imported/plugOut.ogg-19e180cc33c5dc723c0acf21dc253a14.oggvorbisstr::
-studiodoorcreak.ogg::AudioStreamOggVorbis::5484185960116068973::1768019137::1768019138::1::::<><><>0<>0<>4b12e454dacd0d41da6033ce6f13d279<>res://.godot/imported/studiodoorcreak.ogg-44c9b814f6cdcc43e0c71b84a9c2c16d.oggvorbisstr::
+studiodoorcreak.ogg::AudioStreamOggVorbis::5484185960116068973::1772679132::1772679132::1::::<><><>0<>0<>4b12e454dacd0d41da6033ce6f13d279<>res://.godot/imported/studiodoorcreak.ogg-44c9b814f6cdcc43e0c71b84a9c2c16d.oggvorbisstr::
 trash can.ogg::AudioStreamOggVorbis::8226499830824661997::1762139388::1764320741::1::::<><><>0<>0<>d7ed99db5f50ea493f8fe5b8d349329b<>res://.godot/imported/trash can.ogg-e977452c7b831fbd4f1e177342ea7e7a.oggvorbisstr::
 ::res://sounds/picotron/::1770619135
 ambient.ogg::AudioStreamOggVorbis::7398520542138253893::1765687583::1765687584::1::::<><><>0<>0<>95090e91e4b2282af2af152a097b1481<>res://.godot/imported/ambient.ogg-51ffc862055261eb9a83bc141426fba6.oggvorbisstr::
@@ -865,7 +865,7 @@ tick.png::CompressedTexture2D::9221129522873946103::1766439448::1766439449::1:::
 uncheck.jpeg::CompressedTexture2D::7289555621166929736::1771457557::1771457558::1::::<><><>0<>0<>7180f3e22391b42cd3df192671c281e0<>res://.godot/imported/uncheck.jpeg-3f1032509a284cedab789dc17b8ad0f5.ctex::
 updown.png::CompressedTexture2D::240205946372844550::1766460747::1766460748::1::::<><><>0<>0<>3de069a74fe3469b8b0fe79c48c1ae5a<>res://.godot/imported/updown.png-f36a6e476c2dca92da5fb992f45d6fe7.ctex::
 x.png::CompressedTexture2D::1438547946482072057::1766462846::1766462846::1::::<><><>0<>0<>25fcf3d01bf2e54533850ade4ce50fa8<>res://.godot/imported/x.png-be64363e29b3ab29ccecf7c7920c0ebc.ctex::
-::res://sprites/ui/inputs/::1772676163
+::res://sprites/ui/inputs/::1772676164
 1.png::CompressedTexture2D::77126326189877236::1772676092::1772676092::1::::<><><>0<>0<>ccc738b9f8d743cd6b67008ea3d60be4<>res://.godot/imported/1.png-170ae39b9b8bb2f405b81347e4009b32.ctex::
 2.png::CompressedTexture2D::6002341658922961010::1772676092::1772676092::1::::<><><>0<>0<>2d0daeb60fda4d3dffec6ee4af575975<>res://.godot/imported/2.png-54ebc91c5f252e65de3939cf362adeb7.ctex::
 a.png::CompressedTexture2D::6584224076779414174::1772676092::1772676092::1::::<><><>0<>0<>b53e75d15ece39dba337c65e27e3106d<>res://.godot/imported/a.png-8c47981bafe2293c1ed430b635155539.ctex::

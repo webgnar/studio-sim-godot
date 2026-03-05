@@ -111,15 +111,15 @@ func _get_or_create_material(texture: Texture2D, order: int = 0) -> StandardMate
 	# Create new material for this texture + order combination
 	var material = StandardMaterial3D.new()
 	material.albedo_texture = texture
-	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_DEPTH_PRE_PASS
+	# TRANSPARENCY_ALPHA avoids depth pre-pass which causes Z-fighting in Forward+
+	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	# Disable depth writes so stickers don't occlude each other via depth buffer;
+	# render_priority alone controls which sticker appears on top
+	material.depth_draw_mode = BaseMaterial3D.DEPTH_DRAW_DISABLED
 	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR
 	material.cull_mode = BaseMaterial3D.CULL_DISABLED
-
-	# Try to set render_priority (may not work in GL Compatibility, but worth trying)
-	if "render_priority" in material:
-		material.render_priority = order
-		print("[DEBUG] Set render_priority to ", order)
+	material.render_priority = order
 
 	material_cache[material_key] = material
 	return material
