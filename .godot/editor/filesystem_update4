@@ -1,3 +1,4 @@
 res://scripts/InputDeviceManager.gd
 res://scripts/OptionsMenu.gd
 res://scripts/HUD.gd
+res://scripts/old stuff/BoxInteraction.gd

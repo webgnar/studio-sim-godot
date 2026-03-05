@@ -37,8 +37,9 @@ var _close_text: String = ""  # Store close text
 
 func _on_ready() -> void:
 	# Store inspector value as the "open" text (default state)
-	_open_text = interaction_text if interaction_text != "" else "Open Box"
-	_close_text = "Close Box"  # Can be made @export if needed
+	_open_text = interaction_text if interaction_text != "" and interaction_text != "Interact" else "Open"
+	_close_text = "Close"
+	interaction_text = _open_text
 	_ensure_audio_player()
 
 func _find_key_node() -> Node3D:
