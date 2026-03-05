@@ -28,3 +28,5 @@ res://scripts/PlayerInteractionComponent.gd
 res://scripts/economy/ShopManager.gd
 res://scripts/PlayerAnimation.gd
 res://scripts/PlayerController.gd
+res://scripts/GalleryVisitor.gd
+res://scripts/ui/VisitorDialogueBox.gd

@@ -15,6 +15,24 @@ enum State { IDLE, CHOOSING, WALKING, VIEWING }
 
 const GRAVITY := 9.8
 
+const DIALOGUE_API_URL = "https://studio-sim-gallery.vercel.app/api/visitor-dialogue"
+const API_KEY = "jupTtic3qGOULETb2w7E"
+const DIALOGUE_COOLDOWN = 60.0
+
+const FALLBACK_LINES = [
+	"Just checking the place out.",
+	"Nice space.",
+	"Interesting.",
+	"Not sure what to make of it.",
+	"Love what they've done with the lighting.",
+	"I need to come back when it's less crowded.",
+]
+
+const PERSONALITIES = ["casual", "pretentious", "confused", "enthusiastic"]
+
+## Exposed so PlayerInteractionComponent can show a prompt label.
+var interaction_text: String = "Talk"
+
 var _state: State = State.IDLE
 var _nav_agent: NavigationAgent3D
 var _anim_player: AnimationPlayer
@@ -24,9 +42,26 @@ var _view_duration: float = 0.0
 var _is_thinking: bool = false
 var _think_cooldown: float = 0.0
 
+var _personality: String = "casual"
+var _http_request: HTTPRequest
+var _cached_dialogue: String = ""
+var _dialogue_cooldown: float = 0.0
+var _is_interacting: bool = false
+var _facing_player: bool = false
+var _face_player_ref: Node3D = null
+
 
 func _ready() -> void:
 	add_to_group("gallery_visitors")
+	# Only interactable while VIEWING — added/removed as state changes
+	# Player raycast hits layers 1–4 (mask 15). Visitor is on layer 6 (32) by default,
+	# so we also join layer 4 (8) to be detectable.
+	collision_layer |= 8
+
+	# Seed personality consistently per visitor instance
+	var seed_val := hash(name + str(get_instance_id()))
+	_personality = PERSONALITIES[seed_val % PERSONALITIES.size()]
+
 	_nav_agent = $NavigationAgent3D
 	_nav_agent.path_desired_distance = 2.0
 	_nav_agent.target_desired_distance = stop_distance
@@ -38,6 +73,12 @@ func _ready() -> void:
 	else:
 		_anim_player.animation_finished.connect(_on_animation_finished)
 
+	_http_request = HTTPRequest.new()
+	_http_request.name = "DialogueRequest"
+	_http_request.timeout = 15.0
+	add_child(_http_request)
+	_http_request.request_completed.connect(_on_dialogue_response)
+
 	_play_animation("idle")
 	get_tree().create_timer(1.0).timeout.connect(_choose_next_attraction, CONNECT_ONE_SHOT)
 
@@ -46,6 +87,9 @@ func _physics_process(delta: float) -> void:
 	if not is_on_floor():
 		velocity.y -= GRAVITY * delta
 
+	if _dialogue_cooldown > 0.0:
+		_dialogue_cooldown -= delta
+
 	match _state:
 		State.WALKING:
 			_update_walking(delta)
@@ -53,6 +97,167 @@ func _physics_process(delta: float) -> void:
 			_update_viewing(delta)
 		_:
 			move_and_slide()
+
+
+func interact(_player: Node) -> void:
+	var box: VisitorDialogueBox = _get_dialogue_box()
+
+	# If dialogue is already open, advance to the next chunk
+	if box and box.is_open():
+		box.advance()
+		return
+
+	# Ignore spam while a request is in flight
+	if _is_interacting:
+		return
+	_is_interacting = true
+
+	# Store player reference so we can track them continuously while talking
+	if is_instance_valid(_player) and _player is Node3D:
+		_face_player_ref = _player as Node3D
+		var to_player := _face_player_ref.global_position - global_position
+		to_player.y = 0.0
+		if to_player.length() > 0.1:
+			transform.basis = Basis.looking_at(to_player.normalized())
+	_facing_player = true
+
+	# Connect dialogue_finished once so we know when to turn back
+	if box and not box.dialogue_finished.is_connected(_on_dialogue_finished):
+		box.dialogue_finished.connect(_on_dialogue_finished, CONNECT_ONE_SHOT)
+
+	# Fresh cached line still within cooldown — show instantly, no API call
+	if _cached_dialogue != "" and _dialogue_cooldown > 0.0:
+		_start_dialogue(_cached_dialogue)
+		_is_interacting = false
+		return
+
+	# Not currently viewing a painting — fallback immediately
+	if _state != State.VIEWING or not is_instance_valid(_last_attraction):
+		_start_dialogue(FALLBACK_LINES.pick_random())
+		_is_interacting = false
+		return
+
+	# Show loading indicator and fetch dialogue
+	_start_dialogue("...")
+	_fetch_dialogue()
+
+
+func _fetch_dialogue() -> void:
+	var painting_name := ""
+	var artist_statement := ""
+	var artist_name := ""
+
+	if has_node("/root/WorldStateManager"):
+		for data in WorldStateManager.get_all_paintings():
+			if data.get("node") == _last_attraction:
+				painting_name = data.get("name", "")
+				artist_statement = data.get("artist_statement", "")
+				break
+
+	if has_node("/root/SteamManager"):
+		artist_name = SteamManager.persona_name
+
+	if painting_name == "":
+		_start_dialogue(FALLBACK_LINES.pick_random())
+		_is_interacting = false
+		return
+
+	var locale := "en"
+	if has_node("/root/LocaleManager"):
+		locale = LocaleManager.current_locale
+
+	var body := JSON.stringify({
+		"paintingName": painting_name,
+		"artistStatement": artist_statement,
+		"artistName": artist_name,
+		"visitorPersonality": _personality,
+		"locale": locale,
+	})
+	var headers := [
+		"Content-Type: application/json",
+		"X-API-Key: " + API_KEY,
+	]
+	var error := _http_request.request(DIALOGUE_API_URL, headers, HTTPClient.METHOD_POST, body)
+	if error != OK:
+		_start_dialogue(FALLBACK_LINES.pick_random())
+		_is_interacting = false
+		push_error("GalleryVisitor: Failed to start dialogue request: " + str(error))
+
+
+func _on_dialogue_response(result: int, response_code: int, _headers: PackedStringArray, body: PackedByteArray) -> void:
+	_is_interacting = false
+	if result != HTTPRequest.RESULT_SUCCESS or response_code < 200 or response_code >= 300:
+		_start_dialogue(FALLBACK_LINES.pick_random())
+		return
+
+	var json := JSON.new()
+	if json.parse(body.get_string_from_utf8()) == OK and typeof(json.data) == TYPE_DICTIONARY:
+		var line: String = json.data.get("dialogue", "")
+		if line != "":
+			_cached_dialogue = line
+			_dialogue_cooldown = DIALOGUE_COOLDOWN
+			_start_dialogue(line)
+			return
+
+	_start_dialogue(FALLBACK_LINES.pick_random())
+
+
+func _start_dialogue(text: String) -> void:
+	var box: VisitorDialogueBox = _get_dialogue_box()
+	if not box:
+		return
+	box.show_dialogue(_split_into_chunks(text), _personality)
+
+
+func _on_dialogue_finished() -> void:
+	# Turn back to face the painting after a short pause
+	get_tree().create_timer(2.0).timeout.connect(func() -> void:
+		_facing_player = false
+		_face_player_ref = null
+	, CONNECT_ONE_SHOT)
+
+
+func _split_into_chunks(text: String) -> Array[String]:
+	# Split on sentence-ending punctuation followed by a space or end of string
+	var chunks: Array[String] = []
+	var remaining := text.strip_edges()
+	var delimiters := [". ", "! ", "? "]
+
+	while remaining.length() > 0:
+		var earliest_pos := -1
+		var earliest_len := 0
+		for d in delimiters:
+			var pos := remaining.find(d)
+			if pos != -1 and (earliest_pos == -1 or pos < earliest_pos):
+				earliest_pos = pos
+				earliest_len = d.length()
+
+		if earliest_pos == -1:
+			# No more sentence boundaries — remainder is the last chunk
+			chunks.append(remaining)
+			break
+		else:
+			# Include the punctuation mark but not the trailing space
+			chunks.append(remaining.substr(0, earliest_pos + 1))
+			remaining = remaining.substr(earliest_pos + earliest_len)
+
+	if chunks.is_empty():
+		chunks.append(text)
+	return chunks
+
+
+func _get_dialogue_box() -> VisitorDialogueBox:
+	var nodes := get_tree().get_nodes_in_group("visitor_dialogue_box")
+	if nodes.size() > 0:
+		return nodes[0] as VisitorDialogueBox
+	# Auto-instantiate if not in scene yet (no manual scene setup required)
+	var scene: PackedScene = load("res://scenes/UI/VisitorDialogueBox.tscn")
+	if not scene:
+		push_error("GalleryVisitor: Could not load VisitorDialogueBox.tscn")
+		return null
+	var box := scene.instantiate() as VisitorDialogueBox
+	get_tree().root.add_child(box)
+	return box
 
 
 func _on_navigation_finished() -> void:
@@ -92,12 +297,29 @@ func _update_viewing(delta: float) -> void:
 	velocity.z = 0.0
 	move_and_slide()
 
-	if is_instance_valid(_last_attraction):
+	if _facing_player and is_instance_valid(_face_player_ref):
+		var to_player := _face_player_ref.global_position - global_position
+		to_player.y = 0.0
+		# Close dialogue if player walks out of interaction range
+		if to_player.length() > 6.0:
+			var box: VisitorDialogueBox = _get_dialogue_box()
+			if box and box.is_open():
+				box.hide_dialogue()
+			_facing_player = false
+			_face_player_ref = null
+		elif to_player.length() > 0.1:
+			transform.basis = transform.basis.slerp(
+				Basis.looking_at(to_player.normalized()), rotation_speed * delta)
+	elif is_instance_valid(_last_attraction):
 		var to_attraction: Vector3 = _last_attraction.global_position - global_position
 		to_attraction.y = 0.0
 		if to_attraction.length() > 0.1:
 			var target_basis := Basis.looking_at(to_attraction.normalized())
 			transform.basis = transform.basis.slerp(target_basis, rotation_speed * delta)
+
+	# Pause view timer while facing the player (covers dialogue + the 2s cooldown after)
+	if _facing_player:
+		return
 
 	if not _is_thinking:
 		_think_cooldown -= delta
@@ -116,10 +338,14 @@ func _enter_viewing() -> void:
 	_view_duration = randf_range(view_time_min, view_time_max)
 	_is_thinking = false
 	_think_cooldown = randf_range(think_interval_min, think_interval_max)
+	_cached_dialogue = ""  # New painting — clear cached line
+	add_to_group("interactable")
 	_play_animation("idle")
 
 
 func _choose_next_attraction() -> void:
+	remove_from_group("interactable")
+	_facing_player = false
 	_state = State.CHOOSING
 	var all_attractions := _get_attraction_nodes()
 
