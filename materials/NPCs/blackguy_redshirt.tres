@@ -1,0 +1,11 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://dd1qm4k2yh2lu"]
+
+[ext_resource type="Texture2D" uid="uid://dnugw6s7xoh6n" path="res://sprites/NPCs/blackguy_redshirt.png" id="1_7jgwd"]
+[ext_resource type="Texture2D" uid="uid://ci3y0yaf4r5f1" path="res://sprites/NPCs/blackguy_redshirt_normal.png" id="2_tttk5"]
+
+[resource]
+albedo_texture = ExtResource("1_7jgwd")
+normal_enabled = true
+normal_scale = 1.17
+normal_texture = ExtResource("2_tttk5")
+texture_filter = 0

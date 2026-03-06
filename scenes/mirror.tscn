@@ -5,6 +5,7 @@
 [ext_resource type="Material" uid="uid://depuckvrgdvcl" path="res://materials/humanskin.tres" id="3_7epyn"]
 [ext_resource type="Material" uid="uid://bagboitufgv5v" path="res://materials/skeletonskin.tres" id="4_ev2bd"]
 [ext_resource type="Material" uid="uid://d20bmt2xaaips" path="res://materials/garyskin.tres" id="5_0dm0a"]
+[ext_resource type="Material" uid="uid://dd1qm4k2yh2lu" path="res://materials/NPCs/blackguy_redshirt.tres" id="6_brs01"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_kpybi"]
 resource_local_to_scene = true
@@ -35,7 +36,7 @@ shape = SubResource("BoxShape3D_mirror")
 
 [node name="MirrorInteraction" type="Node3D" parent="." unique_id=98364238]
 script = ExtResource("2_0dm0a")
-skin_materials = Array[Material]([ExtResource("3_7epyn"), ExtResource("4_ev2bd"), ExtResource("5_0dm0a")])
+skin_materials = Array[Material]([ExtResource("3_7epyn"), ExtResource("4_ev2bd"), ExtResource("5_0dm0a"), ExtResource("6_brs01")])
 interaction_text = "Change"
 
 [node name="SubViewport" type="SubViewport" parent="." unique_id=672330661]

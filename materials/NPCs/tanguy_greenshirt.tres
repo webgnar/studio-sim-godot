@@ -1,0 +1,11 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://vhwjmrlapxy0"]
+
+[ext_resource type="Texture2D" uid="uid://4me8vm3gdok" path="res://sprites/NPCs/tanguy_greenshirt.png" id="1_86deg"]
+[ext_resource type="Texture2D" uid="uid://0enqg255osbw" path="res://sprites/NPCs/tanguy_greenshirt_normal.png" id="2_hrwa2"]
+
+[resource]
+albedo_texture = ExtResource("1_86deg")
+normal_enabled = true
+normal_scale = -0.7
+normal_texture = ExtResource("2_hrwa2")
+texture_filter = 0

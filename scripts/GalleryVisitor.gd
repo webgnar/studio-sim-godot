@@ -5,6 +5,9 @@ extends CharacterBody3D
 
 enum State { IDLE, CHOOSING, WALKING, VIEWING }
 
+@export var skin_material: StandardMaterial3D
+@export var visitor_display_name: String = ""
+
 @export var walk_speed: float = 2.0
 @export var rotation_speed: float = 5.0
 @export var view_time_min: float = 4.0
@@ -30,6 +33,34 @@ const FALLBACK_LINES = [
 ]
 
 const PERSONALITIES = ["casual", "pretentious", "confused", "enthusiastic"]
+# Streetwise is skin-assigned only — excluded from the random pool
+const PERSONALITIES_RANDOM = ["casual", "pretentious", "confused", "enthusiastic"]
+
+const SKIN_PERSONALITIES: Dictionary = {
+	"blackguy_redshirt": "streetwise",
+	"tanguy_greenshirt": "spiritual",
+	"garyskin": "casual",
+	"humanskin": "enthusiastic",
+	"skeletonskin": "confused",
+}
+
+const STREETWISE_FALLBACK_LINES = [
+	"This hits different.",
+	"Whoever made this got something to say.",
+	"Real talk, I respect the vision.",
+	"I don't know about all the art world stuff, but this one got me.",
+	"Straight up, this is hard.",
+	"Nah this is lowkey underrated.",
+]
+
+const SPIRITUAL_FALLBACK_LINES = [
+	"There's a real energy here.",
+	"I keep coming back to this one.",
+	"I want to carry something from this into my own work.",
+	"It's like the artist was working something out.",
+	"You can feel the intention behind it.",
+	"This is the kind of thing that stays with you.",
+]
 
 ## Exposed so PlayerInteractionComponent can show a prompt label.
 var interaction_text: String = "Talk"
@@ -59,9 +90,14 @@ func _ready() -> void:
 	# so we also join layer 4 (8) to be detectable.
 	collision_layer |= 8
 
-	# Seed personality consistently per visitor instance
-	var seed_val := hash(name + str(get_instance_id()))
-	_personality = PERSONALITIES[seed_val % PERSONALITIES.size()]
+	# Skin-based personality (deterministic) or hash fallback
+	if skin_material:
+		var key := skin_material.resource_path.get_file().get_basename()
+		_personality = SKIN_PERSONALITIES.get(key, "casual")
+		_apply_skin()
+	else:
+		var seed_val := hash(name + str(get_instance_id()))
+		_personality = PERSONALITIES_RANDOM[seed_val % PERSONALITIES_RANDOM.size()]
 
 	_nav_agent = $NavigationAgent3D
 	_nav_agent.path_desired_distance = 2.0
@@ -116,10 +152,6 @@ func interact(_player: Node) -> void:
 	# Store player reference so we can track them continuously while talking
 	if is_instance_valid(_player) and _player is Node3D:
 		_face_player_ref = _player as Node3D
-		var to_player := _face_player_ref.global_position - global_position
-		to_player.y = 0.0
-		if to_player.length() > 0.1:
-			transform.basis = Basis.looking_at(to_player.normalized())
 	_facing_player = true
 
 	# Connect dialogue_finished once so we know when to turn back
@@ -134,7 +166,7 @@ func interact(_player: Node) -> void:
 
 	# Not currently viewing a painting — fallback immediately
 	if _state != State.VIEWING or not is_instance_valid(_last_attraction):
-		_start_dialogue(FALLBACK_LINES.pick_random())
+		_start_dialogue(_pick_fallback())
 		_is_interacting = false
 		return
 
@@ -165,7 +197,7 @@ func _fetch_dialogue() -> void:
 			if item_id != "":
 				_fetch_attraction_dialogue(item_id)
 				return
-		_start_dialogue(FALLBACK_LINES.pick_random())
+		_start_dialogue(_pick_fallback())
 		_is_interacting = false
 		return
 
@@ -186,7 +218,7 @@ func _fetch_dialogue() -> void:
 	]
 	var error := _http_request.request(DIALOGUE_API_URL, headers, HTTPClient.METHOD_POST, body)
 	if error != OK:
-		_start_dialogue(FALLBACK_LINES.pick_random())
+		_start_dialogue(_pick_fallback())
 		_is_interacting = false
 		push_error("GalleryVisitor: Failed to start dialogue request: " + str(error))
 
@@ -200,7 +232,7 @@ func _fetch_attraction_dialogue(item_id: String) -> void:
 				break
 
 	if item.is_empty():
-		_start_dialogue(FALLBACK_LINES.pick_random())
+		_start_dialogue(_pick_fallback())
 		_is_interacting = false
 		return
 
@@ -220,7 +252,7 @@ func _fetch_attraction_dialogue(item_id: String) -> void:
 	]
 	var error := _http_request.request(ATTRACTION_API_URL, headers, HTTPClient.METHOD_POST, body_str)
 	if error != OK:
-		_start_dialogue(FALLBACK_LINES.pick_random())
+		_start_dialogue(_pick_fallback())
 		_is_interacting = false
 		push_error("GalleryVisitor: Failed to start attraction dialogue request: " + str(error))
 
@@ -228,7 +260,7 @@ func _fetch_attraction_dialogue(item_id: String) -> void:
 func _on_dialogue_response(result: int, response_code: int, _headers: PackedStringArray, body: PackedByteArray) -> void:
 	_is_interacting = false
 	if result != HTTPRequest.RESULT_SUCCESS or response_code < 200 or response_code >= 300:
-		_start_dialogue(FALLBACK_LINES.pick_random())
+		_start_dialogue(_pick_fallback())
 		return
 
 	var json := JSON.new()
@@ -240,14 +272,39 @@ func _on_dialogue_response(result: int, response_code: int, _headers: PackedStri
 			_start_dialogue(line)
 			return
 
-	_start_dialogue(FALLBACK_LINES.pick_random())
+	_start_dialogue(_pick_fallback())
+
+
+func _pick_fallback() -> String:
+	match _personality:
+		"streetwise":
+			return STREETWISE_FALLBACK_LINES.pick_random()
+		"spiritual":
+			return SPIRITUAL_FALLBACK_LINES.pick_random()
+	return FALLBACK_LINES.pick_random()
+
+
+func _apply_skin() -> void:
+	if not skin_material:
+		return
+	_apply_material_to_tree($humanrig, skin_material)
+
+
+func _apply_material_to_tree(node: Node, mat: StandardMaterial3D) -> void:
+	if node is MeshInstance3D:
+		var mesh_inst := node as MeshInstance3D
+		for i in mesh_inst.get_surface_override_material_count():
+			mesh_inst.set_surface_override_material(i, mat)
+	for child in node.get_children():
+		_apply_material_to_tree(child, mat)
 
 
 func _start_dialogue(text: String) -> void:
 	var box: VisitorDialogueBox = _get_dialogue_box()
 	if not box:
 		return
-	box.show_dialogue(_split_into_chunks(text), _personality)
+	var label := visitor_display_name if visitor_display_name != "" else _personality
+	box.show_dialogue(_split_into_chunks(text), _personality, label)
 
 
 func _on_dialogue_finished() -> void:

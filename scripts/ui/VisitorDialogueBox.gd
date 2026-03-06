@@ -24,6 +24,8 @@ const PERSONALITY_PITCH := {
 	"pretentious": 0.85,
 	"confused": 1.05,
 	"enthusiastic": 1.25,
+	"streetwise": 1.1,
+	"spiritual": 0.92,
 }
 
 
@@ -35,14 +37,14 @@ func _ready() -> void:
 	add_child(_speech)
 
 
-func show_dialogue(chunks: Array[String], personality: String) -> void:
+func show_dialogue(chunks: Array[String], personality: String, display_name: String = "") -> void:
 	_stop_speech_and_typewriter()
 	_chunks = chunks
 	_chunk_index = 0
 	_open = true
 
 	_speech.base_pitch = PERSONALITY_PITCH.get(personality, 1.0)
-	_personality_label.text = "— %s —" % personality
+	_personality_label.text = "— %s —" % (display_name if display_name != "" else personality)
 	_show_chunk()
 
 	_panel.visible = true
@@ -73,6 +75,12 @@ func hide_dialogue() -> void:
 
 func is_open() -> bool:
 	return _open
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if _open and event.is_action_pressed("interact"):
+		advance()
+		get_viewport().set_input_as_handled()
 
 
 func _show_chunk() -> void:

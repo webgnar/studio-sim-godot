@@ -19,6 +19,20 @@ const _GALLERY_VISITOR_SCENE = preload("res://scenes/GalleryVisitor.tscn")
 # Approximate center of the gallery room floor (matches the pre-placed visitor position)
 const _GALLERY_VISITOR_SPAWN_CENTER = Vector3(1.75, -14.57, 24.97)
 
+# Visitor roster — each entry is assigned in order (index % size wraps around).
+# Add new entries here as new skins are created. Empty skin_path = skinless (random personality).
+const VISITOR_ROSTER: Array = [
+	{"skin_path": "res://materials/NPCs/blackguy_redshirt.tres", "display_name": "Keenan"},
+	{"skin_path": "res://materials/NPCs/tanguy_greenshirt.tres", "display_name": "Ian"},
+	{"skin_path": "res://materials/garyskin.tres",               "display_name": "Gary"},
+	{"skin_path": "res://materials/humanskin.tres",              "display_name": "Alex"},
+	{"skin_path": "res://materials/skeletonskin.tres",           "display_name": "Mort"},
+	# Add more skins here as they're made:
+	# {"skin_path": "res://materials/NPCs/...", "display_name": "..."},
+]
+
+var _spawned_visitor_count: int = 0
+
 
 func _ready() -> void:
 	_build_catalog()
@@ -93,6 +107,17 @@ func reveal_purchased_items() -> void:
 func spawn_gallery_visitor() -> void:
 	"""Instantiate a GalleryVisitor NPC in the gallery room. Called on purchase and on save load."""
 	var visitor = _GALLERY_VISITOR_SCENE.instantiate()
+
+	# Assign skin + name from roster, cycling if more visitors than roster entries
+	var config: Dictionary = VISITOR_ROSTER[_spawned_visitor_count % VISITOR_ROSTER.size()]
+	_spawned_visitor_count += 1
+	if config.get("skin_path", "") != "":
+		var mat: StandardMaterial3D = load(config["skin_path"])
+		if mat:
+			visitor.skin_material = mat
+	if config.get("display_name", "") != "":
+		visitor.visitor_display_name = config["display_name"]
+
 	# Parent to the same node as the pre-placed visitor so it lives in the right scene context
 	var world_root: Node = null
 	var existing = get_tree().get_nodes_in_group("gallery_visitors")
