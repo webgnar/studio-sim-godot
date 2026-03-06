@@ -14,19 +14,34 @@ signal dialogue_finished
 var _chunks: Array[String] = []
 var _chunk_index: int = 0
 var _open: bool = false
+var _typewriter_active: bool = false
+var _speech: ProceduralSpeech
+
+const PUNCTUATION_DELAY := 0.02
+
+const PERSONALITY_PITCH := {
+	"casual": 1.0,
+	"pretentious": 0.85,
+	"confused": 1.05,
+	"enthusiastic": 1.25,
+}
 
 
 func _ready() -> void:
 	add_to_group("visitor_dialogue_box")
 	_panel.modulate.a = 0.0
 	_panel.visible = false
+	_speech = ProceduralSpeech.new()
+	add_child(_speech)
 
 
 func show_dialogue(chunks: Array[String], personality: String) -> void:
+	_stop_speech_and_typewriter()
 	_chunks = chunks
 	_chunk_index = 0
 	_open = true
 
+	_speech.base_pitch = PERSONALITY_PITCH.get(personality, 1.0)
 	_personality_label.text = "— %s —" % personality
 	_show_chunk()
 
@@ -36,6 +51,7 @@ func show_dialogue(chunks: Array[String], personality: String) -> void:
 
 
 func advance() -> bool:
+	_stop_speech_and_typewriter()
 	_chunk_index += 1
 	if _chunk_index >= _chunks.size():
 		hide_dialogue()
@@ -45,6 +61,7 @@ func advance() -> bool:
 
 
 func hide_dialogue() -> void:
+	_stop_speech_and_typewriter()
 	_open = false
 	var tween := create_tween()
 	tween.tween_property(_panel, "modulate:a", 0.0, 0.2)
@@ -59,6 +76,30 @@ func is_open() -> bool:
 
 
 func _show_chunk() -> void:
-	_dialogue_label.text = _chunks[_chunk_index]
+	var chunk := _chunks[_chunk_index]
 	var is_last := _chunk_index >= _chunks.size() - 1
 	_continue_hint.visible = not is_last
+	_typewrite_chunk(chunk)
+
+
+func _stop_speech_and_typewriter() -> void:
+	_typewriter_active = false
+	_speech.stop()
+
+
+func _typewrite_chunk(text: String) -> void:
+	_typewriter_active = true
+	_dialogue_label.text = text
+	_dialogue_label.visible_characters = 0
+
+	for ch in text:
+		if not _typewriter_active:
+			break
+		_dialogue_label.visible_characters += 1
+		var wait := _speech.play_char(ch)
+		if wait <= 0.0:
+			wait = PUNCTUATION_DELAY
+		await get_tree().create_timer(wait).timeout
+
+	if _typewriter_active:
+		_dialogue_label.visible_characters = -1
