@@ -26,6 +26,7 @@ const PERSONALITY_PITCH := {
 	"enthusiastic": 1.25,
 	"streetwise": 1.1,
 	"spiritual": 0.92,
+	"fabulous": 1.15,
 }
 
 

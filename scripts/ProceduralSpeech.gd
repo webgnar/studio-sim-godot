@@ -23,7 +23,6 @@ const VOWELS := "aeiou"
 var base_pitch: float = 1.0
 
 var _player: AudioStreamPlayer
-var _speaking: bool = false
 
 
 func _ready() -> void:

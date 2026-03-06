@@ -112,7 +112,9 @@
 [ext_resource type="PackedScene" uid="uid://cfhlpeapjydro" path="res://scenes/stanmeyerWF.tscn" id="110_tjdyg"]
 [ext_resource type="PackedScene" uid="uid://c7cot7g0c5wmb" path="res://scenes/objects/geet.tscn" id="111_0fl76"]
 [ext_resource type="Material" uid="uid://dftupkqp265f" path="res://materials/pedestal.tres" id="115_optxr"]
+[ext_resource type="PackedScene" uid="uid://dl3mc6he0u4qo" path="res://models/interactables/basketball_hoop.glb" id="120_hi2pd"]
 [ext_resource type="PackedScene" uid="uid://b37nwl2dgl5ff" path="res://scenes/objects/skateboard.tscn" id="120_kegyo"]
+[ext_resource type="PackedScene" uid="uid://cgxdfyf6tidec" path="res://scenes/objects/basketball.tscn" id="121_gyxkx"]
 [ext_resource type="Script" uid="uid://nvjrcsa5oaqc" path="res://scripts/BerkeyInteraction.gd" id="berkey_interaction"]
 [ext_resource type="AudioStream" uid="uid://84rjpuccue2i" path="res://sounds/boomboxSwitch.ogg" id="boombox_switch"]
 [ext_resource type="AudioStream" uid="uid://cfuo8ydnxfi66" path="res://sounds/convenient ear pleasure.ogg" id="ear_ogg"]
@@ -338,17 +340,17 @@ albedo_color = Color(1.0734373, 1.0734373, 0.15063755, 1)
 albedo_texture = ExtResource("82_mu18u")
 texture_filter = 0
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_kegyo"]
+[sub_resource type="PlaneMesh" id="PlaneMesh_gyxkx"]
 resource_local_to_scene = true
 size = Vector2(2.5, 3)
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_hi2pd"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_vaid7"]
 resource_name = "_albedo"
 viewport_path = NodePath("../MirrorNew/SubViewport")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gyxkx"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fnm1x"]
 resource_local_to_scene = true
-albedo_texture = SubResource("ViewportTexture_hi2pd")
+albedo_texture = SubResource("ViewportTexture_vaid7")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_1v02h"]
 size = Vector2(2.5, 3)
@@ -1723,8 +1725,8 @@ surface_material_override/0 = SubResource("StandardMaterial3D_7b7y8")
 
 [node name="mirror" parent="." unique_id=1626491013 groups=["shop_prop"] instance=ExtResource("39_qaasp")]
 transform = Transform3D(-4.7902194e-08, -0.99488777, 0.10098683, -3.9073655e-08, 0.10098683, 0.99488777, -1, 4.3711392e-08, -4.3711385e-08, 2.8, 1.497, 5.232)
-mesh = SubResource("PlaneMesh_kegyo")
-surface_material_override/0 = SubResource("StandardMaterial3D_gyxkx")
+mesh = SubResource("PlaneMesh_gyxkx")
+surface_material_override/0 = SubResource("StandardMaterial3D_fnm1x")
 show_debug_logs = false
 metadata/mirror = "mirror"
 metadata/shop_item_id = "mirror"
@@ -2176,6 +2178,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 32.91327, -10.183143, 6.72988
 use_collision = true
 size = Vector3(1, 1.045166, 1)
 material = ExtResource("115_optxr")
+
+[node name="basketballhoop" parent="gallery" unique_id=544110314 instance=ExtResource("120_hi2pd")]
+transform = Transform3D(-1.3113416e-08, 0, -0.29999998, 0, 0.29999998, 0, 0.29999998, 0, -1.3113416e-08, 35, 9.533992, 16.796337)
+
+[node name="Basketball" parent="gallery" unique_id=1380341004 instance=ExtResource("121_gyxkx")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 29, 7, 17)
 
 [node name="GallerySpawnPoint" type="Node3D" parent="." unique_id=837462901]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.722805, -9.6, 15.43)

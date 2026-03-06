@@ -22,11 +22,12 @@ const _GALLERY_VISITOR_SPAWN_CENTER = Vector3(1.75, -14.57, 24.97)
 # Visitor roster — each entry is assigned in order (index % size wraps around).
 # Add new entries here as new skins are created. Empty skin_path = skinless (random personality).
 const VISITOR_ROSTER: Array = [
-	{"skin_path": "res://materials/NPCs/blackguy_redshirt.tres", "display_name": "Keenan"},
-	{"skin_path": "res://materials/NPCs/tanguy_greenshirt.tres", "display_name": "Ian"},
-	{"skin_path": "res://materials/garyskin.tres",               "display_name": "Gary"},
-	{"skin_path": "res://materials/humanskin.tres",              "display_name": "Alex"},
-	{"skin_path": "res://materials/skeletonskin.tres",           "display_name": "Mort"},
+	{"skin_path": "res://materials/NPCs/blackguy_redshirt.tres",    "display_name": "Keenan"},
+	{"skin_path": "res://materials/NPCs/tanguy_greenshirt.tres",    "display_name": "Ian"},
+	{"skin_path": "res://materials/NPCs/blondeguy_whiteshirt.tres", "display_name": "Bruno"},
+	{"skin_path": "res://materials/garyskin.tres",                  "display_name": "Gary"},
+	{"skin_path": "res://materials/humanskin.tres",                 "display_name": "Alex"},
+	{"skin_path": "res://materials/skeletonskin.tres",              "display_name": "Mort"},
 	# Add more skins here as they're made:
 	# {"skin_path": "res://materials/NPCs/...", "display_name": "..."},
 ]

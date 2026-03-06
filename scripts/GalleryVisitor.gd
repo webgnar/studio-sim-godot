@@ -39,6 +39,7 @@ const PERSONALITIES_RANDOM = ["casual", "pretentious", "confused", "enthusiastic
 const SKIN_PERSONALITIES: Dictionary = {
 	"blackguy_redshirt": "streetwise",
 	"tanguy_greenshirt": "spiritual",
+	"blondeguy_whiteshirt": "fabulous",
 	"garyskin": "casual",
 	"humanskin": "enthusiastic",
 	"skeletonskin": "confused",
@@ -60,6 +61,15 @@ const SPIRITUAL_FALLBACK_LINES = [
 	"It's like the artist was working something out.",
 	"You can feel the intention behind it.",
 	"This is the kind of thing that stays with you.",
+]
+
+const FABULOUS_FALLBACK_LINES = [
+	"This is absolutely fabulous.",
+	"Fabulous. Just... fabulous.",
+	"I don't know who made this, but they have fabulous taste.",
+	"The color palette? Fabulous. The composition? Fabulous. Everything? Fabulous.",
+	"I came in for five minutes and now I never want to leave. Fabulous.",
+	"Honestly, this whole gallery is giving me fabulous energy.",
 ]
 
 ## Exposed so PlayerInteractionComponent can show a prompt label.
@@ -281,6 +291,8 @@ func _pick_fallback() -> String:
 			return STREETWISE_FALLBACK_LINES.pick_random()
 		"spiritual":
 			return SPIRITUAL_FALLBACK_LINES.pick_random()
+		"fabulous":
+			return FABULOUS_FALLBACK_LINES.pick_random()
 	return FALLBACK_LINES.pick_random()
 
 

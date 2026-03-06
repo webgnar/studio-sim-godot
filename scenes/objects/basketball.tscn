@@ -1,0 +1,25 @@
+[gd_scene format=3 uid="uid://cgxdfyf6tidec"]
+
+[ext_resource type="Texture2D" uid="uid://btyk1ig1te2v" path="res://sprites/textures/basketball-texture-free-vector.jpg" id="1_5418n"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gv32d"]
+albedo_texture = ExtResource("1_5418n")
+uv1_scale = Vector3(1, 1.33, 1)
+uv1_offset = Vector3(0.69, 0.21, 0.13)
+uv1_triplanar_sharpness = 0.0011217741
+uv1_world_triplanar = true
+texture_filter = 0
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_hkimk"]
+
+[node name="Basketball" type="Node3D" unique_id=1380341004]
+
+[node name="CSGSphere3D" type="CSGSphere3D" parent="." unique_id=330666385]
+radial_segments = 22
+rings = 10
+material = SubResource("StandardMaterial3D_gv32d")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=1605664940]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" unique_id=1996035232]
+shape = SubResource("SphereShape3D_hkimk")
