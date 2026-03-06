@@ -1,23 +1,26 @@
 [gd_scene format=3 uid="uid://dv8qn3t2xck5p"]
 
-[ext_resource type="Script" path="res://scripts/ui/VisitorDialogueBox.gd" id="1_vdb"]
+[ext_resource type="Script" uid="uid://bcp12flb8ns7k" path="res://scripts/ui/VisitorDialogueBox.gd" id="1_vdb"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
-bg_color = Color(0.05, 0.05, 0.05, 0.88)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
 content_margin_left = 0.0
 content_margin_top = 0.0
 content_margin_right = 0.0
 content_margin_bottom = 0.0
+bg_color = Color(0.05, 0.05, 0.05, 0.88)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(1, 0.69803923, 0.6392157, 1)
+shadow_size = 5
+shadow_offset = Vector2(5, 5)
 
-[node name="VisitorDialogueBox" type="CanvasLayer"]
+[node name="VisitorDialogueBox" type="CanvasLayer" unique_id=824387599]
 layer = 5
 script = ExtResource("1_vdb")
 
-[node name="Control" type="Control" parent="."]
+[node name="Control" type="Control" parent="." unique_id=472548161]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -26,8 +29,9 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="PanelContainer" type="PanelContainer" parent="Control"]
+[node name="PanelContainer" type="PanelContainer" parent="Control" unique_id=1543716017]
 layout_mode = 1
+anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
@@ -41,36 +45,35 @@ grow_vertical = 0
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
 
-[node name="MarginContainer" type="MarginContainer" parent="Control/PanelContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="Control/PanelContainer" unique_id=928228001]
 layout_mode = 2
 theme_override_constants/margin_left = 18
 theme_override_constants/margin_top = 12
 theme_override_constants/margin_right = 18
 theme_override_constants/margin_bottom = 12
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Control/PanelContainer/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/PanelContainer/MarginContainer" unique_id=1148268182]
 layout_mode = 2
 theme_override_constants/separation = 6
 
-[node name="PersonalityLabel" type="Label" parent="Control/PanelContainer/MarginContainer/VBoxContainer"]
-layout_mode = 2
+[node name="PersonalityLabel" type="Label" parent="Control/PanelContainer/MarginContainer/VBoxContainer" unique_id=676239917]
 modulate = Color(0.65, 0.65, 0.65, 1)
-text = "— visitor —"
+layout_mode = 2
 theme_override_font_sizes/font_size = 13
+text = "— visitor —"
 
-[node name="DialogueLabel" type="RichTextLabel" parent="Control/PanelContainer/MarginContainer/VBoxContainer"]
+[node name="DialogueLabel" type="RichTextLabel" parent="Control/PanelContainer/MarginContainer/VBoxContainer" unique_id=1054770040]
 custom_minimum_size = Vector2(0, 52)
 layout_mode = 2
-fit_content = true
 theme_override_font_sizes/normal_font_size = 18
-text = ""
+fit_content = true
 
-[node name="HintContainer" type="HBoxContainer" parent="Control/PanelContainer/MarginContainer/VBoxContainer"]
+[node name="HintContainer" type="HBoxContainer" parent="Control/PanelContainer/MarginContainer/VBoxContainer" unique_id=1090790476]
 layout_mode = 2
 alignment = 2
 
-[node name="ContinueHint" type="Label" parent="Control/PanelContainer/MarginContainer/VBoxContainer/HintContainer"]
-layout_mode = 2
+[node name="ContinueHint" type="Label" parent="Control/PanelContainer/MarginContainer/VBoxContainer/HintContainer" unique_id=1750067583]
 modulate = Color(0.55, 0.55, 0.55, 1)
-text = "[ E ] continue \u25b6"
+layout_mode = 2
 theme_override_font_sizes/font_size = 13
+text = "[ E ] continue  "

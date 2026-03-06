@@ -16,6 +16,7 @@ enum State { IDLE, CHOOSING, WALKING, VIEWING }
 const GRAVITY := 9.8
 
 const DIALOGUE_API_URL = "https://studio-sim-gallery.vercel.app/api/visitor-dialogue"
+const ATTRACTION_API_URL = "https://studio-sim-gallery.vercel.app/api/attraction-dialogue"
 const API_KEY = "jupTtic3qGOULETb2w7E"
 const DIALOGUE_COOLDOWN = 60.0
 
@@ -158,6 +159,12 @@ func _fetch_dialogue() -> void:
 		artist_name = SteamManager.persona_name
 
 	if painting_name == "":
+		# Not a painting — check if it's a shop attraction with a catalog entry
+		if is_instance_valid(_last_attraction) and _last_attraction.is_in_group("shop_prop"):
+			var item_id: String = _last_attraction.get_meta("shop_item_id", "")
+			if item_id != "":
+				_fetch_attraction_dialogue(item_id)
+				return
 		_start_dialogue(FALLBACK_LINES.pick_random())
 		_is_interacting = false
 		return
@@ -182,6 +189,40 @@ func _fetch_dialogue() -> void:
 		_start_dialogue(FALLBACK_LINES.pick_random())
 		_is_interacting = false
 		push_error("GalleryVisitor: Failed to start dialogue request: " + str(error))
+
+
+func _fetch_attraction_dialogue(item_id: String) -> void:
+	var item := {}
+	if has_node("/root/ShopManager"):
+		for entry in ShopManager.get_catalog():
+			if entry["id"] == item_id:
+				item = entry
+				break
+
+	if item.is_empty():
+		_start_dialogue(FALLBACK_LINES.pick_random())
+		_is_interacting = false
+		return
+
+	var locale := "en"
+	if has_node("/root/LocaleManager"):
+		locale = LocaleManager.current_locale
+
+	var body_str := JSON.stringify({
+		"attractionTitle": item.get("title", item.get("display_name", "")),
+		"attractionDescription": item.get("description", ""),
+		"visitorPersonality": _personality,
+		"locale": locale,
+	})
+	var headers := [
+		"Content-Type: application/json",
+		"X-API-Key: " + API_KEY,
+	]
+	var error := _http_request.request(ATTRACTION_API_URL, headers, HTTPClient.METHOD_POST, body_str)
+	if error != OK:
+		_start_dialogue(FALLBACK_LINES.pick_random())
+		_is_interacting = false
+		push_error("GalleryVisitor: Failed to start attraction dialogue request: " + str(error))
 
 
 func _on_dialogue_response(result: int, response_code: int, _headers: PackedStringArray, body: PackedByteArray) -> void:
