@@ -272,7 +272,21 @@ Perfect for off-grid cabins, emergency preparedness, or anyone who enjoys their 
 			"display_name": "Monstera Plant",
 			"title": "Monstera Deliciosa",
 			"description": "Big leafy vibes. Every studio needs one.",
-			"price": 200,
+			"price": 100,
+		},
+		{
+			"id": "fern_plant",
+			"display_name": "Fern Plant",
+			"title": "Polypodiopsida",
+			"description": "Delicate, unfurling fiddleheads. A little prehistoric energy for the studio.",
+			"price": 125,
+		},
+		{
+			"id": "madpalm",
+			"display_name": "Madagascar Palm",
+			"title": "Pachypodium lamerei",
+			"description": "Spiky, drought-tolerant, and technically a succulent. The Madagascar Palm doesn't care what you call it.",
+			"price": 175,
 		},
 		{
 			"id": "psywheel",

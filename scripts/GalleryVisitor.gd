@@ -192,12 +192,14 @@ func _fetch_dialogue() -> void:
 	var painting_name := ""
 	var artist_statement := ""
 	var artist_name := ""
+	var painting_critique := ""
 
 	if has_node("/root/WorldStateManager"):
 		for data in WorldStateManager.get_all_paintings():
 			if data.get("node") == _last_attraction:
 				painting_name = data.get("name", "")
 				artist_statement = data.get("artist_statement", "")
+				painting_critique = data.get("critique", "")
 				break
 
 	if has_node("/root/SteamManager"):
@@ -218,13 +220,23 @@ func _fetch_dialogue() -> void:
 	if has_node("/root/LocaleManager"):
 		locale = LocaleManager.current_locale
 
-	var body := JSON.stringify({
+	if painting_critique != "":
+		var short := painting_critique.substr(0, 400)
+		var last_period := short.rfind(".")
+		if last_period > 100:
+			short = short.substr(0, last_period + 1)
+		painting_critique = short
+
+	var body_dict := {
 		"paintingName": painting_name,
 		"artistStatement": artist_statement,
 		"artistName": artist_name,
 		"visitorPersonality": _personality,
 		"locale": locale,
-	})
+	}
+	if painting_critique != "":
+		body_dict["paintingCritique"] = painting_critique
+	var body := JSON.stringify(body_dict)
 	var headers := [
 		"Content-Type: application/json",
 		"X-API-Key: " + API_KEY,

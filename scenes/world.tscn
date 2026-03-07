@@ -110,6 +110,8 @@
 [ext_resource type="PackedScene" uid="uid://dak4p8mdryt52" path="res://scenes/StudioAssistantCharacter.tscn" id="102_asst"]
 [ext_resource type="PackedScene" uid="uid://buoprlo6hvckr" path="res://scenes/StickerWall.tscn" id="103_swall"]
 [ext_resource type="PackedScene" uid="uid://urnnip80nb2n" path="res://scenes/objects/HireAssistantButton.tscn" id="104_hire"]
+[ext_resource type="PackedScene" uid="uid://b4jjf7gp8rcb3" path="res://models/props/fern_plant.glb" id="104_ic2vq"]
+[ext_resource type="PackedScene" uid="uid://bkru8clp704gh" path="res://models/props/madpalm.glb" id="105_cmoy1"]
 [ext_resource type="PackedScene" uid="uid://bmsbijuu4g8jd" path="res://scenes/objects/SEG.tscn" id="109_pwx6t"]
 [ext_resource type="PackedScene" uid="uid://cfhlpeapjydro" path="res://scenes/stanmeyerWF.tscn" id="110_tjdyg"]
 [ext_resource type="PackedScene" uid="uid://c7cot7g0c5wmb" path="res://scenes/objects/geet.tscn" id="111_0fl76"]
@@ -343,17 +345,17 @@ albedo_color = Color(1.0734373, 1.0734373, 0.15063755, 1)
 albedo_texture = ExtResource("82_mu18u")
 texture_filter = 0
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_bbgx3"]
+[sub_resource type="PlaneMesh" id="PlaneMesh_mgrvy"]
 resource_local_to_scene = true
 size = Vector2(2.5, 3)
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_o7bbu"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_ey67g"]
 resource_name = "_albedo"
 viewport_path = NodePath("../MirrorNew/SubViewport")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cmoy1"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mslh2"]
 resource_local_to_scene = true
-albedo_texture = SubResource("ViewportTexture_o7bbu")
+albedo_texture = SubResource("ViewportTexture_ey67g")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_1v02h"]
 size = Vector2(2.5, 3)
@@ -1744,8 +1746,8 @@ surface_material_override/0 = SubResource("StandardMaterial3D_7b7y8")
 
 [node name="mirror" parent="." unique_id=1626491013 groups=["shop_prop"] instance=ExtResource("39_qaasp")]
 transform = Transform3D(-4.7902194e-08, -0.99488777, 0.10098683, -3.9073655e-08, 0.10098683, 0.99488777, -1, 4.3711392e-08, -4.3711385e-08, 2.8, 1.497, 5.232)
-mesh = SubResource("PlaneMesh_bbgx3")
-surface_material_override/0 = SubResource("StandardMaterial3D_cmoy1")
+mesh = SubResource("PlaneMesh_mgrvy")
+surface_material_override/0 = SubResource("StandardMaterial3D_mslh2")
 show_debug_logs = false
 metadata/mirror = "mirror"
 metadata/shop_item_id = "mirror"
@@ -1892,6 +1894,14 @@ transform = Transform3D(3.6787704e-09, -0.14699711, -0.13561653, -1.6880124e-08,
 
 [node name="rail4" parent="greenhouse" unique_id=643379220 instance=ExtResource("101_tp6af")]
 transform = Transform3D(3.6787704e-09, -0.14699711, -0.13561653, -1.6880124e-08, -0.13561653, 0.14699711, -0.19999999, 8.742277e-09, -1.4901161e-08, -5.879779, -2.7400055, -1.1056767)
+
+[node name="fern" parent="greenhouse" unique_id=987875147 groups=["shop_prop"] instance=ExtResource("104_ic2vq")]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 3.3356872, 1.3456252, 1.1989193)
+metadata/shop_item_id = "fern_plant"
+
+[node name="madpalm" parent="greenhouse" unique_id=1557607760 groups=["shop_prop"] instance=ExtResource("105_cmoy1")]
+transform = Transform3D(0.057448704, 0, 0.19157152, 0, 0.2, 0, -0.19157152, 0, 0.057448704, -2.1619606, 2.6579928, 1.2772312)
+metadata/shop_item_id = "madpalm"
 
 [node name="Door" parent="." unique_id=1914412036 groups=["no_outline"] instance=ExtResource("83_kcpaj")]
 transform = Transform3D(-4.196293e-08, 0, -0.95, 0, 0.95, 0, 0.96, 0, -4.152582e-08, 3.8344553, 1.6471603, 0.54472053)
