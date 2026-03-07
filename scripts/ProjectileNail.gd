@@ -70,7 +70,7 @@ func _physics_process(delta: float) -> void:
 # --- COLLISION HANDLING ---
 
 func _on_body_entered(body: Node) -> void:
-	"""Handle collision - spawn WallNail using pre-calculated hit info"""
+	"""Handle collision - stick to NPC or spawn WallNail using pre-calculated hit info"""
 
 	print("=== PROJECTILE NAIL COLLISION DETECTED ===")
 	print("  Hit body: ", (body.name as String) if body else ("null" as String))
@@ -79,6 +79,13 @@ func _on_body_entered(body: Node) -> void:
 
 	# Try to apply damage to the hit object
 	_try_apply_damage(body)
+
+	# NPC hit: attach nail visually to the NPC
+	if body.is_in_group("npc"):
+		print("  NPC hit - sticking nail to: ", body.name)
+		_stick_to_npc(body as Node3D)
+		queue_free()
+		return
 
 	# Use pre-calculated hit info from the clean raycast (done when gun fired)
 	if not has_target:
@@ -121,27 +128,44 @@ func _on_body_entered(body: Node) -> void:
 	print("  Despawning projectile nail...")
 	queue_free()
 
-func _calculate_nail_rotation(surface_normal: Vector3) -> Vector3:
-	"""Calculate rotation to make nail stick perpendicular to surface"""
-	# Nail model's length runs along X axis:
-	# - Head (positive X) should point OUT from wall (along surface_normal)
-	# - Point (negative X) should point INTO wall (along -surface_normal)
+func _stick_to_npc(npc: Node3D) -> void:
+	"""Attach a nail mesh as a child of the NPC so it follows their movement"""
+	var npc_nail_scene: PackedScene = load("res://scenes/objects/NPCNail.tscn")
+	if not npc_nail_scene:
+		push_warning("ProjectileNail: Could not load NPCNail.tscn")
+		return
 
-	var up = Vector3.UP
+	# Use fire_direction — linear_velocity is unreliable at collision time
+	# because the physics engine modifies it during collision resolution
+	var travel_dir := fire_direction.normalized()
 
-	# Handle edge case: surface is perfectly vertical (normal perpendicular to up)
+	# Push the nail center into the NPC mesh (capsule collider edge is ~0.2 outside the mesh)
+	var hit_pos := global_position + travel_dir * 0.4
+
+	# Nail head points back toward the shooter (opposite of travel direction)
+	var surface_normal := -travel_dir
+
+	var nail := npc_nail_scene.instantiate() as Node3D
+	npc.add_child(nail)
+	nail.global_position = hit_pos
+	nail.global_transform.basis = _calculate_nail_basis(surface_normal)
+
+	print("  NPCNail attached at local pos: ", nail.position)
+
+
+func _calculate_nail_basis(surface_normal: Vector3) -> Basis:
+	"""Build a Basis to orient the nail perpendicular to the surface.
+	Nail X axis = surface_normal (head points out), point embeds inward."""
+	var up := Vector3.UP
 	if abs(surface_normal.dot(up)) > 0.99:
 		up = Vector3.RIGHT
-
-	# Build orthonormal basis
-	# We want surface_normal to be the nail's X axis (head points out)
-	var right = surface_normal.cross(up).normalized()
+	var right := surface_normal.cross(up).normalized()
 	up = right.cross(surface_normal).normalized()
+	return Basis(surface_normal, up, right)
 
-	# Basis: X=surface_normal (head out), Y=up, Z=right
-	var nail_basis = Basis(surface_normal, up, right)
 
-	return nail_basis.get_euler()
+func _calculate_nail_rotation(surface_normal: Vector3) -> Vector3:
+	return _calculate_nail_basis(surface_normal).get_euler()
 
 func _try_apply_damage(body: Node) -> void:
 	"""Attempt to apply damage to the hit object"""

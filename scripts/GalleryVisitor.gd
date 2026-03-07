@@ -98,6 +98,7 @@ var _face_player_ref: Node3D = null
 
 func _ready() -> void:
 	add_to_group("gallery_visitors")
+	add_to_group("npc")
 	# Only interactable while VIEWING — added/removed as state changes
 	# Player raycast hits layers 1–4 (mask 15). Visitor is on layer 6 (32) by default,
 	# so we also join layer 4 (8) to be detectable.

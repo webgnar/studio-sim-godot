@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="PackedScene" uid="uid://b3g0y1ku7myi3" path="res://models/interactables/nail.glb" id="1_nail_model"]
+[ext_resource type="AudioStream" uid="uid://dljak05rpk08s" path="res://sounds/picotron/nailstick.ogg" id="2_nailstick"]
+
+[node name="NPCNail" type="Node3D"]
+
+[node name="nail_model" parent="." instance=ExtResource("1_nail_model")]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
+
+[node name="StickSound" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("2_nailstick")
+autoplay = true
+max_distance = 10.0
+
+[editable path="nail_model"]
