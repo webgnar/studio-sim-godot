@@ -37,6 +37,7 @@
 [ext_resource type="Script" uid="uid://cdcxs0jsffsfb" path="res://scripts/old stuff/BoomboxInteraction.gd" id="36_boombox_new"]
 [ext_resource type="PackedScene" uid="uid://dg4dh5bn60pel" path="res://scenes/objects/psywheel.tscn" id="36_xullu"]
 [ext_resource type="PackedScene" uid="uid://qgkty3mym310" path="res://models/props/plant_stand.glb" id="37_ld7xo"]
+[ext_resource type="PackedScene" uid="uid://guuhi66wtyyp" path="res://models/paintings/stretcher.glb" id="39_bbgx3"]
 [ext_resource type="PackedScene" uid="uid://bxi8jlwr1acc4" path="res://scenes/mirror.tscn" id="39_qaasp"]
 [ext_resource type="PackedScene" uid="uid://ddornft2ln8sq" path="res://models/interactables/boomBox.glb" id="41_rga7q"]
 [ext_resource type="Material" uid="uid://s7aanj1sph6l" path="res://materials/floor.tres" id="43_xiw03"]
@@ -342,17 +343,17 @@ albedo_color = Color(1.0734373, 1.0734373, 0.15063755, 1)
 albedo_texture = ExtResource("82_mu18u")
 texture_filter = 0
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_fnm1x"]
+[sub_resource type="PlaneMesh" id="PlaneMesh_bbgx3"]
 resource_local_to_scene = true
 size = Vector2(2.5, 3)
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_bbgx3"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_o7bbu"]
 resource_name = "_albedo"
 viewport_path = NodePath("../MirrorNew/SubViewport")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_o7bbu"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cmoy1"]
 resource_local_to_scene = true
-albedo_texture = SubResource("ViewportTexture_bbgx3")
+albedo_texture = SubResource("ViewportTexture_o7bbu")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_1v02h"]
 size = Vector2(2.5, 3)
@@ -1087,7 +1088,7 @@ font = ExtResource("31_qetcs")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.5419307, 1.5265388)
 
 [node name="StickerWall" parent="AssistantStudio" unique_id=1083857710 instance=ExtResource("103_swall")]
-transform = Transform3D(0.93857735, 0, 0.34506887, 0, 1, 0, -0.34506887, 0, 0.93857735, -1.0653248, 0.5, -3.3040338)
+transform = Transform3D(0.93857735, 0, 0.34506887, 0, 1, 0, -0.34506887, 0, 0.93857735, -1.0653248, 0.5, -3.1329656)
 
 [node name="SpotLight3D" type="OmniLight3D" parent="AssistantStudio" unique_id=1713332885]
 transform = Transform3D(0.96502113, -0.10872114, 0.23856673, -0.07238323, 0.76410466, 0.64101857, -0.2519822, -0.6358646, 0.72950757, -0.2444439, 0.8378589, -1.6614113)
@@ -1104,6 +1105,9 @@ metadata/shop_item_id = "psywheel"
 
 [node name="stand" parent="AssistantStudio" unique_id=1282393607 instance=ExtResource("37_ld7xo")]
 transform = Transform3D(0.05, 0, 0, 0, 0.05, 0, 0, 0, 0.05, 1.4236965, -1.2685578, 0.41327953)
+
+[node name="stretcher" parent="AssistantStudio" unique_id=1570654499 instance=ExtResource("39_bbgx3")]
+transform = Transform3D(-0.07049975, 0, -0.03411837, 0, 0.045000006, 0, 0.025588779, 0, -0.09399966, -1.1264086, 0.52323437, -3.2981973)
 
 [node name="Elevator" parent="." unique_id=904124064 instance=ExtResource("29_xgy6y")]
 transform = Transform3D(1.44, 0, 0, 0, 1.44, 0, 0, 0, 1.44, 5.356282, 0.43740082, -4.5508404)
@@ -1740,8 +1744,8 @@ surface_material_override/0 = SubResource("StandardMaterial3D_7b7y8")
 
 [node name="mirror" parent="." unique_id=1626491013 groups=["shop_prop"] instance=ExtResource("39_qaasp")]
 transform = Transform3D(-4.7902194e-08, -0.99488777, 0.10098683, -3.9073655e-08, 0.10098683, 0.99488777, -1, 4.3711392e-08, -4.3711385e-08, 2.8, 1.497, 5.232)
-mesh = SubResource("PlaneMesh_fnm1x")
-surface_material_override/0 = SubResource("StandardMaterial3D_o7bbu")
+mesh = SubResource("PlaneMesh_bbgx3")
+surface_material_override/0 = SubResource("StandardMaterial3D_cmoy1")
 show_debug_logs = false
 metadata/mirror = "mirror"
 metadata/shop_item_id = "mirror"
@@ -1868,25 +1872,25 @@ collision_layer = 8
 transform = Transform3D(0.99993044, 0, -2.2441149e-05, 0, 0.9999095, 0, 2.2441149e-05, 0, 0.99993044, -0.05638504, -3.898034, -0.09364319)
 shape = SubResource("BoxShape3D_gyxkx")
 
-[node name="rail" parent="greenhouse" unique_id=1758800207 instance=ExtResource("101_tp6af")]
+[node name="rail" parent="greenhouse" unique_id=2065781956 instance=ExtResource("101_tp6af")]
 transform = Transform3D(-8.742278e-09, -0.2, 0, -1.4901161e-08, 8.881784e-16, 0.2, -0.2, 8.742278e-09, -1.4901161e-08, -5.29385, 0.4946152, -0.8551159)
 
-[node name="rail5" parent="greenhouse" unique_id=2087673068 instance=ExtResource("101_tp6af")]
+[node name="rail5" parent="greenhouse" unique_id=634729526 instance=ExtResource("101_tp6af")]
 transform = Transform3D(-0.2, 3.019916e-08, 1.3200473e-15, 0, -8.742278e-09, 0.2, 3.019916e-08, 0.2, 8.742278e-09, -8.027277, -5.2124486, 2.3244915)
 
-[node name="rail6" parent="greenhouse" unique_id=1630591427 instance=ExtResource("101_tp6af")]
+[node name="rail6" parent="greenhouse" unique_id=752631676 instance=ExtResource("101_tp6af")]
 transform = Transform3D(3.8941437e-08, 0.18, 8.742278e-09, 0, -7.86805e-09, 0.2, 0.2, -3.5047293e-08, -1.7021842e-15, -10.604155, -5.2124486, 4.3244915)
 
-[node name="rail7" parent="greenhouse" unique_id=1833567962 instance=ExtResource("101_tp6af")]
+[node name="rail7" parent="greenhouse" unique_id=2075354059 instance=ExtResource("101_tp6af")]
 transform = Transform3D(0.2, -1.3806337e-07, -4.378878e-08, -2.0205947e-08, -0.28289896, 0.4735703, -5.4729426e-08, -0.40008518, -0.33485994, -8.179258, -9.670702, -11.124024)
 
-[node name="rail2" parent="greenhouse" unique_id=1767175531 instance=ExtResource("101_tp6af")]
+[node name="rail2" parent="greenhouse" unique_id=1705973874 instance=ExtResource("101_tp6af")]
 transform = Transform3D(-8.742278e-09, -0.2, 0, -1.4901161e-08, 8.881784e-16, 0.2, -0.2, 8.742278e-09, -1.4901161e-08, -5.29385, 0.4946152, -3.3394203)
 
-[node name="rail3" parent="greenhouse" unique_id=309506196 instance=ExtResource("101_tp6af")]
+[node name="rail3" parent="greenhouse" unique_id=1362607007 instance=ExtResource("101_tp6af")]
 transform = Transform3D(3.6787704e-09, -0.14699711, -0.13561653, -1.6880124e-08, -0.13561653, 0.14699711, -0.19999999, 8.742277e-09, -1.4901161e-08, -5.879779, -2.7400055, -3.0877113)
 
-[node name="rail4" parent="greenhouse" unique_id=294468469 instance=ExtResource("101_tp6af")]
+[node name="rail4" parent="greenhouse" unique_id=643379220 instance=ExtResource("101_tp6af")]
 transform = Transform3D(3.6787704e-09, -0.14699711, -0.13561653, -1.6880124e-08, -0.13561653, 0.14699711, -0.19999999, 8.742277e-09, -1.4901161e-08, -5.879779, -2.7400055, -1.1056767)
 
 [node name="Door" parent="." unique_id=1914412036 groups=["no_outline"] instance=ExtResource("83_kcpaj")]
@@ -2198,11 +2202,47 @@ material = ExtResource("115_optxr")
 transform = Transform3D(-1.3113416e-08, 0, -0.29999998, 0, 0.29999998, 0, 0.29999998, 0, -1.3113416e-08, 35, 9.533992, 16.796337)
 
 [node name="Basketball" parent="gallery" unique_id=1380341004 instance=ExtResource("121_gyxkx")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 29, 7, 17)
+transform = Transform3D(-0.8660254, 0, -0.50000006, 0, 1, 0, 0.50000006, 0, -0.8660254, -4.850615, -0.2702918, 13.934031)
 
 [node name="basketballcourt" type="MeshInstance3D" parent="gallery" unique_id=965092255]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 27.346199, 4.35151, 16.657421)
 mesh = SubResource("PlaneMesh_cmoy1")
+
+[node name="SpotLight3D" type="SpotLight3D" parent="gallery" unique_id=637761707]
+transform = Transform3D(1, 0, 0, 0, 0.49999997, 0.86602545, 0, -0.86602545, 0.49999997, 3.8003159, -1.8827114, -5.5189524)
+spot_range = 20.187
+
+[node name="SpotLight3D2" type="SpotLight3D" parent="gallery" unique_id=499760338]
+transform = Transform3D(1, 0, 0, 0, 0.49999997, 0.86602545, 0, -0.86602545, 0.49999997, 13.800316, -1.8827114, -5.5189524)
+spot_range = 20.187
+
+[node name="SpotLight3D3" type="SpotLight3D" parent="gallery" unique_id=1827199508]
+transform = Transform3D(1, 0, 0, 0, 0.49999997, 0.86602545, 0, -0.86602545, 0.49999997, 25.800316, -1.8827114, -5.5189524)
+spot_range = 20.187
+
+[node name="SpotLight3D4" type="SpotLight3D" parent="gallery" unique_id=812583939]
+transform = Transform3D(-5.9604645e-08, 0.86602545, -0.49999997, 2.7805946e-08, 0.49999994, 0.86602545, 1, 5.9604645e-08, -1.4901161e-08, 34.800316, -1.8827114, -1.5189524)
+spot_range = 20.187
+
+[node name="SpotLight3D5" type="SpotLight3D" parent="gallery" unique_id=505561001]
+transform = Transform3D(-5.9604645e-08, 0.86602545, -0.49999994, 2.7805946e-08, 0.49999994, 0.86602545, 1, 3.771617e-08, -5.3882978e-08, 34.800316, -1.8827114, 10.481049)
+spot_range = 20.187
+
+[node name="SpotLight3D6" type="SpotLight3D" parent="gallery" unique_id=122967251]
+transform = Transform3D(-5.9604645e-08, 0.86602545, -0.49999994, 2.7805946e-08, 0.49999994, 0.86602545, 1, 3.771617e-08, -5.3882978e-08, 34.800316, -1.8827114, 20.481049)
+spot_range = 20.187
+
+[node name="SpotLight3D7" type="SpotLight3D" parent="gallery" unique_id=326243925]
+transform = Transform3D(-1, -7.557135e-08, 7.573867e-08, 2.7805942e-08, 0.49999994, 0.86602545, -1.0331604e-07, 0.86602545, -0.49999994, 30.800316, -1.8827114, 20.481049)
+spot_range = 20.187
+
+[node name="SpotLight3D8" type="SpotLight3D" parent="gallery" unique_id=2057574739]
+transform = Transform3D(-1, -7.557135e-08, 7.573867e-08, 2.7805942e-08, 0.49999994, 0.86602545, -1.0331604e-07, 0.86602545, -0.49999994, 19.800316, -1.8827114, 20.481049)
+spot_range = 20.187
+
+[node name="SpotLight3D9" type="SpotLight3D" parent="gallery" unique_id=2050515740]
+transform = Transform3D(-1, -7.557135e-08, 7.573867e-08, 2.7805942e-08, 0.49999994, 0.86602545, -1.0331604e-07, 0.86602545, -0.49999994, 8.800316, -1.8827114, 20.481049)
+spot_range = 20.187
 
 [node name="GallerySpawnPoint" type="Node3D" parent="." unique_id=837462901]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.722805, -9.6, 15.43)

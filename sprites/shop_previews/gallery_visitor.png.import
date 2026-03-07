@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c8rieyyerxmv6"
-path="res://.godot/imported/humanrig_Image_0-export.png-4af09e2f2c2933bae6f3f4276950c431.ctex"
+uid="uid://bhbkghyyw7co"
+path="res://.godot/imported/gallery_visitor.png-5b6f8201f2d9a246f6f72a09a31879ac.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://sprites/textures/humanrig_Image_0-export.png"
-dest_files=["res://.godot/imported/humanrig_Image_0-export.png-4af09e2f2c2933bae6f3f4276950c431.ctex"]
+source_file="res://sprites/shop_previews/gallery_visitor.png"
+dest_files=["res://.godot/imported/gallery_visitor.png-5b6f8201f2d9a246f6f72a09a31879ac.ctex"]
 
 [params]
 

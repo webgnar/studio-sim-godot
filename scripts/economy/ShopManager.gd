@@ -25,8 +25,11 @@ const VISITOR_ROSTER: Array = [
 	{"skin_path": "res://materials/NPCs/blackguy_redshirt.tres",    "display_name": "Keenan"},
 	{"skin_path": "res://materials/NPCs/tanguy_greenshirt.tres",    "display_name": "Ian"},
 	{"skin_path": "res://materials/NPCs/blondeguy_whiteshirt.tres", "display_name": "Bruno"},
+	{"skin_path": "res://materials/NPCs/jollyrich.tres",            "display_name": "Reginald"},
+	{"skin_path": "res://materials/NPCs/ronald.tres",               "display_name": "Canio"},
+	{"skin_path": "res://materials/NPCs/kylie.tres",                "display_name": "Kylie"},
 	{"skin_path": "res://materials/garyskin.tres",                  "display_name": "Gary"},
-	{"skin_path": "res://materials/humanskin.tres",                 "display_name": "Alex"},
+	{"skin_path": "res://materials/humanskin.tres",                 "display_name": "Zack"},
 	{"skin_path": "res://materials/skeletonskin.tres",              "display_name": "Mort"},
 	# Add more skins here as they're made:
 	# {"skin_path": "res://materials/NPCs/...", "display_name": "..."},
@@ -181,7 +184,7 @@ func is_player_blocking_spawn(item_id: String) -> bool:
 func _handle_repeatable_purchase(item_id: String) -> void:
 	"""Handle side effects for items that can be purchased multiple times."""
 	match item_id:
-		"gallery_viewer":
+		"gallery_visitor":
 			WorldStateManager.increment_gallery_visitor_count()
 			spawn_gallery_visitor()
 
@@ -331,7 +334,7 @@ Meyer himself described the origins of his inventions in deeply personal, spirit
 			"price": 300,
 		},
 		{
-			"id": "gallery_viewer",
+			"id": "gallery_visitor",
 			"display_name": "Gallery Visitor",
 			"title": "Gallery Visitor Pass",
 			"description": "Invites another visitor to your gallery. Each visitor increases the sale value of your shipped paintings. The more eyes on your work, the more it's worth.",

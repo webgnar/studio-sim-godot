@@ -1,0 +1,11 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://ewc8nbyl6gn7"]
+
+[ext_resource type="Texture2D" uid="uid://cd1t01eg2qp8e" path="res://sprites/NPCs/jollyrich.jpg" id="1_yx2gx"]
+[ext_resource type="Texture2D" uid="uid://cvensrkxhcso1" path="res://sprites/NPCs/jollyrich_normal.png" id="2_ilu7d"]
+
+[resource]
+albedo_texture = ExtResource("1_yx2gx")
+normal_enabled = true
+normal_scale = -0.4
+normal_texture = ExtResource("2_ilu7d")
+texture_filter = 0

@@ -1,0 +1,11 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://cm8tndob3a28r"]
+
+[ext_resource type="Texture2D" uid="uid://dfo4xqal3it41" path="res://sprites/NPCs/ronald.jpg" id="1_22g3h"]
+[ext_resource type="Texture2D" uid="uid://b6xldjm8sah6b" path="res://sprites/NPCs/ronald_normal.png" id="2_jnhhi"]
+
+[resource]
+albedo_texture = ExtResource("1_22g3h")
+normal_enabled = true
+normal_scale = -0.18
+normal_texture = ExtResource("2_jnhhi")
+texture_filter = 0

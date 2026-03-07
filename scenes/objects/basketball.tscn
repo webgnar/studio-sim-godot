@@ -2,33 +2,32 @@
 
 [ext_resource type="PackedScene" uid="uid://7feic2t0cirw" path="res://models/interactables/basketball.glb" id="1_5418n"]
 [ext_resource type="ArrayMesh" uid="uid://dhqxt0afbkbf4" path="res://models/interactables/basket ball.obj" id="2_gv32d"]
-[ext_resource type="Script" path="res://scripts/components/CarryableComponent.gd" id="3_carry"]
+[ext_resource type="Script" uid="uid://cbwg344irqecy" path="res://scripts/components/CarryableComponent.gd" id="3_carry"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_bball"]
+friction = 0.8
+bounce = 0.7
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_hkimk"]
 
-[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_bball"]
-bounce = 0.7
-friction = 0.8
-
-[node name="Basketball" type="RigidBody3D"]
+[node name="Basketball" type="RigidBody3D" unique_id=638927527]
 collision_layer = 8
 collision_mask = 2
-physics_material_override = SubResource("PhysicsMaterial_bball")
 mass = 0.6
+physics_material_override = SubResource("PhysicsMaterial_bball")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1187191043]
 shape = SubResource("SphereShape3D_hkimk")
 
-[node name="CarryableComponent" type="Node3D" parent="."]
+[node name="CarryableComponent" type="Node3D" parent="." unique_id=352676336]
 script = ExtResource("3_carry")
-throw_power = 20.0
 lock_rotation_when_carried = false
 gravity_while_carrying = 0.3
 
-[node name="model" parent="." instance=ExtResource("1_5418n")]
+[node name="model" parent="." unique_id=1847360478 instance=ExtResource("1_5418n")]
 transform = Transform3D(0.16, 0, 0, 0, 0.16, 0, 0, 0, 0.16, 0, 0, 0)
 visible = false
 
-[node name="BasketBall" type="MeshInstance3D" parent="."]
+[node name="BasketBall" type="MeshInstance3D" parent="." unique_id=7585159]
 transform = Transform3D(0.025, 0, 0, 0, 0.025, 0, 0, 0, 0.025, -0.0034077168, 0.0011461973, -0.0005799532)
 mesh = ExtResource("2_gv32d")

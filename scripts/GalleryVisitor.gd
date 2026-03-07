@@ -34,7 +34,7 @@ const FALLBACK_LINES = [
 
 const PERSONALITIES = ["casual", "pretentious", "confused", "enthusiastic"]
 # Streetwise is skin-assigned only — excluded from the random pool
-const PERSONALITIES_RANDOM = ["casual", "pretentious", "confused", "enthusiastic"]
+const PERSONALITIES_RANDOM = ["casual", "pretentious", "confused", "enthusiastic", "snob", "offended", "exasperated"]
 
 const SKIN_PERSONALITIES: Dictionary = {
 	"blackguy_redshirt": "streetwise",
@@ -43,6 +43,9 @@ const SKIN_PERSONALITIES: Dictionary = {
 	"garyskin": "casual",
 	"humanskin": "enthusiastic",
 	"skeletonskin": "confused",
+	"jollyrich": "enthusiastic",
+	"ronald": "canio",
+	"kylie": "kylie",
 }
 
 const STREETWISE_FALLBACK_LINES = [

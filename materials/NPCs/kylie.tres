@@ -1,0 +1,11 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://kmhof4jis4to"]
+
+[ext_resource type="Texture2D" uid="uid://b7xfhqb3101jv" path="res://sprites/NPCs/kylie.jpeg" id="1_04j6h"]
+[ext_resource type="Texture2D" uid="uid://njt0cx27b5wr" path="res://sprites/NPCs/kylie_normal.png" id="2_3vdva"]
+
+[resource]
+albedo_texture = ExtResource("1_04j6h")
+normal_enabled = true
+normal_scale = -0.11
+normal_texture = ExtResource("2_3vdva")
+texture_filter = 0

@@ -1,5 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://dl4gm4q0qo8bm"]
-
-[ext_resource type="PackedScene" uid="uid://c65tkba8onvwi" path="res://models/player/humanrig.glb" id="1_536nk"]
-
-[node name="humanrig" instance=ExtResource("1_536nk")]
