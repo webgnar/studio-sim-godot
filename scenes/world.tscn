@@ -78,6 +78,7 @@
 [ext_resource type="PackedScene" uid="uid://d2hcs1m04uvg7" path="res://models/interactables/button.glb" id="80_oexs8"]
 [ext_resource type="Script" uid="uid://byo8qed1v1rkt" path="res://scripts/components/PaintingConvertButton.gd" id="81_n78cu"]
 [ext_resource type="PackedScene" uid="uid://ctu3xtbhbgtub" path="res://scenes/objects/NailGun.tscn" id="81_oexs8"]
+[ext_resource type="Texture2D" uid="uid://fsaivlucyl88" path="res://sprites/ui/inputs/backtick.png" id="82_fnm1x"]
 [ext_resource type="Texture2D" uid="uid://bd6svkdls6guq" path="res://models/interactables/buttonGreen_0.png" id="82_mu18u"]
 [ext_resource type="Texture2D" uid="uid://djd4xqb57hhr7" path="res://sprites/textures/brick_bump.jpg" id="83_c15v2"]
 [ext_resource type="PackedScene" uid="uid://c8mhk3sajq2fn" path="res://scenes/UI/MissionHUD.tscn" id="83_hud"]
@@ -115,6 +116,7 @@
 [ext_resource type="PackedScene" uid="uid://dl3mc6he0u4qo" path="res://models/interactables/basketball_hoop.glb" id="120_hi2pd"]
 [ext_resource type="PackedScene" uid="uid://b37nwl2dgl5ff" path="res://scenes/objects/skateboard.tscn" id="120_kegyo"]
 [ext_resource type="PackedScene" uid="uid://cgxdfyf6tidec" path="res://scenes/objects/basketball.tscn" id="121_gyxkx"]
+[ext_resource type="Texture2D" uid="uid://dv8w3awcgtjga" path="res://textures/baskball court paint.png" id="122_vaid7"]
 [ext_resource type="Script" uid="uid://nvjrcsa5oaqc" path="res://scripts/BerkeyInteraction.gd" id="berkey_interaction"]
 [ext_resource type="AudioStream" uid="uid://84rjpuccue2i" path="res://sounds/boomboxSwitch.ogg" id="boombox_switch"]
 [ext_resource type="AudioStream" uid="uid://cfuo8ydnxfi66" path="res://sounds/convenient ear pleasure.ogg" id="ear_ogg"]
@@ -340,17 +342,17 @@ albedo_color = Color(1.0734373, 1.0734373, 0.15063755, 1)
 albedo_texture = ExtResource("82_mu18u")
 texture_filter = 0
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_gyxkx"]
+[sub_resource type="PlaneMesh" id="PlaneMesh_fnm1x"]
 resource_local_to_scene = true
 size = Vector2(2.5, 3)
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_vaid7"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_bbgx3"]
 resource_name = "_albedo"
 viewport_path = NodePath("../MirrorNew/SubViewport")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fnm1x"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_o7bbu"]
 resource_local_to_scene = true
-albedo_texture = SubResource("ViewportTexture_vaid7")
+albedo_texture = SubResource("ViewportTexture_bbgx3")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_1v02h"]
 size = Vector2(2.5, 3)
@@ -798,6 +800,15 @@ uv1_scale = Vector3(5.34, 9.1, 2.89)
 uv1_offset = Vector3(0, -1, 0)
 texture_filter = 0
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ic2vq"]
+transparency = 1
+albedo_texture = ExtResource("122_vaid7")
+texture_filter = 0
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_cmoy1"]
+material = SubResource("StandardMaterial3D_ic2vq")
+size = Vector2(12, 17.93)
+
 [node name="World" type="Node3D" unique_id=81477]
 script = ExtResource("1_qaasp")
 
@@ -878,7 +889,7 @@ transform = Transform3D(-0.204136, 0, 0.38978007, 0, 0.44, 0, -0.38978007, 0, -0
 transform = Transform3D(-3.8946845e-07, 2.97, 2.5964567e-07, 2.97, 3.8946845e-07, -2.2698936e-14, -5.674736e-14, 2.5964567e-07, -2.97, -58.9851, -8.151672, 17.451527)
 
 [node name="skyscraper" parent="outside Background" unique_id=1622378402 instance=ExtResource("75_qaasp")]
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 16.498226, 30.75174, 23.823051)
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 16.498226, 29.75174, 23.823051)
 
 [node name="Spotlight1" parent="." unique_id=468801462 instance=ExtResource("86_grmox")]
 transform = Transform3D(0.19553687, 0.04201586, 0, -0.04201586, 0.19553687, 0, 0, 0, 0.2, -2.5281055, 4.97409, -1.6068956)
@@ -1687,6 +1698,10 @@ transform = Transform3D(0, 0, 0.099999994, 0, 0.1, 0, -0.099999994, 0, 0, 1.8911
 [node name="note" parent="table" unique_id=1385263194 instance=ExtResource("75_q6do4")]
 transform = Transform3D(-4.3711378e-08, 0, -0.9999995, 0, 0.99999946, 0, 0.9999995, 0, -4.3711378e-08, -3.755188, 2.94207, -10.306238)
 
+[node name="Sprite3D" type="Sprite3D" parent="table/note" unique_id=2032141145]
+transform = Transform3D(0.48000005, -2.0981474e-08, -9.171295e-16, 0, -2.0981469e-08, 0.48000005, -2.0981474e-08, -0.48000005, -2.0981469e-08, 0.2890978, 0.19192123, -0.5914688)
+texture = ExtResource("82_fnm1x")
+
 [node name="Phone" parent="table" unique_id=1687195098 groups=["shop_prop"] instance=ExtResource("79_wui3h")]
 transform = Transform3D(0.6999999, 0, 0, 0, 0.6999999, 0, 0, 0, 0.6999999, 0, 3.0361843, -7.166624)
 metadata/phone = "smartphone"
@@ -1725,8 +1740,8 @@ surface_material_override/0 = SubResource("StandardMaterial3D_7b7y8")
 
 [node name="mirror" parent="." unique_id=1626491013 groups=["shop_prop"] instance=ExtResource("39_qaasp")]
 transform = Transform3D(-4.7902194e-08, -0.99488777, 0.10098683, -3.9073655e-08, 0.10098683, 0.99488777, -1, 4.3711392e-08, -4.3711385e-08, 2.8, 1.497, 5.232)
-mesh = SubResource("PlaneMesh_gyxkx")
-surface_material_override/0 = SubResource("StandardMaterial3D_fnm1x")
+mesh = SubResource("PlaneMesh_fnm1x")
+surface_material_override/0 = SubResource("StandardMaterial3D_o7bbu")
 show_debug_logs = false
 metadata/mirror = "mirror"
 metadata/shop_item_id = "mirror"
@@ -2184,6 +2199,10 @@ transform = Transform3D(-1.3113416e-08, 0, -0.29999998, 0, 0.29999998, 0, 0.2999
 
 [node name="Basketball" parent="gallery" unique_id=1380341004 instance=ExtResource("121_gyxkx")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 29, 7, 17)
+
+[node name="basketballcourt" type="MeshInstance3D" parent="gallery" unique_id=965092255]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 27.346199, 4.35151, 16.657421)
+mesh = SubResource("PlaneMesh_cmoy1")
 
 [node name="GallerySpawnPoint" type="Node3D" parent="." unique_id=837462901]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.722805, -9.6, 15.43)

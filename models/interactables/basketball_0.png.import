@@ -2,18 +2,21 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dv8w3awcgtjga"
-path.s3tc="res://.godot/imported/baskball court paint.png-2a479a76366b7caaa373fd9dc33350bc.s3tc.ctex"
-path.etc2="res://.godot/imported/baskball court paint.png-2a479a76366b7caaa373fd9dc33350bc.etc2.ctex"
+uid="uid://icj4381pkh8f"
+path.s3tc="res://.godot/imported/basketball_0.png-68aaaa08ad3c91a75050eda2fa779ba0.s3tc.ctex"
+path.etc2="res://.godot/imported/basketball_0.png-68aaaa08ad3c91a75050eda2fa779ba0.etc2.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
+generator_parameters={
+"md5": "0c1c2bfe36542245a26dd6e3d779f599"
+}
 
 [deps]
 
-source_file="res://textures/baskball court paint.png"
-dest_files=["res://.godot/imported/baskball court paint.png-2a479a76366b7caaa373fd9dc33350bc.s3tc.ctex", "res://.godot/imported/baskball court paint.png-2a479a76366b7caaa373fd9dc33350bc.etc2.ctex"]
+source_file="res://models/interactables/basketball_0.png"
+dest_files=["res://.godot/imported/basketball_0.png-68aaaa08ad3c91a75050eda2fa779ba0.s3tc.ctex", "res://.godot/imported/basketball_0.png-68aaaa08ad3c91a75050eda2fa779ba0.etc2.ctex"]
 
 [params]
 

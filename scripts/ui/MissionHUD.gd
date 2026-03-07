@@ -47,7 +47,7 @@ func _on_mission_started(mission: PaintingMission):
 func _process(_delta):
 	if mission_active and MissionManager and MissionManager.mission_start_time > 0:
 		var elapsed_ms = Time.get_ticks_msec() - MissionManager.mission_start_time
-		var total_seconds = int(elapsed_ms / 1000.0)
+		var total_seconds: int = int(elapsed_ms / 1000.0)
 		var minutes: int = total_seconds / 60
 		var seconds = total_seconds % 60
 		timer_label.text = "%d:%02d" % [minutes, seconds]

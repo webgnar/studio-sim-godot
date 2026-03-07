@@ -164,7 +164,6 @@ func _physics_process(delta: float) -> void:
 
 	# Get current angle and angular velocity
 	var angular_velocity = door_body.angular_velocity.y  # Door rotates around Y axis
-	var abs_angular_velocity = abs(angular_velocity)
 	var abs_previous_velocity = abs(previous_velocity)
 
 	# Count down slam cooldown

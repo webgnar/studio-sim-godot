@@ -1,0 +1,12 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://s5o1vioxewa3"]
+
+[ext_resource type="Texture2D" uid="uid://cvcg2vkettl4a" path="res://sprites/NPCs/skinbig.png" id="1_assist"]
+[ext_resource type="Texture2D" uid="uid://c5com1gtiu8k0" path="res://sprites/NPCs/skinbig_normal.png" id="3_5frn3"]
+
+[resource]
+albedo_texture = ExtResource("1_assist")
+normal_enabled = true
+normal_scale = -0.33
+normal_texture = ExtResource("3_5frn3")
+ao_enabled = true
+texture_filter = 0

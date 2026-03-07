@@ -1,5 +1,7 @@
 extends Node3D
 
+const SKIN_MATERIAL = preload("res://materials/NPCs/assistantguy_skin.tres")
+
 ## Studio Assistant NPC character controller.
 ## Uses Tweens (not AnimationPlayer) for position/scale transitions to avoid
 ## snap-jumping from absolute keyframe values.
@@ -25,6 +27,7 @@ var _is_hired: bool = false
 func _ready() -> void:
 	if has_node("humanrig"):
 		rig_anim_player = _find_animation_player($humanrig)
+		_apply_skin($humanrig)
 	else:
 		push_warning("StudioAssistantCharacter: humanrig node not found!")
 
@@ -103,6 +106,14 @@ func _play_rig_animation(anim_name: String) -> void:
 	if anim_name in ["idle", "walk", "meditate"]:
 		rig_anim_player.get_animation(anim_name).loop_mode = Animation.LOOP_LINEAR
 	rig_anim_player.play(anim_name)
+
+
+func _apply_skin(node: Node) -> void:
+	if node is MeshInstance3D:
+		for i in node.get_surface_override_material_count():
+			node.set_surface_override_material(i, SKIN_MATERIAL)
+	for child in node.get_children():
+		_apply_skin(child)
 
 
 func _find_animation_player(node: Node) -> AnimationPlayer:

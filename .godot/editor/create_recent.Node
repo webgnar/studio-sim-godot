@@ -1,10 +1,10 @@
-CollisionShape3D
 StaticBody3D
-CSGSphere3D
+Sprite3D
 MeshInstance3D
+CollisionShape3D
+CSGSphere3D
 AudioStreamPlayer3D
 Node3D
-Sprite3D
 TextureRect
 OmniLight3D
 AnimationPlayer

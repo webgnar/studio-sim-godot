@@ -429,13 +429,9 @@ func _is_sprinting() -> bool:
 	return SteamInput.is_action_pressed("sprint")
 
 func _check_mirror_facing() -> bool:
-	var mirrors := get_tree().get_nodes_in_group("mirrors")
-	for mirror in mirrors:
-		var to_mirror: Vector3 = mirror.global_position - global_position
-		if to_mirror.length() > mirror_trigger_distance:
-			continue
-		var forward: Vector3 = -global_transform.basis.z
-		if forward.dot(to_mirror.normalized()) >= mirror_facing_dot:
+	var zones := get_tree().get_nodes_in_group("mirror_dance_zone")
+	for zone in zones:
+		if zone is Area3D and zone.overlaps_body(self):
 			return true
 	return false
 

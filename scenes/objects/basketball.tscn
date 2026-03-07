@@ -1,25 +1,34 @@
 [gd_scene format=3 uid="uid://cgxdfyf6tidec"]
 
-[ext_resource type="Texture2D" uid="uid://btyk1ig1te2v" path="res://sprites/textures/basketball-texture-free-vector.jpg" id="1_5418n"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gv32d"]
-albedo_texture = ExtResource("1_5418n")
-uv1_scale = Vector3(1, 1.33, 1)
-uv1_offset = Vector3(0.69, 0.21, 0.13)
-uv1_triplanar_sharpness = 0.0011217741
-uv1_world_triplanar = true
-texture_filter = 0
+[ext_resource type="PackedScene" uid="uid://7feic2t0cirw" path="res://models/interactables/basketball.glb" id="1_5418n"]
+[ext_resource type="ArrayMesh" uid="uid://dhqxt0afbkbf4" path="res://models/interactables/basket ball.obj" id="2_gv32d"]
+[ext_resource type="Script" path="res://scripts/components/CarryableComponent.gd" id="3_carry"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_hkimk"]
 
-[node name="Basketball" type="Node3D" unique_id=1380341004]
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_bball"]
+bounce = 0.7
+friction = 0.8
 
-[node name="CSGSphere3D" type="CSGSphere3D" parent="." unique_id=330666385]
-radial_segments = 22
-rings = 10
-material = SubResource("StandardMaterial3D_gv32d")
+[node name="Basketball" type="RigidBody3D"]
+collision_layer = 8
+collision_mask = 2
+physics_material_override = SubResource("PhysicsMaterial_bball")
+mass = 0.6
 
-[node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=1605664940]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" unique_id=1996035232]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("SphereShape3D_hkimk")
+
+[node name="CarryableComponent" type="Node3D" parent="."]
+script = ExtResource("3_carry")
+throw_power = 20.0
+lock_rotation_when_carried = false
+gravity_while_carrying = 0.3
+
+[node name="model" parent="." instance=ExtResource("1_5418n")]
+transform = Transform3D(0.16, 0, 0, 0, 0.16, 0, 0, 0, 0.16, 0, 0, 0)
+visible = false
+
+[node name="BasketBall" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.025, 0, 0, 0, 0.025, 0, 0, 0, 0.025, -0.0034077168, 0.0011461973, -0.0005799532)
+mesh = ExtResource("2_gv32d")

@@ -2,9 +2,9 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dv8w3awcgtjga"
-path.s3tc="res://.godot/imported/baskball court paint.png-2a479a76366b7caaa373fd9dc33350bc.s3tc.ctex"
-path.etc2="res://.godot/imported/baskball court paint.png-2a479a76366b7caaa373fd9dc33350bc.etc2.ctex"
+uid="uid://cvcg2vkettl4a"
+path.s3tc="res://.godot/imported/skinbig.png-57336eb6c97603f30cc9c3aea10747f6.s3tc.ctex"
+path.etc2="res://.godot/imported/skinbig.png-57336eb6c97603f30cc9c3aea10747f6.etc2.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -12,8 +12,8 @@ metadata={
 
 [deps]
 
-source_file="res://textures/baskball court paint.png"
-dest_files=["res://.godot/imported/baskball court paint.png-2a479a76366b7caaa373fd9dc33350bc.s3tc.ctex", "res://.godot/imported/baskball court paint.png-2a479a76366b7caaa373fd9dc33350bc.etc2.ctex"]
+source_file="res://sprites/NPCs/skinbig.png"
+dest_files=["res://.godot/imported/skinbig.png-57336eb6c97603f30cc9c3aea10747f6.s3tc.ctex", "res://.godot/imported/skinbig.png-57336eb6c97603f30cc9c3aea10747f6.etc2.ctex"]
 
 [params]
 

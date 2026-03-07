@@ -21,7 +21,10 @@ albedo_texture = SubResource("ViewportTexture_ctatt")
 [sub_resource type="BoxShape3D" id="BoxShape3D_mirror"]
 size = Vector3(2, 2, 0.041088868)
 
-[node name="mirror" type="MeshInstance3D" unique_id=1473510251 groups=["no_outline","mirrors"]]
+[sub_resource type="BoxShape3D" id="BoxShape3D_dancezone"]
+size = Vector3(0.9, 3.5639648, 1.0361328)
+
+[node name="mirror" type="MeshInstance3D" unique_id=1473510251 groups=["mirrors", "no_outline"]]
 transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0, 0)
 mesh = SubResource("PlaneMesh_kpybi")
 surface_material_override/0 = SubResource("StandardMaterial3D_xgqkh")
@@ -44,3 +47,12 @@ size = Vector2i(256, 256)
 
 [node name="Camera3D" type="Camera3D" parent="SubViewport" unique_id=202067670]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8393148, 0)
+
+[node name="DanceZone" type="Area3D" parent="." unique_id=301000001 groups=["mirror_dance_zone"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 1)
+collision_layer = 0
+monitorable = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="DanceZone" unique_id=301000002]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.7219486, 1.2819824, -1.0179051)
+shape = SubResource("BoxShape3D_dancezone")
