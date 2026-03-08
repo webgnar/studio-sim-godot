@@ -1,3 +1,4 @@
+AnimatedSprite3D
 SpotLight3D
 StaticBody3D
 Sprite3D
@@ -11,5 +12,3 @@ OmniLight3D
 AnimationPlayer
 Area3D
 HBoxContainer
-Label3D
-Label
