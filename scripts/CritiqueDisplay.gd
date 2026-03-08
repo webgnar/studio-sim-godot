@@ -13,7 +13,7 @@ extends Node3D
 
 const R2_BASE_URL = "https://pub-eba211d5cf614843a0f1582ec6c62c2e.r2.dev/paintings/"
 const CRITIQUE_API_URL = "https://studio-sim-gallery.vercel.app/api/critique"
-const REQUEST_TIMEOUT = 15.0
+const REQUEST_TIMEOUT = 30.0
 
 enum State { IDLE, WAITING_FOR_UPLOAD, LOADING_CRITIQUE, DISPLAYING }
 var _state: State = State.IDLE
@@ -162,7 +162,12 @@ func _request_critique(gallery_id: String) -> void:
 func _on_critique_response(result: int, response_code: int, _headers: PackedStringArray, body: PackedByteArray) -> void:
 	if result != HTTPRequest.RESULT_SUCCESS or response_code < 200 or response_code >= 300:
 		_state = State.IDLE
-		_set_text(tr("Critique unavailable."))
+		var err_msg: String
+		if result == HTTPRequest.RESULT_TIMEOUT:
+			err_msg = "The Sumerian AI Demons have been destroyed, there is no Critique for You today..."
+		else:
+			err_msg = "Critique unavailable.\n[result: %d, status: %d]" % [result, response_code]
+		_set_text(err_msg)
 		push_error("CritiqueDisplay: Request failed (result: " + str(result) + ", status: " + str(response_code) + ")")
 		return
 
