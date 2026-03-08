@@ -406,6 +406,9 @@ func _update_painting_hint() -> void:
 		var rotate_icon = painting_hint.get_node("RotateLine/RotateRightIcon")
 		var rotate_label = painting_hint.get_node("RotateLine/RotateLabel")
 		if is_gamepad:
+			var d = InputDeviceManager.glyph_map.get("rotate_clockwise", {})
+			if d.has("gamepad_icon"):
+				rotate_icon.texture = load(d["gamepad_icon"])
 			rotate_icon.show()
 			rotate_label.text = " " + tr("Rotate")
 		else:
@@ -422,6 +425,9 @@ func _update_painting_hint() -> void:
 		var scale_icon = painting_hint.get_node("ScaleLine/ScaleDownIcon")
 		var scale_label = painting_hint.get_node("ScaleLine/ScaleLabel")
 		if is_gamepad:
+			var d = InputDeviceManager.glyph_map.get("scale_sticker_down", {})
+			if d.has("gamepad_icon"):
+				scale_icon.texture = load(d["gamepad_icon"])
 			scale_icon.show()
 			scale_label.text = " " + tr("Scale")
 		else:
@@ -439,6 +445,12 @@ func _update_painting_hint() -> void:
 		var cycle_next_icon = painting_hint.get_node("CycleLine/CycleNextIcon")
 		var cycle_label = painting_hint.get_node("CycleLine/CycleLabel")
 		if is_gamepad:
+			var d_prev = InputDeviceManager.glyph_map.get("cycle_sticker_prev", {})
+			if d_prev.has("gamepad_icon"):
+				cycle_prev_icon.texture = load(d_prev["gamepad_icon"])
+			var d_next = InputDeviceManager.glyph_map.get("cycle_sticker_next", {})
+			if d_next.has("gamepad_icon"):
+				cycle_next_icon.texture = load(d_next["gamepad_icon"])
 			cycle_prev_icon.show()
 			cycle_next_icon.show()
 			cycle_label.text = " " + tr("Cycle")
@@ -461,6 +473,9 @@ func _update_painting_hint() -> void:
 		var place_icon = painting_hint.get_node("PlaceUndoLine/PlaceIcon")
 		var place_text = painting_hint.get_node("PlaceUndoLine/PlaceText")
 		if is_gamepad:
+			var d = InputDeviceManager.glyph_map.get("action_primary", {})
+			if d.has("gamepad_icon"):
+				place_icon.texture = load(d["gamepad_icon"])
 			place_icon.show()
 			place_text.text = " " + tr("Paint")
 		else:
@@ -477,6 +492,9 @@ func _update_painting_hint() -> void:
 		var undo_icon = painting_hint.get_node("HBoxContainer/UndoIcon")
 		var undo_text = painting_hint.get_node("HBoxContainer/UndoText")
 		if is_gamepad:
+			var d = InputDeviceManager.glyph_map.get("action_secondary", {})
+			if d.has("gamepad_icon"):
+				undo_icon.texture = load(d["gamepad_icon"])
 			undo_icon.show()
 			undo_text.text = " " + tr("Erase")
 		else:

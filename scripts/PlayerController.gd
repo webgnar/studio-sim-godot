@@ -432,7 +432,11 @@ func _check_mirror_facing() -> bool:
 	var zones := get_tree().get_nodes_in_group("mirror_dance_zone")
 	for zone in zones:
 		if zone is Area3D and zone.overlaps_body(self):
-			return true
+			var mirror_pos: Vector3 = zone.get_parent().global_position
+			var dir_to_mirror: Vector3 = (mirror_pos - global_position).normalized()
+			var player_forward: Vector3 = -global_transform.basis.z
+			if dir_to_mirror.dot(player_forward) >= mirror_facing_dot:
+				return true
 	return false
 
 func play_death_animation() -> void:
