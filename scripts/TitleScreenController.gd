@@ -334,7 +334,7 @@ func _wipe_save_data():
 
 	# Reset economy
 	if EconomyManager:
-		EconomyManager.set_money(0)
+		EconomyManager.set_money(2500)  # DEBUG: revert to 0 after testing
 
 	# Reset studio assistant
 	if AutomationManager:

@@ -1,0 +1,32 @@
+[gd_scene format=3 uid="uid://dsstapanel001"]
+
+[ext_resource type="Script" uid="uid://c8uap2yk1tjju" path="res://scripts/components/StudioAssistantStatusPanel.gd" id="1_script"]
+[ext_resource type="PackedScene" uid="uid://dsstapanelui1" path="res://scenes/UI/StudioAssistantPanelUI.tscn" id="2_ui"]
+
+[sub_resource type="QuadMesh" id="QuadMesh_screen"]
+size = Vector2(1.2, 0.8)
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_panel"]
+resource_local_to_scene = true
+viewport_path = NodePath("SubViewport")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_screen"]
+resource_local_to_scene = true
+flags_unshaded = true
+albedo_texture = SubResource("ViewportTexture_panel")
+
+[node name="StudioAssistantStatusPanel" type="Node3D" node_paths=PackedStringArray("timer_label", "progress_bar", "earnings_label")]
+script = ExtResource("1_script")
+timer_label = NodePath("SubViewport/StudioAssistantPanelUI/MarginContainer/VBoxContainer/TimerLabel")
+progress_bar = NodePath("SubViewport/StudioAssistantPanelUI/MarginContainer/VBoxContainer/ProgressBar")
+earnings_label = NodePath("SubViewport/StudioAssistantPanelUI/MarginContainer/VBoxContainer/EarningsLabel")
+
+[node name="Screen" type="MeshInstance3D" parent="."]
+mesh = SubResource("QuadMesh_screen")
+surface_material_override/0 = SubResource("StandardMaterial3D_screen")
+
+[node name="SubViewport" type="SubViewport" parent="."]
+size = Vector2i(512, 340)
+render_target_update_mode = 4
+
+[node name="StudioAssistantPanelUI" parent="SubViewport" instance=ExtResource("2_ui")]

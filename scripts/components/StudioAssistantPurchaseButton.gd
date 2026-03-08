@@ -70,13 +70,7 @@ func _update_interaction_text():
 		interaction_text = "Hire Studio Assistant ($%d)" % status.cost
 		is_disabled = false
 	else:
-		var money = EconomyManager.get_money() if has_node("/root/EconomyManager") else 0
-
-		if money < status.cost:
-			interaction_text = "Hire Assistant ($%d) - Need $%d more" % [status.cost, status.cost - money]
-		else:
-			interaction_text = "Hire Assistant ($%d)" % status.cost
-
+		interaction_text = "Hire Assistant ($%d)" % status.cost
 		is_disabled = false  # Allow looking at it to see requirements
 
 func _play_purchase_animation() -> void:
