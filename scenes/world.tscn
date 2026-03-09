@@ -1116,7 +1116,7 @@ shape = SubResource("BoxShape3D_ic2vq")
 transform = Transform3D(-0.07049975, 0, -0.03411837, 0, 0.045000006, 0, 0.025588779, 0, -0.09399966, -1.1264086, 0.52323437, -3.2981973)
 
 [node name="SaveAssistantWorkButton" parent="AssistantStudio" unique_id=200100001 instance=ExtResource("200_savebtn")]
-transform = Transform3D(-5.732056e-16, 1.3113417e-08, 0.1, -0.1, -4.371139e-09, 4.2351642e-23, 4.371139e-09, -0.1, 1.3113417e-08, -3.5153875, -0.3427856, 3.1921883)
+transform = Transform3D(-5.732056e-16, 1.3113417e-08, 0.1, -0.1, -4.371139e-09, 4.2351642e-23, 4.371139e-09, -0.1, 1.3113417e-08, -3.5153875, -0.3427856, 3.1781168)
 
 [node name="AssistantFinishedCanvas" parent="." unique_id=201100001 instance=ExtResource("201_fcanvas")]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 13.564976, 2.6354063, 17.27919)
@@ -2276,8 +2276,6 @@ metadata/shop_item_id = "skateboard"
 [editable path="Fluorescent1"]
 [editable path="Fluorescent2"]
 [editable path="Fluorescent3"]
-[editable path="AssistantStudio/SaveAssistantWorkButton"]
-[editable path="AssistantStudio/SaveAssistantWorkButton/green button"]
 [editable path="Styrofoam cube"]
 [editable path="CameraZone"]
 [editable path="CameraZone3 inside"]

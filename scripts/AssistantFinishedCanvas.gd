@@ -23,7 +23,20 @@ func _ready() -> void:
 func display_painting(image: Image) -> void:
 	"""Apply a baked Image as the canvas plane's texture with alpha transparency."""
 	_current_image = image
-	var texture := ImageTexture.create_from_image(image)
+	_refresh_display()
+
+
+func composite_painting(new_image: Image) -> void:
+	"""Blend new_image on top of the existing canvas."""
+	if _current_image == null:
+		display_painting(new_image)
+	else:
+		_current_image.blend_rect(new_image, Rect2i(0, 0, new_image.get_width(), new_image.get_height()), Vector2i(0, 0))
+		_refresh_display()
+
+
+func _refresh_display() -> void:
+	var texture := ImageTexture.create_from_image(_current_image)
 	var mat := StandardMaterial3D.new()
 	mat.flags_unshaded = true
 	mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA

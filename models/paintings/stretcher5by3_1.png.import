@@ -2,21 +2,21 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://be40ammn31yn"
-path.s3tc="res://.godot/imported/stretcher_1.png-a60b7d7f5a34d78530548b5ef3016c8c.s3tc.ctex"
-path.etc2="res://.godot/imported/stretcher_1.png-a60b7d7f5a34d78530548b5ef3016c8c.etc2.ctex"
+uid="uid://ddne1ngf4t1iy"
+path.s3tc="res://.godot/imported/stretcher5by3_1.png-d742024204ac496889ce4b2e0f9221e4.s3tc.ctex"
+path.etc2="res://.godot/imported/stretcher5by3_1.png-d742024204ac496889ce4b2e0f9221e4.etc2.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 generator_parameters={
-"md5": "60f33c5370dbd8328c5180737e96a318"
+"md5": "dec548170901a621e884cc138d80cb2d"
 }
 
 [deps]
 
-source_file="res://models/paintings/stretcher_1.png"
-dest_files=["res://.godot/imported/stretcher_1.png-a60b7d7f5a34d78530548b5ef3016c8c.s3tc.ctex", "res://.godot/imported/stretcher_1.png-a60b7d7f5a34d78530548b5ef3016c8c.etc2.ctex"]
+source_file="res://models/paintings/stretcher5by3_1.png"
+dest_files=["res://.godot/imported/stretcher5by3_1.png-d742024204ac496889ce4b2e0f9221e4.s3tc.ctex", "res://.godot/imported/stretcher5by3_1.png-d742024204ac496889ce4b2e0f9221e4.etc2.ctex"]
 
 [params]
 

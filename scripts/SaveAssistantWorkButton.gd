@@ -9,7 +9,7 @@ var _is_saving: bool = false
 
 func _ready() -> void:
 	super._ready()
-	interaction_text = "Take Assistant's Work"
+	interaction_text = "Add to Canvas"
 	print("SaveAssistantWorkButton: ready. Node path: ", get_path())
 
 
@@ -51,12 +51,12 @@ func _execute_save(sticker_wall: Node) -> void:
 	var canvas = get_tree().get_first_node_in_group("assistant_canvas")
 	print("SaveAssistantWorkButton: canvas node = ", canvas)
 	if canvas:
-		canvas.display_painting(image)
+		canvas.composite_painting(image)
 
 	sticker_wall.clear_stickers()
 	print("SaveAssistantWorkButton: stickers cleared.")
 
-	interaction_text = "Take Assistant's Work"
+	interaction_text = "Add to Canvas"
 	_is_saving = false
 
 
