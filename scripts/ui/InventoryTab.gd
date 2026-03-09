@@ -372,7 +372,8 @@ func _update_preview(data: Dictionary):
 		var image = Image.new()
 		var error = image.load(texture_path)
 		if error == OK:
-			image.rotate_90(CLOCKWISE)
+			if image.get_width() <= image.get_height():
+				image.rotate_90(CLOCKWISE)
 			preview_image.texture = ImageTexture.create_from_image(image)
 		else:
 			preview_image.texture = null

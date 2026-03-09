@@ -10,6 +10,8 @@ var paintings_created: int = 0
 # Preload scenes
 var carryable_painting_scene = preload("res://scenes/CarryablePainting.tscn")
 var painting_root_2d_scene = preload("res://scenes/PaintingRoot2D.tscn")
+var carryable_painting_5x3_scene = preload("res://scenes/CarryablePainting5x3.tscn")
+var painting_root_2d_5x3_scene = preload("res://scenes/PaintingRoot2D_5x3.tscn")
 
 # Sound effect
 @onready var spawn_sound: AudioStreamPlayer = AudioStreamPlayer.new()
@@ -30,6 +32,11 @@ func replace_painting_with_carryable(world: Node3D) -> void:
 		push_error("PaintingSpawner: No painting system found!")
 		return
 
+	# Detect format from active canvas dimensions
+	var is_landscape = old_painting_root.plane_width > old_painting_root.plane_height
+	var active_carryable_scene = carryable_painting_5x3_scene if is_landscape else carryable_painting_scene
+	var active_blank_scene = painting_root_2d_5x3_scene if is_landscape else painting_root_2d_scene
+
 	# Bake texture from current painting
 	var baked_texture = await _bake_painting_texture(old_painting_system)
 
@@ -42,7 +49,7 @@ func replace_painting_with_carryable(world: Node3D) -> void:
 	var wall_rotation = old_painting_root.global_rotation
 
 	# Spawn carryable painting with frozen texture
-	var carryable = carryable_painting_scene.instantiate()
+	var carryable = active_carryable_scene.instantiate()
 
 	# Set metadata BEFORE adding to tree (so _ready can register)
 	carryable.painting_id = painting_id
@@ -80,8 +87,8 @@ func replace_painting_with_carryable(world: Node3D) -> void:
 	# Remove old painting
 	old_painting_root.queue_free()
 
-	# Spawn new blank painting
-	var new_painting = painting_root_2d_scene.instantiate()
+	# Spawn new blank painting (same format as the converted one)
+	var new_painting = active_blank_scene.instantiate()
 	world.add_child(new_painting)
 	# Set transform AFTER adding to tree
 	new_painting.global_position = wall_position

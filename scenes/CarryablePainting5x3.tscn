@@ -1,0 +1,122 @@
+[gd_scene format=3 uid="uid://b5agxlky7uc1v"]
+
+[ext_resource type="Script" uid="uid://do8vkeu1l02i1" path="res://scripts/components/PaintingHangingComponent.gd" id="1_hanging"]
+[ext_resource type="Script" uid="uid://dvkl3cic5pjcq" path="res://scripts/CarryablePainting.gd" id="1_painting"]
+[ext_resource type="PackedScene" uid="uid://13s1cg3g8erj" path="res://models/paintings/stretcher5by3.glb" id="2_stretcher5x3"]
+[ext_resource type="Script" uid="uid://cxevfv0ev3okf" path="res://scripts/painting/PaintingSignatureSystem.gd" id="4_58v5g"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_5x3"]
+friction = 1.5
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_carryable5x3"]
+size = Vector3(5.089, 3.109, 0.21)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_front5x3"]
+size = Vector2(5, 3)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_front5x3"]
+transparency = 1
+shading_mode = 0
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_top_bar5x3"]
+size = Vector3(5.089, 0.2, 0.2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_bottom_bar5x3"]
+size = Vector3(5.089, 0.2, 0.2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_left_bar5x3"]
+size = Vector3(0.2, 3.109, 0.2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_right_bar5x3"]
+size = Vector3(0.2, 3.109, 0.2)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_back5x3"]
+size = Vector2(5, 3)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_back5x3"]
+transparency = 1
+albedo_color = Color(1, 1, 1, 0)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_backface5x3"]
+size = Vector3(5, 0.3, 3)
+
+[node name="CarryablePainting5x3" type="RigidBody3D" unique_id=160274438 groups=["no_outline"]]
+collision_layer = 4
+collision_mask = 14
+mass = 5.0
+physics_material_override = SubResource("PhysicsMaterial_5x3")
+continuous_cd = true
+linear_damp = 2.5
+angular_damp = 3.0
+script = ExtResource("1_painting")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1264867183]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0.004296899, -0.05982775, 0.005706668)
+shape = SubResource("BoxShape3D_carryable5x3")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1140197003]
+transform = Transform3D(1.01, 0, 0, 0, 1.01, 0, 0, 0, 1.01, 0, 0, 0)
+mesh = SubResource("PlaneMesh_front5x3")
+surface_material_override/0 = SubResource("StandardMaterial3D_front5x3")
+
+[node name="stretcher" parent="." unique_id=1917255524 instance=ExtResource("2_stretcher5x3")]
+transform = Transform3D(0.048, 0, 0, 0, -2.0981465e-09, -0.045, 0, 0.048, -1.9670126e-09, 0, -0.11265105, 0)
+
+[node name="PaintingHangingComponent" type="Node3D" parent="." unique_id=1878966866]
+script = ExtResource("1_hanging")
+carry_distance_offset = 0.1
+gravity_while_carrying = 0.3
+enable_rotation_while_carried = true
+use_interact_key_for_pickup = true
+throw_power = 20.0
+
+[node name="StretcherBarsPhysics" type="Node3D" parent="." unique_id=859144792]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0.012642026, 0)
+
+[node name="TopBar" type="Area3D" parent="StretcherBarsPhysics" unique_id=890895331]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5545, -0.075)
+collision_layer = 16
+collision_mask = 32
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StretcherBarsPhysics/TopBar" unique_id=1465909873]
+shape = SubResource("BoxShape3D_top_bar5x3")
+
+[node name="BottomBar" type="Area3D" parent="StretcherBarsPhysics" unique_id=2029700720]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.5545, -0.075)
+collision_layer = 16
+collision_mask = 32
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StretcherBarsPhysics/BottomBar" unique_id=1961492263]
+shape = SubResource("BoxShape3D_bottom_bar5x3")
+
+[node name="LeftBar" type="Area3D" parent="StretcherBarsPhysics" unique_id=2108880336]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5445, 0, -0.075)
+collision_layer = 16
+collision_mask = 32
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StretcherBarsPhysics/LeftBar" unique_id=18790271]
+shape = SubResource("BoxShape3D_left_bar5x3")
+
+[node name="RightBar" type="Area3D" parent="StretcherBarsPhysics" unique_id=1213180835]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5445, 0, -0.075)
+collision_layer = 16
+collision_mask = 32
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StretcherBarsPhysics/RightBar" unique_id=1033033091]
+shape = SubResource("BoxShape3D_right_bar5x3")
+
+[node name="BackFaceMesh" type="MeshInstance3D" parent="." unique_id=1262736180]
+transform = Transform3D(-1, -8.742278e-08, 0, 8.742278e-08, -1, 0, 0, 0, 1, 0, -0.13918078, 0)
+mesh = SubResource("PlaneMesh_back5x3")
+surface_material_override/0 = SubResource("StandardMaterial3D_back5x3")
+
+[node name="BackFaceBody" type="StaticBody3D" parent="." unique_id=1476774559]
+collision_layer = 64
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="BackFaceBody" unique_id=1911408276]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.068437636, 0)
+shape = SubResource("BoxShape3D_backface5x3")
+
+[node name="PaintingSignatureSystem" type="Node3D" parent="." unique_id=1477442042]
+script = ExtResource("4_58v5g")

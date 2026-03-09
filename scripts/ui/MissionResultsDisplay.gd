@@ -182,7 +182,8 @@ func _display_live_comparison(mission: PaintingMission, painting_system: Paintin
 		if viewport_texture:
 			var current_image = viewport_texture.get_image()
 			if current_image:
-				current_image.rotate_90(CLOCKWISE)
+				if current_image.get_width() <= current_image.get_height():
+					current_image.rotate_90(CLOCKWISE)
 				player_texture = ImageTexture.create_from_image(current_image)
 
 	if mission.reference_image_path and mission.reference_image_path != "":

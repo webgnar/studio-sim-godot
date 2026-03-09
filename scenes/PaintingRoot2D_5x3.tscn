@@ -1,0 +1,56 @@
+[gd_scene format=3 uid="uid://cxbt26jyybmrs"]
+
+[ext_resource type="Script" uid="uid://ddu5r4f51ufg2" path="res://scripts/painting/PaintingRoot2D.gd" id="1_616st"]
+[ext_resource type="Script" uid="uid://cwv7q3pr2rgqg" path="res://scripts/painting/PaintingSystem2D.gd" id="1_r7cr7"]
+[ext_resource type="PackedScene" uid="uid://13s1cg3g8erj" path="res://models/paintings/stretcher5by3.glb" id="3_5x3str"]
+[ext_resource type="AudioStream" uid="uid://c2euptpopaex8" path="res://sounds/picotron/sticker1.ogg" id="3_co74h"]
+[ext_resource type="AudioStream" uid="uid://d4jugxumiyik2" path="res://sounds/picotron/sticker2.ogg" id="4_wru4m"]
+[ext_resource type="AudioStream" uid="uid://bfw6fbptdqnga" path="res://sounds/picotron/sticker5.ogg" id="7_aovqr"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_5x3"]
+size = Vector2(5, 3)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5x3"]
+transparency = 1
+albedo_color = Color(1, 1, 1, 0)
+texture_filter = 0
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_5x3"]
+size = Vector3(7.5, 0.1, 4.5)
+
+[node name="PaintingRoot2d_5x3" type="Node3D" unique_id=273889615]
+script = ExtResource("1_616st")
+plane_width = 5.0
+
+[node name="CanvasViewport" type="SubViewport" parent="." unique_id=1743827849]
+transparent_bg = true
+size = Vector2i(1700, 1020)
+render_target_update_mode = 4
+
+[node name="CanvasRoot" type="Node2D" parent="CanvasViewport" unique_id=1954855360 node_paths=PackedStringArray("painting_plane", "plane_collision", "canvas_viewport")]
+script = ExtResource("1_r7cr7")
+painting_plane = NodePath("../../PaintingPlaneMesh")
+plane_collision = NodePath("../../PaintingPlaneMesh/StaticBody3D")
+canvas_viewport = NodePath("..")
+sticker_scale = 0.5
+sticker_sound_1 = ExtResource("3_co74h")
+sticker_sound_2 = ExtResource("4_wru4m")
+sticker_sound_5 = ExtResource("7_aovqr")
+
+[node name="PaintingPlaneMesh" type="MeshInstance3D" parent="." unique_id=842402870]
+transform = Transform3D(1.01, 0, 0, 0, 1.01, 0, 0, 0, 1.01, 0, 0, 0)
+mesh = SubResource("PlaneMesh_5x3")
+surface_material_override/0 = SubResource("StandardMaterial3D_5x3")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="PaintingPlaneMesh" unique_id=25522964 groups=["2d_painting_canvas"]]
+collision_layer = 4
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PaintingPlaneMesh/StaticBody3D" unique_id=1417108254]
+shape = SubResource("BoxShape3D_5x3")
+
+[node name="stretcher" parent="." unique_id=1066585806 instance=ExtResource("3_5x3str")]
+transform = Transform3D(0.048, 0, 0, 0, -2.0981465e-09, -0.045, 0, 0.048, -1.9670126e-09, 0, -0.11729556, 0)
+
+[node name="SpawnMarker" type="Marker3D" parent="." unique_id=913122645]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.43519586, 0)

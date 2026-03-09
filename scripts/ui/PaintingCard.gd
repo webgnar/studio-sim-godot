@@ -69,8 +69,9 @@ func _load_thumbnail(texture_path: String):
 		thumbnail.texture = null
 		return
 
-	# Rotate to correct orientation (same as PaintingExporter)
-	image.rotate_90(CLOCKWISE)
+	# Rotate to correct orientation for square canvases (landscape canvases are already correct)
+	if image.get_width() <= image.get_height():
+		image.rotate_90(CLOCKWISE)
 
 	var texture = ImageTexture.create_from_image(image)
 	thumbnail.texture = texture

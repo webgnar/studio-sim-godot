@@ -7,8 +7,9 @@ signal export_started(painting: CarryablePainting)
 signal export_completed(png_path: String, glb_path: String)
 signal export_failed(error_message: String)
 
-# Preload stretcher model for GLB export
+# Preload stretcher models for GLB export
 var stretcher_scene = preload("res://models/paintings/stretcher.glb")
+var stretcher_5x3_scene = preload("res://models/paintings/stretcher5by3.glb")
 
 func get_downloads_folder() -> String:
 	"""Returns the path to the user's Downloads folder, cross-platform"""
@@ -156,8 +157,9 @@ func export_painting_png(painting: CarryablePainting, downloads_path: String, fi
 		push_error("PaintingExporter: Failed to get image from texture")
 		return ""
 
-	# Fix rotation: in-game texture is rotated 90° left, so rotate right to correct
-	image.rotate_90(CLOCKWISE)
+	# Fix rotation: square canvases are captured 90° left; landscape canvases are already correct
+	if image.get_width() <= image.get_height():
+		image.rotate_90(CLOCKWISE)
 
 	var error = image.save_png(full_path)
 	if error != OK:
@@ -177,29 +179,7 @@ func export_painting_glb(painting: CarryablePainting, downloads_path: String, fi
 	export_root.name = "ExportedPainting"
 	export_root.rotation_degrees = Vector3(90, 0, 0)  # Stand painting upright for export
 
-	# Clone stretcher bar model
-	var stretcher = stretcher_scene.instantiate()
-	stretcher.name = "StretcherFrame"
-	# Apply same transform as in CarryablePainting.tscn
-	stretcher.transform = Transform3D(
-		Vector3(0.045, 0, 0),
-		Vector3(0, -1.9670126e-09, 0.045),
-		Vector3(0, -0.045, -1.9670126e-09),
-		Vector3(0, -0.07518089, 0)
-	)
-	export_root.add_child(stretcher)
-	stretcher.owner = export_root
-	_set_owner_recursive(stretcher, export_root)
-
-	# Create canvas plane with baked texture
-	var canvas_mesh = MeshInstance3D.new()
-	canvas_mesh.name = "Canvas"
-	canvas_mesh.scale = Vector3(1.01, 1.01, 1.01)  # Match CarryablePainting MeshInstance3D scale
-	var plane_mesh = PlaneMesh.new()
-	plane_mesh.size = Vector2(3, 3)  # Match CarryablePainting canvas size
-	canvas_mesh.mesh = plane_mesh
-
-	# Get painting texture
+	# Get painting mesh to detect canvas format
 	var mesh_instance = painting.get_node_or_null("MeshInstance3D")
 	if not mesh_instance:
 		push_error("PaintingExporter: No MeshInstance3D found on painting for GLB export")
@@ -211,6 +191,44 @@ func export_painting_glb(painting: CarryablePainting, downloads_path: String, fi
 		push_error("PaintingExporter: No texture found for GLB export")
 		export_root.queue_free()
 		return ""
+
+	# Detect canvas size from the painting's actual mesh
+	var src_plane = mesh_instance.mesh as PlaneMesh
+	var canvas_size = src_plane.size if src_plane else Vector2(3, 3)
+	var is_landscape = canvas_size.x > canvas_size.y
+
+	# Clone the correct stretcher bar model for this format
+	var active_stretcher_scene = stretcher_5x3_scene if is_landscape else stretcher_scene
+	var stretcher = active_stretcher_scene.instantiate()
+	stretcher.name = "StretcherFrame"
+	if is_landscape:
+		# Apply same transform as in CarryablePainting5x3.tscn
+		stretcher.transform = Transform3D(
+			Vector3(0.048, 0, 0),
+			Vector3(0, -2.0981465e-09, 0.048),
+			Vector3(0, -0.045, -1.9670126e-09),
+			Vector3(0, -0.11265105, 0)
+		)
+	else:
+		# Apply same transform as in CarryablePainting.tscn
+		stretcher.transform = Transform3D(
+			Vector3(0.045, 0, 0),
+			Vector3(0, -1.9670126e-09, 0.045),
+			Vector3(0, -0.045, -1.9670126e-09),
+			Vector3(0, -0.07518089, 0)
+		)
+	export_root.add_child(stretcher)
+	stretcher.owner = export_root
+	_set_owner_recursive(stretcher, export_root)
+
+	# Create canvas plane with baked texture
+	var canvas_mesh = MeshInstance3D.new()
+	canvas_mesh.name = "Canvas"
+	canvas_mesh.scale = Vector3(1.01, 1.01, 1.01)  # Match CarryablePainting MeshInstance3D scale
+	canvas_mesh.position.y = 0.005  # Offset along canvas normal to prevent Z-fighting with stretcher
+	var plane_mesh = PlaneMesh.new()
+	plane_mesh.size = canvas_size
+	canvas_mesh.mesh = plane_mesh
 
 	# Create new material for export with the painting texture
 	var export_material = StandardMaterial3D.new()
@@ -226,8 +244,9 @@ func export_painting_glb(painting: CarryablePainting, downloads_path: String, fi
 		image = src_texture.get_image()
 
 	if image:
-		# Fix rotation: in-game texture is rotated 90° left, so rotate right to correct
-		image.rotate_90(CLOCKWISE)
+		# Fix rotation: square canvases are captured 90° left; landscape canvases are already correct
+		if not is_landscape:
+			image.rotate_90(CLOCKWISE)
 		var export_texture = ImageTexture.create_from_image(image)
 		export_material.albedo_texture = export_texture
 
@@ -244,7 +263,7 @@ func export_painting_glb(painting: CarryablePainting, downloads_path: String, fi
 		var back_mesh = MeshInstance3D.new()
 		back_mesh.name = "SignatureCanvas"
 		var back_plane = PlaneMesh.new()
-		back_plane.size = Vector2(3, 3)
+		back_plane.size = canvas_size
 		back_mesh.mesh = back_plane
 		# Flip to face opposite direction from front canvas, offset behind it
 		# X must also be negated to prevent horizontal mirroring when viewed from behind
