@@ -367,6 +367,16 @@ func save_world_state() -> bool:
 	# Clean up orphaned texture files
 	_cleanup_orphaned_textures(valid_painting_ids)
 
+	# Save assistant canvas PNG if one exists in memory
+	var canvas = get_tree().get_first_node_in_group("assistant_canvas")
+	if canvas and canvas.has_method("save_to_disk"):
+		canvas.save_to_disk()
+
+	# Save sticker wall placements
+	for wall in get_tree().get_nodes_in_group("sticker_wall_managers"):
+		if wall.has_method("_save_stickers_only"):
+			wall._save_stickers_only()
+
 	print("World state saved: %d paintings, %d nails, %d 3D stickers" % [save_data["paintings"].size(), save_data["nails"].size(), save_data["stickers_3d"].size()])
 	return true
 

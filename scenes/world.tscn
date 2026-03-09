@@ -119,6 +119,8 @@
 [ext_resource type="PackedScene" uid="uid://b37nwl2dgl5ff" path="res://scenes/objects/skateboard.tscn" id="120_kegyo"]
 [ext_resource type="PackedScene" uid="uid://cgxdfyf6tidec" path="res://scenes/objects/basketball.tscn" id="121_gyxkx"]
 [ext_resource type="Texture2D" uid="uid://dv8w3awcgtjga" path="res://textures/baskball court paint.png" id="122_vaid7"]
+[ext_resource type="PackedScene" uid="uid://d2lld8pxrphp3" path="res://scenes/objects/SaveAssistantWorkButton.tscn" id="200_savebtn"]
+[ext_resource type="PackedScene" uid="uid://dfcanvasscn1" path="res://scenes/objects/AssistantFinishedCanvas.tscn" id="201_fcanvas"]
 [ext_resource type="Script" uid="uid://nvjrcsa5oaqc" path="res://scripts/BerkeyInteraction.gd" id="berkey_interaction"]
 [ext_resource type="AudioStream" uid="uid://84rjpuccue2i" path="res://sounds/boomboxSwitch.ogg" id="boombox_switch"]
 [ext_resource type="AudioStream" uid="uid://cfuo8ydnxfi66" path="res://sounds/convenient ear pleasure.ogg" id="ear_ogg"]
@@ -347,17 +349,17 @@ albedo_color = Color(1.0734373, 1.0734373, 0.15063755, 1)
 albedo_texture = ExtResource("82_mu18u")
 texture_filter = 0
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_o7bbu"]
+[sub_resource type="PlaneMesh" id="PlaneMesh_mgrvy"]
 resource_local_to_scene = true
 size = Vector2(2.5, 3)
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_ic2vq"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_ey67g"]
 resource_name = "_albedo"
 viewport_path = NodePath("../MirrorNew/SubViewport")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cmoy1"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mslh2"]
 resource_local_to_scene = true
-albedo_texture = SubResource("ViewportTexture_ic2vq")
+albedo_texture = SubResource("ViewportTexture_ey67g")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_1v02h"]
 size = Vector2(2.5, 3)
@@ -1079,7 +1081,7 @@ size = Vector3(1.5938721, 0.42700195, 0.14248657)
 material = ExtResource("30_3t06w")
 
 [node name="Status Panel" parent="AssistantStudio" unique_id=321856961 instance=ExtResource("34_sasp")]
-transform = Transform3D(0.04672295, 0, 0.99890804, 0, 1, 0, -0.99890804, 0, 0.04672295, -3.8663979, -0.16773748, 0.03305912)
+transform = Transform3D(-0.046722848, 0, -0.9989079, 0, 1, 0, 0.9989079, 0, -0.046722848, 1.7472916, -0.031088471, 2.4722748)
 
 [node name="StudioAssistantCharacter" parent="AssistantStudio" unique_id=421565499 instance=ExtResource("102_asst")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.5419307, 1.5265388)
@@ -1091,7 +1093,7 @@ transform = Transform3D(0.93857735, 0, 0.34506887, 0, 1, 0, -0.34506887, 0, 0.93
 transform = Transform3D(0.96502113, -0.10872114, 0.23856673, -0.07238323, 0.76410466, 0.64101857, -0.2519822, -0.6358646, 0.72950757, -0.2444439, 0.8378589, -1.6614113)
 
 [node name="HireAssistantButton" parent="AssistantStudio" unique_id=47708941 instance=ExtResource("104_hire")]
-transform = Transform3D(-4.371139e-09, 0.1, 0, -0.1, -4.371139e-09, 0, 0, 0, 0.1, -3.925264, -0.24193168, 1.6015806)
+transform = Transform3D(1.110223e-16, 0, 0.099999994, -0.1, -4.3711395e-09, 6.1595574e-18, 4.371139e-09, -0.099999994, 0, -1.0032692, -0.35935426, 3.2341738)
 
 [node name="rug" parent="AssistantStudio" unique_id=1144089093 instance=ExtResource("35_gw1vw")]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -0.24134922, -1.5990667, 0)
@@ -1112,6 +1114,12 @@ shape = SubResource("BoxShape3D_ic2vq")
 
 [node name="stretcher" parent="AssistantStudio" unique_id=1570654499 instance=ExtResource("39_bbgx3")]
 transform = Transform3D(-0.07049975, 0, -0.03411837, 0, 0.045000006, 0, 0.025588779, 0, -0.09399966, -1.1264086, 0.52323437, -3.2981973)
+
+[node name="SaveAssistantWorkButton" parent="AssistantStudio" unique_id=200100001 instance=ExtResource("200_savebtn")]
+transform = Transform3D(-5.732056e-16, 1.3113417e-08, 0.1, -0.1, -4.371139e-09, 4.2351642e-23, 4.371139e-09, -0.1, 1.3113417e-08, -3.5153875, -0.3427856, 3.1921883)
+
+[node name="AssistantFinishedCanvas" parent="." unique_id=201100001 instance=ExtResource("201_fcanvas")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 13.564976, 2.6354063, 17.27919)
 
 [node name="Elevator" parent="." unique_id=904124064 instance=ExtResource("29_xgy6y")]
 transform = Transform3D(1.44, 0, 0, 0, 1.44, 0, 0, 0, 1.44, 5.356282, 0.43740082, -4.5508404)
@@ -1748,8 +1756,8 @@ surface_material_override/0 = SubResource("StandardMaterial3D_7b7y8")
 
 [node name="mirror" parent="." unique_id=1626491013 groups=["shop_prop"] instance=ExtResource("39_qaasp")]
 transform = Transform3D(-4.7902194e-08, -0.99488777, 0.10098683, -3.9073655e-08, 0.10098683, 0.99488777, -1, 4.3711392e-08, -4.3711385e-08, 2.8, 1.497, 5.232)
-mesh = SubResource("PlaneMesh_o7bbu")
-surface_material_override/0 = SubResource("StandardMaterial3D_cmoy1")
+mesh = SubResource("PlaneMesh_mgrvy")
+surface_material_override/0 = SubResource("StandardMaterial3D_mslh2")
 show_debug_logs = false
 metadata/mirror = "mirror"
 metadata/shop_item_id = "mirror"
@@ -2268,6 +2276,8 @@ metadata/shop_item_id = "skateboard"
 [editable path="Fluorescent1"]
 [editable path="Fluorescent2"]
 [editable path="Fluorescent3"]
+[editable path="AssistantStudio/SaveAssistantWorkButton"]
+[editable path="AssistantStudio/SaveAssistantWorkButton/green button"]
 [editable path="Styrofoam cube"]
 [editable path="CameraZone"]
 [editable path="CameraZone3 inside"]

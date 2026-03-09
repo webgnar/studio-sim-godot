@@ -1,4 +1,5 @@
 extends Node3D
+class_name StickerWallManager
 
 ## Procedural sticker wall for the Studio Assistant room.
 ## Spawns a new sticker on the canvas every sticker_interval seconds.
@@ -28,6 +29,8 @@ func _ready():
 	mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 	mat.cull_mode = BaseMaterial3D.CULL_DISABLED
 	wall_plane.set_surface_override_material(0, mat)
+
+	add_to_group("sticker_wall_managers")
 
 	# Restore saved stickers from lightweight file (fast, avoids world state parse)
 	var saved = _load_stickers_from_file()
@@ -72,8 +75,6 @@ func _on_timer_timeout() -> void:
 	_spawn_sticker_sprite(data)
 	_placements.append(data)
 
-	_save_stickers_only()
-
 	# Force viewport update so the new sticker renders
 	sub_viewport.render_target_update_mode = SubViewport.UPDATE_ONCE
 
@@ -102,6 +103,27 @@ func _load_stickers_from_file() -> Array:
 	if result is Array:
 		return result
 	return []
+
+
+func has_stickers() -> bool:
+	"""Returns true if any stickers have been placed on this wall."""
+	return not _placements.is_empty()
+
+
+func bake_to_image() -> Image:
+	"""Capture the current SubViewport contents as an Image. Awaits one frame to ensure render."""
+	sub_viewport.render_target_update_mode = SubViewport.UPDATE_ONCE
+	await RenderingServer.frame_post_draw
+	return sub_viewport.get_texture().get_image()
+
+
+func clear_stickers() -> void:
+	"""Remove all stickers from the wall and persist the empty state."""
+	_placements.clear()
+	for child in sticker_canvas.get_children():
+		child.queue_free()
+	_save_stickers_only()
+	sub_viewport.render_target_update_mode = SubViewport.UPDATE_ONCE
 
 
 func _spawn_sticker_sprite(data: Dictionary) -> void:

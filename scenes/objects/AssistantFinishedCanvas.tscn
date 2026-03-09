@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://dfcanvasscn1"]
+
+[ext_resource type="Script" uid="uid://dqwcuppn6pv8g" path="res://scripts/AssistantFinishedCanvas.gd" id="1_script"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_canvas"]
+size = Vector2(5, 3)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_canvas"]
+resource_local_to_scene = true
+transparency = 1
+cull_mode = 2
+shading_mode = 0
+
+[node name="AssistantFinishedCanvas" type="Node3D" unique_id=1453984409 groups=["assistant_canvas"]]
+script = ExtResource("1_script")
+
+[node name="CanvasPlane" type="MeshInstance3D" parent="." unique_id=569651735]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0)
+mesh = SubResource("PlaneMesh_canvas")
+surface_material_override/0 = SubResource("StandardMaterial3D_canvas")

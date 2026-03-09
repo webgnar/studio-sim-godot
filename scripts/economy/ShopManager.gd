@@ -91,9 +91,6 @@ func purchase(item_id: String) -> bool:
 		# Reveal the prop(s) in the world immediately
 		_reveal_item_props(item_id)
 
-	# Save so purchased state isn't lost on crash
-	WorldStateManager.save_world_state()
-
 	item_purchased.emit(item_id)
 	print("ShopManager: Purchased '%s' for $%d" % [item["display_name"], item["price"]])
 	return true

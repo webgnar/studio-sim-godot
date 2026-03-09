@@ -340,6 +340,9 @@ func _wipe_save_data():
 	if AutomationManager:
 		AutomationManager.clear_state()
 		print("TitleScreen: Reset automation state")
+	if FileAccess.file_exists("user://assistant_canvas.png"):
+		DirAccess.remove_absolute("user://assistant_canvas.png")
+		print("TitleScreen: Deleted assistant_canvas.png")
 
 	# Clear sticker wall saves
 	var user_dir = DirAccess.open("user://")

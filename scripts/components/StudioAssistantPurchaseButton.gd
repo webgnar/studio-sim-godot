@@ -6,9 +6,20 @@ class_name StudioAssistantPurchaseButton
 
 @export var purchase_sound: AudioStream  # Sound played on successful purchase
 
+var _error_stream: AudioStream = preload("res://sounds/picotron/error.ogg")
+var _error_sound: AudioStreamPlayer3D
+
 func _ready() -> void:
 	print("StudioAssistantPurchaseButton: _ready() called on node: ", name)
 	super._ready()  # Call parent InteractionComponent._ready() first
+
+	_error_sound = AudioStreamPlayer3D.new()
+	_error_sound.name = "ErrorSound"
+	_error_sound.max_distance = 15.0
+	_error_sound.bus = "SFX"
+	_error_sound.stream = _error_stream
+	add_child(_error_sound)
+
 	_update_interaction_text()
 	print("StudioAssistantPurchaseButton: Interaction text set to: ", interaction_text)
 
@@ -16,6 +27,12 @@ func _ready() -> void:
 	if has_node("/root/AutomationManager"):
 		AutomationManager.assistant_purchased.connect(_on_assistant_purchased)
 		print("StudioAssistantPurchaseButton: Connected to AutomationManager signals")
+
+func interact(player_interaction_component: PlayerInteractionComponent) -> void:
+	if is_disabled:
+		_error_sound.play()
+		return
+	super.interact(player_interaction_component)
 
 func _on_interacted(_player_interaction_component: PlayerInteractionComponent) -> void:
 	print("StudioAssistantPurchaseButton: _on_interacted() called!")
@@ -53,6 +70,7 @@ func _on_interacted(_player_interaction_component: PlayerInteractionComponent) -
 func _on_assistant_purchased():
 	"""Called when assistant is purchased (from anywhere)"""
 	_update_interaction_text()
+	_play_purchase_animation()
 
 func _update_interaction_text():
 	"""Update the interaction prompt based on purchase state"""
@@ -74,11 +92,8 @@ func _update_interaction_text():
 		is_disabled = false  # Allow looking at it to see requirements
 
 func _play_purchase_animation() -> void:
-	"""Press and release the green button via its AnimationPlayer"""
+	"""Press the green button and leave it down — one-time use."""
 	var anim_player = get_node_or_null("../green button/AnimationPlayer")
 	if not anim_player:
-		push_warning("StudioAssistantPurchaseButton: AnimationPlayer not found on green button")
 		return
 	anim_player.play("press")
-	await anim_player.animation_finished
-	anim_player.play("release")
