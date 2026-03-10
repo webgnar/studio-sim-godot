@@ -85,6 +85,18 @@ border_width_bottom = 3
 border_color = Color(0.701188, 0.43148756, 0.07110313, 1)
 shadow_size = 16
 
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_rnfg8"]
+texture = ExtResource("7_6hnno")
+texture_margin_top = 77.0
+texture_margin_bottom = 42.0
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ku3ou"]
+texture = ExtResource("6_ntpv8")
+axis_stretch_horizontal = 2
+axis_stretch_vertical = 2
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gfhtu"]
 bg_color = Color(0.6, 0.6, 0.6, 0.38039216)
 border_width_left = 5
@@ -186,6 +198,11 @@ LineEdit/styles/focus = SubResource("StyleBoxFlat_j8bgu")
 LineEdit/styles/normal = SubResource("StyleBoxFlat_rnfg8")
 LineEdit/styles/read_only = SubResource("StyleBoxFlat_ku3ou")
 PanelContainer/styles/panel = SubResource("StyleBoxFlat_panel")
+ProgressBar/colors/font_color = Color(0.9490196, 0.4627451, 0.67058825, 1)
+ProgressBar/colors/font_outline_color = Color(0, 0, 0, 1)
+ProgressBar/constants/outline_size = 20
+ProgressBar/styles/background = SubResource("StyleBoxTexture_rnfg8")
+ProgressBar/styles/fill = SubResource("StyleBoxTexture_ku3ou")
 StickerSlotDefault/styles/panel = SubResource("StyleBoxFlat_gfhtu")
 StickerSlotEquipped/styles/panel = SubResource("StyleBoxFlat_jkgan")
 TabContainer/colors/font_outline_color = Color(0, 0, 0, 1)

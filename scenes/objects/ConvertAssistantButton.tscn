@@ -3,7 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://db8764j2674fq" path="res://models/props/outlet_box.glb" id="1_w3unl"]
 [ext_resource type="PackedScene" uid="uid://bryic0ubsrfjn" path="res://models/interactables/buttonGreen.glb" id="2_w1yl1"]
 [ext_resource type="Texture2D" uid="uid://bd6svkdls6guq" path="res://models/interactables/buttonGreen_0.png" id="3_tex"]
-[ext_resource type="Script" uid="uid://b2convrtscr01" path="res://scripts/ConvertAssistantButton.gd" id="4_conv"]
+[ext_resource type="Script" path="res://scripts/ConvertAssistantButton.gd" id="4_conv"]
 
 [sub_resource type="Animation" id="Animation_reset"]
 length = 0.001

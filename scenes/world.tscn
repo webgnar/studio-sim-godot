@@ -10,7 +10,9 @@
 [ext_resource type="Texture2D" uid="uid://bifvpuur5heg3" path="res://sprites/normals/wood_normal.png" id="4_xo05s"]
 [ext_resource type="Material" uid="uid://re8gmfn1nbgt" path="res://materials/wall.tres" id="5_71j4m"]
 [ext_resource type="Texture2D" uid="uid://b3ty4ce0xhyow" path="res://sprites/textures/hvac.jpg" id="14_o8fc1"]
+[ext_resource type="PackedScene" uid="uid://b262cfg0yjdpn" path="res://scenes/old stuff/tomlander.tscn" id="16_8bem1"]
 [ext_resource type="PackedScene" uid="uid://xeaph8bqk1j1" path="res://models/props/pipe_red.glb" id="16_oo54l"]
+[ext_resource type="Texture2D" uid="uid://dui4le70qw5o1" path="res://sprites/textures/Vortex-Math.png" id="17_6od3t"]
 [ext_resource type="PackedScene" uid="uid://fjppju80c5ic" path="res://models/props/pipe_yellow.glb" id="17_kpybi"]
 [ext_resource type="PackedScene" uid="uid://44g07prjgs5x" path="res://models/props/pipe_gray bent.glb" id="19_kpybi"]
 [ext_resource type="PackedScene" uid="uid://cmaavrflrf4d4" path="res://models/props/pipe_gray.glb" id="19_xgqkh"]
@@ -121,7 +123,7 @@
 [ext_resource type="Texture2D" uid="uid://dv8w3awcgtjga" path="res://textures/baskball court paint.png" id="122_vaid7"]
 [ext_resource type="PackedScene" uid="uid://cxbt26jyybmrs" path="res://scenes/PaintingRoot2D_5x3.tscn" id="129_ey67g"]
 [ext_resource type="PackedScene" uid="uid://bq7r4nxt2pgm5" path="res://scenes/objects/CanvasFormatToggle.tscn" id="130_mslh2"]
-[ext_resource type="PackedScene" path="res://scenes/objects/ConvertAssistantButton.tscn" id="131_mslh2"]
+[ext_resource type="PackedScene" uid="uid://b2convrtbtn01" path="res://scenes/objects/ConvertAssistantButton.tscn" id="131_mslh2"]
 [ext_resource type="PackedScene" uid="uid://d2lld8pxrphp3" path="res://scenes/objects/SaveAssistantWorkButton.tscn" id="200_savebtn"]
 [ext_resource type="PackedScene" uid="uid://dfcanvasscn1" path="res://scenes/objects/AssistantFinishedCanvas.tscn" id="201_fcanvas"]
 [ext_resource type="Script" uid="uid://nvjrcsa5oaqc" path="res://scripts/BerkeyInteraction.gd" id="berkey_interaction"]
@@ -352,17 +354,17 @@ albedo_color = Color(1.0734373, 1.0734373, 0.15063755, 1)
 albedo_texture = ExtResource("82_mu18u")
 texture_filter = 0
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_8bem1"]
+[sub_resource type="PlaneMesh" id="PlaneMesh_6od3t"]
 resource_local_to_scene = true
 size = Vector2(2.5, 3)
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_6od3t"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_qn65p"]
 resource_name = "_albedo"
 viewport_path = NodePath("../MirrorNew/SubViewport")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qn65p"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ou5tn"]
 resource_local_to_scene = true
-albedo_texture = SubResource("ViewportTexture_6od3t")
+albedo_texture = SubResource("ViewportTexture_qn65p")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_1v02h"]
 size = Vector2(2.5, 3)
@@ -900,6 +902,13 @@ transform = Transform3D(-3.8946845e-07, 2.97, 2.5964567e-07, 2.97, 3.8946845e-07
 
 [node name="skyscraper" parent="outside Background" unique_id=1622378402 instance=ExtResource("75_qaasp")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 16.498226, 29.75174, 23.823051)
+
+[node name="vortexmath" type="Sprite3D" parent="outside Background" unique_id=1373111303]
+transform = Transform3D(50, 0, 0, 0, -2.1855694e-06, -50, 0, 50, -2.1855694e-06, 29, 812.7767, 14)
+texture = ExtResource("17_6od3t")
+
+[node name="Tomlander" parent="outside Background" unique_id=465715765 instance=ExtResource("16_8bem1")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -45, 44, -121)
 
 [node name="Spotlight1" parent="." unique_id=468801462 instance=ExtResource("86_grmox")]
 transform = Transform3D(0.19553687, 0.04201586, 0, -0.04201586, 0.19553687, 0, 0, 0, 0.2, -2.5281055, 4.97409, -1.6068956)
@@ -1760,8 +1769,8 @@ surface_material_override/0 = SubResource("StandardMaterial3D_7b7y8")
 
 [node name="mirror" parent="." unique_id=1626491013 groups=["shop_prop"] instance=ExtResource("39_qaasp")]
 transform = Transform3D(-4.7902194e-08, -0.99488777, 0.10098683, -3.9073655e-08, 0.10098683, 0.99488777, -1, 4.3711392e-08, -4.3711385e-08, 2.8, 1.497, 5.232)
-mesh = SubResource("PlaneMesh_8bem1")
-surface_material_override/0 = SubResource("StandardMaterial3D_qn65p")
+mesh = SubResource("PlaneMesh_6od3t")
+surface_material_override/0 = SubResource("StandardMaterial3D_ou5tn")
 show_debug_logs = false
 metadata/mirror = "mirror"
 metadata/shop_item_id = "mirror"
@@ -1844,6 +1853,16 @@ operation = 2
 size = Vector3(11.904175, 0.20263672, 0.09765625)
 material = ExtResource("43_xiw03")
 
+[node name="step" type="CSGBox3D" parent="greenhouse/CSGCombiner3D" unique_id=986380510]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.384689, 0.2769165, 4.5285454)
+size = Vector3(2.9902344, 1.553833, 1)
+material = ExtResource("3_qfnet")
+
+[node name="step2" type="CSGBox3D" parent="greenhouse/CSGCombiner3D" unique_id=435964464]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.384689, -0.100860596, 5.4539127)
+size = Vector3(2.9902344, 0.7982788, 1)
+material = ExtResource("3_qfnet")
+
 [node name="StaticBody3D" parent="greenhouse" unique_id=1288370841 instance=ExtResource("66_4kmvx")]
 transform = Transform3D(0.3, 0, 0, 0, -1.3113417e-08, 0.3, 0, -0.3, -1.3113417e-08, 5.9624257, 5.896938, -0.13437462)
 
@@ -1871,11 +1890,15 @@ transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -3.314674, 0.7030182, 1
 [node name="plant table3" parent="greenhouse" unique_id=1693421543 instance=ExtResource("98_l4n3p")]
 transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -6.8099914, 0.7030182, 1.3129082)
 
-[node name="SpotLight3D" type="OmniLight3D" parent="greenhouse" unique_id=1431240099]
-transform = Transform3D(0.8660254, 2.1855694e-08, -0.5, 0.5, -3.7855173e-08, 0.8660254, 0, -1, -4.371139e-08, 5.3414903, 2.6152506, -2)
+[node name="SpotLight3D" type="SpotLight3D" parent="greenhouse" unique_id=1370821429]
+transform = Transform3D(0.8660254, 2.1855694e-08, -0.5, 0.5, -3.7855173e-08, 0.8660254, 0, -1, -4.371139e-08, 5.2815547, 7.090334, -2)
+light_energy = 3.11
+spot_range = 27.713
+spot_attenuation = 1.11
+spot_angle = 58.24
 
 [node name="Cyclone" parent="greenhouse" unique_id=630081305 groups=["shop_prop"] instance=ExtResource("100_fmmry")]
-transform = Transform3D(0.52014846, 0, 0.29907447, 0, 0.59999996, 0, -0.29907447, 0, 0.52014846, 6.7079988, 1.2168989, -2.2006588)
+transform = Transform3D(-0.03146428, 0, 0.5991744, 0, 0.59999996, 0, -0.5991744, 0, -0.03146428, -8.340038, 1.2168989, -2.1002312)
 metadata/shop_item_id = "cyclone"
 
 [node name="monstera" parent="greenhouse" unique_id=1294440789 groups=["shop_prop"] instance=ExtResource("101_nbuqd")]

@@ -2,12 +2,20 @@
 
 [ext_resource type="PackedScene" uid="uid://db8764j2674fq" path="res://models/props/outlet_box.glb" id="1_w3unl"]
 [ext_resource type="PackedScene" uid="uid://bryic0ubsrfjn" path="res://models/interactables/buttonGreen.glb" id="2_w1yl1"]
-[ext_resource type="Texture2D" uid="uid://bd6svkdls6guq" path="res://models/interactables/buttonGreen_0.png" id="3_rs4es"]
 [ext_resource type="Script" uid="uid://clfsod5i4oree" path="res://scripts/SaveAssistantWorkButton.gd" id="3_save"]
 
+[sub_resource type="Gradient" id="Gradient_kmlt6"]
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_rs4es"]
+gradient = SubResource("Gradient_kmlt6")
+repeat = 1
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sebpf"]
-albedo_color = Color(1, 0.18431373, 0.21176471, 1)
-albedo_texture = ExtResource("3_rs4es")
+albedo_color = Color(1, 0.53333336, 0, 1)
+metallic = 1.0
+metallic_texture = SubResource("GradientTexture2D_rs4es")
+roughness = 0.0
+emission_enabled = true
 texture_filter = 0
 
 [sub_resource type="Animation" id="Animation_reset"]

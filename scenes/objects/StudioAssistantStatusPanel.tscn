@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://dsstapanel001"]
 
 [ext_resource type="Script" uid="uid://c8uap2yk1tjju" path="res://scripts/components/StudioAssistantStatusPanel.gd" id="1_script"]
-[ext_resource type="PackedScene" uid="uid://dsstapanelui1" path="res://scenes/UI/StudioAssistantPanelUI.tscn" id="2_ui"]
+[ext_resource type="PackedScene" path="res://scenes/UI/StudioAssistantPanelUI.tscn" id="2_ui"]
 
 [sub_resource type="QuadMesh" id="QuadMesh_screen"]
 size = Vector2(1.2, 0.8)
