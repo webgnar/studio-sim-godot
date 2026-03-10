@@ -1,0 +1,11 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://lkg5dm6skkdg"]
+
+[ext_resource type="Texture2D" uid="uid://bpm73kjoobl7k" path="res://sprites/textures/canvas texture 2.jpg" id="1_mtm21"]
+[ext_resource type="Texture2D" uid="uid://h82xrqpjlgsb" path="res://sprites/textures/canvas texture 2_normal.png" id="2_mtm21"]
+
+[resource]
+albedo_texture = ExtResource("1_mtm21")
+normal_enabled = true
+normal_scale = 0.6
+normal_texture = ExtResource("2_mtm21")
+texture_filter = 0

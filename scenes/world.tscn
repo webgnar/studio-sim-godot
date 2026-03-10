@@ -859,7 +859,7 @@ transform = Transform3D(-6.862688e-08, 0, 1.57, 0, 1.57, 0, -1.57, 0, -6.862688e
 raycast_distance = 20.0
 sticker_scale = 2.0
 
-[node name="PaintingRoot2d" parent="." unique_id=1465464271 instance=ExtResource("75_ca4ee")]
+[node name="PaintingRoot2d" parent="." unique_id=1449395554 instance=ExtResource("75_ca4ee")]
 transform = Transform3D(-4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0, 1, -3.4620748, 2.5300002, 7)
 sticker_scale = 0.65
 preview_fade_delay = 1.0
@@ -910,19 +910,20 @@ omni_range = 0.4
 spot_angle = 68.3
 
 [node name="Spotlight2" parent="." unique_id=1239230442 instance=ExtResource("86_grmox")]
-transform = Transform3D(0.09220726, 0.17747626, 0, -0.17747626, 0.09220726, 0, 0, 0, 0.2, -0.47758496, 4.2677326, 7.830458)
-visible = false
+transform = Transform3D(0.18615127, 0.0731281, 0, -0.0731281, 0.18615127, 0, 0, 0, 0.19999999, -0.22972178, 5.185346, 7.7968307)
 
 [node name="OmniLight3D" parent="Spotlight2" index="2"]
 omni_range = 0.4
 
 [node name="SpotLight3D" parent="Spotlight2" index="3"]
+transform = Transform3D(4.056442, -1.2777853e-07, 2.9232306, -2.9232306, -1.7731276e-07, 4.056442, -1.1779798e-14, -5.0000005, -2.1855706e-07, 0.48944283, -3.8539963, -2.2672462)
 shadow_enabled = true
 shadow_bias = 0.519
 shadow_normal_bias = 3.444
 shadow_opacity = 0.84
-spot_attenuation = 1.9
-spot_angle = 54.09
+spot_range = 7.331
+spot_attenuation = 0.73
+spot_angle = 50.78
 spot_angle_attenuation = 1.1486982
 
 [node name="Spotlight3" parent="." unique_id=818290708 instance=ExtResource("86_grmox")]
@@ -1114,7 +1115,7 @@ collision_layer = 2
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.22671509, 1.9227829, -0.016967773)
 shape = SubResource("BoxShape3D_ic2vq")
 
-[node name="stretcher" parent="AssistantStudio" unique_id=1570654499 instance=ExtResource("39_bbgx3")]
+[node name="stretcher" parent="AssistantStudio" unique_id=1924802114 instance=ExtResource("39_bbgx3")]
 transform = Transform3D(-0.07049975, 0, -0.03411837, 0, 0.045000006, 0, 0.025588779, 0, -0.09399966, -1.1264086, 0.52323437, -3.2981973)
 
 [node name="SaveAssistantWorkButton" parent="AssistantStudio" unique_id=200100001 instance=ExtResource("200_savebtn")]
@@ -1185,7 +1186,7 @@ size = Vector3(1, 0.8, 0.7414551)
 material = ExtResource("5_71j4m")
 
 [node name="pillar" type="CSGBox3D" parent="studio" unique_id=1141610114]
-transform = Transform3D(2.13, 0, 0, 0, 0.88, 0, 0, 0, 0.030000001, 2.3920708, -0.13351133, 0)
+transform = Transform3D(2.13, 0, 0, 0, 0.88, 0, 0, 0, 0.030000001, 2.078845, -0.13351133, 0)
 material = ExtResource("3_qfnet")
 
 [node name="pillar2" type="CSGBox3D" parent="studio" unique_id=1702035535]
@@ -1281,7 +1282,7 @@ transform = Transform3D(-1.1175871e-08, 0, -0.14, 0, 0.14, 0, 0.14, 0, -1.117587
 transform = Transform3D(-1.1175871e-08, 0, -0.14, 0, 0.14, 0, 0.14, 0, -1.1175871e-08, 3.6608849, 0.97617894, 14.7264385)
 
 [node name="wall outlet7" parent="outlets" unique_id=1820465902 instance=ExtResource("66_8lgfd")]
-transform = Transform3D(-6.119594e-09, 0, -0.14, 0, 0.14, 0, 0.14, 0, -6.119594e-09, -3.5728824, 1.6572046, 3.6067662)
+transform = Transform3D(-6.119594e-09, 0, -0.11, 0, 0.14, 0, 0.14, 0, -4.808253e-09, -3.6186662, 1.6572046, 3.6067662)
 
 [node name="Player" parent="." unique_id=1378579681 instance=ExtResource("27_l137e")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.946882, 1.2067637, 12.445705)
@@ -1726,7 +1727,7 @@ metadata/phone = "smartphone"
 metadata/shop_item_id = "phone"
 
 [node name="buttonRed" type="Node3D" parent="." unique_id=1452256917]
-transform = Transform3D(-4.371139e-09, 0.1, 0, -0.1, -4.371139e-09, 0, 0, 0, 0.1, -3.32696, 1.3548026, 4.018647)
+transform = Transform3D(-4.371139e-09, 0.1, 0, -0.1, -4.371139e-09, 0, 0, 0, 0.1, -3.458472, 1.3548026, 4.018647)
 
 [node name="outletbox" parent="buttonRed" unique_id=1407523755 instance=ExtResource("79_swu3i")]
 transform = Transform3D(-4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0, 1, 0, 0, 0)
@@ -1751,7 +1752,7 @@ interaction_text = "New Painting"
 custom_interaction_distance = 15.0
 
 [node name="buttonGreen" parent="." unique_id=1183084891 instance=ExtResource("31_grmox")]
-transform = Transform3D(-4.371139e-09, 0.1, 0, -0.1, -4.371139e-09, 0, 0, 0, 0.1, -3.3180246, 2.0035036, 3.9931483)
+transform = Transform3D(-4.371139e-09, 0.1, 0, -0.1, -4.371139e-09, 0, 0, 0, 0.1, -3.4649062, 2.0035036, 3.9931483)
 
 [node name="buttonGreen" parent="buttonGreen/green button" parent_id_path=PackedInt32Array(1183084891, 1386671482) index="0"]
 surface_material_override/0 = SubResource("StandardMaterial3D_7b7y8")
@@ -2277,7 +2278,7 @@ metadata/shop_item_id = "skateboard"
 transform = Transform3D(-4.371139e-08, 1, -4.371139e-08, 0, -4.371139e-08, -1, -1, -4.371139e-08, 1.9106855e-15, -3.5018876, 2.6335068, 7.3238716)
 
 [node name="CanvasFormatToggle" parent="." unique_id=1340151615 instance=ExtResource("130_mslh2")]
-transform = Transform3D(-4.371139e-09, 0.1, 0, -0.1, -4.371139e-09, 0, 0, 0, 0.1, -3.4103966, 1.119635, 10.946318)
+transform = Transform3D(-4.371139e-09, 0.1, 0, -0.1, -4.371139e-09, 0, 0, 0, 0.1, -3.4103966, 1.4687139, 10.974347)
 
 [node name="ToggleInteraction" parent="CanvasFormatToggle" index="3" node_paths=PackedStringArray("square_canvas", "landscape_canvas")]
 square_canvas = NodePath("../../PaintingRoot2d")

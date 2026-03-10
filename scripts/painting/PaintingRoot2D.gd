@@ -10,6 +10,7 @@ extends Node3D
 @export_range(0.0, 1.0, 0.05) var preview_opacity: float = 0.5
 @export_range(0.5, 5.0, 0.1) var preview_fade_delay: float = 2.0
 @export_range(1.0, 10.0, 0.5) var preview_fade_speed: float = 3.0
+@export_range(-180.0, 180.0, 1.0) var preview_rotation: float = -90.0
 
 @export_group("Canvas Dimensions")
 @export var plane_width: float = 3.0
@@ -34,6 +35,11 @@ func _ready():
 	painting_system.preview_target_opacity = preview_opacity
 	if painting_system.preview_sprite:
 		painting_system.preview_sprite.modulate.a = preview_opacity
+
+	# Set initial preview rotation (varies per canvas orientation in world space)
+	painting_system.preview_rotation = preview_rotation
+	if painting_system.preview_sprite:
+		painting_system.preview_sprite.rotation_degrees = preview_rotation
 
 	# Refresh preview texture/scale after all settings are applied
 	painting_system._update_preview_texture()

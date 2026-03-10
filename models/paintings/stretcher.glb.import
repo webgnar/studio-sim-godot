@@ -37,6 +37,14 @@ import_script/path=""
 materials/extract=0
 materials/extract_format=0
 materials/extract_path=""
-_subresources={}
+_subresources={
+"materials": {
+"gnarworld_canvas texture 2": {
+"use_external/enabled": false,
+"use_external/fallback_path": "res://materials/canvas.tres",
+"use_external/path": "uid://lkg5dm6skkdg"
+}
+}
+}
 gltf/naming_version=2
 gltf/embedded_image_handling=1

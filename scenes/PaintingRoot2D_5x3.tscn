@@ -21,6 +21,7 @@ size = Vector3(7.5, 0.1, 4.5)
 [node name="PaintingRoot2d_5x3" type="Node3D" unique_id=273889615]
 script = ExtResource("1_616st")
 plane_width = 5.0
+preview_rotation = 0.0
 
 [node name="CanvasViewport" type="SubViewport" parent="." unique_id=1743827849]
 transparent_bg = true
