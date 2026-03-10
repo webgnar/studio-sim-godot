@@ -72,7 +72,7 @@ func _execute_save(sticker_wall: Node) -> void:
 	var canvas = get_tree().get_first_node_in_group("assistant_canvas")
 	print("SaveAssistantWorkButton: canvas node = ", canvas)
 	if canvas:
-		canvas.composite_painting(image)
+		await canvas.set_background_composite(image)
 
 	sticker_wall.clear_stickers()
 	print("SaveAssistantWorkButton: stickers cleared.")

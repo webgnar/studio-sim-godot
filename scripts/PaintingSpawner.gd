@@ -114,6 +114,62 @@ func replace_painting_with_carryable(world: Node3D) -> void:
 	if spawn_sound:
 		spawn_sound.play()
 
+func replace_painting_from_root(world: Node3D, painting_root: Node3D) -> void:
+	"""Convert a specific painting root (e.g. AssistantFinishedCanvas) to a carryable.
+	Unlike replace_painting_with_carryable(), this does NOT spawn a new blank canvas
+	and does NOT re-register with PaintingModeManager — the caller handles cleanup."""
+	var painting_system: PaintingSystem2D = painting_root.get_node_or_null("CanvasViewport/CanvasRoot")
+	if not painting_system:
+		push_error("PaintingSpawner: painting_root has no CanvasViewport/CanvasRoot!")
+		return
+
+	# Always landscape for the assistant canvas (5x3)
+	var active_carryable_scene = carryable_painting_5x3_scene
+
+	# Bake texture from the painting root's viewport
+	var baked_texture = await _bake_painting_texture(painting_system)
+
+	# Generate unique painting ID and save texture to disk
+	var painting_id = "assistant_painting_%d_%d" % [Time.get_ticks_msec(), paintings_created]
+	var texture_path = _save_painting_texture(baked_texture, painting_id)
+
+	# Spawn carryable painting
+	var carryable = active_carryable_scene.instantiate()
+	carryable.painting_id = painting_id
+	carryable.texture_path = texture_path
+	world.add_child(carryable)
+
+	# Use spawn marker if available, otherwise fall back to painting_root position
+	var spawn_marker = painting_root.get_node_or_null("SpawnMarker")
+	var spawn_position = spawn_marker.global_position if spawn_marker else painting_root.global_position
+	var spawn_rotation = spawn_marker.global_rotation if spawn_marker else painting_root.global_rotation
+	carryable.global_position = spawn_position
+	carryable.global_rotation = spawn_rotation
+
+	# Apply baked texture
+	var mesh_instance = carryable.get_node("MeshInstance3D")
+	var material = mesh_instance.get_surface_override_material(0)
+	if not material:
+		material = StandardMaterial3D.new()
+		material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+		material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	else:
+		material = material.duplicate()
+	mesh_instance.set_surface_override_material(0, material)
+	material.albedo_texture = baked_texture
+
+	# Push carryable away from wall
+	var push_dir = spawn_marker.global_transform.basis.x if spawn_marker else painting_root.global_transform.basis.x
+	carryable.linear_velocity = push_dir * 0.5
+
+	# Increment counter and emit
+	paintings_created += 1
+	painting_created.emit(paintings_created)
+
+	if spawn_sound:
+		spawn_sound.play()
+
+
 func _bake_painting_texture(painting_system: PaintingSystem2D) -> ImageTexture:
 	"""Capture viewport texture and freeze it as static ImageTexture"""
 	# Temporarily remove preview sprite from tree to prevent it from being re-shown

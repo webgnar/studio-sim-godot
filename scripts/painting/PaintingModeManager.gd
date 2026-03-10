@@ -9,6 +9,7 @@ var painting_system_3d: PaintingSystem3D = null
 var painting_system_2d: PaintingSystem2D = null
 var painting_root_3d: Node3D = null
 var painting_root_2d: Node3D = null
+var extra_2d_systems: Array[PaintingSystem2D] = []
 
 # Camera reference
 var camera: Camera3D = null
@@ -170,11 +171,12 @@ func _unhandled_input(event):
 			DebugLogger.write_log("[PaintingModeManager] Raycast hit: %s" % collider_name)
 
 		if _is_canvas_plane(raycast_result):
-			# Route to 2D system
+			# Route to whichever 2D system owns this canvas
 			if DebugLogger and not OS.has_feature("editor"):
 				DebugLogger.write_log("[PaintingModeManager] Canvas plane detected, routing to 2D system")
-			if painting_system_2d:
-				painting_system_2d.handle_primary_action(raycast_result)
+			var target_2d = _resolve_2d_system(raycast_result.collider)
+			if target_2d:
+				target_2d.handle_primary_action(raycast_result)
 				last_placement_time = current_time
 				get_viewport().set_input_as_handled()
 		else:
@@ -192,9 +194,10 @@ func _unhandled_input(event):
 	if should_undo:
 		var raycast_result = _perform_unified_raycast()
 		if _is_canvas_plane(raycast_result):
-			# Undo from 2D system — consumed flag ensures only one undo per trigger press
-			if painting_system_2d and not _secondary_consumed:
-				painting_system_2d.handle_secondary_action()
+			# Undo from whichever 2D system owns this canvas
+			var target_2d = _resolve_2d_system(raycast_result.collider)
+			if target_2d and not _secondary_consumed:
+				target_2d.handle_secondary_action()
 				_secondary_consumed = true
 				get_viewport().set_input_as_handled()
 		else:
@@ -202,6 +205,25 @@ func _unhandled_input(event):
 			if painting_system_3d:
 				painting_system_3d.handle_secondary_action(raycast_result)
 				get_viewport().set_input_as_handled()
+
+func _resolve_2d_system(collider: Node) -> PaintingSystem2D:
+	"""Walk up from the hit collider to find the PaintingSystem2D for that specific canvas.
+	Handles both PaintingRoot2D (mission canvas) and AssistantFinishedCanvas.
+	Falls back to the registered painting_system_2d if none found."""
+	var current = collider
+	var depth := 0
+	while current and depth < 8:
+		if current is PaintingRoot2D:
+			return current.painting_system
+		# AssistantFinishedCanvas also exposes painting_system
+		if current.get_script() != null and "painting_system" in current:
+			var sys = current.get("painting_system")
+			if sys is PaintingSystem2D:
+				return sys
+		current = current.get_parent()
+		depth += 1
+	return painting_system_2d  # fallback to registered mission canvas
+
 
 func _perform_unified_raycast() -> Dictionary:
 	"""Perform raycast from camera through mouse position"""
@@ -280,6 +302,11 @@ func register_2d_system(system: PaintingSystem2D, root: Node3D):
 	painting_system_2d = system
 	painting_root_2d = root
 
+func register_extra_2d_system(system: PaintingSystem2D) -> void:
+	"""Register an additional 2D system (e.g. AssistantFinishedCanvas) for sticker sync."""
+	if not extra_2d_systems.has(system):
+		extra_2d_systems.append(system)
+
 func sync_sticker_selection(index: int):
 	"""Sync sticker selection across both systems"""
 	if painting_system_3d:
@@ -289,6 +316,11 @@ func sync_sticker_selection(index: int):
 		painting_system_2d.selected_sticker_index = index
 		# Update 2D preview to show the new sticker
 		painting_system_2d._update_preview_texture()
+
+	for sys in extra_2d_systems:
+		if sys and is_instance_valid(sys):
+			sys.selected_sticker_index = index
+			sys._update_preview_texture()
 
 # --- Signing Helpers ---
 

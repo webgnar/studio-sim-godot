@@ -11,6 +11,7 @@ var _death_sound: AudioStream = preload("res://sounds/die.ogg")
 func _ready():
 	body_entered.connect(_on_body_entered)
 	set_process(false)
+	set_collision_mask_value(3, true)  # Also detect CarryablePainting layer
 
 func _process(_delta):
 	if _death_camera and _target_player:
@@ -19,6 +20,8 @@ func _process(_delta):
 func _on_body_entered(body):
 	if body.is_in_group("player") and not _is_respawning:
 		_respawn(body)
+	elif body is CarryablePainting:
+		body.queue_free()
 
 func _respawn(player):
 	_is_respawning = true

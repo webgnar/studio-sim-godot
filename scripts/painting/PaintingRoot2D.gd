@@ -1,4 +1,5 @@
 extends Node3D
+class_name PaintingRoot2D
 
 ## Root node for 2D painting system
 ## Wrapper for PaintingSystem2D inside SubViewport
