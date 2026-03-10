@@ -8,10 +8,19 @@ extends InteractionComponent
 @export var landscape_canvas: Node3D
 
 var _active_is_square: bool = true
+var _click_sound: AudioStreamPlayer3D
+var _click_stream: AudioStream = preload("res://sounds/picotron/closemenu.ogg")
 
 
 func _ready() -> void:
 	super._ready()
+	_click_sound = AudioStreamPlayer3D.new()
+	_click_sound.name = "ClickSound"
+	_click_sound.max_distance = 15.0
+	_click_sound.bus = "SFX"
+	_click_sound.stream = _click_stream
+	add_child(_click_sound)
+
 	if not square_canvas or not landscape_canvas:
 		push_warning("CanvasFormatToggle: canvas exports not configured yet.")
 		return
@@ -38,7 +47,29 @@ func _on_interacted(_player: PlayerInteractionComponent) -> void:
 	PaintingModeManager.register_2d_system(system, active)
 
 	_update_text()
+	_click_sound.play()
+	_play_button_animation()
+
+
+func _play_button_animation() -> void:
+	var anim_player := _find_animation_player(get_parent())
+	if not anim_player:
+		return
+	anim_player.play("press")
+	anim_player.animation_finished.connect(
+		func(_name): anim_player.play("release"), CONNECT_ONE_SHOT
+	)
+
+
+func _find_animation_player(node: Node) -> AnimationPlayer:
+	if node is AnimationPlayer:
+		return node
+	for child in node.get_children():
+		var result := _find_animation_player(child)
+		if result:
+			return result
+	return null
 
 
 func _update_text() -> void:
-	interaction_text = "Switch to 5×3" if _active_is_square else "Switch to Square"
+	interaction_text = "Switch to Landscape" if _active_is_square else "Switch to Square"

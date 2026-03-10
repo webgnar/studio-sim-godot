@@ -4,14 +4,21 @@ class_name StudioAssistantPurchaseButton
 ## Purchase button for Studio Assistant upgrade
 ## Extends InteractionComponent for proper player interaction
 
-@export var purchase_sound: AudioStream  # Sound played on successful purchase
-
+var _purchase_stream: AudioStream = preload("res://sounds/picotron/lougnar_sound.ogg")
 var _error_stream: AudioStream = preload("res://sounds/picotron/error.ogg")
+var _purchase_sound: AudioStreamPlayer3D
 var _error_sound: AudioStreamPlayer3D
 
 func _ready() -> void:
 	print("StudioAssistantPurchaseButton: _ready() called on node: ", name)
 	super._ready()  # Call parent InteractionComponent._ready() first
+
+	_purchase_sound = AudioStreamPlayer3D.new()
+	_purchase_sound.name = "PurchaseSound"
+	_purchase_sound.max_distance = 15.0
+	_purchase_sound.bus = "SFX"
+	_purchase_sound.stream = _purchase_stream
+	add_child(_purchase_sound)
 
 	_error_sound = AudioStreamPlayer3D.new()
 	_error_sound.name = "ErrorSound"
@@ -59,8 +66,7 @@ func _on_interacted(_player_interaction_component: PlayerInteractionComponent) -
 		_update_interaction_text()
 
 		# Play success sound
-		if purchase_sound:
-			_play_sound(purchase_sound)
+		_purchase_sound.play()
 
 		# Visual feedback - flash green
 		_play_purchase_animation()

@@ -47,9 +47,9 @@ func _update_display():
 	var status = AutomationManager.get_assistant_status()
 
 	if not status.active:
-		timer_label.text = "Awaiting Employment"
+		timer_label.text = "Next payment: --:--"
 		progress_bar.value = 0.0
-		earnings_label.text = ""
+		earnings_label.text = "Assisted Earnings: $0"
 		return
 
 	var time_remaining = status.time_remaining
@@ -58,6 +58,6 @@ func _update_display():
 	@warning_ignore("integer_division")
 	var seconds: int = int(time_remaining) % 60
 
-	timer_label.text = "Next painting: %d:%02d" % [minutes, seconds]
+	timer_label.text = "Next payment: %d:%02d" % [minutes, seconds]
 	progress_bar.value = status.progress_percent
-	earnings_label.text = "Session Earnings: $%d" % total_earnings
+	earnings_label.text = "Assisted Earnings: $%d" % total_earnings

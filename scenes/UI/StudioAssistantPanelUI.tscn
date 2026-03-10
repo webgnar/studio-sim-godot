@@ -1,8 +1,8 @@
-[gd_scene format=3 uid="uid://dsstapanelui1"]
+[gd_scene format=3 uid="uid://mebuwng8ggh1"]
 
 [ext_resource type="Theme" uid="uid://cbtaxh5m7udor" path="res://themes/ui_theme.tres" id="1_theme"]
 
-[node name="StudioAssistantPanelUI" type="PanelContainer"]
+[node name="StudioAssistantPanelUI" type="PanelContainer" unique_id=1095983321]
 custom_minimum_size = Vector2(512, 340)
 anchors_preset = 15
 anchor_right = 1.0
@@ -11,42 +11,38 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_theme")
 
-[node name="MarginContainer" type="MarginContainer" parent="."]
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1603059708]
 layout_mode = 2
 theme_override_constants/margin_left = 20
 theme_override_constants/margin_top = 16
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 16
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=461831510]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="TitleLabel" type="Label" parent="MarginContainer/VBoxContainer"]
+[node name="TitleLabel" type="Label" parent="MarginContainer/VBoxContainer" unique_id=558465546]
 layout_mode = 2
-text = "Studio Assistant"
-horizontal_alignment = 1
 theme_override_font_sizes/font_size = 22
-
-[node name="HSeparator" type="HSeparator" parent="MarginContainer/VBoxContainer"]
-layout_mode = 2
-
-[node name="TimerLabel" type="Label" parent="MarginContainer/VBoxContainer"]
-layout_mode = 2
-text = "Next painting: --:--"
+text = "Passive Income!"
 horizontal_alignment = 1
 
-[node name="ProgressBar" type="ProgressBar" parent="MarginContainer/VBoxContainer"]
-layout_mode = 2
-min_value = 0.0
-max_value = 100.0
-value = 0.0
-show_percentage = true
-
-[node name="HSeparator2" type="HSeparator" parent="MarginContainer/VBoxContainer"]
+[node name="HSeparator" type="HSeparator" parent="MarginContainer/VBoxContainer" unique_id=2050572187]
 layout_mode = 2
 
-[node name="EarningsLabel" type="Label" parent="MarginContainer/VBoxContainer"]
+[node name="TimerLabel" type="Label" parent="MarginContainer/VBoxContainer" unique_id=462439149]
 layout_mode = 2
-text = "Session Earnings: $0"
+text = "Next payment: --:--"
+horizontal_alignment = 1
+
+[node name="ProgressBar" type="ProgressBar" parent="MarginContainer/VBoxContainer" unique_id=1851947343]
+layout_mode = 2
+
+[node name="HSeparator2" type="HSeparator" parent="MarginContainer/VBoxContainer" unique_id=70433199]
+layout_mode = 2
+
+[node name="EarningsLabel" type="Label" parent="MarginContainer/VBoxContainer" unique_id=1228452882]
+layout_mode = 2
+text = "Assisted Earnings: $0"
 horizontal_alignment = 1
