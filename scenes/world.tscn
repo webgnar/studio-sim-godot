@@ -33,7 +33,7 @@
 [ext_resource type="Texture2D" uid="uid://uyikjs5uvqxf" path="res://textures/512 cementbrick.png" id="30_kvmu4"]
 [ext_resource type="Texture2D" uid="uid://daneppyy5y8cp" path="res://sprites/textures/floor-cement-2.jpg" id="31_c15v2"]
 [ext_resource type="PackedScene" uid="uid://br0ke8na4oeqj" path="res://scenes/button_green.tscn" id="31_grmox"]
-[ext_resource type="PackedScene" path="res://scenes/objects/StudioAssistantStatusPanel.tscn" id="34_sasp"]
+[ext_resource type="PackedScene" uid="uid://dsstapanel001" path="res://scenes/objects/StudioAssistantStatusPanel.tscn" id="34_sasp"]
 [ext_resource type="PackedScene" uid="uid://cfkagid03erei" path="res://models/props/rug.gltf" id="35_gw1vw"]
 [ext_resource type="Script" uid="uid://cdcxs0jsffsfb" path="res://scripts/old stuff/BoomboxInteraction.gd" id="36_boombox_new"]
 [ext_resource type="PackedScene" uid="uid://dg4dh5bn60pel" path="res://scenes/objects/psywheel.tscn" id="36_xullu"]
@@ -2305,9 +2305,10 @@ transform = Transform3D(-4.371139e-08, 1, -4.371139e-08, 0, -4.371139e-08, -1, -
 [node name="CanvasFormatToggle" parent="." unique_id=1340151615 instance=ExtResource("130_mslh2")]
 transform = Transform3D(-4.371139e-09, 0.1, 0, -0.1, -4.371139e-09, 0, 0, 0, 0.1, -3.4103966, 1.4687139, 10.974347)
 
-[node name="ToggleInteraction" parent="CanvasFormatToggle" index="3" node_paths=PackedStringArray("square_canvas", "landscape_canvas")]
+[node name="ToggleInteraction" parent="CanvasFormatToggle" index="3" node_paths=PackedStringArray("square_canvas", "landscape_canvas", "painting_ui")]
 square_canvas = NodePath("../../PaintingRoot2d")
 landscape_canvas = NodePath("../../PaintingRoot2d_5x3")
+painting_ui = NodePath("../../PaintingUI_Layer/PaintingUi")
 
 [node name="ConvertAssistantButton" parent="." unique_id=963421985 instance=ExtResource("131_mslh2")]
 transform = Transform3D(4.371139e-09, -0.1, -8.742278e-09, -0.1, -4.371139e-09, 0, -3.8213711e-16, 8.742278e-09, -0.1, 13.576837, 1.161165, 13.319655)

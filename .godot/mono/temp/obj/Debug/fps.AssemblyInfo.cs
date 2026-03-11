@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("fps")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6c501bd3a71fe344c876faf06bd8d1aa052ab6f3")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+62e5e0c38441d2ecdec1ec24e418b54bbc179c3e")]
 [assembly: System.Reflection.AssemblyProductAttribute("fps")]
 [assembly: System.Reflection.AssemblyTitleAttribute("fps")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

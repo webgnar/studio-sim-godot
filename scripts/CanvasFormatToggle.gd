@@ -6,6 +6,7 @@ extends InteractionComponent
 
 @export var square_canvas: Node3D
 @export var landscape_canvas: Node3D
+@export var painting_ui: PaintingUI
 
 var _active_is_square: bool = true
 var _click_sound: AudioStreamPlayer3D
@@ -45,6 +46,8 @@ func _on_interacted(_player: PlayerInteractionComponent) -> void:
 	var active := square_canvas if _active_is_square else landscape_canvas
 	var system: PaintingSystem2D = active.get_node("CanvasViewport/CanvasRoot")
 	PaintingModeManager.register_2d_system(system, active)
+	if painting_ui:
+		painting_ui.set_active_system(system)
 
 	_update_text()
 	_click_sound.play()

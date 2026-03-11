@@ -122,6 +122,14 @@ func _process(delta):
 		if ui_idle_time > auto_hide_delay:
 			_hide_ui()
 
+func set_active_system(new_system) -> void:
+	"""Switch the active painting system and reconnect signals"""
+	if active_system and active_system.layer_equipped.is_connected(_on_layer_equipped):
+		active_system.layer_equipped.disconnect(_on_layer_equipped)
+	active_system = new_system
+	if active_system:
+		active_system.layer_equipped.connect(_on_layer_equipped)
+
 func _on_layer_equipped(_index: int):
 	"""Called when Q/E or mouse wheel changes the equipped sticker"""
 	ui_idle_time = 0.0  # Reset idle timer
