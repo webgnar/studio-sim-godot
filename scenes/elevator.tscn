@@ -100,6 +100,9 @@ _data = {
 [sub_resource type="BoxShape3D" id="BoxShape3D_detection"]
 size = Vector3(3.2, 2.5, 3)
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_gateclearance"]
+size = Vector3(3.2, 3.5, 0.6)
+
 [sub_resource type="BoxMesh" id="BoxMesh_button"]
 size = Vector3(0.15, 0.15, 0.08)
 
@@ -310,6 +313,16 @@ collision_mask = 4
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="MovingParts/PaintingDetectionArea" unique_id=1098067742]
 shape = SubResource("BoxShape3D_detection")
+
+[node name="GateClearanceArea" type="Area3D" parent="MovingParts" unique_id=388471205]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.1, 1.2, 2.5)
+collision_layer = 0
+collision_mask = 4
+monitorable = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MovingParts/GateClearanceArea" unique_id=488471205]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.3)
+shape = SubResource("BoxShape3D_gateclearance")
 
 [node name="ExportButton" type="StaticBody3D" parent="." unique_id=1591935125 groups=["interactable"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.013089, 0.5781703, 2.8037944)

@@ -1,0 +1,23 @@
+[gd_scene format=3 uid="uid://b2w7kknvqy8kc"]
+
+[ext_resource type="PackedScene" uid="uid://dl3mc6he0u4qo" path="res://models/interactables/basketball_hoop.glb" id="1_avwpq"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_0mjjj"]
+size = Vector3(9.197296, 9.023399, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ndywt"]
+size = Vector3(1.9143066, 1, 2.3359985)
+
+[node name="BasketballHoop" type="Node3D" unique_id=641032447]
+
+[node name="default" parent="." unique_id=544110314 instance=ExtResource("1_avwpq")]
+
+[node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=208420568]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" unique_id=28868015]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.46567822, 5.823865, 3.077424)
+shape = SubResource("BoxShape3D_0mjjj")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="StaticBody3D" unique_id=2052653114]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.08947754, 2.5779753, 4.733886)
+shape = SubResource("BoxShape3D_ndywt")

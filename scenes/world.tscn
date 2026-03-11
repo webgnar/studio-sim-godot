@@ -927,7 +927,6 @@ omni_range = 0.4
 
 [node name="SpotLight3D" parent="Spotlight2" index="3"]
 transform = Transform3D(4.056442, -1.2777853e-07, 2.9232306, -2.9232306, -1.7731276e-07, 4.056442, -1.1779798e-14, -5.0000005, -2.1855706e-07, 0.48944283, -3.8539963, -2.2672462)
-shadow_enabled = true
 shadow_bias = 0.519
 shadow_normal_bias = 3.444
 shadow_opacity = 0.84
@@ -2085,7 +2084,6 @@ shape = SubResource("BoxShape3D_h5nhj")
 transform = Transform3D(1, 0, 0, 0, -0.50000006, 0.8660254, 0, -0.8660254, -0.50000006, 0, 4, 6)
 light_color = Color(0.52156866, 1, 1, 1)
 light_energy = 11.144
-shadow_enabled = true
 spot_range = 37.272
 spot_attenuation = 3.79
 
@@ -2292,6 +2290,12 @@ spot_range = 20.187
 transform = Transform3D(-1, -7.557135e-08, 7.573867e-08, 2.7805942e-08, 0.49999994, 0.86602545, -1.0331604e-07, 0.86602545, -0.49999994, 8.800316, -1.8827114, 20.481049)
 spot_range = 20.187
 
+[node name="Spotlight" parent="gallery" unique_id=1527255998 instance=ExtResource("86_grmox")]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, -4.5155826, 3.5932565, 13.721367)
+
+[node name="SpotLight3D" parent="gallery/Spotlight" index="3"]
+spot_attenuation = 0.0
+
 [node name="GallerySpawnPoint" type="Node3D" parent="." unique_id=837462901]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.722805, -9.6, 15.43)
 
@@ -2327,5 +2331,6 @@ transform = Transform3D(4.371139e-09, -0.1, -8.742278e-09, -0.1, -4.371139e-09, 
 [editable path="buttonGreen"]
 [editable path="buttonGreen/green button"]
 [editable path="Fluorescent"]
+[editable path="gallery/Spotlight"]
 [editable path="CanvasFormatToggle"]
 [editable path="CanvasFormatToggle/blue button"]

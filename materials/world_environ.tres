@@ -23,5 +23,4 @@ background_energy_multiplier = 0.5
 sky = SubResource("Sky_rwgxs")
 sky_rotation = Vector3(0, -6.2831855, 0)
 tonemap_mode = 2
-glow_enabled = true
-glow_intensity = 2.14
+glow_intensity = 0.8

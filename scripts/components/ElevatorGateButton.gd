@@ -26,6 +26,7 @@ func _ready() -> void:
 		elevator_controller.painting_exited.connect(_on_painting_changed)
 		elevator_controller.foreign_object_entered.connect(_on_foreign_object_changed)
 		elevator_controller.foreign_object_exited.connect(_on_foreign_object_changed)
+		elevator_controller.gate_clearance_changed.connect(_on_gate_clearance_changed)
 		_update_interaction_text()
 	else:
 		push_warning("ElevatorGateButton: Could not find ElevatorController!")
@@ -63,6 +64,13 @@ func _on_painting_changed(_painting: CarryablePainting) -> void:
 func _on_foreign_object_changed(_body: RigidBody3D) -> void:
 	_update_interaction_text()
 
+func _process(_delta: float) -> void:
+	if elevator_controller and elevator_controller.is_gate_open():
+		_update_interaction_text()
+
+func _on_gate_clearance_changed() -> void:
+	_update_interaction_text()
+
 func _update_interaction_text() -> void:
 	if not elevator_controller:
 		interaction_text = "Close Gate"
@@ -78,6 +86,9 @@ func _update_interaction_text() -> void:
 		elif elevator_controller.has_too_many_paintings():
 			interaction_text = "Too Many Paintings"
 			is_disabled = true
+		elif elevator_controller.is_painting_blocking_gate():
+			interaction_text = "Reposition Painting"
+			is_disabled = false
 		else:
 			interaction_text = "Close Gate"
 			is_disabled = false

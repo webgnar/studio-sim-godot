@@ -12,6 +12,7 @@ signal export_started(painting: CarryablePainting)
 signal export_completed(png_path: String, glb_path: String)
 signal foreign_object_entered(body: RigidBody3D)
 signal foreign_object_exited(body: RigidBody3D)
+signal gate_clearance_changed()  ## Emitted when a painting starts/stops blocking the gate
 
 enum GateState { OPEN, CLOSED, ANIMATING }
 
@@ -20,6 +21,7 @@ enum GateState { OPEN, CLOSED, ANIMATING }
 @export var gate_animation_player: AnimationPlayer
 @export var moving_parts: Node3D  ## The node that descends during export
 @export var gallery_spawn_point: Node3D  ## Drop point in gallery room for shipped paintings
+@export var gate_clearance_area: Area3D  ## Thin zone at the gate threshold — detects painting blocking the gate
 
 @export_group("Export Settings")
 @export var descent_duration: float = 1.5  ## Duration of descent animation
@@ -37,6 +39,9 @@ var player_inside_elevator: bool = false
 # Foreign object detection (non-painting items that shouldn't be in elevator)
 var foreign_objects_inside: Array[RigidBody3D] = []
 var foreign_object_detection_area: Area3D
+
+# Gate clearance — paintings overlapping the gate threshold
+var paintings_blocking_gate: Array[CarryablePainting] = []
 
 # Audio
 var _export_sound: AudioStreamPlayer3D
@@ -75,6 +80,15 @@ func _ready() -> void:
 	# Setup player detection for achievement
 	_setup_player_detection()
 	_setup_foreign_object_detection()
+
+	# Connect gate clearance area (fallback to node path if not assigned in Inspector)
+	if not gate_clearance_area:
+		gate_clearance_area = get_node_or_null("MovingParts/GateClearanceArea")
+	if gate_clearance_area:
+		gate_clearance_area.body_entered.connect(_on_gate_clearance_body_entered)
+		gate_clearance_area.body_exited.connect(_on_gate_clearance_body_exited)
+	else:
+		push_warning("ElevatorController: No gate_clearance_area found!")
 
 	# Connect gate_closed for elevator achievement
 	gate_closed.connect(_on_gate_closed_check_player)
@@ -189,6 +203,32 @@ func _on_foreign_body_exited(body: Node) -> void:
 		foreign_objects_inside.erase(body)
 		foreign_object_exited.emit(body)
 
+func _on_gate_clearance_body_entered(body: Node) -> void:
+	if body is CarryablePainting and body not in paintings_blocking_gate:
+		paintings_blocking_gate.append(body)
+		gate_clearance_changed.emit()
+
+func _on_gate_clearance_body_exited(body: Node) -> void:
+	if body is CarryablePainting:
+		paintings_blocking_gate.erase(body)
+		gate_clearance_changed.emit()
+
+func is_painting_blocking_gate() -> bool:
+	if not gate_clearance_area:
+		return not paintings_blocking_gate.is_empty()
+	var shape_node := gate_clearance_area.get_node_or_null("CollisionShape3D") as CollisionShape3D
+	if not shape_node or not shape_node.shape:
+		return not paintings_blocking_gate.is_empty()
+	var space_state := get_world_3d().direct_space_state
+	var query := PhysicsShapeQueryParameters3D.new()
+	query.shape = shape_node.shape
+	query.transform = shape_node.global_transform
+	query.collision_mask = 4
+	for result in space_state.intersect_shape(query, 8):
+		if result["collider"] is CarryablePainting:
+			return true
+	return false
+
 func _on_gate_closed_check_player() -> void:
 	"""Check if player is trapped inside when gate closes"""
 	if player_inside_elevator and SteamManager:
@@ -253,6 +293,10 @@ func close_gate() -> void:
 	if not can_toggle_gate() or gate_state == GateState.CLOSED:
 		return
 
+	if is_painting_blocking_gate():
+		await _play_gate_blocked_bounce()
+		return
+
 	gate_state = GateState.ANIMATING
 	_door_sound.play()
 
@@ -265,6 +309,26 @@ func close_gate() -> void:
 
 	gate_state = GateState.CLOSED
 	gate_closed.emit()
+
+func _play_gate_blocked_bounce() -> void:
+	"""Gate tries to close but a painting is blocking the threshold — bounce back open."""
+	gate_state = GateState.ANIMATING
+	_door_sound.play()
+
+	if gate_animation_player and gate_animation_player.has_animation("close"):
+		gate_animation_player.play("close")
+		# Let the gate descend about 45% of the way before hitting the painting
+		await get_tree().create_timer(0.45).timeout
+		# Reverse from current position by flipping speed_scale (play_backwards would snap to end)
+		gate_animation_player.speed_scale = -1.0
+		_error_sound.play()  # play at impact moment, not after reopening
+		_door_open_sound.play()
+		await gate_animation_player.animation_finished
+		gate_animation_player.speed_scale = 1.0
+	else:
+		await get_tree().create_timer(0.5).timeout
+
+	gate_state = GateState.OPEN
 
 func toggle_gate() -> void:
 	"""Toggle gate between open and closed"""

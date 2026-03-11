@@ -11,6 +11,7 @@ const TEXTURES_DIR = "user://world_paintings"
 
 # Preload scenes for instantiation
 var carryable_painting_scene = preload("res://scenes/CarryablePainting.tscn")
+var carryable_painting_5x3_scene = preload("res://scenes/CarryablePainting5x3.tscn")
 var wall_nail_scene = preload("res://scenes/WallNail.tscn")
 
 # Dictionary mapping painting nodes to their metadata
@@ -293,6 +294,7 @@ func save_world_state() -> bool:
 			"artist_statement": metadata.get("artist_statement", ""),
 			"status": metadata.get("status", "WIP"),
 			"critique": metadata.get("critique", ""),
+			"is_landscape": painting.scene_file_path.contains("5x3"),
 			"position": {
 				"x": painting.global_position.x,
 				"y": painting.global_position.y,
@@ -636,8 +638,10 @@ func _load_painting(world_root: Node3D, painting_data: Dictionary, nail_id_map: 
 		push_warning("Texture file missing for painting: " + texture_path)
 		return false
 
-	# Instantiate painting
-	var painting = carryable_painting_scene.instantiate()
+	# Instantiate painting (use 5x3 scene for landscape paintings)
+	var is_landscape = painting_data.get("is_landscape", false)
+	var scene_to_use = carryable_painting_5x3_scene if is_landscape else carryable_painting_scene
+	var painting = scene_to_use.instantiate()
 
 	# Set metadata (must be set before adding to tree so _ready can register)
 	painting.painting_id = painting_id

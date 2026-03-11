@@ -174,7 +174,7 @@ func _physics_process(delta: float) -> void:
 	var door_angle = door_body.rotation.y
 	var at_closed = abs(door_angle) < 0.15                # near upper limit (0.0 rad)
 	var at_open = abs(door_angle + 2.6354473) < 0.15      # near lower limit (-2.635 rad)
-	if (at_closed or at_open) and abs_previous_velocity >= slam_velocity_threshold and slam_cooldown <= 0.0:
+	if (at_closed or at_open) and abs_previous_velocity >= slam_velocity_threshold and slam_cooldown <= 0.0 and not is_grabbed:
 		if slam_sound:
 			_audio_player.pitch_scale = 1.0
 			_play_sound(slam_sound)

@@ -67,6 +67,7 @@ GalleryUploader="*res://scripts/GalleryUploader.gd"
 LocaleManager="*res://scripts/LocaleManager.gd"
 StickerLibrary="*res://scripts/painting/StickerLibrary.gd"
 SkinLibrary="*res://scripts/SkinLibrary.gd"
+FPSMonitor="*res://scripts/FPSMonitor.gd"
 
 [display]
 
@@ -282,6 +283,7 @@ crouch={
 [rendering]
 
 textures/vram_compression/import_etc2_astc=true
+lights_and_shadows/positional_shadow/atlas_size=2048
 
 [steam]
 
