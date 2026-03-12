@@ -1,0 +1,25 @@
+[gd_scene format=3 uid="uid://up674at5a4c3"]
+
+[ext_resource type="Script" uid="uid://dpipegenerator001" path="res://scripts/PipeGenerator.gd" id="1_pgscript"]
+
+[sub_resource type="Environment" id="Environment_pipes"]
+background_mode = 1
+background_color = Color(0, 0, 0, 1)
+ambient_light_source = 2
+ambient_light_color = Color(1, 1, 1, 1)
+ambient_light_energy = 0.5
+
+[node name="PipeScreensaver" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_pipes")
+
+[node name="PipeGenerator" type="Node3D" parent="."]
+script = ExtResource("1_pgscript")
+
+[node name="Camera3D" type="Camera3D" parent="PipeGenerator"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -5)
+current = true
+fov = 60.0
+near = 0.05
+far = 100.0

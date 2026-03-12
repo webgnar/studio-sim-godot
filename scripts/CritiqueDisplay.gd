@@ -10,10 +10,12 @@ extends Node3D
 @onready var critique_label: RichTextLabel = $SubViewport/MarginContainer/RichTextLabel
 @onready var avatar_sprite: Sprite3D = $Sprite3D
 @onready var dial_up_sound: AudioStreamPlayer3D = $DialUpSound
+@onready var _pipe_generator: Node3D = $SubViewport/PipeScreensaver/PipeGenerator
+@onready var _color_rect: ColorRect = $SubViewport/ColorRect
 
 const R2_BASE_URL = "https://pub-eba211d5cf614843a0f1582ec6c62c2e.r2.dev/paintings/"
 const CRITIQUE_API_URL = "https://studio-sim-gallery.vercel.app/api/critique"
-const REQUEST_TIMEOUT = 30.0
+const REQUEST_TIMEOUT = 60.0
 
 enum State { IDLE, WAITING_FOR_UPLOAD, LOADING_CRITIQUE, DISPLAYING }
 var _state: State = State.IDLE
@@ -61,6 +63,9 @@ func _ready() -> void:
 
 	GalleryUploader.upload_completed.connect(_on_upload_completed)
 	GalleryUploader.upload_failed.connect(_on_upload_failed)
+
+	# Pipes are always the background — ColorRect no longer needed
+	_color_rect.visible = false
 
 	# Hide the scrollbar visually but keep scroll functionality
 	if critique_label:
@@ -127,6 +132,7 @@ func _on_upload_completed(gallery_id: String) -> void:
 		return
 
 	_state = State.LOADING_CRITIQUE
+	_pipe_generator.reset()
 	_set_text(tr("Getting critique..."))
 	dial_up_sound.play()
 	_current_critic = CRITICS[randi() % CRITICS.size()]

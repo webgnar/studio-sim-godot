@@ -1,5 +1,6 @@
 [gd_scene format=3 uid="uid://bs7m75lssp7qx"]
 
+[ext_resource type="PackedScene" uid="uid://up674at5a4c3" path="res://scenes/PipeScreensaver.tscn" id="1_pipescene"]
 [ext_resource type="Script" uid="uid://bca71no7j3vhh" path="res://scripts/CritiqueDisplay.gd" id="1_script"]
 [ext_resource type="Texture2D" uid="uid://bgi7mpqd80v1j" path="res://sprites/art critics/general.png" id="2_8qcen"]
 [ext_resource type="Material" uid="uid://bl43iap4a4kjl" path="res://materials/tv.tres" id="2_llmxe"]
@@ -30,9 +31,12 @@ texture_filter = 1
 script = ExtResource("1_script")
 
 [node name="SubViewport" type="SubViewport" parent="." unique_id=833401773]
+own_world_3d = true
 canvas_item_default_texture_filter = 0
 size = Vector2i(640, 360)
 render_target_update_mode = 4
+
+[node name="PipeScreensaver" parent="SubViewport" unique_id=777101010 instance=ExtResource("1_pipescene")]
 
 [node name="ColorRect" type="ColorRect" parent="SubViewport" unique_id=49168948]
 anchors_preset = 15
@@ -57,6 +61,8 @@ theme_override_constants/margin_bottom = 20
 texture_filter = 1
 layout_mode = 2
 theme_override_colors/default_color = Color(0.8728172, 0.90766454, 0.6322265, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 5
 text = "Awaiting next painting..."
 
 [node name="Screen" type="MeshInstance3D" parent="." unique_id=1207183709]
