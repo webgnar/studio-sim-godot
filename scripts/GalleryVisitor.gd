@@ -46,6 +46,8 @@ const SKIN_PERSONALITIES: Dictionary = {
 	"jollyrich": "enthusiastic",
 	"ronald": "canio",
 	"kylie": "kylie",
+	"tinfoilguy": "conspiracist",
+	"maninblack": "disinfo",
 }
 
 const STREETWISE_FALLBACK_LINES = [
@@ -73,6 +75,24 @@ const FABULOUS_FALLBACK_LINES = [
 	"The color palette? Fabulous. The composition? Fabulous. Everything? Fabulous.",
 	"I came in for five minutes and now I never want to leave. Fabulous.",
 	"Honestly, this whole gallery is giving me fabulous energy.",
+]
+
+const CONSPIRACIST_FALLBACK_LINES = [
+	"They don't want you to look too closely at this one.",
+	"The brushstrokes. Don't you see it? Classic misdirection.",
+	"I've been researching this artist. The connections go deep.",
+	"The framing alone tells you everything they're trying to hide.",
+	"Follow the money. Who funded this gallery? That's all I'm saying.",
+	"I'm not saying it's a psyop. I'm just saying... it could be.",
+]
+
+const AGENT_FALLBACK_LINES = [
+	"Nothing unusual here. Move along.",
+	"I'm just a regular art enthusiast. Totally normal.",
+	"I've been assigned to — I mean, I enjoy this piece.",
+	"The subject matter is... noted.",
+	"We have no record of this artist. That's a good thing.",
+	"Lovely gallery. Very easy to surveil — I mean, navigate.",
 ]
 
 ## Exposed so PlayerInteractionComponent can show a prompt label.
@@ -309,6 +329,10 @@ func _pick_fallback() -> String:
 			return SPIRITUAL_FALLBACK_LINES.pick_random()
 		"fabulous":
 			return FABULOUS_FALLBACK_LINES.pick_random()
+		"conspiracist":
+			return CONSPIRACIST_FALLBACK_LINES.pick_random()
+		"agent":
+			return AGENT_FALLBACK_LINES.pick_random()
 	return FALLBACK_LINES.pick_random()
 
 

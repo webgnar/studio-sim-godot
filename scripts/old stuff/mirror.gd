@@ -9,7 +9,7 @@ var debug_timer: float = 0.0  # Print debug every second, not every frame
 func _ready():
 	# Ensure the viewport is set up
 	var viewport = $SubViewport
-	viewport.size = Vector2(256, 256)  # Adjust resolution as needed
+	viewport.size = Vector2(512, 512)  # Adjust resolution as needed
 	viewport.own_world_3d = false  # Use the same world as the main scene
 	# Note: Setting world_3d to null can cause warnings, but it's needed for mirror functionality
 	if viewport.world_3d:

@@ -28,11 +28,11 @@ const VISITOR_ROSTER: Array = [
 	{"skin_path": "res://materials/NPCs/jollyrich.tres",            "display_name": "Reginald"},
 	{"skin_path": "res://materials/NPCs/ronald.tres",               "display_name": "Canio"},
 	{"skin_path": "res://materials/NPCs/kylie.tres",                "display_name": "Kylie"},
+	{"skin_path": "res://materials/NPCs/tinfoilguy.tres",          "display_name": "Karl"},
+	{"skin_path": "res://materials/NPCs/maninblack.tres",          "display_name": "Agent Brinx"},
 	{"skin_path": "res://materials/garyskin.tres",                  "display_name": "Gary"},
 	{"skin_path": "res://materials/humanskin.tres",                 "display_name": "Zack"},
 	{"skin_path": "res://materials/skeletonskin.tres",              "display_name": "Mort"},
-	# Add more skins here as they're made:
-	# {"skin_path": "res://materials/NPCs/...", "display_name": "..."},
 ]
 
 var _spawned_visitor_count: int = 0
@@ -360,3 +360,32 @@ Meyer himself described the origins of his inventions in deeply personal, spirit
 			"price": 10000,
 		},
 	]
+	_apply_desc_keys()
+
+
+func _apply_desc_keys() -> void:
+	"""Assign translation keys for item descriptions (avoids multi-line CSV keys)."""
+	var keys := {
+		"nail_gun": "SHOP_DESC_NAIL_GUN",
+		"trash_can": "SHOP_DESC_TRASH_CAN",
+		"fan": "SHOP_DESC_FAN",
+		"styrofoam_cube": "SHOP_DESC_STYROFOAM_CUBE",
+		"cardboard_box": "SHOP_DESC_CARDBOARD_BOX",
+		"water_filter": "SHOP_DESC_WATER_FILTER",
+		"phone": "SHOP_DESC_PHONE",
+		"mirror": "SHOP_DESC_MIRROR",
+		"skateboard": "SHOP_DESC_SKATEBOARD",
+		"monstera": "SHOP_DESC_MONSTERA",
+		"fern_plant": "SHOP_DESC_FERN_PLANT",
+		"madpalm": "SHOP_DESC_MADPALM",
+		"psywheel": "SHOP_DESC_PSYWHEEL",
+		"cyclone": "SHOP_DESC_CYCLONE",
+		"seg": "SHOP_DESC_SEG",
+		"geet": "SHOP_DESC_GEET",
+		"wfc": "SHOP_DESC_WFC",
+		"gallery_visitor": "SHOP_DESC_GALLERY_VISITOR",
+		"customstickerbutton": "SHOP_DESC_CUSTOM_STICKER",
+	}
+	for item in _catalog:
+		if keys.has(item["id"]):
+			item["desc_key"] = keys[item["id"]]

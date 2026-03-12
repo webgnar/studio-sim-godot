@@ -1,0 +1,6 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://cg7knu7q6a1dw"]
+
+[ext_resource type="Texture2D" uid="uid://dedgc328ad0qp" path="res://sprites/NPCs/ciasuit.png" id="1_fehh4"]
+
+[resource]
+albedo_texture = ExtResource("1_fehh4")

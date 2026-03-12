@@ -76,6 +76,12 @@ func _ready():
 		button_nav_sound = pause_menu.get_node_or_null("ButtonNavSound")
 		button_hit_sound = pause_menu.get_node_or_null("ButtonHitSound")
 
+	if LocaleManager:
+		LocaleManager.locale_changed.connect(_on_locale_changed)
+
+	# Remove unused Difficulty label (feature not implemented)
+	difficulty_label.queue_free()
+
 	# Disable input processing by default (PauseMenu manages activation via process_mode)
 	process_mode = Node.PROCESS_MODE_DISABLED
 
@@ -482,10 +488,10 @@ func _update_preview_panel():
 		return
 
 	# Update title
-	mission_title.text = selected_mission.title
+	mission_title.text = tr(selected_mission.title)
 
 	# Update description
-	mission_description.text = selected_mission.description
+	mission_description.text = tr(selected_mission.description)
 
 	# Check if this is the current mission
 	var is_current_mission = (MissionManager and MissionManager.current_mission == selected_mission)
@@ -523,7 +529,7 @@ func _update_preview_panel():
 	# Show View Results button for any mission with a stored attempt
 	view_results_button.visible = has_any_attempt
 	view_results_button.disabled = not has_any_attempt
-	view_results_button.tooltip_text = "" if has_any_attempt else "No saved attempt available"
+	view_results_button.tooltip_text = "" if has_any_attempt else tr("No saved attempt available")
 
 	# Update preview image
 	if selected_mission.reference_image_path and selected_mission.reference_image_path != "":
@@ -663,6 +669,12 @@ func _update_stats_display():
 	"""Update commission completion statistics"""
 	if UIManager and completed_missions_label:
 		completed_missions_label.text = tr("Commissions Completed: %d") % UIManager.missions_completed
+
+func _on_locale_changed(_locale: String) -> void:
+	if visible:
+		_update_stats_display()
+		if selected_mission:
+			_update_preview_panel()
 
 func _find_parent_pause_menu() -> Node:
 	"""Find the PauseMenu parent node"""

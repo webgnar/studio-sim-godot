@@ -47,6 +47,9 @@ func _ready() -> void:
 		button_nav_sound = pause_menu.get_node_or_null("ButtonNavSound")
 		button_hit_sound = pause_menu.get_node_or_null("ButtonHitSound")
 
+	if LocaleManager:
+		LocaleManager.locale_changed.connect(_on_locale_changed)
+
 	# PauseMenu enables us via process_mode
 	process_mode = Node.PROCESS_MODE_DISABLED
 
@@ -204,7 +207,7 @@ func _populate_item_list() -> void:
 	for i in range(catalog.size()):
 		var item = catalog[i]
 		var card: ShopItemCard = ITEM_CARD_SCENE.instantiate()
-		card.setup(item["display_name"])
+		card.setup(tr(item["display_name"]))
 		# Connect mouse click to select this card
 		var idx := i
 		card.pressed.connect(func(): _on_card_mouse_pressed(idx))
@@ -228,8 +231,8 @@ func _update_selection() -> void:
 				else Color(0.6, 0.6, 0.6, 1.0)
 
 	var item = catalog[selected_index]
-	item_name_label.text = item.get("title", item["display_name"])
-	item_desc_label.text = item["description"]
+	item_name_label.text = tr(item.get("title", item["display_name"]))
+	item_desc_label.text = tr(item.get("desc_key", item["description"]))
 	desc_scroll.scroll_vertical = 0
 
 	var path := PREVIEW_IMAGE_DIR % item["id"]
@@ -240,18 +243,18 @@ func _update_selection() -> void:
 	if purchased:
 		buy_button.visible = true
 		buy_button.disabled = true
-		buy_button.text = "OWNED"
+		buy_button.text = tr("OWNED")
 		status_label.visible = false
 	else:
 		var can_afford := EconomyManager.can_afford(item["price"])
 		if can_afford:
 			buy_button.visible = true
 			buy_button.disabled = false
-			buy_button.text = "BUY"
+			buy_button.text = tr("BUY")
 			status_label.visible = false
 		else:
 			buy_button.visible = false
-			status_label.text = "Not enough money"
+			status_label.text = tr("Not enough money")
 			status_label.visible = true
 
 	# Scroll the list to keep selected card visible
@@ -329,7 +332,7 @@ func _on_buy_pressed() -> void:
 		return
 	var item = catalog[selected_index]
 	if ShopManager.is_player_blocking_spawn(item["id"]):
-		status_label.text = "Move out of the item's spawn zone first"
+		status_label.text = tr("Move out of the item's spawn zone first")
 		status_label.visible = true
 		return
 	if ShopManager.purchase(item["id"]):
@@ -339,7 +342,7 @@ func _on_buy_pressed() -> void:
 		_exit_buy_mode()
 	else:
 		# Flash the status label briefly on failure
-		status_label.text = "Can't afford this item"
+		status_label.text = tr("Can't afford this item")
 		status_label.visible = true
 
 
@@ -362,6 +365,15 @@ func _play_nav_sound() -> void:
 func _play_hit_sound() -> void:
 	if button_hit_sound:
 		button_hit_sound.play()
+
+
+# ============================================================================
+# Locale
+# ============================================================================
+
+func _on_locale_changed(_locale: String) -> void:
+	if visible and item_cards.size() > 0:
+		_update_selection()
 
 
 # ============================================================================

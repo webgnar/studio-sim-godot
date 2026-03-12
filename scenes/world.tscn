@@ -927,6 +927,7 @@ omni_range = 0.4
 
 [node name="SpotLight3D" parent="Spotlight2" index="3"]
 transform = Transform3D(4.056442, -1.2777853e-07, 2.9232306, -2.9232306, -1.7731276e-07, 4.056442, -1.1779798e-14, -5.0000005, -2.1855706e-07, 0.48944283, -3.8539963, -2.2672462)
+layers = 2
 shadow_bias = 0.519
 shadow_normal_bias = 3.444
 shadow_opacity = 0.84

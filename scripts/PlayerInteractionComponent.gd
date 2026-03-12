@@ -311,7 +311,7 @@ func _update_interaction_prompt() -> void:
 			return
 		var pick_up_glyph = InputDeviceManager.get_formatted_prompt("action_primary")
 		var equip_glyph = InputDeviceManager.get_formatted_prompt("interact")
-		interaction_prompt_changed.emit("%s Pick Up | %s Equip Nailgun" % [pick_up_glyph, equip_glyph])
+		interaction_prompt_changed.emit("%s %s | %s %s" % [pick_up_glyph, tr("Pick Up"), equip_glyph, tr("Equip Nailgun")])
 		return
 	
 	# Check if object is carryable
@@ -329,26 +329,26 @@ func _update_interaction_prompt() -> void:
 	if carryable_component and carryable_component.has_e_key_interaction:
 		# Check if uses interact key for pickup
 		if carryable_component.use_interact_key_for_pickup:
-			prompt_text = "%s Pick Up | " % InputDeviceManager.get_formatted_prompt("interact") + carryable_component.e_key_interaction_text
+			prompt_text = "%s %s | " % [InputDeviceManager.get_formatted_prompt("interact"), tr("Pick Up")] + tr(carryable_component.e_key_interaction_text)
 		else:
 			var pickup_glyph = InputDeviceManager.get_formatted_prompt("action_primary")
 			var interact_glyph = InputDeviceManager.get_formatted_prompt("interact")
-			prompt_text = "%s Pick Up | %s " % [pickup_glyph, interact_glyph] + carryable_component.e_key_interaction_text
+			prompt_text = "%s %s | %s " % [pickup_glyph, tr("Pick Up"), interact_glyph] + tr(carryable_component.e_key_interaction_text)
 	# If it's only carryable (no E-key interaction), show pickup prompt
 	elif carryable_component:
 		# Check if uses interact key for pickup
 		if carryable_component.use_interact_key_for_pickup:
-			prompt_text = "%s " % InputDeviceManager.get_formatted_prompt("interact") + carryable_component.interaction_text
+			prompt_text = "%s " % InputDeviceManager.get_formatted_prompt("interact") + tr(carryable_component.interaction_text)
 		else:
-			prompt_text = "%s Pick Up" % InputDeviceManager.get_formatted_prompt("action_primary")
+			prompt_text = "%s %s" % [InputDeviceManager.get_formatted_prompt("action_primary"), tr("Pick Up")]
 	# If it has an interaction component (but not carryable), show E-key prompt
 	elif interaction_component and "interaction_text" in interaction_component:
-		prompt_text = "%s " % InputDeviceManager.get_formatted_prompt("interact") + interaction_component.interaction_text
+		prompt_text = "%s " % InputDeviceManager.get_formatted_prompt("interact") + tr(interaction_component.interaction_text)
 	elif "interaction_text" in current_interactable:
-		prompt_text = "%s " % InputDeviceManager.get_formatted_prompt("interact") + current_interactable.interaction_text
+		prompt_text = "%s " % InputDeviceManager.get_formatted_prompt("interact") + tr(current_interactable.interaction_text)
 	else:
 		# Default fallback
-		prompt_text = "%s Interact" % InputDeviceManager.get_formatted_prompt("interact")
+		prompt_text = "%s %s" % [InputDeviceManager.get_formatted_prompt("interact"), tr("Interact")]
 
 	interaction_prompt_changed.emit(prompt_text)
 

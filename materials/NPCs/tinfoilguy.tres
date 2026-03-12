@@ -1,0 +1,6 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://bhbnorqaryte7"]
+
+[ext_resource type="Texture2D" uid="uid://cht5pxbkno60y" path="res://sprites/NPCs/conspiraskin.png" id="1_4v3hj"]
+
+[resource]
+albedo_texture = ExtResource("1_4v3hj")

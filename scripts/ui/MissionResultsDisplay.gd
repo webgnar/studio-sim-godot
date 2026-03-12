@@ -126,7 +126,7 @@ func show_saved_results(mission: PaintingMission, completion_data: Dictionary):
 func _update_saved_display(completion_data: Dictionary):
 	grade_label.text = completion_data.get("latest_grade", completion_data["grade"])
 	score_label.text = tr("Score: %.1f%%") % completion_data.get("latest_score", completion_data["best_score"])
-	status_label.text = "Latest Attempt"
+	status_label.text = tr("Latest Attempt")
 	status_label.visible = true
 	visual_label.text = tr("Precision: %.1f%% (weight: 30%%)") % completion_data.get("latest_visual_match", 0.0)
 	color_label.text = tr("Color Field: %.1f%% (weight: 70%%)") % completion_data.get("latest_color_distribution", 0.0)

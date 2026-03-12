@@ -94,6 +94,10 @@ func _ready() -> void:
 	if CameraManager:
 		CameraManager.zones_toggled.connect(_on_zones_toggled)
 
+	# Refresh hints when language changes
+	if LocaleManager:
+		LocaleManager.locale_changed.connect(_on_locale_changed)
+
 	# Connect to player interaction component signals
 	_connect_to_player_interaction_component()
 
@@ -302,6 +306,7 @@ func _update_carry_hint() -> void:
 				rotate_y_line.get_node("RotateYRightLabel"),
 				"rotate_clockwise"
 			)
+			rotate_y_line.get_node("RotateYLabel").text = tr(" Rotate Y")
 			_update_button_display(
 				rotate_x_line.get_node("RotateXDownIcon"),
 				rotate_x_line.get_node("RotateXDownLabel"),
@@ -312,6 +317,7 @@ func _update_carry_hint() -> void:
 				rotate_x_line.get_node("RotateXUpLabel"),
 				"scale_sticker_up"
 			)
+			rotate_x_line.get_node("RotateXLabel").text = tr(" Rotate X")
 			rotate_y_line.show()
 			rotate_x_line.show()
 		else:
@@ -325,7 +331,7 @@ func _update_carry_hint() -> void:
 				_update_button_display(_interact_line_icon, interact_line.get_node("InteractLabel"), "interact")
 			else:
 				interact_line.get_node("InteractLabel").text = InputDeviceManager.get_formatted_prompt("interact")
-			interact_line.get_node("InteractText").text = " " + carried.e_key_interaction_text
+			interact_line.get_node("InteractText").text = " " + tr(carried.e_key_interaction_text)
 			interact_line.show()
 		else:
 			interact_line.hide()
@@ -337,11 +343,13 @@ func _update_carry_hint() -> void:
 			drop_throw_line.get_node("DropLabel"),
 			"action_secondary"
 		)
+		drop_throw_line.get_node("DropText").text = tr(" Drop")
 		_update_button_display(
 			drop_throw_line.get_node("ThrowIcon"),
 			drop_throw_line.get_node("ThrowLabel"),
 			"action_primary"
 		)
+		drop_throw_line.get_node("ThrowText").text = tr(" Throw")
 		drop_throw_line.show()
 
 		_carry_panel.show()
@@ -533,6 +541,11 @@ func show_message(message: String, duration: float = 2.0) -> void:
 func set_crosshair_visible(show_crosshair: bool) -> void:
 	if crosshair:
 		crosshair.visible = show_crosshair
+
+func _on_locale_changed(_locale: String) -> void:
+	"""Refresh hints when language changes"""
+	_update_carry_hint()
+	_update_painting_hint()
 
 func _on_zones_toggled(enabled: bool) -> void:
 	"""Show feedback when camera zones are toggled"""
