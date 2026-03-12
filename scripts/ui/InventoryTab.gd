@@ -7,6 +7,7 @@ class_name InventoryTab
 ## Supports full controller navigation
 
 const PaintingCardScene = preload("res://scenes/UI/PaintingCard.tscn")
+const VirtualKeyboardScene = preload("res://scenes/UI/VirtualKeyboard.tscn")
 
 @onready var scroll_container: ScrollContainer = $HBoxContainer/LeftPanel/ScrollContainer
 @onready var painting_list_container: VBoxContainer = $HBoxContainer/LeftPanel/ScrollContainer/PaintingList
@@ -31,7 +32,8 @@ var keyboard_nav_enabled: bool = false
 var input_cooldown: float = 0.0
 var input_cooldown_time: float = 0.15
 var _last_input_was_gamepad: bool = false
-var _steam_editing_field: Control = null  # tracks which field the Steam keyboard is editing
+var _steam_editing_field: Control = null  # tracks which field the Steam/virtual keyboard is editing
+var _virtual_keyboard: VirtualKeyboard = null
 var _current_is_shipped: bool = false
 var _detail_col: int = 0  # 0=left (statement), 1=right (critique) — shipped only
 
@@ -50,6 +52,12 @@ func _ready():
 	# Connect save button
 	save_button.pressed.connect(_on_save_pressed)
 	save_button.focus_mode = Control.FOCUS_ALL
+
+	# Instantiate virtual keyboard for controller users on non-Steam-Deck
+	_virtual_keyboard = VirtualKeyboardScene.instantiate() as VirtualKeyboard
+	add_child(_virtual_keyboard)
+	_virtual_keyboard.text_confirmed.connect(_on_virtual_keyboard_confirmed)
+	_virtual_keyboard.cancelled.connect(_on_virtual_keyboard_cancelled)
 
 	# Auto-enter text editing when mouse clicks a text field
 	name_input.gui_input.connect(_on_text_gui_input.bind(name_input))
@@ -87,6 +95,11 @@ func _input(event):
 
 	# Only process keyboard/gamepad input when enabled (mouse works via gui_input signals)
 	if not keyboard_nav_enabled:
+		return
+
+	# Block navigation while virtual keyboard is open
+	if _virtual_keyboard != null and _virtual_keyboard.visible:
+		get_viewport().set_input_as_handled()
 		return
 
 	# Don't process navigation if text is being edited — let keys reach the text field
@@ -476,18 +489,29 @@ func _text_overflows(te: TextEdit) -> bool:
 	var bar = te.get_v_scroll_bar()
 	return bar.max_value > bar.page
 
+func _should_use_virtual_keyboard() -> bool:
+	"""True when a controller is active and we're NOT on Steam Deck.
+	Steam Deck has its own native keyboard via the Steam overlay."""
+	if not _last_input_was_gamepad:
+		return false
+	if SteamManager.is_steam_available and Steam.isSteamRunningOnSteamDeck():
+		return false
+	return true
+
 func _activate_detail_item():
 	"""Activate the currently focused detail item"""
 	match detail_focus_index:
 		0:
-			# Enter text editing for name — use Steam overlay keyboard for controllers
-			if _last_input_was_gamepad and SteamManager.is_steam_available:
+			if _should_use_virtual_keyboard():
+				_show_virtual_keyboard(name_input, false)
+			elif _last_input_was_gamepad and SteamManager.is_steam_available:
 				_show_steam_keyboard(name_input, false)
 			else:
 				_enter_text_editing(name_input)
 		1:
-			# Enter text editing for statement — use Steam overlay keyboard for controllers
-			if _last_input_was_gamepad and SteamManager.is_steam_available:
+			if _should_use_virtual_keyboard():
+				_show_virtual_keyboard(statement_input, true)
+			elif _last_input_was_gamepad and SteamManager.is_steam_available:
 				_show_steam_keyboard(statement_input, true)
 			else:
 				_enter_text_editing(statement_input)
@@ -521,6 +545,31 @@ func _show_steam_keyboard(control: Control, multiline: bool) -> void:
 	var max_chars := 500 if multiline else 50
 	var description := "Artist Statement" if multiline else "Painting Name"
 	Steam.showGamepadTextInput(0, line_mode, description, max_chars, existing_text)
+
+func _show_virtual_keyboard(control: Control, multiline: bool) -> void:
+	"""Show the in-game virtual keyboard for controller users on PC."""
+	if _virtual_keyboard == null:
+		return
+	var initial_text: String = control.text if control is LineEdit else (control as TextEdit).text
+	var title: String = tr("Artist Statement") if multiline else tr("Painting Name")
+	var max_len: int = 500 if multiline else 50
+	_steam_editing_field = control
+	_virtual_keyboard.open(initial_text, title, max_len)
+
+func _on_virtual_keyboard_confirmed(text: String) -> void:
+	"""Called when the player presses OK on the virtual keyboard."""
+	if _steam_editing_field == null:
+		return
+	if _steam_editing_field is LineEdit:
+		(_steam_editing_field as LineEdit).text = text
+	elif _steam_editing_field is TextEdit:
+		(_steam_editing_field as TextEdit).text = text
+	_steam_editing_field = null
+
+func _on_virtual_keyboard_cancelled() -> void:
+	"""Called when the player presses B to dismiss without saving."""
+	_steam_editing_field = null
+	_update_detail_focus()
 
 func _on_gamepad_text_input_dismissed(submitted: bool, char_count: int) -> void:
 	"""Called when the Steam overlay keyboard is closed"""
