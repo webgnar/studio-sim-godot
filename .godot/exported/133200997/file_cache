@@ -31,7 +31,7 @@ res://scenes/CarryablePainting.tscn::73c01763a7067768a29c865d6ea415ba::177208866
 res://scenes/human.tscn::69a111d5920c0beed20be7f22b41c616::1761713575::res://.godot/exported/133200997/export-eba661b9dcbe38bde83515c9e6eec66a-human.scn
 res://scenes/PaintingRoot2D.tscn::327cbc56316edd3998080ad3506c2695::1771912938::res://.godot/exported/133200997/export-c9422ff23df7d52dcdbaa5cb19c4dd5d-PaintingRoot2D.scn
 res://scenes/PaintingRoot.tscn::16a314f2db2544bc5d9d0dc50f08ba26::1764019379::res://.godot/exported/133200997/export-7698917d71931537be1d093dc2a1ded6-PaintingRoot.scn
-res://scenes/world.tscn::8a810357fc0f01d06842d474d212b43a::1773253258::res://.godot/exported/133200997/export-6b9c1b1fd6ae6f795188dfdc89e222b0-world.scn
+res://scenes/world.tscn::e8071942f597a998113b27f468c9f4ce::1773331547::res://.godot/exported/133200997/export-6b9c1b1fd6ae6f795188dfdc89e222b0-world.scn
 res://themes/ui_theme.tres::35616f9eca886fe3e908cf52e97c4fc4::1773253258::res://.godot/exported/133200997/export-6986a3918d5316243c91c225d09f5f65-ui_theme.res
 res://default.tscn::090a9f7ae85fa08e3c228d923d165168::1762583134::res://.godot/exported/133200997/export-ecadf3196f98fed7b5722fd2df0d4094-default.scn
 res://scenes/TitleScreen.tscn::7efea40121e9c12ea4b147f644a67443::1771442516::res://.godot/exported/133200997/export-6fe91e769d056a639faff0a4dc2cf1e1-TitleScreen.scn
@@ -101,7 +101,7 @@ res://scenes/UI/PauseMenu.tscn::f5c921f8b934b93d68ec1a3d7a097917::1772485290::re
 res://scenes/button_green.tscn::2789346af5eafff1f25f327d66a66ef3::1771447524::res://.godot/exported/133200997/export-2c92528cb0df77ae3ea1312175b9873c-button_green.scn
 res://scenes/elevator.tscn::4ea47dd79da65434d16fe93bff41320d::1773260286::res://.godot/exported/133200997/export-17f1a0ad83e167178092f4de154a1608-elevator.scn
 res://scenes/Spotlight.tscn::1d6c9b9c08e3d3473ffac13a6417b9e8::1768083039::res://.godot/exported/133200997/export-4bbb8923d986d2a31dd78143e43d6370-Spotlight.scn
-res://scenes/CritiqueTV.tscn::f33bf5cebd0fdb603743077c28465c0a::1772665018::res://.godot/exported/133200997/export-8037a5d4496a4270505916f9ccca4567-CritiqueTV.scn
+res://scenes/CritiqueTV.tscn::5dc7c4bec5f52aeec8c2788630465668::1773335743::res://.godot/exported/133200997/export-8037a5d4496a4270505916f9ccca4567-CritiqueTV.scn
 res://materials/bluebutton.tres::54ce1ca449478c23321719062ab94787::1771447709::res://.godot/exported/133200997/export-9daff46c1d88aeb7798aa53199d5416a-bluebutton.res
 res://materials/tv.tres::0d6bbd5e4e5dfbb1587fed85b5061db6::1773253258::res://.godot/exported/133200997/export-e3b923b7452f19c8cf511bdb811cb8a0-tv.res
 res://materials/world_environ.tres::9b1ce017c1b4475a448ef4d4e23cc7ad::1773253577::res://.godot/exported/133200997/export-2473efc6ed211682c793ff0758380301-world_environ.res
@@ -153,3 +153,7 @@ res://scenes/UI/StudioAssistantPanelUI.tscn::3ee4b635b6bc8f7240437e0d6261fdf1::1
 res://scenes/CarryablePainting5x3.tscn::a06f5df18ee7b5ddf4ba4c322dc46478::1773125547::res://.godot/exported/133200997/export-ed8af1df6a3e0e7647f7968c78585042-CarryablePainting5x3.scn
 res://scenes/PaintingRoot2D_5x3.tscn::f7e057d3a52adaa0342dd5db14a1f041::1773253235::res://.godot/exported/133200997/export-cd73272fcf39ab3dde150b234994856c-PaintingRoot2D_5x3.scn
 res://scenes/objects/basketball_hoop.tscn::cbf3c945a734989e7e6aefcac8841b15::1773253753::res://.godot/exported/133200997/export-9e99c566660c06e64241c298cc062aa5-basketball_hoop.scn
+res://materials/NPCs/maninblack.tres::e57bd8243cbd4996f23f66472ede45e3::1773300909::res://.godot/exported/133200997/export-475d72b83f3027a83a31139e5d69171b-maninblack.res
+res://materials/NPCs/tinfoilguy.tres::2b953dc6084aae68bdad53eb8783aa46::1773300909::res://.godot/exported/133200997/export-0ce02fd254a391bb9803e8704ed82ed4-tinfoilguy.res
+res://scenes/UI/VirtualKeyboard.tscn::60ad016e8cbe96ccaa045735efed5aae::1773347674::res://.godot/exported/133200997/export-fefd510e85d2650edf03306cfb293d7a-VirtualKeyboard.scn
+res://scenes/PipeScreensaver.tscn::6b78f900f18ed6b1f3cfcd1328ea0c36::1773348203::res://.godot/exported/133200997/export-4d1bd3a2b224b6ba9ce3c9a6f250216a-PipeScreensaver.scn

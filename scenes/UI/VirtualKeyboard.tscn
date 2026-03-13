@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://bvkboard4x2m1"]
 
-[ext_resource type="Script" uid="uid://bvkscript7n3p8" path="res://scripts/ui/VirtualKeyboard.gd" id="1_vkscript"]
+[ext_resource type="Script" uid="uid://boni7q8oakbq5" path="res://scripts/ui/VirtualKeyboard.gd" id="1_vkscript"]
 [ext_resource type="Theme" uid="uid://cbtaxh5m7udor" path="res://themes/ui_theme.tres" id="2_theme"]
 
 [node name="VirtualKeyboard" type="CanvasLayer"]
@@ -26,7 +26,7 @@ grow_vertical = 2
 mouse_filter = 2
 
 [node name="PanelContainer" type="PanelContainer" parent="ColorRect/CenterContainer"]
-custom_minimum_size = Vector2(720, 0)
+custom_minimum_size = Vector2(760, 0)
 layout_mode = 2
 theme = ExtResource("2_theme")
 
@@ -53,260 +53,304 @@ theme_override_font_sizes/font_size = 22
 horizontal_alignment = 1
 autowrap_mode = 3
 
-[node name="KeyGrid" type="GridContainer" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
+[node name="KeyArea" type="VBoxContainer" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
-columns = 8
-theme_override_constants/h_separation = 4
-theme_override_constants/v_separation = 4
+theme_override_constants/separation = 4
 
-[node name="Key0" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyGrid"]
-custom_minimum_size = Vector2(72, 52)
+[node name="LetterRowA" type="HBoxContainer" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyArea"]
 layout_mode = 2
-focus_mode = 3
-text = "Q"
+theme_override_constants/separation = 4
 
-[node name="Key1" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyGrid"]
-custom_minimum_size = Vector2(72, 52)
+[node name="BtnA" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyArea/LetterRowA"]
 layout_mode = 2
-focus_mode = 3
-text = "W"
-
-[node name="Key2" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyGrid"]
-custom_minimum_size = Vector2(72, 52)
-layout_mode = 2
-focus_mode = 3
-text = "E"
-
-[node name="Key3" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyGrid"]
-custom_minimum_size = Vector2(72, 52)
-layout_mode = 2
-focus_mode = 3
-text = "R"
-
-[node name="Key4" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyGrid"]
-custom_minimum_size = Vector2(72, 52)
-layout_mode = 2
-focus_mode = 3
-text = "T"
-
-[node name="Key5" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyGrid"]
-custom_minimum_size = Vector2(72, 52)
-layout_mode = 2
-focus_mode = 3
-text = "Y"
-
-[node name="Key6" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyGrid"]
-custom_minimum_size = Vector2(72, 52)
-layout_mode = 2
-focus_mode = 3
-text = "U"
-
-[node name="Key7" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyGrid"]
-custom_minimum_size = Vector2(72, 52)
-layout_mode = 2
-focus_mode = 3
-text = "I"
-
-[node name="Key8" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyGrid"]
-custom_minimum_size = Vector2(72, 52)
-layout_mode = 2
-focus_mode = 3
-text = "O"
-
-[node name="Key9" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyGrid"]
-custom_minimum_size = Vector2(72, 52)
-layout_mode = 2
-focus_mode = 3
-text = "P"
-
-[node name="Key10" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyGrid"]
-custom_minimum_size = Vector2(72, 52)
-layout_mode = 2
-focus_mode = 3
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 52)
+focus_mode = 0
 text = "A"
 
-[node name="Key11" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyGrid"]
-custom_minimum_size = Vector2(72, 52)
+[node name="BtnB" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyArea/LetterRowA"]
 layout_mode = 2
-focus_mode = 3
-text = "S"
-
-[node name="Key12" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyGrid"]
-custom_minimum_size = Vector2(72, 52)
-layout_mode = 2
-focus_mode = 3
-text = "D"
-
-[node name="Key13" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyGrid"]
-custom_minimum_size = Vector2(72, 52)
-layout_mode = 2
-focus_mode = 3
-text = "F"
-
-[node name="Key14" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyGrid"]
-custom_minimum_size = Vector2(72, 52)
-layout_mode = 2
-focus_mode = 3
-text = "G"
-
-[node name="Key15" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyGrid"]
-custom_minimum_size = Vector2(72, 52)
-layout_mode = 2
-focus_mode = 3
-text = "H"
-
-[node name="Key16" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyGrid"]
-custom_minimum_size = Vector2(72, 52)
-layout_mode = 2
-focus_mode = 3
-text = "J"
-
-[node name="Key17" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyGrid"]
-custom_minimum_size = Vector2(72, 52)
-layout_mode = 2
-focus_mode = 3
-text = "K"
-
-[node name="Key18" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyGrid"]
-custom_minimum_size = Vector2(72, 52)
-layout_mode = 2
-focus_mode = 3
-text = "L"
-
-[node name="Key19" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyGrid"]
-custom_minimum_size = Vector2(72, 52)
-layout_mode = 2
-focus_mode = 3
-text = "Z"
-
-[node name="Key20" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyGrid"]
-custom_minimum_size = Vector2(72, 52)
-layout_mode = 2
-focus_mode = 3
-text = "X"
-
-[node name="Key21" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyGrid"]
-custom_minimum_size = Vector2(72, 52)
-layout_mode = 2
-focus_mode = 3
-text = "C"
-
-[node name="Key22" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyGrid"]
-custom_minimum_size = Vector2(72, 52)
-layout_mode = 2
-focus_mode = 3
-text = "V"
-
-[node name="Key23" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyGrid"]
-custom_minimum_size = Vector2(72, 52)
-layout_mode = 2
-focus_mode = 3
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 52)
+focus_mode = 0
 text = "B"
 
-[node name="Key24" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyGrid"]
-custom_minimum_size = Vector2(72, 52)
+[node name="BtnC" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyArea/LetterRowA"]
 layout_mode = 2
-focus_mode = 3
-text = "N"
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 52)
+focus_mode = 0
+text = "C"
 
-[node name="Key25" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyGrid"]
-custom_minimum_size = Vector2(72, 52)
+[node name="BtnD" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyArea/LetterRowA"]
 layout_mode = 2
-focus_mode = 3
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 52)
+focus_mode = 0
+text = "D"
+
+[node name="BtnE" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyArea/LetterRowA"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 52)
+focus_mode = 0
+text = "E"
+
+[node name="BtnF" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyArea/LetterRowA"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 52)
+focus_mode = 0
+text = "F"
+
+[node name="BtnG" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyArea/LetterRowA"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 52)
+focus_mode = 0
+text = "G"
+
+[node name="BtnH" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyArea/LetterRowA"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 52)
+focus_mode = 0
+text = "H"
+
+[node name="BtnI" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyArea/LetterRowA"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 52)
+focus_mode = 0
+text = "I"
+
+[node name="BtnJ" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyArea/LetterRowA"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 52)
+focus_mode = 0
+text = "J"
+
+[node name="BtnK" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyArea/LetterRowA"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 52)
+focus_mode = 0
+text = "K"
+
+[node name="BtnL" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyArea/LetterRowA"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 52)
+focus_mode = 0
+text = "L"
+
+[node name="BtnM" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyArea/LetterRowA"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 52)
+focus_mode = 0
 text = "M"
 
-[node name="Key26" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyGrid"]
-custom_minimum_size = Vector2(72, 52)
+[node name="LetterRowB" type="HBoxContainer" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyArea"]
 layout_mode = 2
-focus_mode = 3
-text = "1"
+theme_override_constants/separation = 4
 
-[node name="Key27" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyGrid"]
-custom_minimum_size = Vector2(72, 52)
+[node name="BtnN" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyArea/LetterRowB"]
 layout_mode = 2
-focus_mode = 3
-text = "2"
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 52)
+focus_mode = 0
+text = "N"
 
-[node name="Key28" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyGrid"]
-custom_minimum_size = Vector2(72, 52)
+[node name="BtnO" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyArea/LetterRowB"]
 layout_mode = 2
-focus_mode = 3
-text = "3"
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 52)
+focus_mode = 0
+text = "O"
 
-[node name="Key29" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyGrid"]
-custom_minimum_size = Vector2(72, 52)
+[node name="BtnP" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyArea/LetterRowB"]
 layout_mode = 2
-focus_mode = 3
-text = "4"
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 52)
+focus_mode = 0
+text = "P"
 
-[node name="Key30" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyGrid"]
-custom_minimum_size = Vector2(72, 52)
+[node name="BtnQ" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyArea/LetterRowB"]
 layout_mode = 2
-focus_mode = 3
-text = "5"
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 52)
+focus_mode = 0
+text = "Q"
 
-[node name="Key31" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyGrid"]
-custom_minimum_size = Vector2(72, 52)
+[node name="BtnR" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyArea/LetterRowB"]
 layout_mode = 2
-focus_mode = 3
-text = "6"
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 52)
+focus_mode = 0
+text = "R"
 
-[node name="Key32" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyGrid"]
-custom_minimum_size = Vector2(72, 52)
+[node name="BtnS" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyArea/LetterRowB"]
 layout_mode = 2
-focus_mode = 3
-text = "7"
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 52)
+focus_mode = 0
+text = "S"
 
-[node name="Key33" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyGrid"]
-custom_minimum_size = Vector2(72, 52)
+[node name="BtnT" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyArea/LetterRowB"]
 layout_mode = 2
-focus_mode = 3
-text = "8"
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 52)
+focus_mode = 0
+text = "T"
 
-[node name="Key34" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyGrid"]
-custom_minimum_size = Vector2(72, 52)
+[node name="BtnU" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyArea/LetterRowB"]
 layout_mode = 2
-focus_mode = 3
-text = "9"
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 52)
+focus_mode = 0
+text = "U"
 
-[node name="Key35" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyGrid"]
-custom_minimum_size = Vector2(72, 52)
+[node name="BtnV" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyArea/LetterRowB"]
 layout_mode = 2
-focus_mode = 3
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 52)
+focus_mode = 0
+text = "V"
+
+[node name="BtnW" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyArea/LetterRowB"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 52)
+focus_mode = 0
+text = "W"
+
+[node name="BtnX" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyArea/LetterRowB"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 52)
+focus_mode = 0
+text = "X"
+
+[node name="BtnY" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyArea/LetterRowB"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 52)
+focus_mode = 0
+text = "Y"
+
+[node name="BtnZ" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyArea/LetterRowB"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 52)
+focus_mode = 0
+text = "Z"
+
+[node name="NumberRow" type="HBoxContainer" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyArea"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="Btn0" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyArea/NumberRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 52)
+focus_mode = 0
 text = "0"
 
-[node name="Key36" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyGrid"]
-custom_minimum_size = Vector2(72, 52)
+[node name="Btn1" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyArea/NumberRow"]
 layout_mode = 2
-focus_mode = 3
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 52)
+focus_mode = 0
+text = "1"
+
+[node name="Btn2" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyArea/NumberRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 52)
+focus_mode = 0
+text = "2"
+
+[node name="Btn3" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyArea/NumberRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 52)
+focus_mode = 0
+text = "3"
+
+[node name="Btn4" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyArea/NumberRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 52)
+focus_mode = 0
+text = "4"
+
+[node name="Btn5" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyArea/NumberRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 52)
+focus_mode = 0
+text = "5"
+
+[node name="Btn6" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyArea/NumberRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 52)
+focus_mode = 0
+text = "6"
+
+[node name="Btn7" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyArea/NumberRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 52)
+focus_mode = 0
+text = "7"
+
+[node name="Btn8" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyArea/NumberRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 52)
+focus_mode = 0
+text = "8"
+
+[node name="Btn9" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyArea/NumberRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 52)
+focus_mode = 0
+text = "9"
+
+[node name="ActionRow" type="HBoxContainer" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyArea"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="BtnCAPS" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyArea/ActionRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 52)
+focus_mode = 0
+text = "CAPS"
+
+[node name="BtnSPACE" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyArea/ActionRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 52)
+focus_mode = 0
 text = "SPACE"
 
-[node name="Key37" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyGrid"]
-custom_minimum_size = Vector2(72, 52)
+[node name="BtnDEL" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyArea/ActionRow"]
 layout_mode = 2
-focus_mode = 3
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 52)
+focus_mode = 0
 text = "DEL"
 
-[node name="Key38" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyGrid"]
-custom_minimum_size = Vector2(72, 52)
+[node name="BtnOK" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyArea/ActionRow"]
 layout_mode = 2
-focus_mode = 3
-text = "."
-
-[node name="Key39" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/KeyGrid"]
-custom_minimum_size = Vector2(72, 52)
-layout_mode = 2
-focus_mode = 3
-text = "-"
-
-[node name="ButtonRow" type="HBoxContainer" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
-layout_mode = 2
-alignment = 1
-
-[node name="OKButton" type="Button" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/ButtonRow"]
-custom_minimum_size = Vector2(200, 52)
-layout_mode = 2
-focus_mode = 3
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 52)
+focus_mode = 0
 text = "OK"
 
 [node name="HintLabel" type="Label" parent="ColorRect/CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]

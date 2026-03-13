@@ -55,9 +55,12 @@ func _ready():
 
 	# Instantiate virtual keyboard for controller users on non-Steam-Deck
 	_virtual_keyboard = VirtualKeyboardScene.instantiate() as VirtualKeyboard
-	add_child(_virtual_keyboard)
-	_virtual_keyboard.text_confirmed.connect(_on_virtual_keyboard_confirmed)
-	_virtual_keyboard.cancelled.connect(_on_virtual_keyboard_cancelled)
+	if _virtual_keyboard == null:
+		push_error("InventoryTab: Failed to instantiate VirtualKeyboard — check script UID in tscn")
+	else:
+		add_child(_virtual_keyboard)
+		_virtual_keyboard.text_confirmed.connect(_on_virtual_keyboard_confirmed)
+		_virtual_keyboard.cancelled.connect(_on_virtual_keyboard_cancelled)
 
 	# Auto-enter text editing when mouse clicks a text field
 	name_input.gui_input.connect(_on_text_gui_input.bind(name_input))
@@ -97,8 +100,9 @@ func _input(event):
 	if not keyboard_nav_enabled:
 		return
 
-	# Block navigation while virtual keyboard is open
+	# Block navigation while virtual keyboard is open; forward event so VK can handle it
 	if _virtual_keyboard != null and _virtual_keyboard.visible:
+		_virtual_keyboard.handle_nav_input(event)
 		get_viewport().set_input_as_handled()
 		return
 

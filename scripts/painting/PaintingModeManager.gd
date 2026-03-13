@@ -25,6 +25,10 @@ var last_placement_time: float = 0.0
 var _is_signing: bool = false
 var _active_signature: PaintingSignatureSystem = null
 
+# Gyro cursor
+var gyro_cursor_offset: Vector2 = Vector2.ZERO
+@export var gyro_sensitivity: float = 350.0
+
 # Undo consumed flag — prevents analog left trigger from undoing multiple times per press in 2D
 var _secondary_consumed: bool = false
 
@@ -55,14 +59,29 @@ func _ready():
 	tick_sound_layer3.bus = "SFX"
 	add_child(tick_sound_layer3)
 
-func _process(_delta):
+func _get_aim_position() -> Vector2:
+	var center = get_viewport().get_visible_rect().size / 2.0
+	return center + gyro_cursor_offset
+
+func _accumulate_gyro(delta: float):
+	var gyro = Input.get_gyroscope()
+	gyro_cursor_offset.x += gyro.y * gyro_sensitivity * delta
+	gyro_cursor_offset.y += gyro.x * gyro_sensitivity * delta
+	var half = get_viewport().get_visible_rect().size / 2.0
+	gyro_cursor_offset = gyro_cursor_offset.clamp(-half, half)
+
+func _process(delta):
 	# Handle continuous signing while button held
 	if _is_signing:
+		_accumulate_gyro(delta)
 		if Input.is_action_pressed("action_primary"):
 			_continue_signing()
 		else:
 			_finish_signing()
 		return
+
+	# Reset gyro drift when not actively painting
+	gyro_cursor_offset = Vector2.ZERO
 
 	# Handle sticker cycling (unified for both systems)
 	if Input.is_action_just_pressed("cycle_sticker_prev"):
@@ -234,8 +253,7 @@ func _perform_unified_raycast() -> Dictionary:
 
 	var viewport = camera.get_viewport()
 
-	# Always use center-screen for controller-first gameplay
-	var mouse_pos: Vector2 = viewport.get_visible_rect().size / 2.0
+	var mouse_pos: Vector2 = _get_aim_position()
 
 	var from = camera.project_ray_origin(mouse_pos)
 	var to = from + camera.project_ray_normal(mouse_pos) * raycast_distance
@@ -331,8 +349,7 @@ func _check_back_face_raycast() -> Dictionary:
 		if not camera:
 			return {}
 
-	var viewport = camera.get_viewport()
-	var mouse_pos: Vector2 = viewport.get_visible_rect().size / 2.0
+	var mouse_pos: Vector2 = _get_aim_position()
 	var from = camera.project_ray_origin(mouse_pos)
 	var to = from + camera.project_ray_normal(mouse_pos) * raycast_distance
 
