@@ -8,9 +8,14 @@ class_name ElevatorExportButton
 @export var button_cooldown: float = 1.0
 
 var last_pressed: float = 0.0
+var _glow_overlay: MeshInstance3D
 
 func _ready() -> void:
 	super._ready()
+
+	_glow_overlay = get_node_or_null("../green button/button/GlowOverlay") as MeshInstance3D
+	if not _glow_overlay:
+		push_warning("ElevatorExportButton: GlowOverlay not found.")
 
 	# Try to find elevator controller if not assigned
 	if not elevator_controller:
@@ -50,6 +55,8 @@ func _on_gate_changed() -> void:
 func _on_export_started(_painting: CarryablePainting) -> void:
 	interaction_text = "Sending..."
 	is_disabled = true
+	if _glow_overlay:
+		_glow_overlay.visible = false
 
 func _on_export_completed(_png_path: String, _glb_path: String) -> void:
 	is_disabled = false
@@ -79,6 +86,9 @@ func _update_interaction_text() -> void:
 	else:
 		interaction_text = "Send Painting"
 		is_disabled = true
+
+	if _glow_overlay:
+		_glow_overlay.visible = not is_disabled
 
 func _on_interacted(_player_interaction_component: PlayerInteractionComponent) -> void:
 	# Cooldown check

@@ -11,6 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://bryic0ubsrfjn" path="res://models/interactables/buttonGreen.glb" id="8_lldhi"]
 [ext_resource type="PackedScene" uid="uid://db8764j2674fq" path="res://models/props/outlet_box.glb" id="9_jkj2p"]
 [ext_resource type="PackedScene" uid="uid://d2hcs1m04uvg7" path="res://models/interactables/button.glb" id="11_qricf"]
+[ext_resource type="Shader" uid="uid://buct2ufpju42v" path="res://shaders/commission_pulse.gdshader" id="export_pulse"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rtj8h"]
 albedo_texture = ExtResource("2_pr5mj")
@@ -111,6 +112,20 @@ albedo_color = Color(0.8, 0.2, 0.2, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_button"]
 size = Vector3(0.2, 0.2, 0.15)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_export_pulse"]
+render_priority = 0
+shader = ExtResource("export_pulse")
+shader_parameter/glow_color = Color(0.47231573, 0.3108883, 0.90421957, 1)
+shader_parameter/glow_strength = 1.0
+shader_parameter/rim_power = 1.0
+shader_parameter/pulse_speed = 6.0
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_export_pulse"]
+top_radius = 0.95
+bottom_radius = 0.95
+radial_segments = 16
+rings = 1
 
 [sub_resource type="Animation" id="Animation_ja3hn"]
 length = 0.001
@@ -345,6 +360,12 @@ transform = Transform3D(-4.371139e-09, 0, -0.1, 0, 0.1, 0, 0.1, 0, -4.371139e-09
 
 [node name="button" parent="ExportButton/green button" unique_id=1538473858 instance=ExtResource("8_lldhi")]
 transform = Transform3D(-3.4969112e-08, 0.8, 0, -0.8, -3.4969112e-08, 0, 0, 0, 0.8, 0.48055172, 0, 0)
+
+[node name="GlowOverlay" type="MeshInstance3D" parent="ExportButton/green button/button" unique_id=159292765]
+visible = false
+material_override = SubResource("ShaderMaterial_export_pulse")
+cast_shadow = 0
+mesh = SubResource("CylinderMesh_export_pulse")
 
 [node name="box" parent="ExportButton/green button" unique_id=1799514240 instance=ExtResource("9_jkj2p")]
 

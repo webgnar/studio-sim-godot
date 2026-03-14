@@ -3,6 +3,21 @@
 [ext_resource type="PackedScene" uid="uid://db8764j2674fq" path="res://models/props/outlet_box.glb" id="1_w3unl"]
 [ext_resource type="PackedScene" uid="uid://bryic0ubsrfjn" path="res://models/interactables/buttonGreen.glb" id="2_w1yl1"]
 [ext_resource type="Script" uid="uid://bsdnronq274dp" path="res://scripts/components/PaintingSubmitButton.gd" id="3_ifk8f"]
+[ext_resource type="Shader" uid="uid://buct2ufpju42v" path="res://shaders/commission_pulse.gdshader" id="4_pulse"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_pulse"]
+render_priority = 0
+shader = ExtResource("4_pulse")
+shader_parameter/glow_color = Color(0.8533752, 0.69665384, 0.99966544, 1)
+shader_parameter/glow_strength = 1.0
+shader_parameter/rim_power = 1.0
+shader_parameter/pulse_speed = 6.0
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_pulse"]
+top_radius = 0.95
+bottom_radius = 0.95
+radial_segments = 16
+rings = 1
 
 [sub_resource type="Animation" id="Animation_c15v2"]
 length = 0.001
@@ -56,6 +71,11 @@ transform = Transform3D(-4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0, 1, 0, 0
 
 [node name="green button" parent="." unique_id=1386671482 instance=ExtResource("2_w1yl1")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5275917, 0)
+
+[node name="GlowOverlay" type="MeshInstance3D" parent="green button" unique_id=2001234567]
+material_override = SubResource("ShaderMaterial_pulse")
+cast_shadow = 0
+mesh = SubResource("CylinderMesh_pulse")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="green button" unique_id=1336102046]
 libraries/ = SubResource("AnimationLibrary_xgy6y")

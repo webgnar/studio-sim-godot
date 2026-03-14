@@ -10,6 +10,7 @@ var last_pressed: float = 0.0
 var pending_painting_system: PaintingSystem2D = null
 var _error_sound: AudioStreamPlayer3D
 var _error_stream: AudioStream = preload("res://sounds/picotron/error.ogg")
+var _glow_overlay: MeshInstance3D
 
 func _on_ready() -> void:
 	_error_sound = AudioStreamPlayer3D.new()
@@ -18,6 +19,10 @@ func _on_ready() -> void:
 	_error_sound.bus = "SFX"
 	_error_sound.stream = _error_stream
 	add_child(_error_sound)
+
+	_glow_overlay = get_node_or_null("../green button/GlowOverlay") as MeshInstance3D
+	if not _glow_overlay:
+		push_warning("PaintingSubmitButton: GlowOverlay not found.")
 
 	_update_interaction_text()
 	MissionManager.mission_started.connect(func(_m): _update_interaction_text())
@@ -29,9 +34,13 @@ func _update_interaction_text() -> void:
 	if MissionManager and MissionManager.current_mission:
 		interaction_text = "Submit Painting"
 		is_disabled = false
+		if _glow_overlay:
+			_glow_overlay.visible = true
 	else:
 		interaction_text = "No Mission"
 		is_disabled = true
+		if _glow_overlay:
+			_glow_overlay.visible = false
 
 func interact(player_interaction_component: PlayerInteractionComponent) -> void:
 	if is_disabled:
