@@ -107,6 +107,10 @@ func setup_achievements() -> void:
 		"ACH_ELEVATOR": false,  # Lock yourself in the elevator
 		"ACH_DIE": false,  # Cause the player to die
 		"ACH_LET_THERE_BE_LIGHT": false,  # Turn on lightswitch3 in light switch box2
+
+		# Shop
+		"ACH_BRAVE_NEW_WORLD": false,  # Purchase all three free energy devices (GEET, Water Fuel Cell, SEG)
+		"ACH_CONSCIOUSNESS_CREATES_REALITY": false,  # Purchase the Custom Sticker button
 	}
 
 func setup_statistics() -> void:

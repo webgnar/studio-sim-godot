@@ -211,6 +211,13 @@ func _unhandled_input(event):
 
 	# Handle undo action
 	if should_undo:
+		# Check for nail removal first
+		var nail_result = _check_nail_raycast()
+		if nail_result:
+			_remove_nail(nail_result)
+			get_viewport().set_input_as_handled()
+			return
+
 		var raycast_result = _perform_unified_raycast()
 		if _is_canvas_plane(raycast_result):
 			# Undo from whichever 2D system owns this canvas
@@ -341,6 +348,34 @@ func sync_sticker_selection(index: int):
 			sys._update_preview_texture()
 
 # --- Signing Helpers ---
+
+func _check_nail_raycast() -> Dictionary:
+	"""Raycast for nail DetectionAreas (collision layer 32)."""
+	if not camera:
+		camera = get_viewport().get_camera_3d()
+		if not camera:
+			return {}
+	var mouse_pos: Vector2 = _get_aim_position()
+	var from = camera.project_ray_origin(mouse_pos)
+	var to = from + camera.project_ray_normal(mouse_pos) * raycast_distance
+	var space_state = camera.get_world_3d().direct_space_state
+	var query = PhysicsRayQueryParameters3D.create(from, to)
+	query.collision_mask = 32
+	query.collide_with_areas = true
+	query.collide_with_bodies = false
+	return space_state.intersect_ray(query)
+
+func _remove_nail(raycast_result: Dictionary) -> void:
+	"""Walk from hit DetectionArea → NailPeg → WallNail root and free it."""
+	var area = raycast_result.get("collider")
+	if not area:
+		return
+	var nail_peg = area.get_parent()       # NailPeg
+	if not nail_peg:
+		return
+	var wall_nail = nail_peg.get_parent()  # WallNail (StaticBody3D)
+	if wall_nail and is_instance_valid(wall_nail):
+		wall_nail.queue_free()
 
 func _check_back_face_raycast() -> Dictionary:
 	"""Raycast specifically for painting back face (layer 7 = bit 6 = mask 64)."""

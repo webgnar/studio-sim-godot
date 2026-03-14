@@ -240,10 +240,16 @@ func _update_selection() -> void:
 
 	item_price_label.text = "$%d" % item["price"]
 	var purchased := ShopManager.is_purchased(item["id"])
+	var locked := ShopManager.is_locked(item["id"])
 	if purchased:
 		buy_button.visible = true
 		buy_button.disabled = true
 		buy_button.text = tr("OWNED")
+		status_label.visible = false
+	elif locked:
+		buy_button.visible = true
+		buy_button.disabled = true
+		buy_button.text = tr("LOCKED")
 		status_label.visible = false
 	else:
 		var can_afford := EconomyManager.can_afford(item["price"])

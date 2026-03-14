@@ -56,6 +56,22 @@ func is_purchased(item_id: String) -> bool:
 	return WorldStateManager.get_purchased_items().has(item_id)
 
 
+func is_locked(item_id: String) -> bool:
+	"""Returns true if item prerequisites are not yet met."""
+	if item_id != "customstickerbutton":
+		return false
+	# Requires all non-repeatable items (except gallery_visitor) to be purchased first
+	for item in _catalog:
+		if item.get("repeatable", false):
+			continue
+		var id: String = item["id"]
+		if id == "customstickerbutton" or id == "gallery_visitor":
+			continue
+		if not is_purchased(id):
+			return true
+	return false
+
+
 func purchase(item_id: String) -> bool:
 	"""
 	Attempt to purchase an item. Deducts money, marks purchased,
@@ -71,6 +87,9 @@ func purchase(item_id: String) -> bool:
 
 	# Non-repeatable items can only be bought once
 	if not is_repeatable and is_purchased(item_id):
+		return false
+
+	if not is_repeatable and is_locked(item_id):
 		return false
 
 	if not EconomyManager.can_afford(item["price"]):
@@ -93,6 +112,19 @@ func purchase(item_id: String) -> bool:
 
 	item_purchased.emit(item_id)
 	print("ShopManager: Purchased '%s' for $%d" % [item["display_name"], item["price"]])
+
+	# Achievement: Consciousness Creates Reality
+	if item_id == "customstickerbutton":
+		if SteamManager:
+			SteamManager.unlock_achievement("ACH_CONSCIOUSNESS_CREATES_REALITY")
+
+	# Achievement: Brave New World (all three free energy devices)
+	var free_energy_ids = ["geet", "wfc", "seg"]
+	if item_id in free_energy_ids:
+		var purchased = WorldStateManager.get_purchased_items()
+		if free_energy_ids.all(func(id): return id in purchased):
+			if SteamManager:
+				SteamManager.unlock_achievement("ACH_BRAVE_NEW_WORLD")
 	return true
 
 
@@ -294,10 +326,10 @@ Perfect for off-grid cabins, emergency preparedness, or anyone who enjoys their 
 		},
 		{
 			"id": "cyclone",
-			"display_name": "Arcade Game",
-			"title": "Vintage Arcade Game from the 90's",
+			"display_name": "Tornado Game",
+			"title": "Tornado Game",
 			"description": "A spinning circle of false hope and questionable reflexes. Perfect for testing hand–eye coordination, patience, and your ability to blame the machine instead of yourself.",
-			"price": 400,
+			"price": 300,
 		},
 		{
 			"id": "seg",
@@ -318,7 +350,7 @@ Rumored capabilities include:
 - Reports of improved electronics efficiency nearby (and occasionally improved confidence).
 
 Whether a revolutionary breakthrough or an extremely sophisticated conversation piece, the Searl Effect Generator undeniably transforms any space into a cutting-edge research facility, or at least a place where bold ideas spin very, very fast.",
-			"price": 300,
+			"price": 420,
 		},
 		{
 			"id": "geet",
@@ -331,7 +363,7 @@ What came out the other end was cleaner than the air going in. Independent tests
 When Paul Pantone refused to sell his patents to the interests circling him (the oil companies, the quiet men in suits who kept showing up at demonstrations and then disappearing), the machinery turned on him. In 2005, the state of Utah charged him with two counts of securities fraud. The case was prosecuted hard, and by the summer of that year Pantone was not in a prison cell but in a state mental hospital in Provo — a distinction that carries its own kind of weight. He remained institutionalized for nearly four years. His son David, convinced his father had full mental faculty, began releasing recorded audio interviews from inside the facility, building a public record. A sympathetic politician eventually intervened. Pantone was released in May 2009. Notably, two researchers at Los Alamos National Laboratory later published work on plasma-assisted combustion that closely mirrored GEET's core principles, and Pantone claimed both men had attended his private training courses.
 
 He died in December 2015, after a long illness, largely unknown outside fringe engineering circles and the European universities and hobbyist groups who had taken his technology further than his own country ever allowed. His US patent, number 5,794,601, filed in 1993, sits in the public record, quiet and unremarkable, describing a fuel pre-treater that makes no performance claims. The technology has been quietly reproduced in Brazil, Israel, France, and elsewhere. The original red Briggs & Stratton engine he dragged to demonstrations for thirty years, wrapped in its confusing tangle of piping, is gone. What remains are the schematics, the testimonies of engineers who walked away shaken, and the question that nobody with power ever seemed to want answered: if it didn't work, why did they work so hard to stop him?",
-			"price": 300,
+			"price": 420,
 		},
 		{
 			"id": "wfc",
@@ -342,7 +374,7 @@ He died in December 2015, after a long illness, largely unknown outside fringe e
 Stanley Meyer collapsed suddenly from a brain aneurysm just an hour after meeting with government officials at a small restaurant in Ohio. According to the story, he had refused to sell his patents for use in military applications, leaving those around him stunned as he fell before he could even leave the building. The abruptness of his death only deepened the aura of mystery surrounding his work.
 
 Meyer himself described the origins of his inventions in deeply personal, spiritual terms. He claimed that during moments between sleep and wakefulness, he received vivid visions of the Water Fuel Cell, images he believed were sent to him by angels. His Christian faith, he said, provided both the moral compass and the inspiration that guided him in turning those visions into mechanical reality.",
-			"price": 300,
+			"price": 420,
 		},
 		{
 			"id": "gallery_visitor",
@@ -357,7 +389,7 @@ Meyer himself described the origins of his inventions in deeply personal, spirit
 			"display_name": "Custom Sticker Modder",
 			"title": "Custom Sticker Modding button",
 			"description": "Modify Studio Sim by adding your own custom motifs to the painting UI array.",
-			"price": 10000,
+			"price": 15000,
 		},
 	]
 	_apply_desc_keys()

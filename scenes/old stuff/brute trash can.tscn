@@ -1,9 +1,11 @@
-[gd_scene load_steps=8 format=3 uid="uid://bhsyl3tj8hblj"]
+[gd_scene format=3 uid="uid://bhsyl3tj8hblj"]
 
 [ext_resource type="PackedScene" uid="uid://duo4fg6er7gvp" path="res://models/props/Brute_L_NoMaterial.glb" id="1_x1lc3"]
 [ext_resource type="Texture2D" uid="uid://dcu1lw1rmyk" path="res://sprites/trashcan/TexturesCom_Plastic_PolypropyleneRough_1K_normal.png" id="2_8ytka"]
 [ext_resource type="Texture2D" uid="uid://cubccvt5724u3" path="res://sprites/trashcan/Brute_Logo.png" id="2_lx68q"]
 [ext_resource type="Texture2D" uid="uid://ccc82eucwlhbu" path="res://sprites/trashcan/TexturesCom_Plastic_PolypropyleneRough_1K_roughness.png" id="3_lx68q"]
+[ext_resource type="PackedScene" uid="uid://cddxg65fcm6bh" path="res://models/props/note.glb" id="5_a4mbt"]
+[ext_resource type="Texture2D" uid="uid://bn3x2lebdbbcl" path="res://sprites/trashcan/note.png" id="6_y1iav"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_jt62n"]
 albedo_color = Color(0.56078434, 0.5568628, 0.59607846, 1)
@@ -20,13 +22,28 @@ subdivide_width = 3
 transparency = 1
 albedo_texture = ExtResource("2_lx68q")
 
-[node name="Brute_L_NoMaterial" instance=ExtResource("1_x1lc3")]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0g4n8"]
+transparency = 1
+albedo_texture = ExtResource("6_y1iav")
+uv1_scale = Vector3(1.01, 1.01, 1.01)
+texture_filter = 0
+
+[node name="Brute_L_NoMaterial" unique_id=1409354813 instance=ExtResource("1_x1lc3")]
 
 [node name="Wheel_005" parent="." index="0"]
 transform = Transform3D(1.000117, 0, 0, 0, 1.0001168, 0, 0, 0, 1.000117, 0, 0, 0)
 surface_material_override/0 = SubResource("StandardMaterial3D_jt62n")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Wheel_005" index="0"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Wheel_005" index="0" unique_id=1606589348]
 transform = Transform3D(0.57811534, 0.81592697, -0.006657182, -0.0063688196, -0.0036463877, -0.99997133, -0.8159288, 0.5781423, 0.003088472, 0.2821403, 0.81927574, 0.15457296)
 mesh = SubResource("PlaneMesh_lx68q")
 surface_material_override/0 = SubResource("StandardMaterial3D_h5djy")
+
+[node name="default" parent="." index="1" unique_id=1385263194 instance=ExtResource("5_a4mbt")]
+transform = Transform3D(0.08, 0, 0, 0, 0.08, 0, 0, 0, 0.08, 0, 0.10453826, -0.09771234)
+
+[node name="note" parent="default" index="0" unique_id=464929315]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.01, 0, 0)
+surface_material_override/0 = SubResource("StandardMaterial3D_0g4n8")
+
+[editable path="default"]
