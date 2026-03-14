@@ -12,6 +12,7 @@ signal closed
 @onready var music_slider: HSlider = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Audio/AudioSettings/MusicSlider
 @onready var sfx_value_label: Label = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Audio/AudioSettings/SFXHeader/SFXValue
 @onready var music_value_label: Label = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Audio/AudioSettings/MusicHeader/MusicValue
+@onready var painting_sounds_checkbox: CheckBox = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Audio/AudioSettings/PaintingSoundsCheckbox
 @onready var hue_slider: HSlider = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/VisualSettings/HueSlider
 @onready var hue_value_label: Label = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/VisualSettings/HueHeader/HueValue
 @onready var saturation_slider: HSlider = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/VisualSettings/SaturationSlider
@@ -84,6 +85,7 @@ func _ready():
 	# Connect signals
 	sfx_slider.value_changed.connect(_on_sfx_slider_changed)
 	music_slider.value_changed.connect(_on_music_slider_changed)
+	painting_sounds_checkbox.toggled.connect(_on_painting_sounds_toggled)
 	
 	# Only connect hue and saturation sliders if they exist
 	if hue_slider:
@@ -336,6 +338,10 @@ func _on_music_slider_changed(value: float):
 	music_value_label.text = "%d%%" % int(value)
 	save_settings()
 
+func _on_painting_sounds_toggled(pressed: bool):
+	AudioManager.painting_sounds_enabled = pressed
+	save_settings()
+
 func _on_hue_slider_changed(value: float):
 	"""Handle hue slider change"""
 	current_hue = value
@@ -422,6 +428,7 @@ func save_settings():
 	# Also save audio settings (in case AudioManager.save_settings() wasn't called)
 	settings["sfx_volume"] = AudioManager.sfx_volume
 	settings["music_volume"] = AudioManager.music_volume
+	settings["painting_sounds"] = AudioManager.painting_sounds_enabled
 
 	# Write to file
 	var file = FileAccess.open("user://settings.json", FileAccess.WRITE)
@@ -436,6 +443,7 @@ func load_settings():
 	music_slider.value = AudioManager.music_volume
 	sfx_value_label.text = "%d%%" % int(AudioManager.sfx_volume)
 	music_value_label.text = "%d%%" % int(AudioManager.music_volume)
+	painting_sounds_checkbox.set_pressed_no_signal(AudioManager.painting_sounds_enabled)
 	
 	# Load visual settings only if hue slider exists
 	if not hue_slider or not saturation_slider:
@@ -659,7 +667,7 @@ func _is_last_in_tab(focused_control: Control) -> bool:
 	"""Check if the focused control is the last focusable item in the current tab"""
 	match tab_container.current_tab:
 		0:  # Audio
-			return focused_control == music_slider
+			return focused_control == painting_sounds_checkbox
 		1:  # Visual
 			return focused_control == saturation_slider
 		2:  # Controls
@@ -678,7 +686,7 @@ func _focus_last_content_item():
 	_update_tab_mode_visual()
 	match tab_container.current_tab:
 		0:  # Audio
-			music_slider.grab_focus()
+			painting_sounds_checkbox.grab_focus()
 		1:  # Visual
 			if saturation_slider:
 				saturation_slider.grab_focus()
@@ -757,7 +765,7 @@ func _update_close_button_focus():
 	if close_button == null:
 		return
 	if tab_container.current_tab == 0:  # Audio tab
-		close_button.focus_previous = close_button.get_path_to(music_slider)
+		close_button.focus_previous = close_button.get_path_to(painting_sounds_checkbox)
 	elif tab_container.current_tab == 1 and saturation_slider:  # Visual tab
 		close_button.focus_previous = close_button.get_path_to(saturation_slider)
 	elif tab_container.current_tab == 2:  # Controls tab
@@ -769,6 +777,7 @@ func _setup_focus_navigation():
 	sfx_slider.focus_mode = Control.FOCUS_ALL
 	music_slider.focus_mode = Control.FOCUS_ALL
 	stick_sensitivity_slider.focus_mode = Control.FOCUS_ALL
+	painting_sounds_checkbox.focus_mode = Control.FOCUS_ALL
 
 	# Set up focus neighbors for Audio tab
 	sfx_slider.focus_next = sfx_slider.get_path_to(music_slider)
@@ -776,6 +785,11 @@ func _setup_focus_navigation():
 
 	music_slider.focus_previous = music_slider.get_path_to(sfx_slider)
 	music_slider.focus_neighbor_top = music_slider.get_path_to(sfx_slider)
+	music_slider.focus_next = music_slider.get_path_to(painting_sounds_checkbox)
+	music_slider.focus_neighbor_bottom = music_slider.get_path_to(painting_sounds_checkbox)
+
+	painting_sounds_checkbox.focus_previous = painting_sounds_checkbox.get_path_to(music_slider)
+	painting_sounds_checkbox.focus_neighbor_top = painting_sounds_checkbox.get_path_to(music_slider)
 
 	# Set up focus for Visual tab only if sliders exist
 	if hue_slider and saturation_slider:
@@ -792,12 +806,12 @@ func _setup_focus_navigation():
 			# When embedded, close button is hidden - don't include in focus chain
 			close_button.focus_mode = Control.FOCUS_NONE
 		else:
-			# Standalone: include close button in focus chain
+			# Standalone: include close button in focus chain after painting_sounds_checkbox
 			close_button.focus_mode = Control.FOCUS_ALL
-			music_slider.focus_next = music_slider.get_path_to(close_button)
-			music_slider.focus_neighbor_bottom = music_slider.get_path_to(close_button)
-			close_button.focus_previous = close_button.get_path_to(music_slider)
-			close_button.focus_neighbor_top = close_button.get_path_to(music_slider)
+			painting_sounds_checkbox.focus_next = painting_sounds_checkbox.get_path_to(close_button)
+			painting_sounds_checkbox.focus_neighbor_bottom = painting_sounds_checkbox.get_path_to(close_button)
+			close_button.focus_previous = close_button.get_path_to(painting_sounds_checkbox)
+			close_button.focus_neighbor_top = close_button.get_path_to(painting_sounds_checkbox)
 			if saturation_slider:
 				saturation_slider.focus_next = saturation_slider.get_path_to(close_button)
 				saturation_slider.focus_neighbor_bottom = saturation_slider.get_path_to(close_button)

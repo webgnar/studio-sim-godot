@@ -13,6 +13,7 @@ var music_bus_index: int = -1
 # Current volume levels (0-100 for UI sliders)
 var sfx_volume: float = 100.0
 var music_volume: float = 100.0
+var painting_sounds_enabled: bool = true
 
 func _ready():
 	# Get audio bus indices
@@ -63,7 +64,8 @@ func save_settings() -> void:
 	"""Save audio settings to disk"""
 	var settings = {
 		"sfx_volume": sfx_volume,
-		"music_volume": music_volume
+		"music_volume": music_volume,
+		"painting_sounds": painting_sounds_enabled
 	}
 	
 	var file = FileAccess.open("user://settings.json", FileAccess.WRITE)
@@ -113,7 +115,10 @@ func load_settings() -> void:
 		music_volume = float(settings.music_volume)
 	else:
 		music_volume = db_to_linear(DEFAULT_MUSIC_VOLUME) * 100.0
-	
+
+	if settings.has("painting_sounds"):
+		painting_sounds_enabled = bool(settings["painting_sounds"])
+
 	print("AudioManager: Settings loaded - SFX: %s, Music: %s" % [sfx_volume, music_volume])
 
 func db_to_linear(db: float) -> float:

@@ -102,6 +102,11 @@ tick_count = 11
 ticks_on_borders = true
 ticks_position = 2
 
+[node name="PaintingSoundsCheckbox" type="CheckBox" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Audio/AudioSettings"]
+layout_mode = 2
+button_pressed = true
+text = "Painting Sounds"
+
 [node name="Visual" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer" unique_id=228019317]
 visible = false
 layout_mode = 2

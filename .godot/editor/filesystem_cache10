@@ -223,7 +223,7 @@ human skeleton rewrite_0.png::CompressedTexture2D::2633463279592013244::17617117
 humanrig_Image_0.png::CompressedTexture2D::3844700032340121009::1763528093::1770566055::1::::<><><>0<>0<>fd8490eca7b6d8f045d94d0aabbdf0d5<>res://.godot/imported/humanrig_Image_0.png-6f93167c8abb5096061c06859ad62577.s3tc.ctex<*>res://.godot/imported/humanrig_Image_0.png-6f93167c8abb5096061c06859ad62577.etc2.ctex::
 humanskeletonskin.png::CompressedTexture2D::2826354972418842789::1761019727::1770566055::1::::<><><>0<>0<>94f6e4ee6aaae4b2759f1072c84b28ca<>res://.godot/imported/humanskeletonskin.png-d74691eb36ccdae28e803813d9b486e6.s3tc.ctex<*>res://.godot/imported/humanskeletonskin.png-d74691eb36ccdae28e803813d9b486e6.etc2.ctex::
 humanskin.png::CompressedTexture2D::8651554618477128302::1761029543::1770566055::1::::<><><>0<>0<>36eff52dda719218d2afd1a8d1274549<>res://.godot/imported/humanskin.png-5e6ca4453bd1a84062922852e6bdf61b.s3tc.ctex<*>res://.godot/imported/humanskin.png-5e6ca4453bd1a84062922852e6bdf61b.etc2.ctex::
-::res://models/props/::1773125547
+::res://models/props/::1773519144
 baricade_1.glb::PackedScene::5926178316641302334::1770442961::1770442983::1::::<><><>0<>0<>cf97ce55d559b80fe6e978a5b93b8fd9<>res://.godot/imported/baricade_1.glb-5deb32314226710173cf319bdf9ad783.scn::uid://bxv8343oasse6::::res://models/props/baricade_1_0.png
 baricade_1_0.png::CompressedTexture2D::4046171250262233791::1770442962::1770566055::1::::<><><>0<>0<>2efd11a2d77a82c3e0ef77c42b56aace<>res://.godot/imported/baricade_1_0.png-d0a14ae24f0a4c6c80de15541bbe3ec8.s3tc.ctex<*>res://.godot/imported/baricade_1_0.png-d0a14ae24f0a4c6c80de15541bbe3ec8.etc2.ctex::
 baricade_2.glb::PackedScene::6722437677685121899::1770442961::1770442983::1::::<><><>0<>0<>ce2a6f8b582b9c1d9cd53d781998b06c<>res://.godot/imported/baricade_2.glb-f11d8a617e7fe26883266d6c15e7f783.scn::uid://vf5d5eqjla6e::::res://models/props/baricade_2_0.png
@@ -304,9 +304,9 @@ stan_meyer water fuel cell_2.png::CompressedTexture2D::4060976443556052438::1772
 table.gltf::PackedScene::4960905446372790431::1764300222::1764320746::1::::<><><>0<>0<>97ac370e112879ba7bcd5a4a1fa1c0e2<>res://.godot/imported/table.gltf-ae1025ffd3d92cd280328dd1fad8bc5a.scn::uid://cau8xno28hd1u::::res://models/props/table_0.png
 table_0.png::CompressedTexture2D::4816174362190452284::1764300222::1770566055::1::::<><><>0<>0<>70bec1547a47b43fa0e4ccd16cda032f<>res://.godot/imported/table_0.png-39a98a990327f5fba3531a00976a9bc2.s3tc.ctex<*>res://.godot/imported/table_0.png-39a98a990327f5fba3531a00976a9bc2.etc2.ctex::
 UpdatedCyclone.glb::PackedScene::8012845650222590361::1772398644::1772519584::1::::<><><>0<>0<>1c3ba28d76b7efb0cc2c85cf6bdb4536<>res://.godot/imported/UpdatedCyclone.glb-7e54100e3f28ae1a0a065151ec5519fe.scn::uid://dh3p7sqe8m1p4::::res://materials/cyclone/cyclone_purple.tres<>uid://cc000gsjbk3a6::::res://materials/cyclone/cyclonedome.tres
-window.glb::PackedScene::5291615734676921467::1761094364::1764320746::1::::<><><>0<>0<>4e1f62c3310c47aac3e116becdc20d04<>res://.godot/imported/window.glb-7084b929be5a813770d7c2361ad9a348.scn::uid://d2g1sathpvh5b::::res://materials/windowglass.tres<>uid://y2n84osgfxtl::::res://models/props/window_1.png
-window_0.png::CompressedTexture2D::5921592433656035733::1762244031::1770566055::1::::<><><>0<>0<>766706c50bc415bc7ad677c5b32b21a9<>res://.godot/imported/window_0.png-1450b2024545dc31d8ff099a39770a7d.s3tc.ctex<*>res://.godot/imported/window_0.png-1450b2024545dc31d8ff099a39770a7d.etc2.ctex::
-window_1.png::CompressedTexture2D::1741120244407712181::1761094364::1770566055::1::::<><><>0<>0<>00cf1a85d04e782a4cdaf98bfbec6ed6<>res://.godot/imported/window_1.png-09e374cdf04aa419789d5b8918df04e0.s3tc.ctex<*>res://.godot/imported/window_1.png-09e374cdf04aa419789d5b8918df04e0.etc2.ctex::
+window.glb::PackedScene::5291615734676921467::1773519144::1773519129::1::::<><><>0<>0<>4e1f62c3310c47aac3e116becdc20d04<>res://.godot/imported/window.glb-7084b929be5a813770d7c2361ad9a348.scn::uid://cqmp06etflq7n::::res://models/props/window_0.png<>uid://y2n84osgfxtl::::res://models/props/window_1.png
+window_0.png::CompressedTexture2D::5921592433656035733::1773519144::1773519146::1::::<><><>0<>0<>766706c50bc415bc7ad677c5b32b21a9<>res://.godot/imported/window_0.png-1450b2024545dc31d8ff099a39770a7d.s3tc.ctex<*>res://.godot/imported/window_0.png-1450b2024545dc31d8ff099a39770a7d.etc2.ctex::
+window_1.png::CompressedTexture2D::1741120244407712181::1773519144::1773519146::1::::<><><>0<>0<>00cf1a85d04e782a4cdaf98bfbec6ed6<>res://.godot/imported/window_1.png-09e374cdf04aa419789d5b8918df04e0.s3tc.ctex<*>res://.godot/imported/window_1.png-09e374cdf04aa419789d5b8918df04e0.etc2.ctex::
 window_2.png::CompressedTexture2D::3843305821279394752::1762243908::1764320742::1::::<><><>0<>0<>77d89750d4ef12e3cff143c8294136a6<>res://.godot/imported/window_2.png-87c4605db02cf03dad312f2f80014718.ctex::
 window_3.png::CompressedTexture2D::8416963540277329472::1762243908::1764320742::1::::<><><>0<>0<>0c91ae31b89ff3e4df2dc32d8c237fb9<>res://.godot/imported/window_3.png-41ae1fb60d3b1a871cf4f15dca02d76a.ctex::
 woodPallet.gltf::PackedScene::3653188179263363965::1764300251::1764320746::1::::<><><>0<>0<>8ffa83969ca255bc0ca2c61f1efda530<>res://.godot/imported/woodPallet.gltf-a9ed822ab15b17360c05aaf1011e4617.scn::uid://duth3xxnuctow::::res://models/props/woodPallet_0.png
@@ -513,10 +513,10 @@ StudioAssistantStatusPanel.tscn::PackedScene::8460974447446245000::1773125547::0
 table.tscn::PackedScene::9105479264143886596::1771824147::0::1::::<><><>0<>0<><>::uid://ccxdngogvbg8n::::res://models/props/table.gltf
 UndoAssistantWorkButton.tscn::PackedScene::-1::1773125547::0::1::::<><><>0<>0<><>::uid://db8764j2674fq::::res://models/props/outlet_box.glb<>uid://bryic0ubsrfjn::::res://models/interactables/buttonGreen.glb<>uid://bd6svkdls6guq::::res://models/interactables/buttonGreen_0.png<>res://scripts/UndoAssistantWorkButton.gd
 WaterBubbles.tscn::PackedScene::3022898495793626513::1772350785::0::1::::<><><>0<>0<><>::
-::res://scenes/old stuff/::1773125547
+::res://scenes/old stuff/::1773518374
 artbox.tscn::PackedScene::5665833970816775326::1764016411::0::1::::<><><>0<>0<><>::uid://b56ugw7vd7hf1::::res://scripts/old stuff/ArtboxInteraction.gd<>uid://cd41rjk7axmf0::::res://sounds/droneRise.ogg<>uid://bgyknl62rv8i2::::res://models/artbox/3.glb<>uid://bscbli4kb5p5n::::res://models/artbox/4.glb<>uid://cwhj4w40hwp52::::res://models/artbox/5.glb<>uid://uwpxuwjxopad::::res://models/artbox/6.glb<>uid://65f11slkoyvf::::res://models/artbox/2.glb<>uid://dsv2g0obaio51::::res://models/artbox/1.glb
 breakable_window.tscn::PackedScene::737024603464478282::1765730031::0::1::::<><><>0<>0<><>::uid://chnkextlwxa7d::::res://models/props/window.glb<>uid://dioncdl2j75r1::::res://scripts/components/BreakableComponent.gd<>uid://da0282miyr872::::res://scenes/old stuff/glass_shard_particle.tscn<>uid://hmanpvvk8cbv::::res://scenes/old stuff/dust_particle.tscn<>uid://cqmp06etflq7n::::res://models/props/window_0.png<>uid://bu0yxkjqsevky::::res://models/props/window_2.png<>uid://dr6ifox1s5hto::::res://models/props/window_3.png<>uid://bfy43rxm5wxu3::::res://sounds/glass-impact.ogg<>uid://c8uq1j18j8m76::::res://sounds/glassbreak.ogg
-brute trash can.tscn::PackedScene::2916379740750135211::1762243521::0::1::::<><><>0<>0<><>::uid://duo4fg6er7gvp::::res://models/props/Brute_L_NoMaterial.glb<>uid://dcu1lw1rmyk::::res://sprites/trashcan/TexturesCom_Plastic_PolypropyleneRough_1K_normal.png<>uid://cubccvt5724u3::::res://sprites/trashcan/Brute_Logo.png<>uid://ccc82eucwlhbu::::res://sprites/trashcan/TexturesCom_Plastic_PolypropyleneRough_1K_roughness.png
+brute trash can.tscn::PackedScene::2916379740750135211::1773518374::0::1::::<><><>0<>0<><>::uid://duo4fg6er7gvp::::res://models/props/Brute_L_NoMaterial.glb<>uid://dcu1lw1rmyk::::res://sprites/trashcan/TexturesCom_Plastic_PolypropyleneRough_1K_normal.png<>uid://cubccvt5724u3::::res://sprites/trashcan/Brute_Logo.png<>uid://ccc82eucwlhbu::::res://sprites/trashcan/TexturesCom_Plastic_PolypropyleneRough_1K_roughness.png<>uid://cddxg65fcm6bh::::res://models/props/note.glb<>uid://bn3x2lebdbbcl::::res://sprites/trashcan/note.png
 dust_particle.tscn::PackedScene::516118475095659207::1762243298::0::1::::<><><>0<>0<><>::uid://c2klhrrwpcdsy::::res://sprites/dust_puff.png
 dust_particle_test.tscn::PackedScene::9180092595922934870::1762243159::0::1::::<><><>0<>0<><>::
 glassshard.tscn::PackedScene::5529825584236249571::1765352157::0::1::::<><><>0<>0<><>::uid://bmhvarfxgft1i::::res://models/particles/shard1.glb<>uid://rmvygaicu8nx::::res://models/particles/new_array_mesh.tres
@@ -604,7 +604,7 @@ SteamManager.gd::GDScript::3479120551781842203::1773516707::0::1::::<>Node<><>0<
 StickerWallManager.gd::GDScript::2943125304701618124::1773125547::0::1::::StickerWallManager<>Node3D<><>0<>0<><>::
 StudioAssistantCharacter.gd::GDScript::6758674201293880360::1773125547::0::1::::<>Node3D<><>0<>0<><>::
 TitleScreenCharacter.gd::GDScript::4191977483880185219::1771296855::0::1::::<>Node3D<><>0<>0<><>::
-TitleScreenController.gd::GDScript::3360862336766886412::1773517420::0::1::::<>Node3D<><>0<>0<><>::
+TitleScreenController.gd::GDScript::3360862336766886412::1773518758::0::1::::<>Node3D<><>0<>0<><>::
 UIManager.gd::GDScript::3514930045252719971::1772519584::0::1::::<>Node<><>0<>0<><>::
 UndoAssistantWorkButton.gd::GDScript::3335762708924329321::1773125547::0::1::::<>InteractionComponent<><>0<>0<><>::
 WorldSetup.gd::GDScript::5696947886217552476::1772350785::0::1::::<>Node3D<><>0<>0<><>::
@@ -660,11 +660,11 @@ MirrorInteraction.gd::GDScript::8819622524409455506::1771949809::0::1::::MirrorI
 mirror_2.gd::GDScript::1296850971002468943::1761113793::0::1::::<>MeshInstance3D<><>0<>0<><>::
 mirror_new.gd::GDScript::3779223385012197752::1761119308::0::1::::<>MeshInstance3D<><>0<>0<><>::
 SimpleInteraction.gd::GDScript::8571012623619763262::1762043942::0::1::::SimpleInteraction<>InteractionComponent<><>0<>0<><>::
-::res://scripts/painting/::1773376652
+::res://scripts/painting/::1773518634
 HistogramRenderer.gd::GDScript::8096184577495570444::1771291643::0::1::::HistogramRenderer<>RefCounted<><>0<>0<><>::
 PaintingLayerDefinition.gd::GDScript::4323075456140053493::1764108643::0::1::::PaintingLayerDefinition<>Resource<><>0<>0<><>::
 PaintingMission.gd::GDScript::4772593952741219278::1772519584::0::1::::PaintingMission<>Resource<><>0<>0<><>::
-PaintingModeManager.gd::GDScript::7917640498477300897::1773376652::0::1::::<>Node<><>0<>0<><>::
+PaintingModeManager.gd::GDScript::7917640498477300897::1773518634::0::1::::<>Node<><>0<>0<><>::
 PaintingRoot2D.gd::GDScript::7412969537653748795::1773125547::0::1::::PaintingRoot2D<>Node3D<><>0<>0<><>::
 PaintingSignatureSystem.gd::GDScript::6396727409716191489::1770495498::0::1::::PaintingSignatureSystem<>Node3D<><>0<>0<><>::
 PaintingSystem2D.gd::GDScript::6362320871364204246::1773125547::0::1::::PaintingSystem2D<>Node2D<><>0<>0<><>::
@@ -934,7 +934,7 @@ hvac.jpg::CompressedTexture2D::4392440591127623322::1761088993::1771439873::1:::
 middle of wall.png::CompressedTexture2D::2970871434465617064::1771309110::1771309144::1::::<><><>0<>0<>5f2e080b5d6560fcac4f08683677c6a9<>res://.godot/imported/middle of wall.png-7b95bb73abcfe48c8e2bf12ac7f53e5e.s3tc.ctex<*>res://.godot/imported/middle of wall.png-7b95bb73abcfe48c8e2bf12ac7f53e5e.etc2.ctex::
 plastic.jpg::CompressedTexture2D::6804898214752282573::1772519584::1772519584::1::::<><><>0<>0<>eca5f1e96b662a13b1860b35fb5db77a<>res://.godot/imported/plastic.jpg-cb18df5baa61711270cc4620467941ff.s3tc.ctex<*>res://.godot/imported/plastic.jpg-cb18df5baa61711270cc4620467941ff.etc2.ctex::
 Vortex-Math.png::CompressedTexture2D::8581334643080919102::1773125547::1773125547::1::::<><><>0<>0<>3c6fd568578adefdb9be8c2b12fadca9<>res://.godot/imported/Vortex-Math.png-d16cd52e1ac8fd999767bb4026dac346.s3tc.ctex<*>res://.godot/imported/Vortex-Math.png-d16cd52e1ac8fd999767bb4026dac346.etc2.ctex::
-::res://sprites/trashcan/::1773518283
+::res://sprites/trashcan/::1773518284
 Brute_Logo.png::CompressedTexture2D::6178808757222810128::1761802209::1770566054::1::::<><><>0<>0<>2430b671e0d9db0b095d36711065dee6<>res://.godot/imported/Brute_Logo.png-831b44461856e34079ed047c063b5736.s3tc.ctex<*>res://.godot/imported/Brute_Logo.png-831b44461856e34079ed047c063b5736.etc2.ctex::
 note.png::CompressedTexture2D::3358123519355810859::1773518283::1773518284::1::::<><><>0<>0<>e35c0d200652e85d072f24902d3b367f<>res://.godot/imported/note.png-9b0142d950e55eba4a3cf5356038068b.s3tc.ctex<*>res://.godot/imported/note.png-9b0142d950e55eba4a3cf5356038068b.etc2.ctex::
 TexturesCom_Plastic_PolypropyleneRough_1K_normal.png::CompressedTexture2D::6351666760769426::1761802358::1770566054::1::::<><><>0<>0<>c13445aa5acdf9e6243f19d75ea8077f<>res://.godot/imported/TexturesCom_Plastic_PolypropyleneRough_1K_normal.png-a5014a568e65abade0f2a8c562b3c48e.s3tc.ctex<*>res://.godot/imported/TexturesCom_Plastic_PolypropyleneRough_1K_normal.png-a5014a568e65abade0f2a8c562b3c48e.etc2.ctex::

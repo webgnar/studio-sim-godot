@@ -423,7 +423,7 @@ func spawn_sticker(world_position: Vector3):
 	# Play random sticker sound (create new player for each sound to allow overlap)
 	var sounds = [sticker_sound_1, sticker_sound_2, sticker_sound_3, sticker_sound_4, sticker_sound_5]
 	var available_sounds = sounds.filter(func(s): return s != null)
-	if not available_sounds.is_empty():
+	if AudioManager.painting_sounds_enabled and not available_sounds.is_empty():
 		var random_sound = available_sounds[randi() % available_sounds.size()]
 		var audio_player = AudioStreamPlayer3D.new()
 		audio_player.name = "StickerSound"

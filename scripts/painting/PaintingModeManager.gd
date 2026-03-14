@@ -109,7 +109,7 @@ func cycle_sticker(direction: int):
 	sync_sticker_selection(new_index)
 
 	# Play tick sound with chord effect
-	if tick_sound:
+	if tick_sound and AudioManager.painting_sounds_enabled:
 		var base_pitch = 1.0
 		tick_sound.pitch_scale = base_pitch
 		tick_sound.play()
