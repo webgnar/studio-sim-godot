@@ -21,9 +21,6 @@ var progression: Dictionary = {}
 # Mission timing for Steam achievements
 var mission_start_time: int = 0
 
-# No-save achievement tracking (runtime only, resets each session)
-var has_manually_saved: bool = false
-
 func _ready():
 	ensure_paintings_directory()
 	load_all_missions()
@@ -341,17 +338,16 @@ func _update_steam_on_mission_complete(_mission: PaintingMission, result: Valida
 	if duration_sec > 0.0 and duration_sec < 60.0:
 		SteamManager.unlock_achievement("ACH_SPEEDRUNNER")
 
-	# Achievement: Complete all co-missions without manual save
-	if not has_manually_saved:
-		var all_completed = true
-		for m in available_missions:
-			if not is_mission_completed(m.mission_id):
-				all_completed = false
-				break
-		if all_completed:
-			SteamManager.unlock_achievement("ACH_ALL_MISSIONS_NO_SAVE")
+	# Achievement: Complete all missions
+	var all_missions_done = true
+	for m in available_missions:
+		if not is_mission_completed(m.mission_id):
+			all_missions_done = false
+			break
+	if all_missions_done:
+		SteamManager.unlock_achievement("ACH_ALL_MISSIONS_COMPLETED")
 
-	# Store all changes to Steam
+# Store all changes to Steam
 	SteamManager.store_steam_data()
 
 func _extract_sticker_ids(placed_layers: Array) -> Array[String]:

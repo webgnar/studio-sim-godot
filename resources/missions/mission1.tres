@@ -1,7 +1,7 @@
-[gd_resource type="Resource" script_class="PaintingMission" load_steps=12 format=3]
+[gd_resource type="Resource" script_class="PaintingMission" format=3 uid="uid://bg77b1vuh45mp"]
 
-[ext_resource type="Script" path="res://scripts/painting/PaintingMission.gd" id="1_akdd4"]
-[ext_resource type="Script" path="res://scripts/painting/PlacedStickerData.gd" id="2_om0rj"]
+[ext_resource type="Script" uid="uid://b8846po2cv0jq" path="res://scripts/painting/PaintingMission.gd" id="1_akdd4"]
+[ext_resource type="Script" uid="uid://c5u6lwuvv83fw" path="res://scripts/painting/PlacedStickerData.gd" id="2_om0rj"]
 
 [sub_resource type="Resource" id="Resource_1a0ho"]
 script = ExtResource("2_om0rj")
@@ -77,7 +77,7 @@ z_order = 8
 [resource]
 script = ExtResource("1_akdd4")
 mission_id = "mission1"
-title = "first"
+title = "the first step"
 description = "					"
 target_stickers = Array[ExtResource("2_om0rj")]([SubResource("Resource_1a0ho"), SubResource("Resource_ik8mr"), SubResource("Resource_w884t"), SubResource("Resource_wwnid"), SubResource("Resource_dy72t"), SubResource("Resource_3opq7"), SubResource("Resource_3ne8p"), SubResource("Resource_qdw4n"), SubResource("Resource_3jutl")])
 reference_image_path = "res://resources/missions/mission1_ref.png"

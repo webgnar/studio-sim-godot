@@ -10,6 +10,8 @@
 [ext_resource type="Texture2D" uid="uid://c5rhf1e60dj00" path="res://sprites/ui/sliderhover.png" id="5_6hnno"]
 [ext_resource type="Texture2D" uid="uid://wpv42ndg7j5o" path="res://sprites/ui/sliderpressed.png" id="6_ntpv8"]
 [ext_resource type="Texture2D" uid="uid://dlupaeaiwaght" path="res://sprites/ui/scroll background.png" id="7_6hnno"]
+[ext_resource type="Texture2D" uid="uid://d3n667lur17kr" path="res://sprites/ui/arrow2.png" id="8_ku3ou"]
+[ext_resource type="Texture2D" uid="uid://dor0d4yiulgi5" path="res://sprites/ui/arrow.png" id="9_thhn4"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6hnno"]
 bg_color = Color(0.59721893, 0.7161294, 1, 1)
@@ -205,6 +207,10 @@ ProgressBar/styles/background = SubResource("StyleBoxTexture_rnfg8")
 ProgressBar/styles/fill = SubResource("StyleBoxTexture_ku3ou")
 StickerSlotDefault/styles/panel = SubResource("StyleBoxFlat_gfhtu")
 StickerSlotEquipped/styles/panel = SubResource("StyleBoxFlat_jkgan")
+TabBar/icons/decrement = ExtResource("8_ku3ou")
+TabBar/icons/decrement_highlight = ExtResource("8_ku3ou")
+TabBar/icons/increment = ExtResource("9_thhn4")
+TabBar/icons/increment_highlight = ExtResource("9_thhn4")
 TabContainer/colors/font_outline_color = Color(0, 0, 0, 1)
 TabContainer/colors/font_selected_color = Color(2.887845e-06, 0.9824384, 0.7705699, 1)
 TabContainer/colors/font_unselected_color = Color(0.8745098, 0.8745098, 0.3137255, 1)
@@ -212,6 +218,10 @@ TabContainer/constants/outline_size = 7
 TabContainer/constants/side_margin = 8
 TabContainer/constants/tab_separation = 9
 TabContainer/font_sizes/font_size = 57
+TabContainer/icons/decrement = ExtResource("8_ku3ou")
+TabContainer/icons/decrement_highlight = ExtResource("8_ku3ou")
+TabContainer/icons/increment = ExtResource("9_thhn4")
+TabContainer/icons/increment_highlight = ExtResource("9_thhn4")
 TabContainer/styles/panel = SubResource("StyleBoxFlat_tab_panel")
 TabContainer/styles/tab_focus = null
 TabContainer/styles/tab_hovered = SubResource("StyleBoxFlat_thhn4")

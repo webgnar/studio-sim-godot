@@ -2,23 +2,14 @@
 	"generated_at": "2026-01-11T00:10:38",
 	"missions": [
 		"face.tres",
-		"landscape1.tres",
 		"landscape2.tres",
 		"landscape3.tres",
 		"minimal.tres",
 		"mission1.tres",
-		"mission2.tres",
-		"mission3.tres",
 		"zack10.tres",
-		"zack11.tres",
-		"zack2.tres",
-		"zack3.tres",
 		"zack34.tres",
-		"zack4.tres",
 		"zack5.tres",
-		"zack6.tres",
 		"zack7.tres",
-		"zack8.tres",
-		"zack9.tres"
+		"zack8.tres"
 	]
 }

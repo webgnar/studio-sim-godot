@@ -1,7 +1,7 @@
-[gd_resource type="Resource" script_class="PaintingMission" load_steps=80 format=3]
+[gd_resource type="Resource" script_class="PaintingMission" format=3 uid="uid://gavf8gvdurpe"]
 
-[ext_resource type="Script" path="res://scripts/painting/PaintingMission.gd" id="1_e5h5x"]
-[ext_resource type="Script" path="res://scripts/painting/PlacedStickerData.gd" id="2_f67lg"]
+[ext_resource type="Script" uid="uid://b8846po2cv0jq" path="res://scripts/painting/PaintingMission.gd" id="1_e5h5x"]
+[ext_resource type="Script" uid="uid://c5u6lwuvv83fw" path="res://scripts/painting/PlacedStickerData.gd" id="2_f67lg"]
 
 [sub_resource type="Resource" id="Resource_ii1bj"]
 script = ExtResource("2_f67lg")
@@ -621,7 +621,7 @@ z_order = 75
 [resource]
 script = ExtResource("1_e5h5x")
 mission_id = "zack34"
-title = "zack34"
+title = "grand weave"
 description = "		"
 target_stickers = Array[ExtResource("2_f67lg")]([SubResource("Resource_ii1bj"), SubResource("Resource_6rlsm"), SubResource("Resource_uaqc4"), SubResource("Resource_sdp1a"), SubResource("Resource_t76p6"), SubResource("Resource_6r2ph"), SubResource("Resource_58lfv"), SubResource("Resource_xbf1q"), SubResource("Resource_wuhlk"), SubResource("Resource_7gh66"), SubResource("Resource_nyxn4"), SubResource("Resource_krorf"), SubResource("Resource_5ykif"), SubResource("Resource_7p88e"), SubResource("Resource_wmbj5"), SubResource("Resource_dplrt"), SubResource("Resource_lalyf"), SubResource("Resource_n3jk6"), SubResource("Resource_caq62"), SubResource("Resource_mkmyo"), SubResource("Resource_7hgne"), SubResource("Resource_kievx"), SubResource("Resource_gda6c"), SubResource("Resource_7prtq"), SubResource("Resource_ym1nv"), SubResource("Resource_mkrhe"), SubResource("Resource_xl1pg"), SubResource("Resource_pth4v"), SubResource("Resource_bf2k3"), SubResource("Resource_7rxcj"), SubResource("Resource_0vb4v"), SubResource("Resource_6u7ni"), SubResource("Resource_iv1uw"), SubResource("Resource_52k82"), SubResource("Resource_hlpyl"), SubResource("Resource_ms2ka"), SubResource("Resource_qucg5"), SubResource("Resource_jdyc0"), SubResource("Resource_n0y73"), SubResource("Resource_8ymoc"), SubResource("Resource_t88g5"), SubResource("Resource_vl77c"), SubResource("Resource_8ldld"), SubResource("Resource_mykvh"), SubResource("Resource_72qxt"), SubResource("Resource_7u60o"), SubResource("Resource_6kw13"), SubResource("Resource_aeivd"), SubResource("Resource_mkq64"), SubResource("Resource_3vifs"), SubResource("Resource_t6at1"), SubResource("Resource_ah2ww"), SubResource("Resource_ow3yx"), SubResource("Resource_33rl5"), SubResource("Resource_fft1g"), SubResource("Resource_t3gmu"), SubResource("Resource_ec0tf"), SubResource("Resource_vtk3j"), SubResource("Resource_tk8d2"), SubResource("Resource_byhcq"), SubResource("Resource_xwn5h"), SubResource("Resource_codih"), SubResource("Resource_t6yu4"), SubResource("Resource_6h0ff"), SubResource("Resource_wmlyt"), SubResource("Resource_rj31d"), SubResource("Resource_2hwau"), SubResource("Resource_t3tni"), SubResource("Resource_tui1w"), SubResource("Resource_0al57"), SubResource("Resource_437c8"), SubResource("Resource_y4ra6"), SubResource("Resource_0bmqf"), SubResource("Resource_yfyop"), SubResource("Resource_q1f4t"), SubResource("Resource_1we5i"), SubResource("Resource_wpth8")])
 reference_image_path = "res://resources/missions/zack34_ref.png"

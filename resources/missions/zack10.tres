@@ -1,7 +1,7 @@
-[gd_resource type="Resource" script_class="PaintingMission" load_steps=72 format=3]
+[gd_resource type="Resource" script_class="PaintingMission" format=3 uid="uid://bm6ssao53voy5"]
 
-[ext_resource type="Script" path="res://scripts/painting/PaintingMission.gd" id="1_urb84"]
-[ext_resource type="Script" path="res://scripts/painting/PlacedStickerData.gd" id="2_yyc3x"]
+[ext_resource type="Script" uid="uid://b8846po2cv0jq" path="res://scripts/painting/PaintingMission.gd" id="1_urb84"]
+[ext_resource type="Script" uid="uid://c5u6lwuvv83fw" path="res://scripts/painting/PlacedStickerData.gd" id="2_yyc3x"]
 
 [sub_resource type="Resource" id="Resource_eh5dt"]
 script = ExtResource("2_yyc3x")
@@ -557,6 +557,6 @@ z_order = 68
 [resource]
 script = ExtResource("1_urb84")
 mission_id = "zack10"
-title = "zack10"
+title = "patterns on the dark"
 target_stickers = Array[ExtResource("2_yyc3x")]([SubResource("Resource_eh5dt"), SubResource("Resource_w5qhv"), SubResource("Resource_7jhbd"), SubResource("Resource_8foa0"), SubResource("Resource_85iqd"), SubResource("Resource_eqpi3"), SubResource("Resource_ubukk"), SubResource("Resource_cruu4"), SubResource("Resource_dllv1"), SubResource("Resource_sherc"), SubResource("Resource_lwree"), SubResource("Resource_e6e5q"), SubResource("Resource_tt6v0"), SubResource("Resource_vjfvy"), SubResource("Resource_b27w4"), SubResource("Resource_631bl"), SubResource("Resource_y8xmm"), SubResource("Resource_7ydmc"), SubResource("Resource_u35gg"), SubResource("Resource_iq4yg"), SubResource("Resource_e2e5v"), SubResource("Resource_il83s"), SubResource("Resource_nw7c6"), SubResource("Resource_nv46v"), SubResource("Resource_8n50v"), SubResource("Resource_4pu8u"), SubResource("Resource_c3bs1"), SubResource("Resource_u2un4"), SubResource("Resource_jjj23"), SubResource("Resource_gnvod"), SubResource("Resource_8pqta"), SubResource("Resource_fciy3"), SubResource("Resource_irykq"), SubResource("Resource_ypryv"), SubResource("Resource_yfqs0"), SubResource("Resource_vk3sp"), SubResource("Resource_gbi8e"), SubResource("Resource_6imaw"), SubResource("Resource_o80ej"), SubResource("Resource_u516v"), SubResource("Resource_ob2tj"), SubResource("Resource_8i8rj"), SubResource("Resource_cp30v"), SubResource("Resource_vjo3w"), SubResource("Resource_x57pb"), SubResource("Resource_k33rf"), SubResource("Resource_14adt"), SubResource("Resource_11hn1"), SubResource("Resource_qym2b"), SubResource("Resource_jcn3i"), SubResource("Resource_7oh16"), SubResource("Resource_i8uyc"), SubResource("Resource_tun58"), SubResource("Resource_0u50i"), SubResource("Resource_pgsu7"), SubResource("Resource_yebeq"), SubResource("Resource_qkj2i"), SubResource("Resource_vckeu"), SubResource("Resource_tg81r"), SubResource("Resource_rvpnn"), SubResource("Resource_rgsjf"), SubResource("Resource_5lw2x"), SubResource("Resource_yds6d"), SubResource("Resource_b3wnr"), SubResource("Resource_eutuo"), SubResource("Resource_mtnu3"), SubResource("Resource_5xfpp"), SubResource("Resource_4wl6u"), SubResource("Resource_aowed")])
 reference_image_path = "res://resources/missions/zack10_ref.png"
