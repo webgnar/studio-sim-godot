@@ -52,6 +52,7 @@ func _hide_all_shop_props() -> void:
 	"""Hide and freeze all shop-gated props. ShopManager reveals purchased ones after load."""
 	for node in get_tree().get_nodes_in_group("shop_prop"):
 		node.visible = false
+		node.process_mode = Node.PROCESS_MODE_DISABLED
 		if node is RigidBody3D:
 			node.freeze = true
 		# Disable all descendant collision shapes so StaticBody3D children (e.g. the

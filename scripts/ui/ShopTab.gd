@@ -245,11 +245,13 @@ func _update_selection() -> void:
 		buy_button.visible = true
 		buy_button.disabled = true
 		buy_button.text = tr("OWNED")
+		buy_button.release_focus()
 		status_label.visible = false
 	elif locked:
 		buy_button.visible = true
 		buy_button.disabled = true
 		buy_button.text = tr("LOCKED")
+		buy_button.release_focus()
 		status_label.visible = false
 	else:
 		var can_afford := EconomyManager.can_afford(item["price"])
@@ -312,6 +314,8 @@ func _exit_desc_scroll_mode() -> void:
 
 
 func _enter_buy_mode() -> void:
+	if buy_button.disabled:
+		return
 	nav_mode = NavMode.BUY_BUTTON
 	desc_scroll.self_modulate = Color(0.7, 0.7, 0.7, 1)
 	scroll_hint.visible = false
@@ -356,7 +360,11 @@ func _on_card_mouse_pressed(idx: int) -> void:
 	"""Handle mouse click on an item card."""
 	selected_index = idx
 	_update_selection()
-	_enter_buy_mode()
+	var catalog := ShopManager.get_catalog()
+	if selected_index >= 0 and selected_index < catalog.size():
+		var item = catalog[selected_index]
+		if not ShopManager.is_purchased(item["id"]) and not ShopManager.is_locked(item["id"]):
+			_enter_buy_mode()
 
 
 # ============================================================================

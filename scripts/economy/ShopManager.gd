@@ -181,6 +181,7 @@ func _reveal_item_props(item_id: String) -> void:
 func _reveal_prop(node: Node) -> void:
 	"""Make a prop visible and active. Applies upward impulse to avoid player overlap."""
 	node.visible = true
+	node.process_mode = Node.PROCESS_MODE_INHERIT
 	# Re-enable all descendant collision shapes that were disabled before purchase
 	for shape in node.find_children("*", "CollisionShape3D", true, false):
 		shape.disabled = false

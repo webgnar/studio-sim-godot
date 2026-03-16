@@ -1,10 +1,10 @@
 72322a848ab928aa5c89f0cb78209805
-::res://::1773608666
+::res://::1773675569
 CAMERA_SYSTEM_SETUP.md::TextFile::-1::1762247192::0::1::::<><><>0<>0<><>::
 DEBUG_EXPORT.md::TextFile::-1::1767209587::0::1::::<><><>0<>0<><>::
 default.tscn::PackedScene::4365866954318602301::1762583134::0::1::::<><><>0<>0<><>::uid://sx0bao2oqis7::::res://models/player/human skeleton rewrite.glb
 default_bus_layout.tres::AudioBusLayout::8879290785730250873::1766349807::0::1::::<><><>0<>0<><>::
-export_presets.cfg::TextFile::-1::1773560518::0::1::::<><><>0<>0<><>::
+export_presets.cfg::TextFile::-1::1773611419::0::1::::<><><>0<>0<><>::
 icon.svg::CompressedTexture2D::2126835338060944900::1760937980::1764320742::1::::<><><>0<>0<>c511fe3db7501179497f362af9747f17<>res://.godot/imported/icon.svg-218a8f2b3041327d8a5756f3a245f83b.ctex::
 INCREMENTAL_GAME_PLAN.md::TextFile::-1::1768030190::0::1::::<><><>0<>0<><>::
 INPUT_ANALYSIS.md::TextFile::-1::1767217029::0::1::::<><><>0<>0<><>::
@@ -547,7 +547,7 @@ ValidationLoadingOverlay.tscn::PackedScene::5033299275984382255::1771171809::0::
 ValidationResultUI.tscn::PackedScene::7481150193439125933::1772063826::0::1::::<><><>0<>0<><>::res://scripts/ui/ValidationResultUI.gd<>uid://cvtxaw8dw07fw::::res://scenes/UI/MissionResultsDisplay.tscn<>uid://cbtaxh5m7udor::::res://themes/ui_theme.tres
 VirtualKeyboard.tscn::PackedScene::3881115922177484614::1773347674::0::1::::<><><>0<>0<><>::uid://boni7q8oakbq5::::res://scripts/ui/VirtualKeyboard.gd<>uid://cbtaxh5m7udor::::res://themes/ui_theme.tres
 VisitorDialogueBox.tscn::PackedScene::8702348421829654227::1772826743::0::1::::<><><>0<>0<><>::uid://bcp12flb8ns7k::::res://scripts/ui/VisitorDialogueBox.gd
-::res://scripts/::1773522602
+::res://scripts/::1773611316
 AssistantFinishedCanvas.gd::GDScript::8327857821395787524::1773125547::0::1::::AssistantFinishedCanvas<>Node3D<><>0<>0<><>::
 AudioManager.gd::GDScript::1683297059755285547::1773519451::0::1::::<>Node<><>0<>0<><>::
 BaricadeTrigger.gd::GDScript::3946487977829720425::1772770510::0::1::::<>Node3D<><>0<>0<><>::
@@ -575,7 +575,7 @@ InputValidator.gd::GDScript::6548696200241836167::1767205465::0::1::::<>Node<><>
 KeyPickup.gd::GDScript::5093388634358452122::1770658043::0::1::::KeyPickup<>InteractionComponent<><>0<>0<><>::
 LaunchOptionsHandler.gd::GDScript::5466695710007717493::1767205477::0::1::::<>Node<><>0<>0<><>::
 LocaleManager.gd::GDScript::591618855742831191::1770695297::0::1::::<>Node<><>0<>0<><>::
-MissionManager.gd::GDScript::3660156020748544969::1773522602::0::1::::<>Node<><>0<>0<><>::
+MissionManager.gd::GDScript::3660156020748544969::1773611176::0::1::::<>Node<><>0<>0<><>::
 MoneyReputationHUD.gd::GDScript::5633928954718032727::1772131608::0::1::::<>CanvasLayer<><>0<>0<><>::
 OptionsMenu.gd::GDScript::7132475646353091587::1773519528::0::1::::<>Control<><>0<>0<><>::
 OutlineManager.gd::GDScript::1775829841741582502::1768028385::0::1::::OutlineManager<>Node<><>0<>0<><>::
@@ -591,7 +591,7 @@ PlayerLaserBeam.gd::GDScript::5626436999992710999::1767419123::0::1::::<>Node3D<
 ProceduralSpeech.gd::GDScript::574056252012520996::1773125547::0::1::::ProceduralSpeech<>Node<><>0<>0<><>::
 ProjectileNail.gd::GDScript::4871427963888925413::1773125547::0::1::::ProjectileNail<>RigidBody3D<><>0<>0<><>::
 SaveAssistantWorkButton.gd::GDScript::5556358647476312208::1773125547::0::1::::<>InteractionComponent<><>0<>0<><>::
-SaveComputerInteraction.gd::GDScript::2362745093935830615::1770670851::0::1::::<>InteractionComponent<><>0<>0<><>::
+SaveComputerInteraction.gd::GDScript::2362745093935830615::1773611316::0::1::::<>InteractionComponent<><>0<>0<><>::
 SceneTransition.gd::GDScript::1910291983766664808::1770406901::0::1::::<>CanvasLayer<><>0<>0<><>::
 SkinLibrary.gd::GDScript::7356394523769754255::1771563477::0::1::::<>Node<><>0<>0<><>::
 SkyRotator.gd::GDScript::3818510123210597579::1771441671::0::1::::<>WorldEnvironment<><>0<>0<><>::
@@ -738,7 +738,7 @@ plugIn.ogg::AudioStreamOggVorbis::4195966990803464657::1762064280::1764320741::1
 plugOut.ogg::AudioStreamOggVorbis::2362873068258311919::1762064284::1764320741::1::::<><><>0<>0<>b7a65a6ce4ab1f231112eb944317ea05<>res://.godot/imported/plugOut.ogg-19e180cc33c5dc723c0acf21dc253a14.oggvorbisstr::
 studiodoorcreak.ogg::AudioStreamOggVorbis::5484185960116068973::1773125547::1772770803::1::::<><><>0<>0<>4b12e454dacd0d41da6033ce6f13d279<>res://.godot/imported/studiodoorcreak.ogg-44c9b814f6cdcc43e0c71b84a9c2c16d.oggvorbisstr::
 trash can.ogg::AudioStreamOggVorbis::8226499830824661997::1762139388::1764320741::1::::<><><>0<>0<>d7ed99db5f50ea493f8fe5b8d349329b<>res://.godot/imported/trash can.ogg-e977452c7b831fbd4f1e177342ea7e7a.oggvorbisstr::
-::res://sounds/picotron/::1773125547
+::res://sounds/picotron/::1773679625
 ambient.ogg::AudioStreamOggVorbis::7398520542138253893::1765687583::1765687584::1::::<><><>0<>0<>95090e91e4b2282af2af152a097b1481<>res://.godot/imported/ambient.ogg-51ffc862055261eb9a83bc141426fba6.oggvorbisstr::
 buttonhit.ogg::AudioStreamOggVorbis::7169313015748236092::1765689900::1765689900::1::::<><><>0<>0<>3655799e36c165bb7ba8574d106d6ea6<>res://.godot/imported/buttonhit.ogg-263a06abffb19c7665206fa42fc879cd.oggvorbisstr::
 buttonnav.ogg::AudioStreamOggVorbis::532518918992108662::1765687634::1765687635::1::::<><><>0<>0<>e5afa1f3f33bdbc017ef4b277097cc45<>res://.godot/imported/buttonnav.ogg-cd086db8856830900a329563ec6052d8.oggvorbisstr::
@@ -760,6 +760,7 @@ nailshoot.ogg::AudioStreamOggVorbis::4285251261807738841::1765690422::1765690422
 nailstick.ogg::AudioStreamOggVorbis::7949937949044002744::1765690422::1765690422::1::::<><><>0<>0<>ef3b44a0d9a267ce12083bbdc16082e2<>res://.godot/imported/nailstick.ogg-700b2d9ae1920736cf339652fc197098.oggvorbisstr::
 openmenu.ogg::AudioStreamOggVorbis::5758522717541714121::1765687666::1765687666::1::::<><><>0<>0<>a53838fb4d0db6d81d172fdfcbcf60a3<>res://.godot/imported/openmenu.ogg-b81408a7b8c2a0478c8ee6eea388b21a.oggvorbisstr::
 release2.ogg::AudioStreamOggVorbis::101198443627544471::1765736991::1765736992::1::::<><><>0<>0<>ced38cc5c8a04a21bf47c70d002beaa1<>res://.godot/imported/release2.ogg-2775fffe8b3c083748e7918ee5835ffb.oggvorbisstr::
+save_painting.ogg::AudioStreamOggVorbis::4820482508699392352::1773679625::1773679626::1::::<><><>0<>0<>819c2c3b503769078d8f537eb88767b1<>res://.godot/imported/save_painting.ogg-e992a22c84072c4a12844979b52dfdd5.oggvorbisstr::
 sine.ogg::AudioStreamOggVorbis::3482651577326618074::1766003011::1766003015::1::::<><><>0<>0<>cd311d11d1d6a808018c5b2780c8ce42<>res://.godot/imported/sine.ogg-88d7eab6ef8a15c724dfd1c2f3e46d63.oggvorbisstr::
 song.ogg::AudioStreamOggVorbis::8891361177289345944::1765687681::1765687682::1::::<><><>0<>0<>ee5ba8f74c499af5d124ad241997e392<>res://.godot/imported/song.ogg-3cdaaaccfc0e1ce5a8ff20c7c93c5f9d.oggvorbisstr::
 sticker1.ogg::AudioStreamOggVorbis::6677439805165083695::1765735412::1765735412::1::::<><><>0<>0<>8fd199b1e89ab0219c514699760d46fb<>res://.godot/imported/sticker1.ogg-9ae446de2d480ca1ef2e5ce334f6bbc5.oggvorbisstr::
@@ -838,11 +839,11 @@ skinbig.png::CompressedTexture2D::6251349476331322446::1773125547::1773125547::1
 skinbig_normal.png::CompressedTexture2D::6883508275211601009::1773125547::1773125547::1::::<><><>0<>0<>596d61650d02710bbd38ba5402ada2e9<>res://.godot/imported/skinbig_normal.png-e09b0d219aef481de5f11c0150318c48.s3tc.ctex<*>res://.godot/imported/skinbig_normal.png-e09b0d219aef481de5f11c0150318c48.etc2.ctex::
 tanguy_greenshirt.png::CompressedTexture2D::60604468250880418::1773125547::1773125547::1::::<><><>0<>0<>6f51c1f767e7c0311b364db3dcd6aab2<>res://.godot/imported/tanguy_greenshirt.png-e60b5ae0ab99ae65306d68a75978cd3e.s3tc.ctex<*>res://.godot/imported/tanguy_greenshirt.png-e60b5ae0ab99ae65306d68a75978cd3e.etc2.ctex::
 tanguy_greenshirt_normal.png::CompressedTexture2D::1763796853829035088::1773125547::1773125547::1::::<><><>0<>0<>8a919dd56c9f7c55800d6271ed2b141f<>res://.godot/imported/tanguy_greenshirt_normal.png-dadbba249af41018a5adac8473f0d569.s3tc.ctex<*>res://.godot/imported/tanguy_greenshirt_normal.png-dadbba249af41018a5adac8473f0d569.etc2.ctex::
-::res://sprites/painting layers/::1773610305
+::res://sprites/painting layers/::1773678894
 1.png::CompressedTexture2D::8976614972343118115::1763617655::1764320741::1::::<><><>0<>0<>84aa20ce54d9d6fa264d538417b59f12<>res://.godot/imported/1.png-a0ecd51a7b2738f2cf50c746423c7a12.ctex::
 2.png::CompressedTexture2D::2969314873682220433::1763617655::1764320741::1::::<><><>0<>0<>d1a4e37121899f1d6ecbddda0c6adf66<>res://.godot/imported/2.png-f377baaa8be1645d219d0c377c4a210f.ctex::
 3.png::CompressedTexture2D::7456802519615643036::1763617655::1764320741::1::::<><><>0<>0<>e86159cb098c00626489a66450bf67b9<>res://.godot/imported/3.png-fdc6bca5bb2db2b33a75ef3420fe4110.ctex::
-4.png::CompressedTexture2D::5217229605023309292::1763617655::1764320741::1::::<><><>0<>0<>aca23693eaf58e16830482c13b4c1d48<>res://.godot/imported/4.png-2e45d31e5f8dcb589bc56c68df74d9c5.ctex::
+4.png::CompressedTexture2D::5217229605023309292::1773677512::1773677516::1::::<><><>0<>0<>aca23693eaf58e16830482c13b4c1d48<>res://.godot/imported/4.png-2e45d31e5f8dcb589bc56c68df74d9c5.ctex::
 5.png::CompressedTexture2D::6728044334963677656::1768176005::1768176005::1::::<><><>0<>0<>3c3f49b3463e1e73744ac0f9c0bd3fbe<>res://.godot/imported/5.png-9e7b66ed0fb341072f00e0856eb9cacb.ctex::
 6.png::CompressedTexture2D::8128206162622410423::1763678875::1764320741::1::::<><><>0<>0<>a99d3b7acad387ec8be0144033525fe2<>res://.godot/imported/6.png-67b188742ebd4746d630f5a5139367d4.ctex::
 7.png::CompressedTexture2D::989267785886251819::1773418565::1773418565::1::::<><><>0<>0<>73e75a9f0908a19f7aea2661f1b5c6ac<>res://.godot/imported/7.png-a5ea26966689069a65a4d52e1240f401.ctex::
@@ -853,7 +854,7 @@ tanguy_greenshirt_normal.png::CompressedTexture2D::1763796853829035088::17731255
 12.png::CompressedTexture2D::8971950077967454875::1764752688::1764752688::1::::<><><>0<>0<>f7587060651b6e2ee6340a12431ea777<>res://.godot/imported/12.png-4ba0f91f0d7b2f56efa15dbb9f25cc43.ctex::
 13.png::CompressedTexture2D::8659208744987941051::1764752688::1764752688::1::::<><><>0<>0<>1c0c1b05ba2e7c2a3fe1330b1bcc4e4f<>res://.godot/imported/13.png-38076205ba14273dd27720e09584a4ed.ctex::
 14.png::CompressedTexture2D::5995768604784760950::1768175821::1768175822::1::::<><><>0<>0<>c059d7e3bcfeecab80e6d5c3b9e16069<>res://.godot/imported/14.png-f78b5322062a65b92ff3073db38a373d.ctex::
-15.png::CompressedTexture2D::3514414370994235372::1764752688::1764752688::1::::<><><>0<>0<>2e634f98d55fd111cda5069173f95cad<>res://.godot/imported/15.png-aace795a83b83a68199703c61c42af7b.ctex::
+15.png::CompressedTexture2D::3514414370994235372::1773678890::1773678894::1::::<><><>0<>0<>2e634f98d55fd111cda5069173f95cad<>res://.godot/imported/15.png-aace795a83b83a68199703c61c42af7b.ctex::
 18.png::CompressedTexture2D::3736306888828710790::1764752688::1764752688::1::::<><><>0<>0<>7ff404f4553ffb6bcbb99984705c5ab3<>res://.godot/imported/18.png-f61f940e23e8cd6c689846af29a6e1d1.ctex::
 19.png::CompressedTexture2D::2487715922081197155::1764752688::1764752688::1::::<><><>0<>0<>52d54b7da38a2f5ab0077e7caf7e4b6c<>res://.godot/imported/19.png-6bc9d7f02d8e45cbd363f4a7d70e9bbc.ctex::
 20.png::CompressedTexture2D::4577969001984972591::1773377620::1773377624::1::::<><><>0<>0<>f690737e9e3bcaf18827fe3ee50d0452<>res://.godot/imported/20.png-133ffa9c5aa7aa612fb5d11aaea3dd3b.ctex::

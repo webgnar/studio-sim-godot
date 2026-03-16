@@ -43,6 +43,7 @@ var _detail_col: int = 0  # 0=left (statement), 1=right (critique) — shipped o
 # Sound (reuse parent PauseMenu sounds)
 var button_nav_sound: AudioStreamPlayer = null
 var button_hit_sound: AudioStreamPlayer = null
+var _save_info_sound: AudioStreamPlayer = null
 
 func _ready():
 	if Engine.is_editor_hint():
@@ -52,6 +53,12 @@ func _ready():
 	# Connect save button
 	save_button.pressed.connect(_on_save_pressed)
 	save_button.focus_mode = Control.FOCUS_ALL
+	save_button.text = "Save Info"
+
+	# Save info sound
+	_save_info_sound = AudioStreamPlayer.new()
+	_save_info_sound.stream = load("res://sounds/picotron/save_painting.ogg")
+	add_child(_save_info_sound)
 
 	# Instantiate virtual keyboard for controller users on non-Steam-Deck
 	_virtual_keyboard = VirtualKeyboardScene.instantiate() as VirtualKeyboard
@@ -290,6 +297,7 @@ func _populate_painting_list():
 
 	# Get all paintings
 	painting_entries = WorldStateManager.get_all_paintings()
+	painting_entries.reverse()
 
 	# Create cards
 	for i in range(painting_entries.size()):
@@ -312,7 +320,8 @@ func _show_detail_panel(should_show: bool):
 	if statement_label:
 		statement_label.visible = should_show
 	statement_input.visible = should_show
-	save_button.visible = should_show
+	if not should_show:
+		save_button.visible = false
 
 	# Show/hide empty label
 	if empty_label:
@@ -522,8 +531,6 @@ func _activate_detail_item():
 		2:
 			# Save
 			_on_save_pressed()
-			if button_hit_sound:
-				button_hit_sound.play()
 
 func _enter_text_editing(control: Control):
 	"""Enter text editing mode for a LineEdit or TextEdit"""
@@ -645,6 +652,8 @@ func _on_save_pressed():
 		status_label.text = tr("Status: %s") % tr("DONE")
 		status_label.modulate = Color(0.4, 1.0, 0.4)
 
+	if _save_info_sound:
+		_save_info_sound.play()
 	print("InventoryTab: Saved painting '%s'" % new_name)
 
 func _on_card_clicked(index: int):
