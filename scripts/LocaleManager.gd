@@ -106,7 +106,7 @@ func _update_font_fallback_order(locale: String):
 			main_font.fallbacks = [cjk_sc, cjk_jp, cjk_kr]
 
 func _load_saved_locale():
-	"""Load saved locale from settings, or detect from system"""
+	"""Load saved locale from settings, or detect from Steam/system"""
 	if FileAccess.file_exists("user://settings.json"):
 		var file = FileAccess.open("user://settings.json", FileAccess.READ)
 		if file:
@@ -119,7 +119,13 @@ func _load_saved_locale():
 					return
 			file.close()
 
-	# No saved locale — detect from system
+	# No saved locale — check Steam language setting first
+	var steam_locale = _get_steam_locale()
+	if steam_locale != "":
+		set_locale(steam_locale)
+		return
+
+	# Fall back to OS system locale
 	var sys_locale = OS.get_locale()
 	if sys_locale.begins_with("zh"):
 		set_locale("zh_CN")
@@ -129,6 +135,29 @@ func _load_saved_locale():
 		set_locale("ko")
 	else:
 		set_locale("en")
+
+func _get_steam_locale() -> String:
+	"""Map Steam's current app language to a supported locale code.
+	Returns "" if Steam is unavailable or the language isn't supported."""
+	if not Engine.has_singleton("Steam"):
+		return ""
+	var steam = Engine.get_singleton("Steam")
+	# Use call() to avoid parser errors on the GDExtension singleton
+	var steam_lang: String = ""
+	if steam.has_method("getCurrentGameLanguage"):
+		steam_lang = steam.call("getCurrentGameLanguage")
+	elif steam.has_method("getAppLanguage"):
+		steam_lang = steam.call("getAppLanguage")
+	if steam_lang == "":
+		return ""
+	var steam_to_locale = {
+		"english": "en",
+		"japanese": "ja",
+		"koreana": "ko",
+		"schinese": "zh_CN",
+		"tchinese": "zh_CN",
+	}
+	return steam_to_locale.get(steam_lang, "")
 
 func _save_locale():
 	"""Save current locale to settings file"""

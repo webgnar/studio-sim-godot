@@ -1,0 +1,7 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://ddv7h8j6qfi0m"]
+
+[ext_resource type="Texture2D" uid="uid://oybefx14nwy6" path="res://sprites/NPCs/Gw.png" id="1_d86m5"]
+
+[resource]
+albedo_texture = ExtResource("1_d86m5")
+texture_filter = 0

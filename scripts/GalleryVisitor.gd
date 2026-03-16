@@ -48,6 +48,7 @@ const SKIN_PERSONALITIES: Dictionary = {
 	"kylie": "kylie",
 	"tinfoilguy": "conspiracist",
 	"maninblack": "disinfo",
+	"gw": "washington",
 }
 
 const STREETWISE_FALLBACK_LINES = [
