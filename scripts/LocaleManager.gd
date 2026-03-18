@@ -106,20 +106,27 @@ func _update_font_fallback_order(locale: String):
 			main_font.fallbacks = [cjk_sc, cjk_jp, cjk_kr]
 
 func _load_saved_locale():
-	"""Load saved locale from settings, or detect from Steam/system"""
+	"""Load saved locale from settings, or detect from Steam/system.
+	Priority: user's explicit in-game choice > Steam language > OS locale > English.
+	Steam is checked before saved settings unless the user explicitly changed the
+	language in-game (locale_explicitly_set == true), so that the Steam language
+	dropdown always takes effect on first launch or after clearing preferences."""
 	if FileAccess.file_exists("user://settings.json"):
 		var file = FileAccess.open("user://settings.json", FileAccess.READ)
 		if file:
 			var json = JSON.new()
 			if json.parse(file.get_as_text()) == OK and json.data is Dictionary:
-				var saved_locale = json.data.get("locale", "")
-				if saved_locale != "" and saved_locale in SUPPORTED_LOCALES:
-					set_locale(saved_locale)
-					file.close()
-					return
+				# Only respect saved locale when the user explicitly chose it in-game.
+				# If locale_explicitly_set is absent/false the Steam dropdown takes priority.
+				if json.data.get("locale_explicitly_set", false):
+					var saved_locale = json.data.get("locale", "")
+					if saved_locale != "" and saved_locale in SUPPORTED_LOCALES:
+						set_locale(saved_locale)
+						file.close()
+						return
 			file.close()
 
-	# No saved locale — check Steam language setting first
+	# No explicit user preference — check Steam language (authoritative for Steam users)
 	var steam_locale = _get_steam_locale()
 	if steam_locale != "":
 		set_locale(steam_locale)
@@ -171,6 +178,7 @@ func _save_locale():
 			read_file.close()
 
 	settings["locale"] = current_locale
+	settings["locale_explicitly_set"] = true
 
 	var file = FileAccess.open("user://settings.json", FileAccess.WRITE)
 	if file:

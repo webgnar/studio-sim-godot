@@ -1,7 +1,7 @@
+SpotLight3D
 CollisionShape3D
 StaticBody3D
 CSGBox3D
-SpotLight3D
 AnimationPlayer
 Sprite3D
 AnimatedSprite3D

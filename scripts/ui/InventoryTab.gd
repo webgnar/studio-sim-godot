@@ -83,6 +83,9 @@ func _ready():
 		button_nav_sound = pause_menu.get_node_or_null("ButtonNavSound")
 		button_hit_sound = pause_menu.get_node_or_null("ButtonHitSound")
 
+	if LocaleManager:
+		LocaleManager.locale_changed.connect(_on_locale_changed)
+
 	# Disable input processing by default (PauseMenu manages activation via process_mode)
 	process_mode = Node.PROCESS_MODE_DISABLED
 
@@ -688,6 +691,16 @@ func _populate_editor_preview():
 		painting_list_container.add_child(card)
 	if stats_label:
 		stats_label.text = "Paintings: 3"
+
+func _on_locale_changed(_locale: String) -> void:
+	if not visible:
+		return
+	stats_label.text = tr("Paintings: %d") % painting_entries.size()
+	if selected_index >= 0 and selected_index < painting_entries.size():
+		var data = painting_entries[selected_index]
+		var status = data.get("status", "WIP")
+		if status_label:
+			status_label.text = tr("Status: %s") % tr(status)
 
 func _find_parent_pause_menu() -> Node:
 	"""Find the PauseMenu parent node"""
