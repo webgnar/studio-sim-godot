@@ -589,6 +589,9 @@ func _create_language_tab():
 		var btn = Button.new()
 		btn.text = LocaleManager.LOCALE_NAMES[locale]
 		btn.focus_mode = Control.FOCUS_ALL
+		var flag_path := "res://sprites/ui/flags/%s.png" % locale
+		if ResourceLoader.exists(flag_path):
+			btn.icon = load(flag_path)
 		btn.pressed.connect(_on_language_selected.bind(locale))
 		btn.focus_entered.connect(_scroll_to_language_button.bind(btn))
 		language_button_container.add_child(btn)
