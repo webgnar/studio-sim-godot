@@ -8,6 +8,10 @@
 [sub_resource type="BoxShape3D" id="BoxShape3D_7a1v1"]
 size = Vector3(0.22827148, 0.10437012, 0.24414063)
 
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_7a1v1"]
+radius = 0.9926758
+height = 3.0233154
+
 [node name="Cyclone" type="Node3D" unique_id=630081305]
 
 [node name="UpdatedCyclone" parent="." unique_id=21331279 node_paths=PackedStringArray("light_parent", "result_label") instance=ExtResource("1_ipdbj")]
@@ -53,7 +57,13 @@ button_number = 2
 [node name="Label3D" type="Label3D" parent="." unique_id=836091663]
 transform = Transform3D(0.885418, 0, 0.46479568, 0, 1, 0, -0.46479568, 0, 0.885418, 0.0010669231, 0.40238494, 0.080770314)
 billboard = 1
-text = ""
 font = ExtResource("4_7a1v1")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=932501507]
+collision_layer = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" unique_id=310590871]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.06332517, -1.0803833, 0)
+shape = SubResource("CapsuleShape3D_7a1v1")
 
 [editable path="UpdatedCyclone"]

@@ -1,6 +1,8 @@
 [gd_scene format=3 uid="uid://dv8qn3t2xck5p"]
 
 [ext_resource type="Script" uid="uid://bcp12flb8ns7k" path="res://scripts/ui/VisitorDialogueBox.gd" id="1_vdb"]
+[ext_resource type="FontFile" uid="uid://tmjyio0w6cu0" path="res://fonts/studio-sim.ttf" id="2_pjm8c"]
+[ext_resource type="FontFile" uid="uid://scsmiofa8vip" path="res://fonts/NotoSerif-Regular.ttf" id="3_b10y2"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
 content_margin_left = 0.0
@@ -59,12 +61,14 @@ theme_override_constants/separation = 6
 [node name="PersonalityLabel" type="Label" parent="Control/PanelContainer/MarginContainer/VBoxContainer" unique_id=676239917]
 modulate = Color(0.65, 0.65, 0.65, 1)
 layout_mode = 2
-theme_override_font_sizes/font_size = 13
+theme_override_fonts/font = ExtResource("2_pjm8c")
+theme_override_font_sizes/font_size = 32
 text = "— visitor —"
 
 [node name="DialogueLabel" type="RichTextLabel" parent="Control/PanelContainer/MarginContainer/VBoxContainer" unique_id=1054770040]
 custom_minimum_size = Vector2(0, 52)
 layout_mode = 2
+theme_override_fonts/normal_font = ExtResource("3_b10y2")
 theme_override_font_sizes/normal_font_size = 18
 fit_content = true
 

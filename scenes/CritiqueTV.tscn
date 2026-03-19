@@ -4,6 +4,7 @@
 [ext_resource type="Script" uid="uid://bca71no7j3vhh" path="res://scripts/CritiqueDisplay.gd" id="1_script"]
 [ext_resource type="Texture2D" uid="uid://bgi7mpqd80v1j" path="res://sprites/art critics/general.png" id="2_8qcen"]
 [ext_resource type="Material" uid="uid://bl43iap4a4kjl" path="res://materials/tv.tres" id="2_llmxe"]
+[ext_resource type="FontFile" uid="uid://scsmiofa8vip" path="res://fonts/NotoSerif-Regular.ttf" id="3_bk5et"]
 [ext_resource type="AudioStream" uid="uid://cnjld2r5btwho" path="res://sounds/dial up.ogg" id="3_dialup"]
 [ext_resource type="Material" uid="uid://48uded6h5otx" path="res://materials/brickwhite.tres" id="4_pd0kh"]
 [ext_resource type="Texture2D" uid="uid://djd4xqb57hhr7" path="res://sprites/textures/brick_bump.jpg" id="4_tgbr6"]
@@ -44,7 +45,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.07295022, 0.07293732, 0.10834237, 1)
 
 [node name="MarginContainer" type="MarginContainer" parent="SubViewport" unique_id=1264582242]
 anchors_preset = 15
@@ -60,9 +60,10 @@ theme_override_constants/margin_bottom = 20
 [node name="RichTextLabel" type="RichTextLabel" parent="SubViewport/MarginContainer" unique_id=310604522]
 texture_filter = 1
 layout_mode = 2
-theme_override_colors/default_color = Color(0.8728172, 0.90766454, 0.6322265, 1)
+theme_override_colors/default_color = Color(0.8633279, 0.8981122, 0.6007165, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 5
+theme_override_fonts/normal_font = ExtResource("3_bk5et")
 text = "Awaiting next painting..."
 
 [node name="Screen" type="MeshInstance3D" parent="." unique_id=1207183709]

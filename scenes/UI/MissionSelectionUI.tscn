@@ -2,7 +2,6 @@
 
 [ext_resource type="Theme" uid="uid://cbtaxh5m7udor" path="res://themes/ui_theme.tres" id="1_3lj1f"]
 [ext_resource type="Script" uid="uid://cv2b3i1u2t6le" path="res://scripts/ui/MissionSelectionUI.gd" id="1_select"]
-[ext_resource type="Texture2D" uid="uid://dgf58oxfs3km7" path="res://sprites/ui/startmission.png" id="3_startmission"]
 [ext_resource type="PackedScene" uid="uid://cvtxaw8dw07fw" path="res://scenes/UI/MissionResultsDisplay.tscn" id="8_results_display"]
 
 [node name="MissionSelectionUI" type="Control" unique_id=169453292]
@@ -67,6 +66,12 @@ theme_override_constants/separation = 5
 
 [node name="CompletedMissionsLabel" type="Label" parent="MarginContainer/HBoxContainer/LeftPanel/StatsPanel/MarginContainer/VBoxContainer" unique_id=551205981]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.68687344, 0.99999994, 0.34574997, 1)
+theme_override_colors/font_shadow_color = Color(0.5764706, 0, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_y = 2
+theme_override_constants/outline_size = 14
+theme_override_constants/shadow_outline_size = 16
 text = "Commissions Completed: 0"
 
 [node name="RightPanel" type="VBoxContainer" parent="MarginContainer/HBoxContainer" unique_id=534849643]
@@ -122,15 +127,14 @@ alignment = 1
 [node name="ViewResultsButton" type="Button" parent="MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ButtonContainer" unique_id=78812732]
 custom_minimum_size = Vector2(300, 150)
 layout_mode = 2
+theme_override_font_sizes/font_size = 40
 text = "View Results"
 
 [node name="StartButton" type="Button" parent="MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ButtonContainer" unique_id=1450903185]
-texture_filter = 1
 custom_minimum_size = Vector2(300, 150)
 layout_mode = 2
-icon = ExtResource("3_startmission")
-icon_alignment = 1
-expand_icon = true
+theme_override_font_sizes/font_size = 40
+text = "Start Mission"
 
 [node name="MissionResultsDisplay" parent="MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer" unique_id=233099724 instance=ExtResource("8_results_display")]
 visible = false

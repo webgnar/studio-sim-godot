@@ -11,9 +11,6 @@ class_name MissionSelectionUI
 # Preload the mission card scene
 const MissionCardScene = preload("res://scenes/UI/MissionCard.tscn")
 
-# Preload button icons
-const StartMissionIcon = preload("res://sprites/ui/startmission.png")
-const AbortMissionIcon = preload("res://sprites/ui/abortmission.png")
 
 @onready var scroll_container = $MarginContainer/HBoxContainer/LeftPanel/ScrollContainer
 @onready var mission_list_container = $MarginContainer/HBoxContainer/LeftPanel/ScrollContainer/MissionList
@@ -496,12 +493,10 @@ func _update_preview_panel():
 	# Check if this is the current mission
 	var is_current_mission = (MissionManager and MissionManager.current_mission == selected_mission)
 
-	# Update button icon based on whether this is the current mission
-	# (No text needed - icons have text baked in)
 	if is_current_mission:
-		start_button.icon = AbortMissionIcon
+		start_button.text = "Abort Mission"
 	else:
-		start_button.icon = StartMissionIcon
+		start_button.text = "Start Mission"
 
 	# Update completion status and buttons
 	var completion_data = MissionManager.get_mission_completion(selected_mission.mission_id)

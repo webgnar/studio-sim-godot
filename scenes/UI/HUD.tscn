@@ -252,7 +252,7 @@ stretch_mode = 5
 [node name="UndoText" type="Label" parent="PaintingHint/HBoxContainer" unique_id=442161430]
 layout_mode = 2
 theme = ExtResource("2")
-text = "Erase"
+text = "Undo"
 
 [node name="CarryHint" type="VBoxContainer" parent="." unique_id=876946278]
 anchors_preset = 1

@@ -22,7 +22,8 @@ var close_button: Button = null  # Removed from scene; closing handled by go_bac
 @onready var controls_scroll_container: ScrollContainer = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Controls/ScrollContainer
 @onready var stick_sensitivity_slider: HSlider = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Controls/SensitivitySection/SensitivitySlider
 @onready var stick_sensitivity_value_label: Label = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Controls/SensitivitySection/SensitivityHeader/SensitivityValue
-@onready var language_button_container: VBoxContainer = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Language/ButtonContainer
+@onready var language_button_container: VBoxContainer = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Language/ScrollContainer/ButtonContainer
+@onready var language_scroll_container: ScrollContainer = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Language/ScrollContainer
 @onready var save_glb_checkbox: CheckBox = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/SaveGLBCheckbox
 @onready var save_png_checkbox: CheckBox = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/SavePNGCheckbox
 @onready var generate_critique_checkbox: CheckBox = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/GenerateCritiqueCheckbox
@@ -263,6 +264,16 @@ func _input(event):
 				input_cooldown = input_cooldown_time
 			get_viewport().set_input_as_handled()
 
+		# Accept / A button: activate the focused control
+		elif event.is_action_pressed("jump") or event.is_action_pressed("ui_accept"):
+			var focused_btn = get_viewport().gui_get_focus_owner()
+			if focused_btn is CheckBox:
+				focused_btn.button_pressed = not focused_btn.button_pressed
+				get_viewport().set_input_as_handled()
+			elif focused_btn is Button:
+				focused_btn.pressed.emit()
+				get_viewport().set_input_as_handled()
+
 		# Handle slider adjustment with left/right in content mode
 		var focused = get_viewport().gui_get_focus_owner()
 		if focused is HSlider:
@@ -282,6 +293,11 @@ func _input(event):
 				or event.is_action_released("move_left") or event.is_action_released("move_right"):
 				is_holding_slider = false
 				slider_hold_timer = 0.0
+				get_viewport().set_input_as_handled()
+		else:
+			# Non-slider controls don't use left/right — consume so TabContainer doesn't switch tabs
+			if event.is_action_pressed("ui_left") or event.is_action_pressed("move_left") \
+					or event.is_action_pressed("ui_right") or event.is_action_pressed("move_right"):
 				get_viewport().set_input_as_handled()
 
 func show_menu():
@@ -574,6 +590,7 @@ func _create_language_tab():
 		btn.text = LocaleManager.LOCALE_NAMES[locale]
 		btn.focus_mode = Control.FOCUS_ALL
 		btn.pressed.connect(_on_language_selected.bind(locale))
+		btn.focus_entered.connect(_scroll_to_language_button.bind(btn))
 		language_button_container.add_child(btn)
 		language_buttons.append(btn)
 
@@ -588,6 +605,21 @@ func _create_language_tab():
 
 	# Highlight current language
 	_update_language_buttons()
+
+func _scroll_to_language_button(btn: Button) -> void:
+	"""Scroll the language list so the focused button is visible"""
+	await get_tree().process_frame
+	if not is_instance_valid(btn) or not is_instance_valid(language_scroll_container):
+		return
+	var btn_top := btn.position.y
+	var btn_bottom := btn_top + btn.size.y
+	var scroll_pos := language_scroll_container.scroll_vertical
+	var viewport_height := language_scroll_container.size.y
+	if btn_top < scroll_pos:
+		language_scroll_container.scroll_vertical = int(btn_top)
+	elif btn_bottom > scroll_pos + viewport_height:
+		language_scroll_container.scroll_vertical = int(btn_bottom - viewport_height)
+
 
 func _on_language_selected(locale: String):
 	"""Handle language button press"""

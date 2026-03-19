@@ -4,12 +4,15 @@ extends Node
 ## Autoload singleton
 
 const DEFAULT_LOCALE = "en"
-const SUPPORTED_LOCALES = ["en", "zh_CN", "ja", "ko"]
+const SUPPORTED_LOCALES = ["en", "zh_CN", "ru", "es", "pt_BR", "ko", "ja"]
 const LOCALE_NAMES = {
 	"en": "English",
 	"zh_CN": "中文",
 	"ja": "日本語",
-	"ko": "한국어"
+	"ko": "한국어",
+	"pt_BR": "Português (BR)",
+	"es": "Español",
+	"ru": "Русский",
 }
 
 var current_locale: String = DEFAULT_LOCALE
@@ -22,56 +25,39 @@ func _ready():
 	_load_saved_locale()
 
 func _setup_font_fallbacks():
-	"""Add CJK fonts as fallbacks on the main game font"""
+	"""Add Cyrillic and CJK fonts as fallbacks on the main game font"""
 	var main_font = load("res://fonts/studio-sim.ttf") as FontFile
+	var cyrillic = load("res://fonts/NotoSerif-Regular.ttf") as FontFile
 	var cjk_sc = load("res://fonts/NotoSerifCJKsc-Medium.otf") as FontFile
 	var cjk_jp = load("res://fonts/NotoSerifCJKjp-Medium.otf") as FontFile
 	var cjk_kr = load("res://fonts/NotoSerifCJKkr-Medium.otf") as FontFile
 
-	if main_font and cjk_sc and cjk_jp and cjk_kr:
-		main_font.fallbacks = [cjk_sc, cjk_jp, cjk_kr]
+	if main_font and cyrillic and cjk_sc and cjk_jp and cjk_kr:
+		main_font.fallbacks = [cyrillic, cjk_sc, cjk_jp, cjk_kr]
 	else:
-		push_warning("LocaleManager: Could not load one or more CJK fonts")
+		push_warning("LocaleManager: Could not load one or more fallback fonts")
 
 func _load_translations_from_csv():
-	"""Parse translations.csv and register with TranslationServer"""
-	var file = FileAccess.open("res://translations/translations.csv", FileAccess.READ)
-	if not file:
-		push_error("LocaleManager: Could not open translations.csv")
-		return
-
-	# Parse header row: keys,en,zh_CN,ja,ko
-	var header = file.get_csv_line()
-	var locale_indices = {}
-	for i in range(1, header.size()):
-		var locale = header[i].strip_edges()
-		if locale != "":
-			locale_indices[locale] = i
-
-	# Create Translation objects for each locale
-	var translations = {}
-	for locale in locale_indices:
-		translations[locale] = Translation.new()
-		translations[locale].locale = locale
-
-	# Parse each row
-	while not file.eof_reached():
-		var line = file.get_csv_line()
-		if line.size() < 2:
-			continue
-		var key = line[0]
-		if key == "" or key.begins_with("#"):
-			continue
-		for locale in locale_indices:
-			var idx = locale_indices[locale]
-			if idx < line.size() and line[idx] != "":
-				translations[locale].add_message(key, line[idx])
-
-	file.close()
-
-	# Register translations with TranslationServer
-	for locale in translations:
-		TranslationServer.add_translation(translations[locale])
+	"""Load compiled translation resources and register with TranslationServer."""
+	var locale_paths := {
+		"en":    "res://translations/translations.en.translation",
+		"zh_CN": "res://translations/translations.zh_CN.translation",
+		"ja":    "res://translations/translations.ja.translation",
+		"ko":    "res://translations/translations.ko.translation",
+		"pt_BR": "res://translations/translations.pt_BR.translation",
+		"es":    "res://translations/translations.es.translation",
+		"ru":    "res://translations/translations.ru.translation",
+	}
+	for locale in locale_paths:
+		var path: String = locale_paths[locale]
+		if ResourceLoader.exists(path):
+			var t := load(path) as Translation
+			if t:
+				TranslationServer.add_translation(t)
+			else:
+				push_warning("LocaleManager: Failed to load translation for %s" % locale)
+		else:
+			push_warning("LocaleManager: Missing translation file: %s" % path)
 
 func set_locale(locale: String):
 	"""Change the active locale"""
@@ -86,24 +72,25 @@ func set_locale(locale: String):
 	locale_changed.emit(locale)
 
 func _update_font_fallback_order(locale: String):
-	"""Reorder CJK font fallbacks so the matching region is first"""
+	"""Reorder font fallbacks so the matching script is first"""
 	var main_font = load("res://fonts/studio-sim.ttf") as FontFile
+	var cyrillic = load("res://fonts/NotoSerif-Regular.ttf") as FontFile
 	var cjk_sc = load("res://fonts/NotoSerifCJKsc-Medium.otf") as FontFile
 	var cjk_jp = load("res://fonts/NotoSerifCJKjp-Medium.otf") as FontFile
 	var cjk_kr = load("res://fonts/NotoSerifCJKkr-Medium.otf") as FontFile
 
-	if not main_font or not cjk_sc or not cjk_jp or not cjk_kr:
+	if not main_font or not cyrillic or not cjk_sc or not cjk_jp or not cjk_kr:
 		return
 
 	match locale:
 		"zh_CN":
-			main_font.fallbacks = [cjk_sc, cjk_jp, cjk_kr]
+			main_font.fallbacks = [cyrillic, cjk_sc, cjk_jp, cjk_kr]
 		"ja":
-			main_font.fallbacks = [cjk_jp, cjk_sc, cjk_kr]
+			main_font.fallbacks = [cyrillic, cjk_jp, cjk_sc, cjk_kr]
 		"ko":
-			main_font.fallbacks = [cjk_kr, cjk_sc, cjk_jp]
+			main_font.fallbacks = [cyrillic, cjk_kr, cjk_sc, cjk_jp]
 		_:
-			main_font.fallbacks = [cjk_sc, cjk_jp, cjk_kr]
+			main_font.fallbacks = [cyrillic, cjk_sc, cjk_jp, cjk_kr]
 
 func _load_saved_locale():
 	"""Load saved locale from settings, or detect from Steam/system.
@@ -140,6 +127,12 @@ func _load_saved_locale():
 		set_locale("ja")
 	elif sys_locale.begins_with("ko"):
 		set_locale("ko")
+	elif sys_locale.begins_with("pt"):
+		set_locale("pt_BR")
+	elif sys_locale.begins_with("es"):
+		set_locale("es")
+	elif sys_locale.begins_with("ru"):
+		set_locale("ru")
 	else:
 		set_locale("en")
 
@@ -163,6 +156,10 @@ func _get_steam_locale() -> String:
 		"koreana": "ko",
 		"schinese": "zh_CN",
 		"tchinese": "zh_CN",
+		"brazilian": "pt_BR",
+		"spanish":   "es",
+		"latam":     "es",
+		"russian":   "ru",
 	}
 	return steam_to_locale.get(steam_lang, "")
 

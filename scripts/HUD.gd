@@ -504,16 +504,16 @@ func _update_painting_hint() -> void:
 			if d.has("gamepad_icon"):
 				undo_icon.texture = load(d["gamepad_icon"])
 			undo_icon.show()
-			undo_text.text = " " + tr("Erase")
+			undo_text.text = " " + tr("Undo")
 		else:
 			var d = InputDeviceManager.glyph_map.get("action_secondary", {})
 			if d.has("keyboard_icon"):
 				undo_icon.texture = load(d["keyboard_icon"])
 				undo_icon.show()
-				undo_text.text = " " + tr("Erase")
+				undo_text.text = " " + tr("Undo")
 			else:
 				undo_icon.hide()
-				undo_text.text = "[Right Click] " + tr("Erase")
+				undo_text.text = "[Right Click] " + tr("Undo")
 
 		_painting_panel.show()
 

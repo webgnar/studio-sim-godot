@@ -1,246 +1,251 @@
-keys,en,zh_CN,ja,ko
-Continue,Continue,继续,続ける,계속
-New Game,New Game,新游戏,ニューゲーム,새 게임
-Options,Options,设置,設定,설정
-Quit,Quit,退出,終了,종료
-COMMISSIONS,COMMISSIONS,委托,依頼,의뢰
-INVENTORY,INVENTORY,物品栏,インベントリ,인벤토리
-OPTIONS,OPTIONS,设置,設定,설정
-"Quit and Return to Title Screen","Quit and Return to Title Screen",退出并返回标题画面,タイトル画面に戻る,타이틀 화면으로 돌아가기
-SELECT A COMMISION,SELECT A COMMISION,选择委托,依頼を選択,의뢰 선택
-COMISSION REQUEST,COMISSION REQUEST,委托详情,依頼内容,의뢰 내용
-Not completed,Not completed,未完成,未完了,미완료
-View Results,View Results,查看结果,結果を見る,결과 보기
-MY PAINTINGS,MY PAINTINGS,我的画作,私の絵画,내 그림
-PAINTING DETAILS,PAINTING DETAILS,画作详情,絵画詳細,그림 상세
-Save,Save,保存,保存,저장
-Enter painting name...,Enter painting name...,输入画作名称...,絵の名前を入力...,그림 이름 입력...
-Write about your painting...,Write about your painting...,描述你的画作...,絵について書く...,그림에 대해 작성...
-Untitled,Untitled,无题,無題,무제
-Mission Results,Mission Results,任务结果,ミッション結果,미션 결과
-Your Painting,Your Painting,你的画作,あなたの絵,당신의 그림
-Target,Target,目标,目標,목표
-Pixel Matching Analysis,Pixel Matching Analysis,像素匹配分析,ピクセルマッチング分析,픽셀 매칭 분석
-"Green = Matched | Red = Mismatched","Green = Matched | Red = Mismatched",绿色=匹配 | 红色=不匹配,緑=一致 | 赤=不一致,초록=일치 | 빨강=불일치
-Color Distribution Comparison,Color Distribution Comparison,颜色分布比较,色分布比較,색상 분포 비교
-Your Colors,Your Colors,你的颜色,あなたの色,당신의 색상
-Target Colors,Target Colors,目标颜色,目標の色,목표 색상
-Score Breakdown,Score Breakdown,得分明细,スコア内訳,점수 내역
-SFX Volume,SFX Volume,音效音量,効果音量,효과음 볼륨
-Music Volume,Music Volume,音乐音量,音楽音量,음악 볼륨
-Hue,Hue,色调,色相,색조
-Saturation,Saturation,饱和度,彩度,채도
-Back,Back,返回,戻る,뒤로
-Your Studio,Your Studio,你的工作室,あなたのスタジオ,당신의 스튜디오
-Main Menu,Main Menu,主菜单,メインメニュー,메인 메뉴
-Missions,Missions,任务,ミッション,미션
-"Shop - Coming Soon","Shop - Coming Soon",商店 - 即将推出,ショップ - 近日公開,상점 - 출시 예정
-"Purchase canvases, stickers, and studio upgrades","Purchase canvases, stickers, and studio upgrades",购买画布、贴纸和工作室升级,キャンバス、ステッカー、スタジオアップグレードを購入,캔버스 스티커 및 스튜디오 업그레이드 구매
-Back to Main Menu,Back to Main Menu,返回主菜单,メインメニューに戻る,메인 메뉴로 돌아가기
-Show Latest,Show Latest,最新结果,最新を表示,최근 결과
-Show Best,Show Best,最佳结果,最高を表示,최고 결과
-back,back,返回,戻る,뒤로
-Audio,Audio,音频,オーディオ,오디오
-Visual,Visual,视觉,ビジュアル,비주얼
-Controls,Controls,控制,操作,조작
-Language,Language,语言,言語,언어
-Interact,Interact,互动,インタラクト,상호작용
-Rotate,Rotate,旋转,回転,회전
-Scale,Scale,缩放,スケール,크기
-Cycle,Cycle,切换,切替,순환
-Place,Place,放置,配置,배치
-Undo,Undo,撤销,取消,실행취소
-Drop,Drop,丢下,落とす,내려놓기
-Throw,Throw,投掷,投げる,던지기
-Rotate Y,Rotate Y,Y轴旋转,Y軸回転,Y축 회전
-Rotate X,Rotate X,X轴旋转,X軸回転,X축 회전
-Move,Move,移动,移動,이동
-Look,Look,视角,視点,시점
-Jump,Jump,跳跃,ジャンプ,점프
-Run,Run,奔跑,走る,달리기
-Paint,Paint,绘画,描く,그리기
-Rotate CW,Rotate CW,顺时针旋转,時計回り,시계방향 회전
-Rotate CCW,Rotate CCW,逆时针旋转,反時計回り,반시계방향 회전
-Scale Up,Scale Up,放大,拡大,확대
-Scale Down,Scale Down,缩小,縮小,축소
-Next Sticker,Next Sticker,下一个贴纸,次のステッカー,다음 스티커
-Prev Sticker,Prev Sticker,上一个贴纸,前のステッカー,이전 스티커
-Pause,Pause,暂停,ポーズ,일시정지
-Paintings: %d,Paintings: %d,画作: %d,絵画: %d,그림: %d
-Status: %s,Status: %s,状态: %s,状態: %s,상태: %s
-WIP,WIP,进行中,制作中,작업 중
-DONE,DONE,已完成,完了,완료
-SHIPPED,SHIPPED,已发货,発送済み,발송됨
-$%d,$%d,$%d,$%d,$%d
-Missions Completed: %d,Missions Completed: %d,已完成任务: %d,完了ミッション: %d,완료된 미션: %d
-Total Earnings: $%d,Total Earnings: $%d,总收入: $%d,総収入: $%d,총 수입: $%d
-Paintings Created: %d,Paintings Created: %d,创作画作: %d,作成した絵画: %d,제작한 그림: %d
-Quit (Main Menu),Quit (Main Menu),退出 (主菜单),終了 (メインメニュー),종료 (메인 메뉴)
-Completed - Grade: %s,Completed - Grade: %s,已完成 - 评级: %s,完了 - 評価: %s,완료 - 등급: %s
-"Completed - Grade: %s (%.1f%%)","Completed - Grade: %s (%.1f%%)",已完成 - 评级: %s (%.1f%%),完了 - 評価: %s (%.1f%%),완료 - 등급: %s (%.1f%%)
-Difficulty: %d/10,Difficulty: %d/10,难度: %d/10,難易度: %d/10,난이도: %d/10
-Score: %.1f%%,Score: %.1f%%,得分: %.1f%%,スコア: %.1f%%,점수: %.1f%%
-"PASSED! (%.0f%% required)","PASSED! (%.0f%% required)",通过！(需要%.0f%%),合格！(%.0f%%必要),합격! (%.0f%% 필요)
-"Failed (%.0f%% required)","Failed (%.0f%% required)",失败 (需要%.0f%%),不合格 (%.0f%%必要),불합격 (%.0f%% 필요)
-Great work! Mission completed.,Great work! Mission completed.,干得好！任务完成。,よくできました！ミッション完了。,잘했습니다! 미션 완료.
-"Precision: %.1f%% (weight: 30%%)","Precision: %.1f%% (weight: 30%%)",精确度: %.1f%% (权重: 30%%),精度: %.1f%% (ウェイト: 30%%),정밀도: %.1f%% (가중치: 30%%)
-"Color Field: %.1f%% (weight: 70%%)","Color Field: %.1f%% (weight: 70%%)",色彩: %.1f%% (权重: 70%%),色彩フィールド: %.1f%% (ウェイト: 70%%),색상 필드: %.1f%% (가중치: 70%%)
-Best Score: %.1f%%,Best Score: %.1f%%,最高分: %.1f%%,最高スコア: %.1f%%,최고 점수: %.1f%%
-No saved painting available,No saved painting available,无已保存的画作,保存された絵がありません,저장된 그림 없음
-Failed to load painting,Failed to load painting,画作加载失败,絵の読み込みに失敗,그림 로드 실패
-Camera Zones: ON,Camera Zones: ON,相机区域: 开,カメラゾーン: オン,카메라 영역: 켜짐
-Camera Zones: OFF,Camera Zones: OFF,相机区域: 关,カメラゾーン: オフ,카메라 영역: 꺼짐
-" Rotate Y"," Rotate Y", Y轴旋转, Y軸回転, Y축 회전
-" Rotate X"," Rotate X", X轴旋转, X軸回転, X축 회전
-" Drop"," Drop", 丢下, 落とす, 내려놓기
-" Throw"," Throw", 投掷, 投げる, 던지기
-" Place"," Place", 放置, 配置, 배치
-" Rotate"," Rotate", 旋转, 回転, 회전
-" Scale"," Scale", 缩放, スケール, 크기
-" Cycle"," Cycle", 切换, 切替, 순환
-" Undo"," Undo", 撤销, 取消, 실행취소
-Mission Name,Mission Name,任务名称,ミッション名,미션 이름
-Awaiting next painting...,Awaiting next painting...,等待下一幅画作...,次の絵を待っています...,다음 그림을 기다리는 중...
-Uploading painting...,Uploading painting...,上传画作中...,絵をアップロード中...,그림 업로드 중...
-Getting critique...,Getting critique...,获取评论中...,批評を取得中...,비평 가져오는 중...
-"Upload failed — no critique available.","Upload failed — no critique available.",上传失败——无法获取评论。,アップロード失敗——批評を取得できません。,업로드 실패 — 비평을 받을 수 없습니다.
-Failed to request critique.,Failed to request critique.,请求评论失败。,批評のリクエストに失敗しました。,비평 요청 실패.
-Critique unavailable.,Critique unavailable.,评论不可用。,批評は利用できません。,비평을 이용할 수 없습니다.
-SHOP,SHOP,商店,ショップ,상점
-OWNED,OWNED,已拥有,所持済み,보유 중
-BUY,BUY,购买,購入,구매
-Select an item,Select an item,选择一个物品,アイテムを選択,아이템 선택
-"Not enough money","Not enough money",钱不够,お金が足りません,돈이 부족합니다
-"Can't afford this item","Can't afford this item",买不起这个物品,このアイテムは買えません,이 아이템을 구매할 수 없습니다
-"Move out of the item's spawn zone first","Move out of the item's spawn zone first",请先离开物品生成区域,アイテムのスポーン地点から離れてください,아이템 생성 구역을 벗어나세요
-"↑ ↓  scroll     →  /  A    buy     ←  /  B    back","↑ ↓  scroll     →  /  A    buy     ←  /  B    back",↑↓ 滚动  →/A 购买  ←/B 返回,↑↓ スクロール  →/A 購入  ←/B 戻る,↑↓ 스크롤  →/A 구매  ←/B 뒤로
-Gnarwalkie Nail Gun,Gnarwalkie Nail Gun,格纳指甲枪,グナーウォーキーネイルガン,그나왈키 네일건
-Trash Can,Trash Can,垃圾桶,ゴミ箱,쓰레기통
-Fan,Fan,风扇,扇風機,선풍기
-Styrofoam Cube,Styrofoam Cube,泡沫立方体,発泡スチロールキューブ,스티로폼 큐브
-Cardboard Box,Cardboard Box,纸板箱,段ボール箱,판지 상자
-Proprietary Water Filter,Proprietary Water Filter,专属净水器,専用浄水器,독점 정수기
-Phone,Phone,手机,スマートフォン,스마트폰
-Mirror,Mirror,镜子,鏡,거울
-Skateboard,Skateboard,滑板,スケートボード,스케이트보드
-Monstera Deliciosa,Monstera Deliciosa,龟背竹,モンステラ・デリシオサ,몬스테라 델리시오사
-Polypodiopsida,Polypodiopsida,蕨类植物,ポリポディオプシダ,폴리포디옵시다
-Pachypodium lamerei,Pachypodium lamerei,马达加斯加棕榈,パキポディウム・ラメレイ,파키포디움 라메레이
-Psywheel,Psywheel,念力风车,サイホイール,사이휠
-"Vintage Arcade Game from the 90's","Vintage Arcade Game from the 90's",90年代复古街机,90年代のヴィンテージアーケードゲーム,90년대 빈티지 아케이드 게임
-Searl Effect Generator,Searl Effect Generator,塞尔效应发电机,サール効果発電機,서얼 효과 발전기
-GEET Plasma Reactor,GEET Plasma Reactor,GEET等离子反应堆,GEETプラズマリアクター,GEET 플라즈마 반응기
-Stanley Meyer Water Fuel Cell,Stanley Meyer Water Fuel Cell,斯坦利·迈耶水燃料电池,スタンリー・メイヤー水燃料電池,스탠리 마이어 수소 연료전지
-Gallery Visitor Pass,Gallery Visitor Pass,画廊访客通行证,ギャラリー訪問者パス,갤러리 방문자 패스
-Custom Sticker Modding button,Custom Sticker Modding button,自定义贴纸改装按钮,カスタムステッカーMODボタン,커스텀 스티커 모딩 버튼
-Pick Up,Pick Up,拾取,拾う,줍기
-Interact,Interact,互动,インタラクト,상호작용
-Play Tape,Play Tape,播放磁带,テープを再生,테이프 재생
-Toggle Power,Toggle Power,切换电源,電源を切り替え,전원 전환
-Turn On Fan,Turn On Fan,打开风扇,扇風機をオンにする,선풍기 켜기
-Turn Off Fan,Turn Off Fan,关闭风扇,扇風機をオフにする,선풍기 끄기
-No Power,No Power,无电源,電源なし,전원 없음
-"Attempted - Latest: %s (%.1f%%)","Attempted - Latest: %s (%.1f%%)",已尝试 - 最近: %s (%.1f%%),試行済み - 最新: %s (%.1f%%),시도됨 - 최근: %s (%.1f%%)
-Not attempted,Not attempted,未尝试,未試行,시도하지 않음
-No saved attempt available,No saved attempt available,无已保存的尝试,保存された試行はありません,저장된 시도 없음
-Save Game,Save Game,保存游戏,ゲームを保存,게임 저장
-Check Phone,Check Phone,查看手机,スマホを確認,스마트폰 확인
-Drink Water,Drink Water,喝水,水を飲む,물 마시기
-Equip Nailgun,Equip Nailgun,装备钉枪,ネイルガンを装備,네일건 장착
-New Painting,New Painting,新画作,新しい絵,새 그림
-Switch to Landscape,Switch to Landscape,切换为横向,横向きに切り替え,가로 방향으로 전환
-Switch to Square,Switch to Square,切换为方形,正方形に切り替え,정사각형으로 전환
-Submit Painting,Submit Painting,提交画作,絵を提出,그림 제출
-No Mission,No Mission,无任务,ミッションなし,미션 없음
-"Abort / New Painting","Abort / New Painting",中止 / 新画作,中止 / 新しい絵,중단 / 새 그림
-Convert Painting,Convert Painting,转换画作,絵を変換,그림 변환
-Convert to Painting,Convert to Painting,转换为画作,絵に変換,그림으로 변환
-Canvas is Empty,Canvas is Empty,画布是空的,キャンバスが空です,캔버스가 비어 있습니다
-Converting...,Converting...,转换中...,変換中...,변환 중...
-"Transfer Assistant's Work","Transfer Assistant's Work",传输助手的作品,アシスタントの作品を転送,어시스턴트 작품 전송
-Nothing to Transfer Yet,Nothing to Transfer Yet,暂无可转移内容,転送するものがありません,전송할 내용 없음
-Saving...,Saving...,保存中...,保存中...,저장 중...
-Undo Last Addition,Undo Last Addition,撤销上次添加,最後の追加を取り消す,마지막 추가 취소
-Nothing to Undo,Nothing to Undo,无可撤销操作,取り消すものがありません,취소할 내용 없음
-"Hire Studio Assistant ($%d)","Hire Studio Assistant ($%d)",雇用工作室助手 ($%d),スタジオアシスタントを雇用 ($%d),스튜디오 어시스턴트 고용 ($%d)
-"Hire Assistant ($%d)","Hire Assistant ($%d)",雇用助手 ($%d),アシスタントを雇用 ($%d),어시스턴트 고용 ($%d)
-Studio Assistant Active,Studio Assistant Active,工作室助手已激活,スタジオアシスタント稼働中,스튜디오 어시스턴트 활성화
-Upgrade Unavailable,Upgrade Unavailable,升级不可用,アップグレード不可,업그레이드 불가
-Open Gate,Open Gate,开门,ゲートを開ける,문 열기
-Close Gate,Close Gate,关门,ゲートを閉じる,문 닫기
-Remove Items First,Remove Items First,请先移除物品,先にアイテムを取り除いてください,먼저 아이템을 제거하세요
-Too Many Paintings,Too Many Paintings,画作太多,絵が多すぎます,그림이 너무 많습니다
-Reposition Painting,Reposition Painting,重新放置画作,絵を移動してください,그림 위치 조정
-Send Painting,Send Painting,发送画作,絵を送る,그림 보내기
-"Send Painting (1 of %d)","Send Painting (1 of %d)",发送画作 (第1幅，共%d幅),絵を送る (1/%d),그림 보내기 (1/%d개 중)
-Sending...,Sending...,发送中...,送信中...,전송 중...
-No Painting Inside,No Painting Inside,内部无画作,中に絵がありません,내부에 그림 없음
-Close Gate First,Close Gate First,请先关门,先にゲートを閉じてください,먼저 문을 닫으세요
-Open Sticker Folder,Open Sticker Folder,打开贴纸文件夹,ステッカーフォルダを開く,스티커 폴더 열기
-Press Button,Press Button,按下按钮,ボタンを押す,버튼 누르기
-Pick Up Painting,Pick Up Painting,拾取画作,絵を拾う,그림 줍기
-Take Down Painting,Take Down Painting,取下画作,絵を取り外す,그림 내리기
-Pick Up Plug,Pick Up Plug,拾取插头,プラグを拾う,플러그 줍기
-Unplug,Unplug,拔掉插头,プラグを抜く,플러그 뽑기
-Pick Up Gun,Pick Up Gun,拾取枪,銃を拾う,총 줍기
-Drop Gun,Drop Gun,放下枪,銃を落とす,총 내려놓기
-Pick Up Key,Pick Up Key,拾取钥匙,鍵を拾う,열쇠 줍기
-Grab Door,Grab Door,抓住门,ドアをつかむ,문 잡기
-Release Door,Release Door,松开门,ドアを離す,문 놓기
-Unlock,Unlock,解锁,解錠,잠금 해제
-"Locked - Need Key","Locked - Need Key",已锁 - 需要钥匙,鍵が必要です,잠금됨 - 열쇠 필요
-Turn On,Turn On,打开,オンにする,켜기
-Turn Off,Turn Off,关闭,オフにする,끄기
-"Commissions Completed: %d","Commissions Completed: %d",完成的委托: %d,完了したコミッション: %d,완료된 의뢰: %d
-SELECT A COMMISSION,SELECT A COMMISSION,选择委托,コミッションを選択,의뢰 선택
-View Results,View Results,查看结果,結果を見る,결과 보기
-Latest Attempt,Latest Attempt,最近尝试,最新の試行,최근 시도
-Your Painting,Your Painting,你的画作,あなたの絵,내 그림
-Target,Target,目标,ターゲット,목표
-Pixel Matching Analysis,Pixel Matching Analysis,像素匹配分析,ピクセルマッチング分析,픽셀 매칭 분석
-"Green = Matched | Red = Mismatched","Green = Matched | Red = Mismatched",绿色=匹配 | 红色=不匹配,緑=一致 | 赤=不一致,녹색=일치 | 빨간=불일치
-Retry,Retry,重试,リトライ,다시 시도
-YOUR PAINTINGS,YOUR PAINTINGS,你的画作,あなたの绘画,내 그림
-Name:,Name:,名称:,名前:,이름:
-Artist Statement:,Artist Statement:,艺术声明:,アーティストステートメント:,작가 노트:
-Enter painting name...,Enter painting name...,输入画作名称...,絵のタイトルを入力...,그림 이름 입력...
-Write about your painting...,Write about your painting...,写下你的画作...,絵について書いてください...,그림에 대해 쓰기...
-Critique:,Critique:,评论:,批評:,비평:
-Save,Save,保存,保存,저장
-There are no paintings in your Inventory. Pressing the red button in the studio will add a painting to your Inventory.,There are no paintings in your Inventory. Pressing the red button in the studio will add a painting to your Inventory.,你的库存中没有画作。按下工作室中的红色按钮将画作添加到库存。,インベントリに絵がありません。スタジオの赤いボタンを押すと絵がインベントリに追加されます。,인벤토리에 그림이 없습니다. 스튜디오의 빨간 버튼을 누르면 그림이 인벤토리에 추가됩니다.
-OPTIONS,OPTIONS,选项,オプション,옵션
-Game,Game,游戏,ゲーム,게임
-Save GLB when shipping the painting,Save GLB when shipping the painting,发货时保存 GLB,発送時に GLB を保存,배송 시 GLB 저장
-Save PNG when shipping the painting,Save PNG when shipping the painting,发货时保存 PNG,発送時に PNG を保存,배송 시 PNG 저장
-Generate NPC critique,Generate NPC critique,生成 NPC 评价,NPC の批評を生成,NPC 비평 생성
-Publish online when shipping to Studio Sim Gallery,Publish online when shipping to Studio Sim Gallery,发货到 Studio Sim 画廊时在线发布,Studio Sim ギャラリーに発送時にオンライン公開,Studio Sim 갤러리로 배송 시 온라인 게시
-Nail Gun,Nail Gun,钉枪,ネイルガン,네일건
-Water Filter,Water Filter,滤水器,ウォーターフィルター,정수기
-Monstera Plant,Monstera Plant,龟背竹,モンステラ,몬스테라
-Fern Plant,Fern Plant,蕨类植物,シダ植物,고사리
-Madagascar Palm,Madagascar Palm,马达加斯加棕榈,マダガスカルパーム,마다가스카르 팜
-Arcade Game,Arcade Game,街机游戏,アーケードゲーム,아케이드 게임
-SEG,SEG,SEG,SEG,SEG
-GEET Engine,GEET Engine,GEET 发动机,GEETエンジン,GEET 엔진
-Water Fuel Cell,Water Fuel Cell,水燃料电池,ウォーターフューエルセル,수연료 전지
-Gallery Visitor,Gallery Visitor,画廊访客,ギャラリー来訪者,갤러리 방문자
-Custom Sticker Modder,Custom Sticker Modder,自定义贴纸修改器,カスタムステッカーモッダー,커스텀 스티커 모더
-SHOP_DESC_NAIL_GUN,Hang your paintings on the wall. An essential tool for viewing your artwork in a gallery setting.,将画作挂在墙上。在画廊环境中展示作品的必备工具。,壁に絵を掛けるための必須ツール。ギャラリーでの作品鑑賞に欠かせない。,그림을 벽에 걸어두는 도구. 갤러리 환경에서 작품을 감상하는 데 필수적입니다.
-SHOP_DESC_TRASH_CAN,A studio staple. Every artist needs somewhere to put their mistakes.,工作室必备。每位艺术家都需要一个放置失误之作的地方。,アトリエの定番。ミスを捨てる場所はどんなアーティストにも必要です。,작업실의 필수품. 모든 예술가에겐 실수를 버릴 곳이 필요합니다.
-SHOP_DESC_FAN,Keeps the studio cool while you work. Comes with a power cord.,在创作时保持工作室凉爽。附带电源线。,作業中もアトリエを快適に保ちます。電源コード付き。,작업 중 작업실을 시원하게 유지합니다. 전원 코드 포함.
-"SHOP_DESC_STYROFOAM_CUBE","Great for breaking up physical space inside the studio. Surprisingly useful as a pedestal.",非常适合分割工作室内部空间。作为基座出奇地好用。,アトリエの空間を上手く仕切るのに最適。台座としても意外と便利です。,작업실 내부 공간을 나누는 데 좋습니다. 받침대로도 의외로 유용합니다.
-SHOP_DESC_CARDBOARD_BOX,A mysterious cardboard box. Something useful might be inside.,一个神秘的纸板箱。里面可能有些有用的东西。,謎めいた段ボール箱。中に何か役立つものが入っているかもしれません。,신비로운 골판지 상자. 안에 뭔가 유용한 것이 있을지도 모릅니다.
-"SHOP_DESC_WATER_FILTER","Clean water for a clear mind. A sleek plastic tower that filters water through gravity and two metal cylinders — no electricity required. Perfect for off-grid living or anyone who prefers their water filtered with a side of apocalypse readiness.",清洁的水，清晰的思维。一个优雅的塑料过滤器，通过重力和两个金属筒净水，无需电力。非常适合离网生活或喜欢末日准备风格的人。,クリアな水でクリアな思考を。重力と2本の金属筒で浄水するシンプルな装置。電源不要。オフグリッドな生活や備蓄好きに最適。,맑은 물로 맑은 정신을. 전기 없이 중력과 두 개의 금속 실린더로 물을 정화하는 세련된 장치. 오프그리드 생활이나 묵시록 대비에 안성맞춤.
-SHOP_DESC_PHONE,A smartphone with a mysterious website loaded onto its home screen.,一部智能手机，主屏幕上加载着一个神秘的网站。,ホーム画面に謎のウェブサイトが開いたスマートフォン。,홈 화면에 의문의 웹사이트가 열려 있는 스마트폰.
-"SHOP_DESC_MIRROR","For checking yourself out between sessions. Perfect for viewing your work through a different lens.",适合在创作间隙欣赏自己。通过不同的视角审视你的作品的完美工具。,セッションの合間に自分を確認するのに最適。作品を新しい視点で見るのにもぴったり。,작업 사이에 자신을 돌아보는 데 좋습니다. 작품을 다른 시각으로 바라보기에도 완벽합니다.
-"SHOP_DESC_SKATEBOARD","A brand-new board leaning against the wall. Old habits.",一块全新的板，靠在墙上。旧习难改。,壁に立てかけられた新品のボード。古い習慣はなかなか抜けないもの。,벽에 기댄 새 보드. 오랜 습관은 쉽게 사라지지 않습니다.
-"SHOP_DESC_MONSTERA","Big leafy vibes. Every studio needs one.",大叶片的氛围感。每个工作室都需要一株。,大きな葉っぱのバイブス。どんなアトリエにも1本は必要です。,큰 잎사귀의 분위기. 모든 작업실에는 하나씩 있어야 합니다.
-"SHOP_DESC_FERN_PLANT","Delicate, unfurling fiddleheads. A little prehistoric energy for the studio.",纤细、展开的嫩芽。为工作室带来一点史前能量。,繊細に広がるゼンマイ。アトリエに少し先史時代のエネルギーを添えて。,섬세하게 펼쳐지는 고사리 잎. 작업실에 약간의 선사시대 에너지를.
-"SHOP_DESC_MADPALM","Spiky, drought-tolerant, and technically a succulent. The Madagascar Palm doesn't care what you call it.",尖刺、耐旱，严格来说是多肉植物。马达加斯加棕榈才不在乎你怎么叫它。,トゲトゲで乾燥に強く、技術的にはサボテン科。マダガスカルパームはそんな分類を気にしません。,가시투성이에 건조에 강하고 엄밀히 말하면 다육식물. 마다가스카르 팜은 뭐라 불리든 신경 쓰지 않습니다.
-"SHOP_DESC_PSYWHEEL","A homemade meditation device made from an eraser, a toothpick, and a folded piece of paper. Used to practice telekinesis. When it's spinning, you know you are onto something.",一个由橡皮擦、牙签和折叠纸片制成的自制冥想装置。用于练习心灵感应。当它旋转时，你知道你找到了什么。,消しゴム・爪楊枝・折り紙で作られた自作の瞑想装置。念動力の練習に使います。回り始めたら、何かを掴んでいる証拠。,지우개와 이쑤시개, 접힌 종이로 만든 수제 명상 도구. 염력 연습에 사용합니다. 돌기 시작하면 뭔가 되고 있다는 신호.
-"SHOP_DESC_CYCLONE","A spinning circle of false hope and questionable reflexes. Perfect for testing hand–eye coordination, patience, and your ability to blame the machine instead of yourself.",充满虚假希望和可疑反应的旋转圆圈。非常适合测试手眼协调、耐心以及你将责任归咎于机器的能力。,偽りの期待と怪しい反射神経を試す回転サークル。手と目の協調性、忍耐力、そして機械のせいにする能力を鍛えるのに最適。,헛된 희망과 의심스러운 반사신경의 회전 원. 눈과 손의 협응력, 인내심, 그리고 기계 탓을 하는 능력을 시험하기에 완벽합니다.
-"SHOP_DESC_SEG","A legendary rotating assembly of magnetized rollers said to unlock the Searl Effect — a self-sustaining electromagnetic state theorized to produce free energy, reduce gravity, and generate dramatic sci-fi ambiance. Whether a revolutionary breakthrough or an extremely sophisticated conversation piece, it transforms any space into a cutting-edge research facility.",一台传说中由磁化滚轮组成的旋转装置，据称能解锁"谢尔效应"——一种据理论能产生自由能量、减轻重力并营造惊人科幻氛围的自持电磁状态。无论是革命性突破还是极其精妙的装饰品，它都能将任何空间变成前沿研究设施。,磁化されたローラーが回転し「サール効果」を起こすとされる伝説の装置。フリーエネルギー・反重力・SF的発光など、様々な現象を起こすと理論化されています。革命的なブレイクスルーか洗練された会話の種か、どちらにせよ空間を最先端研究施設に変えます。,자화된 롤러가 회전하며 '설 효과'를 일으킨다는 전설의 장치. 자유 에너지, 중력 감소, SF 분위기 등을 이론적으로 유발한다고 합니다. 혁신적인 돌파구인지 세련된 대화 소재인지 몰라도, 어떤 공간이든 첨단 연구 시설로 변모시킵니다.
-"SHOP_DESC_GEET","The GEET Plasma Reactor routes exhaust heat back through incoming fuel vapor, causing an anomalous low-temperature plasma transition inside a vacuum chamber. Independent tests recorded near-zero emissions running on diesel, vegetable oil, and reportedly water. Its inventor, Paul Pantone, was institutionalized in Utah after refusing to sell his patents to industry interests. He was released four years later. His US patent 5,794,601 sits quietly in the public record.",GEET等离子反应堆将废气热量回流到燃料蒸气中，在真空腔室内产生异常的低温等离子体转变。独立测试记录到以柴油、植物油甚至据报道以水为燃料时近零排放。发明者保罗·潘通因拒绝将专利出售给行业利益而被关入犹他州精神病院，四年后获释。他的美国专利5,794,601静静躺在公开记录中。,GEETプラズマリアクターは排気熱を燃料蒸気に還流させ、真空チャンバー内で低温プラズマ転移を引き起こします。ディーゼル・植物油・水で動かした際ほぼゼロ排出が独立試験で確認されました。発明者のポール・パントンは特許の売却を拒否した後ユタ州の精神病院に収容され、4年後に釈放されました。米国特許5,794,601は公開記録の中に静かに眠っています。,GEET 플라즈마 반응로는 배기열을 연료 증기로 되돌려 진공 챔버 안에서 저온 플라즈마 전이를 일으킵니다. 디젤, 식물성 기름, 심지어 물로 작동할 때도 거의 무배출을 기록했습니다. 발명자 폴 팬톤은 특허 판매를 거부한 뒤 유타 주립 정신병원에 수용되었다가 4년 후 석방됐습니다. 미국 특허 5,794,601은 공개 기록 속에 조용히 남아 있습니다.
-"SHOP_DESC_WFC","Inspired by Stanley Meyer's water fuel cell: a device said to dissociate water into hydrogen and oxygen through precisely tuned high-voltage, low-current pulses — resonance, not raw amperage. Meyer collapsed from a sudden brain aneurysm shortly after refusing to sell his patents for military use. He claimed the visions for his invention came to him from angels, in the moments between sleep and wakefulness.",灵感来自斯坦利·迈耶的水燃料电池：一种据说通过精确调谐的高压低电流脉冲——而非暴力电解——将水分解为氢气和氧气的装置。迈耶在拒绝出售其军用专利后不久因突发脑动脉瘤猝倒身亡。他声称发明的灵感来自天使，在睡眠与清醒之间的片刻。,スタンレー・メイヤーのウォーターフューエルセルに着想を得た装置：高電圧・低電流の精密なパルスで水を水素と酸素に分解できるとされています。メイヤーは軍事用途での特許売却を拒否した直後に脳動脈瘤で急逝しました。彼は発明のビジョンを天使から夢うつつの間に授かったと語っていました。,스탠리 마이어의 수연료 전지에서 영감을 받은 장치: 높은 전압, 낮은 전류의 정밀 펄스로 물을 수소와 산소로 분해할 수 있다고 합니다. 마이어는 군사 목적의 특허 판매를 거부한 직후 뇌동맥류로 쓰러졌습니다. 그는 수면과 각성 사이의 순간에 천사들로부터 발명의 비전을 받았다고 말했습니다.
-"SHOP_DESC_GALLERY_VISITOR","Invites another visitor to your gallery. Each visitor increases the sale value of your shipped paintings. The more eyes on your work, the more it's worth.",邀请另一位访客来到你的画廊。每位访客都会提升你发货画作的售价。关注你作品的人越多，它就越有价值。,ギャラリーに新しい来訪者を招待します。来訪者が増えるほど、出荷した絵画の売値も上がります。多くの目に触れるほど、作品の価値は高まります。,갤러리에 방문자를 한 명 더 초대합니다. 방문자가 늘수록 배송한 그림의 판매 가치가 높아집니다. 더 많은 시선을 받을수록 작품의 가치도 올라갑니다.
-SHOP_DESC_CUSTOM_STICKER,Modify Studio Sim by adding your own custom motifs to the painting UI array.,通过将自己的自定义图案添加到绘画 UI 阵列来修改 Studio Sim。,絵のUIアレイに自分だけのカスタムモチーフを追加してStudio Simを改造しましょう。,그림 UI 배열에 나만의 커스텀 모티프를 추가해 Studio Sim을 수정합니다.
+keys,en,zh_CN,ja,ko,pt_BR,es,ru
+Continue,Continue,继续,続ける,계속,Continuar,Continuar,Продолжить
+New Game,New Game,新游戏,ニューゲーム,새 게임,Novo Jogo,Nuevo Juego,Новая игра
+Options,Options,设置,設定,설정,Opções,Opciones,Настройки
+Quit,Quit,退出,終了,종료,Sair,Salir,Выйти
+COMMISSIONS,COMMISSIONS,委托,依頼,의뢰,COMISSÕES,COMISIONES,ЗАКАЗЫ
+INVENTORY,INVENTORY,物品栏,インベントリ,인벤토리,INVENTÁRIO,INVENTARIO,ИНВЕНТАРЬ
+OPTIONS,OPTIONS,设置,設定,설정,OPÇÕES,OPCIONES,НАСТРОЙКИ
+"Quit and Return to Title Screen","Quit and Return to Title Screen",退出并返回标题画面,タイトル画面に戻る,타이틀 화면으로 돌아가기,"Sair e Voltar à Tela Inicial","Salir y Volver a la Pantalla de Título","Выйти и вернуться на заглавный экран"
+SELECT A COMMISION,SELECT A COMMISION,选择委托,依頼を選択,의뢰 선택,SELECIONAR UMA COMISSÃO,SELECCIONAR UNA COMISIÓN,ВЫБРАТЬ ЗАКАЗ
+COMISSION REQUEST,COMISSION REQUEST,委托详情,依頼内容,의뢰 내용,PEDIDO DE COMISSÃO,SOLICITUD DE COMISIÓN,ЗАПРОС ЗАКАЗА
+Not completed,Not completed,未完成,未完了,미완료,Não concluído,No completado,Не завершено
+View Results,View Results,查看结果,結果を見る,결과 보기,Ver Resultados,Ver Resultados,Посмотреть результаты
+MY PAINTINGS,MY PAINTINGS,我的画作,私の絵画,내 그림,MINHAS PINTURAS,MIS PINTURAS,МОИ КАРТИНЫ
+PAINTING DETAILS,PAINTING DETAILS,画作详情,絵画詳細,그림 상세,DETALHES DA PINTURA,DETALLES DE LA PINTURA,ДЕТАЛИ КАРТИНЫ
+Save,Save,保存,保存,저장,Salvar,Guardar,Сохранить
+Enter painting name...,Enter painting name...,输入画作名称...,絵の名前を入力...,그림 이름 입력...,Digite o nome da pintura...,Ingresa el nombre de la pintura...,Введите название картины...
+Write about your painting...,Write about your painting...,描述你的画作...,絵について書く...,그림에 대해 작성...,Escreva sobre sua pintura...,Escribe sobre tu pintura...,Напишите о своей картине...
+Untitled,Untitled,无题,無題,무제,Sem Título,Sin Título,Без названия
+Mission Results,Mission Results,任务结果,ミッション結果,미션 결과,Resultados da Missão,Resultados de la Misión,Результаты задания
+Your Painting,Your Painting,你的画作,あなたの絵,당신의 그림,Sua Pintura,Tu Pintura,Ваша картина
+Target,Target,目标,目標,목표,Alvo,Objetivo,Цель
+Pixel Matching Analysis,Pixel Matching Analysis,像素匹配分析,ピクセルマッチング分析,픽셀 매칭 분석,Análise de Correspondência de Pixels,Análisis de Coincidencia de Píxeles,Анализ совпадения пикселей
+"Green = Matched | Red = Mismatched","Green = Matched | Red = Mismatched",绿色=匹配 | 红色=不匹配,緑=一致 | 赤=不一致,초록=일치 | 빨강=불일치,"Verde = Correspondeu | Vermelho = Não Correspondeu","Verde = Coincide | Rojo = No Coincide","Зелёный = совпадение | Красный = несовпадение"
+Color Distribution Comparison,Color Distribution Comparison,颜色分布比较,色分布比較,색상 분포 비교,Comparação de Distribuição de Cores,Comparación de Distribución de Colores,Сравнение распределения цветов
+Your Colors,Your Colors,你的颜色,あなたの色,당신의 색상,Suas Cores,Tus Colores,Ваши цвета
+Target Colors,Target Colors,目标颜色,目標の色,목표 색상,Cores Alvo,Colores Objetivo,Целевые цвета
+Score Breakdown,Score Breakdown,得分明细,スコア内訳,점수 내역,Detalhamento da Pontuação,Desglose de Puntuación,Детализация оценки
+SFX Volume,SFX Volume,音效音量,効果音量,효과음 볼륨,Volume de Efeitos,Volumen de Efectos,Громкость звуков
+Music Volume,Music Volume,音乐音量,音楽音量,음악 볼륨,Volume da Música,Volumen de Música,Громкость музыки
+Painting Sounds,Painting Sounds,绘画音效,描画サウンド,그림 소리,Sons de Pintura,Sonidos de Pintura,Звуки рисования
+Hue,Hue,色调,色相,색조,Matiz,Tono,Оттенок
+Saturation,Saturation,饱和度,彩度,채도,Saturação,Saturación,Насыщенность
+Back,Back,返回,戻る,뒤로,Voltar,Volver,Назад
+Your Studio,Your Studio,你的工作室,あなたのスタジオ,당신의 스튜디오,Seu Estúdio,Tu Estudio,Ваша студия
+Main Menu,Main Menu,主菜单,メインメニュー,메인 메뉴,Menu Principal,Menú Principal,Главное меню
+Missions,Missions,任务,ミッション,미션,Missões,Misiones,Задания
+"Shop - Coming Soon","Shop - Coming Soon",商店 - 即将推出,ショップ - 近日公開,상점 - 출시 예정,"Loja - Em Breve","Tienda - Próximamente","Магазин — скоро"
+"Purchase canvases, stickers, and studio upgrades","Purchase canvases, stickers, and studio upgrades",购买画布、贴纸和工作室升级,キャンバス、ステッカー、スタジオアップグレードを購入,캔버스 스티커 및 스튜디오 업그레이드 구매,"Compre telas, adesivos e melhorias para o estúdio","Compra lienzos, stickers y mejoras del estudio","Покупайте холсты, стикеры и улучшения студии"
+Back to Main Menu,Back to Main Menu,返回主菜单,メインメニューに戻る,메인 메뉴로 돌아가기,Voltar ao Menu Principal,Volver al Menú Principal,Вернуться в главное меню
+Show Latest,Show Latest,最新结果,最新を表示,최근 결과,Mostrar Recente,Mostrar Reciente,Показать последнее
+Show Best,Show Best,最佳结果,最高を表示,최고 결과,Mostrar Melhor,Mostrar Mejor,Показать лучшее
+back,back,返回,戻る,뒤로,voltar,volver,назад
+Audio,Audio,音频,オーディオ,오디오,Áudio,Audio,Звук
+Visual,Visual,视觉,ビジュアル,비주얼,Visual,Visual,Визуальные
+Controls,Controls,控制,操作,조작,Controles,Controles,Управление
+Language,Language,语言,言語,언어,Idioma,Idioma,Язык
+Interact,Interact,互动,インタラクト,상호작용,Interagir,Interactuar,Взаимодействовать
+Rotate,Rotate,旋转,回転,회전,Girar,Rotar,Повернуть
+Scale,Scale,缩放,スケール,크기,Escala,Escala,Масштаб
+Cycle,Cycle,切换,切替,순환,Ciclo,Ciclo,Цикл
+Place,Place,放置,配置,배치,Colocar,Colocar,Поставить
+Undo,Undo,撤销,取消,실행취소,Desfazer,Deshacer,Отменить
+Drop,Drop,丢下,落とす,내려놓기,Soltar,Soltar,Бросить
+Throw,Throw,投掷,投げる,던지기,Arremessar,Lanzar,Кинуть
+Rotate Y,Rotate Y,Y轴旋转,Y軸回転,Y축 회전,Girar Y,Rotar Y,Поворот Y
+Rotate X,Rotate X,X轴旋转,X軸回転,X축 회전,Girar X,Rotar X,Поворот X
+Move,Move,移动,移動,이동,Mover,Mover,Движение
+Look,Look,视角,視点,시점,Olhar,Mirar,Обзор
+Jump,Jump,跳跃,ジャンプ,점프,Pular,Saltar,Прыжок
+Run,Run,奔跑,走る,달리기,Correr,Correr,Бег
+Paint,Paint,绘画,描く,그리기,Pintar,Pintar,Рисовать
+Rotate CW,Rotate CW,顺时针旋转,時計回り,시계방향 회전,Girar Horário,Rotar Horario,Повернуть по часовой
+Rotate CCW,Rotate CCW,逆时针旋转,反時計回り,반시계방향 회전,Girar Anti-Horário,Rotar Antihorario,Повернуть против часовой
+Scale Up,Scale Up,放大,拡大,확대,Ampliar,Ampliar,Увеличить
+Scale Down,Scale Down,缩小,縮小,축소,Reduzir,Reducir,Уменьшить
+Next Sticker,Next Sticker,下一个贴纸,次のステッカー,다음 스티커,Próximo Adesivo,Siguiente Sticker,Следующий стикер
+Prev Sticker,Prev Sticker,上一个贴纸,前のステッカー,이전 스티커,Adesivo Anterior,Sticker Anterior,Предыдущий стикер
+Pause,Pause,暂停,ポーズ,일시정지,Pausar,Pausar,Пауза
+Paintings: %d,Paintings: %d,画作: %d,絵画: %d,그림: %d,Pinturas: %d,Pinturas: %d,Картины: %d
+Status: %s,Status: %s,状态: %s,状態: %s,상태: %s,Status: %s,Estado: %s,Статус: %s
+WIP,WIP,进行中,制作中,작업 중,EM ANDAMENTO,EN PROGRESO,В РАБОТЕ
+DONE,DONE,已完成,完了,완료,CONCLUÍDO,COMPLETADO,ГОТОВО
+SHIPPED,SHIPPED,已发货,発送済み,발송됨,ENVIADO,ENVIADO,ОТПРАВЛЕНО
+$%d,$%d,$%d,$%d,$%d,$%d,$%d,$%d
+Missions Completed: %d,Missions Completed: %d,已完成任务: %d,完了ミッション: %d,완료된 미션: %d,Missões Concluídas: %d,Misiones Completadas: %d,Заданий выполнено: %d
+Total Earnings: $%d,Total Earnings: $%d,总收入: $%d,総収入: $%d,총 수입: $%d,Ganhos Totais: $%d,Ganancias Totales: $%d,Общий доход: $%d
+Paintings Created: %d,Paintings Created: %d,创作画作: %d,作成した絵画: %d,제작한 그림: %d,Pinturas Criadas: %d,Pinturas Creadas: %d,Создано картин: %d
+Quit (Main Menu),Quit (Main Menu),退出 (主菜单),終了 (メインメニュー),종료 (메인 메뉴),Sair (Menu Principal),Salir (Menú Principal),Выйти (Главное меню)
+Completed - Grade: %s,Completed - Grade: %s,已完成 - 评级: %s,完了 - 評価: %s,완료 - 등급: %s,Concluído - Nota: %s,Completado - Nota: %s,Завершено — Оценка: %s
+"Completed - Grade: %s (%.1f%%)","Completed - Grade: %s (%.1f%%)",已完成 - 评级: %s (%.1f%%),完了 - 評価: %s (%.1f%%),완료 - 등급: %s (%.1f%%),"Concluído - Nota: %s (%.1f%%)","Completado - Nota: %s (%.1f%%)","Завершено — Оценка: %s (%.1f%%)"
+Difficulty: %d/10,Difficulty: %d/10,难度: %d/10,難易度: %d/10,난이도: %d/10,Dificuldade: %d/10,Dificultad: %d/10,Сложность: %d/10
+Score: %.1f%%,Score: %.1f%%,得分: %.1f%%,スコア: %.1f%%,점수: %.1f%%,Pontuação: %.1f%%,Puntuación: %.1f%%,Оценка: %.1f%%
+"PASSED! (%.0f%% required)","PASSED! (%.0f%% required)",通过！(需要%.0f%%),合格！(%.0f%%必要),합격! (%.0f%% 필요),"APROVADO! (%.0f%% necessário)","¡APROBADO! (%.0f%% requerido)","ЗАЧТЕНО! (требуется %.0f%%)"
+"Failed (%.0f%% required)","Failed (%.0f%% required)",失败 (需要%.0f%%),不合格 (%.0f%%必要),불합격 (%.0f%% 필요),"Reprovado (%.0f%% necessário)","Reprobado (%.0f%% requerido)","Не сдано (требуется %.0f%%)"
+Great work! Mission completed.,Great work! Mission completed.,干得好！任务完成。,よくできました！ミッション完了。,잘했습니다! 미션 완료.,Ótimo trabalho! Missão concluída.,¡Buen trabajo! Misión completada.,Отличная работа! Задание выполнено.
+"Precision: %.1f%% (weight: 30%%)","Precision: %.1f%% (weight: 30%%)",精确度: %.1f%% (权重: 30%%),精度: %.1f%% (ウェイト: 30%%),정밀도: %.1f%% (가중치: 30%%),"Precisão: %.1f%% (peso: 30%%)","Precisión: %.1f%% (peso: 30%%)","Точность: %.1f%% (вес: 30%%)"
+"Color Field: %.1f%% (weight: 70%%)","Color Field: %.1f%% (weight: 70%%)",色彩: %.1f%% (权重: 70%%),色彩フィールド: %.1f%% (ウェイト: 70%%),색상 필드: %.1f%% (가중치: 70%%),"Campo de Cor: %.1f%% (peso: 70%%)","Campo de Color: %.1f%% (peso: 70%%)","Цветовое поле: %.1f%% (вес: 70%%)"
+Best Score: %.1f%%,Best Score: %.1f%%,最高分: %.1f%%,最高スコア: %.1f%%,최고 점수: %.1f%%,Melhor Pontuação: %.1f%%,Mejor Puntuación: %.1f%%,Лучший результат: %.1f%%
+No saved painting available,No saved painting available,无已保存的画作,保存された絵がありません,저장된 그림 없음,Nenhuma pintura salva disponível,No hay pintura guardada disponible,Нет сохранённой картины
+Failed to load painting,Failed to load painting,画作加载失败,絵の読み込みに失敗,그림 로드 실패,Falha ao carregar pintura,Error al cargar la pintura,Не удалось загрузить картину
+Camera Zones: ON,Camera Zones: ON,相机区域: 开,カメラゾーン: オン,카메라 영역: 켜짐,Zonas de Câmera: ATIVADO,Zonas de Cámara: ACTIVADO,Зоны камеры: ВКЛ
+Camera Zones: OFF,Camera Zones: OFF,相机区域: 关,カメラゾーン: オフ,카메라 영역: 꺼짐,Zonas de Câmera: DESATIVADO,Zonas de Cámara: DESACTIVADO,Зоны камеры: ВЫКЛ
+" Rotate Y"," Rotate Y", Y轴旋转, Y軸回転, Y축 회전," Girar Y"," Rotar Y"," Поворот Y"
+" Rotate X"," Rotate X", X轴旋转, X軸回転, X축 회전," Girar X"," Rotar X"," Поворот X"
+" Drop"," Drop", 丢下, 落とす, 내려놓기," Soltar"," Soltar"," Бросить"
+" Throw"," Throw", 投掷, 投げる, 던지기," Arremessar"," Lanzar"," Кинуть"
+" Place"," Place", 放置, 配置, 배치," Colocar"," Colocar"," Поставить"
+" Rotate"," Rotate", 旋转, 回転, 회전," Girar"," Rotar"," Повернуть"
+" Scale"," Scale", 缩放, スケール, 크기," Escala"," Escala"," Масштаб"
+" Cycle"," Cycle", 切换, 切替, 순환," Ciclo"," Ciclo"," Цикл"
+" Undo"," Undo", 撤销, 取消, 실행취소," Desfazer"," Deshacer"," Отменить"
+Mission Name,Mission Name,任务名称,ミッション名,미션 이름,Nome da Missão,Nombre de la Misión,Название задания
+Awaiting next painting...,Awaiting next painting...,等待下一幅画作...,次の絵を待っています...,다음 그림을 기다리는 중...,Aguardando próxima pintura...,Esperando la próxima pintura...,Ожидание следующей картины...
+Uploading painting...,Uploading painting...,上传画作中...,絵をアップロード中...,그림 업로드 중...,Enviando pintura...,Subiendo pintura...,Загрузка картины...
+Getting critique...,Getting critique...,获取评论中...,批評を取得中...,비평 가져오는 중...,Obtendo crítica...,Obteniendo crítica...,Получение критики...
+"Upload failed — no critique available.","Upload failed — no critique available.",上传失败——无法获取评论。,アップロード失敗——批評を取得できません。,업로드 실패 — 비평을 받을 수 없습니다.,"Falha no envio — crítica indisponível.","Error al subir — crítica no disponible.","Ошибка загрузки — критика недоступна."
+Failed to request critique.,Failed to request critique.,请求评论失败。,批評のリクエストに失敗しました。,비평 요청 실패.,Falha ao solicitar crítica.,Error al solicitar crítica.,Не удалось запросить критику.
+Critique unavailable.,Critique unavailable.,评论不可用。,批評は利用できません。,비평을 이용할 수 없습니다.,Crítica indisponível.,Crítica no disponible.,Критика недоступна.
+SHOP,SHOP,商店,ショップ,상점,LOJA,TIENDA,МАГАЗИН
+OWNED,OWNED,已拥有,所持済み,보유 중,ADQUIRIDO,ADQUIRIDO,КУПЛЕНО
+BUY,BUY,购买,購入,구매,COMPRAR,COMPRAR,КУПИТЬ
+LOCKED,LOCKED,已锁定,ロック済み,잠금됨,BLOQUEADO,BLOQUEADO,ЗАПЕРТО
+Select an item,Select an item,选择一个物品,アイテムを選択,아이템 선택,Selecione um item,Selecciona un artículo,Выберите предмет
+"Not enough money","Not enough money",钱不够,お金が足りません,돈이 부족합니다,"Dinheiro insuficiente","Dinero insuficiente","Недостаточно денег"
+"Can't afford this item","Can't afford this item",买不起这个物品,このアイテムは買えません,이 아이템을 구매할 수 없습니다,"Não é possível comprar este item","No puedes comprar este artículo","Недостаточно средств"
+"Move out of the item's spawn zone first","Move out of the item's spawn zone first",请先离开物品生成区域,アイテムのスポーン地点から離れてください,아이템 생성 구역을 벗어나세요,"Saia da zona de geração do item primeiro","Sal primero de la zona de aparición del artículo","Сначала выйдите из зоны появления предмета"
+"↑ ↓  scroll     →  /  A    buy     ←  /  B    back","↑ ↓  scroll     →  /  A    buy     ←  /  B    back",↑↓ 滚动  →/A 购买  ←/B 返回,↑↓ スクロール  →/A 購入  ←/B 戻る,↑↓ 스크롤  →/A 구매  ←/B 뒤로,"↑ ↓  rolar     →  /  A    comprar     ←  /  B    voltar","↑ ↓  desplazar     →  /  A    comprar     ←  /  B    volver","↑ ↓  прокрутка     →  /  A    купить     ←  /  B    назад"
+Gnarwalkie Nail Gun,Gnarwalkie Nail Gun,格纳指甲枪,グナーウォーキーネイルガン,그나왈키 네일건,Pistola de Pregos Gnarwalkie,Pistola de Clavos Gnarwalkie,Гвоздезабивной пистолет Gnarwalkie
+Trash Can,Trash Can,垃圾桶,ゴミ箱,쓰레기통,Lixeira,Papelera,Мусорное ведро
+Fan,Fan,风扇,扇風機,선풍기,Ventilador,Ventilador,Вентилятор
+Styrofoam Cube,Styrofoam Cube,泡沫立方体,発泡スチロールキューブ,스티로폼 큐브,Cubo de Isopor,Cubo de Poliestireno,Пенопластовый куб
+Cardboard Box,Cardboard Box,纸板箱,段ボール箱,판지 상자,Caixa de Papelão,Caja de Cartón,Картонная коробка
+Proprietary Water Filter,Proprietary Water Filter,专属净水器,専用浄水器,독점 정수기,Filtro de Água Exclusivo,Filtro de Agua Exclusivo,Фирменный фильтр для воды
+Phone,Phone,手机,スマートフォン,스마트폰,Celular,Teléfono,Телефон
+Mirror,Mirror,镜子,鏡,거울,Espelho,Espejo,Зеркало
+Skateboard,Skateboard,滑板,スケートボード,스케이트보드,Skate,Patineta,Скейтборд
+Monstera Deliciosa,Monstera Deliciosa,龟背竹,モンステラ・デリシオサ,몬스테라 델리시오사,Monstera Deliciosa,Monstera Deliciosa,Монстера деликатесная
+Polypodiopsida,Polypodiopsida,蕨类植物,ポリポディオプシダ,폴리포디옵시다,Polypodiopsida,Polypodiopsida,Polypodiopsida
+Pachypodium lamerei,Pachypodium lamerei,马达加斯加棕榈,パキポディウム・ラメレイ,파키포디움 라메레이,Pachypodium lamerei,Pachypodium lamerei,Pachypodium lamerei
+Psywheel,Psywheel,念力风车,サイホイール,사이휠,Roda Psi,Rueda Psi,Псиколесо
+"Vintage Arcade Game from the 90's","Vintage Arcade Game from the 90's",90年代复古街机,90年代のヴィンテージアーケードゲーム,90년대 빈티지 아케이드 게임,"Arcade Vintage dos Anos 90","Arcade Vintage de los 90","Винтажный аркадный автомат 90-х"
+Searl Effect Generator,Searl Effect Generator,塞尔效应发电机,サール効果発電機,서얼 효과 발전기,Gerador do Efeito Searl,Generador del Efecto Searl,Генератор эффекта Сёрла
+GEET Plasma Reactor,GEET Plasma Reactor,GEET等离子反应堆,GEETプラズマリアクター,GEET 플라즈마 반응기,Reator de Plasma GEET,Reactor de Plasma GEET,GEET плазменный реактор
+Stanley Meyer Water Fuel Cell,Stanley Meyer Water Fuel Cell,斯坦利·迈耶水燃料电池,スタンリー・メイヤー水燃料電池,스탠리 마이어 수소 연료전지,Célula de Combustível de Água de Stanley Meyer,Celda de Combustible de Agua de Stanley Meyer,Водотопливный элемент Стэнли Мейера
+Gallery Visitor Pass,Gallery Visitor Pass,画廊访客通行证,ギャラリー訪問者パス,갤러리 방문자 패스,Passe de Visitante da Galeria,Pase de Visitante de la Galería,Пропуск посетителя галереи
+Custom Sticker Modding button,Custom Sticker Modding button,自定义贴纸改装按钮,カスタムステッカーMODボタン,커스텀 스티커 모딩 버튼,Botão de Modificação de Adesivos,Botón de Modificación de Stickers,Кнопка кастомного стикер-мода
+Pick Up,Pick Up,拾取,拾う,줍기,Pegar,Recoger,Поднять
+Interact,Interact,互动,インタラクト,상호작용,Interagir,Interactuar,Взаимодействовать
+Play Tape,Play Tape,播放磁带,テープを再生,테이프 재생,Tocar Fita,Reproducir Cinta,Воспроизвести кассету
+Toggle Power,Toggle Power,切换电源,電源を切り替え,전원 전환,Alternar Energia,Alternar Energía,Переключить питание
+Turn On Fan,Turn On Fan,打开风扇,扇風機をオンにする,선풍기 켜기,Ligar Ventilador,Encender Ventilador,Включить вентилятор
+Turn Off Fan,Turn Off Fan,关闭风扇,扇風機をオフにする,선풍기 끄기,Desligar Ventilador,Apagar Ventilador,Выключить вентилятор
+No Power,No Power,无电源,電源なし,전원 없음,Sem Energia,Sin Energía,Нет питания
+"Attempted - Latest: %s (%.1f%%)","Attempted - Latest: %s (%.1f%%)",已尝试 - 最近: %s (%.1f%%),試行済み - 最新: %s (%.1f%%),시도됨 - 최근: %s (%.1f%%),"Tentado - Último: %s (%.1f%%)","Intentado - Último: %s (%.1f%%)","Попытка — Последняя: %s (%.1f%%)"
+Not attempted,Not attempted,未尝试,未試行,시도하지 않음,Não tentado,No intentado,Без попытки
+No saved attempt available,No saved attempt available,无已保存的尝试,保存された試行はありません,저장된 시도 없음,Nenhuma tentativa salva disponível,No hay intento guardado disponible,Нет сохранённой попытки
+Save Game,Save Game,保存游戏,ゲームを保存,게임 저장,Salvar Jogo,Guardar Juego,Сохранить игру
+Check Phone,Check Phone,查看手机,スマホを確認,스마트폰 확인,Verificar Celular,Ver Teléfono,Проверить телефон
+Drink Water,Drink Water,喝水,水を飲む,물 마시기,Beber Água,Beber Agua,Выпить воду
+Equip Nailgun,Equip Nailgun,装备钉枪,ネイルガンを装備,네일건 장착,Equipar Pistola de Pregos,Equipar Pistola de Clavos,Взять гвоздезабивной пистолет
+New Painting,New Painting,新画作,新しい絵,새 그림,Nova Pintura,Nueva Pintura,Новая картина
+Switch to Landscape,Switch to Landscape,切换为横向,横向きに切り替え,가로 방향으로 전환,Mudar para Paisagem,Cambiar a Horizontal,Переключить на горизонтальный
+Switch to Square,Switch to Square,切换为方形,正方形に切り替え,정사각형으로 전환,Mudar para Quadrado,Cambiar a Cuadrado,Переключить на квадратный
+Submit Painting,Submit Painting,提交画作,絵を提出,그림 제출,Enviar Pintura,Enviar Pintura,Отправить картину
+No Mission,No Mission,无任务,ミッションなし,미션 없음,Sem Missão,Sin Misión,Нет задания
+"Abort / New Painting","Abort / New Painting",中止 / 新画作,中止 / 新しい絵,중단 / 새 그림,"Cancelar / Nova Pintura","Cancelar / Nueva Pintura","Отменить / Новая картина"
+Convert Painting,Convert Painting,转换画作,絵を変換,그림 변환,Converter Pintura,Convertir Pintura,Конвертировать картину
+Convert to Painting,Convert to Painting,转换为画作,絵に変換,그림으로 변換,Converter para Pintura,Convertir a Pintura,Конвертировать в картину
+Canvas is Empty,Canvas is Empty,画布是空的,キャンバスが空です,캔버스가 비어 있습니다,Tela está Vazia,El Lienzo está Vacío,Холст пуст
+Converting...,Converting...,转换中...,変換中...,변환 중...,Convertendo...,Convirtiendo...,Конвертация...
+"Transfer Assistant's Work","Transfer Assistant's Work",传输助手的作品,アシスタントの作品を転送,어시스턴트 작품 전송,"Transferir Trabalho do Assistente","Transferir Trabajo del Asistente","Перенести работу ассистента"
+Nothing to Transfer Yet,Nothing to Transfer Yet,暂无可转移内容,転送するものがありません,전송할 내용 없음,Nada para Transferir Ainda,Nada que Transferir Aún,Нечего переносить
+Saving...,Saving...,保存中...,保存中...,저장 중...,Salvando...,Guardando...,Сохранение...
+Undo Last Addition,Undo Last Addition,撤销上次添加,最後の追加を取り消す,마지막 추가 취소,Desfazer Última Adição,Deshacer Última Adición,Отменить последнее добавление
+Nothing to Undo,Nothing to Undo,无可撤销操作,取り消すものがありません,취소할 내용 없음,Nada para Desfazer,Nada que Deshacer,Нечего отменять
+"Hire Studio Assistant ($%d)","Hire Studio Assistant ($%d)",雇用工作室助手 ($%d),スタジオアシスタントを雇用 ($%d),스튜디오 어시스턴트 고용 ($%d),"Contratar Assistente de Estúdio ($%d)","Contratar Asistente de Estudio ($%d)","Нанять ассистента студии ($%d)"
+"Hire Assistant ($%d)","Hire Assistant ($%d)",雇用助手 ($%d),アシスタントを雇用 ($%d),어시스턴트 고용 ($%d),"Contratar Assistente ($%d)","Contratar Asistente ($%d)","Нанять ассистента ($%d)"
+Studio Assistant Active,Studio Assistant Active,工作室助手已激活,スタジオアシスタント稼働中,스튜디오 어시스턴트 활성화,Assistente de Estúdio Ativo,Asistente de Estudio Activo,Ассистент студии активен
+Upgrade Unavailable,Upgrade Unavailable,升级不可用,アップグレード不可,업그레이드 불가,Melhoria Indisponível,Mejora No Disponible,Улучшение недоступно
+Open Gate,Open Gate,开门,ゲートを開ける,문 열기,Abrir Portão,Abrir Puerta,Открыть ворота
+Close Gate,Close Gate,关门,ゲートを閉じる,문 닫기,Fechar Portão,Cerrar Puerta,Закрыть ворота
+Remove Items First,Remove Items First,请先移除物品,先にアイテムを取り除いてください,먼저 아이템을 제거하세요,Remova os Itens Primeiro,Retira los Artículos Primero,Сначала уберите предметы
+Too Many Paintings,Too Many Paintings,画作太多,絵が多すぎます,그림이 너무 많습니다,Pinturas Demais,Demasiadas Pinturas,Слишком много картин
+Reposition Painting,Reposition Painting,重新放置画作,絵を移動してください,그림 위치 조정,Reposicionar Pintura,Reposicionar Pintura,Переместить картину
+Send Painting,Send Painting,发送画作,絵を送る,그림 보내기,Enviar Pintura,Enviar Pintura,Отправить картину
+"Send Painting (1 of %d)","Send Painting (1 of %d)",发送画作 (第1幅，共%d幅),絵を送る (1/%d),그림 보내기 (1/%d개 중),"Enviar Pintura (1 de %d)","Enviar Pintura (1 de %d)","Отправить картину (1 из %d)"
+Sending...,Sending...,发送中...,送信中...,전송 중...,Enviando...,Enviando...,Отправка...
+No Painting Inside,No Painting Inside,内部无画作,中に絵がありません,내부에 그림 없음,Nenhuma Pintura Dentro,No hay Pintura Dentro,Внутри нет картины
+Close Gate First,Close Gate First,请先关门,先にゲートを閉じてください,먼저 문을 닫으세요,Feche o Portão Primeiro,Cierra la Puerta Primero,Сначала закройте ворота
+Open Sticker Folder,Open Sticker Folder,打开贴纸文件夹,ステッカーフォルダを開く,스티커 폴더 열기,Abrir Pasta de Adesivos,Abrir Carpeta de Stickers,Открыть папку стикеров
+Press Button,Press Button,按下按钮,ボタンを押す,버튼 누르기,Pressionar Botão,Presionar Botón,Нажать кнопку
+Pick Up Painting,Pick Up Painting,拾取画作,絵を拾う,그림 줍기,Pegar Pintura,Recoger Pintura,Поднять картину
+Take Down Painting,Take Down Painting,取下画作,絵を取り外す,그림 내리기,Retirar Pintura,Retirar Pintura,Снять картину
+Pick Up Plug,Pick Up Plug,拾取插头,プラグを拾う,플러그 줍기,Pegar Plugue,Recoger Enchufe,Поднять вилку
+Unplug,Unplug,拔掉插头,プラグを抜く,플러그 뽑기,Desconectar,Desconectar,Отключить
+Pick Up Gun,Pick Up Gun,拾取枪,銃を拾う,총 줍기,Pegar Arma,Recoger Arma,Поднять пистолет
+Drop Gun,Drop Gun,放下枪,銃を落とす,총 내려놓기,Soltar Arma,Soltar Arma,Положить пистолет
+Pick Up Key,Pick Up Key,拾取钥匙,鍵を拾う,열쇠 줍기,Pegar Chave,Recoger Llave,Поднять ключ
+Grab Door,Grab Door,抓住门,ドアをつかむ,문 잡기,Segurar Porta,Agarrar Puerta,Взяться за дверь
+Release Door,Release Door,松开门,ドアを離す,문 놓기,Soltar Porta,Soltar Puerta,Отпустить дверь
+Unlock,Unlock,解锁,解錠,잠금 해제,Desbloquear,Desbloquear,Разблокировать
+"Locked - Need Key","Locked - Need Key",已锁 - 需要钥匙,鍵が必要です,잠금됨 - 열쇠 필요,"Trancado - Precisa de Chave","Bloqueado - Necesita Llave","Заперто — нужен ключ"
+Turn On,Turn On,打开,オンにする,켜기,Ligar,Encender,Включить
+Turn Off,Turn Off,关闭,オフにする,끄기,Desligar,Apagar,Выключить
+"Commissions Completed: %d","Commissions Completed: %d",完成的委托: %d,完了したコミッション: %d,완료된 의뢰: %d,"Comissões Concluídas: %d","Comisiones Completadas: %d","Заказов выполнено: %d"
+SELECT A COMMISSION,SELECT A COMMISSION,选择委托,コミッションを選択,의뢰 선택,SELECIONAR UMA COMISSÃO,SELECCIONAR UNA COMISIÓN,ВЫБРАТЬ ЗАКАЗ
+View Results,View Results,查看结果,結果を見る,결과 보기,Ver Resultados,Ver Resultados,Посмотреть результаты
+Start Mission,Start Mission,开始任务,ミッション開始,미션 시작,Iniciar Missão,Iniciar Misión,Начать задание
+Abort Mission,Abort Mission,中止任务,ミッション中止,미션 중단,Cancelar Missão,Cancelar Misión,Отменить задание
+Latest Attempt,Latest Attempt,最近尝试,最新の試行,최근 시도,Última Tentativa,Último Intento,Последняя попытка
+Your Painting,Your Painting,你的画作,あなたの絵,내 그림,Sua Pintura,Tu Pintura,Ваша картина
+Target,Target,目标,ターゲット,목표,Alvo,Objetivo,Цель
+Pixel Matching Analysis,Pixel Matching Analysis,像素匹配分析,ピクセルマッチング分析,픽셀 매칭 분석,Análise de Correspondência de Pixels,Análisis de Coincidencia de Píxeles,Анализ совпадения пикселей
+"Green = Matched | Red = Mismatched","Green = Matched | Red = Mismatched",绿色=匹配 | 红色=不匹配,緑=一致 | 赤=不一致,녹색=일치 | 빨간=불일치,"Verde = Correspondeu | Vermelho = Não Correspondeu","Verde = Coincide | Rojo = No Coincide","Зелёный = совпадение | Красный = несовпадение"
+Retry,Retry,重试,リトライ,다시 시도,Tentar Novamente,Reintentar,Повторить
+YOUR PAINTINGS,YOUR PAINTINGS,你的画作,あなたの绘画,내 그림,SUAS PINTURAS,TUS PINTURAS,ВАШИ КАРТИНЫ
+Name:,Name:,名称:,名前:,이름:,Nome:,Nombre:,Название:
+Artist Statement:,Artist Statement:,艺术声明:,アーティストステートメント:,작가 노트:,Declaração do Artista:,Declaración del Artista:,Заявление художника:
+Enter painting name...,Enter painting name...,输入画作名称...,絵のタイトルを入力...,그림 이름 입력...,Digite o nome da pintura...,Ingresa el nombre de la pintura...,Введите название картины...
+Write about your painting...,Write about your painting...,写下你的画作...,絵について書いてください...,그림에 대해 쓰기...,Escreva sobre sua pintura...,Escribe sobre tu pintura...,Напишите о своей картине...
+Critique:,Critique:,评论:,批評:,비평:,Crítica:,Crítica:,Критика:
+Save,Save,保存,保存,저장,Salvar,Guardar,Сохранить
+There are no paintings in your Inventory. Pressing the red button in the studio will add a painting to your Inventory.,There are no paintings in your Inventory. Pressing the red button in the studio will add a painting to your Inventory.,你的库存中没有画作。按下工作室中的红色按钮将画作添加到库存。,インベントリに絵がありません。スタジオの赤いボタンを押すと絵がインベントリに追加されます。,인벤토리에 그림이 없습니다. 스튜디오의 빨간 버튼을 누르면 그림이 인벤토리에 추가됩니다.,Não há pinturas no seu Inventário. Pressionar o botão vermelho no estúdio adicionará uma pintura ao seu Inventário.,No hay pinturas en tu Inventario. Presionar el botón rojo en el estudio añadirá una pintura a tu Inventario.,В вашем инвентаре нет картин. Нажмите красную кнопку в студии — она добавит картину в инвентарь.
+OPTIONS,OPTIONS,选项,オプション,옵션,OPÇÕES,OPCIONES,НАСТРОЙКИ
+Game,Game,游戏,ゲーム,게임,Jogo,Juego,Игра
+Save GLB to downloads folder,Save GLB to downloads folder,将 GLB 保存到下载文件夹,GLB をダウンロードフォルダに保存,GLB를 다운로드 폴더에 저장,Salvar GLB na pasta de downloads,Guardar GLB en la carpeta de descargas,Сохранять GLB в папку загрузок
+Save PNG to downloads folder,Save PNG to downloads folder,将 PNG 保存到下载文件夹,PNG をダウンロードフォルダに保存,PNG를 다운로드 폴더에 저장,Salvar PNG na pasta de downloads,Guardar PNG en la carpeta de descargas,Сохранять PNG в папку загрузок
+Generate Elevator Critique,Generate Elevator Critique,生成电梯评价,エレベーター批評を生成,엘리베이터 비평 생성,Gerar Crítica de Elevador,Generar Crítica de Elevador,Генерировать критику в лифте
+Publish painting online,Publish painting online,在线发布画作,絵をオンラインで公開,그림을 온라인으로 게시,Publicar pintura online,Publicar pintura en línea,Публиковать картину онлайн
+Nail Gun,Nail Gun,钉枪,ネイルガン,네일건,Pistola de Pregos,Pistola de Clavos,Гвоздезабивной пистолет
+Water Filter,Water Filter,滤水器,ウォーターフィルター,정수기,Filtro de Água,Filtro de Agua,Фильтр для воды
+Monstera Plant,Monstera Plant,龟背竹,モンステラ,몬스테라,Planta Monstera,Planta Monstera,Растение монстера
+Fern Plant,Fern Plant,蕨类植物,シダ植物,고사리,Samambaia,Helecho,Папоротник
+Madagascar Palm,Madagascar Palm,马达加斯加棕榈,マダガスカルパーム,마다가스카르 팜,Palmeira de Madagáscar,Palma de Madagascar,Мадагаскарская пальма
+Arcade Game,Arcade Game,街机游戏,アーケードゲーム,아케이드 게임,Jogo de Arcade,Juego de Arcade,Аркадная игра
+Tornado Game,Tornado Game,龙卷风游戏,トルネードゲーム,토네이도 게임,Jogo do Tornado,Juego del Tornado,Игра Торнадо
+SEG,SEG,SEG,SEG,SEG,SEG,SEG,SEG
+GEET Engine,GEET Engine,GEET 发动机,GEETエンジン,GEET 엔진,Motor GEET,Motor GEET,GEET двигатель
+Water Fuel Cell,Water Fuel Cell,水燃料电池,ウォーターフューエルセル,수연료 전지,Célula de Combustível de Água,Celda de Combustible de Agua,Водотопливный элемент
+Gallery Visitor,Gallery Visitor,画廊访客,ギャラリー来訪者,갤러리 방문자,Visitante da Galeria,Visitante de la Galería,Посетитель галереи
+Custom Sticker Modder,Custom Sticker Modder,自定义贴纸修改器,カスタムステッカーモッダー,커스텀 스티커 모더,Modificador de Adesivos,Modificador de Stickers,Кастомный стикер-модер
+SHOP_DESC_NAIL_GUN,Hang your paintings on the wall. An essential tool for viewing your artwork in a gallery setting.,将画作挂在墙上。在画廊环境中展示作品的必备工具。,壁に絵を掛けるための必須ツール。ギャラリーでの作品鑑賞に欠かせない。,그림을 벽에 걸어두는 도구. 갤러리 환경에서 작품을 감상하는 데 필수적입니다.,Pendure suas pinturas na parede. Uma ferramenta essencial para exibir sua arte em um ambiente de galeria.,Cuelga tus pinturas en la pared. Una herramienta esencial para exhibir tu arte en un ambiente de galería.,Вешайте картины на стену. Незаменимый инструмент для демонстрации работ в галерейном формате.
+SHOP_DESC_TRASH_CAN,A studio staple. Every artist needs somewhere to put their mistakes.,工作室必备。每位艺术家都需要一个放置失误之作的地方。,アトリエの定番。ミスを捨てる場所はどんなアーティストにも必要です。,작업실의 필수품. 모든 예술가에겐 실수를 버릴 곳이 필요합니다.,Essencial em qualquer estúdio. Todo artista precisa de um lugar para depositar seus erros.,Un básico del estudio. Todo artista necesita un lugar donde poner sus errores.,Неотъемлемая часть студии. Каждому художнику нужно место для своих ошибок.
+SHOP_DESC_FAN,Keeps the studio cool while you work. Comes with a power cord.,在创作时保持工作室凉爽。附带电源线。,作業中もアトリエを快適に保ちます。電源コード付き。,작업 중 작업실을 시원하게 유지합니다. 전원 코드 포함.,Mantém o estúdio fresco enquanto você trabalha. Acompanha cabo de energia.,Mantiene el estudio fresco mientras trabajas. Incluye cable de corriente.,Поддерживает прохладу в студии во время работы. В комплекте кабель питания.
+"SHOP_DESC_STYROFOAM_CUBE","Great for breaking up physical space inside the studio. Surprisingly useful as a pedestal.",非常适合分割工作室内部空间。作为基座出奇地好用。,アトリエの空間を上手く仕切るのに最適。台座としても意外と便利です。,작업실 내부 공간을 나누는 데 좋습니다. 받침대로도 의외로 유용합니다.,"Ótimo para dividir o espaço físico do estúdio. Surpreendentemente útil como pedestal.","Ideal para dividir el espacio físico del estudio. Sorprendentemente útil como pedestal.","Отлично подходит для зонирования пространства студии. Неожиданно удобен как постамент."
+SHOP_DESC_CARDBOARD_BOX,A mysterious cardboard box. Something useful might be inside.,一个神秘的纸板箱。里面可能有些有用的东西。,謎めいた段ボール箱。中に何か役立つものが入っているかもしれません。,신비로운 골판지 상자. 안에 뭔가 유용한 것이 있을지도 모릅니다.,Uma misteriosa caixa de papelão. Talvez haja algo útil lá dentro.,Una misteriosa caja de cartón. Quizás haya algo útil dentro.,Загадочная картонная коробка. Внутри может оказаться что-то полезное.
+"SHOP_DESC_WATER_FILTER","Clean water for a clear mind. A sleek plastic tower that filters water through gravity and two metal cylinders — no electricity required. Perfect for off-grid living or anyone who prefers their water filtered with a side of apocalypse readiness.","清洁的水，清晰的思维。一个优雅的塑料过滤器，通过重力和两个金属筒净水，无需电力。非常适合离网生活或喜欢末日准备风格的人。",クリアな水でクリアな思考を。重力と2本の金属筒で浄水するシンプルな装置。電源不要。オフグリッドな生活や備蓄好きに最適。,맑은 물로 맑은 정신을. 전기 없이 중력과 두 개의 금속 실린더로 물을 정화하는 세련된 장치. 오프그리드 생활이나 묵시록 대비에 안성맞춤.,"Água limpa para uma mente limpa. Uma elegante torre de plástico que filtra a água pela gravidade e dois cilindros metálicos — sem necessidade de eletricidade. Ideal para vida off-grid ou para quem prefere a água filtrada com um toque de preparação para o apocalipse.","Agua limpa para una mente clara. Una elegante torre de plástico que filtra el agua por gravedad y dos cilindros metálicos — sin necesidad de electricidad. Perfecta para vivir fuera de la red o para quien prefiere el agua filtrada con un toque de preparación apocalíptica.","Чистая вода для ясного ума. Изящный пластиковый фильтр, очищающий воду гравитацией и двумя металлическими цилиндрами — без электричества. Идеален для жизни вне сети или для тех, кто любит фильтрованную воду с привкусом готовности к апокалипсису."
+SHOP_DESC_PHONE,A smartphone with a mysterious website loaded onto its home screen.,一部智能手机，主屏幕上加载着一个神秘的网站。,ホーム画面に謎のウェブサイトが開いたスマートフォン。,홈 화면에 의문의 웹사이트가 열려 있는 스마트폰.,Um smartphone com um site misterioso carregado na tela inicial.,Un smartphone con un misterioso sitio web cargado en su pantalla de inicio.,Смартфон с загадочным сайтом на главном экране.
+"SHOP_DESC_MIRROR","For checking yourself out between sessions. Perfect for viewing your work through a different lens.",适合在创作间隙欣赏自己。通过不同的视角审视你的作品的完美工具。,セッションの合間に自分を確認するのに最適。作品を新しい視点で見るのにもぴったり。,작업 사이에 자신을 돌아보는 데 좋습니다. 작품을 다른 시각으로 바라보기에도 완벽합니다.,"Para se olhar entre as sessões. Perfeito para ver seu trabalho por um ângulo diferente.","Para mirarte entre sesiones. Perfecto para ver tu trabajo desde otro ángulo.","Чтобы полюбоваться собой между сессиями. Идеально для взгляда на работу под другим углом."
+"SHOP_DESC_SKATEBOARD","A brand-new board leaning against the wall. Old habits.",一块全新的板，靠在墙上。旧习难改。,壁に立てかけられた新品のボード。古い習慣はなかなか抜けないもの。,벽에 기댄 새 보드. 오랜 습관은 쉽게 사라지지 않습니다.,"Uma prancha novinha encostada na parede. Velhos hábitos não se perdem.","Una tabla nueva apoyada contra la pared. Los viejos hábitos no se pierden.","Новенькая доска, прислонённая к стене. Старые привычки не умирают."
+"SHOP_DESC_MONSTERA","Big leafy vibes. Every studio needs one.",大叶片的氛围感。每个工作室都需要一株。,大きな葉っぱのバイブス。どんなアトリエにも1本は必要です。,큰 잎사귀의 분위기. 모든 작업실에는 하나씩 있어야 합니다.,"Vibe de folhagem exuberante. Todo estúdio precisa de uma.","Vibras de follaje exuberante. Todo estudio necesita una.","Атмосфера пышной зелени. В каждой студии должна быть одна."
+"SHOP_DESC_FERN_PLANT","Delicate, unfurling fiddleheads. A little prehistoric energy for the studio.",纤细、展开的嫩芽。为工作室带来一点史前能量。,繊細に広がるゼンマイ。アトリエに少し先史時代のエネルギーを添えて。,섬세하게 펼쳐지는 고사리 잎. 작업실에 약간의 선사시대 에너지를.,"Brotos delicados se desdobrando. Uma pitada de energia pré-histórica para o estúdio.","Delicados brotes desplegándose. Un poco de energía prehistórica para el estudio.","Нежные разворачивающиеся вайи. Немного доисторической энергии для студии."
+"SHOP_DESC_MADPALM","Spiky, drought-tolerant, and technically a succulent. The Madagascar Palm doesn't care what you call it.",尖刺、耐旱，严格来说是多肉植物。马达加斯加棕榈才不在乎你怎么叫它。,トゲトゲで乾燥に強く、技術的にはサボテン科。マダガスカルパームはそんな分類を気にしません。,가시투성이에 건조에 강하고 엄밀히 말하면 다육식물. 마다가스카르 팜은 뭐라 불리든 신경 쓰지 않습니다.,"Espinhosa, resistente à seca e tecnicamente uma suculenta. A Palmeira-de-Madagáscar não se importa com o que você a chama.","Espinosa, resistente a la sequía y técnicamente una suculenta. La Palma de Madagascar no se preocupa por cómo la llames.","Колючая, засухоустойчивая и технически суккулент. Мадагаскарской пальме всё равно, как её называют."
+"SHOP_DESC_PSYWHEEL","A homemade meditation device made from an eraser, a toothpick, and a folded piece of paper. Used to practice telekinesis. When it's spinning, you know you are onto something.",一个由橡皮擦、牙签和折叠纸片制成的自制冥想装置。用于练习心灵感应。当它旋转时，你知道你找到了什么。,消しゴム・爪楊枝・折り紙で作られた自作の瞑想装置。念動力の練習に使います。回り始めたら、何かを掴んでいる証拠。,"지우개와 이쑤시개, 접힌 종이로 만든 수제 명상 도구. 염력 연습에 사용합니다. 돌기 시작하면 뭔가 되고 있다는 신호.","Um dispositivo de meditação caseiro feito com uma borracha, um palito de dente e um pedaço de papel dobrado. Usado para praticar telecinesia. Quando começa a girar, você sabe que está chegando em algum lugar.","Un dispositivo de meditación casero hecho con una goma de borrar, un palillo y un trozo de papel doblado. Usado para practicar telequinesis. Cuando gira, sabes que estás llegando a algo.","Самодельное медитативное устройство из ластика, зубочистки и сложенного листа бумаги. Используется для тренировки телекинеза. Когда оно вращается — значит вы на правильном пути."
+"SHOP_DESC_CYCLONE","A spinning circle of false hope and questionable reflexes. Perfect for testing hand–eye coordination, patience, and your ability to blame the machine instead of yourself.",充满虚假希望和可疑反应的旋转圆圈。非常适合测试手眼协调、耐心以及你将责任归咎于机器的能力。,偽りの期待と怪しい反射神経を試す回転サークル。手と目の協調性、忍耐力、そして機械のせいにする能力を鍛えるのに最適。,"헛된 희망과 의심스러운 반사신경의 회전 원. 눈과 손의 협응력, 인내심, 그리고 기계 탓을 하는 능력을 시험하기에 완벽합니다.","Um círculo giratório de falsas esperanças e reflexos questionáveis. Perfeito para testar coordenação olho-mão, paciência e sua habilidade de culpar a máquina em vez de si mesmo.","Un círculo giratorio de falsas esperanzas y reflejos cuestionables. Perfecto para probar la coordinación mano-ojo, la paciencia y tu habilidad de culpar a la máquina en lugar de a ti mismo.","Вращающийся круг ложных надежд и сомнительной реакции. Идеально для проверки координации рук и глаз, терпения и умения винить машину вместо себя."
+"SHOP_DESC_SEG","A legendary rotating assembly of magnetized rollers said to unlock the Searl Effect — a self-sustaining electromagnetic state theorized to produce free energy, reduce gravity, and generate dramatic sci-fi ambiance. Whether a revolutionary breakthrough or an extremely sophisticated conversation piece, it transforms any space into a cutting-edge research facility.",一台传说中由磁化滚轮组成的旋转装置，据称能解锁"谢尔效应"——一种据理论能产生自由能量、减轻重力并营造惊人科幻氛围的自持电磁状态。无论是革命性突破还是极其精妙的装饰品，它都能将任何空间变成前沿研究设施。,磁化されたローラーが回転し「サール効果」を起こすとされる伝説の装置。フリーエネルギー・反重力・SF的発光など、様々な現象を起こすと理論化されています。革命的なブレイクスルーか洗練された会話の種か、どちらにせよ空間を最先端研究施設に変えます。,"자화된 롤러가 회전하며 '설 효과'를 일으킨다는 전설의 장치. 자유 에너지, 중력 감소, SF 분위기 등을 이론적으로 유발한다고 합니다. 혁신적인 돌파구인지 세련된 대화 소재인지 몰라도, 어떤 공간이든 첨단 연구 시설로 변모시킵니다.","Um lendário conjunto giratório de rolos magnetizados que supostamente desbloqueia o Efeito Searl — um estado eletromagnético autossustentável teorizado para produzir energia livre, reduzir a gravidade e gerar um clima dramático de ficção científica. Seja um avanço revolucionário ou uma sofisticadíssima peça de conversação, transforma qualquer espaço em uma instalação de pesquisa de ponta.","Un legendario conjunto giratorio de rodillos magnetizados que supuestamente desbloquea el Efecto Searl — un estado electromagnético autosuficiente teorizado para producir energía libre, reducir la gravedad y generar un dramático ambiente de ciencia ficción. Ya sea un avance revolucionario o una sofisticadísima pieza de conversación, transforma cualquier espacio en una instalación de investigación de vanguardia.","Легендарный вращающийся узел из намагниченных роликов, якобы запускающий Эффект Сёрла — самоподдерживающееся электромагнитное состояние, теоретически производящее свободную энергию, снижающее гравитацию и создающее атмосферу научной фантастики. Революционный прорыв или изощрённый предмет для разговора — в любом случае превращает любое пространство в передовую исследовательскую лабораторию."
+"SHOP_DESC_GEET","The GEET Plasma Reactor routes exhaust heat back through incoming fuel vapor, causing an anomalous low-temperature plasma transition inside a vacuum chamber. Independent tests recorded near-zero emissions running on diesel, vegetable oil, and reportedly water. Its inventor, Paul Pantone, was institutionalized in Utah after refusing to sell his patents to industry interests. He was released four years later. His US patent 5,794,601 sits quietly in the public record.","GEET等离子反应堆将废气热量回流到燃料蒸气中，在真空腔室内产生异常的低温等离子体转变。独立测试记录到以柴油、植物油甚至据报道以水为燃料时近零排放。发明者保罗·潘通因拒绝将专利出售给行业利益而被关入犹他州精神病院，四年后获释。他的美国专利5,794,601静静躺在公开记录中。","GEETプラズマリアクターは排気熱を燃料蒸気に還流させ、真空チャンバー内で低温プラズマ転移を引き起こします。ディーゼル・植物油・水で動かした際ほぼゼロ排出が独立試験で確認されました。発明者のポール・パントンは特許の売却を拒否した後ユタ州の精神病院に収容され、4年後に釈放されました。米国特許5,794,601は公開記録の中に静かに眠っています。","GEET 플라즈마 반응로는 배기열을 연료 증기로 되돌려 진공 챔버 안에서 저온 플라즈마 전이를 일으킵니다. 디젤, 식물성 기름, 심지어 물로 작동할 때도 거의 무배출을 기록했습니다. 발명자 폴 팬톤은 특허 판매를 거부한 뒤 유타 주립 정신병원에 수용되었다가 4년 후 석방됐습니다. 미국 특허 5,794,601은 공개 기록 속에 조용히 남아 있습니다.","O Reator de Plasma GEET recircula o calor dos gases de escape de volta ao vapor de combustível, causando uma transição anômala de plasma de baixa temperatura dentro de uma câmara de vácuo. Testes independentes registraram emissões quase zero com diesel, óleo vegetal e, supostamente, água. Seu inventor, Paul Pantone, foi internado em Utah após recusar-se a vender suas patentes a interesses industriais. Foi libertado quatro anos depois. Sua patente americana 5.794.601 permanece quieta no registro público.","El Reactor de Plasma GEET recircula el calor de los gases de escape de vuelta al vapor de combustible, provocando una transición anómala de plasma de baja temperatura dentro de una cámara de vacío. Pruebas independientes registraron emisiones casi nulas con diésel, aceite vegetal y, supuestamente, agua. Su inventor, Paul Pantone, fue internado en Utah tras negarse a vender sus patentes a intereses industriales. Fue liberado cuatro años después. Su patente americana 5.794.601 permanece callada en el registro público.","GEET плазменный реактор направляет тепло выхлопных газов обратно через входящие пары топлива, вызывая аномальный низкотемпературный плазменный переход в вакуумной камере. Независимые испытания зафиксировали почти нулевые выбросы при работе на дизеле, растительном масле и якобы воде. Его изобретатель, Пол Пантон, был помещён в психиатрическую больницу Юты после отказа продать патенты промышленным структурам. Он вышел на свободу четыре года спустя. Его патент США 5 794 601 тихо хранится в открытых архивах."
+"SHOP_DESC_WFC","Inspired by Stanley Meyer's water fuel cell: a device said to dissociate water into hydrogen and oxygen through precisely tuned high-voltage, low-current pulses — resonance, not raw amperage. Meyer collapsed from a sudden brain aneurysm shortly after refusing to sell his patents for military use. He claimed the visions for his invention came to him from angels, in the moments between sleep and wakefulness.",灵感来自斯坦利·迈耶的水燃料电池：一种据说通过精确调谐的高压低电流脉冲——而非暴力电解——将水分解为氢气和氧气的装置。迈耶在拒绝出售其军用专利后不久因突发脑动脉瘤猝倒身亡。他声称发明的灵感来自天使，在睡眠与清醒之间的片刻。,スタンレー・メイヤーのウォーターフューエルセルに着想を得た装置：高電圧・低電流の精密なパルスで水を水素と酸素に分解できるとされています。メイヤーは軍事用途での特許売却を拒否した直後に脳動脈瘤で急逝しました。彼は発明のビジョンを天使から夢うつつの間に授かったと語っていました。,"스탠리 마이어의 수연료 전지에서 영감을 받은 장치: 높은 전압, 낮은 전류의 정밀 펄스로 물을 수소와 산소로 분해할 수 있다고 합니다. 마이어는 군사 목적의 특허 판매를 거부한 직후 뇌동맥류로 쓰러졌습니다. 그는 수면과 각성 사이의 순간에 천사들로부터 발명의 비전을 받았다고 말했습니다.","Inspirado na célula de combustível de água de Stanley Meyer: um dispositivo que supostamente dissocia a água em hidrogênio e oxigênio por meio de pulsos de alta tensão e baixa corrente precisamente calibrados — ressonância, não amperagem bruta. Meyer sofreu um aneurisma cerebral repentino logo após recusar-se a vender suas patentes para uso militar. Ele dizia que as visões de sua invenção vinham de anjos, nos momentos entre o sono e a vigília.","Inspirado en la celda de combustible de agua de Stanley Meyer: un dispositivo que supuestamente disocia el agua en hidrógeno y oxígeno mediante pulsos de alta tensión y baja corriente precisamente calibrados — resonancia, no amperaje bruto. Meyer sufrió un aneurisma cerebral repentino poco después de negarse a vender sus patentes para uso militar. Afirmaba que las visiones de su invención le llegaban de ángeles, en los momentos entre el sueño y la vigilia.","Вдохновлён водотопливным элементом Стэнли Мейера: устройство, якобы расщепляющее воду на водород и кислород с помощью точно настроенных высоковольтных импульсов малой силы тока — резонансом, а не грубым амперажем. Мейер скончался от внезапной аневризмы мозга вскоре после отказа продать патенты для военного применения. Он утверждал, что образы своего изобретения видел от ангелов в моменты между сном и бодрствованием."
+"SHOP_DESC_GALLERY_VISITOR","Invites another visitor to your gallery. Each visitor increases the sale value of your shipped paintings. The more eyes on your work, the more it's worth.",邀请另一位访客来到你的画廊。每位访客都会提升你发货画作的售价。关注你作品的人越多，它就越有价值。,ギャラリーに新しい来訪者を招待します。来訪者が増えるほど、出荷した絵画の売値も上がります。多くの目に触れるほど、作品の価値は高まります。,갤러리에 방문자를 한 명 더 초대합니다. 방문자가 늘수록 배송한 그림의 판매 가치가 높아집니다. 더 많은 시선을 받을수록 작품의 가치도 올라갑니다.,"Convida mais um visitante para sua galeria. Cada visitante aumenta o valor de venda das suas pinturas enviadas. Quanto mais olhos no seu trabalho, maior seu valor.","Invita a otro visitante a tu galería. Cada visitante aumenta el valor de venta de tus pinturas enviadas. Cuantos más ojos vean tu trabajo, más valdrá.","Приглашает ещё одного посетителя в вашу галерею. Каждый посетитель повышает стоимость отправленных картин. Чем больше взглядов на вашу работу, тем она ценнее."
+SHOP_DESC_CUSTOM_STICKER,Modify Studio Sim by adding your own custom motifs to the painting UI array.,通过将自己的自定义图案添加到绘画 UI 阵列来修改 Studio Sim。,絵のUIアレイに自分だけのカスタムモチーフを追加してStudio Simを改造しましょう。,그림 UI 배열에 나만의 커스텀 모티프를 추가해 Studio Sim을 수정합니다.,Personalize o Studio Sim adicionando seus próprios motivos à matriz de UI de pinturas.,Personaliza Studio Sim añadiendo tus propios motivos a la matriz de UI de pinturas.,Измените Studio Sim, добавив собственные мотивы в массив интерфейса рисования.

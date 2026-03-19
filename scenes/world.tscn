@@ -93,7 +93,9 @@
 [ext_resource type="PackedScene" uid="uid://b4nwg0q6ash8e" path="res://scenes/objects/cardboardBox.tscn" id="87_xgy6y"]
 [ext_resource type="PackedScene" uid="uid://dsw1cl0yimheg" path="res://models/props/security_camera.glb" id="89_5p8eo"]
 [ext_resource type="Texture2D" uid="uid://bhfm6dt1hofij" path="res://sprites/waterdrop.png" id="90_mlb8o"]
+[ext_resource type="Texture2D" uid="uid://bpm73kjoobl7k" path="res://sprites/textures/canvas texture 2.jpg" id="90_ou5tn"]
 [ext_resource type="Texture2D" uid="uid://cntrsinhjv1tx" path="res://sprites/waterdrop_hit.png" id="91_ebmc1"]
+[ext_resource type="Texture2D" uid="uid://h82xrqpjlgsb" path="res://sprites/textures/canvas texture 2_normal.png" id="91_k2fqw"]
 [ext_resource type="PackedScene" uid="uid://dp15jyb8i26p7" path="res://models/props/berkey2.glb" id="91_pb8sg"]
 [ext_resource type="AudioStream" uid="uid://bjojrg2a7xxut" path="res://sounds/picotron/waterdrop.ogg" id="92_8xaka"]
 [ext_resource type="PackedScene" uid="uid://cqoxj5pobyw2a" path="res://models/props/baricade_1.glb" id="93_8xaka"]
@@ -133,6 +135,7 @@
 [ext_resource type="AudioStream" uid="uid://bw0ig22tombxc" path="res://sounds/ministudio.ogg" id="ministudio_audio"]
 [ext_resource type="AudioStream" uid="uid://cldonhpncb00b" path="res://sounds/(First Trip) To The Moon copy.ogg" id="moon_ogg"]
 [ext_resource type="Script" uid="uid://bunyklibu48s2" path="res://scripts/SkyRotator.gd" id="sky_rotator"]
+[ext_resource type="PackedScene" uid="uid://money_rain_layer" path="res://scenes/UI/MoneyRainLayer.tscn" id="money_rain_layer"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dss4m"]
 albedo_texture = ExtResource("1_q5onr")
@@ -305,6 +308,15 @@ albedo_texture = SubResource("ViewportTexture_e68xj")
 [sub_resource type="BoxShape3D" id="BoxShape3D_r5yoc"]
 size = Vector3(6.555237, 4.649658, 3.814176)
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wt6o6"]
+albedo_texture = ExtResource("90_ou5tn")
+metallic = 1.0
+normal_enabled = true
+normal_scale = 0.51
+normal_texture = ExtResource("91_k2fqw")
+uv1_scale = Vector3(0.06, 0.06, 0.06)
+texture_filter = 0
+
 [sub_resource type="Animation" id="Animation_xgy6y"]
 length = 0.001
 
@@ -354,17 +366,17 @@ albedo_color = Color(1.0734373, 1.0734373, 0.15063755, 1)
 albedo_texture = ExtResource("82_mu18u")
 texture_filter = 0
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_6od3t"]
+[sub_resource type="PlaneMesh" id="PlaneMesh_j7mh8"]
 resource_local_to_scene = true
 size = Vector2(2.5, 3)
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_qn65p"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_c3c7d"]
 resource_name = "_albedo"
 viewport_path = NodePath("../MirrorNew/SubViewport")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ou5tn"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2kaud"]
 resource_local_to_scene = true
-albedo_texture = SubResource("ViewportTexture_qn65p")
+albedo_texture = SubResource("ViewportTexture_c3c7d")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_1v02h"]
 size = Vector2(2.5, 3)
@@ -852,6 +864,8 @@ painting_system_2d = NodePath("../../PaintingRoot2d/CanvasViewport/CanvasRoot")
 [node name="MissionHUD" parent="GameplayUI_Layer" unique_id=1077091467 instance=ExtResource("83_hud")]
 
 [node name="SaveNotification" parent="GameplayUI_Layer" unique_id=736111851 instance=ExtResource("78_save_notif")]
+
+[node name="MoneyRainLayer" parent="." instance=ExtResource("money_rain_layer")]
 
 [node name="DevTools_Layer" type="CanvasLayer" parent="." unique_id=709203211]
 
@@ -1745,6 +1759,9 @@ transform = Transform3D(-4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0, 1, 0, 0
 [node name="redbutton" parent="buttonRed" unique_id=361325965 instance=ExtResource("80_oexs8")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5275917, 0)
 
+[node name="button" parent="buttonRed/redbutton" index="0"]
+surface_material_override/0 = SubResource("StandardMaterial3D_wt6o6")
+
 [node name="AnimationPlayer" type="AnimationPlayer" parent="buttonRed/redbutton" unique_id=1924593568]
 libraries/ = SubResource("AnimationLibrary_gny1c")
 
@@ -1769,8 +1786,8 @@ surface_material_override/0 = SubResource("StandardMaterial3D_7b7y8")
 
 [node name="mirror" parent="." unique_id=1626491013 groups=["shop_prop"] instance=ExtResource("39_qaasp")]
 transform = Transform3D(-4.7902194e-08, -0.99488777, 0.10098683, -3.9073655e-08, 0.10098683, 0.99488777, -1, 4.3711392e-08, -4.3711385e-08, 2.8, 1.497, 5.232)
-mesh = SubResource("PlaneMesh_6od3t")
-surface_material_override/0 = SubResource("StandardMaterial3D_ou5tn")
+mesh = SubResource("PlaneMesh_j7mh8")
+surface_material_override/0 = SubResource("StandardMaterial3D_2kaud")
 show_debug_logs = false
 metadata/mirror = "mirror"
 metadata/shop_item_id = "mirror"
@@ -2336,6 +2353,7 @@ transform = Transform3D(4.371139e-09, -0.1, -8.742278e-09, -0.1, -4.371139e-09, 
 [editable path="CameraZone3 inside2"]
 [editable path="CameraZone3 inside4"]
 [editable path="CameraZone3 inside3"]
+[editable path="buttonRed/redbutton"]
 [editable path="buttonGreen"]
 [editable path="buttonGreen/green button"]
 [editable path="Fluorescent"]

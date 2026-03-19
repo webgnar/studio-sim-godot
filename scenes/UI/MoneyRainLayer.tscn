@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://money_rain_layer"]
+
+[ext_resource type="Script" path="res://scripts/MoneyRainLayer.gd" id="1"]
+
+[node name="MoneyRainLayer" type="CanvasLayer"]
+script = ExtResource("1")

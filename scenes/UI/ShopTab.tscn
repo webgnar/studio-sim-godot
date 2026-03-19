@@ -119,7 +119,7 @@ modulate = Color(1, 0.4, 0.4, 1)
 layout_mode = 2
 
 [node name="BuyButton" type="Button" parent="HBoxContainer/RightPanel/DetailPanel/MarginContainer/VBoxContainer" unique_id=145367522]
-custom_minimum_size = Vector2(200, 100)
+custom_minimum_size = Vector2(300, 100)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 6

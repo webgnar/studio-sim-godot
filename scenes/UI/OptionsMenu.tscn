@@ -102,7 +102,7 @@ tick_count = 11
 ticks_on_borders = true
 ticks_position = 2
 
-[node name="PaintingSoundsCheckbox" type="CheckBox" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Audio/AudioSettings"]
+[node name="PaintingSoundsCheckbox" type="CheckBox" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Audio/AudioSettings" unique_id=74822820]
 layout_mode = 2
 button_pressed = true
 text = "Painting Sounds"
@@ -215,8 +215,13 @@ layout_mode = 2
 theme_override_constants/separation = 20
 metadata/_tab_index = 3
 
-[node name="ButtonContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Language" unique_id=1111111102]
+[node name="ScrollContainer" type="ScrollContainer" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Language" unique_id=1111111110]
 layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ButtonContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Language/ScrollContainer" unique_id=1111111102]
+layout_mode = 2
+size_flags_horizontal = 3
 theme_override_constants/separation = 10
 
 [node name="Game" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer" unique_id=1111111103]
@@ -228,22 +233,22 @@ metadata/_tab_index = 4
 [node name="SaveGLBCheckbox" type="CheckBox" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game" unique_id=1111111104]
 layout_mode = 2
 button_pressed = true
-text = "Save GLB when shipping the painting"
+text = "Save GLB to downloads folder"
 
 [node name="SavePNGCheckbox" type="CheckBox" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game" unique_id=1111111105]
 layout_mode = 2
 button_pressed = true
-text = "Save PNG when shipping the painting"
+text = "Save PNG to downloads folder"
 
 [node name="GenerateCritiqueCheckbox" type="CheckBox" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game" unique_id=1111111106]
 layout_mode = 2
 button_pressed = true
-text = "Generate NPC critique"
+text = "Generate Elevator Critique"
 
 [node name="PublishOnlineCheckbox" type="CheckBox" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game" unique_id=1111111107]
 layout_mode = 2
 button_pressed = true
-text = "Publish online when shipping to Studio Sim Gallery"
+text = "Publish painting online"
 
 [node name="ButtonNavSound" type="AudioStreamPlayer" parent="." unique_id=1505501763]
 stream = ExtResource("3_nav_sound")

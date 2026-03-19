@@ -12,7 +12,7 @@
 [ext_resource type="AudioStream" uid="uid://cyvlgci21yq6s" path="res://sounds/picotron/closemenu.ogg" id="7_close"]
 [ext_resource type="AudioStream" uid="uid://ht7rkfvqubdm" path="res://sounds/picotron/buttonnav.ogg" id="8_nav"]
 [ext_resource type="AudioStream" uid="uid://dae4sj3nmur45" path="res://sounds/picotron/buttonhit.ogg" id="9_hit"]
-[ext_resource type="PackedScene" path="res://scenes/UI/ShopTab.tscn" id="10_shoptab"]
+[ext_resource type="PackedScene" uid="uid://dby31fq7m8eba" path="res://scenes/UI/ShopTab.tscn" id="10_shoptab"]
 
 [node name="PauseMenu" type="Control" unique_id=1561803109]
 layout_mode = 3
@@ -55,6 +55,11 @@ theme_override_constants/separation = 50
 
 [node name="MoneyLabel" type="Label" parent="Dialog/MarginContainer/VBoxContainer/TabBar" unique_id=2010000001]
 layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0.4745098, 1, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 20
+theme_override_constants/shadow_outline_size = 30
+theme_override_font_sizes/font_size = 50
 text = "$0"
 
 [node name="Spacer" type="Control" parent="Dialog/MarginContainer/VBoxContainer/TabBar" unique_id=2010000002]
