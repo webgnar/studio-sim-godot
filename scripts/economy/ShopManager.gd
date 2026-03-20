@@ -376,7 +376,7 @@ He died in December 2015, after a long illness, largely unknown outside fringe e
 Stanley Meyer collapsed suddenly from a brain aneurysm just an hour after meeting with government officials at a small restaurant in Ohio. According to the story, he had refused to sell his patents for use in military applications, leaving those around him stunned as he fell before he could even leave the building. The abruptness of his death only deepened the aura of mystery surrounding his work.
 
 Meyer himself described the origins of his inventions in deeply personal, spiritual terms. He claimed that during moments between sleep and wakefulness, he received vivid visions of the Water Fuel Cell, images he believed were sent to him by angels. His Christian faith, he said, provided both the moral compass and the inspiration that guided him in turning those visions into mechanical reality.",
-			"price": 420,
+			"price": 555,
 		},
 		{
 			"id": "gallery_visitor",

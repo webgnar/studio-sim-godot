@@ -608,11 +608,11 @@ func verify_painting(target: PaintingMission) -> ValidationResult:
 
 	# Add detailed feedback if not passing
 	if not result.success:
-		result.add_error("Match score: %.1f%% (need %.1f%% to pass)" % [
+		result.add_error(tr("Match score: %.1f%% (need %.1f%% to pass)") % [
 			result.match_percentage,
 			result.pass_threshold
 		])
-		result.add_error("Breakdown - Precision: %.1f%%, Color Field: %.1f%%" % [
+		result.add_error(tr("Breakdown - Precision: %.1f%%, Color Field: %.1f%%") % [
 			visual_percentage,
 			color_distribution_percentage
 		])
@@ -711,11 +711,11 @@ func verify_painting_async(target: PaintingMission, loading_overlay) -> Validati
 
 	# Add detailed feedback if not passing
 	if not result.success:
-		result.add_error("Match score: %.1f%% (need %.1f%% to pass)" % [
+		result.add_error(tr("Match score: %.1f%% (need %.1f%% to pass)") % [
 			result.match_percentage,
 			result.pass_threshold
 		])
-		result.add_error("Breakdown - Precision: %.1f%%, Color Field: %.1f%%" % [
+		result.add_error(tr("Breakdown - Precision: %.1f%%, Color Field: %.1f%%") % [
 			visual_percentage,
 			color_distribution_percentage
 		])

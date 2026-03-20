@@ -73,7 +73,12 @@ theme_override_constants/separation = 12
 
 [node name="ItemName" type="Label" parent="HBoxContainer/RightPanel/DetailPanel/MarginContainer/VBoxContainer" unique_id=1814314984]
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
+theme_override_colors/font_color = Color(0.8553654, 0.9395305, 0.5620537, 1)
+theme_override_colors/font_shadow_color = Color(0.3882353, 0, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 8
+theme_override_constants/shadow_outline_size = 8
+theme_override_font_sizes/font_size = 62
 text = "Select an item"
 autowrap_mode = 1
 
@@ -99,6 +104,12 @@ horizontal_scroll_mode = 0
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 0
+theme_override_colors/font_color = Color(0.457475, 0.9999998, 0.90959054, 1)
+theme_override_colors/font_shadow_color = Color(0.93333334, 0, 0.8901961, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 7
+theme_override_constants/shadow_outline_size = 8
+theme_override_font_sizes/font_size = 42
 autowrap_mode = 3
 
 [node name="ScrollHint" type="Label" parent="HBoxContainer/RightPanel/DetailPanel/MarginContainer/VBoxContainer" unique_id=1234567890]
@@ -111,7 +122,14 @@ horizontal_alignment = 1
 
 [node name="ItemPrice" type="Label" parent="HBoxContainer/RightPanel/DetailPanel/MarginContainer/VBoxContainer" unique_id=1741628036]
 layout_mode = 2
-theme_override_font_sizes/font_size = 20
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0, 1, 0.22745098, 1)
+theme_override_colors/font_shadow_color = Color(1, 0, 0.47843137, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_y = 1
+theme_override_constants/outline_size = 31
+theme_override_constants/shadow_outline_size = 35
+theme_override_font_sizes/font_size = 60
 
 [node name="StatusLabel" type="Label" parent="HBoxContainer/RightPanel/DetailPanel/MarginContainer/VBoxContainer" unique_id=1002640570]
 visible = false

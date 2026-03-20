@@ -133,9 +133,9 @@
 [ext_resource type="AudioStream" uid="uid://cfuo8ydnxfi66" path="res://sounds/convenient ear pleasure.ogg" id="ear_ogg"]
 [ext_resource type="AudioStream" uid="uid://bukro42figtah" path="res://sounds/fan switch.ogg" id="fan_switch"]
 [ext_resource type="AudioStream" uid="uid://bw0ig22tombxc" path="res://sounds/ministudio.ogg" id="ministudio_audio"]
+[ext_resource type="PackedScene" path="res://scenes/UI/MoneyRainLayer.tscn" id="money_rain_layer"]
 [ext_resource type="AudioStream" uid="uid://cldonhpncb00b" path="res://sounds/(First Trip) To The Moon copy.ogg" id="moon_ogg"]
 [ext_resource type="Script" uid="uid://bunyklibu48s2" path="res://scripts/SkyRotator.gd" id="sky_rotator"]
-[ext_resource type="PackedScene" uid="uid://money_rain_layer" path="res://scenes/UI/MoneyRainLayer.tscn" id="money_rain_layer"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dss4m"]
 albedo_texture = ExtResource("1_q5onr")
@@ -366,17 +366,17 @@ albedo_color = Color(1.0734373, 1.0734373, 0.15063755, 1)
 albedo_texture = ExtResource("82_mu18u")
 texture_filter = 0
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_j7mh8"]
+[sub_resource type="PlaneMesh" id="PlaneMesh_k2fqw"]
 resource_local_to_scene = true
 size = Vector2(2.5, 3)
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_c3c7d"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_wt6o6"]
 resource_name = "_albedo"
 viewport_path = NodePath("../MirrorNew/SubViewport")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2kaud"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_j7mh8"]
 resource_local_to_scene = true
-albedo_texture = SubResource("ViewportTexture_c3c7d")
+albedo_texture = SubResource("ViewportTexture_wt6o6")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_1v02h"]
 size = Vector2(2.5, 3)
@@ -865,7 +865,7 @@ painting_system_2d = NodePath("../../PaintingRoot2d/CanvasViewport/CanvasRoot")
 
 [node name="SaveNotification" parent="GameplayUI_Layer" unique_id=736111851 instance=ExtResource("78_save_notif")]
 
-[node name="MoneyRainLayer" parent="." instance=ExtResource("money_rain_layer")]
+[node name="MoneyRainLayer" parent="." unique_id=42688159 instance=ExtResource("money_rain_layer")]
 
 [node name="DevTools_Layer" type="CanvasLayer" parent="." unique_id=709203211]
 
@@ -1108,7 +1108,7 @@ size = Vector3(1.5938721, 0.42700195, 0.14248657)
 material = ExtResource("30_3t06w")
 
 [node name="Status Panel" parent="AssistantStudio" unique_id=321856961 instance=ExtResource("34_sasp")]
-transform = Transform3D(-0.046722848, 0, -0.9989079, 0, 1, 0, 0.9989079, 0, -0.046722848, 1.7472916, -0.031088471, 2.4722748)
+transform = Transform3D(-0.0476573, 0, -1.018886, 0, 1.02, 0, 1.018886, 0, -0.0476573, 1.7472916, -0.031088471, 2.4722748)
 
 [node name="StudioAssistantCharacter" parent="AssistantStudio" unique_id=421565499 instance=ExtResource("102_asst")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.5419307, 1.5265388)
@@ -1786,8 +1786,8 @@ surface_material_override/0 = SubResource("StandardMaterial3D_7b7y8")
 
 [node name="mirror" parent="." unique_id=1626491013 groups=["shop_prop"] instance=ExtResource("39_qaasp")]
 transform = Transform3D(-4.7902194e-08, -0.99488777, 0.10098683, -3.9073655e-08, 0.10098683, 0.99488777, -1, 4.3711392e-08, -4.3711385e-08, 2.8, 1.497, 5.232)
-mesh = SubResource("PlaneMesh_j7mh8")
-surface_material_override/0 = SubResource("StandardMaterial3D_2kaud")
+mesh = SubResource("PlaneMesh_k2fqw")
+surface_material_override/0 = SubResource("StandardMaterial3D_j7mh8")
 show_debug_logs = false
 metadata/mirror = "mirror"
 metadata/shop_item_id = "mirror"
