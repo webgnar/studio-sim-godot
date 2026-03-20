@@ -123,6 +123,22 @@ func ship_painting(painting: Node) -> void:
 	_registered_paintings[painting]["status"] = "SHIPPED"
 	print("WorldStateManager: Painting '%s' shipped to gallery" % meta.get("name", meta["id"]))
 
+func save_gallery_id_for_painting(painting_id: String, gallery_id: String) -> void:
+	"""Store the gallery upload ID on a painting and persist to disk."""
+	for painting in _registered_paintings.keys():
+		if _registered_paintings[painting]["id"] == painting_id:
+			_registered_paintings[painting]["gallery_id"] = gallery_id
+			print("WorldStateManager: Gallery ID saved for '%s'" % _registered_paintings[painting].get("name", painting_id))
+			save_world_state()
+			return
+	for i in range(_shipped_paintings.size()):
+		if _shipped_paintings[i]["id"] == painting_id:
+			_shipped_paintings[i]["gallery_id"] = gallery_id
+			print("WorldStateManager: Gallery ID saved for '%s'" % _shipped_paintings[i].get("name", painting_id))
+			save_world_state()
+			return
+	push_warning("WorldStateManager: No painting found with id: " + painting_id)
+
 func save_critique_for_painting(painting_id: String, critique: String) -> void:
 	"""Store the AI critique text on a shipped painting and persist to disk."""
 	# Check gallery paintings (live nodes in _registered_paintings with status SHIPPED)
@@ -154,7 +170,8 @@ func get_all_paintings() -> Array:
 				"name": meta.get("name", ""),
 				"artist_statement": meta.get("artist_statement", ""),
 				"status": meta.get("status", "WIP"),
-				"critique": meta.get("critique", "")
+				"critique": meta.get("critique", ""),
+				"gallery_id": meta.get("gallery_id", "")
 			})
 	# Append shipped paintings (no node reference)
 	for shipped in _shipped_paintings:
@@ -165,7 +182,8 @@ func get_all_paintings() -> Array:
 			"name": shipped.get("name", ""),
 			"artist_statement": shipped.get("artist_statement", ""),
 			"status": "SHIPPED",
-			"critique": shipped.get("critique", "")
+			"critique": shipped.get("critique", ""),
+			"gallery_id": shipped.get("gallery_id", "")
 		})
 	return result
 
@@ -294,6 +312,7 @@ func save_world_state() -> bool:
 			"artist_statement": metadata.get("artist_statement", ""),
 			"status": metadata.get("status", "WIP"),
 			"critique": metadata.get("critique", ""),
+			"gallery_id": metadata.get("gallery_id", ""),
 			"is_landscape": painting.scene_file_path.contains("5x3"),
 			"position": {
 				"x": painting.global_position.x,
@@ -655,12 +674,15 @@ func _load_painting(world_root: Node3D, painting_data: Dictionary, nail_id_map: 
 	# Add to world (triggers _ready → register_painting with default "WIP" status)
 	world_root.add_child(painting)
 
-	# Apply saved status and critique (overrides the default "WIP" set during registration)
+	# Apply saved status, critique, and gallery_id (overrides defaults set during registration)
 	if painting in _registered_paintings:
 		_registered_paintings[painting]["status"] = saved_status
 		var saved_critique = painting_data.get("critique", "")
 		if saved_critique != "":
 			_registered_paintings[painting]["critique"] = saved_critique
+		var saved_gallery_id = painting_data.get("gallery_id", "")
+		if saved_gallery_id != "":
+			_registered_paintings[painting]["gallery_id"] = saved_gallery_id
 
 	# Set transform
 	painting.global_position = Vector3(

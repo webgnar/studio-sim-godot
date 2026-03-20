@@ -43,6 +43,9 @@ var foreign_object_detection_area: Area3D
 # Gate clearance — paintings overlapping the gate threshold
 var paintings_blocking_gate: Array[CarryablePainting] = []
 
+# Tracks the painting_id of an in-flight gallery upload so we can save the gallery_id on completion
+var _pending_upload_painting_id: String = ""
+
 # Audio
 var _export_sound: AudioStreamPlayer3D
 var _door_sound: AudioStreamPlayer3D
@@ -92,6 +95,9 @@ func _ready() -> void:
 
 	# Connect gate_closed for elevator achievement
 	gate_closed.connect(_on_gate_closed_check_player)
+
+	# Save gallery_id back to the painting when an upload finishes
+	GalleryUploader.upload_completed.connect(_on_gallery_upload_completed)
 
 	# Setup audio
 	_setup_audio()
@@ -228,6 +234,12 @@ func is_painting_blocking_gate() -> bool:
 		if result["collider"] is CarryablePainting:
 			return true
 	return false
+
+func _on_gallery_upload_completed(gallery_id: String) -> void:
+	"""Save the gallery_id onto the painting that was just uploaded."""
+	if _pending_upload_painting_id != "":
+		WorldStateManager.save_gallery_id_for_painting(_pending_upload_painting_id, gallery_id)
+		_pending_upload_painting_id = ""
 
 func _on_gate_closed_check_player() -> void:
 	"""Check if player is trapped inside when gate closes"""
@@ -385,6 +397,7 @@ func start_export() -> void:
 
 	# Upload to gallery (non-blocking) — only if publish_online is enabled
 	if publish_online and not png_path.is_empty() and not glb_path.is_empty():
+		_pending_upload_painting_id = painting.painting_id
 		GalleryUploader.upload_painting(png_path, glb_path, painting.painting_name, painting.artist_statement, SteamManager.persona_name)
 
 	# Ship painting to gallery — mark as SHIPPED and teleport to gallery room

@@ -10,7 +10,7 @@ var last_pressed: float = 0.0
 
 func _on_ready() -> void:
 	# Always set interaction text to support both abort and convert
-	interaction_text = "Abort / New Painting"
+	interaction_text = "Detach Painting"
 
 ## Called by PlayerInteractionComponent when player interacts
 func _on_interacted(_player_interaction_component: PlayerInteractionComponent) -> void:

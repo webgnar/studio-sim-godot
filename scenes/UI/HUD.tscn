@@ -2,22 +2,30 @@
 
 [ext_resource type="Script" uid="uid://d2t2wfmgd2wmn" path="res://scripts/HUD.gd" id="1"]
 [ext_resource type="Theme" uid="uid://cbtaxh5m7udor" path="res://themes/ui_theme.tres" id="2"]
-[ext_resource type="Texture2D" uid="uid://bnb0x8h7n08xg" path="res://sprites/ui/leftright.png" id="3_a0qax"]
 [ext_resource type="Texture2D" uid="uid://uq3w6yycu034" path="res://sprites/ui/x.png" id="3_gawfp"]
 [ext_resource type="Texture2D" uid="uid://d2kvxbmuirlgq" path="res://sprites/ui/crosshair.png" id="4_e8ns6"]
-[ext_resource type="Texture2D" uid="uid://domflkr6l2qs" path="res://sprites/ui/updown.png" id="4_gawfp"]
 [ext_resource type="Texture2D" uid="uid://dc06s6fukhq2a" path="res://sprites/ui/lb.png" id="5_tohwf"]
 [ext_resource type="Texture2D" uid="uid://g4asi3np5tvu" path="res://sprites/ui/rb.png" id="6_e8ns6"]
 [ext_resource type="Texture2D" uid="uid://canne3e2geuxw" path="res://sprites/ui/rt.png" id="7_m51yh"]
 [ext_resource type="Texture2D" uid="uid://bkayr38ljn01r" path="res://sprites/ui/lt.png" id="8_8d6le"]
 [ext_resource type="Texture2D" uid="uid://b2k3q4m0fbw8e" path="res://sprites/vxicon.png" id="9_vxicon"]
+[ext_resource type="Texture2D" uid="uid://cs1qm2kogtvqw" path="res://sprites/ui/inputs/r.png" id="key_r"]
+[ext_resource type="Texture2D" uid="uid://h6crti8rhorm" path="res://sprites/ui/inputs/t.png" id="key_t"]
+[ext_resource type="Texture2D" uid="uid://ccjamwl2mqd05" path="res://sprites/ui/inputs/x.png" id="key_x"]
+[ext_resource type="Texture2D" uid="uid://v258g8nnodtn" path="res://sprites/ui/inputs/z.png" id="key_z"]
 [ext_resource type="Shader" uid="uid://br25jlx3cnm0r" path="res://shaders/crosshair_invert.gdshader" id="shader_crosshair"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_crosshair"]
 shader = ExtResource("shader_crosshair")
 
 [node name="HUD" type="CanvasLayer" unique_id=1092373394]
+offset = Vector2(5, 5)
+transform = Transform2D(1, 0, 0, 1, 5, 5)
 script = ExtResource("1")
+panel_bg_color = Color(1, 0.3254902, 0, 0.5019608)
+panel_corner_radius = 9
+panel_padding_v = 18
+painting_panel_min_size_keyboard = Vector2(0, 300)
 
 [node name="CenterContainer" type="CenterContainer" parent="." unique_id=976094575]
 anchors_preset = 1
@@ -59,86 +67,6 @@ offset_bottom = 2.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Center" type="ColorRect" parent="Crosshair" unique_id=497681997]
-visible = false
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -2.0
-offset_top = -2.0
-offset_right = 2.0
-offset_bottom = 2.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(1, 1, 1, 0.8)
-
-[node name="Top" type="ColorRect" parent="Crosshair" unique_id=995454176]
-visible = false
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -1.0
-offset_top = -8.0
-offset_right = 1.0
-offset_bottom = -4.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(1, 1, 1, 0.8)
-
-[node name="Bottom" type="ColorRect" parent="Crosshair" unique_id=426689441]
-visible = false
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -1.0
-offset_top = 4.0
-offset_right = 1.0
-offset_bottom = 8.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(1, 1, 1, 0.8)
-
-[node name="Left" type="ColorRect" parent="Crosshair" unique_id=909775570]
-visible = false
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -8.0
-offset_top = -1.0
-offset_right = -4.0
-offset_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(1, 1, 1, 0.8)
-
-[node name="Right" type="ColorRect" parent="Crosshair" unique_id=2010450781]
-visible = false
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = 4.0
-offset_top = -1.0
-offset_right = 8.0
-offset_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(1, 1, 1, 0.8)
-
 [node name="TextureRect" type="TextureRect" parent="Crosshair" unique_id=1681105817]
 texture_filter = 1
 material = SubResource("ShaderMaterial_crosshair")
@@ -170,33 +98,55 @@ theme_override_constants/separation = 4
 layout_mode = 2
 alignment = 2
 
-[node name="RotateRightIcon" type="TextureRect" parent="PaintingHint/RotateLine" unique_id=1539713680]
+[node name="RotateRIcon" type="TextureRect" parent="PaintingHint/RotateLine" unique_id=1539713680]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
-texture = ExtResource("3_a0qax")
+texture = ExtResource("key_r")
 stretch_mode = 5
 
 [node name="RotateLabel" type="Label" parent="PaintingHint/RotateLine" unique_id=1877327158]
 layout_mode = 2
 theme = ExtResource("2")
-text = " Rotate"
+theme_override_colors/font_color = Color(0.8365983, 0.8989891, 0.36081582, 1)
+theme_override_colors/font_shadow_color = Color(1, 0, 0.3019608, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 5
+theme_override_constants/shadow_outline_size = 5
+text = "Rotate "
 horizontal_alignment = 1
+
+[node name="RotateTIcon" type="TextureRect" parent="PaintingHint/RotateLine" unique_id=1539713682]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+texture = ExtResource("key_t")
+stretch_mode = 5
 
 [node name="ScaleLine" type="HBoxContainer" parent="PaintingHint" unique_id=1114447611]
 layout_mode = 2
 alignment = 2
 
-[node name="ScaleDownIcon" type="TextureRect" parent="PaintingHint/ScaleLine" unique_id=875419796]
+[node name="ScaleZIcon" type="TextureRect" parent="PaintingHint/ScaleLine" unique_id=875419796]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
-texture = ExtResource("4_gawfp")
+texture = ExtResource("key_z")
 stretch_mode = 5
 
 [node name="ScaleLabel" type="Label" parent="PaintingHint/ScaleLine" unique_id=1485998373]
 layout_mode = 2
 theme = ExtResource("2")
-text = " Scale"
+theme_override_colors/font_color = Color(0.99607843, 0.64705884, 0.827451, 1)
+theme_override_colors/font_shadow_color = Color(0.5764706, 0.94509804, 0.08627451, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 7
+theme_override_constants/shadow_outline_size = 6
+text = " Scale "
 horizontal_alignment = 1
+
+[node name="ScaleXIcon" type="TextureRect" parent="PaintingHint/ScaleLine" unique_id=875419798]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+texture = ExtResource("key_x")
+stretch_mode = 5
 
 [node name="CycleLine" type="HBoxContainer" parent="PaintingHint" unique_id=1491883034]
 layout_mode = 2
@@ -207,12 +157,17 @@ custom_minimum_size = Vector2(104.15, -12.74)
 layout_mode = 2
 texture = ExtResource("5_tohwf")
 expand_mode = 1
-stretch_mode = 3
+stretch_mode = 5
 
 [node name="CycleLabel" type="Label" parent="PaintingHint/CycleLine" unique_id=988563025]
 layout_mode = 2
 theme = ExtResource("2")
-text = " Cycle"
+theme_override_colors/font_color = Color(0.5188848, 0.6727544, 0.99542063, 1)
+theme_override_colors/font_shadow_color = Color(0, 0.92941177, 0.9647059, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 7
+theme_override_constants/shadow_outline_size = 13
+text = "Cycle"
 horizontal_alignment = 1
 
 [node name="CycleNextIcon" type="TextureRect" parent="PaintingHint/CycleLine" unique_id=234186105]
@@ -220,7 +175,7 @@ custom_minimum_size = Vector2(103.82, 114.18)
 layout_mode = 2
 texture = ExtResource("6_e8ns6")
 expand_mode = 1
-stretch_mode = 3
+stretch_mode = 5
 
 [node name="PlaceUndoLine" type="HBoxContainer" parent="PaintingHint" unique_id=88497604]
 layout_mode = 2
@@ -236,6 +191,11 @@ stretch_mode = 2
 [node name="PlaceText" type="Label" parent="PaintingHint/PlaceUndoLine" unique_id=75297682]
 layout_mode = 2
 theme = ExtResource("2")
+theme_override_colors/font_color = Color(1, 0.63529414, 0.38039216, 1)
+theme_override_colors/font_shadow_color = Color(1, 0, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 7
+theme_override_constants/shadow_outline_size = 7
 text = "Paint"
 horizontal_alignment = 1
 
@@ -252,6 +212,11 @@ stretch_mode = 5
 [node name="UndoText" type="Label" parent="PaintingHint/HBoxContainer" unique_id=442161430]
 layout_mode = 2
 theme = ExtResource("2")
+theme_override_colors/font_color = Color(0.99607843, 0.13333334, 0.21176471, 1)
+theme_override_colors/font_shadow_color = Color(0, 1, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 7
+theme_override_constants/shadow_outline_size = 7
 text = "Undo"
 
 [node name="CarryHint" type="VBoxContainer" parent="." unique_id=876946278]

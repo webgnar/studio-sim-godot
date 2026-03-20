@@ -38,6 +38,11 @@ theme_override_constants/separation = 20
 
 [node name="TitleLabel" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=1934144875]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.37254903, 1, 0.9137255, 1)
+theme_override_colors/font_shadow_color = Color(1, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 28
 text = "OPTIONS"
 horizontal_alignment = 1
 
@@ -159,6 +164,28 @@ size_flags_vertical = 1
 max_value = 1.0
 step = 0.01
 value = 0.3
+tick_count = 11
+ticks_on_borders = true
+ticks_position = 2
+
+[node name="HudHueHeader" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/VisualSettings" unique_id=1147382910]
+layout_mode = 2
+
+[node name="HudHueLabel" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/VisualSettings/HudHueHeader" unique_id=1147382911]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 32
+text = "HUD Hue"
+
+[node name="HudHueValue" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/VisualSettings/HudHueHeader" unique_id=1147382912]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+horizontal_alignment = 2
+
+[node name="HudHueSlider" type="HSlider" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/VisualSettings" unique_id=1147382913]
+layout_mode = 2
+size_flags_vertical = 1
+max_value = 360.0
 tick_count = 11
 ticks_on_borders = true
 ticks_position = 2

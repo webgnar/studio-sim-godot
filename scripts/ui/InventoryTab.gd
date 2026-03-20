@@ -39,6 +39,22 @@ var _detail_col: int = 0  # 0=left (statement), 1=right (critique) — shipped o
 
 @onready var _critique_panel: VBoxContainer = $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ContentHBox/RightVBox
 @onready var _critique_display: TextEdit = $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ContentHBox/RightVBox/CritiqueDisplay
+@onready var _detail_vbox: VBoxContainer = $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer
+
+# Social stats
+const _STATS_BASE = "HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ContentHBox/RightVBox/StatsSection"
+@onready var _stats_section: VBoxContainer = $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ContentHBox/RightVBox/StatsSection
+@onready var _stats_hbox: HBoxContainer = $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ContentHBox/RightVBox/StatsSection/StatsHBox
+@onready var _stats_status_label: Label = $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ContentHBox/RightVBox/StatsSection/StatsStatusLabel
+@onready var _platform_labels: Dictionary = {
+	"bluesky": $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ContentHBox/RightVBox/StatsSection/StatsHBox/BlueskyLabel,
+	"instagram": $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ContentHBox/RightVBox/StatsSection/StatsHBox/InstagramLabel,
+	"tumblr": $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ContentHBox/RightVBox/StatsSection/StatsHBox/TumblrLabel,
+	"pinterest": $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ContentHBox/RightVBox/StatsSection/StatsHBox/PinterestLabel,
+}
+var _stats_http: HTTPRequest = null
+var _stats_cache: Dictionary = {}     # painting_id -> stats dict (session cache)
+var _stats_fetching_id: String = ""   # painting_id currently being fetched
 
 # Sound (reuse parent PauseMenu sounds)
 var button_nav_sound: AudioStreamPlayer = null
@@ -88,6 +104,8 @@ func _ready():
 
 	# Disable input processing by default (PauseMenu manages activation via process_mode)
 	process_mode = Node.PROCESS_MODE_DISABLED
+
+	_setup_stats_http()
 
 func _process(delta):
 	if not visible:
@@ -433,13 +451,32 @@ func _update_preview(data: Dictionary):
 	name_input.text = data.get("name", "")
 	statement_input.text = data.get("artist_statement", "")
 
-	# Show critique panel (right column) only for SHIPPED paintings that have one
+	# Show right column for SHIPPED paintings that have a critique and/or social stats
 	var critique = data.get("critique", "")
+	var gallery_id = data.get("gallery_id", "")
 	if _critique_panel:
-		var show_critique = (is_shipped and critique != "")
-		_critique_panel.visible = show_critique
-		if show_critique and _critique_display:
+		var show_right = is_shipped and (critique != "" or gallery_id != "")
+		_critique_panel.visible = show_right
+		if _critique_display:
 			_critique_display.text = critique
+			_critique_display.visible = critique != ""
+			# Hide critique header too if no critique
+			var critique_header = _critique_panel.get_node_or_null("CritiqueHeader")
+			if critique_header:
+				critique_header.visible = critique != ""
+	if _stats_section:
+		if is_shipped and gallery_id != "":
+			_stats_section.visible = true
+			var painting_id = data.get("id", "")
+			if painting_id in _stats_cache:
+				_display_stats(_stats_cache[painting_id])
+			else:
+				_stats_hbox.visible = false
+				_stats_status_label.visible = true
+				_stats_status_label.text = "Fetching..."
+				_fetch_social_stats(painting_id, gallery_id)
+		else:
+			_stats_section.visible = false
 
 # ============================================================================
 # Detail Panel Navigation
@@ -701,6 +738,77 @@ func _on_locale_changed(_locale: String) -> void:
 		var status = data.get("status", "WIP")
 		if status_label:
 			status_label.text = tr("Status: %s") % tr(status)
+
+
+func _setup_stats_http() -> void:
+	"""Create the HTTPRequest node used to fetch social stats."""
+	_stats_http = HTTPRequest.new()
+	_stats_http.name = "StatsHTTPRequest"
+	_stats_http.timeout = 10.0
+	add_child(_stats_http)
+	_stats_http.request_completed.connect(_on_stats_response)
+
+func _fetch_social_stats(painting_id: String, gallery_id: String) -> void:
+	"""Request social stats for the given gallery_id."""
+	if _stats_http.get_http_client_status() != HTTPClient.STATUS_DISCONNECTED:
+		return  # A request is already in flight; the result will be checked against selected painting
+	_stats_fetching_id = painting_id
+	var url = GalleryUploader.API_BASE_URL + "/stats/" + gallery_id
+	var headers = ["X-API-Key: " + GalleryUploader.API_KEY]
+	print("[InventoryTab] Fetching stats from: ", url)
+	var error = _stats_http.request(url, headers, HTTPClient.METHOD_GET)
+	if error != OK:
+		print("[InventoryTab] request() failed, error code: ", error)
+		_stats_fetching_id = ""
+		_stats_hbox.visible = false
+		_stats_status_label.visible = true
+		_stats_status_label.text = "Could not load stats"
+
+func _on_stats_response(result: int, response_code: int, _headers: PackedStringArray, body: PackedByteArray) -> void:
+	"""Handle the social stats HTTP response."""
+	var fetching_id = _stats_fetching_id
+	_stats_fetching_id = ""
+
+	if result != HTTPRequest.RESULT_SUCCESS or response_code != 200:
+		print("[InventoryTab] Stats response failed — result: ", result, " code: ", response_code, " body: ", body.get_string_from_utf8())
+		if selected_index >= 0 and selected_index < painting_entries.size():
+			if painting_entries[selected_index].get("id", "") == fetching_id:
+				_stats_hbox.visible = false
+				_stats_status_label.visible = true
+				_stats_status_label.text = "Could not load stats"
+		return
+
+	var json = JSON.parse_string(body.get_string_from_utf8())
+	if not json or not json is Dictionary:
+		if selected_index >= 0 and selected_index < painting_entries.size():
+			if painting_entries[selected_index].get("id", "") == fetching_id:
+				_stats_hbox.visible = false
+				_stats_status_label.visible = true
+				_stats_status_label.text = "Could not load stats"
+		return
+
+	_stats_cache[fetching_id] = json
+	# Only update display if this is still the selected painting
+	if selected_index >= 0 and selected_index < painting_entries.size():
+		if painting_entries[selected_index].get("id", "") == fetching_id:
+			_display_stats(json)
+
+func _display_stats(stats: Dictionary) -> void:
+	"""Update per-platform labels from the stats dict."""
+	if stats.is_empty():
+		_stats_hbox.visible = false
+		_stats_status_label.visible = true
+		_stats_status_label.text = "No stats yet"
+		return
+	_stats_status_label.visible = false
+	_stats_hbox.visible = true
+	for platform in _platform_labels.keys():
+		var label: Label = _platform_labels[platform]
+		if platform in stats:
+			label.visible = true
+			label.text = "%s: %d ♥" % [platform.capitalize(), int(stats[platform])]
+		else:
+			label.visible = false
 
 func _find_parent_pause_menu() -> Node:
 	"""Find the PauseMenu parent node"""

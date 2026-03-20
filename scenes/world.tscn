@@ -308,9 +308,17 @@ albedo_texture = SubResource("ViewportTexture_e68xj")
 [sub_resource type="BoxShape3D" id="BoxShape3D_r5yoc"]
 size = Vector3(6.555237, 4.649658, 3.814176)
 
+[sub_resource type="Gradient" id="Gradient_k2fqw"]
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_wt6o6"]
+gradient = SubResource("Gradient_k2fqw")
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wt6o6"]
 albedo_texture = ExtResource("90_ou5tn")
 metallic = 1.0
+metallic_specular = 0.67
+metallic_texture = SubResource("GradientTexture2D_wt6o6")
+roughness = 0.77
 normal_enabled = true
 normal_scale = 0.51
 normal_texture = ExtResource("91_k2fqw")
@@ -366,17 +374,17 @@ albedo_color = Color(1.0734373, 1.0734373, 0.15063755, 1)
 albedo_texture = ExtResource("82_mu18u")
 texture_filter = 0
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_k2fqw"]
+[sub_resource type="PlaneMesh" id="PlaneMesh_j7mh8"]
 resource_local_to_scene = true
 size = Vector2(2.5, 3)
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_wt6o6"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_c3c7d"]
 resource_name = "_albedo"
 viewport_path = NodePath("../MirrorNew/SubViewport")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_j7mh8"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2kaud"]
 resource_local_to_scene = true
-albedo_texture = SubResource("ViewportTexture_wt6o6")
+albedo_texture = SubResource("ViewportTexture_c3c7d")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_1v02h"]
 size = Vector2(2.5, 3)
@@ -1108,7 +1116,7 @@ size = Vector3(1.5938721, 0.42700195, 0.14248657)
 material = ExtResource("30_3t06w")
 
 [node name="Status Panel" parent="AssistantStudio" unique_id=321856961 instance=ExtResource("34_sasp")]
-transform = Transform3D(-0.0476573, 0, -1.018886, 0, 1.02, 0, 1.018886, 0, -0.0476573, 1.7472916, -0.031088471, 2.4722748)
+transform = Transform3D(-0.0015393235, 0, -1.0499988, 0, 1.0500002, 0, 1.0499988, 0, -0.0015393235, 1.804513, -0.031088471, 2.4722748)
 
 [node name="StudioAssistantCharacter" parent="AssistantStudio" unique_id=421565499 instance=ExtResource("102_asst")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.5419307, 1.5265388)
@@ -1757,7 +1765,7 @@ transform = Transform3D(-4.371139e-09, 0.1, 0, -0.1, -4.371139e-09, 0, 0, 0, 0.1
 transform = Transform3D(-4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0, 1, 0, 0, 0)
 
 [node name="redbutton" parent="buttonRed" unique_id=361325965 instance=ExtResource("80_oexs8")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5275917, 0)
+transform = Transform3D(0.94, 0, 0, 0, 0.94, 0, 0, 0, 0.94, 0, 0.5275917, 0)
 
 [node name="button" parent="buttonRed/redbutton" index="0"]
 surface_material_override/0 = SubResource("StandardMaterial3D_wt6o6")
@@ -1786,8 +1794,8 @@ surface_material_override/0 = SubResource("StandardMaterial3D_7b7y8")
 
 [node name="mirror" parent="." unique_id=1626491013 groups=["shop_prop"] instance=ExtResource("39_qaasp")]
 transform = Transform3D(-4.7902194e-08, -0.99488777, 0.10098683, -3.9073655e-08, 0.10098683, 0.99488777, -1, 4.3711392e-08, -4.3711385e-08, 2.8, 1.497, 5.232)
-mesh = SubResource("PlaneMesh_k2fqw")
-surface_material_override/0 = SubResource("StandardMaterial3D_j7mh8")
+mesh = SubResource("PlaneMesh_j7mh8")
+surface_material_override/0 = SubResource("StandardMaterial3D_2kaud")
 show_debug_logs = false
 metadata/mirror = "mirror"
 metadata/shop_item_id = "mirror"

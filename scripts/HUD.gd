@@ -27,6 +27,8 @@ var _current_prompt_text: String = ""  # Store current prompt for device switchi
 var _prompt_panel: PanelContainer  # Background panel wrapping interaction prompt
 var _carry_panel: PanelContainer  # Background panel wrapping carry hint
 var _painting_panel: PanelContainer  # Background panel wrapping painting hint
+var _base_panel_bg_color: Color  # Original panel color before hue shift
+var _panel_styles: Array = []    # StyleBoxFlat refs for all HUD panels
 var _interaction_separator: Label  # " | " between two-action prompts
 var _interaction_icon_2: TextureRect  # Second icon for dual-action prompts
 var _interaction_label_2: Label  # Second label for dual-action prompts
@@ -45,6 +47,9 @@ func _ready() -> void:
 	if not _player:
 		push_error("HUD: No player found as parent!")
 		return
+
+	add_to_group("hud")
+	_base_panel_bg_color = panel_bg_color
 
 	# Wrap HUD elements in PanelContainers with semi-transparent backgrounds
 	if interaction_prompt:
@@ -105,6 +110,16 @@ func _ready() -> void:
 	if DebugLogger:
 		DebugLogger.write_log("[HUD] Mouse filter set to IGNORE on all UI elements")
 
+	# Apply saved HUD hue on startup
+	if FileAccess.file_exists("user://settings.json"):
+		var f = FileAccess.open("user://settings.json", FileAccess.READ)
+		if f:
+			var json = JSON.new()
+			if json.parse(f.get_as_text()) == OK and typeof(json.data) == TYPE_DICTIONARY:
+				if json.data.has("hud_hue"):
+					apply_hud_hue(float(json.data["hud_hue"]))
+			f.close()
+
 # --- SETUP METHODS ---
 
 func _wrap_in_panel(content: Control) -> PanelContainer:
@@ -112,6 +127,7 @@ func _wrap_in_panel(content: Control) -> PanelContainer:
 	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var style = StyleBoxFlat.new()
 	style.bg_color = panel_bg_color
+	_panel_styles.append(style)
 	style.set_corner_radius_all(panel_corner_radius)
 	style.content_margin_left = panel_padding_h
 	style.content_margin_right = panel_padding_h
@@ -146,6 +162,12 @@ func _wrap_in_panel(content: Control) -> PanelContainer:
 	parent.add_child(panel)
 	panel.hide()
 	return panel
+
+func apply_hud_hue(hue_shift: float) -> void:
+	var new_h = fmod(_base_panel_bg_color.h + hue_shift / 360.0, 1.0)
+	var new_color = Color.from_hsv(new_h, _base_panel_bg_color.s, _base_panel_bg_color.v, _base_panel_bg_color.a)
+	for style in _panel_styles:
+		style.bg_color = new_color
 
 func _setup_mouse_filters() -> void:
 	"""Set mouse_filter to IGNORE on all HUD Control nodes to prevent consuming mouse motion"""
@@ -408,45 +430,46 @@ func _update_painting_hint() -> void:
 		var is_gamepad = InputDeviceManager.current_device == InputDeviceManager.DeviceType.GAMEPAD
 
 		if _painting_panel:
-			_painting_panel.custom_minimum_size = painting_panel_min_size_gamepad if is_gamepad else painting_panel_min_size_keyboard
+			var shared_x = max(painting_panel_min_size_keyboard.x, painting_panel_min_size_gamepad.x)
+			var h = painting_panel_min_size_gamepad.y if is_gamepad else painting_panel_min_size_keyboard.y
+			_painting_panel.custom_minimum_size = Vector2(shared_x, h)
+			_painting_panel.grow_horizontal = Control.GROW_DIRECTION_BEGIN
 
 		# Update Rotate line
-		var rotate_icon = painting_hint.get_node("RotateLine/RotateRightIcon")
+		var rotate_r_icon = painting_hint.get_node("RotateLine/RotateRIcon")
+		var rotate_t_icon = painting_hint.get_node("RotateLine/RotateTIcon")
 		var rotate_label = painting_hint.get_node("RotateLine/RotateLabel")
 		if is_gamepad:
 			var d = InputDeviceManager.glyph_map.get("rotate_clockwise", {})
 			if d.has("gamepad_icon"):
-				rotate_icon.texture = load(d["gamepad_icon"])
-			rotate_icon.show()
+				rotate_r_icon.texture = load(d["gamepad_icon"])
+			rotate_r_icon.show()
+			rotate_t_icon.hide()
 			rotate_label.text = " " + tr("Rotate")
 		else:
-			var d = InputDeviceManager.glyph_map.get("rotate_clockwise", {})
-			if d.has("keyboard_icon"):
-				rotate_icon.texture = load(d["keyboard_icon"])
-				rotate_icon.show()
-				rotate_label.text = " " + tr("Rotate")
-			else:
-				rotate_icon.hide()
-				rotate_label.text = "[T] " + tr("Rotate")
+			rotate_r_icon.texture = load("res://sprites/ui/inputs/r.png")
+			rotate_t_icon.texture = load("res://sprites/ui/inputs/t.png")
+			rotate_r_icon.show()
+			rotate_t_icon.show()
+			rotate_label.text = " " + tr("Rotate ")
 
 		# Update Scale line
-		var scale_icon = painting_hint.get_node("ScaleLine/ScaleDownIcon")
+		var scale_z_icon = painting_hint.get_node("ScaleLine/ScaleZIcon")
+		var scale_x_icon = painting_hint.get_node("ScaleLine/ScaleXIcon")
 		var scale_label = painting_hint.get_node("ScaleLine/ScaleLabel")
 		if is_gamepad:
 			var d = InputDeviceManager.glyph_map.get("scale_sticker_down", {})
 			if d.has("gamepad_icon"):
-				scale_icon.texture = load(d["gamepad_icon"])
-			scale_icon.show()
+				scale_z_icon.texture = load(d["gamepad_icon"])
+			scale_z_icon.show()
+			scale_x_icon.hide()
 			scale_label.text = " " + tr("Scale")
 		else:
-			var d = InputDeviceManager.glyph_map.get("scale_sticker_down", {})
-			if d.has("keyboard_icon"):
-				scale_icon.texture = load(d["keyboard_icon"])
-				scale_icon.show()
-				scale_label.text = " " + tr("Scale")
-			else:
-				scale_icon.hide()
-				scale_label.text = "[X] / [Z] " + tr("Scale")
+			scale_z_icon.texture = load("res://sprites/ui/inputs/z.png")
+			scale_x_icon.texture = load("res://sprites/ui/inputs/x.png")
+			scale_z_icon.show()
+			scale_x_icon.show()
+			scale_label.text = " " + tr("Scale ")
 
 		# Update Cycle line (has two icons)
 		var cycle_prev_icon = painting_hint.get_node("CycleLine/CyclePrevIcon")

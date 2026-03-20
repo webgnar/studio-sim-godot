@@ -17,6 +17,8 @@ signal closed
 @onready var hue_value_label: Label = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/VisualSettings/HueHeader/HueValue
 @onready var saturation_slider: HSlider = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/VisualSettings/SaturationSlider
 @onready var saturation_value_label: Label = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/VisualSettings/SaturationHeader/SaturationValue
+@onready var hud_hue_slider: HSlider = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/VisualSettings/HudHueSlider
+@onready var hud_hue_value_label: Label = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/VisualSettings/HudHueHeader/HudHueValue
 var close_button: Button = null  # Removed from scene; closing handled by go_back/ESC
 @onready var controls_list: VBoxContainer = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Controls/ScrollContainer/ControlsList
 @onready var controls_scroll_container: ScrollContainer = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Controls/ScrollContainer
@@ -40,6 +42,8 @@ var current_bg_color: Color = Color(0.2, 0.2, 0.2, 0.9)  # Default from theme
 var is_in_tab_mode: bool = true  # true = navigating tabs, false = navigating content
 var current_hue: float = 0.0  # Hue value 0-360
 var current_saturation: float = 0.3  # Saturation value 0.0-1.0
+var current_hud_hue: float = 0.0  # HUD hue shift 0-360
+var _is_loading: bool = false
 var slider_hold_timer: float = 0.0
 var slider_hold_delay: float = 0.3  # Initial delay before repeating
 var slider_repeat_rate: float = 0.05  # Time between repeats
@@ -93,6 +97,8 @@ func _ready():
 		hue_slider.value_changed.connect(_on_hue_slider_changed)
 	if saturation_slider:
 		saturation_slider.value_changed.connect(_on_saturation_slider_changed)
+	if hud_hue_slider:
+		hud_hue_slider.value_changed.connect(_on_hud_hue_slider_changed)
 	stick_sensitivity_slider.value_changed.connect(_on_stick_sensitivity_changed)
 	# Get theme panel style
 	var theme_res = load("res://themes/ui_theme.tres")
@@ -386,6 +392,15 @@ func _on_saturation_slider_changed(value: float):
 
 	save_settings()
 
+func _on_hud_hue_slider_changed(value: float):
+	"""Handle HUD hue slider change"""
+	current_hud_hue = value
+	hud_hue_value_label.text = "%d°" % int(value)
+	var hud = get_tree().get_first_node_in_group("hud")
+	if hud and hud.has_method("apply_hud_hue"):
+		hud.apply_hud_hue(value)
+	save_settings()
+
 func _on_stick_sensitivity_changed(value: float):
 	"""Handle right stick sensitivity slider change"""
 	joystick_sensitivity = value
@@ -413,6 +428,8 @@ func _on_close_pressed():
 
 func save_settings():
 	"""Save all settings to disk"""
+	if _is_loading:
+		return
 	# AudioManager handles audio settings
 	AudioManager.save_settings()
 	
@@ -433,6 +450,7 @@ func save_settings():
 	# Update visual settings - save hue and saturation
 	settings["bg_hue"] = current_hue
 	settings["bg_saturation"] = current_saturation
+	settings["hud_hue"] = current_hud_hue
 
 	# Save game settings
 	settings["save_glb_on_ship"] = save_glb_on_ship
@@ -454,6 +472,7 @@ func save_settings():
 
 func load_settings():
 	"""Load all settings from disk"""
+	_is_loading = true
 	# Load audio settings from AudioManager
 	sfx_slider.value = AudioManager.sfx_volume
 	music_slider.value = AudioManager.music_volume
@@ -463,6 +482,7 @@ func load_settings():
 	
 	# Load visual settings only if hue slider exists
 	if not hue_slider or not saturation_slider:
+		_is_loading = false
 		return
 	
 	# Load visual settings
@@ -471,25 +491,28 @@ func load_settings():
 		hue_value_label.text = "%d°" % int(current_hue)
 		saturation_slider.value = current_saturation
 		saturation_value_label.text = "%.0f%%" % (current_saturation * 100)
+		_is_loading = false
 		return
-	
+
 	var file = FileAccess.open("user://settings.json", FileAccess.READ)
 	if not file:
 		hue_slider.value = current_hue
 		hue_value_label.text = "%d°" % int(current_hue)
 		saturation_slider.value = current_saturation
 		saturation_value_label.text = "%.0f%%" % (current_saturation * 100)
+		_is_loading = false
 		return
-	
+
 	var json_string = file.get_as_text()
 	file.close()
-	
+
 	var json = JSON.new()
 	if json.parse(json_string) != OK:
 		hue_slider.value = current_hue
 		hue_value_label.text = "%d°" % int(current_hue)
 		saturation_slider.value = current_saturation
 		saturation_value_label.text = "%.0f%%" % (current_saturation * 100)
+		_is_loading = false
 		return
 
 	var settings = json.data
@@ -498,6 +521,7 @@ func load_settings():
 		hue_value_label.text = "%d°" % int(current_hue)
 		saturation_slider.value = current_saturation
 		saturation_value_label.text = "%.0f%%" % (current_saturation * 100)
+		_is_loading = false
 		return
 	
 	# Load hue value
@@ -518,6 +542,21 @@ func load_settings():
 	# Apply to theme
 	if theme_panel_style:
 		theme_panel_style.bg_color = current_bg_color
+
+	# Load HUD hue value
+	if settings.has("hud_hue"):
+		current_hud_hue = float(settings["hud_hue"])
+		if hud_hue_slider:
+			hud_hue_slider.value = current_hud_hue
+		if hud_hue_value_label:
+			hud_hue_value_label.text = "%d°" % int(current_hud_hue)
+		var hud = get_tree().get_first_node_in_group("hud")
+		if hud and hud.has_method("apply_hud_hue"):
+			hud.apply_hud_hue(current_hud_hue)
+	elif hud_hue_slider:
+		hud_hue_slider.value = 0.0
+		if hud_hue_value_label:
+			hud_hue_value_label.text = "0°"
 
 	# Load game settings
 	if settings.has("save_glb_on_ship"):
@@ -541,6 +580,8 @@ func load_settings():
 		var players = get_tree().get_nodes_in_group("player")
 		if players.size() > 0:
 			players[0].joystick_sensitivity_multiplier = joystick_sensitivity
+
+	_is_loading = false
 
 func _populate_controls_display():
 	"""Build the controls list with label rows"""
@@ -704,6 +745,8 @@ func _is_last_in_tab(focused_control: Control) -> bool:
 		0:  # Audio
 			return focused_control == painting_sounds_checkbox
 		1:  # Visual
+			if hud_hue_slider:
+				return focused_control == hud_hue_slider
 			return focused_control == saturation_slider
 		2:  # Controls
 			if _in_controls_scroll:
@@ -723,7 +766,9 @@ func _focus_last_content_item():
 		0:  # Audio
 			painting_sounds_checkbox.grab_focus()
 		1:  # Visual
-			if saturation_slider:
+			if hud_hue_slider:
+				hud_hue_slider.grab_focus()
+			elif saturation_slider:
 				saturation_slider.grab_focus()
 		2:  # Controls
 			_in_controls_scroll = true
@@ -801,8 +846,11 @@ func _update_close_button_focus():
 		return
 	if tab_container.current_tab == 0:  # Audio tab
 		close_button.focus_previous = close_button.get_path_to(painting_sounds_checkbox)
-	elif tab_container.current_tab == 1 and saturation_slider:  # Visual tab
-		close_button.focus_previous = close_button.get_path_to(saturation_slider)
+	elif tab_container.current_tab == 1:  # Visual tab
+		if hud_hue_slider:
+			close_button.focus_previous = close_button.get_path_to(hud_hue_slider)
+		elif saturation_slider:
+			close_button.focus_previous = close_button.get_path_to(saturation_slider)
 	elif tab_container.current_tab == 2:  # Controls tab
 		pass  # No focusable items in Controls tab
 
@@ -836,6 +884,14 @@ func _setup_focus_navigation():
 		saturation_slider.focus_previous = saturation_slider.get_path_to(hue_slider)
 		saturation_slider.focus_neighbor_top = saturation_slider.get_path_to(hue_slider)
 
+	if hud_hue_slider and saturation_slider:
+		saturation_slider.focus_next = saturation_slider.get_path_to(hud_hue_slider)
+		saturation_slider.focus_neighbor_bottom = saturation_slider.get_path_to(hud_hue_slider)
+
+		hud_hue_slider.focus_mode = Control.FOCUS_ALL
+		hud_hue_slider.focus_previous = hud_hue_slider.get_path_to(saturation_slider)
+		hud_hue_slider.focus_neighbor_top = hud_hue_slider.get_path_to(saturation_slider)
+
 	if close_button != null:
 		if is_embedded:
 			# When embedded, close button is hidden - don't include in focus chain
@@ -847,7 +903,10 @@ func _setup_focus_navigation():
 			painting_sounds_checkbox.focus_neighbor_bottom = painting_sounds_checkbox.get_path_to(close_button)
 			close_button.focus_previous = close_button.get_path_to(painting_sounds_checkbox)
 			close_button.focus_neighbor_top = close_button.get_path_to(painting_sounds_checkbox)
-			if saturation_slider:
+			if hud_hue_slider:
+				hud_hue_slider.focus_next = hud_hue_slider.get_path_to(close_button)
+				hud_hue_slider.focus_neighbor_bottom = hud_hue_slider.get_path_to(close_button)
+			elif saturation_slider:
 				saturation_slider.focus_next = saturation_slider.get_path_to(close_button)
 				saturation_slider.focus_neighbor_bottom = saturation_slider.get_path_to(close_button)
 			_update_close_button_focus()

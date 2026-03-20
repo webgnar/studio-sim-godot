@@ -122,6 +122,50 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 8
 
+[node name="StatsSection" type="VBoxContainer" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ContentHBox/RightVBox" unique_id=-994967295]
+layout_mode = 2
+size_flags_horizontal = 8
+theme_override_constants/separation = 4
+
+[node name="SocialStatsHeader" type="Label" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ContentHBox/RightVBox/StatsSection" unique_id=-994967294]
+layout_mode = 2
+size_flags_horizontal = 8
+theme_override_colors/font_color = Color(0.4, 0.8, 1, 1)
+theme_override_colors/font_shadow_color = Color(0.68235296, 0.43529412, 1, 1)
+theme_override_constants/shadow_outline_size = 4
+theme_override_font_sizes/font_size = 37
+text = "Social Stats"
+
+[node name="StatsHBox" type="HBoxContainer" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ContentHBox/RightVBox/StatsSection" unique_id=-994967293]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="BlueskyLabel" type="Label" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ContentHBox/RightVBox/StatsSection/StatsHBox" unique_id=-994967292]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.37254903, 0.6156863, 0.99215686, 1)
+theme_override_font_sizes/font_size = 34
+text = "Bluesky: 12 ♥"
+
+[node name="InstagramLabel" type="Label" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ContentHBox/RightVBox/StatsSection/StatsHBox" unique_id=-994967291]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.98353285, 0, 0.4347024, 1)
+text = "Instagram: 5 ♥"
+
+[node name="TumblrLabel" type="Label" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ContentHBox/RightVBox/StatsSection/StatsHBox" unique_id=-994967290]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.83019304, 0.9661768, 0, 1)
+text = "Tumblr: 3 ♥"
+
+[node name="PinterestLabel" type="Label" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ContentHBox/RightVBox/StatsSection/StatsHBox" unique_id=-994967289]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.37254903, 1, 0.6784314, 1)
+text = "Pinterest: 7 ♥"
+
+[node name="StatsStatusLabel" type="Label" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ContentHBox/RightVBox/StatsSection" unique_id=-994967288]
+visible = false
+layout_mode = 2
+text = "Fetching..."
+
 [node name="CritiqueHeader" type="Label" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ContentHBox/RightVBox" unique_id=1111111101]
 layout_mode = 2
 text = "Critique:"

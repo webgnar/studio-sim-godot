@@ -1,0 +1,15 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://dnkxcpkaygoci"]
+
+[sub_resource type="Gradient" id="Gradient_kmlt6"]
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_rs4es"]
+gradient = SubResource("Gradient_kmlt6")
+repeat = 1
+
+[resource]
+albedo_color = Color(1, 0.53333336, 0, 1)
+metallic = 1.0
+metallic_texture = SubResource("GradientTexture2D_rs4es")
+roughness = 0.0
+emission_enabled = true
+texture_filter = 0
