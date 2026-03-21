@@ -232,8 +232,11 @@ func show_screen():
 	"""Show the pause menu (called by UIManager)"""
 	dialog.visible = true
 
-	# Reset to Commissions tab and tab bar mode
-	_switch_tab(Tab.COMMISSIONS)
+	# Restore last tab; always show Commissions if a mission is active
+	if MissionManager and MissionManager.current_mission:
+		_switch_tab(Tab.COMMISSIONS)
+	else:
+		_switch_tab(current_tab)
 	_enter_tab_bar_mode()
 
 	# Reset input cooldown

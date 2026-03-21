@@ -32,12 +32,8 @@ func capture_current_canvas(mission_id: String, title: String, description: Stri
 	mission.description = description
 	mission.reward = reward
 
-	# Sort layers by z-order (back to front)
-	var sorted_layers = painting_system_2d.placed_layers.duplicate()
-	sorted_layers.sort_custom(func(a, b): return a.order < b.order)
-
-	# Convert PlacedLayer2D to PlacedStickerData with full placement info
-	for layer in sorted_layers:
+	# Convert PlacedLayer2D to PlacedStickerData (in placement order = draw order)
+	for layer in painting_system_2d.placed_layers:
 		if not layer.node:
 			continue
 
@@ -46,7 +42,6 @@ func capture_current_canvas(mission_id: String, title: String, description: Stri
 		sticker_data.position = layer.node.position
 		sticker_data.rotation_deg = layer.rotation_deg
 		sticker_data.scale = layer.node.scale.x  # Assume uniform scale
-		sticker_data.z_order = layer.order
 
 		mission.target_stickers.append(sticker_data)
 

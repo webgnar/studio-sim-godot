@@ -451,7 +451,7 @@ func _update_painting_hint() -> void:
 			rotate_t_icon.texture = load("res://sprites/ui/inputs/t.png")
 			rotate_r_icon.show()
 			rotate_t_icon.show()
-			rotate_label.text = " " + tr("Rotate ")
+			rotate_label.text = " " + tr("Rotate")
 
 		# Update Scale line
 		var scale_z_icon = painting_hint.get_node("ScaleLine/ScaleZIcon")
@@ -469,7 +469,7 @@ func _update_painting_hint() -> void:
 			scale_x_icon.texture = load("res://sprites/ui/inputs/x.png")
 			scale_z_icon.show()
 			scale_x_icon.show()
-			scale_label.text = " " + tr("Scale ")
+			scale_label.text = " " + tr("Scale")
 
 		# Update Cycle line (has two icons)
 		var cycle_prev_icon = painting_hint.get_node("CycleLine/CyclePrevIcon")

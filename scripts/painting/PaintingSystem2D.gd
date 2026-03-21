@@ -19,7 +19,6 @@ var placed_layers: Array[PlacedLayer2D] = []
 # Current state
 var selected_sticker_index: int = 0  # Which sticker is selected from library
 var selected_layer: PlacedLayer2D = null  # Currently selected placed layer
-var next_order: int = 0  # Next available z-index value
 var input_enabled: bool = true  # Always enabled (routing handled by PaintingModeManager)
 
 # Input settings
@@ -166,11 +165,6 @@ func _process(delta):
 	elif Input.is_action_pressed("scale_sticker_down"):
 		scale_preview(delta, -1)  # Decrease scale
 
-	# Handle z-order adjustment
-	if selected_layer and Input.is_action_just_pressed("ui_up"):
-		raise_layer_order(selected_layer)
-	if selected_layer and Input.is_action_just_pressed("ui_down"):
-		lower_layer_order(selected_layer)
 
 func handle_primary_action(raycast_result: Dictionary):
 	"""Called by PaintingModeManager when user clicks on canvas"""
@@ -268,7 +262,7 @@ func _update_preview_position():
 		preview_sprite.visible = true
 
 		# Set z_index higher than all placed stickers to ensure it renders on top
-		preview_sprite.z_index = next_order + 100
+		preview_sprite.z_index = 100
 	else:
 		# Hide preview when not hovering over canvas
 		preview_sprite.visible = false
@@ -385,7 +379,6 @@ func spawn_sticker(world_position: Vector3):
 	sprite.texture = definition.texture
 	sprite.centered = true
 	sprite.position = viewport_pos
-	sprite.z_index = next_order
 
 	# Scale sticker to fit canvas proportionally with user's scale multiplier
 	var texture_size = definition.texture.get_size()
@@ -400,12 +393,10 @@ func spawn_sticker(world_position: Vector3):
 	add_child(sprite)
 
 	# Create placed layer data
-	var placed = PlacedLayer2D.new(definition.id, sprite, next_order)
+	var placed = PlacedLayer2D.new(definition.id, sprite)
 	placed.rotation_deg = preview_rotation  # Track the rotation that was set in preview
 	placed.scale_multiplier = preview_scale_multiplier  # Track the scale multiplier
 	placed_layers.append(placed)
-
-	next_order += 1
 
 	if DebugLogger and not OS.has_feature("editor"):
 		DebugLogger.write_log("[PaintingSystem2D] Sticker spawned successfully! Total placed: %d" % placed_layers.size())
@@ -451,22 +442,6 @@ func cycle_sticker(direction: int):
 	# Note: Syncing and signal emission now handled by PaintingModeManager
 	# This function kept for backward compatibility
 
-func raise_layer_order(layer: PlacedLayer2D):
-	"""Increase layer's z-order (bring forward)"""
-	if not layer or not layer.node:
-		return
-
-	layer.order += 1
-	layer.node.z_index = layer.order
-
-func lower_layer_order(layer: PlacedLayer2D):
-	"""Decrease layer's z-order (send backward)"""
-	if not layer or not layer.node:
-		return
-
-	layer.order -= 1
-	layer.node.z_index = layer.order
-
 func delete_selected_layer():
 	"""Delete the currently selected layer"""
 	if not selected_layer:
@@ -486,30 +461,13 @@ func undo_last_sticker():
 	if placed_layers.is_empty():
 		return
 
-	# Find the layer with the highest order value (most recently placed)
-	var last_layer: PlacedLayer2D = null
-	var max_order = -1
+	var last_layer = placed_layers.back()
+	if last_layer.node:
+		last_layer.node.queue_free()
+	placed_layers.pop_back()
 
-	for layer in placed_layers:
-		if layer.order > max_order:
-			max_order = layer.order
-			last_layer = layer
-
-	if last_layer:
-		# Remove from scene
-		if last_layer.node:
-			last_layer.node.queue_free()
-
-		# Remove from array
-		placed_layers.erase(last_layer)
-
-		# Clear selection if this was the selected layer
-		if selected_layer == last_layer:
-			selected_layer = null
-
-		# Decrement next_order so it can be reused
-		if next_order > 0:
-			next_order -= 1
+	if selected_layer == last_layer:
+		selected_layer = null
 
 func select_layer_by_index(index: int):
 	"""Select a placed layer by its index in the array"""
@@ -524,7 +482,6 @@ func clear_canvas():
 		if layer.node:
 			layer.node.queue_free()
 	placed_layers.clear()
-	next_order = 0
 	selected_layer = null
 
 # Validation system

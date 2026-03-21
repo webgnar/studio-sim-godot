@@ -4,6 +4,7 @@ extends Node
 ## Tracks session counter for paintings created
 
 signal painting_created(painting_number: int)
+signal canvas_replaced(new_root: Node3D, is_landscape: bool)
 
 var paintings_created: int = 0
 
@@ -90,6 +91,7 @@ func replace_painting_with_carryable(world: Node3D) -> void:
 	# Spawn new blank painting (same format as the converted one)
 	var new_painting = active_blank_scene.instantiate()
 	world.add_child(new_painting)
+	canvas_replaced.emit(new_painting, is_landscape)
 	# Set transform AFTER adding to tree
 	new_painting.global_position = wall_position
 	new_painting.global_rotation = wall_rotation

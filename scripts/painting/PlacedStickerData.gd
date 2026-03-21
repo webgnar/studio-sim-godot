@@ -8,13 +8,11 @@ class_name PlacedStickerData
 @export var position: Vector2 = Vector2.ZERO
 @export var rotation_deg: float = 0.0
 @export var scale: float = 1.0
-@export var z_order: int = 0
 
-func _init(p_sticker_id: String = "", p_position: Vector2 = Vector2.ZERO, p_rotation: float = 0.0, p_z_order: int = 0):
+func _init(p_sticker_id: String = "", p_position: Vector2 = Vector2.ZERO, p_rotation: float = 0.0):
 	sticker_id = p_sticker_id
 	position = p_position
 	rotation_deg = p_rotation
 	scale = 1.0
-	z_order = p_z_order
 
 # matches() function removed - no longer needed for simplified validation system

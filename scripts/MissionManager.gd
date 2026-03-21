@@ -159,7 +159,6 @@ func complete_mission(result: ValidationResult, latest_painting_path: String = "
 	# Mark as completed if passed
 	if result.success:
 		mission_data["completed"] = true
-		mission_completed.emit(current_mission, result)
 
 		# Calculate mission duration for Steam
 		var mission_duration_sec: float = 0.0
@@ -198,8 +197,14 @@ func complete_mission(result: ValidationResult, latest_painting_path: String = "
 				current_mission, result, score, grade,
 				mission_duration_sec, was_completed_before
 			)
+
+		var completed_mission = current_mission
+		current_mission = null
+		mission_completed.emit(completed_mission, result)
 	else:
-		mission_failed.emit(current_mission, result)
+		var failed_mission = current_mission
+		current_mission = null
+		mission_failed.emit(failed_mission, result)
 
 		# Track failed attempts in Steam
 		if SteamManager:
@@ -218,8 +223,8 @@ func abort_mission():
 		return
 
 	var aborted_mission = current_mission
-	mission_aborted.emit(aborted_mission)
 	current_mission = null
+	mission_aborted.emit(aborted_mission)
 
 	print("MissionManager: Mission '%s' aborted" % aborted_mission.title)
 
