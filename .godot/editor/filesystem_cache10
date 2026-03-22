@@ -1,10 +1,10 @@
 72322a848ab928aa5c89f0cb78209805
-::res://::1774061362
+::res://::1774152972
 CAMERA_SYSTEM_SETUP.md::TextFile::-1::1762247192::0::1::::<><><>0<>0<><>::
 DEBUG_EXPORT.md::TextFile::-1::1767209587::0::1::::<><><>0<>0<><>::
 default.tscn::PackedScene::4365866954318602301::1762583134::0::1::::<><><>0<>0<><>::uid://sx0bao2oqis7::::res://models/player/human skeleton rewrite.glb
 default_bus_layout.tres::AudioBusLayout::8879290785730250873::1766349807::0::1::::<><><>0<>0<><>::
-export_presets.cfg::TextFile::-1::1774061362::0::1::::<><><>0<>0<><>::
+export_presets.cfg::TextFile::-1::1774116082::0::1::::<><><>0<>0<><>::
 icon.svg::CompressedTexture2D::2126835338060944900::1760937980::1764320742::1::::<><><>0<>0<>c511fe3db7501179497f362af9747f17<>res://.godot/imported/icon.svg-218a8f2b3041327d8a5756f3a245f83b.ctex::
 INCREMENTAL_GAME_PLAN.md::TextFile::-1::1768030190::0::1::::<><><>0<>0<><>::
 INPUT_ANALYSIS.md::TextFile::-1::1767217029::0::1::::<><><>0<>0<><>::
@@ -552,7 +552,7 @@ ValidationLoadingOverlay.tscn::PackedScene::5033299275984382255::1771171809::0::
 ValidationResultUI.tscn::PackedScene::7481150193439125933::1772063826::0::1::::<><><>0<>0<><>::res://scripts/ui/ValidationResultUI.gd<>uid://cvtxaw8dw07fw::::res://scenes/UI/MissionResultsDisplay.tscn<>uid://cbtaxh5m7udor::::res://themes/ui_theme.tres
 VirtualKeyboard.tscn::PackedScene::3881115922177484614::1773347674::0::1::::<><><>0<>0<><>::uid://boni7q8oakbq5::::res://scripts/ui/VirtualKeyboard.gd<>uid://cbtaxh5m7udor::::res://themes/ui_theme.tres
 VisitorDialogueBox.tscn::PackedScene::8702348421829654227::1773945829::0::1::::<><><>0<>0<><>::uid://bcp12flb8ns7k::::res://scripts/ui/VisitorDialogueBox.gd<>uid://tmjyio0w6cu0::::res://fonts/studio-sim.ttf<>uid://scsmiofa8vip::::res://fonts/NotoSerif-Regular.ttf
-::res://scripts/::1774069109
+::res://scripts/::1774115896
 AssistantFinishedCanvas.gd::GDScript::8327857821395787524::1773125547::0::1::::AssistantFinishedCanvas<>Node3D<><>0<>0<><>::
 AudioManager.gd::GDScript::1683297059755285547::1773519451::0::1::::<>Node<><>0<>0<><>::
 BaricadeTrigger.gd::GDScript::3946487977829720425::1772770510::0::1::::<>Node3D<><>0<>0<><>::
@@ -560,7 +560,7 @@ BerkeyInteraction.gd::GDScript::956383844454778354::1772770510::0::1::::BerkeyIn
 Bullet.gd::GDScript::4494185522286921364::1765049008::0::1::::Bullet<>RigidBody3D<><>0<>0<><>::
 CameraManager.gd::GDScript::5090965087567803578::1767640563::0::1::::<>Node<><>0<>0<><>::
 CameraZone.gd::GDScript::4337440007670042935::1764017871::0::1::::<>Area3D<><>0<>0<><>::
-CanvasFormatToggle.gd::GDScript::3234542348815096218::1774068843::0::1::::<>InteractionComponent<><>0<>0<><>::
+CanvasFormatToggle.gd::GDScript::3234542348815096218::1774070019::0::1::::<>InteractionComponent<><>0<>0<><>::
 CarryablePainting.gd::GDScript::8654589551705045776::1771626648::0::1::::CarryablePainting<>RigidBody3D<><>0<>0<><>::
 ControllerDebugOverlay.gd::GDScript::5829514318379726784::1767838876::0::1::::<>CanvasLayer<><>0<>0<><>::
 ControllerMapper.gd::GDScript::1571345890455605991::1767214384::0::1::::<>Node<><>0<>0<><>::
@@ -586,7 +586,7 @@ MoneyReputationHUD.gd::GDScript::5633928954718032727::1773954434::0::1::::<>Canv
 OptionsMenu.gd::GDScript::7132475646353091587::1774031483::0::1::::<>Control<><>0<>0<><>::
 OutlineManager.gd::GDScript::1775829841741582502::1768028385::0::1::::OutlineManager<>Node<><>0<>0<><>::
 PaintingExporter.gd::GDScript::3765254846967518743::1773125547::0::1::::<>Node<><>0<>0<><>::
-PaintingSpawner.gd::GDScript::4348115639158510571::1773125547::0::1::::<>Node<><>0<>0<><>::
+PaintingSpawner.gd::GDScript::4348115639158510571::1774070011::0::1::::<>Node<><>0<>0<><>::
 PhoneInteraction.gd::GDScript::59552204620518798::1771518336::0::1::::PhoneInteraction<>InteractionComponent<><>0<>0<><>::
 PipeGenerator.gd::GDScript::1515297680803242810::1773335474::0::1::::<>Node3D<><>0<>0<><>::
 PlayerAnimation.gd::GDScript::3994514209863087763::1772770510::0::1::::PlayerAnimation<>Node<><>0<>0<><>::
@@ -607,7 +607,7 @@ StickerWallManager.gd::GDScript::2943125304701618124::1773125547::0::1::::Sticke
 StudioAssistantCharacter.gd::GDScript::6758674201293880360::1773125547::0::1::::<>Node3D<><>0<>0<><>::
 TitleScreenCharacter.gd::GDScript::4191977483880185219::1771296855::0::1::::<>Node3D<><>0<>0<><>::
 TitleScreenController.gd::GDScript::3360862336766886412::1773520793::0::1::::<>Node3D<><>0<>0<><>::
-UIManager.gd::GDScript::3514930045252719971::1772519584::0::1::::<>Node<><>0<>0<><>::
+UIManager.gd::GDScript::3514930045252719971::1774115896::0::1::::<>Node<><>0<>0<><>::
 UndoAssistantWorkButton.gd::GDScript::3335762708924329321::1773125547::0::1::::<>InteractionComponent<><>0<>0<><>::
 WorldSetup.gd::GDScript::5696947886217552476::1773679737::0::1::::<>Node3D<><>0<>0<><>::
 WorldStateManager.gd::GDScript::6399081172495642325::1773982014::0::1::::<>Node<><>0<>0<><>::
@@ -682,9 +682,9 @@ VisualValidator.gd::GDScript::4169772428084211328::1767214443::0::1::::VisualVal
 ::res://scripts/tools/::1774067355
 create_power_cord.gd::GDScript::1820023332295702997::1762057172::0::1::::<>EditorScript<><>0<>1<><>::
 MissionAuthoringTool.gd::GDScript::6880012840404432544::1774067355::0::1::::MissionAuthoringTool<>Node<><>0<>0<><>::
-::res://scripts/ui/::1774035948
+::res://scripts/ui/::1774152947
 AssistantPayoutNotification.gd::GDScript::331416185543843258::1768030355::0::1::::AssistantPayoutNotification<>Control<><>0<>0<><>::
-InventoryTab.gd::GDScript::3210561050709174356::1774035578::0::1::::InventoryTab<>Control<><>0<>1<><>::
+InventoryTab.gd::GDScript::3210561050709174356::1774152947::0::1::::InventoryTab<>Control<><>0<>1<><>::
 MainMenuHub.gd::GDScript::8302427656593457044::1771277269::0::1::::MainMenuHub<>Control<><>0<>0<><>::
 MissionAuthoringUI.gd::GDScript::1912430109288517738::1772132725::0::1::::<>Control<><>0<>0<><>::
 MissionCard.gd::GDScript::8737076011923695214::1772061810::0::1::::MissionCard<>PanelContainer<><>0<>0<><>::
@@ -1064,7 +1064,7 @@ texture_hvac_albedo.png::CompressedTexture2D::5143359380379924727::1762070414::1
 texture_texture_1_albedo.png::CompressedTexture2D::3824769149247691282::1762070414::1770566055::1::::<><><>0<>0<>225d655f4238b376fcebac08ddc41cf3<>res://.godot/imported/texture_texture_1_albedo.png-d6811323a7c6fb5600d040b1ee91ccec.s3tc.ctex<*>res://.godot/imported/texture_texture_1_albedo.png-d6811323a7c6fb5600d040b1ee91ccec.etc2.ctex::
 ::res://themes/::1774029965
 ui_theme.tres::Theme::4882294876207544217::1774029965::0::1::::<><><>0<>0<><>::uid://crvmjsumaqouq::::res://sprites/ui/check.jpeg<>uid://sb7vac4222ai::::res://sprites/ui/slider button.png<>uid://tmjyio0w6cu0::::res://fonts/studio-sim.ttf<>uid://cqd8ayvnhrj6w::::res://sprites/ui/slider buttondisabled.png<>uid://db4d6e77is6b1::::res://sprites/ui/uncheck.jpeg<>uid://d4m1wkmejf136::::res://sprites/ui/tick.png<>uid://d3o7cns418oil::::res://sprites/ui/sliderplain.png<>uid://c5rhf1e60dj00::::res://sprites/ui/sliderhover.png<>uid://wpv42ndg7j5o::::res://sprites/ui/sliderpressed.png<>uid://dlupaeaiwaght::::res://sprites/ui/scroll background.png<>uid://d3n667lur17kr::::res://sprites/ui/arrow2.png<>uid://dor0d4yiulgi5::::res://sprites/ui/arrow.png
-::res://translations/::1774069114
+::res://translations/::1774069188
 translations.csv::Translation::2372015004737268857::1774069114::1774069188::1::::<><><>0<>0<>94dac7bb88c421e082bec7b990d0126d<>res://translations/translations.en.translation<*>res://translations/translations.zh_CN.translation<*>res://translations/translations.ja.translation<*>res://translations/translations.ko.translation<*>res://translations/translations.pt_BR.translation<*>res://translations/translations.es.translation<*>res://translations/translations.ru.translation::
 translations.en.translation::OptimizedTranslation::4439093618374977040::1774069188::0::1::::<><><>0<>0<><>::
 translations.es.translation::OptimizedTranslation::4250644107112792410::1774069188::0::1::::<><><>0<>0<><>::

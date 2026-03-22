@@ -75,6 +75,7 @@ func _ready():
 	_save_info_sound = AudioStreamPlayer.new()
 	_save_info_sound.stream = load("res://sounds/picotron/save_painting.ogg")
 	add_child(_save_info_sound)
+	_save_info_sound.process_mode = Node.PROCESS_MODE_ALWAYS
 
 	# Instantiate virtual keyboard for controller users on non-Steam-Deck
 	_virtual_keyboard = VirtualKeyboardScene.instantiate() as VirtualKeyboard
@@ -89,9 +90,6 @@ func _ready():
 	name_input.gui_input.connect(_on_text_gui_input.bind(name_input))
 	statement_input.gui_input.connect(_on_text_gui_input.bind(statement_input))
 
-	# Connect Steam gamepad text input callback (for controller text entry)
-	if SteamManager.is_steam_available:
-		Steam.gamepad_text_input_dismissed.connect(_on_gamepad_text_input_dismissed)
 
 	# Find sounds from parent PauseMenu
 	var pause_menu = _find_parent_pause_menu()
@@ -312,6 +310,8 @@ func _populate_painting_list():
 	"""Populate the painting list from WorldStateManager"""
 	# Clear existing cards
 	for child in painting_list_container.get_children():
+		if child is PaintingCard and child.card_clicked.is_connected(_on_card_clicked):
+			child.card_clicked.disconnect(_on_card_clicked)
 		child.queue_free()
 	painting_cards.clear()
 	painting_entries.clear()
@@ -557,20 +557,29 @@ func _activate_detail_item():
 		0:
 			if _should_use_virtual_keyboard():
 				_show_virtual_keyboard(name_input, false)
-			elif _last_input_was_gamepad and SteamManager.is_steam_available:
-				_show_steam_keyboard(name_input, false)
 			else:
 				_enter_text_editing(name_input)
+				_show_floating_steam_keyboard(name_input, false)
 		1:
 			if _should_use_virtual_keyboard():
 				_show_virtual_keyboard(statement_input, true)
-			elif _last_input_was_gamepad and SteamManager.is_steam_available:
-				_show_steam_keyboard(statement_input, true)
 			else:
 				_enter_text_editing(statement_input)
+				_show_floating_steam_keyboard(statement_input, true)
 		2:
 			# Save
 			_on_save_pressed()
+
+func _show_floating_steam_keyboard(control: Control, multiline: bool) -> void:
+	"""Show the Steam floating keyboard (same as Steam+X) positioned near the text field.
+	Keyboard types directly into the focused control — no callback needed."""
+	if not SteamManager.is_steam_available:
+		return
+	if not Steam.isSteamRunningOnSteamDeck():
+		return
+	var mode := 1 if multiline else 0
+	var rect := control.get_global_rect()
+	Steam.showFloatingGamepadTextInput(mode, int(rect.position.x), int(rect.position.y), int(rect.size.x), int(rect.size.y))
 
 func _enter_text_editing(control: Control):
 	"""Enter text editing mode for a LineEdit or TextEdit"""
@@ -588,14 +597,6 @@ func _exit_text_editing():
 	_clear_detail_focus()
 	_update_detail_focus()
 
-func _show_steam_keyboard(control: Control, multiline: bool) -> void:
-	"""Show the Steam overlay keyboard for controller text input"""
-	_steam_editing_field = control
-	var existing_text: String = control.text if control is LineEdit else (control as TextEdit).text
-	var line_mode := 1 if multiline else 0  # 0=single line, 1=multi-line
-	var max_chars := 500 if multiline else 50
-	var description := "Artist Statement" if multiline else "Painting Name"
-	Steam.showGamepadTextInput(0, line_mode, description, max_chars, existing_text)
 
 func _show_virtual_keyboard(control: Control, multiline: bool) -> void:
 	"""Show the in-game virtual keyboard for controller users on PC."""
@@ -622,18 +623,6 @@ func _on_virtual_keyboard_cancelled() -> void:
 	_steam_editing_field = null
 	_update_detail_focus()
 
-func _on_gamepad_text_input_dismissed(submitted: bool, char_count: int) -> void:
-	"""Called when the Steam overlay keyboard is closed"""
-	if not submitted or _steam_editing_field == null:
-		_steam_editing_field = null
-		return
-	# Use dynamic call to avoid static analysis mismatch with GodotSteam GDExtension type
-	var entered_text: String = Engine.get_singleton("Steam").call("getEnteredGamepadTextInput", char_count)
-	if _steam_editing_field is LineEdit:
-		(_steam_editing_field as LineEdit).text = entered_text
-	elif _steam_editing_field is TextEdit:
-		(_steam_editing_field as TextEdit).text = entered_text
-	_steam_editing_field = null
 
 # ============================================================================
 # Actions

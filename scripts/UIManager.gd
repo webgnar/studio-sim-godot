@@ -25,6 +25,7 @@ var missions_completed: int = 0
 
 # Platform detection for mouse mode
 var _platform_name: String = ""
+var _mouse_mode_call_id: int = 0
 
 # Steam overlay auto-pause tracking
 var _overlay_triggered_pause: bool = false
@@ -205,20 +206,29 @@ func _get_gameplay_mouse_mode() -> Input.MouseMode:
 	return Input.MOUSE_MODE_CAPTURED
 
 func _set_mouse_mode(mode: Input.MouseMode):
-	"""Set mouse capture mode with verification"""
+	"""Set mouse capture mode with verification. Uses an ID guard so stale coroutines
+	from rapid state transitions don't fight each other (especially on Linux/Wayland)."""
+	_mouse_mode_call_id += 1
+	var my_id := _mouse_mode_call_id
 	if Input.mouse_mode != mode:
 		Input.mouse_mode = mode
 
 		# Verify the mode was actually set (especially important for CAPTURED/CONFINED_HIDDEN modes)
 		await get_tree().process_frame
+		if my_id != _mouse_mode_call_id:
+			return  # Superseded by a newer _set_mouse_mode call — bail out
 
 		if Input.mouse_mode != mode:
 			push_error("UIManager: Failed to set mouse mode to %d! Current mode: %d (0=VISIBLE, 2=CAPTURED, 5=CONFINED_HIDDEN)" % [mode, Input.mouse_mode])
 
 			# Retry once
 			await get_tree().process_frame
+			if my_id != _mouse_mode_call_id:
+				return
 			Input.mouse_mode = mode
 			await get_tree().process_frame
+			if my_id != _mouse_mode_call_id:
+				return
 
 			if Input.mouse_mode == mode:
 				print("UIManager: Mouse mode set to %d on retry (0=VISIBLE, 2=CAPTURED, 5=CONFINED_HIDDEN)" % mode)
