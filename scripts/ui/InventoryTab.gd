@@ -49,8 +49,7 @@ const _STATS_BASE = "HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxC
 @onready var _platform_labels: Dictionary = {
 	"bluesky": $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ContentHBox/RightVBox/StatsSection/StatsHBox/BlueskyLabel,
 	"instagram": $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ContentHBox/RightVBox/StatsSection/StatsHBox/InstagramLabel,
-	"tumblr": $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ContentHBox/RightVBox/StatsSection/StatsHBox/TumblrLabel,
-	"pinterest": $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ContentHBox/RightVBox/StatsSection/StatsHBox/PinterestLabel,
+	"deviantart": $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ContentHBox/RightVBox/StatsSection/StatsHBox/DeviantArtLabel,
 }
 var _stats_http: HTTPRequest = null
 var _stats_cache: Dictionary = {}     # painting_id -> stats dict (session cache)
