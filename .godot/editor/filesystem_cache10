@@ -1,10 +1,10 @@
 72322a848ab928aa5c89f0cb78209805
-::res://::1774153181
+::res://::1774284871
 CAMERA_SYSTEM_SETUP.md::TextFile::-1::1762247192::0::1::::<><><>0<>0<><>::
 DEBUG_EXPORT.md::TextFile::-1::1767209587::0::1::::<><><>0<>0<><>::
 default.tscn::PackedScene::4365866954318602301::1762583134::0::1::::<><><>0<>0<><>::uid://sx0bao2oqis7::::res://models/player/human skeleton rewrite.glb
 default_bus_layout.tres::AudioBusLayout::8879290785730250873::1766349807::0::1::::<><><>0<>0<><>::
-export_presets.cfg::TextFile::-1::1774153181::0::1::::<><><>0<>0<><>::
+export_presets.cfg::TextFile::-1::1774157663::0::1::::<><><>0<>0<><>::
 icon.svg::CompressedTexture2D::2126835338060944900::1760937980::1764320742::1::::<><><>0<>0<>c511fe3db7501179497f362af9747f17<>res://.godot/imported/icon.svg-218a8f2b3041327d8a5756f3a245f83b.ctex::
 INCREMENTAL_GAME_PLAN.md::TextFile::-1::1768030190::0::1::::<><><>0<>0<><>::
 INPUT_ANALYSIS.md::TextFile::-1::1767217029::0::1::::<><><>0<>0<><>::
@@ -1064,7 +1064,7 @@ texture_hvac_albedo.png::CompressedTexture2D::5143359380379924727::1762070414::1
 texture_texture_1_albedo.png::CompressedTexture2D::3824769149247691282::1762070414::1770566055::1::::<><><>0<>0<>225d655f4238b376fcebac08ddc41cf3<>res://.godot/imported/texture_texture_1_albedo.png-d6811323a7c6fb5600d040b1ee91ccec.s3tc.ctex<*>res://.godot/imported/texture_texture_1_albedo.png-d6811323a7c6fb5600d040b1ee91ccec.etc2.ctex::
 ::res://themes/::1774157511
 ui_theme.tres::Theme::4882294876207544217::1774157511::0::1::::<><><>0<>0<><>::uid://crvmjsumaqouq::::res://sprites/ui/check.jpeg<>uid://sb7vac4222ai::::res://sprites/ui/slider button.png<>uid://tmjyio0w6cu0::::res://fonts/studio-sim.ttf<>uid://cqd8ayvnhrj6w::::res://sprites/ui/slider buttondisabled.png<>uid://db4d6e77is6b1::::res://sprites/ui/uncheck.jpeg<>uid://d4m1wkmejf136::::res://sprites/ui/tick.png<>uid://d3o7cns418oil::::res://sprites/ui/sliderplain.png<>uid://c5rhf1e60dj00::::res://sprites/ui/sliderhover.png<>uid://wpv42ndg7j5o::::res://sprites/ui/sliderpressed.png<>uid://dlupaeaiwaght::::res://sprites/ui/scroll background.png<>uid://d3n667lur17kr::::res://sprites/ui/arrow2.png<>uid://dor0d4yiulgi5::::res://sprites/ui/arrow.png
-::res://translations/::1774157575
+::res://translations/::1774157611
 translations.csv::Translation::2372015004737268857::1774157575::1774157611::1::::<><><>0<>0<>94dac7bb88c421e082bec7b990d0126d<>res://translations/translations.en.translation<*>res://translations/translations.zh_CN.translation<*>res://translations/translations.ja.translation<*>res://translations/translations.ko.translation<*>res://translations/translations.pt_BR.translation<*>res://translations/translations.es.translation<*>res://translations/translations.ru.translation::
 translations.en.translation::OptimizedTranslation::4439093618374977040::1774157611::0::1::::<><><>0<>0<><>::
 translations.es.translation::OptimizedTranslation::4250644107112792410::1774157611::0::1::::<><><>0<>0<><>::
