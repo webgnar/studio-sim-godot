@@ -57,9 +57,9 @@ func _generate_surface_key(collider: Node, hit_position: Vector3, normal: Vector
 
 	# Quantize position to 1m grid to group nearby hits on the same plane
 	var pos_key = Vector3(
-		snapped(hit_position.x, 1.0),
-		snapped(hit_position.y, 1.0),
-		snapped(hit_position.z, 1.0)
+		snapped(hit_position.x, 10.0),
+		snapped(hit_position.y, 10.0),
+		snapped(hit_position.z, 10.0)
 	)
 
 	# Quantize normal to 0.1 precision to group similar facing directions
@@ -312,11 +312,11 @@ func spawn_sticker(world_position: Vector3, normal: Vector3, raycast_result: Dic
 	canvas_root.add_child(sprite)
 
 	# Offset slightly in front of wall to avoid z-fighting
-	# Use surface-relative z-offset for layer ordering (FIXED - 3mm per sticker for oblique angle stability)
-	# Smaller spacing prevents flickering while maintaining depth ordering at all angles
-	var z_offset = 0.005 + (surface_order * 0.003)  # Each layer gets 3mm offset (better for oblique viewing)
+	# All stickers at same physical depth — render_priority is sole ordering mechanism.
+	# Per-layer depth offset caused camera-distance sort to flip order at oblique angles.
+	var z_offset = 0.005
 	var final_world_position = world_position + (normal * z_offset)
-	print("[DEBUG] Z-offset: ", z_offset, " (base: 0.005 + order ", surface_order, " * 0.003)")
+	print("[DEBUG] Z-offset: ", z_offset, " (flat, order controlled by render_priority: ", surface_order, ")")
 	print("[DEBUG] Hit position: ", world_position, " | Normal: ", normal)
 	print("[DEBUG] Final position: ", final_world_position)
 

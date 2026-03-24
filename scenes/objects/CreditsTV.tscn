@@ -1,0 +1,90 @@
+[gd_scene format=3 uid="uid://df8i7yfpgundi"]
+
+[ext_resource type="Script" uid="uid://dly3mtdn5v02f" path="res://scripts/CreditsDisplay.gd" id="1_script"]
+[ext_resource type="FontFile" uid="uid://tmjyio0w6cu0" path="res://fonts/studio-sim.ttf" id="2_knrbc"]
+[ext_resource type="Material" uid="uid://bl43iap4a4kjl" path="res://materials/tv.tres" id="2_tvmat"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_portrait"]
+size = Vector2(0.9, 1.6)
+
+[node name="CreditsTV" type="Node3D" unique_id=961104450]
+script = ExtResource("1_script")
+
+[node name="SubViewport" type="SubViewport" parent="." unique_id=1581664093]
+own_world_3d = true
+canvas_item_default_texture_filter = 0
+size = Vector2i(360, 640)
+render_target_update_mode = 4
+
+[node name="ColorRect" type="ColorRect" parent="SubViewport" unique_id=380554113]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.05, 0.05, 0.05, 1)
+
+[node name="CreditsLabel" type="RichTextLabel" parent="SubViewport" unique_id=2104277479]
+offset_left = 20.0
+offset_right = 340.0
+offset_bottom = 640.0
+theme_override_colors/default_color = Color(0.8633279, 0.8981122, 0.6007165, 1)
+theme_override_constants/outline_size = 2
+theme_override_fonts/normal_font = ExtResource("2_knrbc")
+theme_override_font_sizes/normal_font_size = 44
+bbcode_enabled = true
+text = "[center]CREDITS[/center]
+
+[center] ART & PROGRAMMING [/center]
+Z. Goulet
+
+[center]Music[/center]
+Z. Goulet
+Tom C.
+c.t. Rodel
+
+[center]Supporting artists[/center]
+Adam L. P.
+D. Ramis
+Cullen B.
+
+
+[center] Playtesting  & Feedback [/center]
+Jesse P.
+Canaan B.
+R. Tipparach
+D. Ramis
+The folks at IGDATC
+mom
+
+[center]Special thanks[/center]
+- anyone who owns a zoulet original 
+- crocotile3d
+- godot
+- Dave
+- Ruben
+- The Gamedev Den
+- claude"
+fit_content = true
+scroll_active = false
+
+[node name="Screen" type="MeshInstance3D" parent="." unique_id=354011409]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0)
+mesh = SubResource("PlaneMesh_portrait")
+surface_material_override/0 = ExtResource("2_tvmat")
+
+[node name="BezelTop" type="CSGBox3D" parent="." unique_id=1213172169]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.822, -0.036)
+size = Vector3(0.962, 0.0437, 0.091)
+
+[node name="BezelBottom" type="CSGBox3D" parent="." unique_id=1068255376]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.822, -0.036)
+size = Vector3(0.962, 0.0437, 0.091)
+
+[node name="BezelLeft" type="CSGBox3D" parent="." unique_id=893404251]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.471, 0, -0.036)
+size = Vector3(0.0437, 1.6, 0.091)
+
+[node name="BezelRight" type="CSGBox3D" parent="." unique_id=1180842798]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.471, 0, -0.036)
+size = Vector3(0.0437, 1.6, 0.091)

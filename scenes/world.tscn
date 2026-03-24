@@ -126,6 +126,7 @@
 [ext_resource type="PackedScene" uid="uid://cxbt26jyybmrs" path="res://scenes/PaintingRoot2D_5x3.tscn" id="129_ey67g"]
 [ext_resource type="PackedScene" uid="uid://bq7r4nxt2pgm5" path="res://scenes/objects/CanvasFormatToggle.tscn" id="130_mslh2"]
 [ext_resource type="PackedScene" uid="uid://b2convrtbtn01" path="res://scenes/objects/ConvertAssistantButton.tscn" id="131_mslh2"]
+[ext_resource type="PackedScene" uid="uid://df8i7yfpgundi" path="res://scenes/objects/CreditsTV.tscn" id="133_wt6o6"]
 [ext_resource type="PackedScene" uid="uid://d2lld8pxrphp3" path="res://scenes/objects/SaveAssistantWorkButton.tscn" id="200_savebtn"]
 [ext_resource type="PackedScene" uid="uid://dfcanvasscn1" path="res://scenes/objects/AssistantFinishedCanvas.tscn" id="201_fcanvas"]
 [ext_resource type="Script" uid="uid://nvjrcsa5oaqc" path="res://scripts/BerkeyInteraction.gd" id="berkey_interaction"]
@@ -374,17 +375,17 @@ albedo_color = Color(1.0734373, 1.0734373, 0.15063755, 1)
 albedo_texture = ExtResource("82_mu18u")
 texture_filter = 0
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_j7mh8"]
+[sub_resource type="PlaneMesh" id="PlaneMesh_wt6o6"]
 resource_local_to_scene = true
 size = Vector2(2.5, 3)
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_c3c7d"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_j7mh8"]
 resource_name = "_albedo"
 viewport_path = NodePath("../MirrorNew/SubViewport")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2kaud"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_c3c7d"]
 resource_local_to_scene = true
-albedo_texture = SubResource("ViewportTexture_c3c7d")
+albedo_texture = SubResource("ViewportTexture_j7mh8")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_1v02h"]
 size = Vector2(2.5, 3)
@@ -1794,8 +1795,8 @@ surface_material_override/0 = SubResource("StandardMaterial3D_7b7y8")
 
 [node name="mirror" parent="." unique_id=1626491013 groups=["shop_prop"] instance=ExtResource("39_qaasp")]
 transform = Transform3D(-4.7902194e-08, -0.99488777, 0.10098683, -3.9073655e-08, 0.10098683, 0.99488777, -1, 4.3711392e-08, -4.3711385e-08, 2.8, 1.497, 5.232)
-mesh = SubResource("PlaneMesh_j7mh8")
-surface_material_override/0 = SubResource("StandardMaterial3D_2kaud")
+mesh = SubResource("PlaneMesh_wt6o6")
+surface_material_override/0 = SubResource("StandardMaterial3D_c3c7d")
 show_debug_logs = false
 metadata/mirror = "mirror"
 metadata/shop_item_id = "mirror"
@@ -2328,6 +2329,41 @@ spot_range = 34.999
 spot_attenuation = -0.2
 spot_angle = 87.93
 spot_angle_attenuation = 2.8284266
+
+[node name="CreditsTV" parent="gallery" unique_id=744129836 instance=ExtResource("133_wt6o6")]
+transform = Transform3D(1, 0, 0, 0, 0.5875453, -0.80919135, 0, 0.80919135, 0.5875453, -5.081478, -6.85495, 0)
+credits_text = "[center]CREDITS[/center]
+
+[center] ART & PROGRAMMING [/center]
+Z. Goulet
+
+[center]Music[/center]
+Z. Goulet
+Tom C.
+c.t. Rodel
+
+[center]Supporting artists[/center]
+Adam L. P.
+D. Ramis
+Cullen B.
+
+
+[center] Playtesting  & Feedback [/center]
+Jesse P.
+Canaan B.
+R. Tipparach
+D. Ramis
+The folks at IGDATC
+mom
+
+[center]Special thanks[/center]
+- anyone who owns a zoulet original 
+- crocotile3d
+- godot
+- Dave
+- Ruben
+- The Gamedev Den
+- claude"
 
 [node name="GallerySpawnPoint" type="Node3D" parent="." unique_id=837462901]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.722805, -9.6, 15.43)
