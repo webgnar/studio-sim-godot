@@ -21,8 +21,6 @@ size = Vector3(2, 3.5, 0.3)
 
 [node name="DoorBody" type="RigidBody3D" parent="." unique_id=675657723]
 collision_layer = 2
-axis_lock_angular_x = true
-axis_lock_angular_z = true
 mass = 10.0
 angular_damp = 3.0
 

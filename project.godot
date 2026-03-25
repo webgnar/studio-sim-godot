@@ -66,6 +66,7 @@ PaintingExporter="*res://scripts/PaintingExporter.gd"
 GalleryUploader="*res://scripts/GalleryUploader.gd"
 LocaleManager="*res://scripts/LocaleManager.gd"
 StickerLibrary="*res://scripts/painting/StickerLibrary.gd"
+GameManager="*res://scenes/rubens_coin_pusher/scripts/game_manager.gd"
 SkinLibrary="*res://scripts/SkinLibrary.gd"
 FPSMonitor="*res://scripts/FPSMonitor.gd"
 
@@ -276,6 +277,7 @@ crouch={
 
 [physics]
 
+3d/physics_engine="Jolt Physics"
 3d/sleep_threshold_angular=0.139626
 3d/time_before_sleep=0.2
 3d/solver/contact_max_allowed_penetration=0.001
