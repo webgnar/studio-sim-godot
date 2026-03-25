@@ -1,7 +1,7 @@
 extends Node3D
 
 var wheel_body: AnimatableBody3D
-var rotation_speed: float = 0.75
+var rotation_speed: float = 2
 
 var bonus_queue: int = 0
 var dispense_left: bool = true
@@ -41,17 +41,15 @@ func _on_bonus(body: Node3D):
 var _flash_tween: Tween
 
 func _flash_lights_green():
-	# Kill any existing flash so they don't stack
 	if _flash_tween and _flash_tween.is_running():
 		_flash_tween.kill()
-		for light in top_lights:
-			light.light_color = Color.WHITE
+	_set_lights_color(Color.GREEN)
 	_flash_tween = create_tween()
-	for i in 3:
-		_flash_tween.tween_callback(func(): _set_lights_color(Color.GREEN))
-		_flash_tween.tween_interval(0.12)
-		_flash_tween.tween_callback(func(): _set_lights_color(Color.WHITE))
-		_flash_tween.tween_interval(0.1)
+	_flash_tween.tween_method(_lerp_lights, 0.0, 1.0, 0.4).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUAD)
+
+func _lerp_lights(t: float):
+	var color = Color.GREEN.lerp(Color.WHITE, t)
+	_set_lights_color(color)
 
 func _set_lights_color(color: Color):
 	for light in top_lights:
@@ -73,6 +71,6 @@ func _dispense_next():
 		randf_range(-0.001, 0.001),
 		0
 	)
-	GameManager.spawn_coin(pos, impulse)
+	GameManager.spawn_coin(pos, impulse, PI / 2)
 
 	get_tree().create_timer(0.18).timeout.connect(_dispense_next)

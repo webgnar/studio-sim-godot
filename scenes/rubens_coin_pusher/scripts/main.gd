@@ -7,7 +7,9 @@ func _ready():
 	GameManager.coin_spawn_point = $CoinSpawnBox
 	GameManager.score_3d = $DisplayPanel/Score3D
 	GameManager.coins_3d = $DisplayPanel/Coins3D
+	GameManager.money_3d = $DisplayPanel/Money3D
 	GameManager.interact_prompt = $CoinSlot/InteractPrompt
+	GameManager._update_money_3d()
 
 	_win_sound = AudioStreamPlayer3D.new()
 	_win_sound.stream = preload("res://scenes/rubens_coin_pusher/ingle_win_synth_05.wav")
@@ -35,7 +37,7 @@ func _prespawn_coins():
 	var x_start = -0.28
 	var x_end = 0.28
 	var z_start = -0.57
-	var z_end = -0.21
+	var z_end = -0.28
 	var z = z_start
 	var row = 0
 	while z <= z_end:

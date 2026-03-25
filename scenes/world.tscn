@@ -376,17 +376,17 @@ albedo_color = Color(1.0734373, 1.0734373, 0.15063755, 1)
 albedo_texture = ExtResource("82_mu18u")
 texture_filter = 0
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_c3c7d"]
+[sub_resource type="PlaneMesh" id="PlaneMesh_j7mh8"]
 resource_local_to_scene = true
 size = Vector2(2.5, 3)
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_2kaud"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_c3c7d"]
 resource_name = "_albedo"
 viewport_path = NodePath("../MirrorNew/SubViewport")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7huuw"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2kaud"]
 resource_local_to_scene = true
-albedo_texture = SubResource("ViewportTexture_2kaud")
+albedo_texture = SubResource("ViewportTexture_c3c7d")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_1v02h"]
 size = Vector2(2.5, 3)
@@ -1796,8 +1796,8 @@ surface_material_override/0 = SubResource("StandardMaterial3D_7b7y8")
 
 [node name="mirror" parent="." unique_id=1626491013 groups=["shop_prop"] instance=ExtResource("39_qaasp")]
 transform = Transform3D(-4.7902194e-08, -0.99488777, 0.10098683, -3.9073655e-08, 0.10098683, 0.99488777, -1, 4.3711392e-08, -4.3711385e-08, 2.8, 1.497, 5.232)
-mesh = SubResource("PlaneMesh_c3c7d")
-surface_material_override/0 = SubResource("StandardMaterial3D_7huuw")
+mesh = SubResource("PlaneMesh_j7mh8")
+surface_material_override/0 = SubResource("StandardMaterial3D_2kaud")
 show_debug_logs = false
 metadata/mirror = "mirror"
 metadata/shop_item_id = "mirror"
@@ -2387,8 +2387,9 @@ painting_ui = NodePath("../../PaintingUI_Layer/PaintingUi")
 [node name="ConvertAssistantButton" parent="." unique_id=963421985 instance=ExtResource("131_mslh2")]
 transform = Transform3D(4.371139e-09, -0.1, -8.742278e-09, -0.1, -4.371139e-09, 0, -3.8213711e-16, 8.742278e-09, -0.1, 13.576837, 1.161165, 13.319655)
 
-[node name="CoinPusherMachine" parent="." unique_id=131192629 instance=ExtResource("138_j7mh8")]
+[node name="CoinPusherMachine" parent="." unique_id=131192629 groups=["shop_prop"] instance=ExtResource("138_j7mh8")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.059882, 0, 13.855978)
+metadata/shop_item_id = "coin_pusher"
 
 [editable path="Spotlight1"]
 [editable path="Spotlight2"]

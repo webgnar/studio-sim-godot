@@ -26,4 +26,4 @@ func interact(_interactor) -> void:
 	var pos = spawn_point.global_position
 	pos += Vector3(randf_range(-0.02, 0.02), randf_range(-0.01, 0.01), 0)
 	var impulse = Vector3(randf_range(-0.004, 0.004), randf_range(-0.002, 0.002), -0.015)
-	GameManager.spawn_coin(pos, impulse)
+	GameManager.spawn_coin(pos, impulse, PI / 2)

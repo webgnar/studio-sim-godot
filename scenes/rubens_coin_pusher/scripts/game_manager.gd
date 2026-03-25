@@ -1,9 +1,9 @@
 extends Node
 
 var score: int = 0
-var dollars: int = 10
 var score_3d: Label3D
 var coins_3d: Label3D
+var money_3d: Label3D
 var interact_prompt: Label3D
 var main_scene: Node
 var coin_spawn_point: Node3D
@@ -14,8 +14,6 @@ const MAX_COINS = 500
 var next_ball_at: int = 50
 var balls_pending: int = 0
 var coins_loaded: int = 0
-
-var _font = preload("res://fonts/studio-sim.ttf")
 
 func _ready():
 	pass
@@ -31,12 +29,13 @@ func add_score(amount: int = 1):
 		drop_next_ball()
 
 func add_dollars(amount: int):
-	dollars += amount
+	EconomyManager.add_money(amount, "coin_pusher")
+	_update_money_3d()
 
 func try_insert_dollar() -> bool:
-	if dollars <= 0:
+	if not EconomyManager.can_afford(1):
 		return false
-	dollars -= 1
+	EconomyManager.spend_money(1, "coin_pusher")
 	coins_loaded += 10
 	_update_coins_3d()
 	return true
@@ -51,6 +50,11 @@ func try_shoot_coin() -> bool:
 func _update_coins_3d():
 	if coins_3d:
 		coins_3d.text = "Coins: " + str(coins_loaded)
+	_update_money_3d()
+
+func _update_money_3d():
+	if money_3d:
+		money_3d.text = "$" + str(EconomyManager.get_money())
 
 func drop_next_ball():
 	if balls_pending <= 0 or not main_scene:
@@ -61,7 +65,7 @@ func drop_next_ball():
 	main_scene.add_child(ball)
 	ball.global_position = main_scene.to_global(Vector3(randf_range(-0.08, 0.08), 1.7, randf_range(-0.65, -0.45)))
 
-func spawn_coin(pos: Vector3, impulse: Vector3 = Vector3.ZERO):
+func spawn_coin(pos: Vector3, impulse: Vector3 = Vector3.ZERO, z_rotation: float = 0.0):
 	if not main_scene:
 		return
 	var coins = get_tree().get_nodes_in_group("coins")
@@ -70,5 +74,7 @@ func spawn_coin(pos: Vector3, impulse: Vector3 = Vector3.ZERO):
 	var coin = coin_scene.instantiate()
 	main_scene.add_child(coin)
 	coin.global_position = pos
+	if z_rotation != 0.0:
+		coin.rotation.z = z_rotation
 	if impulse != Vector3.ZERO:
 		coin.apply_central_impulse(impulse)
