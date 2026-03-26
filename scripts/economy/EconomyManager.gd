@@ -13,6 +13,13 @@ signal painting_sold(amount: int, source: String)
 func _ready():
 	money_changed.emit(money)  # Update HUD
 
+func _unhandled_input(event):
+	if not OS.has_feature("editor"):
+		return
+	if event is InputEventKey and event.pressed and event.keycode == KEY_9 and event.ctrl_pressed:
+		add_money(1000, "debug")
+		print("DEBUG: +$1000")
+
 func add_money(amount: int, source: String = "unknown"):
 	"""Add money and emit signals"""
 	money += amount

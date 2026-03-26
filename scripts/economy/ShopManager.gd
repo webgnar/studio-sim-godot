@@ -379,6 +379,13 @@ Meyer himself described the origins of his inventions in deeply personal, spirit
 			"price": 555,
 		},
 		{
+			"id": "coin_pusher",
+			"display_name": "Coin Pusher",
+			"title": "Coin Pusher Machine",
+			"description": "A fully functional arcade coin pusher machine for your studio. Insert coins, watch them fall, and try your luck at the spinning wheel bonus.",
+			"price": 12000,
+		},
+		{
 			"id": "gallery_visitor",
 			"display_name": "Gallery Visitor",
 			"title": "Gallery Visitor Pass",
@@ -417,6 +424,7 @@ func _apply_desc_keys() -> void:
 		"seg": "SHOP_DESC_SEG",
 		"geet": "SHOP_DESC_GEET",
 		"wfc": "SHOP_DESC_WFC",
+		"coin_pusher": "SHOP_DESC_COIN_PUSHER",
 		"gallery_visitor": "SHOP_DESC_GALLERY_VISITOR",
 		"customstickerbutton": "SHOP_DESC_CUSTOM_STICKER",
 	}
