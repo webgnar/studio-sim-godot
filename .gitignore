@@ -1,2 +1,10 @@
 # Godot 4+ specific ignores
 .godot/
+
+# Godot import cache
+*.import
+
+# Temp files
+~*.dll
+*.TMP
+.history/
