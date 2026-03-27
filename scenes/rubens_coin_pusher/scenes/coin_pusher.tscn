@@ -14,6 +14,7 @@
 [ext_resource type="Script" uid="uid://ceto027ue0h4g" path="res://scenes/rubens_coin_pusher/scripts/coin_slot_interaction.gd" id="9"]
 [ext_resource type="Material" uid="uid://dfjjs1rkdw2bi" path="res://materials/metal.tres" id="9_rr50d"]
 [ext_resource type="Script" uid="uid://bfy16i3rkmhjn" path="res://scenes/rubens_coin_pusher/scripts/coin_shoot_interaction.gd" id="10"]
+[ext_resource type="PackedScene" uid="uid://r77i37ju5du6" path="res://models/interactables/gun.glb" id="10_46fq4"]
 [ext_resource type="PackedScene" uid="uid://cnkgo62u3uskx" path="res://scenes/rubens_coin_pusher/coinslot.glb" id="12_ioehx"]
 
 [sub_resource type="StandardMaterial3D" id="s5"]
@@ -175,6 +176,43 @@ emission_energy_multiplier = 1.5
 
 [sub_resource type="BoxMesh" id="s20"]
 size = Vector3(0.08, 0.05, 0.05)
+
+[sub_resource type="Animation" id="Animation_mnu36"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("top:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(-0.72265625, 1.3046875, 0.03125)]
+}
+
+[sub_resource type="Animation" id="Animation_vmcce"]
+resource_name = "fire"
+length = 0.2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("top:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.033333335, 0.2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(-0.72265625, 1.3046875, 0.03125), Vector3(0.3925972, 1.3046875, 0.03125), Vector3(-0.72265625, 1.3046875, 0.03125)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_qbh0s"]
+_data = {
+&"RESET": SubResource("Animation_mnu36"),
+&"fire": SubResource("Animation_vmcce")
+}
 
 [sub_resource type="BoxShape3D" id="coin_shoot_col_shape"]
 size = Vector3(0.6, 0.6, 0.3)
@@ -509,8 +547,15 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2022772, -0.30802906)
 
 [node name="Mesh" type="MeshInstance3D" parent="CoinSpawnBox" unique_id=654799416]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.032)
+visible = false
 material_override = SubResource("s19")
 mesh = SubResource("s20")
+
+[node name="Gun" parent="CoinSpawnBox" unique_id=1705304363 instance=ExtResource("10_46fq4")]
+transform = Transform3D(0, 0, -0.029999996, 0, 0.029999997, 0, 0.029999996, 0, 0, 0, -0.028640985, 0.10114662)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="CoinSpawnBox/Gun" unique_id=705196295]
+libraries/ = SubResource("AnimationLibrary_qbh0s")
 
 [node name="CoinShootArea" type="StaticBody3D" parent="." unique_id=1469301002 groups=["interactable"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.3, -0.3)
@@ -635,3 +680,5 @@ surface_material_override/0 = SubResource("cabinet_mat")
 surface_material_override/1 = SubResource("cabinet_back_mat")
 
 [connection signal="body_entered" from="ScoreZone" to="." method="_on_score"]
+
+[editable path="CoinSpawnBox/Gun"]

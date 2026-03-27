@@ -2,7 +2,9 @@ extends Node3D
 class_name Cyclone
 
 @export var light_parent: Node3D
-@export var result_label: Label3D
+@export var result_label_1: Label3D
+@export var result_label_2: Label3D
+@export var result_label_3: Label3D
 
 var lights: Array[MeshInstance3D]
 var mat_light_off: Material
@@ -52,3 +54,17 @@ func next_light() -> void:
 func is_winner(button_number: int) -> bool:
 	var idx := win_index[button_number - 1]
 	return idx != -1 and current_light == idx
+
+
+func get_result_label(button_number: int) -> Label3D:
+	match button_number:
+		1: return result_label_1
+		2: return result_label_2
+		3: return result_label_3
+	return null
+
+
+func clear_all_labels() -> void:
+	for lbl in [result_label_1, result_label_2, result_label_3]:
+		if lbl:
+			lbl.text = ""

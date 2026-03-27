@@ -21,6 +21,9 @@ func interact(_interactor) -> void:
 		return
 	_zap_sound.play()
 	var spawn_point = GameManager.coin_spawn_point
+	var anim = spawn_point.get_node_or_null("Gun/AnimationPlayer")
+	if anim:
+		anim.play("fire")
 	if not spawn_point:
 		return
 	var dir = -spawn_point.global_transform.basis.z

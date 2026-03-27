@@ -14,11 +14,31 @@ height = 3.0233154
 
 [node name="Cyclone" type="Node3D" unique_id=630081305]
 
-[node name="UpdatedCyclone" parent="." unique_id=21331279 node_paths=PackedStringArray("light_parent", "result_label") instance=ExtResource("1_ipdbj")]
+[node name="UpdatedCyclone" parent="." unique_id=21331279 node_paths=PackedStringArray("light_parent", "result_label_1", "result_label_2", "result_label_3") instance=ExtResource("1_ipdbj")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.4651785, 0, 23.942663)
 script = ExtResource("2_052mr")
 light_parent = NodePath("Cyclone/LightParent")
-result_label = NodePath("../Label3D")
+result_label_1 = NodePath("Cyclone/CycloneJackpot1/JackpotDisplay1/Label3D")
+result_label_2 = NodePath("Cyclone/CycloneJackpot2/JackpotDisplay2/Label3D")
+result_label_3 = NodePath("Cyclone/CycloneJackpot3/JackpotDisplay3/Label3D")
+
+[node name="Label3D" type="Label3D" parent="UpdatedCyclone/Cyclone/CycloneJackpot1/JackpotDisplay1" parent_id_path=PackedInt32Array(21331279, 413491132) index="0" unique_id=836091663]
+transform = Transform3D(1, 0, 0, -1.4901161e-08, 1, 0, 7.450581e-09, -1.4901161e-08, 1, -0.08474159, 0.06970835, -0.029028654)
+billboard = 1
+font = ExtResource("4_7a1v1")
+font_size = 190
+
+[node name="Label3D" type="Label3D" parent="UpdatedCyclone/Cyclone/CycloneJackpot2/JackpotDisplay2" parent_id_path=PackedInt32Array(21331279, 1452853747) index="0" unique_id=836091664]
+transform = Transform3D(1, 0, -5.9604645e-08, -1.4901161e-08, 1, -5.9604645e-08, -2.9802322e-08, 1.4901161e-08, 1, -0.24632311, 0.20262718, -0.03651917)
+billboard = 1
+font = ExtResource("4_7a1v1")
+font_size = 190
+
+[node name="Label3D" type="Label3D" parent="UpdatedCyclone/Cyclone/CycloneJackpot3/JackpotDisplay3" parent_id_path=PackedInt32Array(21331279, 1977019954) index="0" unique_id=836091665]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.25096703, 0.20644665, 0)
+billboard = 1
+font = ExtResource("4_7a1v1")
+font_size = 190
 
 [node name="button" type="StaticBody3D" parent="." unique_id=376741156]
 
@@ -53,11 +73,6 @@ shape = SubResource("BoxShape3D_7a1v1")
 script = ExtResource("3_052mr")
 cyclone = NodePath("../../UpdatedCyclone")
 button_number = 2
-
-[node name="Label3D" type="Label3D" parent="." unique_id=836091663]
-transform = Transform3D(0.885418, 0, 0.46479568, 0, 1, 0, -0.46479568, 0, 0.885418, 0.0010669231, 0.40238494, 0.080770314)
-billboard = 1
-font = ExtResource("4_7a1v1")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=932501507]
 collision_layer = 2

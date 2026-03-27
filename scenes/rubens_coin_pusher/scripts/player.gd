@@ -117,6 +117,9 @@ func _handle_interact():
 		return
 	_zap_sound.play()
 	var spawn = GameManager.coin_spawn_point
+	var anim = spawn.get_node_or_null("Gun/AnimationPlayer")
+	if anim:
+		anim.play("fire")
 	var pos = spawn.global_position
 	pos += Vector3(randf_range(-0.02, 0.02), 0, 0)
 	var dir = -spawn.global_transform.basis.z

@@ -12,13 +12,9 @@ func _on_interacted(_player: PlayerInteractionComponent) -> void:
 		return
 	if cyclone.stopped:
 		cyclone.stopped = false
-		if cyclone.result_label:
-			cyclone.result_label.text = ""
+		cyclone.clear_all_labels()
 	else:
 		cyclone.stopped = true
-		if cyclone.is_winner(button_number):
-			if cyclone.result_label:
-				cyclone.result_label.text = "Winner!"
-		else:
-			if cyclone.result_label:
-				cyclone.result_label.text = "Loser!"
+		var lbl := cyclone.get_result_label(button_number)
+		if lbl:
+			lbl.text = "Winner!" if cyclone.is_winner(button_number) else "Loser!"
