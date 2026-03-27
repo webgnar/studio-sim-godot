@@ -31,6 +31,9 @@ func _ready():
 	initialize_steam()
 	setup_achievements()
 	setup_statistics()
+	# Retroactively unlock export achievements based on save data (fixes players affected by stat-tracking bug)
+	if WorldStateManager:
+		WorldStateManager.world_state_loaded.connect(_check_retroactive_export_achievements, CONNECT_ONE_SHOT)
 
 func _process(_delta: float):
 	# Run Steam callbacks every frame (required for events)
@@ -85,6 +88,36 @@ func initialize_steam() -> void:
 
 	steam_initialized.emit(true)
 
+func _check_retroactive_export_achievements() -> void:
+	"""On load, count shipped paintings from save data and unlock any earned achievements retroactively"""
+	var all_paintings = WorldStateManager.get_all_paintings()
+	var shipped_count = 0
+	for p in all_paintings:
+		if p.get("status", "") == "SHIPPED":
+			shipped_count += 1
+
+	if shipped_count == 0:
+		return
+
+	# Use whichever is higher: the Steam-tracked stat or the actual save data count
+	var tracked = get_stat("STAT_PAINTINGS_EXPORTED")
+	if shipped_count > tracked:
+		set_stat_int("STAT_PAINTINGS_EXPORTED", shipped_count)
+		if debug_mode:
+			print("SteamManager: Retroactive stat update — STAT_PAINTINGS_EXPORTED: %d → %d" % [tracked, shipped_count])
+
+	var final_count = get_stat("STAT_PAINTINGS_EXPORTED")
+	if final_count >= 1:
+		unlock_achievement("ACH_EXPORT_PAINTING")
+	if final_count >= 5:
+		unlock_achievement("ACH_EXPORT_5")
+	if final_count >= 10:
+		unlock_achievement("ACH_EXPORT_10")
+	if final_count >= 20:
+		unlock_achievement("ACH_EXPORT_20")
+	if final_count >= 50:
+		unlock_achievement("ACH_EXPORT_50")
+
 func setup_achievements() -> void:
 	"""Define all achievements (must match Steamworks backend)"""
 	achievements = {
@@ -111,6 +144,8 @@ func setup_achievements() -> void:
 		# Shop
 		"ACH_BRAVE_NEW_WORLD": false,  # Purchase all three free energy devices (GEET, Water Fuel Cell, SEG)
 		"ACH_CONSCIOUSNESS_CREATES_REALITY": false,  # Purchase the Custom Sticker button
+		"ACH_COIN_PUSHER": false,  # Purchase the coin pusher machine
+		"ACH_STUDIO_ASSISTANT": false,  # Purchase the studio assistant
 	}
 
 func setup_statistics() -> void:
@@ -207,13 +242,13 @@ func set_stat_int(stat_id: String, value: int) -> void:
 		push_warning("SteamManager: Unknown stat ID: %s" % stat_id)
 		return
 
+	# Always update local state first so get_stat() reflects the change even if Steam sync fails
+	statistics[stat_id] = value
+
 	# Update Steam
 	if not Steam.setStatInt(stat_id, value):
 		# push_error("SteamManager: Failed to set stat: %s" % stat_id)  # Commented until Steamworks backend configured
 		return
-
-	# Update local state
-	statistics[stat_id] = value
 
 	if debug_mode:
 		print("SteamManager: Stat updated: %s = %d" % [stat_id, value])

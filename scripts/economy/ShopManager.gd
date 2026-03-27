@@ -114,6 +114,11 @@ func purchase(item_id: String) -> bool:
 	item_purchased.emit(item_id)
 	print("ShopManager: Purchased '%s' for $%d" % [item["display_name"], item["price"]])
 
+	# Achievement: Coin Pusher
+	if item_id == "coin_pusher":
+		if SteamManager:
+			SteamManager.unlock_achievement("ACH_COIN_PUSHER")
+
 	# Achievement: Consciousness Creates Reality
 	if item_id == "customstickerbutton":
 		if SteamManager:

@@ -94,6 +94,9 @@ func purchase_studio_assistant() -> bool:
 	print("AutomationManager: Studio Assistant purchased! Passive income active.")
 	assistant_purchased.emit()
 
+	if SteamManager:
+		SteamManager.unlock_achievement("ACH_STUDIO_ASSISTANT")
+
 	return true
 
 func get_assistant_status() -> Dictionary:
