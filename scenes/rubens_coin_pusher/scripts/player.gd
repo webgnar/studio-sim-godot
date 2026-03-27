@@ -116,7 +116,9 @@ func _handle_interact():
 	if not GameManager.try_shoot_coin():
 		return
 	_zap_sound.play()
-	var pos = GameManager.coin_spawn_point.global_position
-	pos += Vector3(randf_range(-0.02, 0.02), randf_range(-0.01, 0.01), 0)
-	var impulse = Vector3(randf_range(-0.004, 0.004), randf_range(-0.002, 0.002), -0.015)
+	var spawn = GameManager.coin_spawn_point
+	var pos = spawn.global_position
+	pos += Vector3(randf_range(-0.02, 0.02), 0, 0)
+	var dir = -spawn.global_transform.basis.z
+	var impulse = dir * 0.015 + Vector3(randf_range(-0.004, 0.004), 0, 0)
 	GameManager.spawn_coin(pos, impulse)

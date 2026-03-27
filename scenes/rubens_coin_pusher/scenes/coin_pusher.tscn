@@ -505,11 +505,10 @@ mesh = SubResource("s40")
 shape = SubResource("s41")
 
 [node name="CoinSpawnBox" type="Node3D" parent="." unique_id=1768390360]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2239305, -0.5867461)
-visible = false
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2022772, -0.30802906)
 
 [node name="Mesh" type="MeshInstance3D" parent="CoinSpawnBox" unique_id=654799416]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.042495966, 0.45847186)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.032)
 material_override = SubResource("s19")
 mesh = SubResource("s20")
 
