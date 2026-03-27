@@ -1769,7 +1769,7 @@ transform = Transform3D(-4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0, 1, 0, 0
 [node name="redbutton" parent="buttonRed" unique_id=361325965 instance=ExtResource("80_oexs8")]
 transform = Transform3D(0.94, 0, 0, 0, 0.94, 0, 0, 0, 0.94, 0, 0.5275917, 0)
 
-[node name="button" parent="buttonRed/redbutton" index="0" unique_id=53996497]
+[node name="button" parent="buttonRed/redbutton" index="0"]
 surface_material_override/0 = SubResource("StandardMaterial3D_wt6o6")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="buttonRed/redbutton" unique_id=1924593568]
@@ -1791,7 +1791,7 @@ custom_interaction_distance = 15.0
 [node name="buttonGreen" parent="." unique_id=1183084891 instance=ExtResource("31_grmox")]
 transform = Transform3D(-4.371139e-09, 0.1, 0, -0.1, -4.371139e-09, 0, 0, 0, 0.1, -3.4649062, 2.0035036, 3.9931483)
 
-[node name="buttonGreen" parent="buttonGreen/green button" parent_id_path=PackedInt32Array(1183084891, 1386671482) index="0" unique_id=507039216]
+[node name="buttonGreen" parent="buttonGreen/green button" parent_id_path=PackedInt32Array(1183084891, 1386671482) index="0" unique_id=1080363823]
 surface_material_override/0 = SubResource("StandardMaterial3D_7b7y8")
 
 [node name="mirror" parent="." unique_id=1626491013 groups=["shop_prop"] instance=ExtResource("39_qaasp")]
@@ -1967,6 +1967,9 @@ metadata/shop_item_id = "fern_plant"
 [node name="madpalm" parent="greenhouse" unique_id=1557607760 groups=["shop_prop"] instance=ExtResource("105_cmoy1")]
 transform = Transform3D(0.057448704, 0, 0.19157152, 0, 0.2, 0, -0.19157152, 0, 0.057448704, -2.1619606, 2.6579928, 1.2772312)
 metadata/shop_item_id = "madpalm"
+
+[node name="SpotLight3D2" type="SpotLight3D" parent="greenhouse" unique_id=1116549202]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, -8, 3, -2)
 
 [node name="Door" parent="." unique_id=1914412036 groups=["no_outline"] instance=ExtResource("83_kcpaj")]
 transform = Transform3D(-4.196293e-08, 0, -0.95, 0, 0.95, 0, 0.96, 0, -4.152582e-08, 3.8344553, 1.6471603, 0.54472053)

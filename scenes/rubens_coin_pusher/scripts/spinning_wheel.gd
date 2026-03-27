@@ -12,6 +12,9 @@ var right_dispenser: Node3D
 var top_lights: Array[Light3D] = []
 var _jingle_sound: AudioStreamPlayer
 
+var _shader_mesh: MeshInstance3D
+var _shader_show_id: int = 0
+
 func _ready():
 	wheel_body = $WheelBody
 	get_parent().get_node("BonusZone").body_entered.connect(_on_bonus)
@@ -26,6 +29,10 @@ func _ready():
 	_jingle_sound.volume_db = -5.0
 	add_child(_jingle_sound)
 
+	_shader_mesh = get_parent().get_node_or_null("Shader")
+	if _shader_mesh:
+		_shader_mesh.visible = false
+
 func _physics_process(delta):
 	wheel_body.rotation.z += rotation_speed * delta
 
@@ -37,6 +44,18 @@ func _on_bonus(body: Node3D):
 			_dispense_next()
 		_flash_lights_green()
 		_jingle_sound.play()
+		_show_shader_briefly(3.0)
+
+func _show_shader_briefly(duration: float):
+	if not _shader_mesh:
+		return
+	_shader_mesh.visible = true
+	_shader_show_id += 1
+	var my_id := _shader_show_id
+	get_tree().create_timer(duration).timeout.connect(func():
+		if _shader_show_id == my_id:
+			_shader_mesh.visible = false
+	)
 
 var _flash_tween: Tween
 
