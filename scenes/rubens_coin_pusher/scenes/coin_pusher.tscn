@@ -1,14 +1,20 @@
 [gd_scene format=3 uid="uid://8m5s44pc8lsn"]
 
 [ext_resource type="Script" uid="uid://dqvgjfag4f2ph" path="res://scenes/rubens_coin_pusher/scripts/main.gd" id="1"]
+[ext_resource type="Material" uid="uid://cf5qhur1stvis" path="res://materials/painting7.tres" id="2_rr50d"]
 [ext_resource type="Script" uid="uid://c6lcyubonuhp6" path="res://scenes/rubens_coin_pusher/scripts/spinning_wheel.gd" id="3"]
 [ext_resource type="Script" uid="uid://t4m20l25pps" path="res://scenes/rubens_coin_pusher/scripts/coin_pusher.gd" id="4"]
-[ext_resource type="Texture2D" uid="uid://ct4taeh5oytxp" path="res://scenes/rubens_coin_pusher/Tom_ship_bkg.png" id="5"]
-[ext_resource type="Texture2D" uid="uid://by8p4ohsiu05s" path="res://scenes/rubens_coin_pusher/tom_bkg_2.png" id="6"]
-[ext_resource type="ArrayMesh" uid="uid://2eujcmpvuwuk" path="res://scenes/rubens_coin_pusher/cabinet.obj" id="7"]
+[ext_resource type="PackedScene" uid="uid://csrfbtugpo6x6" path="res://scenes/rubens_coin_pusher/cloud.glb" id="4_ioehx"]
+[ext_resource type="Texture2D" uid="uid://ducmwegtnuwhr" path="res://scenes/rubens_coin_pusher/Tom_ship_bkg.png" id="5"]
+[ext_resource type="Material" uid="uid://dnkxcpkaygoci" path="res://materials/orange metal.tres" id="5_rr50d"]
+[ext_resource type="Texture2D" uid="uid://c0vn8autcufvt" path="res://scenes/rubens_coin_pusher/tom_bkg_2.png" id="6"]
+[ext_resource type="Material" uid="uid://bivhmxyal2g73" path="res://materials/water_tank.tres" id="6_ioehx"]
+[ext_resource type="ArrayMesh" uid="uid://cvgs807nfwatv" path="res://scenes/rubens_coin_pusher/cabinet.obj" id="7"]
 [ext_resource type="FontFile" uid="uid://tmjyio0w6cu0" path="res://fonts/studio-sim.ttf" id="8"]
 [ext_resource type="Script" uid="uid://ceto027ue0h4g" path="res://scenes/rubens_coin_pusher/scripts/coin_slot_interaction.gd" id="9"]
+[ext_resource type="Material" uid="uid://dfjjs1rkdw2bi" path="res://materials/metal.tres" id="9_rr50d"]
 [ext_resource type="Script" uid="uid://bfy16i3rkmhjn" path="res://scenes/rubens_coin_pusher/scripts/coin_shoot_interaction.gd" id="10"]
+[ext_resource type="PackedScene" uid="uid://cnkgo62u3uskx" path="res://scenes/rubens_coin_pusher/coinslot.glb" id="12_ioehx"]
 
 [sub_resource type="StandardMaterial3D" id="s5"]
 albedo_color = Color(0.15, 0.15, 0.18, 1)
@@ -22,9 +28,6 @@ size = Vector3(0.71, 0.88, 0.99)
 [sub_resource type="PhysicsMaterial" id="s9"]
 friction = 0.85
 bounce = 0.05
-
-[sub_resource type="StandardMaterial3D" id="s8"]
-albedo_color = Color(0.12, 0.35, 0.12, 1)
 
 [sub_resource type="BoxMesh" id="s10"]
 size = Vector3(0.65, 0.02, 0.75)
@@ -98,13 +101,47 @@ emission_energy_multiplier = 0.5
 [sub_resource type="BoxMesh" id="s37"]
 size = Vector3(0.06, 0.08, 0.06)
 
+[sub_resource type="Animation" id="Animation_ioehx"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("default:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_46fq4"]
+resource_name = "float"
+length = 8.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("default:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 2, 4, 6, 8),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, -0.007983565, 0), Vector3(0, 0, 0), Vector3(0, 0.014933944, 0), Vector3(0, 0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_mnu36"]
+_data = {
+&"RESET": SubResource("Animation_ioehx"),
+&"float": SubResource("Animation_46fq4")
+}
+
 [sub_resource type="PhysicsMaterial" id="s27"]
 friction = 0.2
 bounce = 0.4
-
-[sub_resource type="StandardMaterial3D" id="s26"]
-albedo_color = Color(0.5, 0.5, 0.55, 1)
-metallic = 0.7
 
 [sub_resource type="CylinderMesh" id="s28"]
 top_radius = 0.04
@@ -115,22 +152,14 @@ height = 0.02
 height = 0.02
 radius = 0.04
 
-[sub_resource type="StandardMaterial3D" id="s25"]
-albedo_color = Color(0.6, 0.32, 0.12, 1)
-
 [sub_resource type="BoxMesh" id="s30"]
-size = Vector3(0.28, 0.10, 0.02)
+size = Vector3(0.28, 0.1, 0.02)
 
 [sub_resource type="BoxShape3D" id="s31"]
-size = Vector3(0.28, 0.10, 0.02)
+size = Vector3(0.28, 0.1, 0.02)
 
 [sub_resource type="BoxShape3D" id="s32"]
 size = Vector3(0.28515625, 0.20180663, 0.08)
-
-[sub_resource type="StandardMaterial3D" id="s39"]
-albedo_color = Color(0.55, 0.55, 0.6, 1)
-metallic = 0.7
-roughness = 0.3
 
 [sub_resource type="BoxMesh" id="s40"]
 size = Vector3(0.63, 0.04, 0.375)
@@ -218,7 +247,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.89, -0.575)
 physics_material_override = SubResource("s9")
 
 [node name="Mesh" type="MeshInstance3D" parent="Platform" unique_id=1429646152]
-material_override = SubResource("s8")
+material_override = ExtResource("2_rr50d")
 mesh = SubResource("s10")
 
 [node name="Col" type="CollisionShape3D" parent="Platform" unique_id=918719254]
@@ -253,6 +282,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.35, -0.05)
 script = ExtResource("10")
 
 [node name="Mesh" type="MeshInstance3D" parent="FrontGlass" unique_id=435863288]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00029736757, 0, -2.9444695e-05)
 material_override = SubResource("s22")
 mesh = SubResource("s23")
 
@@ -340,15 +370,31 @@ mesh = SubResource("light_bulb_mesh")
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -0.25, 1.68, -0.6)
 
 [node name="Mesh" type="MeshInstance3D" parent="LeftDispenser" unique_id=1831600759]
+visible = false
 material_override = SubResource("s38")
 mesh = SubResource("s37")
+
+[node name="default" parent="LeftDispenser" unique_id=1484520437 instance=ExtResource("4_ioehx")]
+transform = Transform3D(-5.398029e-23, 5.551115e-16, -0.04, -0.04, 2.220446e-16, 2.5663952e-16, 1.1102232e-16, 0.04, 5.551115e-16, 0, 0, 0)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="LeftDispenser" unique_id=2048368187]
+libraries/ = SubResource("AnimationLibrary_mnu36")
+autoplay = &"float"
 
 [node name="RightDispenser" type="Node3D" parent="." unique_id=1791599192]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0.25, 1.68, -0.6)
 
 [node name="Mesh" type="MeshInstance3D" parent="RightDispenser" unique_id=388378872]
+visible = false
 material_override = SubResource("s38")
 mesh = SubResource("s37")
+
+[node name="default" parent="RightDispenser" unique_id=898105029 instance=ExtResource("4_ioehx")]
+transform = Transform3D(-2.3488223e-23, -3.4969112e-09, 0.04, -0.04, 2.220446e-16, 2.566395e-16, -1.110223e-16, -0.04, -3.4969112e-09, 0, 0, 0)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="RightDispenser" unique_id=2065565721]
+libraries/ = SubResource("AnimationLibrary_mnu36")
+autoplay = &"float"
 
 [node name="SpinningWheel" type="Node3D" parent="." unique_id=1712728950]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, -0.724633)
@@ -359,7 +405,7 @@ physics_material_override = SubResource("s27")
 
 [node name="HubMesh" type="MeshInstance3D" parent="SpinningWheel/WheelBody" unique_id=404949903]
 transform = Transform3D(1, 0, 0, 0, -3.8242848e-05, -0.9999871, 0, 10.564351, -3.6199435e-06, 0, 0, -0.07387406)
-material_override = SubResource("s26")
+material_override = ExtResource("6_ioehx")
 mesh = SubResource("s28")
 
 [node name="HubCol" type="CollisionShape3D" parent="SpinningWheel/WheelBody" unique_id=1592983352]
@@ -368,7 +414,7 @@ shape = SubResource("s29")
 
 [node name="Spoke0Mesh" type="MeshInstance3D" parent="SpinningWheel/WheelBody" unique_id=1782186827]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.14, 0, 0)
-material_override = SubResource("s25")
+material_override = ExtResource("5_rr50d")
 mesh = SubResource("s30")
 
 [node name="Spoke0Col" type="CollisionShape3D" parent="SpinningWheel/WheelBody" unique_id=300433089]
@@ -377,7 +423,7 @@ shape = SubResource("s31")
 
 [node name="Spoke1Mesh" type="MeshInstance3D" parent="SpinningWheel/WheelBody" unique_id=1506511753]
 transform = Transform3D(0.7071068, -0.7071068, 0, 0.7071068, 0.7071068, 0, 0, 0, 1, 0.09899, 0.09899, 0)
-material_override = SubResource("s25")
+material_override = ExtResource("5_rr50d")
 mesh = SubResource("s30")
 
 [node name="Spoke1Col" type="CollisionShape3D" parent="SpinningWheel/WheelBody" unique_id=264664486]
@@ -386,7 +432,7 @@ shape = SubResource("s31")
 
 [node name="Spoke2Mesh" type="MeshInstance3D" parent="SpinningWheel/WheelBody" unique_id=1124702860]
 transform = Transform3D(0, -1, 0, 1, 0, 0, 0, 0, 1, 0, 0.14, 0)
-material_override = SubResource("s25")
+material_override = ExtResource("5_rr50d")
 mesh = SubResource("s30")
 
 [node name="Spoke2Col" type="CollisionShape3D" parent="SpinningWheel/WheelBody" unique_id=1593660648]
@@ -395,7 +441,7 @@ shape = SubResource("s31")
 
 [node name="Spoke3Mesh" type="MeshInstance3D" parent="SpinningWheel/WheelBody" unique_id=481871960]
 transform = Transform3D(-0.7071068, -0.7071068, 0, 0.7071068, -0.7071068, 0, 0, 0, 1, -0.09899, 0.09899, 0)
-material_override = SubResource("s25")
+material_override = ExtResource("5_rr50d")
 mesh = SubResource("s30")
 
 [node name="Spoke3Col" type="CollisionShape3D" parent="SpinningWheel/WheelBody" unique_id=2103729256]
@@ -404,7 +450,7 @@ shape = SubResource("s31")
 
 [node name="Spoke4Mesh" type="MeshInstance3D" parent="SpinningWheel/WheelBody" unique_id=889775005]
 transform = Transform3D(-1, 0, 0, 0, -1, 0, 0, 0, 1, -0.14, 0, 0)
-material_override = SubResource("s25")
+material_override = ExtResource("5_rr50d")
 mesh = SubResource("s30")
 
 [node name="Spoke4Col" type="CollisionShape3D" parent="SpinningWheel/WheelBody" unique_id=1274589462]
@@ -413,7 +459,7 @@ shape = SubResource("s31")
 
 [node name="Spoke5Mesh" type="MeshInstance3D" parent="SpinningWheel/WheelBody" unique_id=1927418830]
 transform = Transform3D(-0.7071068, 0.7071068, 0, -0.7071068, -0.7071068, 0, 0, 0, 1, -0.09899, -0.09899, 0)
-material_override = SubResource("s25")
+material_override = ExtResource("5_rr50d")
 mesh = SubResource("s30")
 
 [node name="Spoke5Col" type="CollisionShape3D" parent="SpinningWheel/WheelBody" unique_id=1164787324]
@@ -422,7 +468,7 @@ shape = SubResource("s31")
 
 [node name="Spoke6Mesh" type="MeshInstance3D" parent="SpinningWheel/WheelBody" unique_id=233828908]
 transform = Transform3D(0, 1, 0, -1, 0, 0, 0, 0, 1, 0, -0.14, 0)
-material_override = SubResource("s25")
+material_override = ExtResource("5_rr50d")
 mesh = SubResource("s30")
 
 [node name="Spoke6Col" type="CollisionShape3D" parent="SpinningWheel/WheelBody" unique_id=1561295935]
@@ -431,7 +477,7 @@ shape = SubResource("s31")
 
 [node name="Spoke7Mesh" type="MeshInstance3D" parent="SpinningWheel/WheelBody" unique_id=1575168628]
 transform = Transform3D(0.7071068, 0.7071068, 0, -0.7071068, 0.7071068, 0, 0, 0, 1, 0.09899, -0.09899, 0)
-material_override = SubResource("s25")
+material_override = ExtResource("5_rr50d")
 mesh = SubResource("s30")
 
 [node name="Spoke7Col" type="CollisionShape3D" parent="SpinningWheel/WheelBody" unique_id=1714254585]
@@ -452,7 +498,7 @@ script = ExtResource("4")
 
 [node name="Mesh" type="MeshInstance3D" parent="CoinPusher" unique_id=686420824]
 transform = Transform3D(1.088839, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
-material_override = SubResource("s39")
+material_override = ExtResource("9_rr50d")
 mesh = SubResource("s40")
 
 [node name="Col" type="CollisionShape3D" parent="CoinPusher" unique_id=1570350078]
@@ -460,6 +506,7 @@ shape = SubResource("s41")
 
 [node name="CoinSpawnBox" type="Node3D" parent="." unique_id=1768390360]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2239305, -0.5867461)
+visible = false
 
 [node name="Mesh" type="MeshInstance3D" parent="CoinSpawnBox" unique_id=654799416]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.042495966, 0.45847186)
@@ -535,6 +582,7 @@ script = ExtResource("9")
 shape = SubResource("coin_slot_col_shape")
 
 [node name="SlotMesh" type="MeshInstance3D" parent="CoinSlot" unique_id=1391440282]
+visible = false
 material_override = SubResource("coin_slot_mat")
 mesh = SubResource("coin_slot_mesh")
 
@@ -546,6 +594,9 @@ modulate = Color(1, 1, 1, 0.9)
 font = ExtResource("8")
 font_size = 28
 outline_size = 6
+
+[node name="default" parent="CoinSlot" unique_id=408952409 instance=ExtResource("12_ioehx")]
+transform = Transform3D(-2.6226832e-09, 0, 0.06, 0, 0.06, 0, -0.06, 0, -2.6226832e-09, 0, 0, 0)
 
 [node name="DisplayPanel" type="MeshInstance3D" parent="." unique_id=153508566]
 transform = Transform3D(1, 0, 0, 0, 1.2135603, 0, 0, 0, 1, 0, 1.6388417, -0.68141526)

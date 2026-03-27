@@ -1,0 +1,15 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://dfjjs1rkdw2bi"]
+
+[ext_resource type="Texture2D" uid="uid://hrd8j1jg0hos" path="res://sprites/textures/metal_18-512x512.png" id="1_bad26"]
+[ext_resource type="Texture2D" uid="uid://bdjgb5bn2m778" path="res://sprites/normals/metal_18-512x512_normal.png" id="2_bad26"]
+
+[resource]
+albedo_texture = ExtResource("1_bad26")
+metallic = 1.0
+roughness = 0.0
+emission_energy_multiplier = 10.61
+normal_enabled = true
+normal_scale = 1.43
+normal_texture = ExtResource("2_bad26")
+uv1_scale = Vector3(-0.26, -0.321, -0.089)
+texture_filter = 0
