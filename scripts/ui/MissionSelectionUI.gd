@@ -569,8 +569,7 @@ func show_live_results_for_mission(result: ValidationResult, mission: PaintingMi
 	is_showing_live_results = true
 	showing_results = true
 	preview_content.visible = false
-	var painting_system = PaintingModeManager.painting_system_2d
-	results_display.show_live_results(result, mission, painting_system)
+	results_display.show_live_results(result, mission)
 
 func _hide_results_view():
 	"""Switch back to normal preview content"""

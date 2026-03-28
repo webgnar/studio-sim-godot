@@ -12,6 +12,7 @@ func _ready():
 	body_entered.connect(_on_body_entered)
 	set_process(false)
 	set_collision_mask_value(3, true)  # Also detect CarryablePainting layer
+	set_collision_mask_value(8, true)  # Also detect basketball layer
 
 func _process(_delta):
 	if _death_camera and _target_player:
@@ -20,6 +21,8 @@ func _process(_delta):
 func _on_body_entered(body):
 	if body.is_in_group("player") and not _is_respawning:
 		_respawn(body)
+	elif body.is_in_group("respawnable"):
+		body.respawn()
 	elif body is CarryablePainting:
 		body.queue_free()
 

@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://b2w7kknvqy8kc"]
 
 [ext_resource type="PackedScene" uid="uid://dl3mc6he0u4qo" path="res://models/interactables/basketball_hoop.glb" id="1_avwpq"]
+[ext_resource type="Script" uid="uid://bkm63rcxufb06" path="res://scripts/objects/basketball_hoop.gd" id="2_hoop"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_0mjjj"]
 size = Vector3(9.197296, 9.023399, 1)
@@ -8,11 +9,23 @@ size = Vector3(9.197296, 9.023399, 1)
 [sub_resource type="BoxShape3D" id="BoxShape3D_ndywt"]
 size = Vector3(1.9143066, 1, 2.3359985)
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_avwpq"]
+size = Vector3(1, 21.88874, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_4vyy7"]
+size = Vector3(0.29833984, 3.2995605, 2.1118774)
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_hoop"]
+height = 0.4
+radius = 0.72
+
 [node name="BasketballHoop" type="Node3D" unique_id=641032447]
+script = ExtResource("2_hoop")
 
 [node name="default" parent="." unique_id=544110314 instance=ExtResource("1_avwpq")]
 
 [node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=208420568]
+collision_layer = 2
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" unique_id=28868015]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.46567822, 5.823865, 3.077424)
@@ -21,3 +34,40 @@ shape = SubResource("BoxShape3D_0mjjj")
 [node name="CollisionShape3D2" type="CollisionShape3D" parent="StaticBody3D" unique_id=2052653114]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.08947754, 2.5779753, 4.733886)
 shape = SubResource("BoxShape3D_ndywt")
+
+[node name="CollisionShape3D3" type="CollisionShape3D" parent="StaticBody3D" unique_id=1520244576]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -6.5522194, -7.5301743)
+shape = SubResource("BoxShape3D_avwpq")
+
+[node name="rim wall" type="CollisionShape3D" parent="StaticBody3D" unique_id=2086740190]
+transform = Transform3D(0.86125684, 0, -0.5081699, 0, 1, 0, 0.5081699, 0, 0.86125684, -1.9362878, 1.4459739, 6.8173003)
+shape = SubResource("BoxShape3D_4vyy7")
+
+[node name="rim wall2" type="CollisionShape3D" parent="StaticBody3D" unique_id=1779796959]
+transform = Transform3D(0.01642277, 0, -0.99986506, 0, 1, 0, 0.99986506, 0, 0.01642277, -0.08572924, 1.4459739, 5.6725163)
+shape = SubResource("BoxShape3D_4vyy7")
+
+[node name="rim wall3" type="CollisionShape3D" parent="StaticBody3D" unique_id=2108923444]
+transform = Transform3D(-0.87367034, 0, -0.48651832, 0, 1, 0, 0.48651832, 0, -0.87367034, 1.6732284, 1.4459739, 6.693176)
+shape = SubResource("BoxShape3D_4vyy7")
+
+[node name="rim wall4" type="CollisionShape3D" parent="StaticBody3D" unique_id=1635993847]
+transform = Transform3D(-0.8641079, 0, 0.50330657, 0, 1, 0, -0.50330657, 0, -0.8641079, 1.6630174, 1.4459739, 8.789322)
+shape = SubResource("BoxShape3D_4vyy7")
+
+[node name="rim wall5" type="CollisionShape3D" parent="StaticBody3D" unique_id=786491119]
+transform = Transform3D(-0.037655264, 0, 0.9992907, 0, 1, 0, -0.9992907, 0, -0.037655264, -0.16476929, 1.4459739, 9.79139)
+shape = SubResource("BoxShape3D_4vyy7")
+
+[node name="rim wall6" type="CollisionShape3D" parent="StaticBody3D" unique_id=2129545322]
+transform = Transform3D(0.83685017, 0, 0.5474317, 0, 1, 0, -0.5474317, 0, 0.83685017, -1.9231522, 1.4459739, 8.870757)
+shape = SubResource("BoxShape3D_4vyy7")
+
+[node name="HoopTrigger" type="Area3D" parent="." unique_id=392847165]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.08947754, 0.88252974, 7.7680807)
+collision_layer = 0
+collision_mask = 8
+monitorable = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="HoopTrigger" unique_id=195034782]
+shape = SubResource("CylinderShape3D_hoop")

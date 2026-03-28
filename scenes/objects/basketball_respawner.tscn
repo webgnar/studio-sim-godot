@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://dtdy4a4qkn66"]
+
+[ext_resource type="Script" uid="uid://bv0k75t1p7tdw" path="res://scripts/objects/basketball_respawner.gd" id="1_respawn"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_respawn"]
+size = Vector3(300, 2, 300)
+
+[node name="BasketballRespawner" type="Area3D" unique_id=971778820]
+collision_layer = 0
+collision_mask = 8
+monitorable = false
+script = ExtResource("1_respawn")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1143769984]
+shape = SubResource("BoxShape3D_respawn")
+debug_color = Color(0.8599027, 0.0006726754, 0.8745322, 1)
+debug_fill = false

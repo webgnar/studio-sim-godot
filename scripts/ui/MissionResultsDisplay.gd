@@ -62,15 +62,14 @@ func _input(event: InputEvent) -> void:
 func _update_retry_highlight():
 	retry_button.modulate = Color(1.2, 1.2, 1.0) if _retry_button_selected else Color(1, 1, 1)
 
-func show_live_results(result: ValidationResult, mission: PaintingMission, painting_system: PaintingSystem2D):
+func show_live_results(result: ValidationResult, mission: PaintingMission):
 	current_mission = mission
 	_retry_button_selected = false
 	_update_retry_highlight()
 	scroll_container.scroll_vertical = 0
 
 	# Grade and score
-	var grade = result.get_grade()
-	grade_label.text = grade
+	grade_label.text = result.get_grade()
 	score_label.text = tr("Score: %.1f%%") % result.match_percentage
 
 	# Pass/fail status
@@ -87,15 +86,15 @@ func show_live_results(result: ValidationResult, mission: PaintingMission, paint
 	else:
 		message_label.visible = false
 
-	# Comparison images
-	_display_live_comparison(mission, painting_system)
-	_display_analysis(result)
-
-	# Score breakdown
-	visual_label.visible = true
-	color_label.visible = true
-	visual_label.text = tr("Precision: %.1f%% (weight: 30%%)") % result.visual_match_percentage
-	color_label.text = tr("Color Field: %.1f%% (weight: 70%%)") % result.color_distribution_score
+	# Load all images from disk (saved immediately before this is called)
+	var completion_data = MissionManager.get_mission_completion(mission.mission_id)
+	_load_saved_painting(completion_data)
+	if mission.reference_image_path != "":
+		target_image.texture = load(mission.reference_image_path) as Texture2D
+	else:
+		target_image.texture = null
+	_update_saved_display(completion_data)
+	comparison_container.visible = true
 
 	visible = true
 
@@ -126,7 +125,12 @@ func show_saved_results(mission: PaintingMission, completion_data: Dictionary):
 func _update_saved_display(completion_data: Dictionary):
 	grade_label.text = completion_data.get("latest_grade", completion_data["grade"])
 	score_label.text = tr("Score: %.1f%%") % completion_data.get("latest_score", completion_data["best_score"])
-	status_label.text = tr("Latest Attempt")
+	var pass_threshold = current_mission.get_pass_threshold()
+	var latest_score = completion_data.get("latest_score", 0.0)
+	if latest_score >= pass_threshold:
+		status_label.text = tr("PASSED! (%.0f%% required)") % pass_threshold
+	else:
+		status_label.text = tr("Failed (%.0f%% required)") % pass_threshold
 	status_label.visible = true
 	visual_label.text = tr("Precision: %.1f%% (weight: 30%%)") % completion_data.get("latest_visual_match", 0.0)
 	color_label.text = tr("Color Field: %.1f%% (weight: 70%%)") % completion_data.get("latest_color_distribution", 0.0)
@@ -167,63 +171,6 @@ func _update_saved_display(completion_data: Dictionary):
 		else:
 			reference_swatch_display.visible = false
 	else:
-		reference_swatch_display.visible = false
-
-func _display_live_comparison(mission: PaintingMission, painting_system: PaintingSystem2D):
-	if not mission or not painting_system:
-		comparison_container.visible = false
-		return
-
-	var player_texture: ImageTexture = null
-	var reference_texture: Texture2D = null
-
-	if painting_system.canvas_viewport:
-		var viewport_texture = painting_system.canvas_viewport.get_texture()
-		if viewport_texture:
-			var current_image = viewport_texture.get_image()
-			if current_image:
-				if current_image.get_width() <= current_image.get_height():
-					current_image.rotate_90(CLOCKWISE)
-				player_texture = ImageTexture.create_from_image(current_image)
-
-	if mission.reference_image_path and mission.reference_image_path != "":
-		reference_texture = load(mission.reference_image_path) as Texture2D
-
-	if player_texture and reference_texture:
-		player_image.texture = player_texture
-		target_image.texture = reference_texture
-		comparison_container.visible = true
-	else:
-		comparison_container.visible = false
-		if not player_texture:
-			push_warning("MissionResultsDisplay: Could not capture player's painting")
-		if not reference_texture:
-			push_warning("MissionResultsDisplay: Could not load reference image from '%s'" % mission.reference_image_path)
-
-func _display_analysis(result: ValidationResult):
-	if not result or result.debug_data.is_empty():
-		heatmap_panel.visible = false
-		player_swatch_display.visible = false
-		reference_swatch_display.visible = false
-		return
-
-	var debug = result.debug_data
-
-	if debug.has("heatmap_data"):
-		heatmap_image.texture = ImageTexture.create_from_image(debug["heatmap_data"])
-		heatmap_panel.visible = true
-	else:
-		heatmap_panel.visible = false
-
-	if debug.has("current_histogram") and debug.has("reference_histogram"):
-		var player_hist = debug["current_histogram"]
-		var ref_hist = debug["reference_histogram"]
-		player_swatch_display.texture = HistogramRenderer.create_top_colors_swatch(player_hist, swatch_size)
-		reference_swatch_display.texture = HistogramRenderer.create_top_colors_swatch(ref_hist, swatch_size)
-		player_swatch_display.visible = true
-		reference_swatch_display.visible = true
-	else:
-		player_swatch_display.visible = false
 		reference_swatch_display.visible = false
 
 func _load_saved_painting(completion_data: Dictionary):

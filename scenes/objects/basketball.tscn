@@ -1,7 +1,8 @@
 [gd_scene format=3 uid="uid://cgxdfyf6tidec"]
 
-[ext_resource type="ArrayMesh" uid="uid://dhqxt0afbkbf4" path="res://models/interactables/basket ball.obj" id="2_gv32d"]
+[ext_resource type="ArrayMesh" uid="uid://cl5glvk6cwqh7" path="res://models/interactables/basket ball.obj" id="2_gv32d"]
 [ext_resource type="Script" uid="uid://cbwg344irqecy" path="res://scripts/components/CarryableComponent.gd" id="3_carry"]
+[ext_resource type="Script" path="res://scripts/objects/basketball.gd" id="4_bball"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_bball"]
 friction = 0.8
@@ -10,8 +11,10 @@ bounce = 0.5
 [sub_resource type="SphereShape3D" id="SphereShape3D_hkimk"]
 
 [node name="Basketball" type="RigidBody3D" unique_id=638927527]
+script = ExtResource("4_bball")
 collision_layer = 8
 collision_mask = 2
+can_sleep = false
 mass = 0.6
 physics_material_override = SubResource("PhysicsMaterial_bball")
 
@@ -22,7 +25,9 @@ shape = SubResource("SphereShape3D_hkimk")
 script = ExtResource("3_carry")
 lock_rotation_when_carried = false
 gravity_while_carrying = 0.3
+throw_power = 10.0
 enable_floor_freeze = true
+floor_rest_confirm_time = 1.5
 
 [node name="BasketBall" type="MeshInstance3D" parent="." unique_id=7585159]
 transform = Transform3D(0.025, 0, 0, 0, 0.025, 0, 0, 0, 0.025, -0.0034077168, 0.0011461973, -0.0005799532)

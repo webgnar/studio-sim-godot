@@ -313,6 +313,7 @@ func open_to_painting(painting_node: CarryablePainting) -> void:
 
 func show_mission_results(result: ValidationResult, mission: PaintingMission) -> void:
 	"""Show live results in the Commissions tab after a painting is submitted"""
+	UIManager.change_state(UIManager.GameState.PAUSE_MENU)
 	_switch_tab(Tab.COMMISSIONS)
 	_enter_tab_content_mode()
 	if mission_selection_ui:

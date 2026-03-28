@@ -853,12 +853,15 @@ func submit_painting():
 	if ValidationLoadingOverlay:
 		ValidationLoadingOverlay.hide_loading()
 
+	# Save mission reference before complete_mission() clears current_mission
+	var mission = MissionManager.current_mission
+
 	# Save the result to mission manager with painting paths
 	MissionManager.complete_mission(result, latest_path, best_path, analysis_paths)
 
 	# Show results inside the pause menu (Commissions tab)
 	if UIManager.pause_menu and UIManager.pause_menu.has_method("show_mission_results"):
-		UIManager.pause_menu.show_mission_results(result, MissionManager.current_mission)
+		UIManager.pause_menu.show_mission_results(result, mission)
 	else:
 		push_error("PaintingSystem2D: Could not find PauseMenu to show results!")
 		print("Validation result: %s, Score: %.1f%%" % [result.get_grade(), result.match_percentage])

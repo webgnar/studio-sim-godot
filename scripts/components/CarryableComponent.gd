@@ -37,6 +37,7 @@ signal e_key_interacted(player_interaction_component: PlayerInteractionComponent
 
 @export_group("Floor Physics")
 @export var enable_floor_freeze: bool = false ## Freeze object when settled on floor (prevents twitching)
+@export var floor_rest_confirm_time: float = FLOOR_REST_CONFIRM_TIME ## Seconds at rest (with surface contact) before freezing. Increase for bouncy objects.
 
 @export_group("Audio")
 @export var pickup_sound: AudioStream
@@ -96,7 +97,7 @@ func _physics_process(_delta: float) -> void:
 				_floor_rest_timer += _delta
 			else:
 				_floor_rest_timer = 0.0
-			if _floor_rest_timer >= FLOOR_REST_CONFIRM_TIME or _floor_time_since_free >= FLOOR_REST_HARD_TIMEOUT:
+			if _floor_rest_timer >= floor_rest_confirm_time:
 				parent_rigid_body.linear_velocity = Vector3.ZERO
 				parent_rigid_body.angular_velocity = Vector3.ZERO
 				parent_rigid_body.freeze = true
