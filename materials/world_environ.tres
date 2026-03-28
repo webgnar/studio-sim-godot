@@ -1,6 +1,6 @@
 [gd_resource type="Environment" format=3 uid="uid://dq2im6ne1o2q6"]
 
-[ext_resource type="Texture2D" uid="uid://c60o1eresxu3j" path="res://sprites/sky.jpg" id="1_mers3"]
+[ext_resource type="Texture2D" uid="uid://c3g8mguua3ok4" path="res://sprites/sky.jpg" id="1_mers3"]
 [ext_resource type="Shader" uid="uid://c2ljpwtvw5fwg" path="res://shaders/sky_custom.gdshader" id="2_shader"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_sky"]

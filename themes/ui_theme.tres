@@ -11,7 +11,7 @@
 [ext_resource type="Texture2D" uid="uid://wpv42ndg7j5o" path="res://sprites/ui/sliderpressed.png" id="6_ntpv8"]
 [ext_resource type="Texture2D" uid="uid://dlupaeaiwaght" path="res://sprites/ui/scroll background.png" id="7_6hnno"]
 [ext_resource type="Texture2D" uid="uid://d3n667lur17kr" path="res://sprites/ui/arrow2.png" id="8_ku3ou"]
-[ext_resource type="Texture2D" uid="uid://dor0d4yiulgi5" path="res://sprites/ui/arrow.png" id="9_thhn4"]
+[ext_resource type="Texture2D" uid="uid://l1isr7p8ada0" path="res://sprites/ui/arrow.png" id="9_thhn4"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6hnno"]
 bg_color = Color(0.59721893, 0.7161294, 1, 1)
