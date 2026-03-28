@@ -790,6 +790,10 @@ func _display_stats(stats: Dictionary) -> void:
 		return
 	_stats_status_label.visible = false
 	_stats_hbox.visible = true
+	if "instagram" in stats and int(stats["instagram"]) >= 10:
+		if SteamManager:
+			SteamManager.unlock_achievement("ACH_INSTAGRAM_10")
+			SteamManager.store_steam_data()
 	for platform in _platform_labels.keys():
 		var label: Label = _platform_labels[platform]
 		if platform in stats:

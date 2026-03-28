@@ -25,7 +25,7 @@ preview_rotation = 0.0
 
 [node name="CanvasViewport" type="SubViewport" parent="." unique_id=1743827849]
 transparent_bg = true
-size = Vector2i(1280, 768)
+size = Vector2i(1706, 1024)
 render_target_update_mode = 4
 
 [node name="CanvasRoot" type="Node2D" parent="CanvasViewport" unique_id=1954855360 node_paths=PackedStringArray("painting_plane", "plane_collision", "canvas_viewport")]

@@ -141,6 +141,9 @@ func setup_achievements() -> void:
 		"ACH_DIE": false,  # Cause the player to die
 		"ACH_LET_THERE_BE_LIGHT": false,  # Turn on lightswitch3 in light switch box2
 
+		# Social
+		"ACH_INSTAGRAM_10": false,  # Receive 10 or more Instagram likes on a painting
+
 		# Shop
 		"ACH_BRAVE_NEW_WORLD": false,  # Purchase all three free energy devices (GEET, Water Fuel Cell, SEG)
 		"ACH_CONSCIOUSNESS_CREATES_REALITY": false,  # Purchase the Custom Sticker button
