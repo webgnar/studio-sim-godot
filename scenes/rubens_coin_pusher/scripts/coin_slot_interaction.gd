@@ -9,6 +9,7 @@ func _ready():
 	_coin_sound.stream = preload("res://scenes/rubens_coin_pusher/coins_single_02.wav")
 	_coin_sound.volume_db = -5.0
 	_coin_sound.max_distance = 8.0
+	_coin_sound.bus = "SFX"
 	add_child(_coin_sound)
 
 	# Create a reusable coin mesh for the insert animation

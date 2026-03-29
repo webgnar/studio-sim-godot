@@ -3,6 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://dmfqnrejt221r" path="res://models/props/UpdatedCyclone.glb" id="1_ipdbj"]
 [ext_resource type="Script" uid="uid://bxohs1n10x0sf" path="res://scripts/objects/cyclone.gd" id="2_052mr"]
 [ext_resource type="Script" uid="uid://d26dcxjkrbr8x" path="res://scripts/objects/cyclone_button.gd" id="3_052mr"]
+[ext_resource type="Material" uid="uid://d2g1sathpvh5b" path="res://materials/windowglass.tres" id="3_imiyg"]
 [ext_resource type="FontFile" uid="uid://tmjyio0w6cu0" path="res://fonts/studio-sim.ttf" id="4_7a1v1"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_7a1v1"]
@@ -22,19 +23,22 @@ result_label_1 = NodePath("Cyclone/CycloneJackpot1/JackpotDisplay1/Label3D")
 result_label_2 = NodePath("Cyclone/CycloneJackpot2/JackpotDisplay2/Label3D")
 result_label_3 = NodePath("Cyclone/CycloneJackpot3/JackpotDisplay3/Label3D")
 
-[node name="Label3D" type="Label3D" parent="UpdatedCyclone/Cyclone/CycloneJackpot1/JackpotDisplay1" parent_id_path=PackedInt32Array(21331279, 413491132) index="0" unique_id=836091663]
+[node name="CycloneDome" parent="UpdatedCyclone/Cyclone" parent_id_path=PackedInt32Array(21331279, 1980081305) index="5" unique_id=1145766239]
+surface_material_override/0 = ExtResource("3_imiyg")
+
+[node name="Label3D" type="Label3D" parent="UpdatedCyclone/Cyclone/CycloneJackpot1/JackpotDisplay1" parent_id_path=PackedInt32Array(21331279, 744627217) index="0" unique_id=836091663]
 transform = Transform3D(1, 0, 0, -1.4901161e-08, 1, 0, 7.450581e-09, -1.4901161e-08, 1, -0.08474159, 0.06970835, -0.029028654)
 billboard = 1
 font = ExtResource("4_7a1v1")
 font_size = 190
 
-[node name="Label3D" type="Label3D" parent="UpdatedCyclone/Cyclone/CycloneJackpot2/JackpotDisplay2" parent_id_path=PackedInt32Array(21331279, 1452853747) index="0" unique_id=836091664]
+[node name="Label3D" type="Label3D" parent="UpdatedCyclone/Cyclone/CycloneJackpot2/JackpotDisplay2" parent_id_path=PackedInt32Array(21331279, 100424231) index="0" unique_id=836091664]
 transform = Transform3D(1, 0, -5.9604645e-08, -1.4901161e-08, 1, -5.9604645e-08, -2.9802322e-08, 1.4901161e-08, 1, -0.24632311, 0.20262718, -0.03651917)
 billboard = 1
 font = ExtResource("4_7a1v1")
 font_size = 190
 
-[node name="Label3D" type="Label3D" parent="UpdatedCyclone/Cyclone/CycloneJackpot3/JackpotDisplay3" parent_id_path=PackedInt32Array(21331279, 1977019954) index="0" unique_id=836091665]
+[node name="Label3D" type="Label3D" parent="UpdatedCyclone/Cyclone/CycloneJackpot3/JackpotDisplay3" parent_id_path=PackedInt32Array(21331279, 927836782) index="0" unique_id=836091665]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.25096703, 0.20644665, 0)
 billboard = 1
 font = ExtResource("4_7a1v1")

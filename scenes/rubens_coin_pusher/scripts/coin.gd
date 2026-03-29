@@ -12,6 +12,7 @@ func _ready():
 	_sound.stream = _coin_sound
 	_sound.volume_db = -10.0
 	_sound.max_distance = 5.0
+	_sound.bus = "SFX"
 	add_child(_sound)
 	body_entered.connect(_on_body_entered)
 

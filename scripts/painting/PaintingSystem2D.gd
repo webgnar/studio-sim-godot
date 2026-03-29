@@ -62,6 +62,9 @@ var preview_last_position: Vector2 = Vector2.ZERO
 var preview_target_opacity: float = 0.5
 var preview_base_opacity: float = 0.5  # Set by PaintingRoot2D
 
+# Commission tracking: true if this canvas passed a commission validation
+var was_commission_validated: bool = false
+
 func _ready():
 	# Find camera from the painting plane's world (not from SubViewport)
 	if painting_plane:
@@ -806,6 +809,7 @@ func start_mission(mission: PaintingMission):
 		push_error("PaintingSystem2D: Cannot start null mission!")
 		return
 
+	was_commission_validated = false
 	# Clear the canvas
 	clear_canvas()
 
@@ -858,6 +862,9 @@ func submit_painting():
 
 	# Save the result to mission manager with painting paths
 	MissionManager.complete_mission(result, latest_path, best_path, analysis_paths)
+
+	if result.success:
+		was_commission_validated = true
 
 	# Show results inside the pause menu (Commissions tab)
 	if UIManager.pause_menu and UIManager.pause_menu.has_method("show_mission_results"):

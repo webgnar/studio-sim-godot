@@ -27,6 +27,7 @@ func _ready():
 	_jingle_sound = AudioStreamPlayer.new()
 	_jingle_sound.stream = preload("res://scenes/rubens_coin_pusher/happy-jingle.wav")
 	_jingle_sound.volume_db = -5.0
+	_jingle_sound.bus = "SFX"
 	add_child(_jingle_sound)
 
 	_shader_mesh = get_parent().get_node_or_null("Shader")

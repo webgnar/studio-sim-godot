@@ -4,7 +4,7 @@
 [ext_resource type="Material" uid="uid://wwlsotlotycw" path="res://materials/wood.tres" id="1_hjcsb"]
 [ext_resource type="PackedScene" uid="uid://dmrwgxfaod0t7" path="res://scenes/UI/TitleScreenUI.tscn" id="1_ui_layer"]
 [ext_resource type="Texture2D" uid="uid://cbn0d3riillev" path="res://sprites/wood.jpg" id="2_2ktle"]
-[ext_resource type="Texture2D" uid="uid://c60o1eresxu3j" path="res://sprites/sky.jpg" id="2_pe36d"]
+[ext_resource type="Texture2D" uid="uid://c3g8mguua3ok4" path="res://sprites/sky.jpg" id="2_pe36d"]
 [ext_resource type="Texture2D" uid="uid://dyuvtxhp260rj" path="res://sprites/normals/wood_ambient.png" id="3_l7b4h"]
 [ext_resource type="Texture2D" uid="uid://3smflfln5x7y" path="res://sprites/normals/wood_specular.png" id="4_3mdse"]
 [ext_resource type="Texture2D" uid="uid://bifvpuur5heg3" path="res://sprites/normals/wood_normal.png" id="5_f48o8"]

@@ -2,9 +2,6 @@
 
 [ext_resource type="PackedScene" uid="uid://ccxdngogvbg8n" path="res://models/props/table.gltf" id="1_7vqcc"]
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_ltsr6"]
-size = Vector3(9.159126, 9.252832, 3.9770813)
-
 [sub_resource type="BoxShape3D" id="BoxShape3D_7vqcc"]
 size = Vector3(11.01442, 9.269104, 7.106079)
 
@@ -13,17 +10,17 @@ size = Vector3(9.771057, 1.3915405, 15.208069)
 
 [node name="default" unique_id=1835522596 instance=ExtResource("1_7vqcc")]
 
-[node name="StaticBody3D" parent="table" index="0"]
+[node name="StaticBody3D" type="StaticBody3D" parent="." index="1" unique_id=144180217]
 collision_layer = 2
 
-[node name="CollisionShape3D" parent="table/StaticBody3D" index="0"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.7772415, -1.8448726, 9.717636)
-shape = SubResource("BoxShape3D_ltsr6")
-
-[node name="CollisionShape3D2" type="CollisionShape3D" parent="table/StaticBody3D" index="1" unique_id=1367348658]
+[node name="table_StaticBody3D#CollisionShape3D2" type="CollisionShape3D" parent="StaticBody3D" index="0" unique_id=1367348658]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.121026, -1.9045715, -9.516938)
 shape = SubResource("BoxShape3D_7vqcc")
 
-[node name="CollisionShape3D3" type="CollisionShape3D" parent="table/StaticBody3D" index="2" unique_id=21253480]
+[node name="table_StaticBody3D#CollisionShape3D4" type="CollisionShape3D" parent="StaticBody3D" index="1" unique_id=2136587271]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.121026, -1.9045715, 11.350055)
+shape = SubResource("BoxShape3D_7vqcc")
+
+[node name="table_StaticBody3D#CollisionShape3D3" type="CollisionShape3D" parent="StaticBody3D" index="2" unique_id=21253480]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.1194763, 2.065287, 1.3350525)
 shape = SubResource("BoxShape3D_ym3ej")

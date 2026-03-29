@@ -7,6 +7,7 @@ var texture_path: String = ""
 var painting_name: String = ""
 var artist_statement: String = ""
 var signature_texture_path: String = ""
+var is_commissioned: bool = false
 
 # Runtime reference
 var signature_system: PaintingSignatureSystem = null

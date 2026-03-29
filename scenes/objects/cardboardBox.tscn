@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://b4nwg0q6ash8e"]
+[gd_scene format=3 uid="uid://b4nwg0q6ash8e"]
 
 [ext_resource type="PackedScene" uid="uid://d0y6fk05wn5dc" path="res://models/interactables/cardboard box/box.glb" id="1_wti17"]
 [ext_resource type="PackedScene" uid="uid://tejn0hfpdhf7" path="res://models/interactables/cardboard box/box topL.glb" id="2_fg35f"]
@@ -154,43 +154,35 @@ _data = {
 &"rotate": SubResource("Animation_fh13f")
 }
 
-[node name="CardboardBox" type="Node3D"]
+[node name="CardboardBox" type="Node3D" unique_id=1782190253]
 
-[node name="box bottom" parent="." instance=ExtResource("1_wti17")]
+[node name="box bottom" parent="." unique_id=1292779471 instance=ExtResource("1_wti17")]
 
-[node name="lid1" parent="." instance=ExtResource("2_fg35f")]
+[node name="lid1" parent="." unique_id=1346919455 instance=ExtResource("2_fg35f")]
 transform = Transform3D(7.54979e-08, 0, -1, 0, 1, 0, 1, 0, 7.54979e-08, -0.011651158, 1.194471, 0.974849)
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="lid1"]
-libraries = {
-&"": SubResource("AnimationLibrary_817gm")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="lid1" unique_id=473915842]
+libraries/ = SubResource("AnimationLibrary_817gm")
 
-[node name="lid2" parent="." instance=ExtResource("2_fg35f")]
+[node name="lid2" parent="." unique_id=1290831575 instance=ExtResource("2_fg35f")]
 transform = Transform3D(-1.6292068e-07, 0, 1, 0, 1, 0, -1, 0, -1.6292068e-07, -0.011651158, 1.194471, -1.0021005)
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="lid2"]
-libraries = {
-&"": SubResource("AnimationLibrary_e75v4")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="lid2" unique_id=919355547]
+libraries/ = SubResource("AnimationLibrary_e75v4")
 
-[node name="lid3" parent="." instance=ExtResource("2_fg35f")]
+[node name="lid3" parent="." unique_id=352910815 instance=ExtResource("2_fg35f")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.9976504, 1.1547137, 0)
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="lid3"]
-libraries = {
-&"": SubResource("AnimationLibrary_luhhm")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="lid3" unique_id=1018216890]
+libraries/ = SubResource("AnimationLibrary_luhhm")
 
-[node name="lid4" parent="." instance=ExtResource("2_fg35f")]
+[node name="lid4" parent="." unique_id=492824651 instance=ExtResource("2_fg35f")]
 transform = Transform3D(-1, 0, -1.509958e-07, 0, 1, 0, 1.509958e-07, 0, -1, -1.0027584, 1.1547137, 0)
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="lid4"]
-libraries = {
-&"": SubResource("AnimationLibrary_4kbfs")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="lid4" unique_id=1836676805]
+libraries/ = SubResource("AnimationLibrary_4kbfs")
 
-[node name="BoxInteraction" type="Node3D" parent="."]
+[node name="BoxInteraction" type="Node3D" parent="." unique_id=144702155]
 script = ExtResource("3_fg35f")
 flap_1_open_sound = ExtResource("4_fiwsb")
 flap_2_open_sound = ExtResource("5_4rmvi")

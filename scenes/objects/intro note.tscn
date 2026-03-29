@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://bqmpjl0m0erex"]
+
+[ext_resource type="PackedScene" uid="uid://cddxg65fcm6bh" path="res://models/props/note.glb" id="1_qult0"]
+[ext_resource type="Material" uid="uid://cs3dpteof73vq" path="res://materials/intro note.tres" id="2_ldnam"]
+[ext_resource type="PackedScene" uid="uid://b3g0y1ku7myi3" path="res://models/interactables/nail.glb" id="3_ldnam"]
+
+[node name="IntroNote" type="Node3D" unique_id=1006240094]
+
+[node name="default" parent="." unique_id=865340633 instance=ExtResource("1_qult0")]
+
+[node name="note" parent="default" index="0" unique_id=892984364]
+surface_material_override/0 = ExtResource("2_ldnam")
+
+[node name="default2" parent="." unique_id=473890531 instance=ExtResource("3_ldnam")]
+transform = Transform3D(-8.742278e-09, -0.2, 0, 0.2, -8.742278e-09, 0, 0, 0, 0.2, 0, 0, -1.650188)
+
+[editable path="default"]

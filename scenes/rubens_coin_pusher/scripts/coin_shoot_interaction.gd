@@ -8,6 +8,7 @@ func _ready():
 	_zap_sound.stream = preload("res://scenes/rubens_coin_pusher/zap_c_02.wav")
 	_zap_sound.volume_db = -5.0
 	_zap_sound.max_distance = 8.0
+	_zap_sound.bus = "SFX"
 	add_child(_zap_sound)
 
 func _process(_delta):

@@ -4,7 +4,7 @@
 [ext_resource type="Script" uid="uid://dioncdl2j75r1" path="res://scripts/components/BreakableComponent.gd" id="2_breakable"]
 [ext_resource type="PackedScene" uid="uid://da0282miyr872" path="res://scenes/old stuff/glass_shard_particle.tscn" id="3_glass"]
 [ext_resource type="PackedScene" uid="uid://hmanpvvk8cbv" path="res://scenes/old stuff/dust_particle.tscn" id="4_dust"]
-[ext_resource type="Texture2D" uid="uid://cqmp06etflq7n" path="res://models/props/window_0.png" id="5_intact"]
+[ext_resource type="Texture2D" uid="uid://c87ukcluc6gco" path="res://models/props/window_0.png" id="5_intact"]
 [ext_resource type="Texture2D" uid="uid://bu0yxkjqsevky" path="res://models/props/window_2.png" id="6_cracked"]
 [ext_resource type="Texture2D" uid="uid://dr6ifox1s5hto" path="res://models/props/window_3.png" id="7_verycracked"]
 [ext_resource type="AudioStream" uid="uid://bfy43rxm5wxu3" path="res://sounds/glass-impact.ogg" id="8_fv8xu"]

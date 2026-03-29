@@ -24,6 +24,17 @@ func _ready() -> void:
 
 	dismiss_button.pressed.connect(_on_dismiss)
 	add_button.pressed.connect(_on_open_inventory)
+	add_button.grab_focus()
+
+func _input(event: InputEvent) -> void:
+	if event.is_action_pressed("jump") or event.is_action_pressed("ui_accept"):
+		get_viewport().set_input_as_handled()
+		var focused := get_viewport().gui_get_focus_owner()
+		if focused is Button:
+			focused.pressed.emit()
+	elif event.is_action_pressed("go_back"):
+		get_viewport().set_input_as_handled()
+		_on_dismiss()
 
 func _on_dismiss() -> void:
 	Input.mouse_mode = _previous_mouse_mode

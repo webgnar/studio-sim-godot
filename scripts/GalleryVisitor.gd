@@ -21,6 +21,7 @@ const GRAVITY := 9.8
 const DIALOGUE_API_URL = "https://studio-sim-gallery.vercel.app/api/visitor-dialogue"
 const ATTRACTION_API_URL = "https://studio-sim-gallery.vercel.app/api/attraction-dialogue"
 const API_KEY = "jupTtic3qGOULETb2w7E"
+const R2_BASE_URL = "https://pub-eba211d5cf614843a0f1582ec6c62c2e.r2.dev/paintings/"
 const DIALOGUE_COOLDOWN = 60.0
 
 const FALLBACK_LINES = [
@@ -215,6 +216,7 @@ func _fetch_dialogue() -> void:
 	var artist_statement := ""
 	var artist_name := ""
 	var painting_critique := ""
+	var gallery_id := ""
 
 	if has_node("/root/WorldStateManager"):
 		for data in WorldStateManager.get_all_paintings():
@@ -222,6 +224,7 @@ func _fetch_dialogue() -> void:
 				painting_name = data.get("name", "")
 				artist_statement = data.get("artist_statement", "")
 				painting_critique = data.get("critique", "")
+				gallery_id = data.get("gallery_id", "")
 				break
 
 	if has_node("/root/SteamManager"):
@@ -258,6 +261,8 @@ func _fetch_dialogue() -> void:
 	}
 	if painting_critique != "":
 		body_dict["paintingCritique"] = painting_critique
+	if gallery_id != "":
+		body_dict["imageUrl"] = R2_BASE_URL + gallery_id + ".png"
 	var body := JSON.stringify(body_dict)
 	var headers := [
 		"Content-Type: application/json",
@@ -418,7 +423,7 @@ func _on_navigation_finished() -> void:
 
 func _update_walking(delta: float) -> void:
 	# Manual distance fallback in case the signal fires late or not at all
-	if is_instance_valid(_last_attraction):
+	if is_instance_valid(_last_attraction) and _last_attraction.is_inside_tree():
 		var flat_dist := Vector2(global_position.x, global_position.z).distance_to(
 			Vector2(_last_attraction.global_position.x, _last_attraction.global_position.z))
 		if flat_dist <= stop_distance:
@@ -448,7 +453,7 @@ func _update_viewing(delta: float) -> void:
 	velocity.z = 0.0
 	move_and_slide()
 
-	if _facing_player and is_instance_valid(_face_player_ref):
+	if _facing_player and is_instance_valid(_face_player_ref) and _face_player_ref.is_inside_tree():
 		var to_player := _face_player_ref.global_position - global_position
 		to_player.y = 0.0
 		# Close dialogue if player walks out of interaction range
@@ -461,7 +466,7 @@ func _update_viewing(delta: float) -> void:
 		elif to_player.length() > 0.1:
 			transform.basis = transform.basis.slerp(
 				Basis.looking_at(to_player.normalized()), rotation_speed * delta)
-	elif is_instance_valid(_last_attraction):
+	elif is_instance_valid(_last_attraction) and _last_attraction.is_inside_tree():
 		var to_attraction: Vector3 = _last_attraction.global_position - global_position
 		to_attraction.y = 0.0
 		if to_attraction.length() > 0.1:

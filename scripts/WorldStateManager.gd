@@ -314,6 +314,7 @@ func save_world_state() -> bool:
 			"critique": metadata.get("critique", ""),
 			"gallery_id": metadata.get("gallery_id", ""),
 			"is_landscape": painting.scene_file_path.contains("5x3"),
+			"is_commissioned": painting.is_commissioned if "is_commissioned" in painting else false,
 			"position": {
 				"x": painting.global_position.x,
 				"y": painting.global_position.y,
@@ -667,6 +668,7 @@ func _load_painting(world_root: Node3D, painting_data: Dictionary, nail_id_map: 
 	painting.texture_path = texture_path
 	painting.painting_name = painting_data.get("name", "")
 	painting.artist_statement = painting_data.get("artist_statement", "")
+	painting.is_commissioned = painting_data.get("is_commissioned", false)
 
 	# Store status to apply after registration
 	var saved_status = painting_data.get("status", "WIP")

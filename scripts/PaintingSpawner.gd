@@ -55,6 +55,7 @@ func replace_painting_with_carryable(world: Node3D) -> void:
 	# Set metadata BEFORE adding to tree (so _ready can register)
 	carryable.painting_id = painting_id
 	carryable.texture_path = texture_path
+	carryable.is_commissioned = old_painting_system.was_commission_validated
 
 	world.add_child(carryable)
 
@@ -139,6 +140,7 @@ func replace_painting_from_root(world: Node3D, painting_root: Node3D) -> void:
 	var carryable = active_carryable_scene.instantiate()
 	carryable.painting_id = painting_id
 	carryable.texture_path = texture_path
+	carryable.is_commissioned = painting_system.was_commission_validated
 	world.add_child(carryable)
 
 	# Use spawn marker if available, otherwise fall back to painting_root position

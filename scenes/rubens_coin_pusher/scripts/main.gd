@@ -15,6 +15,7 @@ func _ready():
 	_win_sound.stream = preload("res://scenes/rubens_coin_pusher/ingle_win_synth_05.wav")
 	_win_sound.volume_db = -5.0
 	_win_sound.max_distance = 10.0
+	_win_sound.bus = "SFX"
 	add_child(_win_sound)
 
 	_prespawn_coins.call_deferred()

@@ -406,7 +406,8 @@ func start_export() -> void:
 		var viewer_count: int = 0
 		if has_node("/root/WorldStateManager"):
 			viewer_count = WorldStateManager.get_gallery_visitor_count()
-		var ship_price: int = int(275.0 * (1.0 + viewer_count * 0.15))
+		var commission_multiplier: float = 0.25 if painting.is_commissioned else 1.0
+		var ship_price: int = int(275.0 * (1.0 + viewer_count * 0.15) * commission_multiplier)
 		EconomyManager.add_money(ship_price, "shipped: " + painting.painting_name)
 	paintings_inside.erase(painting)
 

@@ -29,6 +29,7 @@ func _build_frames():
 func _build_sfx():
 	_sfx = AudioStreamPlayer.new()
 	_sfx.process_mode = Node.PROCESS_MODE_ALWAYS
+	_sfx.bus = "SFX"
 	var stream = load("res://sounds/picotron/money.ogg")
 	if stream:
 		_sfx.stream = stream
