@@ -1,5 +1,40 @@
 [gd_scene format=3 uid="uid://c2grt1vf3d7da"]
 
-[node name="Scanner" type="Node3D" unique_id=1070719451]
+[ext_resource type="Script" uid="uid://ce7tweyegc67x" path="res://scripts/objects/Scanner.gd" id="1_scanner"]
+[ext_resource type="Shader" uid="uid://l6cwj3rh1ot0" path="res://shaders/scanner_beam.gdshader" id="2_beam_shader"]
+[ext_resource type="Shader" uid="uid://dlybab18k23nm" path="res://shaders/scan_overlay.gdshader" id="3_overlay_shader"]
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=727548511]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_beam"]
+render_priority = 0
+shader = ExtResource("2_beam_shader")
+
+[sub_resource type="PrismMesh" id="PrismMesh_beam"]
+size = Vector3(0.4, 0.4, 4)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_overlay"]
+render_priority = 0
+shader = ExtResource("3_overlay_shader")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_overlay"]
+size = Vector2(3.1, 3.1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_b71ys"]
+render_priority = 0
+shader = ExtResource("3_overlay_shader")
+
+[node name="Scanner" type="Node3D" unique_id=543618752]
+script = ExtResource("1_scanner")
+
+[node name="BeamPivot" type="Node3D" parent="." unique_id=1882967065]
+
+[node name="BeamMesh" type="MeshInstance3D" parent="BeamPivot" unique_id=285289271]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2)
+material_override = SubResource("ShaderMaterial_beam")
+cast_shadow = 0
+mesh = SubResource("PrismMesh_beam")
+
+[node name="ScanOverlay" type="MeshInstance3D" parent="." unique_id=765469824]
+material_override = SubResource("ShaderMaterial_overlay")
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_overlay")
+surface_material_override/0 = SubResource("ShaderMaterial_b71ys")

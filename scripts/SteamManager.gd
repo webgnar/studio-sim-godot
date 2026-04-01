@@ -192,8 +192,6 @@ func load_steam_achievements() -> void:
 		if debug_mode and result['achieved']:
 			print("SteamManager: Achievement already unlocked: %s" % achievement_id)
 
-	_check_completionist_achievement()
-
 func load_steam_stats() -> void:
 	"""Load statistics from Steam"""
 	if not is_steam_available:
