@@ -138,7 +138,8 @@ func _on_upload_completed(gallery_id: String) -> void:
 	_current_critic = CRITICS[randi() % CRITICS.size()]
 	_request_critique(gallery_id)
 
-func _on_upload_failed(_error_message: String) -> void:
+func _on_upload_failed(error_message: String) -> void:
+	push_error("CritiqueDisplay: Upload failed: " + error_message)
 	if _state == State.WAITING_FOR_UPLOAD or _state == State.LOADING_CRITIQUE:
 		_state = State.IDLE
 		_set_text(tr("Upload failed — no critique available."))

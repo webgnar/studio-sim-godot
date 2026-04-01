@@ -1,0 +1,5 @@
+[gd_scene format=3 uid="uid://c2grt1vf3d7da"]
+
+[node name="Scanner" type="Node3D" unique_id=1070719451]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=727548511]

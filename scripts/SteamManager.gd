@@ -25,12 +25,12 @@ var persona_name: String = ""
 
 
 # Debug mode
-var debug_mode: bool = true  # Set to false for production
+var debug_mode: bool = false
 
 func _ready():
-	initialize_steam()
 	setup_achievements()
 	setup_statistics()
+	initialize_steam()
 	# Retroactively unlock export achievements based on save data (fixes players affected by stat-tracking bug)
 	if WorldStateManager:
 		WorldStateManager.world_state_loaded.connect(_check_retroactive_export_achievements, CONNECT_ONE_SHOT)
@@ -149,6 +149,10 @@ func setup_achievements() -> void:
 		"ACH_CONSCIOUSNESS_CREATES_REALITY": false,  # Purchase the Custom Sticker button
 		"ACH_COIN_PUSHER": false,  # Purchase the coin pusher machine
 		"ACH_STUDIO_ASSISTANT": false,  # Purchase the studio assistant
+
+		# Commissions
+		"ACH_ALL_MISSIONS_COMPLETED": false,  # Complete all commissions
+
 	}
 
 func setup_statistics() -> void:
@@ -188,6 +192,8 @@ func load_steam_achievements() -> void:
 		if debug_mode and result['achieved']:
 			print("SteamManager: Achievement already unlocked: %s" % achievement_id)
 
+	_check_completionist_achievement()
+
 func load_steam_stats() -> void:
 	"""Load statistics from Steam"""
 	if not is_steam_available:
@@ -204,11 +210,6 @@ func load_steam_stats() -> void:
 
 func unlock_achievement(achievement_id: String) -> void:
 	"""Unlock an achievement (idempotent - safe to call multiple times)"""
-	if not is_steam_available:
-		if debug_mode:
-			print("SteamManager: [OFFLINE] Achievement unlocked: %s" % achievement_id)
-		return
-
 	if not achievements.has(achievement_id):
 		push_warning("SteamManager: Unknown achievement ID: %s" % achievement_id)
 		return
@@ -219,19 +220,28 @@ func unlock_achievement(achievement_id: String) -> void:
 			print("SteamManager: Achievement already unlocked: %s" % achievement_id)
 		return
 
-	# Unlock on Steam
-	if not Steam.setAchievement(achievement_id):
-		push_error("SteamManager: Failed to set achievement: %s" % achievement_id)
-		return
-
-	# Store to Steam (required for achievement popup)
-	store_steam_data()
-
 	# Update local state
 	achievements[achievement_id] = true
 
+	if not is_steam_available:
+		print("SteamManager: [OFFLINE] Achievement unlocked: %s" % achievement_id)
+	else:
+		# Unlock on Steam
+		if not Steam.setAchievement(achievement_id):
+			push_error("SteamManager: Failed to set achievement: %s" % achievement_id)
+		else:
+			store_steam_data()
+
 	print("SteamManager: ✓ Achievement unlocked: %s" % achievement_id)
 	achievement_unlocked.emit(achievement_id)
+
+func debug_unlock_all_achievements() -> void:
+	"""DEBUG ONLY: Unlock all achievements to test completionist flow"""
+	if not debug_mode:
+		return
+	print("SteamManager: [DEBUG] Unlocking all achievements...")
+	for id in achievements.keys():
+		unlock_achievement(id)
 
 func set_stat_int(stat_id: String, value: int) -> void:
 	"""Set an integer statistic (absolute value)"""

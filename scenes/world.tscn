@@ -318,35 +318,17 @@ size = Vector3(6.555237, 4.649658, 3.814176)
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_wt6o6"]
 gradient = SubResource("Gradient_k2fqw")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7huuw"]
-render_priority = 1
-transparency = 1
-shading_mode = 0
-albedo_color = Color(0, 0, 0, 1)
-grow = true
-grow_amount = 0.027
-stencil_mode = 3
-stencil_flags = 1
-stencil_compare = 5
-metadata/_stencil_owned = true
-
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wt6o6"]
-next_pass = SubResource("StandardMaterial3D_7huuw")
 albedo_texture = ExtResource("90_ou5tn")
 metallic = 1.0
 metallic_specular = 0.67
 metallic_texture = SubResource("GradientTexture2D_wt6o6")
-roughness = 0.33
-emission = Color(0.44313726, 0.78039217, 0.9254902, 1)
-emission_energy_multiplier = 0.72
+roughness = 0.77
 normal_enabled = true
 normal_scale = 0.25
 normal_texture = ExtResource("91_k2fqw")
 uv1_scale = Vector3(-0.59, -0.59, -0.59)
-texture_filter = 1
-stencil_mode = 1
-stencil_flags = 2
-stencil_outline_thickness = 0.027
+texture_filter = 0
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ahrxh"]
 resource_name = "shippy2_1"
@@ -438,17 +420,17 @@ albedo_color = Color(1.0734373, 1.0734373, 0.15063755, 1)
 albedo_texture = ExtResource("82_mu18u")
 texture_filter = 0
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_i00a8"]
+[sub_resource type="PlaneMesh" id="PlaneMesh_7huuw"]
 resource_local_to_scene = true
 size = Vector2(2.5, 3)
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_7m83x"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_i00a8"]
 resource_name = "_albedo"
 viewport_path = NodePath("../MirrorNew/SubViewport")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_l8ik4"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7m83x"]
 resource_local_to_scene = true
-albedo_texture = SubResource("ViewportTexture_7m83x")
+albedo_texture = SubResource("ViewportTexture_i00a8")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_1v02h"]
 size = Vector2(2.5, 3)
@@ -1611,7 +1593,7 @@ transform = Transform3D(0.014088948, -0.019586174, -0.62915206, 0.47128618, 0.04
 [node name="pipegraybent2" parent="electrical conduit" unique_id=124518006 instance=ExtResource("19_kpybi")]
 transform = Transform3D(0.013917993, 0.06352692, -0.6286893, 0.017449299, 1.3355626, 0.030572794, 0.47172707, -0.05127709, 0.01741816, 58.345383, 9.54422, -27.782818)
 
-[node name="BOOMbox" type="RigidBody3D" parent="." unique_id=1893876606]
+[node name="BOOMbox" type="RigidBody3D" parent="." unique_id=1893876606 groups=["gallery_attraction"]]
 transform = Transform3D(-0.9796208, 0, 0.20085552, 0, 1, 0, -0.20085552, 0, -0.9796208, -2.6843157, 0.40117872, 1.8697941)
 collision_layer = 8
 collision_mask = 11
@@ -1969,8 +1951,8 @@ surface_material_override/0 = SubResource("StandardMaterial3D_7b7y8")
 
 [node name="mirror" parent="." unique_id=1626491013 groups=["shop_prop"] instance=ExtResource("39_qaasp")]
 transform = Transform3D(-4.7902194e-08, -0.99488777, 0.10098683, -3.9073655e-08, 0.10098683, 0.99488777, -1, 4.3711392e-08, -4.3711385e-08, 2.8, 1.497, 5.232)
-mesh = SubResource("PlaneMesh_i00a8")
-surface_material_override/0 = SubResource("StandardMaterial3D_l8ik4")
+mesh = SubResource("PlaneMesh_7huuw")
+surface_material_override/0 = SubResource("StandardMaterial3D_7m83x")
 show_debug_logs = false
 metadata/mirror = "mirror"
 metadata/shop_item_id = "mirror"
@@ -2009,8 +1991,9 @@ transform = Transform3D(-0.047106393, 0, 0.99888986, 0, 1, 0, -0.99888986, 0, -0
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.917138, 0)
 metadata/shop_item_id = "nail_gun"
 
-[node name="CardboardBox" parent="." unique_id=1782190253 groups=["no_outline", "shop_prop"] instance=ExtResource("87_xgy6y")]
+[node name="CardboardBox" parent="." unique_id=1349751666 groups=["no_outline", "shop_prop"] instance=ExtResource("87_xgy6y")]
 transform = Transform3D(0.19946352, 0, 0.22408547, 0, 0.29999998, 0, -0.22408547, 0, 0.19946352, 1.6987343, 0.25670362, 12.923679)
+metadata/shop_item_id = "cardboard_box"
 
 [node name="Key" parent="CardboardBox" unique_id=188385642 groups=["no_outline"] instance=ExtResource("83_n78cu")]
 transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 0, 0, 0)

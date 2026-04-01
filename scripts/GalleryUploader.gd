@@ -9,7 +9,7 @@ signal upload_failed(error_message: String)
 
 const API_BASE_URL = "https://studio-sim-gallery.vercel.app/api"
 const API_KEY = "jupTtic3qGOULETb2w7E"
-const REQUEST_TIMEOUT = 30.0
+const REQUEST_TIMEOUT = 60.0
 
 var is_uploading: bool = false
 
@@ -25,6 +25,7 @@ var _current_png_path: String = ""
 var _current_glb_path: String = ""
 var _image_uploaded: bool = false
 var _model_uploaded: bool = false
+var _model_upload_done: bool = false
 var _current_painting_name: String = ""
 var _current_artist_statement: String = ""
 var _current_artist_name: String = ""
@@ -67,6 +68,7 @@ func upload_painting(png_path: String, glb_path: String, painting_name: String =
 	_current_glb_path = glb_path
 	_image_uploaded = false
 	_model_uploaded = false
+	_model_upload_done = false
 	_current_id = ""
 	_current_painting_name = painting_name
 	_current_artist_statement = artist_statement
@@ -127,30 +129,34 @@ func _upload_file(file_path: String, upload_url: String, content_type: String, r
 	if error != OK:
 		_fail("Failed to start upload for " + file_path + ": " + str(error))
 
-func _on_image_upload_completed(result: int, response_code: int, _headers: PackedStringArray, _body: PackedByteArray) -> void:
+func _on_image_upload_completed(result: int, response_code: int, _headers: PackedStringArray, body: PackedByteArray) -> void:
 	if result != HTTPRequest.RESULT_SUCCESS or response_code < 200 or response_code >= 300:
-		_fail("Image upload failed (result: " + str(result) + ", status: " + str(response_code) + ")")
+		push_error("GalleryUploader: PNG upload response body: " + body.get_string_from_utf8())
+		_fail("Image upload failed (result: %d, status: %d)" % [result, response_code])
 		return
 
 	print("GalleryUploader: PNG uploaded")
 	_image_uploaded = true
 	_check_uploads_complete()
 
-func _on_model_upload_completed(result: int, response_code: int, _headers: PackedStringArray, _body: PackedByteArray) -> void:
+func _on_model_upload_completed(result: int, response_code: int, _headers: PackedStringArray, body: PackedByteArray) -> void:
 	if result != HTTPRequest.RESULT_SUCCESS or response_code < 200 or response_code >= 300:
-		_fail("Model upload failed (result: " + str(result) + ", status: " + str(response_code) + ")")
+		push_warning("GalleryUploader: GLB upload failed (result: %d, status: %d) — proceeding with PNG only\n%s" % [result, response_code, body.get_string_from_utf8()])
+		_model_upload_done = true
+		_check_uploads_complete()
 		return
 
 	print("GalleryUploader: GLB uploaded")
 	_model_uploaded = true
+	_model_upload_done = true
 	_check_uploads_complete()
 
 func _check_uploads_complete() -> void:
-	if not _image_uploaded or not _model_uploaded:
+	if not _image_uploaded or not _model_upload_done:
 		return
 
-	# Step 3: Confirm upload
-	print("GalleryUploader: Both files uploaded, confirming...")
+	# Step 3: Confirm upload (GLB is optional — PNG is sufficient for critique + social)
+	print("GalleryUploader: PNG uploaded (GLB: %s), confirming..." % ("ok" if _model_uploaded else "skipped"))
 	var headers = [
 		"X-API-Key: " + API_KEY,
 		"Content-Type: application/json",
@@ -178,6 +184,8 @@ func _on_confirm_completed(result: int, response_code: int, _headers: PackedStri
 	upload_completed.emit(gallery_id)
 
 func _fail(message: String) -> void:
+	if not is_uploading:
+		return
 	push_error("GalleryUploader: " + message)
 	_reset_state()
 	upload_failed.emit(message)
@@ -189,6 +197,7 @@ func _reset_state() -> void:
 	_current_glb_path = ""
 	_image_uploaded = false
 	_model_uploaded = false
+	_model_upload_done = false
 	_current_painting_name = ""
 	_current_artist_statement = ""
 	_current_artist_name = ""

@@ -661,8 +661,14 @@ func _abort_mission_immediate():
 
 func _update_stats_display():
 	"""Update commission completion statistics"""
-	if UIManager and completed_missions_label:
-		completed_missions_label.text = tr("Commissions Completed: %d") % UIManager.missions_completed
+	if not completed_missions_label:
+		return
+	var count := 0
+	if MissionManager:
+		for mission_id in MissionManager.progression:
+			if MissionManager.progression[mission_id].get("completed", false):
+				count += 1
+	completed_missions_label.text = tr("Commissions Completed: %d") % count
 
 func _on_locale_changed(_locale: String) -> void:
 	if visible:

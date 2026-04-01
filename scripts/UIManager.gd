@@ -91,6 +91,10 @@ func _ready():
 	else:
 		change_state(GameState.GAMEPLAY)  # dev workflow: direct world scene loading
 
+	# Track commission completions
+	if MissionManager:
+		MissionManager.mission_completed.connect(_on_mission_completed)
+
 	# Pause when Steam overlay opens
 	if SteamManager:
 		SteamManager.steam_initialized.connect(_on_steam_initialized_for_overlay)
@@ -99,6 +103,10 @@ func _ready():
 	Input.joy_connection_changed.connect(_on_joy_connection_changed)
 
 func _input(event):
+	# DEBUG: F8 unlocks all achievements to test completionist flow
+	if OS.has_feature("editor") and event.is_action_pressed("ui_end"):
+		SteamManager.debug_unlock_all_achievements()
+
 	# "start" button (backtick) toggles mission selection menu
 	if event.is_action_pressed("start"):
 		match current_state:
@@ -304,6 +312,7 @@ func load_player_data():
 	"""Load player data from disk"""
 	if not FileAccess.file_exists(SAVE_PATH):
 		print("UIManager: No save file found, starting with default values")
+		call_deferred("_reconcile_missions_completed")
 		return
 
 	var file = FileAccess.open(SAVE_PATH, FileAccess.READ)
@@ -321,5 +330,37 @@ func load_player_data():
 		var data = json.data
 		missions_completed = data.get("missions_completed", 0)
 		print("UIManager: Loaded player data - Missions: %d" % missions_completed)
+		# Reconcile counter against actual progression (fixes players with counter stuck at 0)
+		call_deferred("_reconcile_missions_completed")
 	else:
 		push_error("UIManager: Failed to parse save file JSON!")
+
+func _reconcile_missions_completed():
+	"""Fix missions_completed counter from actual progression data (retroactive fix)"""
+	if not MissionManager:
+		return
+	var actual := 0
+	for mission_id in MissionManager.progression:
+		if MissionManager.progression[mission_id].get("completed", false):
+			actual += 1
+	if actual > missions_completed:
+		print("UIManager: Correcting missions_completed from %d to %d" % [missions_completed, actual])
+		missions_completed = actual
+		save_player_data()
+	# Retroactively unlock the all-commissions achievement if earned
+	if actual > 0 and MissionManager.available_missions.size() > 0:
+		var all_done := true
+		for m in MissionManager.available_missions:
+			if not MissionManager.is_mission_completed(m.mission_id):
+				all_done = false
+				break
+		if all_done:
+			SteamManager.unlock_achievement("ACH_ALL_MISSIONS_COMPLETED")
+			SteamManager.store_steam_data()
+
+func _on_mission_completed(_mission: PaintingMission, result: ValidationResult):
+	"""Increment counter each time a commission is successfully completed"""
+	if result.success:
+		missions_completed += 1
+		save_player_data()
+
