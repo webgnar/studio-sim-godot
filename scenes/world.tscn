@@ -131,6 +131,7 @@
 [ext_resource type="PackedScene" uid="uid://8m5s44pc8lsn" path="res://scenes/rubens_coin_pusher/scenes/coin_pusher.tscn" id="138_j7mh8"]
 [ext_resource type="PackedScene" uid="uid://dtdy4a4qkn66" path="res://scenes/objects/basketball_respawner.tscn" id="139_c3c7d"]
 [ext_resource type="PackedScene" uid="uid://bqmpjl0m0erex" path="res://scenes/objects/intro note.tscn" id="141_7huuw"]
+[ext_resource type="PackedScene" uid="uid://dd72wvy86gw6t" path="res://scenes/objects/intro note2.tscn" id="142_i00a8"]
 [ext_resource type="PackedScene" uid="uid://d2lld8pxrphp3" path="res://scenes/objects/SaveAssistantWorkButton.tscn" id="200_savebtn"]
 [ext_resource type="PackedScene" uid="uid://dfcanvasscn1" path="res://scenes/objects/AssistantFinishedCanvas.tscn" id="201_fcanvas"]
 [ext_resource type="Script" uid="uid://nvjrcsa5oaqc" path="res://scripts/BerkeyInteraction.gd" id="berkey_interaction"]
@@ -420,17 +421,17 @@ albedo_color = Color(1.0734373, 1.0734373, 0.15063755, 1)
 albedo_texture = ExtResource("82_mu18u")
 texture_filter = 0
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_7m83x"]
+[sub_resource type="PlaneMesh" id="PlaneMesh_7huuw"]
 resource_local_to_scene = true
 size = Vector2(2.5, 3)
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_l8ik4"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_i00a8"]
 resource_name = "_albedo"
 viewport_path = NodePath("../MirrorNew/SubViewport")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_70d8d"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7m83x"]
 resource_local_to_scene = true
-albedo_texture = SubResource("ViewportTexture_l8ik4")
+albedo_texture = SubResource("ViewportTexture_i00a8")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_1v02h"]
 size = Vector2(2.5, 3)
@@ -1372,7 +1373,7 @@ transform = Transform3D(-1.1175871e-08, 0, -0.14, 0, 0.14, 0, 0.14, 0, -1.117587
 transform = Transform3D(-6.119594e-09, 0, -0.11, 0, 0.14, 0, 0.14, 0, -4.808253e-09, -3.6186662, 1.6572046, 3.6067662)
 
 [node name="Player" parent="." unique_id=1378579681 instance=ExtResource("27_l137e")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.946882, 1.2067637, 12.445705)
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 2.700754, 1.2067637, 12.445705)
 
 [node name="hvac group" type="Node3D" parent="." unique_id=179664338]
 
@@ -1951,8 +1952,8 @@ surface_material_override/0 = SubResource("StandardMaterial3D_7b7y8")
 
 [node name="mirror" parent="." unique_id=1626491013 groups=["shop_prop"] instance=ExtResource("39_qaasp")]
 transform = Transform3D(-4.7902194e-08, -0.99488777, 0.10098683, -3.9073655e-08, 0.10098683, 0.99488777, -1, 4.3711392e-08, -4.3711385e-08, 2.8, 1.497, 5.232)
-mesh = SubResource("PlaneMesh_7m83x")
-surface_material_override/0 = SubResource("StandardMaterial3D_70d8d")
+mesh = SubResource("PlaneMesh_7huuw")
+surface_material_override/0 = SubResource("StandardMaterial3D_7m83x")
 show_debug_logs = false
 metadata/mirror = "mirror"
 metadata/shop_item_id = "mirror"
@@ -2559,6 +2560,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.90279, -32.9953, 20.853844
 
 [node name="IntroNote" parent="." unique_id=1006240094 instance=ExtResource("141_7huuw")]
 transform = Transform3D(-0.2, 3.019916e-08, -1.3200473e-15, 0, -8.742278e-09, -0.2, -3.019916e-08, -0.2, 8.742278e-09, 3.0481505, 2.1881933, 14.731887)
+
+[node name="IntroNote2" parent="." unique_id=829726708 instance=ExtResource("142_i00a8")]
+transform = Transform3D(-0.2, 0, 1.7484556e-08, -1.7484556e-08, -8.742278e-09, -0.2, 7.6427423e-16, -0.2, 8.742278e-09, 2.9587736, 1.2738194, 14.698681)
 
 [editable path="Spotlight1"]
 [editable path="Spotlight2"]

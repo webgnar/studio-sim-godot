@@ -1,0 +1,8 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://dftcff42xpbvq"]
+
+[ext_resource type="Texture2D" uid="uid://dquesokc3yoeq" path="res://sprites/textures/intro note 2.png" id="1_nirts"]
+
+[resource]
+transparency = 1
+albedo_texture = ExtResource("1_nirts")
+texture_filter = 0
