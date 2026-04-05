@@ -9,8 +9,17 @@ class_name PaintingConvertButton
 var last_pressed: float = 0.0
 
 func _on_ready() -> void:
-	# Always set interaction text to support both abort and convert
 	interaction_text = "Detach Painting"
+
+func _on_hover_started() -> void:
+	_refresh_text()
+
+func _refresh_text() -> void:
+	var ps = PaintingModeManager.painting_system_2d
+	if not ps or ps.placed_layers.is_empty():
+		interaction_text = "Canvas is Empty"
+	else:
+		interaction_text = "Detach Painting"
 
 ## Called by PlayerInteractionComponent when player interacts
 func _on_interacted(_player_interaction_component: PlayerInteractionComponent) -> void:
@@ -21,6 +30,11 @@ func _on_interacted(_player_interaction_component: PlayerInteractionComponent) -
 
 	last_pressed = current_time
 
+	var ps = PaintingModeManager.painting_system_2d
+	if not ps or ps.placed_layers.is_empty():
+		interaction_text = "Canvas is Empty"
+		return
+
 	# Check if mission is active
 	if MissionManager and MissionManager.current_mission:
 		# Abort the active mission
@@ -29,6 +43,9 @@ func _on_interacted(_player_interaction_component: PlayerInteractionComponent) -
 
 	# Convert painting to carryable (regardless of mission state)
 	PaintingSpawner.replace_painting_with_carryable(get_tree().current_scene)
+
+	# New blank canvas is now active — update text
+	_refresh_text()
 
 	# Play animation if available
 	var anim_player = _find_animation_player()

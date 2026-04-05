@@ -68,7 +68,7 @@ carry_distance_offset = 0.1
 gravity_while_carrying = 0.3
 enable_rotation_while_carried = true
 use_interact_key_for_pickup = true
-throw_power = 20.0
+throw_power = 50.0
 
 [node name="StretcherBarsPhysics" type="Node3D" parent="." unique_id=859144792]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0.012642026, 0)

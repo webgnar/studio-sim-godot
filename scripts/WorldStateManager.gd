@@ -266,7 +266,8 @@ func save_world_state() -> bool:
 		"player_flags": _player_flags,  # Player state flags (keys, unlocks, etc.)
 		"misc_data": _misc_data.duplicate(true),  # Generic arbitrary persistent data
 		"purchased_items": _purchased_items.duplicate(),  # Shop items bought by player
-		"light_switches": light_switch_states  # Light switch on/off states
+		"light_switches": light_switch_states,  # Light switch on/off states
+		"player": _save_player_state()
 	}
 
 	var valid_painting_ids = []
@@ -489,6 +490,11 @@ func load_world_state(world_root: Node3D) -> void:
 
 	# Load player state flags
 	_player_flags = save_data.get("player_flags", {})
+
+	# Restore player position/rotation
+	var player_data = save_data.get("player", {})
+	if not player_data.is_empty():
+		_restore_player_state(player_data)
 
 	# Load generic misc data
 	_misc_data = save_data.get("misc_data", {})
@@ -857,6 +863,42 @@ func _find_hanging_component(painting: Node) -> Node:
 		if child.has_method("hang_on_nail"):
 			return child
 	return null
+
+# ============================================================================
+# Player Position Save/Load
+# ============================================================================
+
+func _save_player_state() -> Dictionary:
+	var player = get_tree().get_first_node_in_group("player")
+	if not is_instance_valid(player):
+		return {}
+	var head = player.get_node_or_null("Head")
+	return {
+		"position": {
+			"x": player.global_position.x,
+			"y": player.global_position.y,
+			"z": player.global_position.z
+		},
+		"rotation_y": player.rotation.y,
+		"head_rotation_x": head.rotation.x if head else 0.0
+	}
+
+func _restore_player_state(data: Dictionary) -> void:
+	var player = get_tree().get_first_node_in_group("player")
+	if not is_instance_valid(player):
+		return
+	var pos_data = data.get("position", {})
+	if not pos_data.is_empty():
+		player.global_position = Vector3(
+			float(pos_data.get("x", player.global_position.x)),
+			float(pos_data.get("y", player.global_position.y)),
+			float(pos_data.get("z", player.global_position.z))
+		)
+	if data.has("rotation_y"):
+		player.rotation.y = float(data["rotation_y"])
+	var head = player.get_node_or_null("Head")
+	if head and data.has("head_rotation_x"):
+		head.rotation.x = float(data["head_rotation_x"])
 
 # ============================================================================
 # PHASE 0: Economy Save/Load

@@ -5,8 +5,6 @@ class_name PaintingHangingComponent
 ## Paintings rest on nails via gravity and can fall off if bumped
 
 # --- CONSTANTS ---
-const RESTING_VELOCITY_THRESHOLD: float = 0.5  ## Consider "resting" below this speed
-const RESTING_CONTACT_TIME: float = 0.2  ## Must be in contact this long to consider hung
 const NAIL_PEG_LAYER_BIT: int = 5  ## Layer 6 is bit 5 (zero-indexed)
 
 # --- SIGNALS ---
@@ -18,9 +16,6 @@ var current_nail: NailComponent = null
 var is_resting_on_nail: bool = false
 var contact_nail_count: int = 0
 var resting_check_timer: float = 0.0
-var is_resting_on_floor: bool = false
-var floor_rest_timer: float = 0.0
-var floor_time_since_free: float = 0.0
 
 # --- GODOT METHODS ---
 
@@ -53,26 +48,7 @@ func _physics_process(delta: float) -> void:
 		parent_rigid_body.linear_damp = 2.5
 		unhanged_from_nail.emit(current_nail)
 		current_nail = null
-		floor_rest_timer = 0.0
 		print("💥 Painting fell off!")
-
-	# Auto-freeze when settled on floor (prevents twitching and floor penetration)
-	if not is_resting_on_nail and not is_carried and not parent_rigid_body.freeze:
-		floor_time_since_free += delta
-		var speed = parent_rigid_body.linear_velocity.length() + parent_rigid_body.angular_velocity.length()
-		if speed < FLOOR_REST_VELOCITY_THRESHOLD:
-			floor_rest_timer += delta
-		else:
-			floor_rest_timer = 0.0
-		# Freeze if settled OR hard timeout hit (catches persistent jitter)
-		if floor_rest_timer >= FLOOR_REST_CONFIRM_TIME or floor_time_since_free >= FLOOR_REST_HARD_TIMEOUT:
-			parent_rigid_body.linear_velocity = Vector3.ZERO
-			parent_rigid_body.angular_velocity = Vector3.ZERO
-			parent_rigid_body.freeze = true
-			is_resting_on_floor = true
-	else:
-		floor_rest_timer = 0.0
-		floor_time_since_free = 0.0
 
 # --- CONTACT DETECTION ---
 
@@ -142,13 +118,6 @@ func _find_nearby_nail() -> NailComponent:
 
 func _on_interacted(player_interaction: PlayerInteractionComponent) -> void:
 	"""Override interaction - reset resting state when picked up"""
-
-	# If painting is frozen on floor, unfreeze so pickup() can carry it
-	if is_resting_on_floor:
-		is_resting_on_floor = false
-		floor_rest_timer = 0.0
-		floor_time_since_free = 0.0
-		parent_rigid_body.freeze = false
 
 	# If painting is resting on nail, unfreeze and restore damping
 	if is_resting_on_nail:
