@@ -61,7 +61,9 @@
 [ext_resource type="PackedScene" uid="uid://bbsxc2lslc5cn" path="res://models/outside/SfRoadFlat.gltf" id="66_5nedk"]
 [ext_resource type="PackedScene" uid="uid://clyqlnamf1d2w" path="res://scenes/old stuff/wall_outlet.tscn" id="66_8lgfd"]
 [ext_resource type="PackedScene" uid="uid://ddh82wmd7v37" path="res://models/outside/sewerroad.gltf" id="68_5nedk"]
+[ext_resource type="AudioStream" uid="uid://dv5yoxwt2ynma" path="res://sounds/music_gnar - Gnar Loops Bass.ogg" id="68_l8ik4"]
 [ext_resource type="PackedScene" uid="uid://bk1j8boxuauwf" path="res://models/outside/treeSmallOak2.gltf" id="69_40xph"]
+[ext_resource type="AudioStream" uid="uid://w1j8bql6nn1e" path="res://sounds/Wavy I.D. - dinner at my place (i can't wait).ogg" id="69_70d8d"]
 [ext_resource type="PackedScene" uid="uid://coe4uac2fu4vl" path="res://models/outside/crazy2.gltf" id="70_8lgfd"]
 [ext_resource type="PackedScene" uid="uid://k5bi7w8gtday" path="res://scenes/camera stuff/CameraZone.tscn" id="71_dyafi"]
 [ext_resource type="PackedScene" uid="uid://bsbvqf088sigr" path="res://models/props/woodPallet.gltf" id="71_r5yoc"]
@@ -316,14 +318,14 @@ size = Vector3(6.555237, 4.649658, 3.814176)
 
 [sub_resource type="Gradient" id="Gradient_k2fqw"]
 
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_wt6o6"]
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_ctgs1"]
 gradient = SubResource("Gradient_k2fqw")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wt6o6"]
 albedo_texture = ExtResource("90_ou5tn")
 metallic = 1.0
 metallic_specular = 0.67
-metallic_texture = SubResource("GradientTexture2D_wt6o6")
+metallic_texture = SubResource("GradientTexture2D_ctgs1")
 roughness = 0.77
 normal_enabled = true
 normal_scale = 0.25
@@ -331,7 +333,7 @@ normal_texture = ExtResource("91_k2fqw")
 uv1_scale = Vector3(-0.59, -0.59, -0.59)
 texture_filter = 0
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ahrxh"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hv50j"]
 resource_name = "shippy2_1"
 transparency = 2
 alpha_scissor_threshold = 0.01
@@ -340,7 +342,7 @@ albedo_texture = ExtResource("93_2kaud")
 texture_filter = 0
 texture_repeat = false
 
-[sub_resource type="ArrayMesh" id="ArrayMesh_k8f0y"]
+[sub_resource type="ArrayMesh" id="ArrayMesh_6li3m"]
 _surfaces = [{
 "aabb": AABB(-0.866137, -0.9375, -0.866137, 1.732274, 1.875, 1.732274),
 "format": 34896613377,
@@ -362,7 +364,7 @@ _surfaces = [{
 "format": 34896613399,
 "index_count": 96,
 "index_data": PackedByteArray("AAABAAIAAAADAAEAAAACAAQAAAAFAAMAAAAEAAYAAAAHAAUAAAAGAAgAAAAIAAcACQAKAAsACQAMAAoACQALAA0ACQAOAAwACQANAA8ACQAQAA4ACQAPABEACQARABAAEgATABQAEgAUABUAFgAXABgAFgAYABkAGgAbABwAGgAcAB0AHgAfACAAHgAgACEAIgAjACQAIgAkACUAJgAnACgAJgAoACkAKgArACwAKgAsAC0ALgAvADAALgAwADEA"),
-"material": SubResource("StandardMaterial3D_ahrxh"),
+"material": SubResource("StandardMaterial3D_hv50j"),
 "name": "shippy2_1",
 "primitive": 3,
 "uv_scale": Vector4(0, 0, 0, 0),
@@ -370,7 +372,7 @@ _surfaces = [{
 "vertex_data": PackedByteArray("/38AAP9//78EtQAA////v///AAAEtf+/+koAAP///7///wAA+kr/vwAAAAAEtf+/BLUAAAAA/78AAAAA+kr/v/pKAAAAAP+//3////9/////////+kr///////8Etf//BLX//wAA//8Etf////////pK//8AAP//+kr///////8AAP//+kr//wAA//8Etf//AAAAAAS1/58AAP//BLX/n/pK//////+f+koAAP///58AAAAA+kr/vwAA///6Sv+/AAD//wS1/78AAAAABLX/v/pKAAAAAP/f+kr//wAA/98AAP//+kr/3wAAAAD6Sv/fBLUAAAAA//8Etf//AAD///pK//8AAP//+koAAAAA/////wAA+kr/3//////6Sv/fBLX//wAA/98EtQAAAAD/3///AAAEtf+//////wS1/7//////+kr/v///AAD6Sv+/BLUAAP///58Etf//////n/////8Etf+f//8AAAS1/5/6SgAA//8AgPpK/////wCABLX/////AIAEtQAA//8AgAAA/38AAP9/AAD/fwAA/38AAP9/AAD/fwAA/38AAP9/AAD/f/9//7//f/+//3//v/9//7//f/+//3//v/9//7//f/+//3//v/9/////f////3////9/////f////3////9/////f////3////9/////f////3////9/////f////3////9/////fwAA/38AAP9/AAD/fwAA/38AAP9/AAD/fwAA/38AAP9/AAD/fwAA/38AAP9/AAD/f////3////9/////f///")
 }]
 blend_shape_mode = 0
-shadow_mesh = SubResource("ArrayMesh_k8f0y")
+shadow_mesh = SubResource("ArrayMesh_6li3m")
 
 [sub_resource type="Animation" id="Animation_xgy6y"]
 length = 0.001
@@ -421,17 +423,17 @@ albedo_color = Color(1.0734373, 1.0734373, 0.15063755, 1)
 albedo_texture = ExtResource("82_mu18u")
 texture_filter = 0
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_i00a8"]
+[sub_resource type="PlaneMesh" id="PlaneMesh_scu3r"]
 resource_local_to_scene = true
 size = Vector2(2.5, 3)
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_7m83x"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_7m3dx"]
 resource_name = "_albedo"
 viewport_path = NodePath("../MirrorNew/SubViewport")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_l8ik4"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vevsf"]
 resource_local_to_scene = true
-albedo_texture = SubResource("ViewportTexture_7m83x")
+albedo_texture = SubResource("ViewportTexture_7m3dx")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_1v02h"]
 size = Vector2(2.5, 3)
@@ -1604,13 +1606,13 @@ mass = 2.0
 transform = Transform3D(0.9999999, 0, 0, 0, 1, 0, 0, 0, 0.9999999, 4.7683716e-07, -0.06947191, 0.016858816)
 shape = SubResource("BoxShape3D_4kmvx")
 
-[node name="boombox model" parent="BOOMbox" unique_id=692391154 instance=ExtResource("41_rga7q")]
+[node name="boombox model" parent="BOOMbox" unique_id=577198111 instance=ExtResource("41_rga7q")]
 transform = Transform3D(0.17, 0, 0, 0, 0.17, 0, 0, 0, 0.17, 0, 0, 0)
 
 [node name="BoomboxInteraction" type="Node3D" parent="BOOMbox" unique_id=1261900052]
 script = ExtResource("36_boombox_new")
 auto_play_on_start = true
-songs = Array[AudioStream]([ExtResource("51_swu3i"), ExtResource("ministudio_audio"), ExtResource("moon_ogg"), ExtResource("ear_ogg")])
+songs = Array[AudioStream]([ExtResource("51_swu3i"), ExtResource("ministudio_audio"), ExtResource("moon_ogg"), ExtResource("ear_ogg"), ExtResource("68_l8ik4"), ExtResource("69_70d8d")])
 switch_sound = ExtResource("boombox_switch")
 default_volume = 1.0
 max_hearing_distance = 45.0
@@ -1952,8 +1954,8 @@ surface_material_override/0 = SubResource("StandardMaterial3D_7b7y8")
 
 [node name="mirror" parent="." unique_id=1626491013 groups=["shop_prop"] instance=ExtResource("39_qaasp")]
 transform = Transform3D(-4.7902194e-08, -0.99488777, 0.10098683, -3.9073655e-08, 0.10098683, 0.99488777, -1, 4.3711392e-08, -4.3711385e-08, 2.8, 1.497, 5.232)
-mesh = SubResource("PlaneMesh_i00a8")
-surface_material_override/0 = SubResource("StandardMaterial3D_l8ik4")
+mesh = SubResource("PlaneMesh_scu3r")
+surface_material_override/0 = SubResource("StandardMaterial3D_vevsf")
 show_debug_logs = false
 metadata/mirror = "mirror"
 metadata/shop_item_id = "mirror"
