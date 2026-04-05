@@ -60,6 +60,7 @@ var last_impact_time: float = 0.0 ## Track last impact sound to enforce cooldown
 var original_collision_mask: int = 0 ## Store original collision mask to restore on drop
 var _floor_rest_timer: float = 0.0
 var _floor_time_since_free: float = 0.0
+var _carry_settle_timer: float = 0.0 ## Time since pickup started; auto-drop skipped until settled
 
 # --- GODOT METHODS ---
 
@@ -119,9 +120,12 @@ func _physics_process(_delta: float) -> void:
 		parent_rigid_body.angular_velocity = current_angular.limit_length(max_carry_angular_velocity)
 
 	# Auto-drop if object gets too far away (prevents carrying through walls)
-	var distance = parent_rigid_body.global_position.distance_to(carry_target)
-	if distance >= drop_distance:
-		drop()
+	# Skip check during settle period so edge-grabs have time to pull object to carry position
+	_carry_settle_timer += _delta
+	if _carry_settle_timer >= 0.5:
+		var distance = parent_rigid_body.global_position.distance_to(carry_target)
+		if distance >= drop_distance:
+			drop()
 
 	# Handle rotation controls if enabled (R/T for Y-axis, Z/X for X-axis)
 	if enable_rotation_while_carried:
@@ -254,6 +258,7 @@ func pickup(player_interaction: PlayerInteractionComponent) -> void:
 		_play_sound(pickup_sound)
 	
 	# Update state
+	_carry_settle_timer = 0.0
 	is_carried = true
 	interaction_text = "Drop"
 	being_carried_changed.emit(true)
