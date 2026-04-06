@@ -260,6 +260,8 @@ func hide_screen():
 
 func _on_return_to_title_pressed():
 	"""Quit and return to the title screen"""
+	if SceneTransition.is_transitioning:
+		return
 	if button_hit_sound:
 		button_hit_sound.play()
 

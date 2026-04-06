@@ -253,8 +253,8 @@ func _on_input_device_changed(device: InputDeviceManager.DeviceType) -> void:
 
 func _transition_to_game(scene_path: String, wipe_data: bool) -> void:
 	"""Handle transition to game with character animation and fade"""
-	if is_transitioning:
-		return  # Prevent multiple transitions
+	if is_transitioning or SceneTransition.is_transitioning:
+		return  # Prevent multiple transitions and block input during incoming fade-in
 
 	# Close options menu if it's open
 	if options_menu and options_menu.visible:

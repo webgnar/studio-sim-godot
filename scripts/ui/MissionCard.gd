@@ -18,18 +18,10 @@ var selected_style: StyleBoxFlat
 func _ready():
 	# Create styles
 	default_style = StyleBoxFlat.new()
-	default_style.bg_color = Color(0.15, 0.15, 0.15, 0.8)
-	default_style.corner_radius_top_left = 4
-	default_style.corner_radius_top_right = 4
-	default_style.corner_radius_bottom_right = 4
-	default_style.corner_radius_bottom_left = 4
+	default_style.bg_color = Color(0, 0, 0, 1)
 
 	selected_style = StyleBoxFlat.new()
-	selected_style.bg_color = Color(0.95, 0.9, 0.6, 0.9)
-	selected_style.corner_radius_top_left = 4
-	selected_style.corner_radius_top_right = 4
-	selected_style.corner_radius_bottom_right = 4
-	selected_style.corner_radius_bottom_left = 4
+	selected_style.bg_color = Color(1, 1, 1, 1)
 
 	add_theme_stylebox_override("panel", default_style)
 
