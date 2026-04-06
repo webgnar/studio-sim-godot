@@ -424,17 +424,17 @@ albedo_color = Color(1.0734373, 1.0734373, 0.15063755, 1)
 albedo_texture = ExtResource("82_mu18u")
 texture_filter = 0
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_scu3r"]
+[sub_resource type="PlaneMesh" id="PlaneMesh_70d8d"]
 resource_local_to_scene = true
 size = Vector2(2.5, 3)
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_7m3dx"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_ctgs1"]
 resource_name = "_albedo"
 viewport_path = NodePath("../MirrorNew/SubViewport")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vevsf"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6li3m"]
 resource_local_to_scene = true
-albedo_texture = SubResource("ViewportTexture_7m3dx")
+albedo_texture = SubResource("ViewportTexture_ctgs1")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_1v02h"]
 size = Vector2(2.5, 3)
@@ -1955,8 +1955,8 @@ surface_material_override/0 = SubResource("StandardMaterial3D_7b7y8")
 
 [node name="mirror" parent="." unique_id=1626491013 groups=["shop_prop"] instance=ExtResource("39_qaasp")]
 transform = Transform3D(-4.7902194e-08, -0.99488777, 0.10098683, -3.9073655e-08, 0.10098683, 0.99488777, -1, 4.3711392e-08, -4.3711385e-08, 2.8, 1.497, 5.232)
-mesh = SubResource("PlaneMesh_scu3r")
-surface_material_override/0 = SubResource("StandardMaterial3D_vevsf")
+mesh = SubResource("PlaneMesh_70d8d")
+surface_material_override/0 = SubResource("StandardMaterial3D_6li3m")
 show_debug_logs = false
 metadata/mirror = "mirror"
 metadata/shop_item_id = "mirror"
@@ -1988,7 +1988,7 @@ transform = Transform3D(0.05999574, -0.0011920407, 0, 0.00071522593, 0.0999929, 
 [node name="default4" parent="mirror/pallete stack" unique_id=1016114551 instance=ExtResource("71_r5yoc")]
 transform = Transform3D(-0.024906214, 0.06936846, 0, -0.04335528, -0.039849952, 0, 0, 0, 0.079999976, 1.4378908, 0.36619115, 0.40393543)
 
-[node name="SaveComputer" parent="." unique_id=403051502 instance=ExtResource("79_l137e")]
+[node name="SaveComputer" parent="." unique_id=880102419 instance=ExtResource("79_l137e")]
 transform = Transform3D(-0.047106393, 0, 0.99888986, 0, 1, 0, -0.99888986, 0, -0.047106393, 1.9871993, 1.5039661, 8.739948)
 
 [node name="NailGun" parent="." unique_id=1118235123 groups=["shop_prop"] instance=ExtResource("81_oexs8")]

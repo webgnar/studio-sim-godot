@@ -71,7 +71,7 @@ grow_end = 0.0
 thickness = 7
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_j8bgu"]
-bg_color = Color(0.9121951, 0.8040016, 0.71834236, 1)
+bg_color = Color(0.67843, 0.0549, 0.40784, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rnfg8"]
 bg_color = Color(0.89176005, 0.91459197, 0.71859854, 1)
@@ -98,6 +98,7 @@ axis_stretch_vertical = 1
 texture = ExtResource("6_ntpv8")
 axis_stretch_horizontal = 2
 axis_stretch_vertical = 2
+
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gfhtu"]
 bg_color = Color(0.6, 0.6, 0.6, 0.38039216)
@@ -143,6 +144,9 @@ border_width_right = 3
 border_color = Color(0.3, 0.3, 0.3, 1)
 corner_radius_top_left = 5
 corner_radius_top_right = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_te_focus"]
+bg_color = Color(0.67843, 0.0549, 0.40784, 1)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_l5g8p"]
 texture = ExtResource("4_l5g8p")
@@ -228,15 +232,16 @@ TabContainer/styles/tab_hovered = SubResource("StyleBoxFlat_thhn4")
 TabContainer/styles/tab_selected = SubResource("StyleBoxFlat_tab_selected")
 TabContainer/styles/tab_unselected = SubResource("StyleBoxFlat_tab_unselected")
 TextEdit/colors/background_color = Color(0.9581782, 0.862201, 0.6076636, 1)
-TextEdit/colors/caret_color = Color(0.5764706, 0, 0.38431373, 1)
+TextEdit/colors/caret_color = Color(0.5764706, 1, 0.38431373, 1)
 TextEdit/colors/current_line_color = Color(0.6046311, 0.41572735, 0.91881543, 0.8)
 TextEdit/colors/font_color = Color(0.875, 0.875, 0.875, 1)
 TextEdit/colors/font_outline_color = Color(0, 0, 0, 1)
 TextEdit/colors/font_selected_color = Color(0, 0, 0, 0)
 TextEdit/constants/caret_width = 8
-TextEdit/constants/line_spacing = -13
-TextEdit/constants/outline_size = 17
+TextEdit/constants/line_spacing = -8
+TextEdit/constants/outline_size = 14
 TextEdit/font_sizes/font_size = 32
+TextEdit/styles/focus = SubResource("StyleBoxFlat_te_focus")
 VScrollBar/constants/padding_left = 3
 VScrollBar/constants/padding_right = 5
 VScrollBar/styles/grabber = SubResource("StyleBoxTexture_l5g8p")

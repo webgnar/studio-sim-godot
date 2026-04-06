@@ -80,6 +80,11 @@ func _ready():
 	name_input.text_changed.connect(func(_new_text): _save_current_painting())
 	statement_input.text_changed.connect(func(): _save_current_painting())
 
+	# Change TextEdit background color on focus (TextEdit/styles/focus only draws a border overlay)
+	const FOCUS_BG = Color(0.67843, 0.0549, 0.40784, 1)
+	statement_input.focus_entered.connect(func(): statement_input.add_theme_color_override("background_color", FOCUS_BG))
+	statement_input.focus_exited.connect(func(): statement_input.remove_theme_color_override("background_color"))
+
 
 	# Find sounds from parent PauseMenu
 	var pause_menu = _find_parent_pause_menu()

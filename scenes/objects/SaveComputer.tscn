@@ -208,7 +208,7 @@ animations = [{
 transform = Transform3D(0.9404128, 0, 0.3400349, 0, 1, 0, -0.3400349, 0, 0.9404128, -0.39993265, 0.3446464, -0.0049111005)
 shape = SubResource("BoxShape3D_wvr1c")
 
-[node name="default" parent="." unique_id=12378409 instance=ExtResource("1_uw6nw")]
+[node name="default" parent="." unique_id=1564308754 instance=ExtResource("1_uw6nw")]
 transform = Transform3D(0.08, 0, 0, 0, 0.08, 0, 0, 0, 0.08, 0, 0, 0)
 
 [node name="SaveComputerInteraction" type="Node3D" parent="." unique_id=346041637]

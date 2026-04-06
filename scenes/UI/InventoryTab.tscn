@@ -28,6 +28,9 @@ layout_mode = 2
 
 [node name="TitleLabel" type="Label" parent="HBoxContainer/LeftPanel" unique_id=1178948721]
 layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.8535269, 0.8173793, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 12
 text = "YOUR PAINTINGS"
 horizontal_alignment = 1
 
@@ -55,7 +58,7 @@ size_flags_horizontal = 3
 
 [node name="PreviewPanel" type="PanelContainer" parent="HBoxContainer/RightPanel" unique_id=2146974402]
 layout_mode = 2
-size_flags_vertical = 3
+size_flags_vertical = 6
 
 [node name="MarginContainer" type="MarginContainer" parent="HBoxContainer/RightPanel/PreviewPanel" unique_id=3015075]
 layout_mode = 2
@@ -70,13 +73,14 @@ size_flags_horizontal = 3
 theme_override_constants/separation = 12
 
 [node name="PaintingImage" type="TextureRect" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer" unique_id=1001707753]
-custom_minimum_size = Vector2(0, 300)
+custom_minimum_size = Vector2(0, 420)
 layout_mode = 2
 size_flags_horizontal = 3
 expand_mode = 1
 stretch_mode = 5
 
 [node name="ContentHBox" type="HBoxContainer" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer" unique_id=843837310]
+custom_minimum_size = Vector2(0, 400)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -99,10 +103,6 @@ text = "Name:"
 layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "Enter painting name..."
-
-[node name="StatusLabel" type="Label" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ContentHBox/LeftVBox" unique_id=143958508]
-layout_mode = 2
-text = "Status: WIP"
 
 [node name="StatementLabel" type="Label" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ContentHBox/LeftVBox" unique_id=317679574]
 layout_mode = 2
