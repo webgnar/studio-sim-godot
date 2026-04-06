@@ -15,6 +15,7 @@ enum State { IDLE, CHOOSING, WALKING, VIEWING }
 @export var stop_distance: float = 2.0
 @export var think_interval_min: float = 2.0
 @export var think_interval_max: float = 5.0
+@export var gallery_floor_y: float = -5.0  ## gallery_attraction nodes above this Y are skipped (studio level)
 
 const GRAVITY := 9.8
 
@@ -543,7 +544,8 @@ func _get_attraction_nodes() -> Array[Node3D]:
 	# Source 2: anything else explicitly tagged as a gallery attraction
 	for node in get_tree().get_nodes_in_group("gallery_attraction"):
 		if is_instance_valid(node) and node.is_visible_in_tree() and node not in result:
-			result.append(node as Node3D)
+			if node.global_position.y <= gallery_floor_y:
+				result.append(node as Node3D)
 
 	return result
 

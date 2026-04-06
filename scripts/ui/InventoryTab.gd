@@ -17,7 +17,6 @@ const VirtualKeyboardScene = preload("res://scenes/UI/VirtualKeyboard.tscn")
 @onready var name_input: LineEdit = $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ContentHBox/LeftVBox/NameContainer/NameInput
 @onready var statement_label: Label = $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ContentHBox/LeftVBox/StatementLabel
 @onready var statement_input: TextEdit = $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ContentHBox/LeftVBox/StatementInput
-@onready var save_button: Button = $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/SaveButton
 @onready var empty_label: Label = $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/EmptyLabel
 
 # Navigation
@@ -26,7 +25,7 @@ var nav_mode: NavMode = NavMode.PAINTING_LIST
 var selected_index: int = 0
 var painting_cards: Array[PaintingCard] = []
 var painting_entries: Array = []  # Array of dicts from WorldStateManager
-var detail_focus_index: int = 0  # 0=name, 1=statement, 2=save
+var detail_focus_index: int = 0  # 0=name, 1=statement
 var is_editing_text: bool = false
 var keyboard_nav_enabled: bool = false
 var input_cooldown: float = 0.0
@@ -58,23 +57,11 @@ var _stats_fetching_id: String = ""   # painting_id currently being fetched
 # Sound (reuse parent PauseMenu sounds)
 var button_nav_sound: AudioStreamPlayer = null
 var button_hit_sound: AudioStreamPlayer = null
-var _save_info_sound: AudioStreamPlayer = null
 
 func _ready():
 	if Engine.is_editor_hint():
 		_populate_editor_preview()
 		return
-
-	# Connect save button
-	save_button.pressed.connect(_on_save_pressed)
-	save_button.focus_mode = Control.FOCUS_ALL
-	save_button.text = "Save Info"
-
-	# Save info sound
-	_save_info_sound = AudioStreamPlayer.new()
-	_save_info_sound.stream = load("res://sounds/picotron/save_painting.ogg")
-	add_child(_save_info_sound)
-	_save_info_sound.process_mode = Node.PROCESS_MODE_ALWAYS
 
 	# Instantiate virtual keyboard for controller users on non-Steam-Deck
 	_virtual_keyboard = VirtualKeyboardScene.instantiate() as VirtualKeyboard
@@ -88,6 +75,10 @@ func _ready():
 	# Auto-enter text editing when mouse clicks a text field
 	name_input.gui_input.connect(_on_text_gui_input.bind(name_input))
 	statement_input.gui_input.connect(_on_text_gui_input.bind(statement_input))
+
+	# Auto-save on every keystroke so navigation/close never loses data
+	name_input.text_changed.connect(func(_new_text): _save_current_painting())
+	statement_input.text_changed.connect(func(): _save_current_painting())
 
 
 	# Find sounds from parent PauseMenu
@@ -340,8 +331,6 @@ func _show_detail_panel(should_show: bool):
 	if statement_label:
 		statement_label.visible = should_show
 	statement_input.visible = should_show
-	if not should_show:
-		save_button.visible = false
 
 	# Show/hide empty label
 	if empty_label:
@@ -359,6 +348,7 @@ func _select_next_painting():
 	"""Select the next painting in the list (clamped, no wrapping)"""
 	if painting_entries.size() == 0:
 		return
+	_save_current_painting()
 	selected_index = mini(selected_index + 1, painting_entries.size() - 1)
 	_update_selection()
 	if button_nav_sound:
@@ -368,6 +358,7 @@ func _select_previous_painting():
 	"""Select the previous painting in the list (clamped, no wrapping)"""
 	if painting_entries.size() == 0:
 		return
+	_save_current_painting()
 	selected_index = maxi(selected_index - 1, 0)
 	_update_selection()
 	if button_nav_sound:
@@ -444,7 +435,6 @@ func _update_preview(data: Dictionary):
 	_detail_col = 0
 	name_input.editable = not is_shipped
 	statement_input.editable = not is_shipped
-	save_button.visible = not is_shipped
 
 	# Set name and statement fields
 	name_input.text = data.get("name", "")
@@ -500,7 +490,7 @@ func _exit_detail_mode():
 func _navigate_detail(direction: int):
 	"""Navigate up/down through detail panel items"""
 	var new_index = detail_focus_index + direction
-	new_index = clampi(new_index, 0, 2)  # 0=name, 1=statement, 2=save
+	new_index = clampi(new_index, 0, 1)  # 0=name, 1=statement
 	if new_index != detail_focus_index:
 		detail_focus_index = new_index
 		_update_detail_focus()
@@ -523,8 +513,6 @@ func _update_detail_focus():
 			name_input.modulate = Color(1.2, 1.2, 1.0, 1.0)
 		1:
 			statement_input.modulate = Color(1.2, 1.2, 1.0, 1.0)
-		2:
-			save_button.grab_focus()
 
 func _clear_detail_focus():
 	"""Clear focus and highlight from all detail panel items"""
@@ -532,7 +520,6 @@ func _clear_detail_focus():
 	name_input.modulate = Color.WHITE
 	statement_input.release_focus()
 	statement_input.modulate = Color.WHITE
-	save_button.release_focus()
 	if _critique_display:
 		_critique_display.modulate = Color.WHITE
 
@@ -565,9 +552,6 @@ func _activate_detail_item():
 			else:
 				_enter_text_editing(statement_input)
 				_show_floating_steam_keyboard(statement_input, true)
-		2:
-			# Save
-			_on_save_pressed()
 
 func _show_floating_steam_keyboard(control: Control, multiline: bool) -> void:
 	"""Show the Steam floating keyboard (same as Steam+X) positioned near the text field.
@@ -643,49 +627,44 @@ func _on_text_gui_input(event: InputEvent, control: Control):
 			if pause_menu and pause_menu.nav_mode == PauseMenuUI.NavMode.TAB_BAR:
 				pause_menu._enter_tab_content_mode(true)
 
-func _on_save_pressed():
-	"""Save the painting name and artist statement"""
+func _save_current_painting():
+	"""Auto-save the current painting's name and artist statement"""
 	if selected_index < 0 or selected_index >= painting_entries.size():
 		return
 
 	var data = painting_entries[selected_index]
-	var painting_node = data["node"]
+	var painting_node = data.get("node")
 
 	# Can't save shipped paintings (no node, read-only)
 	if painting_node == null or not is_instance_valid(painting_node):
-		push_warning("InventoryTab: Painting node no longer valid")
-		if status_label:
-			status_label.text = tr("Error: painting unavailable")
-			status_label.modulate = Color(1.0, 0.3, 0.3)
 		return
 
 	var new_name = name_input.text.strip_edges()
 	var new_statement = statement_input.text.strip_edges()
+	var new_status = "DONE" if new_name != "" else data.get("status", "WIP")
 
-	# Update through WorldStateManager (set status to DONE on save)
-	WorldStateManager.update_painting_metadata(painting_node, new_name, new_statement, "DONE")
+	WorldStateManager.update_painting_metadata(painting_node, new_name, new_statement, new_status)
 
-	# Update local data
 	painting_entries[selected_index]["name"] = new_name
 	painting_entries[selected_index]["artist_statement"] = new_statement
-	painting_entries[selected_index]["status"] = "DONE"
+	painting_entries[selected_index]["status"] = new_status
 
-	# Update the card in the sidebar
 	if selected_index < painting_cards.size():
 		painting_cards[selected_index].update_name(new_name)
-		painting_cards[selected_index].update_status("DONE")
+		painting_cards[selected_index].update_status(new_status)
 
-	# Update status in preview
 	if status_label:
-		status_label.text = tr("Status: %s") % tr("DONE")
-		status_label.modulate = Color(0.4, 1.0, 0.4)
-
-	if _save_info_sound:
-		_save_info_sound.play()
-	print("InventoryTab: Saved painting '%s'" % new_name)
+		status_label.text = tr("Status: %s") % tr(new_status)
+		match new_status:
+			"WIP":
+				status_label.modulate = Color(1.0, 0.9, 0.3)
+			"DONE":
+				status_label.modulate = Color(0.4, 1.0, 0.4)
 
 func _on_card_clicked(index: int):
 	"""Handle painting card click"""
+	if index != selected_index:
+		_save_current_painting()
 	selected_index = index
 	_update_selection()
 

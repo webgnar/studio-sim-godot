@@ -65,6 +65,7 @@
 [ext_resource type="PackedScene" uid="uid://bk1j8boxuauwf" path="res://models/outside/treeSmallOak2.gltf" id="69_40xph"]
 [ext_resource type="AudioStream" uid="uid://w1j8bql6nn1e" path="res://sounds/Wavy I.D. - dinner at my place (i can't wait).ogg" id="69_70d8d"]
 [ext_resource type="PackedScene" uid="uid://coe4uac2fu4vl" path="res://models/outside/crazy2.gltf" id="70_8lgfd"]
+[ext_resource type="AudioStream" uid="uid://ckdv6pqn7b5ws" path="res://sounds/blue whale.ogg" id="70_70d8d"]
 [ext_resource type="PackedScene" uid="uid://k5bi7w8gtday" path="res://scenes/camera stuff/CameraZone.tscn" id="71_dyafi"]
 [ext_resource type="PackedScene" uid="uid://bsbvqf088sigr" path="res://models/props/woodPallet.gltf" id="71_r5yoc"]
 [ext_resource type="PackedScene" uid="uid://btuhdnbc2hjii" path="res://scenes/PaintingRoot.tscn" id="73_1m1ue"]
@@ -1596,7 +1597,7 @@ transform = Transform3D(0.014088948, -0.019586174, -0.62915206, 0.47128618, 0.04
 [node name="pipegraybent2" parent="electrical conduit" unique_id=124518006 instance=ExtResource("19_kpybi")]
 transform = Transform3D(0.013917993, 0.06352692, -0.6286893, 0.017449299, 1.3355626, 0.030572794, 0.47172707, -0.05127709, 0.01741816, 58.345383, 9.54422, -27.782818)
 
-[node name="BOOMbox" type="RigidBody3D" parent="." unique_id=1893876606 groups=["gallery_attraction"]]
+[node name="BOOMbox" type="RigidBody3D" parent="." unique_id=1893876606]
 transform = Transform3D(-0.9796208, 0, 0.20085552, 0, 1, 0, -0.20085552, 0, -0.9796208, -2.6843157, 0.40117872, 1.8697941)
 collision_layer = 8
 collision_mask = 11
@@ -1612,7 +1613,7 @@ transform = Transform3D(0.17, 0, 0, 0, 0.17, 0, 0, 0, 0.17, 0, 0, 0)
 [node name="BoomboxInteraction" type="Node3D" parent="BOOMbox" unique_id=1261900052]
 script = ExtResource("36_boombox_new")
 auto_play_on_start = true
-songs = Array[AudioStream]([ExtResource("51_swu3i"), ExtResource("ministudio_audio"), ExtResource("moon_ogg"), ExtResource("ear_ogg"), ExtResource("68_l8ik4"), ExtResource("69_70d8d")])
+songs = Array[AudioStream]([ExtResource("51_swu3i"), ExtResource("ministudio_audio"), ExtResource("moon_ogg"), ExtResource("ear_ogg"), ExtResource("68_l8ik4"), ExtResource("69_70d8d"), ExtResource("70_70d8d")])
 switch_sound = ExtResource("boombox_switch")
 default_volume = 1.0
 max_hearing_distance = 45.0

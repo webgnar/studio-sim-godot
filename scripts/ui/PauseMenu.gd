@@ -406,6 +406,7 @@ func _deactivate_tab_content(tab: Tab):
 				mission_selection_ui.keyboard_nav_enabled = false
 		Tab.INVENTORY:
 			if inventory_tab:
+				inventory_tab._save_current_painting()
 				inventory_tab.keyboard_nav_enabled = false
 		Tab.OPTIONS:
 			if options_menu:
