@@ -1376,7 +1376,7 @@ transform = Transform3D(-1.1175871e-08, 0, -0.14, 0, 0.14, 0, 0.14, 0, -1.117587
 transform = Transform3D(-6.119594e-09, 0, -0.11, 0, 0.14, 0, 0.14, 0, -4.808253e-09, -3.6186662, 1.6572046, 3.6067662)
 
 [node name="Player" parent="." unique_id=1378579681 instance=ExtResource("27_l137e")]
-transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 2.700754, 1.2067637, 12.445705)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.14252, 1.0146583, 10.445705)
 
 [node name="hvac group" type="Node3D" parent="." unique_id=179664338]
 

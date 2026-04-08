@@ -29,6 +29,8 @@ var _carry_panel: PanelContainer  # Background panel wrapping carry hint
 var _painting_panel: PanelContainer  # Background panel wrapping painting hint
 var _base_panel_bg_color: Color  # Original panel color before hue shift
 var _panel_styles: Array = []    # StyleBoxFlat refs for all HUD panels
+var _hud_bg_visible: bool = true
+var _current_hud_hue_shift: float = 0.0
 var _interaction_separator: Label  # " | " between two-action prompts
 var _interaction_icon_2: TextureRect  # Second icon for dual-action prompts
 var _interaction_label_2: Label  # Second label for dual-action prompts
@@ -118,6 +120,8 @@ func _ready() -> void:
 			if json.parse(f.get_as_text()) == OK and typeof(json.data) == TYPE_DICTIONARY:
 				if json.data.has("hud_hue"):
 					apply_hud_hue(float(json.data["hud_hue"]))
+				if json.data.has("hud_bg"):
+					apply_hud_bg_visible(bool(json.data["hud_bg"]))
 			f.close()
 
 # --- SETUP METHODS ---
@@ -164,10 +168,16 @@ func _wrap_in_panel(content: Control) -> PanelContainer:
 	return panel
 
 func apply_hud_hue(hue_shift: float) -> void:
+	_current_hud_hue_shift = hue_shift
 	var new_h = fmod(_base_panel_bg_color.h + hue_shift / 360.0, 1.0)
-	var new_color = Color.from_hsv(new_h, _base_panel_bg_color.s, _base_panel_bg_color.v, _base_panel_bg_color.a)
+	var alpha = _base_panel_bg_color.a if _hud_bg_visible else 0.0
+	var new_color = Color.from_hsv(new_h, _base_panel_bg_color.s, _base_panel_bg_color.v, alpha)
 	for style in _panel_styles:
 		style.bg_color = new_color
+
+func apply_hud_bg_visible(enabled: bool) -> void:
+	_hud_bg_visible = enabled
+	apply_hud_hue(_current_hud_hue_shift)
 
 func _setup_mouse_filters() -> void:
 	"""Set mouse_filter to IGNORE on all HUD Control nodes to prevent consuming mouse motion"""

@@ -49,7 +49,7 @@ horizontal_alignment = 1
 [node name="TabContainer" type="TabContainer" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=2051853900]
 layout_mode = 2
 size_flags_vertical = 3
-current_tab = 3
+current_tab = 1
 
 [node name="Audio" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer" unique_id=1884413625]
 visible = false
@@ -113,30 +113,36 @@ button_pressed = true
 text = "Painting Sounds"
 
 [node name="Visual" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer" unique_id=228019317]
-visible = false
 layout_mode = 2
 metadata/_tab_index = 1
 
-[node name="VisualSettings" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual" unique_id=1880168904]
+[node name="ScrollContainer" type="ScrollContainer" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual" unique_id=228019318]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+follow_focus = true
+
+[node name="VisualSettings" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/ScrollContainer" unique_id=1880168904]
+layout_mode = 2
+size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 15
 
-[node name="HueHeader" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/VisualSettings" unique_id=569103496]
+[node name="HueHeader" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/ScrollContainer/VisualSettings" unique_id=569103496]
 layout_mode = 2
 
-[node name="HueLabel" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/VisualSettings/HueHeader" unique_id=985284925]
+[node name="HueLabel" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/ScrollContainer/VisualSettings/HueHeader" unique_id=985284925]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 32
 text = "Hue"
 
-[node name="HueValue" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/VisualSettings/HueHeader" unique_id=1993194545]
+[node name="HueValue" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/ScrollContainer/VisualSettings/HueHeader" unique_id=1993194545]
 layout_mode = 2
 theme_override_font_sizes/font_size = 28
 horizontal_alignment = 2
 
-[node name="HueSlider" type="HSlider" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/VisualSettings" unique_id=1580865728]
+[node name="HueSlider" type="HSlider" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/ScrollContainer/VisualSettings" unique_id=1580865728]
 layout_mode = 2
 size_flags_vertical = 1
 max_value = 360.0
@@ -144,21 +150,21 @@ tick_count = 11
 ticks_on_borders = true
 ticks_position = 2
 
-[node name="SaturationHeader" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/VisualSettings" unique_id=1729527624]
+[node name="SaturationHeader" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/ScrollContainer/VisualSettings" unique_id=1729527624]
 layout_mode = 2
 
-[node name="SaturationLabel" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/VisualSettings/SaturationHeader" unique_id=277640640]
+[node name="SaturationLabel" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/ScrollContainer/VisualSettings/SaturationHeader" unique_id=277640640]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 32
 text = "Saturation"
 
-[node name="SaturationValue" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/VisualSettings/SaturationHeader" unique_id=1795596328]
+[node name="SaturationValue" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/ScrollContainer/VisualSettings/SaturationHeader" unique_id=1795596328]
 layout_mode = 2
 theme_override_font_sizes/font_size = 28
 horizontal_alignment = 2
 
-[node name="SaturationSlider" type="HSlider" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/VisualSettings" unique_id=1155236599]
+[node name="SaturationSlider" type="HSlider" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/ScrollContainer/VisualSettings" unique_id=1155236599]
 layout_mode = 2
 size_flags_vertical = 1
 max_value = 1.0
@@ -168,27 +174,33 @@ tick_count = 11
 ticks_on_borders = true
 ticks_position = 2
 
-[node name="HudHueHeader" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/VisualSettings" unique_id=1147382910]
+[node name="HudHueHeader" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/ScrollContainer/VisualSettings" unique_id=1147382910]
 layout_mode = 2
 
-[node name="HudHueLabel" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/VisualSettings/HudHueHeader" unique_id=1147382911]
+[node name="HudHueLabel" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/ScrollContainer/VisualSettings/HudHueHeader" unique_id=1147382911]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 32
 text = "HUD Hue"
 
-[node name="HudHueValue" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/VisualSettings/HudHueHeader" unique_id=1147382912]
+[node name="HudHueValue" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/ScrollContainer/VisualSettings/HudHueHeader" unique_id=1147382912]
 layout_mode = 2
 theme_override_font_sizes/font_size = 28
 horizontal_alignment = 2
 
-[node name="HudHueSlider" type="HSlider" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/VisualSettings" unique_id=1147382913]
+[node name="HudHueSlider" type="HSlider" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/ScrollContainer/VisualSettings" unique_id=1147382913]
 layout_mode = 2
 size_flags_vertical = 1
 max_value = 360.0
 tick_count = 11
 ticks_on_borders = true
 ticks_position = 2
+
+[node name="HudBgCheckbox" type="CheckBox" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/ScrollContainer/VisualSettings" unique_id=228019319]
+layout_mode = 2
+focus_mode = 1
+button_pressed = true
+text = "HUD Background"
 
 [node name="Controls" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer" unique_id=2061308574]
 visible = false
@@ -238,6 +250,7 @@ size_flags_horizontal = 3
 theme_override_constants/separation = 4
 
 [node name="Language" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer" unique_id=1111111101]
+visible = false
 layout_mode = 2
 theme_override_constants/separation = 20
 metadata/_tab_index = 3

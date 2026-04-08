@@ -99,7 +99,6 @@ texture = ExtResource("6_ntpv8")
 axis_stretch_horizontal = 2
 axis_stretch_vertical = 2
 
-
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gfhtu"]
 bg_color = Color(0.6, 0.6, 0.6, 0.38039216)
 border_width_left = 5

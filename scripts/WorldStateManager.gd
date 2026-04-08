@@ -894,11 +894,34 @@ func _restore_player_state(data: Dictionary) -> void:
 			float(pos_data.get("y", player.global_position.y)),
 			float(pos_data.get("z", player.global_position.z))
 		)
-	if data.has("rotation_y"):
-		player.rotation.y = float(data["rotation_y"])
-	var head = player.get_node_or_null("Head")
-	if head and data.has("head_rotation_x"):
-		head.rotation.x = float(data["head_rotation_x"])
+	var rot_y = float(data.get("rotation_y", player.rotation.y))
+	var head_x = float(data.get("head_rotation_x", 0.0))
+	if player.has_method("apply_saved_rotation"):
+		player.apply_saved_rotation(rot_y, head_x)
+	else:
+		player.rotation.y = rot_y
+		var head = player.get_node_or_null("Head")
+		if head:
+			head.rotation.x = head_x
+
+func restore_player_position_early() -> void:
+	"""Apply saved player position/rotation before the first frame renders.
+	Called from WorldSetup before await get_tree().process_frame to prevent
+	the 1-frame snap from the editor origin to the saved position."""
+	if not FileAccess.file_exists(WORLD_STATE_PATH):
+		return
+	var file = FileAccess.open(WORLD_STATE_PATH, FileAccess.READ)
+	if not file:
+		return
+	var json = JSON.new()
+	if json.parse(file.get_as_text()) != OK:
+		file.close()
+		return
+	file.close()
+	var player_data = json.data.get("player", {})
+	if player_data.is_empty():
+		return
+	_restore_player_state(player_data)
 
 # ============================================================================
 # PHASE 0: Economy Save/Load

@@ -37,6 +37,10 @@ func _ready():
 	if camera_zone_switch:
 		camera_zone_switch.lights_toggled.connect(_on_camera_zone_switch_toggled)
 
+	# Apply saved player position/rotation immediately to avoid 1-frame origin snap
+	if WorldStateManager:
+		WorldStateManager.restore_player_position_early()
+
 	# Wait one frame for scene tree to fully initialize
 	await get_tree().process_frame
 

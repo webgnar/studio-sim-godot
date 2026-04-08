@@ -148,6 +148,13 @@ func _ready() -> void:
 	# Setup interaction component
 	_setup_interaction_component()
 
+func apply_saved_rotation(rot_y: float, head_x: float) -> void:
+	rotation.y = rot_y
+	if _head_node:
+		_head_node.rotation.x = head_x
+	_target_rot = Vector2(head_x, rot_y)
+	_current_rot = _target_rot
+
 func _notification(what: int) -> void:
 	"""Handle window focus events for mouse capture"""
 	match what:
