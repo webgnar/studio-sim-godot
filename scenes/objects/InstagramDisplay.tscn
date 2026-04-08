@@ -1,0 +1,122 @@
+[gd_scene format=3 uid="uid://dtspe6ksqg4e0"]
+
+[ext_resource type="Script" uid="uid://culriic1boi1s" path="res://scripts/InstagramDisplay.gd" id="1_script"]
+[ext_resource type="Material" uid="uid://bl43iap4a4kjl" path="res://materials/tv.tres" id="2_tvmat"]
+[ext_resource type="FontFile" uid="uid://scsmiofa8vip" path="res://fonts/NotoSerif-Regular.ttf" id="3_font"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_screen"]
+size = Vector2(1.6, 1.2)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bezel"]
+albedo_color = Color(0.08, 0.08, 0.08, 1)
+
+[node name="InstagramDisplay" type="Node3D" unique_id=100000001]
+script = ExtResource("1_script")
+
+[node name="SubViewport" type="SubViewport" parent="." unique_id=100000002]
+own_world_3d = true
+canvas_item_default_texture_filter = 0
+size = Vector2i(640, 480)
+render_target_update_mode = 4
+
+[node name="BgColorRect" type="ColorRect" parent="SubViewport" unique_id=100000003]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.05, 0.05, 0.05, 1)
+
+[node name="PostImage" type="TextureRect" parent="SubViewport" unique_id=100000004]
+texture_filter = 2
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="StatusLabel" type="Label" parent="SubViewport" unique_id=100000005]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.8, 0.85, 0.6, 1)
+theme_override_fonts/font = ExtResource("3_font")
+theme_override_font_sizes/font_size = 20
+text = "Loading feed..."
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="OverlayColorRect" type="ColorRect" parent="SubViewport" unique_id=100000006]
+offset_top = 438.0
+offset_right = 640.0
+offset_bottom = 480.0
+color = Color(0, 0, 0, 0.7)
+
+[node name="OverlayContainer" type="Control" parent="SubViewport" unique_id=100000007]
+layout_mode = 3
+anchors_preset = 0
+offset_top = 438.0
+offset_right = 640.0
+offset_bottom = 480.0
+
+[node name="MarginContainer" type="MarginContainer" parent="SubViewport/OverlayContainer" unique_id=100000008]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 3
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="SubViewport/OverlayContainer/MarginContainer" unique_id=100000009]
+layout_mode = 2
+theme_override_constants/separation = 1
+
+[node name="CaptionLabel" type="RichTextLabel" parent="SubViewport/OverlayContainer/MarginContainer/VBoxContainer" unique_id=100000010]
+custom_minimum_size = Vector2(0, 17)
+layout_mode = 2
+theme_override_colors/default_color = Color(0.95, 0.95, 0.9, 1)
+theme_override_constants/outline_size = 2
+theme_override_fonts/normal_font = ExtResource("3_font")
+theme_override_font_sizes/normal_font_size = 12
+bbcode_enabled = true
+scroll_active = false
+
+[node name="MetaLabel" type="Label" parent="SubViewport/OverlayContainer/MarginContainer/VBoxContainer" unique_id=100000011]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6, 0.6, 0.6, 1)
+theme_override_fonts/font = ExtResource("3_font")
+theme_override_font_sizes/font_size = 11
+text = "♥ 0   1 / 10"
+horizontal_alignment = 2
+
+[node name="Screen" type="MeshInstance3D" parent="." unique_id=100000012]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0)
+mesh = SubResource("PlaneMesh_screen")
+surface_material_override/0 = ExtResource("2_tvmat")
+
+[node name="BezelTop" type="CSGBox3D" parent="." unique_id=100000013]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00079345703, 0.6120697, -0.03460422)
+size = Vector3(1.5618896, 0.043670654, 0.091430664)
+material = SubResource("StandardMaterial3D_bezel")
+
+[node name="BezelBottom" type="CSGBox3D" parent="." unique_id=100000014]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0026369095, -0.6219642, -0.03460422)
+size = Vector3(1.6388721, 0.043670654, 0.091430664)
+material = SubResource("StandardMaterial3D_bezel")
+
+[node name="BezelLeft" type="CSGBox3D" parent="." unique_id=100000015]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, -0.8001337, 0.0028075576, -0.036108285)
+size = Vector3(1.2601593, 0.043670654, 0.091430664)
+material = SubResource("StandardMaterial3D_bezel")
+
+[node name="BezelRight" type="CSGBox3D" parent="." unique_id=100000016]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0.79849315, -0.005150676, -0.036108285)
+size = Vector3(1.2760757, 0.043670654, 0.091430664)
+material = SubResource("StandardMaterial3D_bezel")
