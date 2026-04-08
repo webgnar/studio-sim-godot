@@ -135,7 +135,7 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 32
-text = "Hue"
+text = "Pause Menu Hue"
 
 [node name="HueValue" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/ScrollContainer/VisualSettings/HueHeader" unique_id=1993194545]
 layout_mode = 2
@@ -157,7 +157,7 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 32
-text = "Saturation"
+text = "Pause Menu Saturation"
 
 [node name="SaturationValue" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/ScrollContainer/VisualSettings/SaturationHeader" unique_id=1795596328]
 layout_mode = 2
@@ -174,16 +174,25 @@ tick_count = 11
 ticks_on_borders = true
 ticks_position = 2
 
-[node name="HudHueHeader" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/ScrollContainer/VisualSettings" unique_id=1147382910]
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/ScrollContainer/VisualSettings" unique_id=934591076]
 layout_mode = 2
 
-[node name="HudHueLabel" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/ScrollContainer/VisualSettings/HudHueHeader" unique_id=1147382911]
+[node name="HudBgCheckbox" type="CheckBox" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/ScrollContainer/VisualSettings/HBoxContainer" unique_id=228019319]
+layout_mode = 2
+focus_mode = 1
+button_pressed = true
+text = "HUD Background"
+
+[node name="HudHueHeader" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/ScrollContainer/VisualSettings/HBoxContainer" unique_id=1147382910]
+layout_mode = 2
+
+[node name="HudHueLabel" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/ScrollContainer/VisualSettings/HBoxContainer/HudHueHeader" unique_id=1147382911]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 32
-text = "HUD Hue"
+text = "Hue"
 
-[node name="HudHueValue" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/ScrollContainer/VisualSettings/HudHueHeader" unique_id=1147382912]
+[node name="HudHueValue" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/ScrollContainer/VisualSettings/HBoxContainer/HudHueHeader" unique_id=1147382912]
 layout_mode = 2
 theme_override_font_sizes/font_size = 28
 horizontal_alignment = 2
@@ -195,12 +204,6 @@ max_value = 360.0
 tick_count = 11
 ticks_on_borders = true
 ticks_position = 2
-
-[node name="HudBgCheckbox" type="CheckBox" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/ScrollContainer/VisualSettings" unique_id=228019319]
-layout_mode = 2
-focus_mode = 1
-button_pressed = true
-text = "HUD Background"
 
 [node name="Controls" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer" unique_id=2061308574]
 visible = false

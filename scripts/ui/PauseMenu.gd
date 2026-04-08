@@ -138,7 +138,13 @@ func _input(event):
 		if event is InputEventMouseButton:
 			return  # Let scroll wheel propagate to scroll containers
 		if input_cooldown <= 0:
-			_cycle_tab(-1)
+			if current_tab == Tab.OPTIONS and nav_mode == NavMode.TAB_CONTENT and options_menu:
+				options_menu._switch_tab(-1)
+				options_menu.is_in_tab_mode = false
+				options_menu._update_tab_mode_visual()
+				options_menu._focus_first_content_item()
+			else:
+				_cycle_tab(-1)
 			input_cooldown = input_cooldown_time
 		viewport.set_input_as_handled()
 		return
@@ -147,7 +153,13 @@ func _input(event):
 		if event is InputEventMouseButton:
 			return  # Let scroll wheel propagate to scroll containers
 		if input_cooldown <= 0:
-			_cycle_tab(1)
+			if current_tab == Tab.OPTIONS and nav_mode == NavMode.TAB_CONTENT and options_menu:
+				options_menu._switch_tab(1)
+				options_menu.is_in_tab_mode = false
+				options_menu._update_tab_mode_visual()
+				options_menu._focus_first_content_item()
+			else:
+				_cycle_tab(1)
 			input_cooldown = input_cooldown_time
 		viewport.set_input_as_handled()
 		return

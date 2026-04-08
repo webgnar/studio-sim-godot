@@ -18,8 +18,8 @@ signal closed
 @onready var saturation_slider: HSlider = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/ScrollContainer/VisualSettings/SaturationSlider
 @onready var saturation_value_label: Label = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/ScrollContainer/VisualSettings/SaturationHeader/SaturationValue
 @onready var hud_hue_slider: HSlider = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/ScrollContainer/VisualSettings/HudHueSlider
-@onready var hud_hue_value_label: Label = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/ScrollContainer/VisualSettings/HudHueHeader/HudHueValue
-@onready var hud_bg_checkbox: CheckBox = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/ScrollContainer/VisualSettings/HudBgCheckbox
+@onready var hud_hue_value_label: Label = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/ScrollContainer/VisualSettings/HBoxContainer/HudHueHeader/HudHueValue
+@onready var hud_bg_checkbox: CheckBox = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/ScrollContainer/VisualSettings/HBoxContainer/HudBgCheckbox
 @onready var visual_scroll_container: ScrollContainer = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/ScrollContainer
 var close_button: Button = null  # Removed from scene; closing handled by go_back/ESC
 @onready var controls_list: VBoxContainer = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Controls/ScrollContainer/ControlsList
@@ -770,10 +770,10 @@ func _is_last_in_tab(focused_control: Control) -> bool:
 		0:  # Audio
 			return focused_control == painting_sounds_checkbox
 		1:  # Visual
-			if hud_bg_checkbox:
-				return focused_control == hud_bg_checkbox
-			elif hud_hue_slider:
+			if hud_hue_slider:
 				return focused_control == hud_hue_slider
+			elif hud_bg_checkbox:
+				return focused_control == hud_bg_checkbox
 			return focused_control == saturation_slider
 		2:  # Controls
 			if _in_controls_scroll:
@@ -793,10 +793,10 @@ func _focus_last_content_item():
 		0:  # Audio
 			painting_sounds_checkbox.grab_focus()
 		1:  # Visual
-			if hud_bg_checkbox:
-				hud_bg_checkbox.grab_focus()
-			elif hud_hue_slider:
+			if hud_hue_slider:
 				hud_hue_slider.grab_focus()
+			elif hud_bg_checkbox:
+				hud_bg_checkbox.grab_focus()
 			elif saturation_slider:
 				saturation_slider.grab_focus()
 		2:  # Controls
@@ -876,9 +876,9 @@ func _update_close_button_focus():
 	if tab_container.current_tab == 0:  # Audio tab
 		close_button.focus_previous = close_button.get_path_to(painting_sounds_checkbox)
 	elif tab_container.current_tab == 1:  # Visual tab
-		if hud_bg_checkbox:
-			close_button.focus_previous = close_button.get_path_to(hud_bg_checkbox)
-		elif hud_hue_slider:
+		if hud_hue_slider:
+			close_button.focus_previous = close_button.get_path_to(hud_hue_slider)
+		elif hud_bg_checkbox:
 			close_button.focus_previous = close_button.get_path_to(hud_hue_slider)
 		elif saturation_slider:
 			close_button.focus_previous = close_button.get_path_to(saturation_slider)
@@ -915,20 +915,20 @@ func _setup_focus_navigation():
 		saturation_slider.focus_previous = saturation_slider.get_path_to(hue_slider)
 		saturation_slider.focus_neighbor_top = saturation_slider.get_path_to(hue_slider)
 
-	if hud_hue_slider and saturation_slider:
-		saturation_slider.focus_next = saturation_slider.get_path_to(hud_hue_slider)
-		saturation_slider.focus_neighbor_bottom = saturation_slider.get_path_to(hud_hue_slider)
+	if hud_bg_checkbox and saturation_slider:
+		saturation_slider.focus_next = saturation_slider.get_path_to(hud_bg_checkbox)
+		saturation_slider.focus_neighbor_bottom = saturation_slider.get_path_to(hud_bg_checkbox)
 
-		hud_hue_slider.focus_mode = Control.FOCUS_ALL
-		hud_hue_slider.focus_previous = hud_hue_slider.get_path_to(saturation_slider)
-		hud_hue_slider.focus_neighbor_top = hud_hue_slider.get_path_to(saturation_slider)
-
-	if hud_hue_slider and hud_bg_checkbox:
-		hud_hue_slider.focus_next = hud_hue_slider.get_path_to(hud_bg_checkbox)
-		hud_hue_slider.focus_neighbor_bottom = hud_hue_slider.get_path_to(hud_bg_checkbox)
 		hud_bg_checkbox.focus_mode = Control.FOCUS_ALL
-		hud_bg_checkbox.focus_previous = hud_bg_checkbox.get_path_to(hud_hue_slider)
-		hud_bg_checkbox.focus_neighbor_top = hud_bg_checkbox.get_path_to(hud_hue_slider)
+		hud_bg_checkbox.focus_previous = hud_bg_checkbox.get_path_to(saturation_slider)
+		hud_bg_checkbox.focus_neighbor_top = hud_bg_checkbox.get_path_to(saturation_slider)
+
+	if hud_bg_checkbox and hud_hue_slider:
+		hud_bg_checkbox.focus_next = hud_bg_checkbox.get_path_to(hud_hue_slider)
+		hud_bg_checkbox.focus_neighbor_bottom = hud_bg_checkbox.get_path_to(hud_hue_slider)
+		hud_hue_slider.focus_mode = Control.FOCUS_ALL
+		hud_hue_slider.focus_previous = hud_hue_slider.get_path_to(hud_bg_checkbox)
+		hud_hue_slider.focus_neighbor_top = hud_hue_slider.get_path_to(hud_bg_checkbox)
 
 	if close_button != null:
 		if is_embedded:
@@ -941,7 +941,10 @@ func _setup_focus_navigation():
 			painting_sounds_checkbox.focus_neighbor_bottom = painting_sounds_checkbox.get_path_to(close_button)
 			close_button.focus_previous = close_button.get_path_to(painting_sounds_checkbox)
 			close_button.focus_neighbor_top = close_button.get_path_to(painting_sounds_checkbox)
-			if hud_bg_checkbox:
+			if hud_hue_slider:
+				hud_hue_slider.focus_next = hud_hue_slider.get_path_to(close_button)
+				hud_hue_slider.focus_neighbor_bottom = hud_hue_slider.get_path_to(close_button)
+			elif hud_bg_checkbox:
 				hud_bg_checkbox.focus_next = hud_bg_checkbox.get_path_to(close_button)
 				hud_bg_checkbox.focus_neighbor_bottom = hud_bg_checkbox.get_path_to(close_button)
 			elif hud_hue_slider:
