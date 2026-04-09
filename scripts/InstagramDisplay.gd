@@ -1,8 +1,10 @@
+@tool
 extends Node3D
 
-## Displays the gallery's last 5 Instagram posts as a live slideshow on a 3D screen.
+## Displays the gallery's last Instagram posts as a live slideshow on a 3D screen.
 ## Fetches post metadata from the backend, then downloads each image directly from
 ## Instagram's CDN. Refreshes every FETCH_INTERVAL seconds.
+## @tool lets the SubViewport preview render on the screen mesh in the editor.
 
 @onready var _sub_viewport: SubViewport = $SubViewport
 @onready var _screen: MeshInstance3D = $Screen
@@ -30,11 +32,14 @@ var _image_requests: Array[HTTPRequest] = []
 
 
 func _ready() -> void:
-	# Apply TV shader using SubViewport texture
+	# Apply TV shader — runs in both editor and game so the SubViewport is visible
 	if _screen and _sub_viewport:
 		var mat: ShaderMaterial = preload("res://materials/tv.tres").duplicate()
 		mat.set_shader_parameter("tv_tex", _sub_viewport.get_texture())
 		_screen.material_override = mat
+
+	if Engine.is_editor_hint():
+		return  # Skip HTTP and signals in the editor
 
 	# Feed request
 	_feed_request = HTTPRequest.new()
@@ -58,7 +63,7 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
-	if not _is_ready or _posts.is_empty():
+	if Engine.is_editor_hint() or not _is_ready or _posts.is_empty():
 		return
 
 	_slide_timer -= delta

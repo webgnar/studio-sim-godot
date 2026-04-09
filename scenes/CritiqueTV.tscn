@@ -3,7 +3,6 @@
 [ext_resource type="PackedScene" uid="uid://up674at5a4c3" path="res://scenes/PipeScreensaver.tscn" id="1_pipescene"]
 [ext_resource type="Script" uid="uid://bca71no7j3vhh" path="res://scripts/CritiqueDisplay.gd" id="1_script"]
 [ext_resource type="Texture2D" uid="uid://bgi7mpqd80v1j" path="res://sprites/art critics/general.png" id="2_8qcen"]
-[ext_resource type="Material" uid="uid://bl43iap4a4kjl" path="res://materials/tv.tres" id="2_llmxe"]
 [ext_resource type="FontFile" uid="uid://scsmiofa8vip" path="res://fonts/NotoSerif-Regular.ttf" id="3_bk5et"]
 [ext_resource type="AudioStream" uid="uid://cnjld2r5btwho" path="res://sounds/dial up.ogg" id="3_dialup"]
 [ext_resource type="Material" uid="uid://48uded6h5otx" path="res://materials/brickwhite.tres" id="4_pd0kh"]
@@ -13,6 +12,45 @@
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_tv"]
 size = Vector2(1.6, 0.9)
+
+[sub_resource type="Shader" id="Shader_dbi58"]
+code = "shader_type spatial;
+
+uniform sampler2D tv_tex : source_color;
+
+uniform float scanline_strength = 0.3;
+uniform float noise_strength = 0.04;
+uniform float flicker_strength = 0.03;
+
+void fragment() {
+    vec2 uv = UV;
+
+    vec3 col = texture(tv_tex, uv).rgb;
+
+    float scan = sin(uv.y * 900.0) * 0.5 + 0.5;
+    col *= mix(1.0, scan, scanline_strength);
+
+    float n = fract(sin(dot(uv * TIME, vec2(12.9898,78.233))) * 43758.5453);
+    col += (n - 0.5) * noise_strength;
+
+    col *= 1.0 + sin(TIME * 60.0) * flicker_strength;
+
+    ALBEDO = col;
+    EMISSION = col * 0.4;
+}
+"
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_llmxe"]
+viewport_path = NodePath("SubViewport")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_bk5et"]
+resource_local_to_scene = true
+render_priority = 0
+shader = SubResource("Shader_dbi58")
+shader_parameter/tv_tex = SubResource("ViewportTexture_llmxe")
+shader_parameter/scanline_strength = 0.4
+shader_parameter/noise_strength = 0.15
+shader_parameter/flicker_strength = 0.02
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_a3r00"]
 albedo_texture = ExtResource("4_tgbr6")
@@ -69,7 +107,7 @@ text = "Awaiting next painting..."
 [node name="Screen" type="MeshInstance3D" parent="." unique_id=1207183709]
 transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0)
 mesh = SubResource("PlaneMesh_tv")
-surface_material_override/0 = ExtResource("2_llmxe")
+surface_material_override/0 = SubResource("ShaderMaterial_bk5et")
 
 [node name="Sprite3D" type="Sprite3D" parent="." unique_id=1553093011]
 transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -1.0383173, 0, 0)

@@ -47,6 +47,7 @@ Wavy ID
 [center]Supporting artists[/center]
 R. Tipparach
 Adam L. P.
+capn
 D. Ramis
 Cullen B.
 
@@ -76,12 +77,12 @@ mesh = SubResource("PlaneMesh_portrait")
 surface_material_override/0 = ExtResource("2_tvmat")
 
 [node name="BezelTop" type="CSGBox3D" parent="." unique_id=1213172169]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.822, -0.036)
-size = Vector3(0.962, 0.0437, 0.091)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00096583366, 0.822, -0.036)
+size = Vector3(0.985373, 0.0437, 0.091)
 
 [node name="BezelBottom" type="CSGBox3D" parent="." unique_id=1068255376]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.822, -0.036)
-size = Vector3(0.962, 0.0437, 0.091)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0031325668, -0.822, -0.036)
+size = Vector3(0.99202585, 0.0437, 0.091)
 
 [node name="BezelLeft" type="CSGBox3D" parent="." unique_id=893404251]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.471, 0, -0.036)

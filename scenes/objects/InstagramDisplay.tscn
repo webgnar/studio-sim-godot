@@ -3,12 +3,86 @@
 [ext_resource type="Script" uid="uid://culriic1boi1s" path="res://scripts/InstagramDisplay.gd" id="1_script"]
 [ext_resource type="Material" uid="uid://bl43iap4a4kjl" path="res://materials/tv.tres" id="2_tvmat"]
 [ext_resource type="FontFile" uid="uid://scsmiofa8vip" path="res://fonts/NotoSerif-Regular.ttf" id="3_font"]
+[ext_resource type="Texture2D" uid="uid://hrd8j1jg0hos" path="res://sprites/textures/metal_18-512x512.png" id="4_tqk6m"]
+[ext_resource type="Texture2D" uid="uid://bdjgb5bn2m778" path="res://sprites/normals/metal_18-512x512_normal.png" id="5_ndro1"]
+
+[sub_resource type="Shader" id="Shader_dbi58"]
+code = "shader_type spatial;
+
+uniform sampler2D tv_tex : source_color;
+
+uniform float scanline_strength = 0.3;
+uniform float noise_strength = 0.04;
+uniform float flicker_strength = 0.03;
+
+void fragment() {
+    vec2 uv = UV;
+
+    vec3 col = texture(tv_tex, uv).rgb;
+
+    float scan = sin(uv.y * 900.0) * 0.5 + 0.5;
+    col *= mix(1.0, scan, scanline_strength);
+
+    float n = fract(sin(dot(uv * TIME, vec2(12.9898,78.233))) * 43758.5453);
+    col += (n - 0.5) * noise_strength;
+
+    col *= 1.0 + sin(TIME * 60.0) * flicker_strength;
+
+    ALBEDO = col;
+    EMISSION = col * 0.4;
+}
+"
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_jbkqc"]
+viewport_path = NodePath("SubViewport")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_7e7hv"]
+resource_local_to_scene = true
+render_priority = 0
+shader = SubResource("Shader_dbi58")
+shader_parameter/tv_tex = SubResource("ViewportTexture_jbkqc")
+shader_parameter/scanline_strength = 0.2
+shader_parameter/noise_strength = 0.24
+shader_parameter/flicker_strength = 0.02
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_screen"]
 size = Vector2(1.6, 1.2)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bezel"]
-albedo_color = Color(0.08, 0.08, 0.08, 1)
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_e50hx"]
+albedo_color = Color(0, 0, 0, 1)
+albedo_texture = ExtResource("4_tqk6m")
+metallic = 1.0
+roughness = 0.0
+emission_energy_multiplier = 10.61
+normal_enabled = true
+normal_scale = 1.43
+normal_texture = ExtResource("5_ndro1")
+uv1_scale = Vector3(0.03, 0.037, 0.01)
+texture_filter = 0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hh5u0"]
+albedo_color = Color(0, 0, 0, 1)
+albedo_texture = ExtResource("4_tqk6m")
+metallic = 1.0
+roughness = 0.0
+emission_energy_multiplier = 10.61
+normal_enabled = true
+normal_scale = 1.43
+normal_texture = ExtResource("5_ndro1")
+uv1_scale = Vector3(0.03, 0.037, 0.01)
+texture_filter = 0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ayrge"]
+albedo_color = Color(0, 0, 0, 1)
+albedo_texture = ExtResource("4_tqk6m")
+metallic = 1.0
+roughness = 0.0
+emission_energy_multiplier = 10.61
+normal_enabled = true
+normal_scale = 1.43
+normal_texture = ExtResource("5_ndro1")
+uv1_scale = Vector3(0.03, 0.037, 0.01)
+texture_filter = 0
 
 [node name="InstagramDisplay" type="Node3D" unique_id=100000001]
 script = ExtResource("1_script")
@@ -50,73 +124,74 @@ text = "Loading feed..."
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="OverlayColorRect" type="ColorRect" parent="SubViewport" unique_id=100000006]
-offset_top = 438.0
-offset_right = 640.0
-offset_bottom = 480.0
-color = Color(0, 0, 0, 0.7)
-
 [node name="OverlayContainer" type="Control" parent="SubViewport" unique_id=100000007]
 layout_mode = 3
 anchors_preset = 0
-offset_top = 438.0
+offset_top = 350.0
 offset_right = 640.0
-offset_bottom = 480.0
+offset_bottom = 490.0
 
 [node name="MarginContainer" type="MarginContainer" parent="SubViewport/OverlayContainer" unique_id=100000008]
 layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_top = 42.48
+offset_bottom = 41.949997
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 3
+theme_override_constants/margin_top = 6
 theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 3
+theme_override_constants/margin_bottom = 8
 
 [node name="VBoxContainer" type="VBoxContainer" parent="SubViewport/OverlayContainer/MarginContainer" unique_id=100000009]
 layout_mode = 2
-theme_override_constants/separation = 1
+theme_override_constants/separation = 4
 
 [node name="CaptionLabel" type="RichTextLabel" parent="SubViewport/OverlayContainer/MarginContainer/VBoxContainer" unique_id=100000010]
-custom_minimum_size = Vector2(0, 17)
+custom_minimum_size = Vector2(113.31, 62.31)
 layout_mode = 2
-theme_override_colors/default_color = Color(0.95, 0.95, 0.9, 1)
-theme_override_constants/outline_size = 2
+theme_override_colors/default_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 6
 theme_override_fonts/normal_font = ExtResource("3_font")
-theme_override_font_sizes/normal_font_size = 12
+theme_override_font_sizes/normal_font_size = 13
 bbcode_enabled = true
+text = "A new painting just finished — oil on canvas, inspired by the late afternoon light filtering through the studio windows."
 scroll_active = false
 
 [node name="MetaLabel" type="Label" parent="SubViewport/OverlayContainer/MarginContainer/VBoxContainer" unique_id=100000011]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.6, 0.6, 0.6, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 0.85)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 5
 theme_override_fonts/font = ExtResource("3_font")
-theme_override_font_sizes/font_size = 11
-text = "♥ 0   1 / 10"
+theme_override_font_sizes/font_size = 12
+text = "♥ 142   3 / 10"
 horizontal_alignment = 2
 
 [node name="Screen" type="MeshInstance3D" parent="." unique_id=100000012]
 transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0)
+material_override = SubResource("ShaderMaterial_7e7hv")
 mesh = SubResource("PlaneMesh_screen")
 surface_material_override/0 = ExtResource("2_tvmat")
 
 [node name="BezelTop" type="CSGBox3D" parent="." unique_id=100000013]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00079345703, 0.6120697, -0.03460422)
 size = Vector3(1.5618896, 0.043670654, 0.091430664)
-material = SubResource("StandardMaterial3D_bezel")
+material = SubResource("StandardMaterial3D_e50hx")
 
 [node name="BezelBottom" type="CSGBox3D" parent="." unique_id=100000014]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0026369095, -0.6219642, -0.03460422)
 size = Vector3(1.6388721, 0.043670654, 0.091430664)
-material = SubResource("StandardMaterial3D_bezel")
+material = SubResource("StandardMaterial3D_e50hx")
 
 [node name="BezelLeft" type="CSGBox3D" parent="." unique_id=100000015]
 transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, -0.8001337, 0.0028075576, -0.036108285)
 size = Vector3(1.2601593, 0.043670654, 0.091430664)
-material = SubResource("StandardMaterial3D_bezel")
+material = SubResource("StandardMaterial3D_hh5u0")
 
 [node name="BezelRight" type="CSGBox3D" parent="." unique_id=100000016]
 transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0.79849315, -0.005150676, -0.036108285)
 size = Vector3(1.2760757, 0.043670654, 0.091430664)
-material = SubResource("StandardMaterial3D_bezel")
+material = SubResource("StandardMaterial3D_ayrge")

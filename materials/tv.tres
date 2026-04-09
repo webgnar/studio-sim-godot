@@ -1,6 +1,31 @@
 [gd_resource type="ShaderMaterial" format=3 uid="uid://bl43iap4a4kjl"]
 
-[ext_resource type="Shader" uid="uid://dpauf2xqr6u2e" path="res://materials/tv.gdshader" id="1_nvkav"]
+[sub_resource type="Shader" id="Shader_dbi58"]
+code = "shader_type spatial;
+
+uniform sampler2D tv_tex : source_color;
+
+uniform float scanline_strength = 0.3;
+uniform float noise_strength = 0.04;
+uniform float flicker_strength = 0.03;
+
+void fragment() {
+    vec2 uv = UV;
+
+    vec3 col = texture(tv_tex, uv).rgb;
+
+    float scan = sin(uv.y * 900.0) * 0.5 + 0.5;
+    col *= mix(1.0, scan, scanline_strength);
+
+    float n = fract(sin(dot(uv * TIME, vec2(12.9898,78.233))) * 43758.5453);
+    col += (n - 0.5) * noise_strength;
+
+    col *= 1.0 + sin(TIME * 60.0) * flicker_strength;
+
+    ALBEDO = col;
+    EMISSION = col * 0.4;
+}
+"
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_llmxe"]
 viewport_path = NodePath("SubViewport")
@@ -8,8 +33,8 @@ viewport_path = NodePath("SubViewport")
 [resource]
 resource_local_to_scene = true
 render_priority = 0
-shader = ExtResource("1_nvkav")
+shader = SubResource("Shader_dbi58")
 shader_parameter/tv_tex = SubResource("ViewportTexture_llmxe")
-shader_parameter/scanline_strength = 0.3
-shader_parameter/noise_strength = 0.46
-shader_parameter/flicker_strength = 0.01
+shader_parameter/scanline_strength = 0.2
+shader_parameter/noise_strength = 0.24
+shader_parameter/flicker_strength = 0.02
