@@ -3,8 +3,6 @@
 [ext_resource type="Script" uid="uid://culriic1boi1s" path="res://scripts/InstagramDisplay.gd" id="1_script"]
 [ext_resource type="Material" uid="uid://bl43iap4a4kjl" path="res://materials/tv.tres" id="2_tvmat"]
 [ext_resource type="FontFile" uid="uid://scsmiofa8vip" path="res://fonts/NotoSerif-Regular.ttf" id="3_font"]
-[ext_resource type="Texture2D" uid="uid://hrd8j1jg0hos" path="res://sprites/textures/metal_18-512x512.png" id="4_tqk6m"]
-[ext_resource type="Texture2D" uid="uid://bdjgb5bn2m778" path="res://sprites/normals/metal_18-512x512_normal.png" id="5_ndro1"]
 
 [sub_resource type="Shader" id="Shader_dbi58"]
 code = "shader_type spatial;
@@ -48,41 +46,8 @@ shader_parameter/flicker_strength = 0.02
 [sub_resource type="PlaneMesh" id="PlaneMesh_screen"]
 size = Vector2(1.6, 1.2)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_e50hx"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tqk6m"]
 albedo_color = Color(0, 0, 0, 1)
-albedo_texture = ExtResource("4_tqk6m")
-metallic = 1.0
-roughness = 0.0
-emission_energy_multiplier = 10.61
-normal_enabled = true
-normal_scale = 1.43
-normal_texture = ExtResource("5_ndro1")
-uv1_scale = Vector3(0.03, 0.037, 0.01)
-texture_filter = 0
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hh5u0"]
-albedo_color = Color(0, 0, 0, 1)
-albedo_texture = ExtResource("4_tqk6m")
-metallic = 1.0
-roughness = 0.0
-emission_energy_multiplier = 10.61
-normal_enabled = true
-normal_scale = 1.43
-normal_texture = ExtResource("5_ndro1")
-uv1_scale = Vector3(0.03, 0.037, 0.01)
-texture_filter = 0
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ayrge"]
-albedo_color = Color(0, 0, 0, 1)
-albedo_texture = ExtResource("4_tqk6m")
-metallic = 1.0
-roughness = 0.0
-emission_energy_multiplier = 10.61
-normal_enabled = true
-normal_scale = 1.43
-normal_texture = ExtResource("5_ndro1")
-uv1_scale = Vector3(0.03, 0.037, 0.01)
-texture_filter = 0
 
 [node name="InstagramDisplay" type="Node3D" unique_id=100000001]
 script = ExtResource("1_script")
@@ -177,21 +142,21 @@ mesh = SubResource("PlaneMesh_screen")
 surface_material_override/0 = ExtResource("2_tvmat")
 
 [node name="BezelTop" type="CSGBox3D" parent="." unique_id=100000013]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00079345703, 0.6120697, -0.03460422)
-size = Vector3(1.5618896, 0.043670654, 0.091430664)
-material = SubResource("StandardMaterial3D_e50hx")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.021476746, 0.6120697, -0.03460422)
+size = Vector3(1.5999298, 0.043670654, 0.091430664)
+material = SubResource("StandardMaterial3D_tqk6m")
 
 [node name="BezelBottom" type="CSGBox3D" parent="." unique_id=100000014]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0026369095, -0.6219642, -0.03460422)
-size = Vector3(1.6388721, 0.043670654, 0.091430664)
-material = SubResource("StandardMaterial3D_e50hx")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.021968603, -0.6219642, -0.03460422)
+size = Vector3(1.6002088, 0.043670654, 0.091430664)
+material = SubResource("StandardMaterial3D_tqk6m")
 
 [node name="BezelLeft" type="CSGBox3D" parent="." unique_id=100000015]
-transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, -0.8001337, 0.0028075576, -0.036108285)
-size = Vector3(1.2601593, 0.043670654, 0.091430664)
-material = SubResource("StandardMaterial3D_hh5u0")
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, -0.8001337, 0.016925752, -0.036108285)
+size = Vector3(1.2336061, 0.043670654, 0.091430664)
+material = SubResource("StandardMaterial3D_tqk6m")
 
 [node name="BezelRight" type="CSGBox3D" parent="." unique_id=100000016]
-transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0.79849315, -0.005150676, -0.036108285)
-size = Vector3(1.2760757, 0.043670654, 0.091430664)
-material = SubResource("StandardMaterial3D_ayrge")
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0.79849315, -0.02597642, -0.036108285)
+size = Vector3(1.2344242, 0.043670654, 0.091430664)
+material = SubResource("StandardMaterial3D_tqk6m")

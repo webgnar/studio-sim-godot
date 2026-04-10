@@ -170,6 +170,10 @@ func _input(event):
 	if not keyboard_nav_enabled:
 		return
 
+	# Don't intercept input while a LineEdit is focused — let it handle typing
+	if get_viewport().gui_get_focus_owner() is LineEdit:
+		return
+
 	# ESC or B button to close (when standalone) or go back to tab mode (when embedded)
 	if event.is_action_pressed("ui_cancel") or event.is_action_pressed("go_back"):
 		if is_embedded:
