@@ -1,0 +1,23 @@
+[gd_scene format=3 uid="uid://b4j6krmtnx1p8"]
+
+[ext_resource type="PackedScene" uid="uid://d2kpo28l1t3oa" path="res://models/discord.glb" id="1_disc"]
+[ext_resource type="Script" path="res://scripts/components/OpenURLButton.gd" id="2_disc"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_disc"]
+size = Vector3(1, 1, 1)
+
+[node name="DiscordLink" type="Node3D"]
+
+[node name="model" parent="." instance=ExtResource("1_disc")]
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+collision_layer = 8
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+shape = SubResource("BoxShape3D_disc")
+
+[node name="OpenURLButton" type="Node3D" parent="."]
+script = ExtResource("2_disc")
+url = "https://discord.gg/R7Qxbm4shZ"
+interaction_text = "Join Discord"

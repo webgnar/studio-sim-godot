@@ -1,0 +1,27 @@
+[gd_scene format=3 uid="uid://1ohpov10kqj4"]
+
+[ext_resource type="PackedScene" uid="uid://bns2tboqmlubn" path="res://models/spider_web.glb" id="1_spweb"]
+[ext_resource type="Script" uid="uid://bmpswtco2xtru" path="res://scripts/components/OpenURLButton.gd" id="2_spweb"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_spweb"]
+size = Vector3(2.0703125, 1.881958, 0.9428711)
+
+[node name="SpiderWebLink" type="Node3D" unique_id=33700776]
+
+[node name="model" parent="." unique_id=1892588130 instance=ExtResource("1_spweb")]
+
+[node name="model2" parent="." unique_id=597844968 instance=ExtResource("1_spweb")]
+transform = Transform3D(-4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0, 1, 4.600745, -0.047216415, 0)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=1970722815]
+collision_layer = 8
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" unique_id=705087192]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.24016, -1.1774472, 0.028564453)
+shape = SubResource("BoxShape3D_spweb")
+
+[node name="OpenURLButton" type="Node3D" parent="." unique_id=583859306]
+script = ExtResource("2_spweb")
+url = "https://studio-sim-gallery.vercel.app/"
+interaction_text = "Visit Gallery"

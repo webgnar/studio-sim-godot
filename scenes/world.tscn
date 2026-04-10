@@ -136,6 +136,8 @@
 [ext_resource type="PackedScene" uid="uid://bqmpjl0m0erex" path="res://scenes/objects/intro note.tscn" id="141_7huuw"]
 [ext_resource type="PackedScene" uid="uid://dd72wvy86gw6t" path="res://scenes/objects/intro note2.tscn" id="142_i00a8"]
 [ext_resource type="PackedScene" uid="uid://dtspe6ksqg4e0" path="res://scenes/objects/InstagramDisplay.tscn" id="146_ctgs1"]
+[ext_resource type="PackedScene" uid="uid://1ohpov10kqj4" path="res://scenes/objects/SpiderWebLink.tscn" id="147_spweb"]
+[ext_resource type="PackedScene" uid="uid://b4j6krmtnx1p8" path="res://scenes/objects/DiscordLink.tscn" id="148_disc"]
 [ext_resource type="PackedScene" uid="uid://d2lld8pxrphp3" path="res://scenes/objects/SaveAssistantWorkButton.tscn" id="200_savebtn"]
 [ext_resource type="PackedScene" uid="uid://dfcanvasscn1" path="res://scenes/objects/AssistantFinishedCanvas.tscn" id="201_fcanvas"]
 [ext_resource type="Script" uid="uid://nvjrcsa5oaqc" path="res://scripts/BerkeyInteraction.gd" id="berkey_interaction"]
@@ -425,17 +427,17 @@ albedo_color = Color(1.0734373, 1.0734373, 0.15063755, 1)
 albedo_texture = ExtResource("82_mu18u")
 texture_filter = 0
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_ctgs1"]
+[sub_resource type="PlaneMesh" id="PlaneMesh_scu3r"]
 resource_local_to_scene = true
 size = Vector2(2.5, 3)
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_6li3m"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_7m3dx"]
 resource_name = "_albedo"
 viewport_path = NodePath("../MirrorNew/SubViewport")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_scu3r"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vevsf"]
 resource_local_to_scene = true
-albedo_texture = SubResource("ViewportTexture_6li3m")
+albedo_texture = SubResource("ViewportTexture_7m3dx")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_1v02h"]
 size = Vector2(2.5, 3)
@@ -1956,8 +1958,8 @@ surface_material_override/0 = SubResource("StandardMaterial3D_7b7y8")
 
 [node name="mirror" parent="." unique_id=1626491013 groups=["shop_prop"] instance=ExtResource("39_qaasp")]
 transform = Transform3D(-4.7902194e-08, -0.99488777, 0.10098683, -3.9073655e-08, 0.10098683, 0.99488777, -1, 4.3711392e-08, -4.3711385e-08, 2.8, 1.497, 5.232)
-mesh = SubResource("PlaneMesh_ctgs1")
-surface_material_override/0 = SubResource("StandardMaterial3D_scu3r")
+mesh = SubResource("PlaneMesh_scu3r")
+surface_material_override/0 = SubResource("StandardMaterial3D_vevsf")
 show_debug_logs = false
 metadata/mirror = "mirror"
 metadata/shop_item_id = "mirror"
@@ -2573,6 +2575,12 @@ transform = Transform3D(-0.2, 0, 1.7484556e-08, -1.7484556e-08, -8.742278e-09, -
 
 [node name="InstagramDisplay" parent="." unique_id=100000001 instance=ExtResource("146_ctgs1")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 4.176862, 1.863181, 5)
+
+[node name="SpiderWebLink" parent="." unique_id=200000010 instance=ExtResource("147_spweb")]
+transform = Transform3D(-6.8943287e-09, 3.950687e-09, 0.09, 0.00056235865, -0.08999824, 3.993689e-09, 0.08999824, 0.00056235865, 6.8695085e-09, 4.1625786, 1.0141416, 5.2197046)
+
+[node name="DiscordLink" parent="." unique_id=200000011 instance=ExtResource("148_disc")]
+transform = Transform3D(0.09, 0, 0, 0, -3.934025e-09, 0.09, 0, -0.09, -3.934025e-09, 2.494263, 1.2698529, 8.7283325)
 
 [editable path="Spotlight1"]
 [editable path="Spotlight2"]
