@@ -293,6 +293,42 @@ layout_mode = 2
 button_pressed = true
 text = "Publish painting online"
 
+[node name="InstagramRow" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game" unique_id=1111111108]
+layout_mode = 2
+
+[node name="InstagramLabel" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/InstagramRow" unique_id=1111111109]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Instagram:"
+
+[node name="InstagramAt" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/InstagramRow" unique_id=1111111114]
+layout_mode = 2
+text = "@"
+
+[node name="InstagramLineEdit" type="LineEdit" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/InstagramRow" unique_id=1111111110]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "handle"
+focus_mode = 2
+
+[node name="BlueSkyRow" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game" unique_id=1111111111]
+layout_mode = 2
+
+[node name="BlueSkyLabel" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/BlueSkyRow" unique_id=1111111112]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Bluesky:"
+
+[node name="BlueSkyAt" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/BlueSkyRow" unique_id=1111111115]
+layout_mode = 2
+text = "@"
+
+[node name="BlueSkyLineEdit" type="LineEdit" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/BlueSkyRow" unique_id=1111111113]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "handle"
+focus_mode = 2
+
 [node name="ButtonNavSound" type="AudioStreamPlayer" parent="." unique_id=1505501763]
 stream = ExtResource("3_nav_sound")
 bus = &"SFX"

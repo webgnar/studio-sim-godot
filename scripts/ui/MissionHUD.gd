@@ -3,10 +3,8 @@ class_name MissionHUD
 
 ## Always-visible HUD in bottom-left corner showing current mission name and target thumbnail
 
-@onready var panel_container = $PanelContainer
-@onready var thumbnail_rect = $PanelContainer/MarginContainer/HBoxContainer/ThumbnailRect
-@onready var mission_name_label = $PanelContainer/MarginContainer/HBoxContainer/VBoxContainer/MissionNameLabel
-@onready var timer_label = $PanelContainer/MarginContainer/HBoxContainer/VBoxContainer/TimerLabel
+@onready var thumbnail_rect = $VBoxContainer/ThumbnailRect
+@onready var mission_name_label = $VBoxContainer/MissionNameLabel
 
 var mission_active := false
 
@@ -43,14 +41,6 @@ func _on_mission_started(mission: PaintingMission):
 	# Show the HUD
 	mission_active = true
 	visible = true
-
-func _process(_delta):
-	if mission_active and MissionManager and MissionManager.mission_start_time > 0:
-		var elapsed_ms = Time.get_ticks_msec() - MissionManager.mission_start_time
-		var total_seconds: int = int(elapsed_ms / 1000.0)
-		var minutes: int = int(total_seconds / 60.0)
-		var seconds = total_seconds % 60
-		timer_label.text = "%d:%02d" % [minutes, seconds]
 
 func _on_mission_ended(_mission: PaintingMission, _result = null):
 	"""Hide HUD when mission ends"""

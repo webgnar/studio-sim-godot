@@ -51,9 +51,16 @@ func _ready() -> void:
 	_setup_switch_audio()
 	_setup_animation()
 
-	# Auto-play song 1 if enabled
-	if auto_play_on_start:
-		_current_song_index = 0  # Set to song 1
+	WorldStateManager.world_state_loaded.connect(_on_world_state_loaded, CONNECT_ONE_SHOT)
+
+func _on_world_state_loaded() -> void:
+	var saved = WorldStateManager.get_data("boombox_" + boombox_id, null)
+	if saved != null:
+		_current_song_index = saved.get("song_index", 0)
+		if saved.get("is_playing", false):
+			_start_audio()
+	elif auto_play_on_start:
+		_current_song_index = 0
 		_start_audio()
 		print("Boombox auto-playing song 1 on scene load")
 
@@ -138,6 +145,7 @@ func _start_audio() -> void:
 
 	audio_started.emit(song_name)
 	print("Now playing: " + song_name)
+	_save_state()
 
 func _stop_audio() -> void:
 	if _radio_audio_player and _radio_audio_player.playing:
@@ -149,12 +157,19 @@ func _stop_audio() -> void:
 
 		audio_stopped.emit()
 		print("Stopped playing")
+		_save_state()
 
 func _check_if_audio_finished() -> void:
 	# When a song finishes, loop it by restarting playback
 	if _radio_audio_player and not _radio_audio_player.playing:
 		# Restart the same song to create a loop
 		_radio_audio_player.play()
+
+func _save_state() -> void:
+	WorldStateManager.set_data("boombox_" + boombox_id, {
+		"song_index": _current_song_index,
+		"is_playing": _current_state == BoomboxState.PLAYING
+	})
 
 func get_radio_state() -> BoomboxState:
 	return _current_state

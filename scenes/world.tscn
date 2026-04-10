@@ -927,9 +927,9 @@ painting_system_2d = NodePath("../../PaintingRoot2d/CanvasViewport/CanvasRoot")
 
 [node name="GameplayUI_Layer" type="CanvasLayer" parent="." unique_id=497812470]
 
-[node name="PauseMenu" parent="GameplayUI_Layer" unique_id=1200484280 instance=ExtResource("77_pause_menu")]
-
 [node name="MissionHUD" parent="GameplayUI_Layer" unique_id=1077091467 instance=ExtResource("83_hud")]
+
+[node name="PauseMenu" parent="GameplayUI_Layer" unique_id=1200484280 instance=ExtResource("77_pause_menu")]
 
 [node name="SaveNotification" parent="GameplayUI_Layer" unique_id=736111851 instance=ExtResource("78_save_notif")]
 

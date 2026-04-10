@@ -384,8 +384,10 @@ func start_export() -> void:
 		png_path = result.get("png", "")
 		glb_path = result.get("glb", "")
 
-	# Check publish_online_on_ship setting (default true)
+	# Check publish_online_on_ship setting and read social handles (default true)
 	var publish_online: bool = true
+	var instagram_handle: String = ""
+	var bluesky_handle: String = ""
 	if FileAccess.file_exists("user://settings.json"):
 		var sj_file = FileAccess.open("user://settings.json", FileAccess.READ)
 		if sj_file:
@@ -393,12 +395,20 @@ func start_export() -> void:
 			if sj_json.parse(sj_file.get_as_text()) == OK and typeof(sj_json.data) == TYPE_DICTIONARY:
 				if sj_json.data.has("publish_online_on_ship"):
 					publish_online = bool(sj_json.data["publish_online_on_ship"])
+				if sj_json.data.has("instagram_handle"):
+					var raw = str(sj_json.data["instagram_handle"]).strip_edges()
+					if raw != "":
+						instagram_handle = ("@" + raw) if not raw.begins_with("@") else raw
+				if sj_json.data.has("bluesky_handle"):
+					var raw2 = str(sj_json.data["bluesky_handle"]).strip_edges()
+					if raw2 != "":
+						bluesky_handle = ("@" + raw2) if not raw2.begins_with("@") else raw2
 			sj_file.close()
 
 	# Upload to gallery (non-blocking) — only if publish_online is enabled
 	if publish_online and not png_path.is_empty() and not glb_path.is_empty():
 		_pending_upload_painting_id = painting.painting_id
-		GalleryUploader.upload_painting(png_path, glb_path, painting.painting_name, painting.artist_statement, SteamManager.persona_name)
+		GalleryUploader.upload_painting(png_path, glb_path, painting.painting_name, painting.artist_statement, SteamManager.persona_name, instagram_handle, bluesky_handle)
 
 	# Ship painting to gallery — mark as SHIPPED and teleport to gallery room
 	WorldStateManager.ship_painting(painting)

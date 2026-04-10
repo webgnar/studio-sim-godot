@@ -32,6 +32,8 @@ var close_button: Button = null  # Removed from scene; closing handled by go_bac
 @onready var save_png_checkbox: CheckBox = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/SavePNGCheckbox
 @onready var generate_critique_checkbox: CheckBox = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/GenerateCritiqueCheckbox
 @onready var publish_online_checkbox: CheckBox = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/PublishOnlineCheckbox
+@onready var instagram_line_edit: LineEdit = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/InstagramRow/InstagramLineEdit
+@onready var bluesky_line_edit: LineEdit = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/BlueSkyRow/BlueSkyLineEdit
 @onready var panel_container: PanelContainer = $PanelContainer
 @onready var button_nav_sound: AudioStreamPlayer = $ButtonNavSound
 @onready var open_menu_sound: AudioStreamPlayer = $OpenMenuSound
@@ -471,6 +473,8 @@ func save_settings():
 	settings["save_png_on_ship"] = save_png_on_ship
 	settings["generate_npc_critique"] = generate_npc_critique
 	settings["publish_online_on_ship"] = publish_online_on_ship
+	settings["instagram_handle"] = instagram_handle
+	settings["bluesky_handle"] = bluesky_handle
 	settings["joystick_sensitivity"] = joystick_sensitivity
 
 	# Also save audio settings (in case AudioManager.save_settings() wasn't called)
@@ -592,6 +596,12 @@ func load_settings():
 		generate_npc_critique = bool(settings["generate_npc_critique"])
 	if settings.has("publish_online_on_ship"):
 		publish_online_on_ship = bool(settings["publish_online_on_ship"])
+	if settings.has("instagram_handle"):
+		instagram_handle = str(settings["instagram_handle"])
+		instagram_line_edit.text = instagram_handle
+	if settings.has("bluesky_handle"):
+		bluesky_handle = str(settings["bluesky_handle"])
+		bluesky_line_edit.text = bluesky_handle
 	save_glb_checkbox.button_pressed = save_glb_on_ship
 	save_png_checkbox.button_pressed = save_png_on_ship
 	generate_critique_checkbox.button_pressed = generate_npc_critique
@@ -646,6 +656,8 @@ var save_glb_on_ship: bool = true
 var save_png_on_ship: bool = true
 var generate_npc_critique: bool = true
 var publish_online_on_ship: bool = true
+var instagram_handle: String = ""
+var bluesky_handle: String = ""
 var game_checkboxes: Array[CheckBox] = []
 var joystick_sensitivity: float = 500.0
 
@@ -740,11 +752,29 @@ func _create_game_tab():
 	publish_online_checkbox.focus_previous = publish_online_checkbox.get_path_to(generate_critique_checkbox)
 	publish_online_checkbox.focus_neighbor_top = publish_online_checkbox.get_path_to(generate_critique_checkbox)
 
+	# Set up social handle inputs
+	instagram_line_edit.text = instagram_handle
+	instagram_line_edit.focus_mode = Control.FOCUS_ALL
+	bluesky_line_edit.text = bluesky_handle
+	bluesky_line_edit.focus_mode = Control.FOCUS_ALL
+
+	# Extend focus chain: publish → instagram → bluesky
+	publish_online_checkbox.focus_next = publish_online_checkbox.get_path_to(instagram_line_edit)
+	publish_online_checkbox.focus_neighbor_bottom = publish_online_checkbox.get_path_to(instagram_line_edit)
+	instagram_line_edit.focus_previous = instagram_line_edit.get_path_to(publish_online_checkbox)
+	instagram_line_edit.focus_neighbor_top = instagram_line_edit.get_path_to(publish_online_checkbox)
+	instagram_line_edit.focus_next = instagram_line_edit.get_path_to(bluesky_line_edit)
+	instagram_line_edit.focus_neighbor_bottom = instagram_line_edit.get_path_to(bluesky_line_edit)
+	bluesky_line_edit.focus_previous = bluesky_line_edit.get_path_to(instagram_line_edit)
+	bluesky_line_edit.focus_neighbor_top = bluesky_line_edit.get_path_to(instagram_line_edit)
+
 	# Connect signals after setting button_pressed to avoid triggering save_settings()
 	save_glb_checkbox.toggled.connect(_on_save_glb_toggled)
 	save_png_checkbox.toggled.connect(_on_save_png_toggled)
 	generate_critique_checkbox.toggled.connect(_on_generate_critique_toggled)
 	publish_online_checkbox.toggled.connect(_on_publish_online_toggled)
+	instagram_line_edit.text_changed.connect(_on_instagram_changed)
+	bluesky_line_edit.text_changed.connect(_on_bluesky_changed)
 
 	game_checkboxes = [save_glb_checkbox, save_png_checkbox, generate_critique_checkbox, publish_online_checkbox]
 
@@ -762,6 +792,14 @@ func _on_generate_critique_toggled(pressed: bool):
 
 func _on_publish_online_toggled(pressed: bool):
 	publish_online_on_ship = pressed
+	save_settings()
+
+func _on_instagram_changed(new_text: String):
+	instagram_handle = new_text
+	save_settings()
+
+func _on_bluesky_changed(new_text: String):
+	bluesky_handle = new_text
 	save_settings()
 
 func _is_last_in_tab(focused_control: Control) -> bool:
@@ -783,7 +821,7 @@ func _is_last_in_tab(focused_control: Control) -> bool:
 		3:  # Language
 			return language_buttons.size() > 0 and focused_control == language_buttons[-1]
 		4:  # Game
-			return game_checkboxes.size() > 0 and focused_control == game_checkboxes[-1]
+			return focused_control == bluesky_line_edit
 	return false
 
 func _focus_last_content_item():
@@ -807,8 +845,7 @@ func _focus_last_content_item():
 			if language_buttons.size() > 0:
 				language_buttons[-1].grab_focus()
 		4:  # Game
-			if game_checkboxes.size() > 0:
-				game_checkboxes[-1].grab_focus()
+			bluesky_line_edit.grab_focus()
 
 func _navigate_focus(direction: int):
 	"""Navigate focus up/down through controls"""
