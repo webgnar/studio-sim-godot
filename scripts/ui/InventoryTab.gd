@@ -640,7 +640,9 @@ func _save_current_painting():
 	var data = painting_entries[selected_index]
 	var painting_node = data.get("node")
 
-	# Can't save shipped paintings (no node, read-only)
+	# Can't save shipped paintings (read-only, even if node is still valid in gallery)
+	if data.get("status", "WIP") == "SHIPPED":
+		return
 	if painting_node == null or not is_instance_valid(painting_node):
 		return
 
