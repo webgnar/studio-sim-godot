@@ -235,6 +235,7 @@ TextEdit/colors/caret_color = Color(0.5764706, 1, 0.38431373, 1)
 TextEdit/colors/current_line_color = Color(0.6046311, 0.41572735, 0.91881543, 0.8)
 TextEdit/colors/font_color = Color(0.875, 0.875, 0.875, 1)
 TextEdit/colors/font_outline_color = Color(0, 0, 0, 1)
+TextEdit/colors/font_readonly_color = Color(1, 0.8745098, 0.8745098, 1)
 TextEdit/colors/font_selected_color = Color(0, 0, 0, 0)
 TextEdit/constants/caret_width = 8
 TextEdit/constants/line_spacing = -8
