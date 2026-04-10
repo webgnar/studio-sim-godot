@@ -2506,9 +2506,12 @@ Z. Goulet
 Z. Goulet
 Tom C.
 c.t. Rodel
+Wavy ID
 
 [center]Supporting artists[/center]
+R. Tipparach
 Adam L. P.
+capn
 D. Ramis
 Cullen B.
 
@@ -2517,6 +2520,7 @@ Cullen B.
 Jesse P.
 Canaan B.
 R. Tipparach
+Scott S.
 D. Ramis
 The folks at IGDATC
 mom
@@ -2527,8 +2531,7 @@ mom
 - godot
 - Dave
 - Ruben
-- The Gamedev Den
-- claude"
+- The Gamedev Den"
 
 [node name="BasketballHoop" parent="gallery" unique_id=641032447 instance=ExtResource("133_j7mh8")]
 transform = Transform3D(-1.3113417e-08, 0, -0.3, 0, 0.3, 0, 0.3, 0, -1.3113417e-08, 35.290443, 9.433124, 16.647125)
