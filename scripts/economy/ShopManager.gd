@@ -48,13 +48,24 @@ func _ready() -> void:
 # ============================================================================
 
 func get_catalog() -> Array:
-	"""Returns all shop items in order."""
+	"""Returns all shop items in order, including always_present entries."""
 	return _catalog
+
+
+func get_purchaseable_catalog() -> Array:
+	"""Returns only items that can be purchased (excludes always_present world objects)."""
+	return _catalog.filter(func(item): return not item.get("always_present", false))
 
 
 func is_purchased(item_id: String) -> bool:
 	"""Check if an item has been purchased this session."""
 	return WorldStateManager.get_purchased_items().has(item_id)
+
+
+func is_always_present(item_id: String) -> bool:
+	"""Returns true if this item is permanently in the world and not purchase-gated."""
+	var item = _get_item(item_id)
+	return item.get("always_present", false)
 
 
 func is_locked(item_id: String) -> bool:
@@ -399,11 +410,27 @@ Meyer himself described the origins of his inventions in deeply personal, spirit
 			"repeatable": true,
 		},
 		{
+			"id": "boombox",
+			"display_name": "Boombox",
+			"title": "Boombox",
+			"description": "A portable stereo sitting in the studio. Old school. Moves very strangely when playing.",
+			"price": 0,
+			"always_present": true,
+		},
+		{
+			"id": "basketball",
+			"display_name": "Basketball",
+			"title": "Basketball",
+			"description": "A cheap knock off non brand name basketball. How did this even get into the gallery? Whose child is bouncing balls in a gallery?",
+			"price": 0,
+			"always_present": true,
+		},
+		{
 			"id": "customstickerbutton",
 			"display_name": "Custom Sticker Modder",
 			"title": "Custom Sticker Modding button",
 			"description": "Modify Studio Sim by adding your own custom motifs to the painting UI array.",
-			"price": 15000,
+			"price": 5000,
 		},
 	]
 	_apply_desc_keys()

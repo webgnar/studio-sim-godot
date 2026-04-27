@@ -106,6 +106,7 @@ func _input(event: InputEvent) -> void:
 		if is_carrying and is_instance_valid(carried_object):
 			# Gentle drop
 			drop_carried_object()
+			get_viewport().set_input_as_handled()
 			return
 	
 	# E KEY - Interact (always interaction, never drop)

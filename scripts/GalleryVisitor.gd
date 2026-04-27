@@ -541,11 +541,31 @@ func _get_attraction_nodes() -> Array[Node3D]:
 			if data["status"] == "SHIPPED" and is_instance_valid(data["node"]):
 				result.append(data["node"] as Node3D)
 
-	# Source 2: anything else explicitly tagged as a gallery attraction
+	# Find gallery zone — optional, falls back to Y-filter if absent
+	var gallery_zone: GalleryZone = null
+	var zone_candidates := get_tree().get_nodes_in_group("gallery_zone")
+	if not zone_candidates.is_empty():
+		gallery_zone = zone_candidates[0] as GalleryZone
+
+	# Source 2: gallery_attraction group nodes (static sculptures: Seg, Stanmeyer, Geet)
 	for node in get_tree().get_nodes_in_group("gallery_attraction"):
-		if is_instance_valid(node) and node.is_visible_in_tree() and node not in result:
-			if node.global_position.y <= gallery_floor_y:
-				result.append(node as Node3D)
+		if not is_instance_valid(node) or not node.is_visible_in_tree():
+			continue
+		if node in result:
+			continue
+		var in_gallery: bool
+		if gallery_zone != null:
+			in_gallery = gallery_zone.contains_node(node)
+		else:
+			in_gallery = (node.global_position.y <= gallery_floor_y)
+		if in_gallery:
+			result.append(node as Node3D)
+
+	# Source 3: carryable shop props physically inside the gallery zone
+	if gallery_zone != null:
+		for body in gallery_zone.get_reactable_bodies():
+			if is_instance_valid(body) and body not in result:
+				result.append(body)
 
 	return result
 

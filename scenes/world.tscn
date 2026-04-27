@@ -131,6 +131,7 @@
 [ext_resource type="PackedScene" uid="uid://b2convrtbtn01" path="res://scenes/objects/ConvertAssistantButton.tscn" id="131_mslh2"]
 [ext_resource type="PackedScene" uid="uid://b2w7kknvqy8kc" path="res://scenes/objects/basketball_hoop.tscn" id="133_j7mh8"]
 [ext_resource type="PackedScene" uid="uid://df8i7yfpgundi" path="res://scenes/objects/CreditsTV.tscn" id="133_wt6o6"]
+[ext_resource type="Script" uid="uid://cpk305jcad6rx" path="res://scripts/GalleryZone.gd" id="138_7m3dx"]
 [ext_resource type="PackedScene" uid="uid://8m5s44pc8lsn" path="res://scenes/rubens_coin_pusher/scenes/coin_pusher.tscn" id="138_j7mh8"]
 [ext_resource type="PackedScene" uid="uid://dtdy4a4qkn66" path="res://scenes/objects/basketball_respawner.tscn" id="139_c3c7d"]
 [ext_resource type="PackedScene" uid="uid://bqmpjl0m0erex" path="res://scenes/objects/intro note.tscn" id="141_7huuw"]
@@ -427,17 +428,17 @@ albedo_color = Color(1.0734373, 1.0734373, 0.15063755, 1)
 albedo_texture = ExtResource("82_mu18u")
 texture_filter = 0
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_scu3r"]
+[sub_resource type="PlaneMesh" id="PlaneMesh_7m3dx"]
 resource_local_to_scene = true
 size = Vector2(2.5, 3)
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_7m3dx"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_vevsf"]
 resource_name = "_albedo"
 viewport_path = NodePath("../MirrorNew/SubViewport")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vevsf"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vuv1g"]
 resource_local_to_scene = true
-albedo_texture = SubResource("ViewportTexture_7m3dx")
+albedo_texture = SubResource("ViewportTexture_vevsf")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_1v02h"]
 size = Vector2(2.5, 3)
@@ -902,6 +903,9 @@ texture_filter = 0
 [sub_resource type="PlaneMesh" id="PlaneMesh_cmoy1"]
 material = SubResource("StandardMaterial3D_ic2vq")
 size = Vector2(12, 17.93)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_vevsf"]
+size = Vector3(37.429077, 3.4591064, 32.6156)
 
 [node name="World" type="Node3D" unique_id=81477]
 script = ExtResource("1_qaasp")
@@ -1600,11 +1604,12 @@ transform = Transform3D(0.014088948, -0.019586174, -0.62915206, 0.47128618, 0.04
 [node name="pipegraybent2" parent="electrical conduit" unique_id=124518006 instance=ExtResource("19_kpybi")]
 transform = Transform3D(0.013917993, 0.06352692, -0.6286893, 0.017449299, 1.3355626, 0.030572794, 0.47172707, -0.05127709, 0.01741816, 58.345383, 9.54422, -27.782818)
 
-[node name="BOOMbox" type="RigidBody3D" parent="." unique_id=1893876606]
+[node name="BOOMbox" type="RigidBody3D" parent="." unique_id=1893876606 groups=["shop_prop"]]
 transform = Transform3D(-0.9796208, 0, 0.20085552, 0, 1, 0, -0.20085552, 0, -0.9796208, -2.6843157, 0.40117872, 1.8697941)
 collision_layer = 8
 collision_mask = 11
 mass = 2.0
+metadata/shop_item_id = "boombox"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="BOOMbox" unique_id=38216420]
 transform = Transform3D(0.9999999, 0, 0, 0, 1, 0, 0, 0, 0.9999999, 4.7683716e-07, -0.06947191, 0.016858816)
@@ -1634,7 +1639,7 @@ mass = 5.0
 continuous_cd = true
 metadata/shop_item_id = "trash_can"
 
-[node name="Brute_L_NoMaterial" parent="trash can" unique_id=1299747660 instance=ExtResource("46_18clu")]
+[node name="Brute_L_NoMaterial" parent="trash can" unique_id=1299747660 groups=["shop_prop"] instance=ExtResource("46_18clu")]
 
 [node name="CarryableComponent" type="Node3D" parent="trash can" unique_id=884312105]
 script = ExtResource("46_e68xj")
@@ -1735,6 +1740,8 @@ surface_material_override/0 = SubResource("StandardMaterial3D_5hglh")
 [node name="Styrofoam cube" parent="." unique_id=593356463 groups=["no_outline", "shop_prop"] instance=ExtResource("52_e68xj")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 1, -3)
 metadata/shop_item_id = "styrofoam_cube"
+
+[node name="MeshInstance3D" parent="Styrofoam cube" index="1" groups=["shop_prop"]]
 
 [node name="Node3D" parent="Styrofoam cube" index="2"]
 impact_damage = 0.4
@@ -1958,8 +1965,8 @@ surface_material_override/0 = SubResource("StandardMaterial3D_7b7y8")
 
 [node name="mirror" parent="." unique_id=1626491013 groups=["shop_prop"] instance=ExtResource("39_qaasp")]
 transform = Transform3D(-4.7902194e-08, -0.99488777, 0.10098683, -3.9073655e-08, 0.10098683, 0.99488777, -1, 4.3711392e-08, -4.3711385e-08, 2.8, 1.497, 5.232)
-mesh = SubResource("PlaneMesh_scu3r")
-surface_material_override/0 = SubResource("StandardMaterial3D_vevsf")
+mesh = SubResource("PlaneMesh_7m3dx")
+surface_material_override/0 = SubResource("StandardMaterial3D_vuv1g")
 show_debug_logs = false
 metadata/mirror = "mirror"
 metadata/shop_item_id = "mirror"
@@ -2441,8 +2448,9 @@ use_collision = true
 size = Vector3(1, 1.045166, 1)
 material = ExtResource("115_optxr")
 
-[node name="Basketball" parent="gallery" unique_id=1380341004 instance=ExtResource("121_gyxkx")]
+[node name="Basketball" parent="gallery" unique_id=1380341004 groups=["shop_prop"] instance=ExtResource("121_gyxkx")]
 transform = Transform3D(-0.8660254, 0, -0.50000006, 0, 1, 0, 0.50000006, 0, -0.8660254, -4.850615, -0.2702918, 13.934031)
+metadata/shop_item_id = "basketball"
 
 [node name="basketballcourt" type="MeshInstance3D" parent="gallery" unique_id=965092255]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 27.346199, 4.35151, 16.657421)
@@ -2538,6 +2546,15 @@ mom
 [node name="BasketballHoop" parent="gallery" unique_id=641032447 instance=ExtResource("133_j7mh8")]
 transform = Transform3D(-1.3113417e-08, 0, -0.3, 0, 0.3, 0, 0.3, 0, -1.3113417e-08, 35.290443, 9.433124, 16.647125)
 script = null
+
+[node name="GalleryZone" type="Area3D" parent="gallery" unique_id=1880804030]
+collision_layer = 0
+collision_mask = 8
+script = ExtResource("138_7m3dx")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="gallery/GalleryZone" unique_id=1276578246]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.214539, -9.175521, 7.194519)
+shape = SubResource("BoxShape3D_vevsf")
 
 [node name="GallerySpawnPoint" type="Node3D" parent="." unique_id=837462901]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.722805, -9.6, 15.43)

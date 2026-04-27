@@ -95,7 +95,7 @@ func activate() -> void:
 
 func _handle_item_list_input(event: InputEvent) -> void:
 	var viewport := get_viewport()
-	var catalog := ShopManager.get_catalog()
+	var catalog := ShopManager.get_purchaseable_catalog()
 
 	# Up: clamp at top; don't consume at boundary so PauseMenu returns to tab bar
 	if event.is_action_pressed("move_forward") or event.is_action_pressed("ui_up"):
@@ -156,7 +156,7 @@ func _handle_desc_scroll_input(event: InputEvent) -> void:
 	# Right / Accept: move to buy button
 	if event.is_action_pressed("jump") or event.is_action_pressed("ui_right") or \
 			event.is_action_pressed("move_right") or event.is_action_pressed("ui_accept"):
-		if input_cooldown <= 0 and ShopManager.get_catalog().size() > 0:
+		if input_cooldown <= 0 and ShopManager.get_purchaseable_catalog().size() > 0:
 			_enter_buy_mode()
 			input_cooldown = input_cooldown_time
 		viewport.set_input_as_handled()
@@ -203,7 +203,7 @@ func _populate_item_list() -> void:
 		child.queue_free()
 	item_cards.clear()
 
-	var catalog := ShopManager.get_catalog()
+	var catalog := ShopManager.get_purchaseable_catalog()
 	for i in range(catalog.size()):
 		var item = catalog[i]
 		var card: ShopItemCard = ITEM_CARD_SCENE.instantiate()
@@ -220,7 +220,7 @@ func _populate_item_list() -> void:
 
 func _update_selection() -> void:
 	"""Highlight the selected card and update the right panel."""
-	var catalog := ShopManager.get_catalog()
+	var catalog := ShopManager.get_purchaseable_catalog()
 	if catalog.is_empty() or item_cards.is_empty():
 		return
 
@@ -337,7 +337,7 @@ func _exit_buy_mode() -> void:
 
 
 func _on_buy_pressed() -> void:
-	var catalog := ShopManager.get_catalog()
+	var catalog := ShopManager.get_purchaseable_catalog()
 	if selected_index < 0 or selected_index >= catalog.size():
 		return
 	var item = catalog[selected_index]
@@ -360,7 +360,7 @@ func _on_card_mouse_pressed(idx: int) -> void:
 	"""Handle mouse click on an item card."""
 	selected_index = idx
 	_update_selection()
-	var catalog := ShopManager.get_catalog()
+	var catalog := ShopManager.get_purchaseable_catalog()
 	if selected_index >= 0 and selected_index < catalog.size():
 		var item = catalog[selected_index]
 		if not ShopManager.is_purchased(item["id"]) and not ShopManager.is_locked(item["id"]):

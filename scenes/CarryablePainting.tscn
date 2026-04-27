@@ -42,7 +42,7 @@ size = Vector3(3, 0.3, 3)
 
 [node name="CarryablePainting" type="RigidBody3D" unique_id=1044698982 groups=["no_outline"]]
 collision_layer = 4
-collision_mask = 14
+collision_mask = 6
 mass = 5.0
 physics_material_override = SubResource("PhysicsMaterial_painting")
 continuous_cd = true

@@ -55,6 +55,15 @@ func _ready():
 func _hide_all_shop_props() -> void:
 	"""Hide and freeze all shop-gated props. ShopManager reveals purchased ones after load."""
 	for node in get_tree().get_nodes_in_group("shop_prop"):
+		# Skip child nodes in the group that don't own an item — hiding/disabling the root
+		# prop already covers its children implicitly, and explicitly hiding children
+		# prevents them from becoming visible again when the root is revealed.
+		var item_id: String = node.get_meta("shop_item_id", "")
+		if item_id == "":
+			continue
+		# Skip items that are always present (not gated behind a purchase)
+		if ShopManager.is_always_present(item_id):
+			continue
 		node.visible = false
 		node.process_mode = Node.PROCESS_MODE_DISABLED
 		if node is RigidBody3D:

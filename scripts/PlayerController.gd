@@ -76,6 +76,9 @@ var _standing_head_y: float
 var _still_timer: float = 0.0
 var _near_mirror_facing: bool = false
 
+# Platform velocity tracking (Jolt physics fix)
+var _was_on_floor := false
+
 # Current speed property - returns appropriate speed based on movement state
 var current_speed: float:
 	get:
@@ -375,6 +378,18 @@ func _physics_process(delta: float) -> void:
 	# --- APPLY MOVEMENT ---
 	# This is the core function of CharacterBody3D. It moves the character and handles collisions.
 	move_and_slide()
+
+	# Jolt physics transfers RigidBody platform velocity to the character more aggressively than
+	# GodotPhysics. Clamp horizontal speed on the frame the player leaves a surface so the
+	# platform's residual velocity can't launch them.
+	if _was_on_floor and not is_on_floor():
+		var horiz := Vector3(velocity.x, 0, velocity.z)
+		var max_speed := sprint_speed if _is_sprinting() else walk_speed
+		if horiz.length() > max_speed:
+			horiz = horiz.normalized() * max_speed
+			velocity.x = horiz.x
+			velocity.z = horiz.z
+	_was_on_floor = is_on_floor()
 	
 	# --- MIRROR STILLNESS DETECTION ---
 	if velocity.length() < 0.1 and is_on_floor():

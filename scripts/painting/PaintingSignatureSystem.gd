@@ -5,8 +5,8 @@ class_name PaintingSignatureSystem
 ## Manages a 512x512 Image painted via raycast UV conversion.
 
 const TEXTURE_SIZE: int = 512
-const BRUSH_RADIUS: int = 4
-const BRUSH_COLOR: Color = Color(0.1, 0.1, 0.1, 1.0)
+const BRUSH_RADIUS: int = 2
+const BRUSH_COLOR: Color = Color(0.1, 0.1, 0.1, 0.3)
 const CANVAS_BG_COLOR: Color = Color(0.95, 0.93, 0.88, 1.0)
 const PLANE_SIZE: float = 3.0
 
@@ -112,4 +112,6 @@ func _draw_circle(center: Vector2i, radius: int):
 				var px = center.x + dx
 				var py = center.y + dy
 				if px >= 0 and px < TEXTURE_SIZE and py >= 0 and py < TEXTURE_SIZE:
-					signature_image.set_pixel(px, py, BRUSH_COLOR)
+					var existing: Color = signature_image.get_pixel(px, py)
+					var blended_alpha: float = existing.a + BRUSH_COLOR.a * (1.0 - existing.a)
+					signature_image.set_pixel(px, py, Color(BRUSH_COLOR.r, BRUSH_COLOR.g, BRUSH_COLOR.b, blended_alpha))
