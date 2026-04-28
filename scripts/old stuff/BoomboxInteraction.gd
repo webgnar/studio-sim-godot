@@ -181,6 +181,7 @@ func _play_entry(index: int) -> void:
 		_inactive_slot.stop()
 		_next_chunk = null
 		_current_state = BoomboxState.LOADING
+		e_key_interaction_text = "Tuning in..."
 		_start_animation()
 		audio_started.emit("Tuning in: " + entry["label"])
 		_radio.connect_to_stream(entry["url"])
@@ -192,6 +193,7 @@ func _play_entry(index: int) -> void:
 		_local_player.stream = entry["stream"]
 		_local_player.play()
 		_current_state = BoomboxState.PLAYING
+		e_key_interaction_text = "Play Tape"
 		_start_animation()
 		audio_started.emit(entry["label"])
 		_save_state()
@@ -204,6 +206,7 @@ func _stop_all() -> void:
 	_inactive_slot.stop()
 	_next_chunk = null
 	_current_state = BoomboxState.OFF
+	e_key_interaction_text = "Play Tape"
 	_stop_animation()
 	audio_stopped.emit()
 	_save_state()
@@ -214,6 +217,7 @@ func _on_chunk_ready(stream: AudioStreamMP3) -> void:
 		_active_slot.stream = stream
 		_active_slot.play()
 		_current_state = BoomboxState.PLAYING
+		e_key_interaction_text = "Play Tape"
 		_save_state()
 		_radio.resume()  # start buffering the next chunk immediately
 	else:

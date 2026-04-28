@@ -6,8 +6,8 @@ signal station_name_resolved(name: String)
 signal now_playing_changed(track_info: String)
 signal stream_error
 
-const INITIAL_CHUNK_SIZE := 131072  # 128KB — ~8s at 128kbps, keeps swap threshold safe
-const CHUNK_SIZE := 65536           # 64KB — subsequent chunks (~4s each)
+const INITIAL_CHUNK_SIZE := 245760  # 240KB — ~15s at 128kbps
+const CHUNK_SIZE := 245760          # 240KB — gaps every ~15s
 
 enum State { IDLE, CONNECTING, REQUESTING, STREAMING, ERROR }
 
