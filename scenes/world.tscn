@@ -148,6 +148,7 @@
 [ext_resource type="AudioStream" uid="uid://c443ekfhr0sru" path="res://sounds/ministudio.ogg" id="ministudio_audio"]
 [ext_resource type="PackedScene" path="res://scenes/UI/MoneyRainLayer.tscn" id="money_rain_layer"]
 [ext_resource type="AudioStream" uid="uid://cldonhpncb00b" path="res://sounds/(First Trip) To The Moon copy.ogg" id="moon_ogg"]
+[ext_resource type="AudioStream" uid="uid://c8ydv54m1n9p2" path="res://sounds/dial up.ogg" id="dial_up_ogg"]
 [ext_resource type="Script" uid="uid://bunyklibu48s2" path="res://scripts/SkyRotator.gd" id="sky_rotator"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dss4m"]
@@ -1623,6 +1624,7 @@ script = ExtResource("36_boombox_new")
 auto_play_on_start = true
 songs = Array[AudioStream]([ExtResource("51_swu3i"), ExtResource("ministudio_audio"), ExtResource("moon_ogg"), ExtResource("ear_ogg"), ExtResource("68_l8ik4"), ExtResource("69_70d8d"), ExtResource("70_70d8d")])
 switch_sound = ExtResource("boombox_switch")
+dial_up_sound = ExtResource("dial_up_ogg")
 default_volume = 1.0
 max_hearing_distance = 45.0
 min_distance = 15.0

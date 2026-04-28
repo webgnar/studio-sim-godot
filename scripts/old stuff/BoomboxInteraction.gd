@@ -13,6 +13,7 @@ signal audio_stopped
 @export_group("Audio Settings")
 @export var songs: Array[AudioStream]
 @export var switch_sound: AudioStream
+@export var dial_up_sound: AudioStream
 @export var default_volume: float = 0.5
 @export var max_hearing_distance: float = 15.0
 @export var min_distance: float = 1.0
@@ -23,6 +24,7 @@ signal audio_stopped
 	{"name": "Radio K", "url": "https://radiok.broadcasttool.stream/play_128"},
 	{"name": "WTJU / WXTJ", "url": "https://streams.wtju.net/wxtj-live.mp3"},
 	{"name": "KEXP Seattle", "url": "https://kexp-mp3-128.streamguys1.com/kexp128.mp3"},
+	{"name": "WREK Atlanta", "url": "http://streaming.wrek.org:8000/wrek_live-128kb"},
 ]
 
 var _current_state: BoomboxState = BoomboxState.OFF
@@ -33,6 +35,7 @@ var _playlist: Array[Dictionary] = []
 var _animation_player: AnimationPlayer
 var _local_player: AudioStreamPlayer3D
 var _switch_player: AudioStreamPlayer3D
+var _dial_up_player: AudioStreamPlayer3D
 var _stream_slot_a: AudioStreamPlayer3D
 var _stream_slot_b: AudioStreamPlayer3D
 var _active_slot: AudioStreamPlayer3D
@@ -55,6 +58,7 @@ func _ready() -> void:
 	_build_playlist()
 	_setup_local_player()
 	_setup_switch_player()
+	_setup_dial_up_player()
 	_setup_stream_slots()
 	_setup_radio_stream_player()
 	_setup_animation()
@@ -66,6 +70,7 @@ const _DEFAULT_STATIONS := [
 	{"name": "Radio K", "url": "https://radiok.broadcasttool.stream/play_128"},
 	{"name": "WTJU / WXTJ", "url": "https://streams.wtju.net/wxtj-live.mp3"},
 	{"name": "KEXP Seattle", "url": "https://kexp-mp3-128.streamguys1.com/kexp128.mp3"},
+	{"name": "WREK Atlanta", "url": "http://streaming.wrek.org:8000/wrek_live-128kb"},
 ]
 
 func _build_playlist() -> void:
@@ -95,6 +100,18 @@ func _setup_switch_player() -> void:
 	_switch_player.volume_db = -10.0
 	_switch_player.bus = "SFX"
 	add_child(_switch_player)
+
+
+func _setup_dial_up_player() -> void:
+	if not dial_up_sound:
+		return
+	_dial_up_player = AudioStreamPlayer3D.new()
+	_dial_up_player.name = "DialUpPlayer"
+	_dial_up_player.max_distance = max_hearing_distance
+	_dial_up_player.unit_size = min_distance
+	_dial_up_player.volume_db = linear_to_db(default_volume)
+	_dial_up_player.bus = "SFX"
+	add_child(_dial_up_player)
 
 
 func _setup_stream_slots() -> void:
@@ -184,6 +201,9 @@ func _play_entry(index: int) -> void:
 		e_key_interaction_text = "Tuning in..."
 		_start_animation()
 		audio_started.emit("Tuning in: " + entry["label"])
+		if _dial_up_player and dial_up_sound:
+			_dial_up_player.stream = dial_up_sound
+			_dial_up_player.play()
 		_radio.connect_to_stream(entry["url"])
 	else:
 		_radio.disconnect_stream()
@@ -204,6 +224,8 @@ func _stop_all() -> void:
 	_local_player.stop()
 	_active_slot.stop()
 	_inactive_slot.stop()
+	if _dial_up_player:
+		_dial_up_player.stop()
 	_next_chunk = null
 	_current_state = BoomboxState.OFF
 	e_key_interaction_text = "Play Tape"
@@ -214,6 +236,8 @@ func _stop_all() -> void:
 
 func _on_chunk_ready(stream: AudioStreamMP3) -> void:
 	if _current_state == BoomboxState.LOADING:
+		if _dial_up_player:
+			_dial_up_player.stop()
 		_active_slot.stream = stream
 		_active_slot.play()
 		_current_state = BoomboxState.PLAYING
