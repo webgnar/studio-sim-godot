@@ -52,6 +52,9 @@ func _ready():
 
 	# Build the UI once the painting system is ready
 	call_deferred("_build_carousel")
+
+	# Rebuild whenever StickerLibrary reloads (e.g. custom modder purchased, new game)
+	StickerLibrary.library_changed.connect(_build_carousel)
 	
 	# Initialize auto-hide positions
 	visible_position_x = position.x

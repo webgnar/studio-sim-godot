@@ -95,6 +95,10 @@ func _ready():
 		EconomyManager.money_changed.connect(_on_money_changed)
 		_update_money_display()
 
+	# Show marketplace tab immediately when player buys the sticker modder
+	if ShopManager:
+		ShopManager.item_purchased.connect(_on_item_purchased)
+
 	# Register with UIManager
 	if UIManager:
 		UIManager.register_screen("pause_menu", self)
@@ -359,6 +363,8 @@ func _close_menu():
 
 func _switch_tab(tab: Tab):
 	"""Switch to a specific tab"""
+	if tab == Tab.MARKETPLACE and not _has_marketplace_unlocked():
+		tab = Tab.SHOP
 	current_tab = tab
 	_hide_all_tab_content()
 	_show_tab_content(tab)
@@ -515,8 +521,16 @@ func _update_tab_button_styles():
 		var button = tab_buttons[i]
 		if i == current_tab:
 			button.modulate = Color(1.0, 1.0, 1.0, 1.0)
+			_apply_hover_style(button, true)
 		else:
 			button.modulate = Color(0.6, 0.6, 0.6, 1.0)
+			_apply_hover_style(button, false)
+
+func _apply_hover_style(button: Button, on: bool) -> void:
+	if on:
+		button.add_theme_stylebox_override("normal", button.get_theme_stylebox("hover", "Button"))
+	else:
+		button.remove_theme_stylebox_override("normal")
 
 func _update_tab_bar_visual():
 	"""Update tab bar highlight for tab mode"""
@@ -556,6 +570,10 @@ func _update_money_display():
 func _on_money_changed(new_amount: int):
 	if money_label:
 		money_label.text = "$%d" % new_amount
+
+func _on_item_purchased(item_id: String):
+	if item_id == "customstickerbutton":
+		_update_marketplace_tab_visibility()
 
 # ============================================================================
 # Child finding helpers

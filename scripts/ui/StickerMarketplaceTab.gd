@@ -24,6 +24,7 @@ enum NavMode { SUB_TAB_BAR, LISTING_LIST, PRICE_INPUT, ACTION_BUTTON }
 
 @onready var preview_image: TextureRect = $HBoxContainer/RightPanel/DetailPanel/MarginContainer/VBoxContainer/PreviewImage
 @onready var item_name_label: Label = $HBoxContainer/RightPanel/DetailPanel/MarginContainer/VBoxContainer/ItemNameLabel
+@onready var price_text_label: Label = $HBoxContainer/RightPanel/DetailPanel/MarginContainer/VBoxContainer/PriceRow/PriceTextLabel
 @onready var display_price_label: Label = $HBoxContainer/RightPanel/DetailPanel/MarginContainer/VBoxContainer/PriceRow/DisplayPriceLabel
 @onready var price_input: LineEdit = $HBoxContainer/RightPanel/DetailPanel/MarginContainer/VBoxContainer/PriceRow/PriceInput
 @onready var seller_label: Label = $HBoxContainer/RightPanel/DetailPanel/MarginContainer/VBoxContainer/SellerLabel
@@ -50,6 +51,7 @@ var button_hit_sound: AudioStreamPlayer = null
 var _preview_request: HTTPRequest = null
 var _preview_cache: Dictionary = {}   # url -> ImageTexture
 var _preview_pending_url: String = ""
+var _preview_queue: Array[String] = []  # urls waiting to download
 
 
 func _ready() -> void:
@@ -67,6 +69,7 @@ func _ready() -> void:
 
 	price_input.text = "100"
 	price_input.focus_mode = Control.FOCUS_ALL
+	price_input.text_changed.connect(_on_price_input_changed)
 
 	StickerMarketplaceManager.marketplace_loaded.connect(_on_marketplace_loaded)
 	StickerMarketplaceManager.listing_step.connect(_on_listing_step)
@@ -124,6 +127,7 @@ func _input(event: InputEvent) -> void:
 				or event.is_action_pressed("ui_left") or event.is_action_pressed("move_left") \
 				or event.is_action_pressed("go_back"):
 			action_button.release_focus()
+			_apply_hover_style(action_button, false)
 			if current_sub_tab == SubTab.SELL:
 				nav_mode = NavMode.PRICE_INPUT
 				_set_price_input_highlight(true)
@@ -157,6 +161,7 @@ func _handle_browse_list_input(event: InputEvent, viewport: Viewport) -> void:
 		if input_cooldown <= 0 and _selected_listing_index >= 0:
 			nav_mode = NavMode.ACTION_BUTTON
 			action_button.grab_focus()
+			_apply_hover_style(action_button, true)
 			input_cooldown = input_cooldown_time
 		viewport.set_input_as_handled()
 
@@ -239,12 +244,33 @@ func _handle_price_input_nav(event: InputEvent, viewport: Viewport) -> void:
 			_set_price_input_highlight(false)
 			nav_mode = NavMode.ACTION_BUTTON
 			action_button.grab_focus()
+			_apply_hover_style(action_button, true)
 			input_cooldown = input_cooldown_time
 		viewport.set_input_as_handled()
 
 
+func _on_price_input_changed(new_text: String) -> void:
+	var digits := ""
+	for ch in new_text:
+		if ch >= "0" and ch <= "9":
+			digits += ch
+	digits = digits.lstrip("0")
+	if not digits.is_empty() and digits.to_int() > 99999:
+		digits = "99999"
+	if digits != new_text:
+		price_input.text = digits
+		price_input.caret_column = digits.length()
+
+
 func _set_price_input_highlight(on: bool) -> void:
 	price_input.modulate = Color(1.3, 1.3, 0.5, 1.0) if on else Color(1, 1, 1, 1)
+
+
+func _apply_hover_style(button: Button, on: bool) -> void:
+	if on:
+		button.add_theme_stylebox_override("normal", button.get_theme_stylebox("hover", "Button"))
+	else:
+		button.remove_theme_stylebox_override("normal")
 
 
 # ============================================================================
@@ -255,6 +281,7 @@ func activate() -> void:
 	nav_mode = NavMode.SUB_TAB_BAR
 	input_cooldown = 0.0
 	action_button.release_focus()
+	_apply_hover_style(action_button, false)
 	_set_price_input_highlight(false)
 	_switch_sub_tab(SubTab.BROWSE)
 	StickerMarketplaceManager.fetch_pending_credits()
@@ -273,14 +300,16 @@ func _switch_sub_tab(tab: SubTab) -> void:
 	sell_container.visible = (tab == SubTab.SELL)
 	browse_button.modulate = Color(1, 1, 1, 1) if tab == SubTab.BROWSE else Color(0.6, 0.6, 0.6, 1)
 	sell_button.modulate = Color(1, 1, 1, 1) if tab == SubTab.SELL else Color(0.6, 0.6, 0.6, 1)
+	_apply_hover_style(browse_button, tab == SubTab.BROWSE)
+	_apply_hover_style(sell_button, tab == SubTab.SELL)
 
 	if tab == SubTab.SELL:
+		StickerLibrary.reload()
 		_populate_sticker_grid()
 	else:
-		if _selected_listing_index >= 0 and _selected_listing_index < _listings.size():
-			_select_listing(_selected_listing_index)
-		else:
-			_clear_right_panel()
+		_set_browse_status("Loading marketplace...")
+		_clear_right_panel()
+		StickerMarketplaceManager.fetch_marketplace()
 	if button_nav_sound:
 		button_nav_sound.play()
 
@@ -294,6 +323,8 @@ func _on_marketplace_loaded(listings: Array) -> void:
 	_listing_cards.clear()
 	_preview_cache.clear()
 	_preview_pending_url = ""
+	_preview_queue.clear()
+	_preview_request.cancel_request()
 
 	for child in listing_list.get_children():
 		child.queue_free()
@@ -327,6 +358,7 @@ func _select_listing(index: int) -> void:
 
 	for i in range(_listing_cards.size()):
 		_listing_cards[i].modulate = Color(1, 1, 1, 1) if i == index else Color(0.7, 0.7, 0.7, 1)
+		_apply_hover_style(_listing_cards[i], i == index)
 
 	if index < 0 or index >= _listings.size():
 		_clear_right_panel()
@@ -340,6 +372,7 @@ func _select_listing(index: int) -> void:
 
 	item_name_label.text = sticker_name
 	display_price_label.text = "$%d" % price
+	price_text_label.visible = true
 	display_price_label.visible = true
 	price_input.visible = false
 	seller_label.text = "by %s" % seller_id.substr(0, 8)
@@ -347,10 +380,18 @@ func _select_listing(index: int) -> void:
 
 	_load_preview(png_url)
 
-	action_button.text = "BUY  $%d" % price
-	action_button.disabled = not EconomyManager.can_afford(price)
-	action_button.modulate = Color(1, 1, 1, 1) if EconomyManager.can_afford(price) else Color(0.5, 0.5, 0.5, 1)
-	feedback_label.text = ""
+	var own_listing = seller_id == WorldStateManager.get_player_id()
+	if own_listing:
+		action_button.text = "YOUR LISTING"
+		action_button.disabled = true
+		action_button.modulate = Color(0.5, 0.5, 0.5, 1)
+		feedback_label.text = "You can't buy your own sticker."
+		feedback_label.modulate = Color(0.7, 0.7, 0.7, 1)
+	else:
+		action_button.text = "BUY  $%d" % price
+		action_button.disabled = not EconomyManager.can_afford(price)
+		action_button.modulate = Color(1, 1, 1, 1) if EconomyManager.can_afford(price) else Color(0.5, 0.5, 0.5, 1)
+		feedback_label.text = ""
 
 	if button_nav_sound:
 		button_nav_sound.play()
@@ -358,37 +399,41 @@ func _select_listing(index: int) -> void:
 
 func _load_preview(url: String) -> void:
 	if url.is_empty():
-		preview_image.texture = null
 		return
 	if _preview_cache.has(url):
-		preview_image.texture = _preview_cache[url]
 		return
-	preview_image.texture = null
-	if _preview_pending_url == url:
-		return  # already downloading this one
-	_preview_pending_url = url
-	_preview_request.cancel_request()
-	_preview_request.request(url)
+	if _preview_pending_url == url or url in _preview_queue:
+		return
+	if _preview_pending_url.is_empty():
+		_preview_pending_url = url
+		_preview_request.request(url)
+	else:
+		_preview_queue.append(url)
 
 
 func _on_preview_downloaded(result: int, response_code: int, _headers: PackedStringArray, body: PackedByteArray) -> void:
 	var url = _preview_pending_url
 	_preview_pending_url = ""
-	if result != HTTPRequest.RESULT_SUCCESS or response_code < 200 or response_code >= 300:
-		return
-	var image = Image.new()
-	if image.load_png_from_buffer(body) != OK:
-		return
-	var texture = ImageTexture.create_from_image(image)
-	_preview_cache[url] = texture
-	# Apply to any card whose listing matches this URL
-	for i in range(_listings.size()):
-		if _listings[i].get("png_url", "") == url and i < _listing_cards.size():
-			_listing_cards[i].set_preview(texture)
-	# Apply to right-panel preview if this listing is still selected
-	if _selected_listing_index >= 0 and _selected_listing_index < _listings.size():
-		if _listings[_selected_listing_index].get("png_url", "") == url:
-			preview_image.texture = texture
+
+	if result == HTTPRequest.RESULT_SUCCESS and response_code >= 200 and response_code < 300:
+		var image = Image.new()
+		if image.load_png_from_buffer(body) == OK:
+			var texture = ImageTexture.create_from_image(image)
+			_preview_cache[url] = texture
+			for i in range(_listings.size()):
+				if _listings[i].get("png_url", "") == url and i < _listing_cards.size():
+					_listing_cards[i].set_preview(texture)
+			if _selected_listing_index >= 0 and _selected_listing_index < _listings.size():
+				if _listings[_selected_listing_index].get("png_url", "") == url:
+					preview_image.texture = texture
+
+	# Drain the queue — start the next download
+	while not _preview_queue.is_empty():
+		var next_url = _preview_queue.pop_front()
+		if not _preview_cache.has(next_url):
+			_preview_pending_url = next_url
+			_preview_request.request(next_url)
+			break
 
 
 func _set_browse_status(text: String) -> void:
@@ -433,6 +478,7 @@ func _select_sticker(index: int) -> void:
 
 	for i in range(_sticker_cards.size()):
 		_sticker_cards[i].set_selected(i == index)
+		_apply_hover_style(_sticker_cards[i], i == index)
 
 	if index < 0 or index >= _custom_stickers.size():
 		_clear_right_panel()
@@ -441,6 +487,7 @@ func _select_sticker(index: int) -> void:
 	var sticker = _custom_stickers[index]
 	preview_image.texture = sticker.texture
 	item_name_label.text = sticker.id.replace("custom_", "")
+	price_text_label.visible = true
 	display_price_label.visible = false
 	price_input.visible = true
 	seller_label.visible = false
@@ -481,6 +528,9 @@ func _execute_buy() -> void:
 
 	var listing = _listings[_selected_listing_index]
 	var price = int(listing.get("price", 0))
+
+	if listing.get("seller_id", "") == WorldStateManager.get_player_id():
+		return
 
 	if not EconomyManager.can_afford(price):
 		feedback_label.text = "Not enough money!"
@@ -577,6 +627,7 @@ func _on_listing_complete(_listing_id: String) -> void:
 	feedback_label.modulate = Color(0.4, 1, 0.4, 1)
 	action_button.text = "LISTED!"
 	action_button.release_focus()
+	_apply_hover_style(action_button, false)
 	nav_mode = NavMode.LISTING_LIST
 	_set_price_input_highlight(false)
 	_populate_sticker_grid()
@@ -590,6 +641,7 @@ func _on_listing_failed(error: String) -> void:
 	action_button.disabled = false
 	action_button.modulate = Color(1, 1, 1, 1)
 	action_button.release_focus()
+	_apply_hover_style(action_button, false)
 	nav_mode = NavMode.PRICE_INPUT
 	_set_price_input_highlight(true)
 
@@ -606,6 +658,7 @@ func _on_credits_received(amount: int) -> void:
 func _clear_right_panel() -> void:
 	preview_image.texture = null
 	item_name_label.text = "Select a sticker"
+	price_text_label.visible = false
 	display_price_label.visible = false
 	price_input.visible = false
 	seller_label.visible = false

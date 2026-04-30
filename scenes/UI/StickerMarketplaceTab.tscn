@@ -148,35 +148,37 @@ theme_override_constants/outline_size = 11
 theme_override_font_sizes/font_size = 37
 text = "Select a sticker"
 
-[node name="PriceRow" type="HBoxContainer" parent="HBoxContainer/RightPanel/DetailPanel/MarginContainer/VBoxContainer" unique_id=1087077328]
-layout_mode = 2
-theme_override_constants/separation = 6
-
-[node name="PriceInputLabel" type="Label" parent="HBoxContainer/RightPanel/DetailPanel/MarginContainer/VBoxContainer/PriceRow" unique_id=350193995]
-layout_mode = 2
-text = "Price: $"
-
-[node name="PriceInput" type="LineEdit" parent="HBoxContainer/RightPanel/DetailPanel/MarginContainer/VBoxContainer/PriceRow" unique_id=2120432927]
-visible = false
-custom_minimum_size = Vector2(100, 0)
-layout_mode = 2
-size_flags_horizontal = 3
-placeholder_text = "100"
-max_length = 7
-
-[node name="DisplayPriceLabel" type="Label" parent="HBoxContainer/RightPanel/DetailPanel/MarginContainer/VBoxContainer/PriceRow" unique_id=1148624373]
-visible = false
-layout_mode = 2
-theme_override_colors/font_color = Color(0.5, 1, 0.5, 1)
-theme_override_font_sizes/font_size = 20
-text = "$0"
-
 [node name="SellerLabel" type="Label" parent="HBoxContainer/RightPanel/DetailPanel/MarginContainer/VBoxContainer" unique_id=972754172]
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
 theme_override_font_sizes/font_size = 31
 text = "by ..."
+
+[node name="PriceRow" type="HBoxContainer" parent="HBoxContainer/RightPanel/DetailPanel/MarginContainer/VBoxContainer" unique_id=338847291]
+layout_mode = 2
+
+[node name="PriceTextLabel" type="Label" parent="HBoxContainer/RightPanel/DetailPanel/MarginContainer/VBoxContainer/PriceRow" unique_id=774920133]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0.72117114, 0.38165504, 1)
+theme_override_colors/font_outline_color = Color(6.407406e-07, 0.2583178, 0, 1)
+theme_override_constants/outline_size = 9
+theme_override_font_sizes/font_size = 36
+text = "Price  "
+
+[node name="DisplayPriceLabel" type="Label" parent="HBoxContainer/RightPanel/DetailPanel/MarginContainer/VBoxContainer/PriceRow" unique_id=229104857]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 36
+text = "$0"
+
+[node name="PriceInput" type="LineEdit" parent="HBoxContainer/RightPanel/DetailPanel/MarginContainer/VBoxContainer/PriceRow" unique_id=556634912]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+text = "100"
+placeholder_text = "dollar amount"
 
 [node name="ActionButton" type="Button" parent="HBoxContainer/RightPanel/DetailPanel/MarginContainer/VBoxContainer" unique_id=416758042]
 layout_mode = 2
@@ -185,5 +187,5 @@ text = "..."
 
 [node name="FeedbackLabel" type="Label" parent="HBoxContainer/RightPanel/DetailPanel/MarginContainer/VBoxContainer" unique_id=1269807233]
 layout_mode = 2
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 36
 autowrap_mode = 3

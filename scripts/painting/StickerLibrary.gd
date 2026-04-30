@@ -13,6 +13,12 @@ const CUSTOM_STICKERS_FOLDER = "user://custom_stickers/"
 func _ready():
 	_ensure_custom_folder_exists()
 	_load_all_stickers()
+	if ShopManager:
+		ShopManager.item_purchased.connect(_on_item_purchased)
+
+func _on_item_purchased(item_id: String) -> void:
+	if item_id == "customstickerbutton":
+		reload()
 
 func _load_all_stickers():
 	sticker_library.clear()

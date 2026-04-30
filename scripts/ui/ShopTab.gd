@@ -229,6 +229,7 @@ func _update_selection() -> void:
 	for i in range(item_cards.size()):
 		item_cards[i].modulate = Color(1.0, 1.0, 1.0, 1.0) if i == selected_index \
 				else Color(0.6, 0.6, 0.6, 1.0)
+		_apply_hover_style(item_cards[i], i == selected_index)
 
 	var item = catalog[selected_index]
 	item_name_label.text = tr(item.get("title", item["display_name"]))
@@ -320,11 +321,13 @@ func _enter_buy_mode() -> void:
 	desc_scroll.self_modulate = Color(0.7, 0.7, 0.7, 1)
 	scroll_hint.visible = false
 	buy_button.grab_focus()
+	_apply_hover_style(buy_button, true)
 	_play_hit_sound()
 
 
 func _exit_buy_mode() -> void:
 	buy_button.release_focus()
+	_apply_hover_style(buy_button, false)
 	_play_nav_sound()
 	if not _desc_needs_scroll():
 		nav_mode = NavMode.ITEM_LIST
@@ -365,6 +368,13 @@ func _on_card_mouse_pressed(idx: int) -> void:
 		var item = catalog[selected_index]
 		if not ShopManager.is_purchased(item["id"]) and not ShopManager.is_locked(item["id"]):
 			_enter_buy_mode()
+
+
+func _apply_hover_style(button: Button, on: bool) -> void:
+	if on:
+		button.add_theme_stylebox_override("normal", button.get_theme_stylebox("hover", "Button"))
+	else:
+		button.remove_theme_stylebox_override("normal")
 
 
 # ============================================================================
