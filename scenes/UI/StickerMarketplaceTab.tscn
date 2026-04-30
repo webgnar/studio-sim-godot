@@ -1,0 +1,189 @@
+[gd_scene format=3 uid="uid://3efr372yqrya"]
+
+[ext_resource type="Script" uid="uid://vx1anq14uh11" path="res://scripts/ui/StickerMarketplaceTab.gd" id="1_script"]
+[ext_resource type="Theme" uid="uid://cbtaxh5m7udor" path="res://themes/ui_theme.tres" id="1_theme"]
+
+[node name="StickerMarketplaceTab" type="Control" unique_id=601159983]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_theme")
+script = ExtResource("1_script")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=282883521]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 20
+
+[node name="LeftPanel" type="VBoxContainer" parent="HBoxContainer" unique_id=141360721]
+custom_minimum_size = Vector2(420, 0)
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="LeftHeader" type="Label" parent="HBoxContainer/LeftPanel" unique_id=1106295305]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 22
+text = "STICKER MARKETPLACE"
+
+[node name="SubTabBar" type="HBoxContainer" parent="HBoxContainer/LeftPanel" unique_id=1286802226]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 44
+
+[node name="BrowseButton" type="Button" parent="HBoxContainer/LeftPanel/SubTabBar" unique_id=1842933411]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+focus_mode = 0
+text = "BUY"
+
+[node name="SellButton" type="Button" parent="HBoxContainer/LeftPanel/SubTabBar" unique_id=1059408368]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+focus_mode = 0
+text = "SELL"
+
+[node name="BrowseContainer" type="VBoxContainer" parent="HBoxContainer/LeftPanel" unique_id=1897393027]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 6
+
+[node name="StatusLabel" type="Label" parent="HBoxContainer/LeftPanel/BrowseContainer" unique_id=1648469821]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
+theme_override_font_sizes/font_size = 16
+autowrap_mode = 3
+
+[node name="ScrollContainer" type="ScrollContainer" parent="HBoxContainer/LeftPanel/BrowseContainer" unique_id=662156373]
+layout_mode = 2
+size_flags_vertical = 3
+follow_focus = true
+horizontal_scroll_mode = 0
+
+[node name="ListMargin" type="MarginContainer" parent="HBoxContainer/LeftPanel/BrowseContainer/ScrollContainer" unique_id=1099102900]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="ListingList" type="VBoxContainer" parent="HBoxContainer/LeftPanel/BrowseContainer/ScrollContainer/ListMargin" unique_id=1201531006]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 4
+
+[node name="SellContainer" type="VBoxContainer" parent="HBoxContainer/LeftPanel" unique_id=1126349755]
+visible = false
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 6
+
+[node name="StatusLabel" type="Label" parent="HBoxContainer/LeftPanel/SellContainer" unique_id=1787354953]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
+theme_override_font_sizes/font_size = 16
+autowrap_mode = 3
+
+[node name="ScrollContainer" type="ScrollContainer" parent="HBoxContainer/LeftPanel/SellContainer" unique_id=1507497795]
+layout_mode = 2
+size_flags_vertical = 3
+follow_focus = true
+horizontal_scroll_mode = 0
+
+[node name="ListMargin" type="MarginContainer" parent="HBoxContainer/LeftPanel/SellContainer/ScrollContainer" unique_id=428774850]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="StickerGrid" type="GridContainer" parent="HBoxContainer/LeftPanel/SellContainer/ScrollContainer/ListMargin" unique_id=1034778617]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/h_separation = 6
+theme_override_constants/v_separation = 6
+columns = 4
+
+[node name="RightPanel" type="VBoxContainer" parent="HBoxContainer" unique_id=1932987752]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="DetailPanel" type="PanelContainer" parent="HBoxContainer/RightPanel" unique_id=560396170]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer/RightPanel/DetailPanel" unique_id=521461794]
+layout_mode = 2
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/RightPanel/DetailPanel/MarginContainer" unique_id=425647825]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="PreviewImage" type="TextureRect" parent="HBoxContainer/RightPanel/DetailPanel/MarginContainer/VBoxContainer" unique_id=480345268]
+custom_minimum_size = Vector2(512, 512)
+layout_mode = 2
+size_flags_horizontal = 4
+expand_mode = 1
+stretch_mode = 6
+
+[node name="ItemNameLabel" type="Label" parent="HBoxContainer/RightPanel/DetailPanel/MarginContainer/VBoxContainer" unique_id=2015267537]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0.855, 0.939, 0.562, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 11
+theme_override_font_sizes/font_size = 37
+text = "Select a sticker"
+
+[node name="PriceRow" type="HBoxContainer" parent="HBoxContainer/RightPanel/DetailPanel/MarginContainer/VBoxContainer" unique_id=1087077328]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="PriceInputLabel" type="Label" parent="HBoxContainer/RightPanel/DetailPanel/MarginContainer/VBoxContainer/PriceRow" unique_id=350193995]
+layout_mode = 2
+text = "Price: $"
+
+[node name="PriceInput" type="LineEdit" parent="HBoxContainer/RightPanel/DetailPanel/MarginContainer/VBoxContainer/PriceRow" unique_id=2120432927]
+visible = false
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "100"
+max_length = 7
+
+[node name="DisplayPriceLabel" type="Label" parent="HBoxContainer/RightPanel/DetailPanel/MarginContainer/VBoxContainer/PriceRow" unique_id=1148624373]
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(0.5, 1, 0.5, 1)
+theme_override_font_sizes/font_size = 20
+text = "$0"
+
+[node name="SellerLabel" type="Label" parent="HBoxContainer/RightPanel/DetailPanel/MarginContainer/VBoxContainer" unique_id=972754172]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
+theme_override_font_sizes/font_size = 31
+text = "by ..."
+
+[node name="ActionButton" type="Button" parent="HBoxContainer/RightPanel/DetailPanel/MarginContainer/VBoxContainer" unique_id=416758042]
+layout_mode = 2
+disabled = true
+text = "..."
+
+[node name="FeedbackLabel" type="Label" parent="HBoxContainer/RightPanel/DetailPanel/MarginContainer/VBoxContainer" unique_id=1269807233]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+autowrap_mode = 3

@@ -8,6 +8,7 @@ signal world_state_loaded
 const SAVE_VERSION = 4
 const WORLD_STATE_PATH = "user://world_state.json"
 const TEXTURES_DIR = "user://world_paintings"
+const PLAYER_ID_PATH = "user://player_id.txt"
 
 # Preload scenes for instantiation
 var carryable_painting_scene = preload("res://scenes/CarryablePainting.tscn")
@@ -231,6 +232,39 @@ func get_gallery_visitor_count() -> int:
 func increment_gallery_visitor_count() -> void:
 	"""Increment the gallery visitor count by 1. Called by ShopManager on purchase."""
 	_misc_data["gallery_visitor_count"] = get_gallery_visitor_count() + 1
+
+func get_player_id() -> String:
+	"""Return this installation's stable player ID, generating it on first call."""
+	if FileAccess.file_exists(PLAYER_ID_PATH):
+		var file = FileAccess.open(PLAYER_ID_PATH, FileAccess.READ)
+		if file:
+			var pid = file.get_as_text().strip_edges()
+			file.close()
+			if not pid.is_empty():
+				return pid
+	var pid = _generate_player_id()
+	var file = FileAccess.open(PLAYER_ID_PATH, FileAccess.WRITE)
+	if file:
+		file.store_string(pid)
+		file.close()
+	return pid
+
+func _generate_player_id() -> String:
+	var rng = RandomNumberGenerator.new()
+	rng.randomize()
+	return "%08x%04x%04x%04x%012x" % [
+		rng.randi(),
+		rng.randi() & 0xffff,
+		(rng.randi() & 0x0fff) | 0x4000,
+		(rng.randi() & 0x3fff) | 0x8000,
+		(int(rng.randi()) << 16) | (rng.randi() & 0xffff)
+	]
+
+func get_listed_sticker_ids() -> Array:
+	return _misc_data.get("listed_sticker_ids", [])
+
+func set_listed_sticker_ids(ids: Array) -> void:
+	_misc_data["listed_sticker_ids"] = ids
 
 # ============================================================================
 # Save/Load

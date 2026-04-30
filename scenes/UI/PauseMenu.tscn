@@ -13,6 +13,7 @@
 [ext_resource type="AudioStream" uid="uid://ht7rkfvqubdm" path="res://sounds/picotron/buttonnav.ogg" id="8_nav"]
 [ext_resource type="AudioStream" uid="uid://dae4sj3nmur45" path="res://sounds/picotron/buttonhit.ogg" id="9_hit"]
 [ext_resource type="PackedScene" uid="uid://dby31fq7m8eba" path="res://scenes/UI/ShopTab.tscn" id="10_shoptab"]
+[ext_resource type="PackedScene" uid="uid://3efr372yqrya" path="res://scenes/UI/StickerMarketplaceTab.tscn" id="11_marketplace"]
 
 [node name="PauseMenu" type="Control" unique_id=1561803109]
 layout_mode = 3
@@ -68,28 +69,41 @@ size_flags_horizontal = 3
 
 [node name="TextureRect" type="TextureRect" parent="Dialog/MarginContainer/VBoxContainer/TabBar" unique_id=1693687554]
 visible = false
+custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
 texture = ExtResource("3_ecia5")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="InventoryTab" type="Button" parent="Dialog/MarginContainer/VBoxContainer/TabBar" unique_id=1450620378]
-custom_minimum_size = Vector2(300, 40)
+custom_minimum_size = Vector2(200, 40)
 layout_mode = 2
-text = "INVENTORY"
+text = "🖼️
+INVENTORY"
 
 [node name="CommissionsTab" type="Button" parent="Dialog/MarginContainer/VBoxContainer/TabBar" unique_id=1763618734]
-custom_minimum_size = Vector2(300, 100)
+custom_minimum_size = Vector2(200, 100)
 layout_mode = 2
-text = "COMMISSIONS"
+text = "🐈
+COMMISSIONS"
 
 [node name="ShopTabButton" type="Button" parent="Dialog/MarginContainer/VBoxContainer/TabBar" unique_id=2010000010]
-custom_minimum_size = Vector2(300, 40)
+custom_minimum_size = Vector2(200, 40)
 layout_mode = 2
-text = "SHOP"
+text = "🛍️
+SHOP"
+
+[node name="MarketplaceTabButton" type="Button" parent="Dialog/MarginContainer/VBoxContainer/TabBar" unique_id=2010000020]
+custom_minimum_size = Vector2(216.65, 40)
+layout_mode = 2
+text = "🌐
+STICKER MARKET"
 
 [node name="OptionsTab" type="Button" parent="Dialog/MarginContainer/VBoxContainer/TabBar" unique_id=481085732]
-custom_minimum_size = Vector2(300, 40)
+custom_minimum_size = Vector2(200, 40)
 layout_mode = 2
-text = "OPTIONS"
+text = "🎛️
+OPTIONS"
 
 [node name="KeyIcon" type="TextureRect" parent="Dialog/MarginContainer/VBoxContainer/TabBar" unique_id=1630929932]
 layout_mode = 2
@@ -98,8 +112,11 @@ texture = ExtResource("3_rgmlj")
 
 [node name="TextureRect2" type="TextureRect" parent="Dialog/MarginContainer/VBoxContainer/TabBar" unique_id=280591683]
 visible = false
+custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
 texture = ExtResource("5_adhrm")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="SpacerRight" type="Control" parent="Dialog/MarginContainer/VBoxContainer/TabBar" unique_id=2010000003]
 layout_mode = 2
@@ -174,6 +191,18 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="ShopTab" parent="Dialog/MarginContainer/VBoxContainer/TabContent/ShopContent" unique_id=2010000012 instance=ExtResource("10_shoptab")]
+layout_mode = 1
+
+[node name="MarketplaceContent" type="Control" parent="Dialog/MarginContainer/VBoxContainer/TabContent" unique_id=2010000021]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="StickerMarketplaceTab" parent="Dialog/MarginContainer/VBoxContainer/TabContent/MarketplaceContent" unique_id=2010000022 instance=ExtResource("11_marketplace")]
 layout_mode = 1
 
 [node name="OpenMenuSound" type="AudioStreamPlayer" parent="." unique_id=331198535]

@@ -4,7 +4,7 @@ class_name PauseMenuUI
 ## Pause menu with horizontal tabs: Commissions, Inventory, Options
 ## Handles top-level tab switching and delegates input to active tab content
 
-enum Tab { INVENTORY, COMMISSIONS, SHOP, OPTIONS }
+enum Tab { INVENTORY, COMMISSIONS, SHOP, MARKETPLACE, OPTIONS }
 enum NavMode { TAB_BAR, TAB_CONTENT }
 
 @onready var dialog: PanelContainer = $Dialog
@@ -16,12 +16,14 @@ enum NavMode { TAB_BAR, TAB_CONTENT }
 @onready var inventory_tab_button: Button = $Dialog/MarginContainer/VBoxContainer/TabBar/InventoryTab
 @onready var options_tab_button: Button = $Dialog/MarginContainer/VBoxContainer/TabBar/OptionsTab
 @onready var shop_tab_button: Button = $Dialog/MarginContainer/VBoxContainer/TabBar/ShopTabButton
+@onready var marketplace_tab_button: Button = $Dialog/MarginContainer/VBoxContainer/TabBar/MarketplaceTabButton
 
 # Tab content containers
 @onready var commissions_content: Control = $Dialog/MarginContainer/VBoxContainer/TabContent/CommissionsContent
 @onready var inventory_content: Control = $Dialog/MarginContainer/VBoxContainer/TabContent/InventoryContent
 @onready var options_content: Control = $Dialog/MarginContainer/VBoxContainer/TabContent/OptionsContent
 @onready var shop_content: Control = $Dialog/MarginContainer/VBoxContainer/TabContent/ShopContent
+@onready var marketplace_content: Control = $Dialog/MarginContainer/VBoxContainer/TabContent/MarketplaceContent
 
 # Return to title button (in Options tab)
 @onready var return_to_title_button: Button = $Dialog/MarginContainer/VBoxContainer/TabContent/OptionsContent/ReturnToTitleButton
@@ -37,6 +39,7 @@ var mission_selection_ui: MissionSelectionUI = null
 var inventory_tab: Control = null
 var options_menu: Control = null
 var shop_tab: ShopTab = null
+var marketplace_tab: StickerMarketplaceTab = null
 
 # Key icon (placed in TabBar in scene)
 @onready var key_icon: TextureRect = $Dialog/MarginContainer/VBoxContainer/TabBar/KeyIcon
@@ -59,8 +62,8 @@ func _ready():
 	# Hide dialog initially
 	dialog.visible = false
 
-	# Build tab buttons array
-	tab_buttons = [inventory_tab_button, commissions_tab_button, shop_tab_button, options_tab_button]
+	# Build tab buttons array (order must match Tab enum)
+	tab_buttons = [inventory_tab_button, commissions_tab_button, shop_tab_button, marketplace_tab_button, options_tab_button]
 
 	# Disable Godot focus on tab buttons (navigation is script-driven via modulate)
 	for button in tab_buttons:
@@ -71,12 +74,14 @@ func _ready():
 	inventory_tab_button.pressed.connect(func(): if current_tab != Tab.INVENTORY: _switch_tab(Tab.INVENTORY))
 	options_tab_button.pressed.connect(func(): if current_tab != Tab.OPTIONS: _switch_tab(Tab.OPTIONS))
 	shop_tab_button.pressed.connect(func(): if current_tab != Tab.SHOP: _switch_tab(Tab.SHOP))
+	marketplace_tab_button.pressed.connect(func(): if current_tab != Tab.MARKETPLACE: _switch_tab(Tab.MARKETPLACE))
 
 	# Find embedded child UIs
 	mission_selection_ui = _find_child_of_type(commissions_content, "MissionSelectionUI") as MissionSelectionUI
 	inventory_tab = _find_child_by_class_name(inventory_content, "InventoryTab")
 	options_menu = _find_child_by_script_name(options_content, "OptionsMenu")
 	shop_tab = _find_child_by_class_name(shop_content, "ShopTab") as ShopTab
+	marketplace_tab = _find_child_by_class_name(marketplace_content, "StickerMarketplaceTab") as StickerMarketplaceTab
 
 	# Connect return to title button
 	return_to_title_button.pressed.connect(_on_return_to_title_pressed)
@@ -244,9 +249,15 @@ func show_screen():
 	"""Show the pause menu (called by UIManager)"""
 	dialog.visible = true
 
+	# Show marketplace tab only if unlocked
+	_update_marketplace_tab_visibility()
+
 	# Restore last tab; always show Commissions if a mission is active
+	# Fall back to SHOP if MARKETPLACE was last selected but is now locked
 	if MissionManager and MissionManager.current_mission:
 		_switch_tab(Tab.COMMISSIONS)
+	elif current_tab == Tab.MARKETPLACE and not _has_marketplace_unlocked():
+		_switch_tab(Tab.SHOP)
 	else:
 		_switch_tab(current_tab)
 	_enter_tab_bar_mode()
@@ -360,8 +371,10 @@ func _switch_tab(tab: Tab):
 func _cycle_tab(direction: int):
 	"""Cycle through tabs with clamping (no wrap)"""
 	var new_tab = clampi(current_tab + direction, 0, Tab.OPTIONS)
+	# Skip MARKETPLACE if not unlocked
+	if new_tab == Tab.MARKETPLACE and not _has_marketplace_unlocked():
+		new_tab = clampi(new_tab + direction, 0, Tab.OPTIONS)
 	if new_tab != current_tab:
-		# If we were in content mode, enter tab bar first
 		if nav_mode == NavMode.TAB_CONTENT:
 			_enter_tab_bar_mode()
 		_switch_tab(new_tab as Tab)
@@ -408,6 +421,12 @@ func _enter_tab_content_mode(from_mouse: bool = false):
 				if not from_mouse:
 					shop_tab.nav_mode = ShopTab.NavMode.ITEM_LIST
 					shop_tab.input_cooldown = 0.0
+		Tab.MARKETPLACE:
+			if marketplace_tab:
+				marketplace_tab.keyboard_nav_enabled = true
+				if not from_mouse:
+					marketplace_tab.nav_mode = StickerMarketplaceTab.NavMode.SUB_TAB_BAR
+					marketplace_tab.input_cooldown = 0.0
 
 	if not from_mouse and button_hit_sound:
 		button_hit_sound.play()
@@ -428,6 +447,9 @@ func _deactivate_tab_content(tab: Tab):
 		Tab.SHOP:
 			if shop_tab:
 				shop_tab.keyboard_nav_enabled = false
+		Tab.MARKETPLACE:
+			if marketplace_tab:
+				marketplace_tab.keyboard_nav_enabled = false
 
 func _hide_all_tab_content():
 	"""Hide all tab content areas and disable input processing"""
@@ -435,6 +457,7 @@ func _hide_all_tab_content():
 	inventory_content.visible = false
 	options_content.visible = false
 	shop_content.visible = false
+	marketplace_content.visible = false
 
 	# Disable input processing
 	if mission_selection_ui:
@@ -446,6 +469,8 @@ func _hide_all_tab_content():
 		options_menu.process_mode = Node.PROCESS_MODE_DISABLED
 	if shop_tab:
 		shop_tab.process_mode = Node.PROCESS_MODE_DISABLED
+	if marketplace_tab:
+		marketplace_tab.process_mode = Node.PROCESS_MODE_DISABLED
 
 func _show_tab_content(tab: Tab):
 	"""Show the content area for a specific tab (mouse-interactive immediately, keyboard nav controlled by flag)"""
@@ -477,6 +502,12 @@ func _show_tab_content(tab: Tab):
 				shop_tab.activate()
 				shop_tab.process_mode = Node.PROCESS_MODE_INHERIT
 				shop_tab.keyboard_nav_enabled = false
+		Tab.MARKETPLACE:
+			marketplace_content.visible = true
+			if marketplace_tab:
+				marketplace_tab.activate()
+				marketplace_tab.process_mode = Node.PROCESS_MODE_INHERIT
+				marketplace_tab.keyboard_nav_enabled = false
 
 func _update_tab_button_styles():
 	"""Update tab button visual states"""
@@ -504,6 +535,15 @@ func _release_text_focus():
 	var focused = get_viewport().gui_get_focus_owner()
 	if focused:
 		focused.release_focus()
+
+func _has_marketplace_unlocked() -> bool:
+	return WorldStateManager and "customstickerbutton" in WorldStateManager.get_purchased_items()
+
+
+func _update_marketplace_tab_visibility() -> void:
+	if marketplace_tab_button:
+		marketplace_tab_button.visible = _has_marketplace_unlocked()
+
 
 func _update_key_icon():
 	if key_icon:

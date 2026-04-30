@@ -75,8 +75,17 @@ func _load_builtin_stickers():
 			push_error("Failed to load sticker texture: %s" % path)
 
 func _load_custom_stickers():
-	"""Load user-added PNG stickers from user://custom_stickers/"""
-	var dir = DirAccess.open(CUSTOM_STICKERS_FOLDER)
+	"""Load user-added PNG stickers from user://custom_stickers/ and its marketplace subfolder."""
+	var listed_ids: Array = WorldStateManager.get_listed_sticker_ids() if has_node("/root/WorldStateManager") else []
+
+	if has_node("/root/WorldStateManager") and "customstickerbutton" in WorldStateManager.get_purchased_items():
+		_load_stickers_from_folder(CUSTOM_STICKERS_FOLDER, "custom_", listed_ids)
+
+	_load_stickers_from_folder(CUSTOM_STICKERS_FOLDER + "marketplace/", "marketplace_", [])
+
+
+func _load_stickers_from_folder(folder: String, id_prefix: String, exclude_base_names: Array) -> void:
+	var dir = DirAccess.open(folder)
 	if not dir:
 		return
 
@@ -91,19 +100,22 @@ func _load_custom_stickers():
 
 	file_names.sort()
 
-	var absolute_folder = ProjectSettings.globalize_path(CUSTOM_STICKERS_FOLDER)
+	var absolute_folder = ProjectSettings.globalize_path(folder)
 	for fname in file_names:
+		var base_name = fname.get_basename()
+		if base_name in exclude_base_names:
+			continue  # sticker is currently listed for sale — hide from carousel
 		var absolute_path = absolute_folder.path_join(fname)
 		var image = Image.new()
 		var error = image.load(absolute_path)
 		if error == OK:
 			var texture = ImageTexture.create_from_image(image)
-			var sticker_name = "custom_" + fname.get_basename()
-			var definition = PaintingLayerDefinition.new(sticker_name, texture, 0)
+			var sticker_id = id_prefix + base_name
+			var definition = PaintingLayerDefinition.new(sticker_id, texture, 0)
 			definition.unlocked = true
 			sticker_library.append(definition)
 		else:
-			push_warning("Failed to load custom sticker: %s (error %d)" % [fname, error])
+			push_warning("Failed to load sticker: %s (error %d)" % [fname, error])
 
 func _ensure_custom_folder_exists():
 	"""Create the custom stickers folder and README if they don't exist"""
@@ -120,6 +132,14 @@ func _ensure_custom_folder_exists():
 func reload():
 	"""Reload all stickers (call after user adds new files)"""
 	_load_all_stickers()
+
+func get_custom_stickers_for_marketplace() -> Array[PaintingLayerDefinition]:
+	"""Returns only unlisted custom stickers (id prefix 'custom_') available to sell."""
+	var result: Array[PaintingLayerDefinition] = []
+	for def in sticker_library:
+		if def.id.begins_with("custom_"):
+			result.append(def)
+	return result
 
 func get_definition_by_id(sticker_id: String) -> PaintingLayerDefinition:
 	"""Find a sticker definition by its ID"""

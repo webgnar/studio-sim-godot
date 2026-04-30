@@ -220,19 +220,21 @@ func _hide_ui():
 	"""Animate UI off-screen to the left with scale"""
 	if not is_ui_visible:
 		return  # Already hidden
-	
+
 	is_ui_visible = false
-	
+
 	# Kill existing tween if any
 	if animation_tween:
 		animation_tween.kill()
-	
+
 	# Create new tween
 	animation_tween = create_tween()
 	animation_tween.set_parallel(true)  # Run position and scale animations simultaneously
 	animation_tween.set_trans(Tween.TRANS_SINE)
 	animation_tween.set_ease(Tween.EASE_OUT)
-	
+
 	# Animate position and scale
 	animation_tween.tween_property(self, "position:x", hidden_position_x, animation_duration)
 	animation_tween.tween_property(self, "scale", Vector2(hidden_scale, hidden_scale), animation_duration)
+
+

@@ -1,0 +1,71 @@
+[gd_scene format=3 uid="uid://d11jppdn8dl5q"]
+
+[ext_resource type="Script" uid="uid://blpu2t7vet8nf" path="res://scripts/ui/StickerListingCard.gd" id="1_script"]
+[ext_resource type="Theme" uid="uid://cbtaxh5m7udor" path="res://themes/ui_theme.tres" id="1_theme"]
+
+[node name="StickerListingCard" type="Button" unique_id=1177552734]
+custom_minimum_size = Vector2(0, 84)
+size_flags_horizontal = 3
+focus_mode = 0
+theme = ExtResource("1_theme")
+alignment = 0
+script = ExtResource("1_script")
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1710121714]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 6
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer" unique_id=674165237]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 10
+
+[node name="PreviewRect" type="TextureRect" parent="MarginContainer/HBoxContainer" unique_id=172172285]
+custom_minimum_size = Vector2(52, 52)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer" unique_id=1698987928]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 2
+theme_override_constants/separation = 2
+
+[node name="NameLabel" type="Label" parent="MarginContainer/HBoxContainer/VBoxContainer" unique_id=1576555824]
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 20
+text = "Sticker Name"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer/VBoxContainer" unique_id=1373170858]
+layout_mode = 2
+
+[node name="PriceLabel" type="Label" parent="MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer" unique_id=267441205]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.5, 1, 0.5, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 6
+theme_override_font_sizes/font_size = 23
+text = "$0"
+
+[node name="SellerLabel" type="Label" parent="MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer" unique_id=191654192]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95596343, 0.9559633, 0.95596343, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 9
+theme_override_font_sizes/font_size = 23
+text = "by ..."

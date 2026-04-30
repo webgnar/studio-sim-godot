@@ -356,6 +356,22 @@ func _wipe_save_data():
 			fname = user_dir.get_next()
 		user_dir.list_dir_end()
 
+	# Clear all custom sticker PNGs (root folder + marketplace subfolder)
+	for sticker_path in ["user://custom_stickers", "user://custom_stickers/marketplace"]:
+		var sdir = DirAccess.open(sticker_path)
+		if sdir:
+			sdir.list_dir_begin()
+			var sfname = sdir.get_next()
+			while sfname != "":
+				if not sdir.current_is_dir() and sfname.ends_with(".png"):
+					DirAccess.remove_absolute(sticker_path + "/" + sfname)
+					print("TitleScreen: Deleted custom sticker %s" % sfname)
+				sfname = sdir.get_next()
+			sdir.list_dir_end()
+
+	# Reload StickerLibrary so in-memory sticker list matches the wiped disk state
+	StickerLibrary.reload()
+
 func _delete_directory_recursive(path: String):
 	"""Recursively delete a directory and all its contents"""
 	var dir = DirAccess.open(path)

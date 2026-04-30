@@ -68,19 +68,7 @@ func is_always_present(item_id: String) -> bool:
 	return item.get("always_present", false)
 
 
-func is_locked(item_id: String) -> bool:
-	"""Returns true if item prerequisites are not yet met."""
-	if item_id != "customstickerbutton":
-		return false
-	# Requires all non-repeatable items (except gallery_visitor) to be purchased first
-	for item in _catalog:
-		if item.get("repeatable", false):
-			continue
-		var id: String = item["id"]
-		if id == "customstickerbutton" or id == "gallery_visitor":
-			continue
-		if not is_purchased(id):
-			return true
+func is_locked(_item_id: String) -> bool:
 	return false
 
 
@@ -429,7 +417,7 @@ Meyer himself described the origins of his inventions in deeply personal, spirit
 			"id": "customstickerbutton",
 			"display_name": "Custom Sticker Modder",
 			"title": "Custom Sticker Modding button",
-			"description": "Modify Studio Sim by adding your own custom motifs to the painting UI array.",
+			"description": "Modify Studio Sim by adding your own custom motifs to the painting UI array. Look under your desk.",
 			"price": 5000,
 		},
 	]
