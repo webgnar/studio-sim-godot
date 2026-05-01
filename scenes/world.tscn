@@ -61,7 +61,6 @@
 [ext_resource type="PackedScene" uid="uid://bbsxc2lslc5cn" path="res://models/outside/SfRoadFlat.gltf" id="66_5nedk"]
 [ext_resource type="PackedScene" uid="uid://clyqlnamf1d2w" path="res://scenes/old stuff/wall_outlet.tscn" id="66_8lgfd"]
 [ext_resource type="PackedScene" uid="uid://ddh82wmd7v37" path="res://models/outside/sewerroad.gltf" id="68_5nedk"]
-[ext_resource type="AudioStream" uid="uid://dv5yoxwt2ynma" path="res://sounds/music_gnar - Gnar Loops Bass.ogg" id="68_l8ik4"]
 [ext_resource type="PackedScene" uid="uid://bk1j8boxuauwf" path="res://models/outside/treeSmallOak2.gltf" id="69_40xph"]
 [ext_resource type="AudioStream" uid="uid://w1j8bql6nn1e" path="res://sounds/Wavy I.D. - dinner at my place (i can't wait).ogg" id="69_70d8d"]
 [ext_resource type="PackedScene" uid="uid://coe4uac2fu4vl" path="res://models/outside/crazy2.gltf" id="70_8lgfd"]
@@ -143,12 +142,11 @@
 [ext_resource type="PackedScene" uid="uid://dfcanvasscn1" path="res://scenes/objects/AssistantFinishedCanvas.tscn" id="201_fcanvas"]
 [ext_resource type="Script" uid="uid://nvjrcsa5oaqc" path="res://scripts/BerkeyInteraction.gd" id="berkey_interaction"]
 [ext_resource type="AudioStream" uid="uid://b8pj17m4nhgjm" path="res://sounds/boomboxSwitch.ogg" id="boombox_switch"]
-[ext_resource type="AudioStream" uid="uid://cfuo8ydnxfi66" path="res://sounds/convenient ear pleasure.ogg" id="ear_ogg"]
+[ext_resource type="AudioStream" uid="uid://cnjld2r5btwho" path="res://sounds/dial up.ogg" id="dial_up_ogg"]
 [ext_resource type="AudioStream" uid="uid://bukro42figtah" path="res://sounds/fan switch.ogg" id="fan_switch"]
 [ext_resource type="AudioStream" uid="uid://c443ekfhr0sru" path="res://sounds/ministudio.ogg" id="ministudio_audio"]
 [ext_resource type="PackedScene" path="res://scenes/UI/MoneyRainLayer.tscn" id="money_rain_layer"]
 [ext_resource type="AudioStream" uid="uid://cldonhpncb00b" path="res://sounds/(First Trip) To The Moon copy.ogg" id="moon_ogg"]
-[ext_resource type="AudioStream" uid="uid://c8ydv54m1n9p2" path="res://sounds/dial up.ogg" id="dial_up_ogg"]
 [ext_resource type="Script" uid="uid://bunyklibu48s2" path="res://scripts/SkyRotator.gd" id="sky_rotator"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dss4m"]
@@ -429,17 +427,17 @@ albedo_color = Color(1.0734373, 1.0734373, 0.15063755, 1)
 albedo_texture = ExtResource("82_mu18u")
 texture_filter = 0
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_7m3dx"]
+[sub_resource type="PlaneMesh" id="PlaneMesh_scu3r"]
 resource_local_to_scene = true
 size = Vector2(2.5, 3)
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_vevsf"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_7m3dx"]
 resource_name = "_albedo"
 viewport_path = NodePath("../MirrorNew/SubViewport")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vuv1g"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vevsf"]
 resource_local_to_scene = true
-albedo_texture = SubResource("ViewportTexture_vevsf")
+albedo_texture = SubResource("ViewportTexture_7m3dx")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_1v02h"]
 size = Vector2(2.5, 3)
@@ -1622,7 +1620,7 @@ transform = Transform3D(0.17, 0, 0, 0, 0.17, 0, 0, 0, 0.17, 0, 0, 0)
 [node name="BoomboxInteraction" type="Node3D" parent="BOOMbox" unique_id=1261900052]
 script = ExtResource("36_boombox_new")
 auto_play_on_start = true
-songs = Array[AudioStream]([ExtResource("51_swu3i"), ExtResource("ministudio_audio"), ExtResource("moon_ogg"), ExtResource("ear_ogg"), ExtResource("68_l8ik4"), ExtResource("69_70d8d"), ExtResource("70_70d8d")])
+songs = Array[AudioStream]([ExtResource("51_swu3i"), ExtResource("ministudio_audio"), ExtResource("moon_ogg"), ExtResource("70_70d8d"), ExtResource("69_70d8d")])
 switch_sound = ExtResource("boombox_switch")
 dial_up_sound = ExtResource("dial_up_ogg")
 default_volume = 1.0
@@ -1967,8 +1965,8 @@ surface_material_override/0 = SubResource("StandardMaterial3D_7b7y8")
 
 [node name="mirror" parent="." unique_id=1626491013 groups=["shop_prop"] instance=ExtResource("39_qaasp")]
 transform = Transform3D(-4.7902194e-08, -0.99488777, 0.10098683, -3.9073655e-08, 0.10098683, 0.99488777, -1, 4.3711392e-08, -4.3711385e-08, 2.8, 1.497, 5.232)
-mesh = SubResource("PlaneMesh_7m3dx")
-surface_material_override/0 = SubResource("StandardMaterial3D_vuv1g")
+mesh = SubResource("PlaneMesh_scu3r")
+surface_material_override/0 = SubResource("StandardMaterial3D_vevsf")
 show_debug_logs = false
 metadata/mirror = "mirror"
 metadata/shop_item_id = "mirror"

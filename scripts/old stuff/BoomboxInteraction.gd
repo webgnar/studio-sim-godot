@@ -74,16 +74,27 @@ const _DEFAULT_STATIONS := [
 ]
 
 func _build_playlist() -> void:
+	var local_entries: Array[Dictionary] = []
 	for s in songs:
 		if s:
-			_playlist.append({"type": "local", "stream": s, "label": s.resource_path.get_file().get_basename()})
+			local_entries.append({"type": "local", "stream": s, "label": s.resource_path.get_file().get_basename()})
 
 	var stations := radio_stations if radio_stations.size() > 0 else _DEFAULT_STATIONS
+	var radio_entries: Array[Dictionary] = []
 	for r in stations:
 		var url: String = r.get("url", "")
 		var label: String = r.get("name", "Radio")
 		if url.length() > 0:
-			_playlist.append({"type": "radio", "url": url, "label": label})
+			radio_entries.append({"type": "radio", "url": url, "label": label})
+
+	# Stagger radio stations between songs: insert one radio entry after each song,
+	# cycling through stations if there are more songs than stations (or vice versa).
+	var total := maxi(local_entries.size(), radio_entries.size())
+	for i in range(total):
+		if i < local_entries.size():
+			_playlist.append(local_entries[i])
+		if i < radio_entries.size():
+			_playlist.append(radio_entries[i])
 
 
 

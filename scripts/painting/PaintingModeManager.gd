@@ -31,6 +31,8 @@ var gyro_cursor_offset: Vector2 = Vector2.ZERO
 
 # Undo consumed flag — prevents analog left trigger from undoing multiple times per press in 2D
 var _secondary_consumed: bool = false
+# Place consumed flag — prevents analog right trigger from placing twice per press (pull + release both cross deadzone)
+var _primary_consumed: bool = false
 
 # Audio
 var tick_sound: AudioStreamPlayer
@@ -141,6 +143,9 @@ func _unhandled_input(event):
 	# Reset undo consumed flag when left trigger is released
 	if event.is_action_released("action_secondary"):
 		_secondary_consumed = false
+	# Reset place consumed flag when right trigger is released
+	if event.is_action_released("action_primary"):
+		_primary_consumed = false
 
 	# Detect painting actions
 	if event is InputEventMouseButton:
@@ -152,8 +157,9 @@ func _unhandled_input(event):
 			should_undo = true
 			if DebugLogger and not OS.has_feature("editor"):
 				DebugLogger.write_log("[PaintingModeManager] Right click - should_undo=true")
-	elif event.is_action_pressed("action_primary"):
+	elif event.is_action_pressed("action_primary") and not _primary_consumed:
 		should_place = true
+		_primary_consumed = true
 	elif event.is_action_pressed("action_secondary"):
 		should_undo = true
 
@@ -213,8 +219,9 @@ func _unhandled_input(event):
 	if should_undo:
 		# Check for nail removal first
 		var nail_result = _check_nail_raycast()
-		if nail_result:
+		if nail_result and not _secondary_consumed:
 			_remove_nail(nail_result)
+			_secondary_consumed = true
 			get_viewport().set_input_as_handled()
 			return
 
@@ -227,9 +234,9 @@ func _unhandled_input(event):
 				_secondary_consumed = true
 				get_viewport().set_input_as_handled()
 		else:
-			# Undo from 3D system — no consumed guard (multi-fire while held is intentional)
-			if painting_system_3d:
+			if painting_system_3d and not _secondary_consumed:
 				painting_system_3d.handle_secondary_action(raycast_result)
+				_secondary_consumed = true
 				get_viewport().set_input_as_handled()
 
 func _resolve_2d_system(collider: Node) -> PaintingSystem2D:
