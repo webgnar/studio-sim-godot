@@ -946,6 +946,7 @@ shadow_bias = 0.188
 shadow_normal_bias = 0.94
 
 [node name="PaintingUI_Layer" type="CanvasLayer" parent="." unique_id=842324816]
+layer = 2
 
 [node name="PaintingUi" parent="PaintingUI_Layer" unique_id=773548253 node_paths=PackedStringArray("painting_system_3d", "painting_system_2d") instance=ExtResource("74_ntuqo")]
 painting_system_3d = NodePath("../../PaintingRoot")

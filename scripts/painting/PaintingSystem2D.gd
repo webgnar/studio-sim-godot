@@ -7,6 +7,7 @@ class_name PaintingSystem2D
 # Signals
 @warning_ignore("UNUSED_SIGNAL")
 signal layer_equipped(index: int)  # Emitted when Q/E changes the equipped sticker
+signal sticker_placed               # Emitted when a sticker is successfully placed on the canvas
 
 # Node references (assign in inspector)
 @export var painting_plane: MeshInstance3D  # The plane mesh displaying the canvas
@@ -419,6 +420,7 @@ func spawn_sticker(world_position: Vector3):
 	placed.rotation_deg = preview_rotation  # Track the rotation that was set in preview
 	placed.scale_multiplier = preview_scale_multiplier  # Track the scale multiplier
 	placed_layers.append(placed)
+	sticker_placed.emit()
 
 	if DebugLogger and not OS.has_feature("editor"):
 		DebugLogger.write_log("[PaintingSystem2D] Sticker spawned successfully! Total placed: %d" % placed_layers.size())
