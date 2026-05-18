@@ -547,23 +547,26 @@ func load_settings():
 		return
 	
 	# Load hue value
-	if settings.has("bg_hue"):
+	var has_hue_setting = settings.has("bg_hue")
+	var has_sat_setting = settings.has("bg_saturation")
+
+	if has_hue_setting:
 		current_hue = float(settings.bg_hue)
 		hue_slider.value = current_hue
 		hue_value_label.text = "%d°" % int(current_hue)
 
 	# Load saturation value
-	if settings.has("bg_saturation"):
+	if has_sat_setting:
 		current_saturation = float(settings.bg_saturation)
 		saturation_slider.value = current_saturation
 		saturation_value_label.text = "%.0f%%" % (current_saturation * 100)
 
-	# Convert hue and saturation to color
-	current_bg_color = Color.from_hsv(current_hue / 360.0, current_saturation, 0.3, 0.9)
-
-	# Apply to theme
-	if theme_panel_style:
-		theme_panel_style.bg_color = current_bg_color
+	# Only override the theme color if the user has explicitly saved visual settings.
+	# Without this guard, default values produce a dark gray that overlays all menus.
+	if has_hue_setting or has_sat_setting:
+		current_bg_color = Color.from_hsv(current_hue / 360.0, current_saturation, 0.3, 0.9)
+		if theme_panel_style:
+			theme_panel_style.bg_color = current_bg_color
 
 	# Load HUD hue value
 	if settings.has("hud_hue"):

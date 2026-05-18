@@ -1,54 +1,27 @@
 extends Node
 
 ## Debug logging singleton for exported builds
-## Writes logs to user://debug.log for post-export diagnostics
+## Outputs to console only (no file writing to avoid polluting Steam Cloud sync)
 
-const LOG_PATH = "user://debug.log"
-var log_file: FileAccess = null
 var debug_enabled: bool = false
 
 func _ready():
 	# Enable logging in non-editor builds
 	if not OS.has_feature("editor"):
 		debug_enabled = true
-		log_file = FileAccess.open(LOG_PATH, FileAccess.WRITE)
-
-		if log_file:
-			var log_full_path = OS.get_user_data_dir() + "/debug.log"
-			write_log("=== Debug Log Started ===")
-			write_log("LOG FILE LOCATION: %s" % log_full_path)
-			write_log("Platform: %s" % OS.get_name())
-			write_log("Godot Version: %s" % Engine.get_version_info()["string"])
-			write_log("User data path: %s" % OS.get_user_data_dir())
-			write_log("Executable path: %s" % OS.get_executable_path())
-
-			# Log display info
-			write_log("Screen size: %s" % DisplayServer.screen_get_size())
-			write_log("Window size: %s" % DisplayServer.window_get_size())
-
-			# Print to console prominently
-			print("\n" + "=".repeat(80))
-			print("DEBUG LOG FILE LOCATION:")
-			print(log_full_path)
-			print("=".repeat(80) + "\n")
-		else:
-			push_error("DebugLogger: Failed to open log file at %s" % LOG_PATH)
+		write_log("=== Debug Log Started ===")
+		write_log("Platform: %s" % OS.get_name())
+		write_log("Godot Version: %s" % Engine.get_version_info()["string"])
+		write_log("User data path: %s" % OS.get_user_data_dir())
+		write_log("Executable path: %s" % OS.get_executable_path())
+		write_log("Screen size: %s" % DisplayServer.screen_get_size())
+		write_log("Window size: %s" % DisplayServer.window_get_size())
 
 func write_log(message: String) -> void:
-	"""Log a message to both console and file"""
 	if not debug_enabled:
 		return
-
 	var timestamp = Time.get_datetime_string_from_system()
-	var log_line = "[%s] %s" % [timestamp, message]
-
-	# Always print to console (shows in export console wrapper)
-	print(log_line)
-
-	# Write to file if available
-	if log_file:
-		log_file.store_line(log_line)
-		log_file.flush()  # Ensure written immediately
+	print("[%s] %s" % [timestamp, message])
 
 func log_input_event(event: InputEvent) -> void:
 	"""Log input event details for debugging"""
@@ -113,6 +86,4 @@ func _mouse_mode_to_string(mode: int) -> String:
 			return "UNKNOWN(%d)" % mode
 
 func _exit_tree():
-	if log_file:
-		write_log("=== Debug Log Ended ===")
-		log_file.close()
+	write_log("=== Debug Log Ended ===")

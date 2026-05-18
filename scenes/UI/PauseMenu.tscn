@@ -15,6 +15,43 @@
 [ext_resource type="PackedScene" uid="uid://dby31fq7m8eba" path="res://scenes/UI/ShopTab.tscn" id="10_shoptab"]
 [ext_resource type="PackedScene" uid="uid://3efr372yqrya" path="res://scenes/UI/StickerMarketplaceTab.tscn" id="11_marketplace"]
 
+[sub_resource type="Animation" id="Animation_0ibie"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("MoneyLabel:theme_override_colors/font_shadow_color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(0.4745098, 1, 0, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_h3ho0"]
+resource_name = "pulse"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("MoneyLabel:theme_override_colors/font_shadow_color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.3, 0.53333336, 0.73565066, 1),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [Color(0.4745098, 1, 0, 1), Color(1, 1, 1, 1), Color(0.4745098, 1, 0, 1), Color(1, 1, 1, 1), Color(0.4745098, 1, 0, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_wclpb"]
+_data = {
+&"RESET": SubResource("Animation_0ibie"),
+&"pulse": SubResource("Animation_h3ho0")
+}
+
 [node name="PauseMenu" type="Control" unique_id=1561803109]
 layout_mode = 3
 anchors_preset = 15
@@ -78,36 +115,42 @@ stretch_mode = 5
 [node name="InventoryTab" type="Button" parent="Dialog/MarginContainer/VBoxContainer/TabBar" unique_id=1450620378]
 custom_minimum_size = Vector2(200, 40)
 layout_mode = 2
+tooltip_text = "look at your paintings!"
 text = "🖼️
 INVENTORY"
 
 [node name="CommissionsTab" type="Button" parent="Dialog/MarginContainer/VBoxContainer/TabBar" unique_id=1763618734]
 custom_minimum_size = Vector2(200, 100)
 layout_mode = 2
+tooltip_text = "make what someone wants you to make"
 text = "🐈
 COMMISSIONS"
 
 [node name="ShopTabButton" type="Button" parent="Dialog/MarginContainer/VBoxContainer/TabBar" unique_id=2010000010]
 custom_minimum_size = Vector2(200, 40)
 layout_mode = 2
+tooltip_text = "buy cool stuff!"
 text = "🛍️
 SHOP"
 
 [node name="MarketplaceTabButton" type="Button" parent="Dialog/MarginContainer/VBoxContainer/TabBar" unique_id=2010000020]
 custom_minimum_size = Vector2(216.65, 40)
 layout_mode = 2
+tooltip_text = "buy and sell stickers with other players"
 text = "🌐
 STICKER MARKET"
 
 [node name="OptionsTab" type="Button" parent="Dialog/MarginContainer/VBoxContainer/TabBar" unique_id=481085732]
 custom_minimum_size = Vector2(200, 40)
 layout_mode = 2
+tooltip_text = "options and stuff!"
 text = "🎛️
 OPTIONS"
 
 [node name="KeyIcon" type="TextureRect" parent="Dialog/MarginContainer/VBoxContainer/TabBar" unique_id=1630929932]
 layout_mode = 2
 size_flags_vertical = 4
+tooltip_text = "the key to open the studio door"
 texture = ExtResource("3_rgmlj")
 
 [node name="TextureRect2" type="TextureRect" parent="Dialog/MarginContainer/VBoxContainer/TabBar" unique_id=280591683]
@@ -121,6 +164,10 @@ stretch_mode = 5
 [node name="SpacerRight" type="Control" parent="Dialog/MarginContainer/VBoxContainer/TabBar" unique_id=2010000003]
 layout_mode = 2
 size_flags_horizontal = 3
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Dialog/MarginContainer/VBoxContainer/TabBar" unique_id=1597737652]
+libraries/ = SubResource("AnimationLibrary_wclpb")
+autoplay = &"pulse"
 
 [node name="TabContent" type="Control" parent="Dialog/MarginContainer/VBoxContainer" unique_id=1835759430]
 layout_mode = 2
@@ -179,7 +226,8 @@ offset_top = -40.0
 offset_right = 150.0
 grow_horizontal = 2
 grow_vertical = 0
-text = "Quit and Return to Title Screen"
+tooltip_text = "make sure you saved!"
+text = "Quit Game"
 
 [node name="ShopContent" type="Control" parent="Dialog/MarginContainer/VBoxContainer/TabContent" unique_id=2010000011]
 visible = false

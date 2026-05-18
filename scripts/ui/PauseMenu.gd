@@ -47,6 +47,9 @@ var marketplace_tab: StickerMarketplaceTab = null
 # Money display (placed in TabBar in scene)
 @onready var money_label: Label = $Dialog/MarginContainer/VBoxContainer/TabBar/MoneyLabel
 
+# Close button (keyboard/mouse only)
+var close_button: Button = null
+
 # State
 var current_tab: Tab = Tab.COMMISSIONS
 var nav_mode: NavMode = NavMode.TAB_BAR
@@ -98,6 +101,35 @@ func _ready():
 	# Show marketplace tab immediately when player buys the sticker modder
 	if ShopManager:
 		ShopManager.item_purchased.connect(_on_item_purchased)
+
+	# Create keyboard/mouse-only close button (far right of TabBar, opposite MoneyLabel)
+	close_button = Button.new()
+	close_button.name = "CloseButton"
+	close_button.text = "X"
+	close_button.focus_mode = Control.FOCUS_NONE
+	close_button.custom_minimum_size = Vector2(40, 40)
+	close_button.pressed.connect(_close_menu)
+	tab_bar.add_child(close_button)
+
+	var style = StyleBoxFlat.new()
+	style.set_border_width_all(2)
+	style.border_color = Color(1, 1, 1, 0.8)
+	style.bg_color = Color(0, 0, 0, 0)
+	style.content_margin_left = 8
+	style.content_margin_right = 8
+	close_button.add_theme_stylebox_override("normal", style)
+	var hover_style = style.duplicate()
+	hover_style.bg_color = Color(1, 1, 1, 0.15)
+	close_button.add_theme_stylebox_override("hover", hover_style)
+	var pressed_style = style.duplicate()
+	pressed_style.bg_color = Color(1, 1, 1, 0.3)
+	close_button.add_theme_stylebox_override("pressed", pressed_style)
+	close_button.add_theme_font_size_override("font_size", 28)
+	close_button.add_theme_color_override("font_color", Color(1, 1, 1, 0.9))
+
+	if InputDeviceManager:
+		InputDeviceManager.device_changed.connect(_on_close_button_device_changed)
+	_update_close_button_visibility()
 
 	# Register with UIManager
 	if UIManager:
@@ -272,6 +304,7 @@ func show_screen():
 
 	# Update key icon visibility
 	_update_key_icon()
+	_update_close_button_visibility()
 
 	# Refresh money display
 	_update_money_display()
@@ -574,6 +607,13 @@ func _on_money_changed(new_amount: int):
 func _on_item_purchased(item_id: String):
 	if item_id == "customstickerbutton":
 		_update_marketplace_tab_visibility()
+
+func _update_close_button_visibility():
+	if close_button and InputDeviceManager:
+		close_button.visible = InputDeviceManager.current_device == InputDeviceManager.DeviceType.KEYBOARD_MOUSE
+
+func _on_close_button_device_changed(_device):
+	_update_close_button_visibility()
 
 # ============================================================================
 # Child finding helpers

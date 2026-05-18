@@ -16,6 +16,10 @@ signal layer_equipped(index: int)  # Emitted when Q/E changes the equipped stick
 # Currently placed layers on canvas
 var placed_layers: Array[PlacedLayer2D] = []
 
+# Auto-bake background (flattens live Sprite2D nodes into a single texture for performance)
+@export var auto_bake_threshold: int = 150  # 0 = disabled
+var _background_sprite: Sprite2D = null
+
 # Current state
 var selected_sticker_index: int = 0  # Which sticker is selected from library
 var selected_layer: PlacedLayer2D = null  # Currently selected placed layer
@@ -87,6 +91,21 @@ func _ready():
 
 	# Create preview sprite
 	_setup_preview_sprite()
+
+	# Find or create background sprite for auto-bake
+	_setup_background_sprite()
+
+func _setup_background_sprite():
+	var existing = get_node_or_null("BackgroundSprite") as Sprite2D
+	if existing:
+		_background_sprite = existing
+		return
+	_background_sprite = Sprite2D.new()
+	_background_sprite.name = "BackgroundSprite"
+	_background_sprite.centered = false
+	_background_sprite.z_index = -1000
+	add_child(_background_sprite)
+	move_child(_background_sprite, 0)
 
 func _setup_plane_material():
 	"""Assign SubViewport texture to the painting plane material"""
@@ -413,6 +432,9 @@ func spawn_sticker(world_position: Vector3):
 
 	# Select the newly placed sticker
 	selected_layer = placed
+
+	if auto_bake_threshold > 0 and placed_layers.size() >= auto_bake_threshold:
+		_bake_to_background()  # fire-and-forget coroutine
 	
 	# Play random sticker sound (create new player for each sound to allow overlap)
 	var sounds = [sticker_sound_1, sticker_sound_2, sticker_sound_3, sticker_sound_4, sticker_sound_5]
@@ -429,6 +451,27 @@ func spawn_sticker(world_position: Vector3):
 		audio_player.play()
 		# Auto-cleanup when sound finishes
 		audio_player.finished.connect(func(): audio_player.queue_free())
+
+func _bake_to_background() -> void:
+	if not canvas_viewport or not _background_sprite:
+		return
+	var was_visible = false
+	if preview_sprite:
+		was_visible = preview_sprite.visible
+		preview_sprite.visible = false
+	await RenderingServer.frame_post_draw
+	var image = canvas_viewport.get_texture().get_image()
+	if preview_sprite:
+		preview_sprite.visible = was_visible
+	if not image:
+		return
+	_background_sprite.texture = ImageTexture.create_from_image(image)
+	_background_sprite.scale = Vector2.ONE
+	for layer in placed_layers:
+		if layer.node:
+			layer.node.queue_free()
+	placed_layers.clear()
+	selected_layer = null
 
 func cycle_sticker(direction: int):
 	"""Cycle through available stickers in library (deprecated - use PaintingModeManager)"""
