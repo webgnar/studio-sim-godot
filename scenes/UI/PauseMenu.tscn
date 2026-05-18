@@ -20,7 +20,7 @@ length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("MoneyLabel:theme_override_colors/font_shadow_color")
+tracks/0/path = NodePath("MarginContainer/MoneyLabel:theme_override_colors/font_shadow_color")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -36,7 +36,7 @@ loop_mode = 1
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("MoneyLabel:theme_override_colors/font_shadow_color")
+tracks/0/path = NodePath("MarginContainer/MoneyLabel:theme_override_colors/font_shadow_color")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -91,14 +91,18 @@ theme_override_constants/separation = 10
 layout_mode = 2
 theme_override_constants/separation = 50
 
-[node name="MoneyLabel" type="Label" parent="Dialog/MarginContainer/VBoxContainer/TabBar" unique_id=2010000001]
+[node name="MarginContainer" type="MarginContainer" parent="Dialog/MarginContainer/VBoxContainer/TabBar" unique_id=1238180383]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MoneyLabel" type="Label" parent="Dialog/MarginContainer/VBoxContainer/TabBar/MarginContainer" unique_id=2010000001]
 layout_mode = 2
 theme_override_colors/font_shadow_color = Color(0.4745098, 1, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 20
 theme_override_constants/shadow_outline_size = 30
-theme_override_font_sizes/font_size = 50
-text = "$0"
+theme_override_font_sizes/font_size = 55
+text = "$ 0"
 
 [node name="Spacer" type="Control" parent="Dialog/MarginContainer/VBoxContainer/TabBar" unique_id=2010000002]
 layout_mode = 2

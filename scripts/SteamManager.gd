@@ -147,8 +147,7 @@ func setup_achievements() -> void:
 		# Shop
 		"ACH_BRAVE_NEW_WORLD": false,  # Purchase all three free energy devices (GEET, Water Fuel Cell, SEG)
 		"ACH_CONSCIOUSNESS_CREATES_REALITY": false,  # Purchase the Custom Sticker button
-		"ACH_COIN_PUSHER": false,  # Purchase the coin pusher machine
-		"ACH_STUDIO_ASSISTANT": false,  # Purchase the studio assistant
+"ACH_STUDIO_ASSISTANT": false,  # Purchase the studio assistant
 
 		# Commissions
 		"ACH_ALL_MISSIONS_COMPLETED": false,  # Complete all commissions

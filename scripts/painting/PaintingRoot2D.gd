@@ -18,7 +18,7 @@ class_name PaintingRoot2D
 @export var plane_height: float = 3.0
 
 @onready var painting_system: PaintingSystem2D = $CanvasViewport/CanvasRoot
-@onready var _pulse_hint: CanvasPulseHint = $CanvasPulseHint
+var _pulse_hint: CanvasPulseHint
 
 const IDLE_TIMEOUT := 10.0
 
@@ -26,7 +26,7 @@ var _idle_timer: float = 0.0
 var _idle_running: bool = true
 
 func _process(delta: float) -> void:
-	if not _idle_running:
+	if not _idle_running or not _pulse_hint:
 		return
 	_idle_timer += delta
 	if _idle_timer >= IDLE_TIMEOUT:
@@ -36,12 +36,15 @@ func _process(delta: float) -> void:
 func _on_sticker_placed() -> void:
 	_idle_timer = 0.0
 	_idle_running = true
-	_pulse_hint.hide_hint()
+	if _pulse_hint:
+		_pulse_hint.hide_hint()
 
 func _ready():
 	if not painting_system:
 		push_error("PaintingSystem2D not found!")
 		return
+
+	_pulse_hint = get_node_or_null("CanvasPulseHint") as CanvasPulseHint
 
 	painting_system.sticker_placed.connect(_on_sticker_placed)
 

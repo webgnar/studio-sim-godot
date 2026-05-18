@@ -141,6 +141,7 @@
 [ext_resource type="PackedScene" uid="uid://b4j6krmtnx1p8" path="res://scenes/objects/DiscordLink.tscn" id="148_disc"]
 [ext_resource type="Texture2D" uid="uid://bhx3k1r4uh3ma" path="res://sprites/ui/gallery.png" id="148_tuav7"]
 [ext_resource type="PackedScene" uid="uid://fl4ouxm4suyd" path="res://models/props/arrow_sign.gltf" id="151_cn8kp"]
+[ext_resource type="Texture2D" uid="uid://bbf0fel1jr3xl" path="res://sprites/ui/elevator.png" id="152_tuav7"]
 [ext_resource type="PackedScene" uid="uid://d2lld8pxrphp3" path="res://scenes/objects/SaveAssistantWorkButton.tscn" id="200_savebtn"]
 [ext_resource type="PackedScene" uid="uid://dfcanvasscn1" path="res://scenes/objects/AssistantFinishedCanvas.tscn" id="201_fcanvas"]
 [ext_resource type="Script" uid="uid://nvjrcsa5oaqc" path="res://scripts/BerkeyInteraction.gd" id="berkey_interaction"]
@@ -430,17 +431,17 @@ albedo_color = Color(1.0734373, 1.0734373, 0.15063755, 1)
 albedo_texture = ExtResource("82_mu18u")
 texture_filter = 0
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_e5kln"]
+[sub_resource type="PlaneMesh" id="PlaneMesh_vuv1g"]
 resource_local_to_scene = true
 size = Vector2(2.5, 3)
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_t1by1"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_tuav7"]
 resource_name = "_albedo"
 viewport_path = NodePath("../MirrorNew/SubViewport")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tq137"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cn8kp"]
 resource_local_to_scene = true
-albedo_texture = SubResource("ViewportTexture_t1by1")
+albedo_texture = SubResource("ViewportTexture_tuav7")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_1v02h"]
 size = Vector2(2.5, 3)
@@ -926,6 +927,15 @@ texture_filter = 0
 [sub_resource type="PlaneMesh" id="PlaneMesh_i688p"]
 material = SubResource("StandardMaterial3D_fahuw")
 size = Vector2(1.66, 0.5)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_e5kln"]
+transparency = 1
+albedo_texture = ExtResource("152_tuav7")
+texture_filter = 0
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_t1by1"]
+material = SubResource("StandardMaterial3D_e5kln")
+size = Vector2(6.25, 1.04)
 
 [node name="World" type="Node3D" unique_id=81477]
 script = ExtResource("1_qaasp")
@@ -1987,8 +1997,8 @@ surface_material_override/0 = SubResource("StandardMaterial3D_7b7y8")
 
 [node name="mirror" parent="." unique_id=1626491013 groups=["shop_prop"] instance=ExtResource("39_qaasp")]
 transform = Transform3D(-4.7902194e-08, -0.99488777, 0.10098683, -3.9073655e-08, 0.10098683, 0.99488777, -1, 4.3711392e-08, -4.3711385e-08, 2.8, 1.497, 5.232)
-mesh = SubResource("PlaneMesh_e5kln")
-surface_material_override/0 = SubResource("StandardMaterial3D_tq137")
+mesh = SubResource("PlaneMesh_vuv1g")
+surface_material_override/0 = SubResource("StandardMaterial3D_cn8kp")
 show_debug_logs = false
 metadata/mirror = "mirror"
 metadata/shop_item_id = "mirror"
@@ -2630,7 +2640,11 @@ transform = Transform3D(-6.8943287e-09, 3.950687e-09, 0.09, 0.00056235865, -0.08
 transform = Transform3D(0.09, 0, 0, 0, -3.934025e-09, 0.09, 0, -0.09, -3.934025e-09, 2.494263, 1.2698529, 8.7283325)
 
 [node name="arrow sign" parent="." unique_id=449322654 instance=ExtResource("151_cn8kp")]
-transform = Transform3D(6.5567076e-09, -9.900353e-16, 0.14999999, -0.03418893, -0.14605176, 1.4944445e-09, 0.14605176, -0.03418893, -6.3841252e-09, 4.252333, 3.4278598, 7)
+transform = Transform3D(1.1804951e-08, 3.3246738e-14, 0.15, 0.0059606913, -0.13996588, -1.447497e-10, 0.2699342, 0.0030907285, -6.5567085e-09, 4.089716, 2.2336495, 10.515658)
+
+[node name="elevator sign" type="MeshInstance3D" parent="." unique_id=435783017]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 8.155401, 4.6409097, -0.65066266)
+mesh = SubResource("PlaneMesh_t1by1")
 
 [editable path="Spotlight1"]
 [editable path="Spotlight2"]

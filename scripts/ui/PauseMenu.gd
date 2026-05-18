@@ -598,11 +598,11 @@ func _update_key_icon():
 
 func _update_money_display():
 	if money_label and EconomyManager:
-		money_label.text = "$%d" % EconomyManager.get_money()
+		money_label.text = "$ %d" % EconomyManager.get_money()
 
 func _on_money_changed(new_amount: int):
 	if money_label:
-		money_label.text = "$%d" % new_amount
+		money_label.text = "$ %d" % new_amount
 
 func _on_item_purchased(item_id: String):
 	if item_id == "customstickerbutton":
