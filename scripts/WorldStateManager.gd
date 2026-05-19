@@ -233,6 +233,19 @@ func increment_gallery_visitor_count() -> void:
 	"""Increment the gallery visitor count by 1. Called by ShopManager on purchase."""
 	_misc_data["gallery_visitor_count"] = get_gallery_visitor_count() + 1
 
+func get_seen_visitor_skins() -> Array:
+	"""Return array of skin keys (basename of material file) the player has encountered."""
+	return _misc_data.get("seen_visitor_skins", [])
+
+func add_seen_visitor_skin(skin_key: String) -> void:
+	"""Record a visitor skin as seen. No-op if already recorded."""
+	var seen: Array = get_seen_visitor_skins()
+	if skin_key in seen:
+		return
+	seen.append(skin_key)
+	_misc_data["seen_visitor_skins"] = seen
+	save_world_state()
+
 func get_player_id() -> String:
 	"""Return this installation's stable player ID, generating it on first call."""
 	if FileAccess.file_exists(PLAYER_ID_PATH):

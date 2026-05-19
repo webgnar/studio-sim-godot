@@ -45,7 +45,7 @@ var marketplace_tab: StickerMarketplaceTab = null
 @onready var key_icon: TextureRect = $Dialog/MarginContainer/VBoxContainer/TabBar/KeyIcon
 
 # Money display (placed in TabBar in scene)
-@onready var money_label: Label = $Dialog/MarginContainer/VBoxContainer/TabBar/MoneyLabel
+@onready var money_label: Label = $Dialog/MarginContainer/VBoxContainer/TabBar/MarginContainer/MoneyLabel
 
 # Close button (keyboard/mouse only)
 var close_button: Button = null

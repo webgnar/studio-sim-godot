@@ -6,11 +6,14 @@ extends Node
 # Studio Assistant state
 var studio_assistant_active: bool = false
 var assistant_timer: float = 0.0
+var assistant_payout_accumulated: int = 0  # grows each cycle based on visitor count
 
 # Studio Assistant constants
 const ASSISTANT_COST: int = 2000
 const ASSISTANT_INTERVAL: float = 300.0  # 5 minutes in seconds
-const ASSISTANT_PAYOUT: int = 100  # $100 per painting
+const ASSISTANT_PAYOUT: int = 100  # $100 base per painting
+const VISITOR_BONUS_PER_CYCLE: int = 5   # $ added to accumulated bonus per visitor per cycle
+const ASSISTANT_MAX_BONUS: int = 150     # cap: ASSISTANT_PAYOUT * 10 * 0.15
 
 # Audio
 @export var payout_sound: AudioStream  # Sound played when assistant completes painting
@@ -55,9 +58,16 @@ func _complete_assistant_painting():
 		push_error("AutomationManager: EconomyManager not found!")
 		return
 
-	EconomyManager.add_money(ASSISTANT_PAYOUT, "studio_assistant")
-	assistant_payout.emit(ASSISTANT_PAYOUT)
-	print("AutomationManager: Studio Assistant completed painting (+$%d)" % ASSISTANT_PAYOUT)
+	var actual_payout = ASSISTANT_PAYOUT + assistant_payout_accumulated
+	EconomyManager.add_money(actual_payout, "studio_assistant")
+	assistant_payout.emit(actual_payout)
+
+	var visitor_count: int = 0
+	if has_node("/root/WorldStateManager"):
+		visitor_count = WorldStateManager.get_gallery_visitor_count()
+	assistant_payout_accumulated = min(assistant_payout_accumulated + visitor_count * VISITOR_BONUS_PER_CYCLE, ASSISTANT_MAX_BONUS)
+
+	print("AutomationManager: Studio Assistant +$%d (bonus: $%d/$%d)" % [actual_payout, assistant_payout_accumulated, ASSISTANT_MAX_BONUS])
 
 	# Play payout sound
 	if payout_sound and audio_player:
@@ -122,13 +132,15 @@ func get_save_data() -> Dictionary:
 	"""Get automation state for saving"""
 	return {
 		"studio_assistant_active": studio_assistant_active,
-		"assistant_timer": assistant_timer
+		"assistant_timer": assistant_timer,
+		"assistant_payout_accumulated": assistant_payout_accumulated
 	}
 
 func load_save_data(data: Dictionary):
 	"""Load automation state from save"""
 	studio_assistant_active = data.get("studio_assistant_active", false)
 	assistant_timer = data.get("assistant_timer", 0.0)
+	assistant_payout_accumulated = data.get("assistant_payout_accumulated", 0)
 
 	if studio_assistant_active:
 		print("AutomationManager: Studio Assistant restored (%.1fs until next payout)" % (ASSISTANT_INTERVAL - assistant_timer))
@@ -138,4 +150,5 @@ func clear_state():
 	"""Reset all automation state (called on new game)"""
 	studio_assistant_active = false
 	assistant_timer = 0.0
+	assistant_payout_accumulated = 0
 	print("AutomationManager: State cleared")

@@ -142,6 +142,7 @@
 [ext_resource type="Texture2D" uid="uid://bhx3k1r4uh3ma" path="res://sprites/ui/gallery.png" id="148_tuav7"]
 [ext_resource type="PackedScene" uid="uid://fl4ouxm4suyd" path="res://models/props/arrow_sign.gltf" id="151_cn8kp"]
 [ext_resource type="Texture2D" uid="uid://bbf0fel1jr3xl" path="res://sprites/ui/elevator.png" id="152_tuav7"]
+[ext_resource type="Texture2D" uid="uid://ditgfk6m80iap" path="res://sprites/catclock-Sheet491 x 1080.png" id="153_cn8kp"]
 [ext_resource type="PackedScene" uid="uid://d2lld8pxrphp3" path="res://scenes/objects/SaveAssistantWorkButton.tscn" id="200_savebtn"]
 [ext_resource type="PackedScene" uid="uid://dfcanvasscn1" path="res://scenes/objects/AssistantFinishedCanvas.tscn" id="201_fcanvas"]
 [ext_resource type="Script" uid="uid://nvjrcsa5oaqc" path="res://scripts/BerkeyInteraction.gd" id="berkey_interaction"]
@@ -431,17 +432,17 @@ albedo_color = Color(1.0734373, 1.0734373, 0.15063755, 1)
 albedo_texture = ExtResource("82_mu18u")
 texture_filter = 0
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_vuv1g"]
+[sub_resource type="PlaneMesh" id="PlaneMesh_e5kln"]
 resource_local_to_scene = true
 size = Vector2(2.5, 3)
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_tuav7"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_t1by1"]
 resource_name = "_albedo"
 viewport_path = NodePath("../MirrorNew/SubViewport")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cn8kp"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tq137"]
 resource_local_to_scene = true
-albedo_texture = SubResource("ViewportTexture_tuav7")
+albedo_texture = SubResource("ViewportTexture_t1by1")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_1v02h"]
 size = Vector2(2.5, 3)
@@ -937,6 +938,70 @@ texture_filter = 0
 material = SubResource("StandardMaterial3D_e5kln")
 size = Vector2(6.25, 1.04)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_kloan"]
+atlas = ExtResource("153_cn8kp")
+region = Rect2(0, 0, 491, 1080)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sonb8"]
+atlas = ExtResource("153_cn8kp")
+region = Rect2(491, 0, 491, 1080)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fahuw"]
+atlas = ExtResource("153_cn8kp")
+region = Rect2(982, 0, 491, 1080)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_i688p"]
+atlas = ExtResource("153_cn8kp")
+region = Rect2(0, 1080, 491, 1080)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yhtv1"]
+atlas = ExtResource("153_cn8kp")
+region = Rect2(491, 1080, 491, 1080)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_c7mri"]
+atlas = ExtResource("153_cn8kp")
+region = Rect2(982, 1080, 491, 1080)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_t2jyq"]
+atlas = ExtResource("153_cn8kp")
+region = Rect2(0, 2160, 491, 1080)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7n6r0"]
+atlas = ExtResource("153_cn8kp")
+region = Rect2(491, 2160, 491, 1080)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_gom0u"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kloan")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_sonb8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fahuw")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_i688p")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yhtv1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_c7mri")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_t2jyq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7n6r0")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
 [node name="World" type="Node3D" unique_id=81477]
 script = ExtResource("1_qaasp")
 
@@ -1295,10 +1360,10 @@ size = Vector3(1, 0.8, 0.9962158)
 material = ExtResource("5_71j4m")
 
 [node name="wall2" type="CSGBox3D" parent="studio" unique_id=1227082846]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1.0247351, 19.365456, -0.099999994, -0.015761316)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1.0247351, 19.365456, -0.099999994, -0.014823139)
 use_collision = true
 collision_mask = 0
-size = Vector3(0.6639404, 0.8, 0.9692383)
+size = Vector3(0.6639404, 0.8, 0.97106934)
 material = ExtResource("5_71j4m")
 
 [node name="CSGBox3D" type="CSGBox3D" parent="studio/wall2" unique_id=55098247]
@@ -1308,10 +1373,10 @@ size = Vector3(1, 0.44067383, 0.072753906)
 material = ExtResource("30_3t06w")
 
 [node name="wall3" type="CSGBox3D" parent="studio" unique_id=154693461]
-transform = Transform3D(-4.371139e-08, 0, 24.108696, 0, 1, 0, -0.020318022, 0, -2.1411632e-08, 10.764258, -0.099999994, 0.48586574)
+transform = Transform3D(-4.371139e-08, 0, 24.108696, 0, 1, 0, -0.020318022, 0, -2.1411632e-08, 10.756902, -0.099999994, 0.48586574)
 use_collision = true
 collision_mask = 0
-size = Vector3(1, 0.8, 0.7414551)
+size = Vector3(1, 0.8, 0.7408447)
 material = ExtResource("5_71j4m")
 
 [node name="pillar" type="CSGBox3D" parent="studio" unique_id=1141610114]
@@ -1997,8 +2062,8 @@ surface_material_override/0 = SubResource("StandardMaterial3D_7b7y8")
 
 [node name="mirror" parent="." unique_id=1626491013 groups=["shop_prop"] instance=ExtResource("39_qaasp")]
 transform = Transform3D(-4.7902194e-08, -0.99488777, 0.10098683, -3.9073655e-08, 0.10098683, 0.99488777, -1, 4.3711392e-08, -4.3711385e-08, 2.8, 1.497, 5.232)
-mesh = SubResource("PlaneMesh_vuv1g")
-surface_material_override/0 = SubResource("StandardMaterial3D_cn8kp")
+mesh = SubResource("PlaneMesh_e5kln")
+surface_material_override/0 = SubResource("StandardMaterial3D_tq137")
 show_debug_logs = false
 metadata/mirror = "mirror"
 metadata/shop_item_id = "mirror"
@@ -2342,6 +2407,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 38.208893, -3.4046488, 7.4751
 size = Vector3(0.98, 15.390234, 34.65087)
 material = ExtResource("5_71j4m")
 
+[node name="CSGBox3D10" type="CSGBox3D" parent="gallery" unique_id=957513142]
+transform = Transform3D(1.9106855e-15, -4.371139e-08, 1, -1, -4.371139e-08, 0, 4.371139e-08, -1, -4.371139e-08, 20.792917, 3.8018093, 15.241215)
+size = Vector3(0.3543799, 17.808863, 34.576935)
+material = ExtResource("5_71j4m")
+
 [node name="CSGBox3D2" type="CSGBox3D" parent="gallery" unique_id=1827195016]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 14.944803, -3.252696, -9.52205)
 size = Vector3(0.51490235, 15.69414, 47.415874)
@@ -2353,8 +2423,8 @@ size = Vector3(0.98, 15.390234, 47.33407)
 material = ExtResource("5_71j4m")
 
 [node name="ceiling" type="CSGBox3D" parent="gallery" unique_id=1652689336]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21.13892, 3.73877, 15.146198)
-size = Vector3(35.224358, 1.19, 17.440916)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21.13892, 4.1322174, 15.146198)
+size = Vector3(35.224358, 0.4031055, 17.440916)
 material = ExtResource("1_4mrxx")
 
 [node name="ceiling2" type="CSGBox3D" parent="gallery" unique_id=1479267165]
@@ -2645,6 +2715,12 @@ transform = Transform3D(1.1804951e-08, 3.3246738e-14, 0.15, 0.0059606913, -0.139
 [node name="elevator sign" type="MeshInstance3D" parent="." unique_id=435783017]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 8.155401, 4.6409097, -0.65066266)
 mesh = SubResource("PlaneMesh_t1by1")
+
+[node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="." unique_id=2025812935]
+transform = Transform3D(0.14, 0, 0, 0, 0.14, 0, 0, 0, 0.14, 3.4214303, 2.0881543, 15.268718)
+texture_filter = 0
+sprite_frames = SubResource("SpriteFrames_gom0u")
+autoplay = "default"
 
 [editable path="Spotlight1"]
 [editable path="Spotlight2"]

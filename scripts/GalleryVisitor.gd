@@ -132,6 +132,7 @@ func _ready() -> void:
 		var key := skin_material.resource_path.get_file().get_basename()
 		_personality = SKIN_PERSONALITIES.get(key, "casual")
 		_apply_skin()
+		_record_visitor_skin(key)
 	else:
 		var seed_val := hash(name + str(get_instance_id()))
 		_personality = PERSONALITIES_RANDOM[seed_val % PERSONALITIES_RANDOM.size()]
@@ -587,6 +588,14 @@ func _play_animation(anim_name: String) -> void:
 	if anim_name in ["idle", "walk"]:
 		_anim_player.get_animation(anim_name).loop_mode = Animation.LOOP_LINEAR
 	_anim_player.play(anim_name)
+
+
+func _record_visitor_skin(skin_key: String) -> void:
+	if not has_node("/root/WorldStateManager"):
+		return
+	WorldStateManager.add_seen_visitor_skin(skin_key)
+	if WorldStateManager.get_seen_visitor_skins().size() >= 12 and has_node("/root/SteamManager"):
+		SteamManager.unlock_achievement("ACH_ALL_VISITORS")
 
 
 func _find_animation_player(node: Node) -> AnimationPlayer:
