@@ -6,6 +6,8 @@
 [ext_resource type="AudioStream" uid="uid://c2euptpopaex8" path="res://sounds/picotron/sticker1.ogg" id="3_co74h"]
 [ext_resource type="AudioStream" uid="uid://d4jugxumiyik2" path="res://sounds/picotron/sticker2.ogg" id="4_wru4m"]
 [ext_resource type="AudioStream" uid="uid://bfw6fbptdqnga" path="res://sounds/picotron/sticker5.ogg" id="7_aovqr"]
+[ext_resource type="Shader" uid="uid://cqvbr5nplx4e1" path="res://shaders/canvas_pulse.gdshader" id="7_mbn85"]
+[ext_resource type="Script" uid="uid://b4qrmhintcvs3" path="res://scripts/components/CanvasPulseHint.gd" id="8_ak2hp"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_5x3"]
 size = Vector2(5, 3)
@@ -18,10 +20,25 @@ texture_filter = 0
 [sub_resource type="BoxShape3D" id="BoxShape3D_5x3"]
 size = Vector3(7.5, 0.1, 4.5)
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_hg7j4"]
+render_priority = 0
+shader = ExtResource("7_mbn85")
+shader_parameter/speed = 0.400000019
+shader_parameter/line_density = 4.0
+shader_parameter/line_width = 0.1330000063175
+shader_parameter/edge_softness = 0.12800000608
+shader_parameter/glow = 2.322000110295
+shader_parameter/line_color = Color(1, 0.9, 0.6, 1)
+shader_parameter/opacity = 0.0
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_42oov"]
+material = SubResource("ShaderMaterial_hg7j4")
+size = Vector2(10, 10)
+
 [node name="PaintingRoot2d_5x3" type="Node3D" unique_id=273889615]
 script = ExtResource("1_616st")
-plane_width = 5.0
 preview_rotation = 0.0
+plane_width = 5.0
 
 [node name="CanvasViewport" type="SubViewport" parent="." unique_id=1743827849]
 transparent_bg = true
@@ -55,3 +72,10 @@ transform = Transform3D(0.048, 0, 0, 0, -2.0981465e-09, -0.045, 0, 0.048, -1.967
 
 [node name="SpawnMarker" type="Marker3D" parent="." unique_id=913122645]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.43519586, 0)
+
+[node name="pulse shader planemesh" type="MeshInstance3D" parent="." unique_id=1744438753]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.119327486, 0)
+mesh = SubResource("PlaneMesh_42oov")
+
+[node name="CanvasPulseHint" type="Node" parent="." unique_id=1051090127]
+script = ExtResource("8_ak2hp")

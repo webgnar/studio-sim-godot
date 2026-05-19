@@ -153,6 +153,7 @@
 [ext_resource type="PackedScene" path="res://scenes/UI/MoneyRainLayer.tscn" id="money_rain_layer"]
 [ext_resource type="AudioStream" uid="uid://cldonhpncb00b" path="res://sounds/(First Trip) To The Moon copy.ogg" id="moon_ogg"]
 [ext_resource type="Script" uid="uid://bunyklibu48s2" path="res://scripts/SkyRotator.gd" id="sky_rotator"]
+[ext_resource type="Script" path="res://scripts/DayNightCycle.gd" id="day_night_cycle"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dss4m"]
 albedo_texture = ExtResource("1_q5onr")
@@ -1007,8 +1008,6 @@ script = ExtResource("1_qaasp")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=34147071]
 environment = ExtResource("2_pb8sg")
-script = ExtResource("sky_rotator")
-rotation_speed = 0.03
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=583888582]
 transform = Transform3D(1, 0, 0, 0, 0.024990592, -0.9996877, 0, 0.9996877, 0.024990592, 0, 9.141167, 0)
@@ -1019,6 +1018,9 @@ transform = Transform3D(0.9557057, 0.22730023, 0.18697909, 0, -0.63528335, 0.772
 shadow_enabled = true
 shadow_bias = 0.188
 shadow_normal_bias = 0.94
+
+[node name="DayNightCycle" type="Node" parent="."]
+script = ExtResource("day_night_cycle")
 
 [node name="PaintingUI_Layer" type="CanvasLayer" parent="." unique_id=842324816]
 layer = 2

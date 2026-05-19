@@ -70,6 +70,11 @@ var preview_base_opacity: float = 0.5  # Set by PaintingRoot2D
 # Commission tracking: true if this canvas passed a commission validation
 var was_commission_validated: bool = false
 
+# Debris effect pool (pre-allocated, reused each stamp)
+const _DEBRIS_COUNT = 10
+var _debris_pool: Array[Sprite2D] = []
+var _debris_tween: Tween = null
+
 func _ready():
 	# Find camera from the painting plane's world (not from SubViewport)
 	if painting_plane:
@@ -95,6 +100,14 @@ func _ready():
 
 	# Find or create background sprite for auto-bake
 	_setup_background_sprite()
+
+	# Pre-allocate debris fragment pool
+	for i in _DEBRIS_COUNT:
+		var frag = Sprite2D.new()
+		frag.visible = false
+		frag.z_index = 200
+		add_child(frag)
+		_debris_pool.append(frag)
 
 func _setup_background_sprite():
 	var existing = get_node_or_null("BackgroundSprite") as Sprite2D
@@ -374,6 +387,35 @@ func _update_preview_scale():
 
 	preview_sprite.scale = Vector2(final_scale, final_scale)
 
+func _spawn_sticker_debris(sprite: Sprite2D) -> void:
+	const TRAVEL = 450.0
+	const DURATION = 0.5
+
+	if _debris_tween:
+		_debris_tween.kill()
+		for frag in _debris_pool:
+			frag.visible = false
+
+	_debris_tween = create_tween().set_parallel(true)
+
+	for i in _DEBRIS_COUNT:
+		var frag = _debris_pool[i]
+		frag.texture = sprite.texture
+		frag.scale = sprite.scale * 0.15
+		frag.position = sprite.position
+		frag.modulate = Color.WHITE
+		frag.visible = true
+
+		var dir = Vector2(cos((TAU / _DEBRIS_COUNT) * i), sin((TAU / _DEBRIS_COUNT) * i))
+		_debris_tween.tween_property(frag, "position", sprite.position + dir * TRAVEL, DURATION)
+		_debris_tween.tween_property(frag, "modulate:a", 0.0, DURATION)
+
+	_debris_tween.chain().tween_callback(func():
+		for frag in _debris_pool:
+			frag.visible = false
+	)
+
+
 func spawn_sticker(world_position: Vector3):
 	"""Spawn a new sticker at the given world position"""
 	if DebugLogger and not OS.has_feature("editor"):
@@ -421,6 +463,7 @@ func spawn_sticker(world_position: Vector3):
 	placed.scale_multiplier = preview_scale_multiplier  # Track the scale multiplier
 	placed_layers.append(placed)
 	sticker_placed.emit()
+	_spawn_sticker_debris(sprite)
 
 	if DebugLogger and not OS.has_feature("editor"):
 		DebugLogger.write_log("[PaintingSystem2D] Sticker spawned successfully! Total placed: %d" % placed_layers.size())
