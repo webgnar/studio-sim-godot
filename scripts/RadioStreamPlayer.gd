@@ -138,8 +138,8 @@ func _read_headers() -> void:
 			_metaint = int(header.substr(header.find(":") + 1).strip_edges())
 			_bytes_until_meta = _metaint
 		elif lower.begins_with("icy-name:"):
-			var name := header.substr(header.find(":") + 1).strip_edges()
-			station_name_resolved.emit(name)
+			var station_name := header.substr(header.find(":") + 1).strip_edges()
+			station_name_resolved.emit(station_name)
 
 
 func _accumulate() -> void:

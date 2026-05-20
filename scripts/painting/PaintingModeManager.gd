@@ -265,8 +265,6 @@ func _perform_unified_raycast() -> Dictionary:
 		if not camera:
 			return {}
 
-	var viewport = camera.get_viewport()
-
 	var mouse_pos: Vector2 = _get_aim_position()
 
 	var from = camera.project_ray_origin(mouse_pos)

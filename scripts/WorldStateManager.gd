@@ -249,12 +249,12 @@ func add_seen_visitor_skin(skin_key: String) -> void:
 func get_player_id() -> String:
 	"""Return this installation's stable player ID, generating it on first call."""
 	if FileAccess.file_exists(PLAYER_ID_PATH):
-		var file = FileAccess.open(PLAYER_ID_PATH, FileAccess.READ)
-		if file:
-			var pid = file.get_as_text().strip_edges()
-			file.close()
-			if not pid.is_empty():
-				return pid
+		var read_file = FileAccess.open(PLAYER_ID_PATH, FileAccess.READ)
+		if read_file:
+			var existing_pid = read_file.get_as_text().strip_edges()
+			read_file.close()
+			if not existing_pid.is_empty():
+				return existing_pid
 	var pid = _generate_player_id()
 	var file = FileAccess.open(PLAYER_ID_PATH, FileAccess.WRITE)
 	if file:

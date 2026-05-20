@@ -8,6 +8,10 @@ extends Node
 @export var speed_dusk:          float = 1.0
 @export var speed_night:         float = 1.0
 
+@export_group("Lighting")
+@export var light_energy_max: float = 1.2
+@export_range(0.1, 1.0) var light_rise_curve: float = 0.5  # lower = faster fade in at sunrise/sunset
+
 @onready var _dir_light: DirectionalLight3D = get_node_or_null("sun root/SunSphere/DirectionalLight3D2")
 @onready var _fill_light: DirectionalLight3D = get_parent().get_node_or_null("DirectionalLight3D")
 @onready var _world_env: WorldEnvironment = get_parent().get_node("WorldEnvironment")
@@ -16,7 +20,6 @@ var _sky_mat: ShaderMaterial
 var _sun_mat: ShaderMaterial
 var _phase: String = ""
 var _sun_deg: float = 5.0   # start at sunrise
-var _debug_timer: float = 0.0
 
 # Phase angle boundaries
 const DEG_MID_MORNING   := 75.0
@@ -99,7 +102,7 @@ func _update_lighting() -> void:
 	var rad := deg_to_rad(_sun_deg)
 	var elevation := sin(rad)
 
-	_dir_light.light_energy = clamp(elevation, 0.0, 1.0) * 1.2
+	_dir_light.light_energy = pow(clamp(elevation, 0.0, 1.0), light_rise_curve) * light_energy_max
 	_dir_light.light_color  = _phase_color(C_SUN_MORNING, C_SUN_MID_MORNING, C_SUN_DAY, C_SUN_MID_AFTERNOON, C_SUN_DUSK, C_SUN_NIGHT)
 	_sky_mat.set_shader_parameter("sky_top_color",     _phase_color(C_TOP_MORNING, C_TOP_MID_MORNING, C_TOP_DAY, C_TOP_MID_AFTERNOON, C_TOP_DUSK, C_TOP_NIGHT))
 	_sky_mat.set_shader_parameter("sky_horizon_color", _phase_color(C_HOR_MORNING, C_HOR_MID_MORNING, C_HOR_DAY, C_HOR_MID_AFTERNOON, C_HOR_DUSK, C_HOR_NIGHT))

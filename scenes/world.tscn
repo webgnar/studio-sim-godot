@@ -1025,12 +1025,13 @@ light_energy = 0.2
 
 [node name="DayNightCycle" type="Node" parent="." unique_id=1453921235]
 script = ExtResource("day_night_cycle")
-speed_morning = 2.0
 speed_mid_morning = 0.5
 speed_day = 0.25
 speed_mid_afternoon = 0.5
 speed_dusk = 2.0
 speed_night = 12.0
+light_energy_max = 2.5
+light_rise_curve = 0.219
 
 [node name="sun root" type="Node3D" parent="DayNightCycle" unique_id=1277744555]
 transform = Transform3D(0.8660254, 0, -0.49999988, 0, 0.9999999, 0, 0.5, 0, 0.8660252, 0, 0, 0)
@@ -1270,6 +1271,11 @@ transform = Transform3D(1.9106855e-15, 1, 4.371139e-08, 4.371139e-08, -4.371139e
 operation = 2
 size = Vector3(6.2917633, 5.5410156, 36.63073)
 material = SubResource("StandardMaterial3D_frq1x")
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="hallway" unique_id=169436616]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.333557, -4.1942825, -7.2930923)
+size = Vector3(5.640625, 16.888687, 1)
+material = ExtResource("3_qfnet")
 
 [node name="AssistantStudio" type="Node3D" parent="." unique_id=1212904913]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.778659, 1.5494895, 8.896082)
@@ -2186,6 +2192,36 @@ material = ExtResource("3_qfnet")
 [node name="step2" type="CSGBox3D" parent="greenhouse/CSGCombiner3D" unique_id=435964464]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.384689, -0.100860596, 5.4539127)
 size = Vector3(2.9902344, 0.7982788, 1)
+material = ExtResource("3_qfnet")
+
+[node name="CSGBox3D3" type="CSGBox3D" parent="greenhouse/CSGCombiner3D" unique_id=1159438296]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.838135, -0.35824412, -0.8828678)
+size = Vector3(5.652832, 0.79156494, 0.3154297)
+material = ExtResource("3_qfnet")
+
+[node name="CSGBox3D6" type="CSGBox3D" parent="greenhouse/CSGCombiner3D" unique_id=1815684032]
+transform = Transform3D(0.72771287, -0.68588185, 0, 0.68588185, 0.72771287, 0, 0, 0, 1, -5.4342036, -3.2933664, -0.8828678)
+size = Vector3(7.6745605, 0.4446106, 0.3154297)
+material = ExtResource("3_qfnet")
+
+[node name="CSGBox3D7" type="CSGBox3D" parent="greenhouse/CSGCombiner3D" unique_id=1830658973]
+transform = Transform3D(0.72771287, -0.68588185, 0, 0.68588185, 0.72771287, 0, 0, 0, 1, -5.5113544, -3.3660822, -3.3144093)
+size = Vector3(7.8865967, 0.4446106, 0.3154297)
+material = ExtResource("3_qfnet")
+
+[node name="CSGBox3D4" type="CSGBox3D" parent="greenhouse/CSGCombiner3D" unique_id=1695228299]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.838135, -0.35824412, -3.3380985)
+size = Vector3(5.652832, 0.79156494, 0.3154297)
+material = ExtResource("3_qfnet")
+
+[node name="CSGBox3D8" type="CSGBox3D" parent="greenhouse/CSGCombiner3D" unique_id=612550597]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.39605713, 5.4337015, -3.897873)
+size = Vector3(16.32483, 0.5071106, 0.3154297)
+material = ExtResource("3_qfnet")
+
+[node name="CSGBox3D5" type="CSGBox3D" parent="greenhouse/CSGCombiner3D" unique_id=1990185890]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -7.5083055, -0.35824412, -2.0758991)
+size = Vector3(2.7006836, 0.79156494, 0.30548096)
 material = ExtResource("3_qfnet")
 
 [node name="StaticBody3D" parent="greenhouse" unique_id=1288370841 instance=ExtResource("66_4kmvx")]
