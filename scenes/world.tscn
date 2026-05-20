@@ -130,6 +130,7 @@
 [ext_resource type="PackedScene" uid="uid://cxbt26jyybmrs" path="res://scenes/PaintingRoot2D_5x3.tscn" id="129_ey67g"]
 [ext_resource type="PackedScene" uid="uid://bq7r4nxt2pgm5" path="res://scenes/objects/CanvasFormatToggle.tscn" id="130_mslh2"]
 [ext_resource type="PackedScene" uid="uid://b2convrtbtn01" path="res://scenes/objects/ConvertAssistantButton.tscn" id="131_mslh2"]
+[ext_resource type="Texture2D" uid="uid://bs8weekpjsm0b" path="res://sprites/normals/concrete normal.jpg" id="131_tq137"]
 [ext_resource type="PackedScene" uid="uid://b2w7kknvqy8kc" path="res://scenes/objects/basketball_hoop.tscn" id="133_j7mh8"]
 [ext_resource type="PackedScene" uid="uid://df8i7yfpgundi" path="res://scenes/objects/CreditsTV.tscn" id="133_wt6o6"]
 [ext_resource type="Script" uid="uid://cpk305jcad6rx" path="res://scripts/GalleryZone.gd" id="138_7m3dx"]
@@ -224,17 +225,6 @@ size = Vector3(5.7043457, 14.934555, 5.9116364)
 [sub_resource type="BoxShape3D" id="BoxShape3D_ce70q"]
 size = Vector3(1.644928, 1, 0.17285156)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_grmox"]
-albedo_texture = ExtResource("31_c15v2")
-normal_enabled = true
-normal_scale = 0.24
-normal_texture = ExtResource("23_swu3i")
-ao_enabled = true
-ao_light_affect = 0.08
-ao_texture = ExtResource("22_ygn2i")
-uv1_scale = Vector3(5.34, 3.05, 2.89)
-uv1_offset = Vector3(0, -1, 0)
-
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_oexs8"]
 albedo_texture = ExtResource("21_l137e")
 normal_enabled = true
@@ -244,6 +234,17 @@ ao_enabled = true
 ao_light_affect = 0.08
 ao_texture = ExtResource("22_ygn2i")
 uv1_scale = Vector3(3.353, 3.481, 3.131)
+uv1_offset = Vector3(0, -1, 0)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_grmox"]
+albedo_texture = ExtResource("31_c15v2")
+normal_enabled = true
+normal_scale = 0.24
+normal_texture = ExtResource("23_swu3i")
+ao_enabled = true
+ao_light_affect = 0.08
+ao_texture = ExtResource("22_ygn2i")
+uv1_scale = Vector3(5.34, 3.05, 2.89)
 uv1_offset = Vector3(0, -1, 0)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xo05s"]
@@ -499,28 +500,6 @@ uv1_offset = Vector3(-0.12, 0.01, 1.34)
 uv1_triplanar = true
 uv1_world_triplanar = true
 texture_filter = 1
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xgy6y"]
-albedo_texture = ExtResource("31_c15v2")
-normal_enabled = true
-normal_scale = 0.24
-normal_texture = ExtResource("23_swu3i")
-ao_enabled = true
-ao_light_affect = 0.08
-ao_texture = ExtResource("22_ygn2i")
-uv1_scale = Vector3(3.18, 2.11, 2.89)
-uv1_offset = Vector3(0, -1, 0)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nbuqd"]
-albedo_texture = ExtResource("31_c15v2")
-normal_enabled = true
-normal_scale = 0.24
-normal_texture = ExtResource("23_swu3i")
-ao_enabled = true
-ao_light_affect = 0.08
-ao_texture = ExtResource("22_ygn2i")
-uv1_scale = Vector3(3.18, 3.43, 2.89)
-uv1_offset = Vector3(0, -1, 0)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_gyxkx"]
 size = Vector3(2.065918, 2.5327148, 1.9875488)
@@ -883,54 +862,53 @@ uv1_scale = Vector3(0.1, 0.84, 1.09)
 uv1_offset = Vector3(1.43, 0, 0)
 texture_filter = 0
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wui3h"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_i688p"]
 albedo_texture = ExtResource("31_c15v2")
 normal_enabled = true
-normal_scale = 0.24
-normal_texture = ExtResource("23_swu3i")
+normal_scale = -6.44
+normal_texture = ExtResource("131_tq137")
 ao_enabled = true
 ao_light_affect = 0.08
 ao_texture = ExtResource("22_ygn2i")
-uv1_scale = Vector3(0.27, 2.87, 2.89)
+uv1_scale = Vector3(0.73, 2.4, 2.89)
 uv1_offset = Vector3(0, -1, 0)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xiw03"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yhtv1"]
 albedo_texture = ExtResource("31_c15v2")
 normal_enabled = true
-normal_scale = 0.24
-normal_texture = ExtResource("23_swu3i")
+normal_scale = -6.44
+normal_texture = ExtResource("131_tq137")
 ao_enabled = true
 ao_light_affect = 0.08
 ao_texture = ExtResource("22_ygn2i")
-uv1_scale = Vector3(0.77, 2.21, 2.89)
+uv1_scale = Vector3(0.93, 2.4, 2.89)
 uv1_offset = Vector3(0, -1, 0)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xullu"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_c7mri"]
 albedo_texture = ExtResource("31_c15v2")
 normal_enabled = true
-normal_scale = 0.24
-normal_texture = ExtResource("23_swu3i")
+normal_scale = -6.44
+normal_texture = ExtResource("131_tq137")
 ao_enabled = true
 ao_light_affect = 0.08
 ao_texture = ExtResource("22_ygn2i")
-uv1_scale = Vector3(1.39, 1.15, 2.89)
+uv1_scale = Vector3(2.26, 2.4, 2.89)
 uv1_offset = Vector3(0, -1, 0)
 
 [sub_resource type="NavigationMesh" id="NavigationMesh_fmmry"]
 vertices = PackedVector3Array(24.802937, -10.369489, 10.490723, 22.302937, -10.369489, 5.2407227, 20.552937, -10.369489, 4.9907227, 24.802937, -10.369489, 11.990723, 20.552937, -10.369489, 3.2407227, -8.697063, -10.369489, -10.009277, 25.802937, -10.369489, 23.990723, 25.802937, -10.369489, 12.240723, 21.552937, -10.369489, 2.9907227, 21.552937, -10.369489, -10.009277, -8.697063, -10.369489, 23.990723, 33.802937, -10.369489, 5.4907227, 34.052937, -10.369489, 6.4907227, 38.052937, -10.369489, 6.4907227, 38.052937, -10.369489, -10.009277, 25.052937, -10.369489, 9.990723, 22.802937, -10.369489, 4.9907227, 22.802937, -10.369489, 3.2407227, 26.552937, -10.369489, 9.990723, 31.802937, -10.369489, 7.2407227, 32.052937, -10.369489, 5.4907227, 33.802937, -10.369489, 7.7407227, 27.052937, -10.369489, 10.240723, 32.052937, -10.369489, 7.7407227, 27.052937, -10.369489, 11.990723, 38.052937, -10.369489, 23.990723)
 polygons = [PackedInt32Array(0, 3, 1), PackedInt32Array(1, 3, 2), PackedInt32Array(5, 4, 2), PackedInt32Array(3, 7, 6), PackedInt32Array(8, 4, 9), PackedInt32Array(9, 4, 5), PackedInt32Array(3, 6, 2), PackedInt32Array(2, 6, 10), PackedInt32Array(2, 10, 5), PackedInt32Array(12, 11, 13), PackedInt32Array(13, 11, 14), PackedInt32Array(16, 15, 1), PackedInt32Array(1, 15, 0), PackedInt32Array(17, 8, 9), PackedInt32Array(15, 16, 18), PackedInt32Array(18, 16, 17), PackedInt32Array(18, 17, 19), PackedInt32Array(19, 17, 20), PackedInt32Array(20, 17, 11), PackedInt32Array(11, 17, 9), PackedInt32Array(11, 9, 14), PackedInt32Array(21, 12, 13), PackedInt32Array(23, 22, 19), PackedInt32Array(19, 22, 18), PackedInt32Array(6, 7, 24), PackedInt32Array(22, 23, 24), PackedInt32Array(24, 23, 21), PackedInt32Array(21, 13, 24), PackedInt32Array(24, 13, 6), PackedInt32Array(6, 13, 25)]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_odf6h"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_t2jyq"]
 albedo_texture = ExtResource("31_c15v2")
 normal_enabled = true
-normal_scale = 0.24
-normal_texture = ExtResource("23_swu3i")
+normal_scale = -6.44
+normal_texture = ExtResource("131_tq137")
 ao_enabled = true
 ao_light_affect = 0.08
 ao_texture = ExtResource("22_ygn2i")
-uv1_scale = Vector3(5.34, 9.1, 2.89)
+uv1_scale = Vector3(6.42, 5.89, 2.89)
 uv1_offset = Vector3(0, -1, 0)
-texture_filter = 0
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ic2vq"]
 transparency = 1
@@ -1047,13 +1025,15 @@ light_energy = 0.2
 
 [node name="DayNightCycle" type="Node" parent="." unique_id=1453921235]
 script = ExtResource("day_night_cycle")
-speed_morning = 12.0
-speed_day = 12.0
-speed_dusk = 12.0
+speed_morning = 2.0
+speed_mid_morning = 0.5
+speed_day = 0.25
+speed_mid_afternoon = 0.5
+speed_dusk = 2.0
 speed_night = 12.0
 
 [node name="sun root" type="Node3D" parent="DayNightCycle" unique_id=1277744555]
-transform = Transform3D(1, 0, 0, 0, 0.9999999, 0, 0, 0, 0.9999999, 0, 0, 0)
+transform = Transform3D(0.8660254, 0, -0.49999988, 0, 0.9999999, 0, 0.5, 0, 0.8660252, 0, 0, 0)
 
 [node name="SunSphere" type="MeshInstance3D" parent="DayNightCycle/sun root" unique_id=1773008231]
 transform = Transform3D(-1, 0, 8.742277e-08, 0, 0.9999999, 0, -8.742278e-08, 0, -0.9999999, 13.277603, 0, -799.9999)
@@ -1062,7 +1042,7 @@ mesh = SubResource("SphereMesh_sun")
 skeleton = NodePath("../..")
 
 [node name="DirectionalLight3D2" type="DirectionalLight3D" parent="DayNightCycle/sun root/SunSphere" unique_id=627802137]
-transform = Transform3D(0.9947028, 0, -0.10279253, 0, 1, 0, 0.10279253, 0, 0.9947028, 0, 0, 1.6)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.6)
 shadow_enabled = true
 shadow_bias = 0.188
 shadow_normal_bias = 0.94
@@ -1140,6 +1120,7 @@ transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 16.4
 
 [node name="vortexmath" type="Sprite3D" parent="outside Background" unique_id=1373111303]
 transform = Transform3D(50, 0, 0, 0, -2.1855694e-06, -50, 0, 50, -2.1855694e-06, 29, 812.7767, 14)
+modulate = Color(1, 1, 1, 0.4509804)
 texture = ExtResource("17_6od3t")
 
 [node name="Tomlander" parent="outside Background" unique_id=465715765 instance=ExtResource("16_8bem1")]
@@ -1394,7 +1375,7 @@ transform = Transform3D(22.413044, 0, 0, 0, 0.008010681, 0, 0, 0, 1.0114841, 10.
 use_collision = true
 collision_mask = 0
 size = Vector3(0.77761596, 12.45, 0.6328125)
-material = SubResource("StandardMaterial3D_grmox")
+material = ExtResource("43_xiw03")
 
 [node name="floor2" type="CSGBox3D" parent="studio" unique_id=799769230]
 transform = Transform3D(-9.797052e-07, 0, -49.782604, 0, 0.00801068, 0, 0.45538867, 0, -4.421337e-08, 10.873473, -0.5213924, -0.32749128)
@@ -2182,14 +2163,14 @@ transform = Transform3D(10.31, 0, 0, 0, 0.06, 0, 0, 0, 22.9, -5.412866, -0.36606
 use_collision = true
 collision_mask = 0
 size = Vector3(0.8251733, 12.45, 0.3253479)
-material = SubResource("StandardMaterial3D_xgy6y")
+material = ExtResource("43_xiw03")
 
 [node name="floor5" type="CSGBox3D" parent="greenhouse/CSGCombiner3D" unique_id=702312259]
 transform = Transform3D(10.31, 0, 0, 0, 0.06, 0, 0, 0, 22.9, 3.7250714, -0.3660605, -3.1275291)
 use_collision = true
 collision_mask = 0
 size = Vector3(0.94774294, 12.45, 0.5690485)
-material = SubResource("StandardMaterial3D_nbuqd")
+material = ExtResource("43_xiw03")
 
 [node name="stairwell cut" type="CSGBox3D" parent="greenhouse/CSGCombiner3D" unique_id=1152142603]
 transform = Transform3D(0.46, 0, 0, 0, 7.49, 0, 0, 0, 22.64, -4.858467, -0.2633934, -2.1128464)
@@ -2516,17 +2497,17 @@ material = SubResource("StandardMaterial3D_gw1vw")
 [node name="CSGBox3D5" type="CSGBox3D" parent="gallery" unique_id=1455443260]
 transform = Transform3D(0.7344291, -0.6786854, 0, 0.6786854, 0.7344291, 0, 0, 0, 1, 0.050621986, 1.8103878, 8.670744)
 size = Vector3(8.559082, 0.36865234, 2.2436523)
-material = SubResource("StandardMaterial3D_wui3h")
+material = SubResource("StandardMaterial3D_i688p")
 
 [node name="CSGBox3D7" type="CSGBox3D" parent="gallery" unique_id=1361886888]
 transform = Transform3D(1.0430813e-07, -8.940697e-08, -0.99999994, 0.581541, 0.8135171, -6.2326055e-10, 0.81351703, -0.58154094, 1.2007347e-07, -5.810877, -6.5570307, -0.05550289)
 size = Vector3(18.950443, 0.45007324, 6.267456)
-material = SubResource("StandardMaterial3D_xiw03")
+material = SubResource("StandardMaterial3D_yhtv1")
 
 [node name="CSGBox3D6" type="CSGBox3D" parent="gallery" unique_id=1796157694]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.8282504, -1.0484972, 11.517204)
 size = Vector3(6.1931763, 0.37182617, 7.990631)
-material = SubResource("StandardMaterial3D_xullu")
+material = SubResource("StandardMaterial3D_c7mri")
 
 [node name="CSGBox3D8" type="CSGBox3D" parent="gallery" unique_id=120670611]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.3636584, -1.1210938, -9.3975115)
@@ -2581,7 +2562,7 @@ use_collision = true
 collision_layer = 2
 collision_mask = 0
 size = Vector3(47.839737, 3.44, 35.041435)
-material = SubResource("StandardMaterial3D_odf6h")
+material = SubResource("StandardMaterial3D_t2jyq")
 
 [node name="pedestal" type="CSGBox3D" parent="gallery/NavigationRegion3D" unique_id=1193496576]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21.801332, -10.18548, 4.035714)
@@ -2709,6 +2690,31 @@ script = ExtResource("138_7m3dx")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.214539, -9.175521, 7.194519)
 shape = SubResource("BoxShape3D_vevsf")
 
+[node name="CSGBox3D14" type="CSGBox3D" parent="gallery" unique_id=1016714000]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.7876587, -1.0635071, 15.450928)
+size = Vector3(6.024292, 0.44647217, 0.47607422)
+material = ExtResource("3_qfnet")
+
+[node name="CSGBox3D15" type="CSGBox3D" parent="gallery" unique_id=924075820]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -2.7876587, -1.0635071, 11.568436)
+size = Vector3(8.139984, 0.44647217, 0.47607422)
+material = ExtResource("3_qfnet")
+
+[node name="CSGBox3D16" type="CSGBox3D" parent="gallery" unique_id=640930544]
+transform = Transform3D(-4.371139e-08, 1.5037631e-15, 1, -0.5718453, 0.82036155, -2.499615e-08, -0.82036155, -0.5718453, -3.5859138e-08, -2.7876587, -5.9479036, 1.0253534)
+size = Vector3(16.455944, 0.96318054, 0.47607422)
+material = ExtResource("3_qfnet")
+
+[node name="CSGBox3D17" type="CSGBox3D" parent="gallery" unique_id=1212687341]
+transform = Transform3D(-4.371139e-08, 2.961018e-15, 1, -0.99637663, -0.085051805, -4.3553e-08, 0.085051805, -0.99637663, 3.7177337e-09, -2.7876587, -6.17505, 8.044743)
+size = Vector3(10, 0.96318054, 0.47607422)
+material = ExtResource("3_qfnet")
+
+[node name="CSGBox3D18" type="CSGBox3D" parent="gallery" unique_id=1584414709]
+transform = Transform3D(-4.371139e-08, 2.961018e-15, 1, -0.99637663, -0.085051805, -4.3553e-08, 0.085051805, -0.99637663, 3.7177337e-09, -8.787659, -6.17505, 8.044743)
+size = Vector3(10, 0.96318054, 0.47607422)
+material = ExtResource("3_qfnet")
+
 [node name="GallerySpawnPoint" type="Node3D" parent="." unique_id=837462901]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.722805, -9.6, 15.43)
 
@@ -2761,7 +2767,7 @@ transform = Transform3D(-6.8943287e-09, 3.950687e-09, 0.09, 0.00056235865, -0.08
 transform = Transform3D(0.09, 0, 0, 0, -3.934025e-09, 0.09, 0, -0.09, -3.934025e-09, 2.494263, 1.2698529, 8.7283325)
 
 [node name="arrow sign" parent="." unique_id=449322654 instance=ExtResource("151_cn8kp")]
-transform = Transform3D(1.1804951e-08, 3.3246738e-14, 0.15, 0.0059606913, -0.13996588, -1.447497e-10, 0.2699342, 0.0030907285, -6.5567085e-09, 4.089716, 2.2336495, 10.515658)
+transform = Transform3D(4.8094244e-09, 1.4248602e-14, 0.15, 0.0024284297, -0.059985377, -1.447497e-10, 0.10997319, 0.001324598, -6.5567085e-09, 4.089716, 3.2336495, 6.5156584)
 
 [node name="elevator sign" type="MeshInstance3D" parent="." unique_id=435783017]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 8.155401, 4.6409097, -0.65066266)
