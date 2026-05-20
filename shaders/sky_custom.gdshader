@@ -8,7 +8,6 @@ uniform float cover_scale : hint_range(0.1, 10.0) = 1.0;
 uniform vec4 cover_modulate : source_color = vec4(1.0, 1.0, 1.0, 1.0);
 uniform vec3 ground_bottom_color : source_color = vec3(0.238, 0.497, 0.972);
 uniform vec3 ground_horizon_color : source_color = vec3(0.183, 0.0, 0.837);
-
 void sky() {
 	float v_angle = EYEDIR.y;
 

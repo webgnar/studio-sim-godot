@@ -63,23 +63,29 @@ radius = 4.0
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_smoke"]
 direction = Vector3(0, 1, 0)
-spread = 60.0
-initial_velocity_min = 1.5
-initial_velocity_max = 3.0
-gravity = Vector3(0, 0.5, 0)
-scale_min = 0.3
-scale_max = 0.7
-color = Color(0.4, 0.4, 0.4, 0.8)
+spread = 80.0
+initial_velocity_min = 4.0
+initial_velocity_max = 10.0
+angular_velocity_min = -30.0
+angular_velocity_max = 30.0
+gravity = Vector3(0, 1.0, 0)
+scale_min = 4.0
+scale_max = 10.0
+color = Color(0.35, 0.35, 0.35, 0.9)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_smoke"]
 transparency = 1
 shading_mode = 0
-vertex_color_use_as_albedo = true
-albedo_color = Color(1, 1, 1, 1)
-billboard_mode = 1
+albedo_color = Color(0.45, 0.45, 0.45, 0.85)
+disable_receive_shadows = true
+billboard_mode = 3
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
 
 [sub_resource type="QuadMesh" id="QuadMesh_smoke"]
 material = SubResource("StandardMaterial3D_smoke")
+size = Vector2(2.0, 2.0)
 
 [node name="Tomlander" type="Node3D" unique_id=465715765]
 script = ExtResource("3_tomlander")
@@ -148,8 +154,9 @@ shape = SubResource("SphereShape3D_hit")
 
 [node name="SmokeEffect" type="GPUParticles3D" parent="."]
 emitting = false
-amount = 24
-lifetime = 1.5
+amount = 40
+lifetime = 3.0
 one_shot = true
+explosiveness = 0.8
 process_material = SubResource("ParticleProcessMaterial_smoke")
 draw_pass_1 = SubResource("QuadMesh_smoke")

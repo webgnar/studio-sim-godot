@@ -147,13 +147,16 @@
 [ext_resource type="PackedScene" uid="uid://dfcanvasscn1" path="res://scenes/objects/AssistantFinishedCanvas.tscn" id="201_fcanvas"]
 [ext_resource type="Script" uid="uid://nvjrcsa5oaqc" path="res://scripts/BerkeyInteraction.gd" id="berkey_interaction"]
 [ext_resource type="AudioStream" uid="uid://b8pj17m4nhgjm" path="res://sounds/boomboxSwitch.ogg" id="boombox_switch"]
+[ext_resource type="Script" uid="uid://dy1equdk316u6" path="res://scripts/DayNightCycle.gd" id="day_night_cycle"]
 [ext_resource type="AudioStream" uid="uid://cnjld2r5btwho" path="res://sounds/dial up.ogg" id="dial_up_ogg"]
 [ext_resource type="AudioStream" uid="uid://bukro42figtah" path="res://sounds/fan switch.ogg" id="fan_switch"]
 [ext_resource type="AudioStream" uid="uid://c443ekfhr0sru" path="res://sounds/ministudio.ogg" id="ministudio_audio"]
 [ext_resource type="PackedScene" path="res://scenes/UI/MoneyRainLayer.tscn" id="money_rain_layer"]
 [ext_resource type="AudioStream" uid="uid://cldonhpncb00b" path="res://sounds/(First Trip) To The Moon copy.ogg" id="moon_ogg"]
-[ext_resource type="Script" uid="uid://bunyklibu48s2" path="res://scripts/SkyRotator.gd" id="sky_rotator"]
-[ext_resource type="Script" path="res://scripts/DayNightCycle.gd" id="day_night_cycle"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_sun"]
+radius = 20.0
+height = 40.0
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dss4m"]
 albedo_texture = ExtResource("1_q5onr")
@@ -433,17 +436,17 @@ albedo_color = Color(1.0734373, 1.0734373, 0.15063755, 1)
 albedo_texture = ExtResource("82_mu18u")
 texture_filter = 0
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_e5kln"]
+[sub_resource type="PlaneMesh" id="PlaneMesh_tq137"]
 resource_local_to_scene = true
 size = Vector2(2.5, 3)
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_t1by1"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_kloan"]
 resource_name = "_albedo"
 viewport_path = NodePath("../MirrorNew/SubViewport")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tq137"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sonb8"]
 resource_local_to_scene = true
-albedo_texture = SubResource("ViewportTexture_t1by1")
+albedo_texture = SubResource("ViewportTexture_kloan")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_1v02h"]
 size = Vector2(2.5, 3)
@@ -1013,14 +1016,24 @@ environment = ExtResource("2_pb8sg")
 transform = Transform3D(1, 0, 0, 0, 0.024990592, -0.9996877, 0, 0.9996877, 0.024990592, 0, 9.141167, 0)
 light_energy = 0.2
 
-[node name="DirectionalLight3D2" type="DirectionalLight3D" parent="." unique_id=627802137]
-transform = Transform3D(0.9557057, 0.22730023, 0.18697909, 0, -0.63528335, 0.77227914, 0.29432392, -0.73807156, -0.60714394, 0, 7.9149475, -11.400858)
+[node name="DayNightCycle" type="Node" parent="." unique_id=1453921235]
+script = ExtResource("day_night_cycle")
+degrees_per_second = 1.0
+
+[node name="sun root" type="Node3D" parent="DayNightCycle" unique_id=1277744555]
+transform = Transform3D(1, 0, 0, 0, 0.9999999, 0, 0, 0, 0.9999999, 0, 0, 0)
+
+[node name="SunSphere" type="MeshInstance3D" parent="DayNightCycle/sun root" unique_id=1773008231]
+transform = Transform3D(1, 0, 0, 0, 0.9999999, 0, 0, 0, 0.9999999, 13.277603, 0, -799.9999)
+cast_shadow = 0
+mesh = SubResource("SphereMesh_sun")
+skeleton = NodePath("../..")
+
+[node name="DirectionalLight3D2" type="DirectionalLight3D" parent="DayNightCycle/sun root/SunSphere" unique_id=627802137]
+transform = Transform3D(1, 0, 0, 0, -1, 8.742278e-08, 0, -8.742278e-08, -1, 0, 0, 1.6)
 shadow_enabled = true
 shadow_bias = 0.188
 shadow_normal_bias = 0.94
-
-[node name="DayNightCycle" type="Node" parent="."]
-script = ExtResource("day_night_cycle")
 
 [node name="PaintingUI_Layer" type="CanvasLayer" parent="." unique_id=842324816]
 layer = 2
@@ -1094,7 +1107,7 @@ transform = Transform3D(50, 0, 0, 0, -2.1855694e-06, -50, 0, 50, -2.1855694e-06,
 texture = ExtResource("17_6od3t")
 
 [node name="Tomlander" parent="outside Background" unique_id=465715765 instance=ExtResource("16_8bem1")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -45, 44, -121)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -45, 34.814934, -101.735535)
 
 [node name="Spotlight1" parent="." unique_id=468801462 instance=ExtResource("86_grmox")]
 transform = Transform3D(0.19553687, 0.04201586, 0, -0.04201586, 0.19553687, 0, 0, 0, 0.2, -2.5281055, 4.97409, -1.6068956)
@@ -1144,10 +1157,10 @@ transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 5.0153227, 11.774637
 spot_angle = 90.0
 
 [node name="celing" type="CSGBox3D" parent="." unique_id=266199176]
-transform = Transform3D(-2.0107239e-08, 7.49, 0, -0.46, -3.2739828e-07, 0, 0, 0, 22.64, 0.06583545, 5.5446606, 4)
+transform = Transform3D(-2.0107239e-08, 7.49, 0, -0.46, -3.2739828e-07, 0, 0, 0, 22.64, 0.003834039, 5.5446606, 4)
 use_collision = true
 collision_layer = 2
-size = Vector3(1, 1.0183105, 1)
+size = Vector3(1, 1.0957489, 1)
 material = ExtResource("1_4mrxx")
 
 [node name="strut" type="CSGBox3D" parent="celing" unique_id=1466166137]
@@ -1355,10 +1368,10 @@ size = Vector3(0.795, 12.27, 0.348)
 material = SubResource("StandardMaterial3D_oexs8")
 
 [node name="wall" type="CSGBox3D" parent="studio" unique_id=601196792]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.173913, -0.099999994, -0.0018920898)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.173913, -0.099999994, -0.010650635)
 use_collision = true
 collision_mask = 0
-size = Vector3(1, 0.8, 0.9962158)
+size = Vector3(1, 0.8, 0.97869873)
 material = ExtResource("5_71j4m")
 
 [node name="wall2" type="CSGBox3D" parent="studio" unique_id=1227082846]
@@ -2064,8 +2077,8 @@ surface_material_override/0 = SubResource("StandardMaterial3D_7b7y8")
 
 [node name="mirror" parent="." unique_id=1626491013 groups=["shop_prop"] instance=ExtResource("39_qaasp")]
 transform = Transform3D(-4.7902194e-08, -0.99488777, 0.10098683, -3.9073655e-08, 0.10098683, 0.99488777, -1, 4.3711392e-08, -4.3711385e-08, 2.8, 1.497, 5.232)
-mesh = SubResource("PlaneMesh_e5kln")
-surface_material_override/0 = SubResource("StandardMaterial3D_tq137")
+mesh = SubResource("PlaneMesh_tq137")
+surface_material_override/0 = SubResource("StandardMaterial3D_sonb8")
 show_debug_logs = false
 metadata/mirror = "mirror"
 metadata/shop_item_id = "mirror"
