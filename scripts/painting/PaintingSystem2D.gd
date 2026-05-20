@@ -103,7 +103,7 @@ func _ready():
 	# Pre-allocate splat sprite
 	_splat_sprite = Sprite2D.new()
 	_splat_sprite.visible = false
-	_splat_sprite.z_index = 200
+	_splat_sprite.z_index = 0
 	add_child(_splat_sprite)
 
 func _setup_background_sprite():
@@ -394,6 +394,7 @@ func _spawn_sticker_debris(sprite: Sprite2D) -> void:
 	_splat_sprite.scale = sprite.scale
 	_splat_sprite.modulate = Color(1, 1, 1, 0.5)
 	_splat_sprite.visible = true
+	move_child(_splat_sprite, sprite.get_index() - 1)
 
 	_splat_tween = create_tween().set_parallel(true)
 	_splat_tween.tween_property(_splat_sprite, "scale", sprite.scale * 2.5, 0.3)

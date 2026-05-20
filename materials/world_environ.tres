@@ -13,6 +13,8 @@ shader_parameter/cover_scale = 0.10000000149012
 shader_parameter/cover_modulate = Color(1, 1, 1, 1)
 shader_parameter/ground_bottom_color = Color(0.238, 0.497, 0.972, 1)
 shader_parameter/ground_horizon_color = Color(0.183, 0, 0.837, 1)
+shader_parameter/night_blend = 0.0
+shader_parameter/star_density = 0.985
 
 [sub_resource type="Sky" id="Sky_rwgxs"]
 sky_material = SubResource("ShaderMaterial_sky")

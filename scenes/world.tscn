@@ -7,8 +7,10 @@
 [ext_resource type="Environment" uid="uid://dq2im6ne1o2q6" path="res://materials/world_environ.tres" id="2_pb8sg"]
 [ext_resource type="Texture2D" uid="uid://3smflfln5x7y" path="res://sprites/normals/wood_specular.png" id="3_o8fc1"]
 [ext_resource type="Material" uid="uid://48uded6h5otx" path="res://materials/brickwhite.tres" id="3_qfnet"]
+[ext_resource type="Shader" uid="uid://b6oa7iig8xwjf" path="res://shaders/sun_surface.gdshader" id="4_e5kln"]
 [ext_resource type="Texture2D" uid="uid://bifvpuur5heg3" path="res://sprites/normals/wood_normal.png" id="4_xo05s"]
 [ext_resource type="Material" uid="uid://re8gmfn1nbgt" path="res://materials/wall.tres" id="5_71j4m"]
+[ext_resource type="Texture2D" uid="uid://beg8r5veohrc4" path="res://sprites/textures/moon texture.jpeg" id="5_t1by1"]
 [ext_resource type="Texture2D" uid="uid://b3ty4ce0xhyow" path="res://sprites/textures/hvac.jpg" id="14_o8fc1"]
 [ext_resource type="PackedScene" uid="uid://b262cfg0yjdpn" path="res://scenes/old stuff/tomlander.tscn" id="16_8bem1"]
 [ext_resource type="PackedScene" uid="uid://xeaph8bqk1j1" path="res://models/props/pipe_red.glb" id="16_oo54l"]
@@ -154,7 +156,34 @@
 [ext_resource type="PackedScene" path="res://scenes/UI/MoneyRainLayer.tscn" id="money_rain_layer"]
 [ext_resource type="AudioStream" uid="uid://cldonhpncb00b" path="res://sounds/(First Trip) To The Moon copy.ogg" id="moon_ogg"]
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_t1by1"]
+render_priority = 0
+shader = ExtResource("4_e5kln")
+shader_parameter/sun_color = Color(1.4211367, 0.7242894, 0.13169472, 1)
+shader_parameter/hot_color = Color(1.3655106, 1.2968677, 0.95893383, 1)
+shader_parameter/dark_color = Color(0.9603152, 0.46583295, 0.17923197, 1)
+shader_parameter/time_scale = 0.22400001064
+shader_parameter/uv_scale = 2.5
+shader_parameter/cell_contrast = 2.0
+shader_parameter/fbm_strength = 0.18
+shader_parameter/limb_power = 0.6
+shader_parameter/emission_strength = 6.0
+shader_parameter/sunspot_count = 3
+shader_parameter/sunspot_size = 0.09
+shader_parameter/spot_drift_speed = 0.04
+
 [sub_resource type="SphereMesh" id="SphereMesh_sun"]
+material = SubResource("ShaderMaterial_t1by1")
+radius = 20.0
+height = 40.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tq137"]
+shading_mode = 0
+albedo_color = Color(1.010103, 1.010103, 1.010103, 1)
+albedo_texture = ExtResource("5_t1by1")
+
+[sub_resource type="SphereMesh" id="SphereMesh_cn8kp"]
+material = SubResource("StandardMaterial3D_tq137")
 radius = 20.0
 height = 40.0
 
@@ -1018,22 +1047,29 @@ light_energy = 0.2
 
 [node name="DayNightCycle" type="Node" parent="." unique_id=1453921235]
 script = ExtResource("day_night_cycle")
-degrees_per_second = 1.0
+speed_morning = 12.0
+speed_day = 12.0
+speed_dusk = 12.0
+speed_night = 12.0
 
 [node name="sun root" type="Node3D" parent="DayNightCycle" unique_id=1277744555]
 transform = Transform3D(1, 0, 0, 0, 0.9999999, 0, 0, 0, 0.9999999, 0, 0, 0)
 
 [node name="SunSphere" type="MeshInstance3D" parent="DayNightCycle/sun root" unique_id=1773008231]
-transform = Transform3D(1, 0, 0, 0, 0.9999999, 0, 0, 0, 0.9999999, 13.277603, 0, -799.9999)
+transform = Transform3D(-1, 0, 8.742277e-08, 0, 0.9999999, 0, -8.742278e-08, 0, -0.9999999, 13.277603, 0, -799.9999)
 cast_shadow = 0
 mesh = SubResource("SphereMesh_sun")
 skeleton = NodePath("../..")
 
 [node name="DirectionalLight3D2" type="DirectionalLight3D" parent="DayNightCycle/sun root/SunSphere" unique_id=627802137]
-transform = Transform3D(1, 0, 0, 0, -1, 8.742278e-08, 0, -8.742278e-08, -1, 0, 0, 1.6)
+transform = Transform3D(0.9947028, 0, -0.10279253, 0, 1, 0, 0.10279253, 0, 0.9947028, 0, 0, 1.6)
 shadow_enabled = true
 shadow_bias = 0.188
 shadow_normal_bias = 0.94
+
+[node name="moonsphere" type="MeshInstance3D" parent="DayNightCycle/sun root" unique_id=604540150]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 800)
+mesh = SubResource("SphereMesh_cn8kp")
 
 [node name="PaintingUI_Layer" type="CanvasLayer" parent="." unique_id=842324816]
 layer = 2
