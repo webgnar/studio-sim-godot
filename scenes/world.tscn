@@ -153,6 +153,7 @@
 [ext_resource type="Script" uid="uid://dy1equdk316u6" path="res://scripts/DayNightCycle.gd" id="day_night_cycle"]
 [ext_resource type="AudioStream" uid="uid://cnjld2r5btwho" path="res://sounds/dial up.ogg" id="dial_up_ogg"]
 [ext_resource type="AudioStream" uid="uid://bukro42figtah" path="res://sounds/fan switch.ogg" id="fan_switch"]
+[ext_resource type="PackedScene" uid="uid://dft4un8r3mpqc" path="res://scenes/FortuneTeller.tscn" id="fortune_teller_scene"]
 [ext_resource type="AudioStream" uid="uid://c443ekfhr0sru" path="res://sounds/ministudio.ogg" id="ministudio_audio"]
 [ext_resource type="PackedScene" path="res://scenes/UI/MoneyRainLayer.tscn" id="money_rain_layer"]
 [ext_resource type="AudioStream" uid="uid://cldonhpncb00b" path="res://sounds/(First Trip) To The Moon copy.ogg" id="moon_ogg"]
@@ -466,17 +467,17 @@ albedo_color = Color(1.0734373, 1.0734373, 0.15063755, 1)
 albedo_texture = ExtResource("82_mu18u")
 texture_filter = 0
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_tq137"]
+[sub_resource type="PlaneMesh" id="PlaneMesh_kloan"]
 resource_local_to_scene = true
 size = Vector2(2.5, 3)
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_kloan"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_sonb8"]
 resource_name = "_albedo"
 viewport_path = NodePath("../MirrorNew/SubViewport")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sonb8"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7n6r0"]
 resource_local_to_scene = true
-albedo_texture = SubResource("ViewportTexture_kloan")
+albedo_texture = SubResource("ViewportTexture_sonb8")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_1v02h"]
 size = Vector2(2.5, 3)
@@ -896,8 +897,8 @@ uv1_scale = Vector3(2.26, 2.4, 2.89)
 uv1_offset = Vector3(0, -1, 0)
 
 [sub_resource type="NavigationMesh" id="NavigationMesh_fmmry"]
-vertices = PackedVector3Array(24.802937, -10.369489, 10.490723, 22.302937, -10.369489, 5.2407227, 20.552937, -10.369489, 4.9907227, 24.802937, -10.369489, 11.990723, 20.552937, -10.369489, 3.2407227, -8.697063, -10.369489, -10.009277, 25.802937, -10.369489, 23.990723, 25.802937, -10.369489, 12.240723, 21.552937, -10.369489, 2.9907227, 21.552937, -10.369489, -10.009277, -8.697063, -10.369489, 23.990723, 33.802937, -10.369489, 5.4907227, 34.052937, -10.369489, 6.4907227, 38.052937, -10.369489, 6.4907227, 38.052937, -10.369489, -10.009277, 25.052937, -10.369489, 9.990723, 22.802937, -10.369489, 4.9907227, 22.802937, -10.369489, 3.2407227, 26.552937, -10.369489, 9.990723, 31.802937, -10.369489, 7.2407227, 32.052937, -10.369489, 5.4907227, 33.802937, -10.369489, 7.7407227, 27.052937, -10.369489, 10.240723, 32.052937, -10.369489, 7.7407227, 27.052937, -10.369489, 11.990723, 38.052937, -10.369489, 23.990723)
-polygons = [PackedInt32Array(0, 3, 1), PackedInt32Array(1, 3, 2), PackedInt32Array(5, 4, 2), PackedInt32Array(3, 7, 6), PackedInt32Array(8, 4, 9), PackedInt32Array(9, 4, 5), PackedInt32Array(3, 6, 2), PackedInt32Array(2, 6, 10), PackedInt32Array(2, 10, 5), PackedInt32Array(12, 11, 13), PackedInt32Array(13, 11, 14), PackedInt32Array(16, 15, 1), PackedInt32Array(1, 15, 0), PackedInt32Array(17, 8, 9), PackedInt32Array(15, 16, 18), PackedInt32Array(18, 16, 17), PackedInt32Array(18, 17, 19), PackedInt32Array(19, 17, 20), PackedInt32Array(20, 17, 11), PackedInt32Array(11, 17, 9), PackedInt32Array(11, 9, 14), PackedInt32Array(21, 12, 13), PackedInt32Array(23, 22, 19), PackedInt32Array(19, 22, 18), PackedInt32Array(6, 7, 24), PackedInt32Array(22, 23, 24), PackedInt32Array(24, 23, 21), PackedInt32Array(21, 13, 24), PackedInt32Array(24, 13, 6), PackedInt32Array(6, 13, 25)]
+vertices = PackedVector3Array(-8.697063, -10.369489, 8.490723, -3.9470634, -10.369489, 8.490723, -3.6970634, -10.369489, 7.2407227, -8.697063, -10.369489, -10.009277, 20.552937, -10.369489, 3.2407227, 21.552937, -10.369489, 2.9907227, 21.552937, -10.369489, -10.009277, -2.1970634, -10.369489, 7.2407227, 20.552937, -10.369489, 4.7407227, 33.802937, -10.369489, 5.4907227, 34.052937, -10.369489, 6.4907227, 38.052937, -10.369489, 6.4907227, 38.052937, -10.369489, -10.009277, 22.302937, -10.369489, 5.2407227, 24.802937, -10.369489, 10.490723, 25.052937, -10.369489, 9.990723, 22.802937, -10.369489, 4.9907227, 22.802937, -10.369489, 3.2407227, 26.552937, -10.369489, 9.990723, 31.802937, -10.369489, 7.2407227, 32.052937, -10.369489, 5.4907227, -1.6970634, -10.369489, 7.7407227, 21.052937, -10.369489, 5.2407227, -3.6970634, -10.369489, 9.490723, -8.697063, -10.369489, 23.990723, 24.802937, -10.369489, 11.990723, -1.9470634, -10.369489, 9.490723, 25.802937, -10.369489, 23.990723, 25.802937, -10.369489, 12.240723, 33.802937, -10.369489, 7.7407227, 27.052937, -10.369489, 10.240723, 32.052937, -10.369489, 7.7407227, 27.052937, -10.369489, 11.990723, 38.052937, -10.369489, 23.990723)
+polygons = [PackedInt32Array(1, 0, 2), PackedInt32Array(2, 0, 3), PackedInt32Array(5, 4, 6), PackedInt32Array(6, 4, 7), PackedInt32Array(6, 7, 2), PackedInt32Array(6, 2, 3), PackedInt32Array(4, 8, 7), PackedInt32Array(10, 9, 11), PackedInt32Array(11, 9, 12), PackedInt32Array(16, 15, 13), PackedInt32Array(13, 15, 14), PackedInt32Array(17, 5, 6), PackedInt32Array(15, 16, 18), PackedInt32Array(18, 16, 17), PackedInt32Array(18, 17, 19), PackedInt32Array(19, 17, 20), PackedInt32Array(20, 17, 9), PackedInt32Array(9, 17, 6), PackedInt32Array(9, 6, 12), PackedInt32Array(7, 8, 21), PackedInt32Array(21, 8, 22), PackedInt32Array(1, 23, 0), PackedInt32Array(0, 23, 24), PackedInt32Array(13, 14, 22), PackedInt32Array(22, 14, 25), PackedInt32Array(26, 21, 22), PackedInt32Array(25, 28, 27), PackedInt32Array(25, 27, 22), PackedInt32Array(22, 27, 26), PackedInt32Array(26, 27, 24), PackedInt32Array(24, 23, 26), PackedInt32Array(29, 10, 11), PackedInt32Array(31, 30, 19), PackedInt32Array(19, 30, 18), PackedInt32Array(27, 28, 32), PackedInt32Array(30, 31, 32), PackedInt32Array(32, 31, 29), PackedInt32Array(29, 11, 32), PackedInt32Array(32, 11, 27), PackedInt32Array(27, 11, 33)]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_t2jyq"]
 albedo_texture = ExtResource("31_c15v2")
@@ -947,7 +948,7 @@ texture_filter = 0
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_t1by1"]
 material = SubResource("StandardMaterial3D_e5kln")
-size = Vector2(6.25, 1.04)
+size = Vector2(4.73, 0.9)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_kloan"]
 atlas = ExtResource("153_cn8kp")
@@ -1029,8 +1030,8 @@ speed_mid_morning = 0.5
 speed_day = 0.25
 speed_mid_afternoon = 0.5
 speed_dusk = 2.0
-speed_night = 12.0
-light_energy_max = 2.5
+speed_night = 6.0
+light_energy_max = 2.0
 light_rise_curve = 0.219
 
 [node name="sun root" type="Node3D" parent="DayNightCycle" unique_id=1277744555]
@@ -1357,7 +1358,7 @@ transform = Transform3D(-5.732056e-16, 1.3113417e-08, 0.1, -0.1, -4.371139e-09, 
 transform = Transform3D(0, -1, 4.371139e-08, 4.371139e-08, -4.371139e-08, -1, 1, 1.9106855e-15, 4.371139e-08, 13.361956, 2.6354063, 17.27919)
 
 [node name="Elevator" parent="." unique_id=904124064 instance=ExtResource("29_xgy6y")]
-transform = Transform3D(1.44, 0, 0, 0, 1.44, 0, 0, 0, 1.44, 5.356282, 0.43740082, -4.5508404)
+transform = Transform3D(1.44, 0, 0, 0, 1.44, 0, 0, 0, 1.44, 5.35633, 0.44715643, -4.551083)
 
 [node name="CritiqueTV" parent="." unique_id=1552722384 node_paths=PackedStringArray("elevator_controller") instance=ExtResource("97_crtq")]
 transform = Transform3D(-2.8167248, 0, -1.0325029, 0, 3, 0, 1.0325029, 0, -2.8167248, 10.004766, 2.0000713, 5.076662)
@@ -1405,9 +1406,9 @@ size = Vector3(0.6639404, 0.8, 0.97106934)
 material = ExtResource("5_71j4m")
 
 [node name="CSGBox3D" type="CSGBox3D" parent="studio/wall2" unique_id=55098247]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 0.9999999, 0, -0.16516119, -0.09741212)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 0.9999999, 0, -0.16516122, -0.09777832)
 operation = 2
-size = Vector3(1, 0.44067383, 0.072753906)
+size = Vector3(1, 0.44067383, 0.072021484)
 material = ExtResource("30_3t06w")
 
 [node name="wall3" type="CSGBox3D" parent="studio" unique_id=154693461]
@@ -2100,8 +2101,8 @@ surface_material_override/0 = SubResource("StandardMaterial3D_7b7y8")
 
 [node name="mirror" parent="." unique_id=1626491013 groups=["shop_prop"] instance=ExtResource("39_qaasp")]
 transform = Transform3D(-4.7902194e-08, -0.99488777, 0.10098683, -3.9073655e-08, 0.10098683, 0.99488777, -1, 4.3711392e-08, -4.3711385e-08, 2.8, 1.497, 5.232)
-mesh = SubResource("PlaneMesh_tq137")
-surface_material_override/0 = SubResource("StandardMaterial3D_sonb8")
+mesh = SubResource("PlaneMesh_kloan")
+surface_material_override/0 = SubResource("StandardMaterial3D_7n6r0")
 show_debug_logs = false
 metadata/mirror = "mirror"
 metadata/shop_item_id = "mirror"
@@ -2618,6 +2619,11 @@ use_collision = true
 size = Vector3(1, 1.045166, 1)
 material = ExtResource("115_optxr")
 
+[node name="CSGBox3D" type="CSGBox3D" parent="gallery/NavigationRegion3D" unique_id=1259779143]
+transform = Transform3D(1, 0, 0, 0, 0.99521035, 0.0977566, 0, -0.0977566, 0.99521035, -2.8139048, -5.964979, 8.001201)
+size = Vector3(0.5161133, 9.681091, 1)
+material = ExtResource("3_qfnet")
+
 [node name="Basketball" parent="gallery" unique_id=1380341004 groups=["shop_prop"] instance=ExtResource("121_gyxkx")]
 transform = Transform3D(-0.8660254, 0, -0.50000006, 0, 1, 0, 0.50000006, 0, -0.8660254, -4.850615, -0.2702918, 13.934031)
 metadata/shop_item_id = "basketball"
@@ -2737,13 +2743,8 @@ size = Vector3(8.139984, 0.44647217, 0.47607422)
 material = ExtResource("3_qfnet")
 
 [node name="CSGBox3D16" type="CSGBox3D" parent="gallery" unique_id=640930544]
-transform = Transform3D(-4.371139e-08, 1.5037631e-15, 1, -0.5718453, 0.82036155, -2.499615e-08, -0.82036155, -0.5718453, -3.5859138e-08, -2.7876587, -5.9479036, 1.0253534)
-size = Vector3(16.455944, 0.96318054, 0.47607422)
-material = ExtResource("3_qfnet")
-
-[node name="CSGBox3D17" type="CSGBox3D" parent="gallery" unique_id=1212687341]
-transform = Transform3D(-4.371139e-08, 2.961018e-15, 1, -0.99637663, -0.085051805, -4.3553e-08, 0.085051805, -0.99637663, 3.7177337e-09, -2.7876587, -6.17505, 8.044743)
-size = Vector3(10, 0.96318054, 0.47607422)
+transform = Transform3D(-4.371139e-08, 1.5037631e-15, 1, -0.5718453, 0.82036155, -2.499615e-08, -0.82036155, -0.5718453, -3.5859138e-08, -2.7876587, -6.226207, 0.62610435)
+size = Vector3(17.429295, 0.96318054, 0.47607422)
 material = ExtResource("3_qfnet")
 
 [node name="CSGBox3D18" type="CSGBox3D" parent="gallery" unique_id=1584414709]
@@ -2806,7 +2807,7 @@ transform = Transform3D(0.09, 0, 0, 0, -3.934025e-09, 0.09, 0, -0.09, -3.934025e
 transform = Transform3D(4.8094244e-09, 1.4248602e-14, 0.15, 0.0024284297, -0.059985377, -1.447497e-10, 0.10997319, 0.001324598, -6.5567085e-09, 4.089716, 3.2336495, 6.5156584)
 
 [node name="elevator sign" type="MeshInstance3D" parent="." unique_id=435783017]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 8.155401, 4.6409097, -0.65066266)
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 8.351225, 4.6409097, -0.65066266)
 mesh = SubResource("PlaneMesh_t1by1")
 
 [node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="." unique_id=2025812935]
@@ -2814,6 +2815,8 @@ transform = Transform3D(0.14, 0, 0, 0, 0.14, 0, 0, 0, 0.14, 3.4214303, 2.0881543
 texture_filter = 0
 sprite_frames = SubResource("SpriteFrames_gom0u")
 autoplay = "default"
+
+[node name="FortuneTeller" parent="." unique_id=430244168 instance=ExtResource("fortune_teller_scene")]
 
 [editable path="Spotlight1"]
 [editable path="Spotlight2"]

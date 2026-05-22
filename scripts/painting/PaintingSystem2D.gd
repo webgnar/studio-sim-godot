@@ -8,6 +8,8 @@ class_name PaintingSystem2D
 @warning_ignore("UNUSED_SIGNAL")
 signal layer_equipped(index: int)  # Emitted when Q/E changes the equipped sticker
 signal sticker_placed               # Emitted when a sticker is successfully placed on the canvas
+signal cursor_entered_canvas
+signal cursor_exited_canvas
 
 # Node references (assign in inspector)
 @export var painting_plane: MeshInstance3D  # The plane mesh displaying the canvas
@@ -25,6 +27,7 @@ var _background_sprite: Sprite2D = null
 var selected_sticker_index: int = 0  # Which sticker is selected from library
 var selected_layer: PlacedLayer2D = null  # Currently selected placed layer
 var input_enabled: bool = true  # Always enabled (routing handled by PaintingModeManager)
+var _cursor_on_canvas: bool = false
 
 # Input settings
 @export var raycast_distance: float = 10.0
@@ -296,10 +299,18 @@ func _update_preview_position():
 
 		# Set z_index higher than all placed stickers to ensure it renders on top
 		preview_sprite.z_index = 100
+
+		if not _cursor_on_canvas:
+			_cursor_on_canvas = true
+			cursor_entered_canvas.emit()
 	else:
 		# Hide preview when not hovering over canvas
 		preview_sprite.visible = false
 		preview_idle_time = 0.0  # Reset timer when not visible
+
+		if _cursor_on_canvas:
+			_cursor_on_canvas = false
+			cursor_exited_canvas.emit()
 
 func _update_preview_fade(delta: float):
 	"""Handle fade-out effect for preview sprite when idle"""

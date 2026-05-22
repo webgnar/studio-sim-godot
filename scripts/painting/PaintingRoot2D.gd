@@ -24,12 +24,13 @@ const IDLE_TIMEOUT := 10.0
 
 var _idle_timer: float = 0.0
 var _idle_running: bool = true
+var _cursor_on_canvas: bool = false
 
 func _process(delta: float) -> void:
 	if not _idle_running or not _pulse_hint:
 		return
 	_idle_timer += delta
-	if _idle_timer >= IDLE_TIMEOUT:
+	if _idle_timer >= IDLE_TIMEOUT and not _cursor_on_canvas:
 		_idle_running = false
 		_pulse_hint.show_hint()
 
@@ -39,6 +40,16 @@ func _on_sticker_placed() -> void:
 	if _pulse_hint:
 		_pulse_hint.hide_hint()
 
+func _on_cursor_entered_canvas() -> void:
+	_cursor_on_canvas = true
+	if _pulse_hint:
+		_pulse_hint.hide_hint()
+
+func _on_cursor_exited_canvas() -> void:
+	_cursor_on_canvas = false
+	_idle_timer = 0.0
+	_idle_running = true
+
 func _ready():
 	if not painting_system:
 		push_error("PaintingSystem2D not found!")
@@ -47,6 +58,8 @@ func _ready():
 	_pulse_hint = get_node_or_null("CanvasPulseHint") as CanvasPulseHint
 
 	painting_system.sticker_placed.connect(_on_sticker_placed)
+	painting_system.cursor_entered_canvas.connect(_on_cursor_entered_canvas)
+	painting_system.cursor_exited_canvas.connect(_on_cursor_exited_canvas)
 
 	# Apply inspector values to painting system
 	painting_system.sticker_scale = sticker_scale

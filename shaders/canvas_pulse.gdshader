@@ -17,7 +17,8 @@ void fragment() {
 
     float movement = fract(radius * line_density + TIME * speed);
 
-    float lines = smoothstep(line_width, line_width - edge_softness, movement);
+    float lines = smoothstep(line_width, line_width - edge_softness, movement)
+              * smoothstep(0.0, edge_softness, movement);
 
     float fade = smoothstep(1.0, 0.2, radius);
 
