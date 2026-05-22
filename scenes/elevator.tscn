@@ -193,7 +193,7 @@ shader_parameter/opacity = 0.0
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_fasgy"]
 material = SubResource("ShaderMaterial_uyl0v")
-size = Vector2(5, 5)
+size = Vector2(3, 3)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_export_plane_pulse"]
 render_priority = 0

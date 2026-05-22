@@ -6,6 +6,7 @@ class_name CanvasPulseHint
 
 @export var mesh: MeshInstance3D
 @export var fade_duration: float = 1.0
+@export_range(0.0, 1.0, 0.01) var max_opacity: float = 1.0
 
 var _visible_state: bool = false
 var _tween: Tween
@@ -37,7 +38,7 @@ func _fade(show: bool) -> void:
 		push_warning("CanvasPulseHint: no ShaderMaterial found on mesh")
 		return
 	var from: float = mat.get_shader_parameter("opacity")
-	var to: float = 1.0 if show else 0.0
+	var to: float = max_opacity if show else 0.0
 	if _tween:
 		_tween.kill()
 	_tween = create_tween()
