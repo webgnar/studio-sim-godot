@@ -143,7 +143,6 @@
 [ext_resource type="Texture2D" uid="uid://ciyp25tao4x8l" path="res://sprites/ui/studio sim title.png" id="147_vuv1g"]
 [ext_resource type="PackedScene" uid="uid://b4j6krmtnx1p8" path="res://scenes/objects/DiscordLink.tscn" id="148_disc"]
 [ext_resource type="Texture2D" uid="uid://bhx3k1r4uh3ma" path="res://sprites/ui/gallery.png" id="148_tuav7"]
-[ext_resource type="PackedScene" uid="uid://fl4ouxm4suyd" path="res://models/props/arrow_sign.gltf" id="151_cn8kp"]
 [ext_resource type="Texture2D" uid="uid://bbf0fel1jr3xl" path="res://sprites/ui/elevator.png" id="152_tuav7"]
 [ext_resource type="Texture2D" uid="uid://ditgfk6m80iap" path="res://sprites/catclock-Sheet491 x 1080.png" id="153_cn8kp"]
 [ext_resource type="PackedScene" uid="uid://d2lld8pxrphp3" path="res://scenes/objects/SaveAssistantWorkButton.tscn" id="200_savebtn"]
@@ -236,6 +235,17 @@ ao_light_affect = 0.08
 ao_texture = ExtResource("22_ygn2i")
 uv1_scale = Vector3(3.353, 3.481, 3.131)
 uv1_offset = Vector3(0, -1, 0)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gom0u"]
+albedo_texture = ExtResource("101_mu18u")
+metallic = 1.0
+metallic_texture = ExtResource("3_o8fc1")
+normal_enabled = true
+normal_texture = ExtResource("4_xo05s")
+ao_enabled = true
+ao_texture = ExtResource("2_jhx03")
+uv1_scale = Vector3(-0.72, 0.15, 0.94)
+uv1_offset = Vector3(0.73, 0.02, 0)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_grmox"]
 albedo_texture = ExtResource("31_c15v2")
@@ -962,7 +972,7 @@ texture_filter = 0
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_t1by1"]
 material = SubResource("StandardMaterial3D_e5kln")
-size = Vector2(4.73, 0.9)
+size = Vector2(3, 0.37)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_kloan"]
 atlas = ExtResource("153_cn8kp")
@@ -1424,6 +1434,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 0.9999999, 0, -0.16516122, -0.09
 operation = 2
 size = Vector3(1, 0.44067383, 0.072021484)
 material = ExtResource("30_3t06w")
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="studio/wall2" unique_id=2097059672]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 0.9999999, -0.01320076, 0.061908066, -0.09907107)
+size = Vector3(0.4912703, 0.014282227, 0.08029175)
+material = SubResource("StandardMaterial3D_gom0u")
 
 [node name="wall3" type="CSGBox3D" parent="studio" unique_id=154693461]
 transform = Transform3D(-4.371139e-08, 0, 24.108696, 0, 1, 0, -0.020318022, 0, -2.1411632e-08, 10.756902, -0.099999994, 0.48586574)
@@ -2817,11 +2832,8 @@ transform = Transform3D(-6.8943287e-09, 3.950687e-09, 0.09, 0.00056235865, -0.08
 [node name="DiscordLink" parent="." unique_id=200000011 instance=ExtResource("148_disc")]
 transform = Transform3D(0.09, 0, 0, 0, -3.934025e-09, 0.09, 0, -0.09, -3.934025e-09, 2.494263, 1.2698529, 8.7283325)
 
-[node name="arrow sign" parent="." unique_id=449322654 instance=ExtResource("151_cn8kp")]
-transform = Transform3D(4.8094244e-09, 1.4248602e-14, 0.15, 0.0024284297, -0.059985377, -1.447497e-10, 0.10997319, 0.001324598, -6.5567085e-09, 4.089716, 3.2336495, 6.5156584)
-
 [node name="elevator sign" type="MeshInstance3D" parent="." unique_id=435783017]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 8.351225, 4.6409097, -0.65066266)
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 8.351225, 4.356871, -0.65066266)
 mesh = SubResource("PlaneMesh_t1by1")
 
 [node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="." unique_id=2025812935]
