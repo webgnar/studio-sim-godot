@@ -27,9 +27,9 @@ shader_parameter/speed = 0.294000013965
 shader_parameter/line_density = 4.0
 shader_parameter/line_width = 0.71200003382
 shader_parameter/edge_softness = 0.17200000817
-shader_parameter/glow = 0.66400003154
+shader_parameter/glow = 0.87600004161
 shader_parameter/line_color = Color(0.92960846, 0.9095422, 0.77705264, 1)
-shader_parameter/opacity = 0.154000007315
+shader_parameter/opacity = 0.0
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_wvh0i"]
 material = SubResource("ShaderMaterial_hg7j4")

@@ -300,9 +300,19 @@ func _update_preview_position():
 		# Set z_index higher than all placed stickers to ensure it renders on top
 		preview_sprite.z_index = 100
 
-		if not _cursor_on_canvas:
+		# Ring suppression: only trigger when within actual canvas surface bounds.
+		# The collision box is 50% oversized to allow edge sticker placement, so we
+		# check viewport_pos bounds instead of relying on the raycast hit alone.
+		var on_canvas_surface: bool = (
+			viewport_pos.x >= 0.0 and viewport_pos.x <= viewport_size.x and
+			viewport_pos.y >= 0.0 and viewport_pos.y <= viewport_size.y
+		)
+		if on_canvas_surface and not _cursor_on_canvas:
 			_cursor_on_canvas = true
 			cursor_entered_canvas.emit()
+		elif not on_canvas_surface and _cursor_on_canvas:
+			_cursor_on_canvas = false
+			cursor_exited_canvas.emit()
 	else:
 		# Hide preview when not hovering over canvas
 		preview_sprite.visible = false
