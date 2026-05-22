@@ -375,6 +375,19 @@ layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "lat, lon (e.g. 40.71, -74.00)"
 
+[node name="BirthTimeRow" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/ScrollContainer/GameSettings" unique_id=1111111123]
+layout_mode = 2
+
+[node name="BirthTimeLabel" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/ScrollContainer/GameSettings/BirthTimeRow" unique_id=1111111124]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "Birth Time:"
+
+[node name="BirthTimeLineEdit" type="LineEdit" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/ScrollContainer/GameSettings/BirthTimeRow" unique_id=1111111125]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "HH:MM (optional)"
+
 [node name="ButtonNavSound" type="AudioStreamPlayer" parent="." unique_id=1505501763]
 stream = ExtResource("3_nav_sound")
 bus = &"SFX"

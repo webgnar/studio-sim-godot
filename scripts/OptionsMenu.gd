@@ -36,6 +36,7 @@ var close_button: Button = null  # Removed from scene; closing handled by go_bac
 @onready var bluesky_line_edit: LineEdit = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/ScrollContainer/GameSettings/BlueSkyRow/BlueSkyLineEdit
 @onready var birth_date_line_edit: LineEdit = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/ScrollContainer/GameSettings/DOBRow/BirthDateLineEdit
 @onready var birth_location_line_edit: LineEdit = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/ScrollContainer/GameSettings/BirthLocRow/BirthLocationLineEdit
+@onready var birth_time_line_edit: LineEdit = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/ScrollContainer/GameSettings/BirthTimeRow/BirthTimeLineEdit
 @onready var panel_container: PanelContainer = $PanelContainer
 @onready var button_nav_sound: AudioStreamPlayer = $ButtonNavSound
 @onready var open_menu_sound: AudioStreamPlayer = $OpenMenuSound
@@ -483,6 +484,7 @@ func save_settings():
 	settings["bluesky_handle"] = bluesky_handle
 	settings["birth_date"] = birth_date
 	settings["birth_location"] = birth_location
+	settings["birth_time"] = birth_time
 	settings["joystick_sensitivity"] = joystick_sensitivity
 
 	# Also save audio settings (in case AudioManager.save_settings() wasn't called)
@@ -619,6 +621,9 @@ func load_settings():
 	if settings.has("birth_location"):
 		birth_location = str(settings["birth_location"])
 		birth_location_line_edit.text = birth_location
+	if settings.has("birth_time"):
+		birth_time = str(settings["birth_time"])
+		birth_time_line_edit.text = birth_time
 	save_glb_checkbox.button_pressed = save_glb_on_ship
 	save_png_checkbox.button_pressed = save_png_on_ship
 	generate_critique_checkbox.button_pressed = generate_npc_critique
@@ -677,6 +682,7 @@ var instagram_handle: String = ""
 var bluesky_handle: String = ""
 var birth_date: String = ""
 var birth_location: String = ""
+var birth_time: String = ""
 var game_checkboxes: Array[CheckBox] = []
 var joystick_sensitivity: float = 500.0
 
@@ -800,6 +806,13 @@ func _create_game_tab():
 	birth_location_line_edit.focus_mode = Control.FOCUS_ALL
 	birth_location_line_edit.focus_previous = birth_location_line_edit.get_path_to(birth_date_line_edit)
 	birth_location_line_edit.focus_neighbor_top = birth_location_line_edit.get_path_to(birth_date_line_edit)
+	birth_location_line_edit.focus_next = birth_location_line_edit.get_path_to(birth_time_line_edit)
+	birth_location_line_edit.focus_neighbor_bottom = birth_location_line_edit.get_path_to(birth_time_line_edit)
+
+	birth_time_line_edit.text = birth_time
+	birth_time_line_edit.focus_mode = Control.FOCUS_ALL
+	birth_time_line_edit.focus_previous = birth_time_line_edit.get_path_to(birth_location_line_edit)
+	birth_time_line_edit.focus_neighbor_top = birth_time_line_edit.get_path_to(birth_location_line_edit)
 
 	# Connect signals after setting button_pressed to avoid triggering save_settings()
 	save_glb_checkbox.toggled.connect(_on_save_glb_toggled)
@@ -810,6 +823,7 @@ func _create_game_tab():
 	bluesky_line_edit.text_changed.connect(_on_bluesky_changed)
 	birth_date_line_edit.text_changed.connect(_on_birth_date_changed)
 	birth_location_line_edit.text_changed.connect(_on_birth_location_changed)
+	birth_time_line_edit.text_changed.connect(_on_birth_time_changed)
 	game_checkboxes = [save_glb_checkbox, save_png_checkbox, generate_critique_checkbox, publish_online_checkbox]
 
 func _on_save_glb_toggled(pressed: bool):
@@ -842,6 +856,10 @@ func _on_birth_date_changed(new_text: String):
 
 func _on_birth_location_changed(new_text: String):
 	birth_location = new_text
+	save_settings()
+
+func _on_birth_time_changed(new_text: String):
+	birth_time = new_text
 	save_settings()
 
 func _is_last_in_tab(focused_control: Control) -> bool:

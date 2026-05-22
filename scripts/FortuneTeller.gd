@@ -1,9 +1,10 @@
 class_name FortuneTeller extends CharacterBody3D
 
-# TODO: Update this URL once the astrology endpoint details are confirmed
 const ASTROLOGY_API_URL = "https://studio-sim-gallery.vercel.app/api/astrology"
 const API_KEY = "jupTtic3qGOULETb2w7E"
 const COOLDOWN = 120.0
+
+@export var skin_material: StandardMaterial3D
 
 const FALLBACK_LINES: Array[String] = [
 	"The cosmic signal is weak tonight. Return when the stars align.",
@@ -16,27 +17,25 @@ const FALLBACK_LINES: Array[String] = [
 const NO_DATA_LINE = "The stars cannot find you without knowing when and where you were born. Visit the Options menu and enter your date of birth and GPS coordinates."
 
 var _http_request: HTTPRequest
+var _anim_player: AnimationPlayer
 var _cached_reading: String = ""
 var _cooldown_timer: float = 0.0
 var _is_busy: bool = false
-var _facing_player: bool = false
-var _face_player_ref: Node3D = null
 
 func _ready() -> void:
+	add_to_group("interactable")
 	_http_request = HTTPRequest.new()
 	add_child(_http_request)
 	_http_request.request_completed.connect(_on_horoscope_response)
 
+	_anim_player = _find_animation_player($humanrig)
+	if skin_material:
+		_apply_material_to_tree($humanrig, skin_material)
+	_sit_then_meditate()
+
 func _process(delta: float) -> void:
 	if _cooldown_timer > 0.0:
 		_cooldown_timer -= delta
-
-	if _facing_player and is_instance_valid(_face_player_ref):
-		var dir := (_face_player_ref.global_position - global_position)
-		dir.y = 0.0
-		if dir.length_squared() > 0.001:
-			var target_angle := atan2(dir.x, dir.z)
-			rotation.y = lerp_angle(rotation.y, target_angle, 5.0 * delta)
 
 func interact(player: Node) -> void:
 	var box: VisitorDialogueBox = _get_dialogue_box()
@@ -49,16 +48,13 @@ func interact(player: Node) -> void:
 		return
 	_is_busy = true
 
-	if is_instance_valid(player) and player is Node3D:
-		_face_player_ref = player as Node3D
-	_facing_player = true
-
 	if box and not box.dialogue_finished.is_connected(_on_dialogue_finished):
 		box.dialogue_finished.connect(_on_dialogue_finished, CONNECT_ONE_SHOT)
 
 	var settings := _load_settings()
 	var bd: String = settings.get("birth_date", "")
 	var bl: String = settings.get("birth_location", "")
+	var bt: String = settings.get("birth_time", "")
 
 	if bd.strip_edges() == "" or bl.strip_edges() == "":
 		_start_dialogue(NO_DATA_LINE)
@@ -71,13 +67,16 @@ func interact(player: Node) -> void:
 		return
 
 	_start_dialogue("...")
-	_fetch_horoscope(bd, bl)
+	_fetch_horoscope(bd, bl, bt)
 
-func _fetch_horoscope(birth_date: String, birth_location: String) -> void:
-	var body := JSON.stringify({
+func _fetch_horoscope(birth_date: String, birth_location: String, birth_time: String) -> void:
+	var payload := {
 		"birthDate": birth_date,
 		"birthLocation": birth_location,
-	})
+	}
+	if birth_time.strip_edges() != "":
+		payload["birthTime"] = birth_time
+	var body := JSON.stringify(payload)
 	var headers := [
 		"Content-Type: application/json",
 		"X-API-Key: " + API_KEY,
@@ -112,10 +111,7 @@ func _start_dialogue(text: String) -> void:
 	box.show_dialogue(_split_into_chunks(text), "spiritual", "The Fortune Teller")
 
 func _on_dialogue_finished() -> void:
-	get_tree().create_timer(1.5).timeout.connect(func() -> void:
-		_facing_player = false
-		_face_player_ref = null
-	, CONNECT_ONE_SHOT)
+	pass
 
 func _get_dialogue_box() -> VisitorDialogueBox:
 	var nodes := get_tree().get_nodes_in_group("visitor_dialogue_box")
@@ -153,6 +149,32 @@ func _split_into_chunks(text: String) -> Array[String]:
 	if chunks.is_empty():
 		chunks.append(text)
 	return chunks
+
+func _sit_then_meditate() -> void:
+	if not _anim_player:
+		return
+	_anim_player.play("sit")
+	await _anim_player.animation_finished
+	if _anim_player.has_animation("meditate"):
+		_anim_player.get_animation("meditate").loop_mode = Animation.LOOP_LINEAR
+	_anim_player.play("meditate")
+
+func _find_animation_player(node: Node) -> AnimationPlayer:
+	if node is AnimationPlayer:
+		return node
+	for child in node.get_children():
+		var result = _find_animation_player(child)
+		if result:
+			return result
+	return null
+
+func _apply_material_to_tree(node: Node, mat: StandardMaterial3D) -> void:
+	if node is MeshInstance3D:
+		var mesh_inst := node as MeshInstance3D
+		for i in mesh_inst.get_surface_override_material_count():
+			mesh_inst.set_surface_override_material(i, mat)
+	for child in node.get_children():
+		_apply_material_to_tree(child, mat)
 
 func _load_settings() -> Dictionary:
 	if not FileAccess.file_exists("user://settings.json"):

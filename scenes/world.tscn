@@ -366,6 +366,7 @@ size = Vector3(6.555237, 4.649658, 3.814176)
 gradient = SubResource("Gradient_k2fqw")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wt6o6"]
+albedo_color = Color(1.1869953, 1.1869953, 1.1869953, 1)
 albedo_texture = ExtResource("90_ou5tn")
 metallic = 1.0
 metallic_specular = 0.67
@@ -417,6 +418,19 @@ _surfaces = [{
 }]
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_6li3m")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sonb8"]
+albedo_color = Color(1.6014289, 1.6014289, 1.6014289, 1)
+albedo_texture = ExtResource("90_ou5tn")
+metallic = 1.0
+metallic_specular = 0.67
+metallic_texture = SubResource("GradientTexture2D_ctgs1")
+roughness = 0.77
+normal_enabled = true
+normal_scale = 0.25
+normal_texture = ExtResource("91_k2fqw")
+uv1_scale = Vector3(-0.59, -0.59, -0.59)
+texture_filter = 0
 
 [sub_resource type="Animation" id="Animation_xgy6y"]
 length = 0.001
@@ -2030,7 +2044,7 @@ metadata/extras = {
 transform = Transform3D(0.71, 0, 0, 0, 0.71, 0, 0, 0, 0.71, 0, 0.4522705, 0)
 mesh = SubResource("ArrayMesh_yrapt")
 skeleton = NodePath("")
-surface_material_override/0 = SubResource("StandardMaterial3D_wt6o6")
+surface_material_override/0 = SubResource("StandardMaterial3D_sonb8")
 metadata/extras = {
 "data": {
 "billboard": {
@@ -2817,6 +2831,7 @@ sprite_frames = SubResource("SpriteFrames_gom0u")
 autoplay = "default"
 
 [node name="FortuneTeller" parent="." unique_id=430244168 instance=ExtResource("fortune_teller_scene")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -4.9279757, -13.587963, 9.5063715)
 
 [editable path="Spotlight1"]
 [editable path="Spotlight2"]

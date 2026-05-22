@@ -1,24 +1,22 @@
 [gd_scene format=3 uid="uid://dft4un8r3mpqc"]
 
-[ext_resource type="Script" uid="uid://bft4un8r3mpq1" path="res://scripts/FortuneTeller.gd" id="1_fteller"]
+[ext_resource type="Script" uid="uid://df6gyrhw7okil" path="res://scripts/FortuneTeller.gd" id="1_fteller"]
+[ext_resource type="PackedScene" uid="uid://gv6172d2ngws" path="res://scenes/humanrig_blender.tscn" id="2_humanrig"]
+[ext_resource type="Material" uid="uid://djacbkb2fkgem" path="res://materials/NPCs/fortune_teller.tres" id="3_skin"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_body"]
 radius = 0.4
+height = 1.2
 
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_placeholder"]
-radius = 0.4
-height = 1.8
-
-[node name="FortuneTeller" type="CharacterBody3D"]
-collision_layer = 32
+[node name="FortuneTeller" type="CharacterBody3D" unique_id=2061334966]
+collision_layer = 8
 collision_mask = 2
 script = ExtResource("1_fteller")
-groups = ["interactable"]
+skin_material = ExtResource("3_skin")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=371703865]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.38723522, 0.15195704)
 shape = SubResource("CapsuleShape3D_body")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
-mesh = SubResource("CapsuleMesh_placeholder")
+[node name="humanrig" parent="." unique_id=2041947129 instance=ExtResource("2_humanrig")]
+transform = Transform3D(0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, 0, -1, 0.24366075)

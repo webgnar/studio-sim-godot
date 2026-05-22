@@ -15,6 +15,7 @@ var _chunks: Array[String] = []
 var _chunk_index: int = 0
 var _open: bool = false
 var _typewriter_active: bool = false
+var _typewriter_gen: int = 0
 var _speech: ProceduralSpeech
 
 const PUNCTUATION_DELAY := 0.02
@@ -100,17 +101,19 @@ func _stop_speech_and_typewriter() -> void:
 
 func _typewrite_chunk(text: String) -> void:
 	_typewriter_active = true
+	_typewriter_gen += 1
+	var my_gen := _typewriter_gen
 	_dialogue_label.text = text
 	_dialogue_label.visible_characters = 0
 
 	for ch in text:
-		if not _typewriter_active:
-			break
+		if not _typewriter_active or _typewriter_gen != my_gen:
+			return
 		_dialogue_label.visible_characters += 1
 		var wait := _speech.play_char(ch)
 		if wait <= 0.0:
 			wait = PUNCTUATION_DELAY
 		await get_tree().create_timer(wait).timeout
 
-	if _typewriter_active:
+	if _typewriter_active and _typewriter_gen == my_gen:
 		_dialogue_label.visible_characters = -1
