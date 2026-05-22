@@ -144,7 +144,6 @@
 [ext_resource type="PackedScene" uid="uid://b4j6krmtnx1p8" path="res://scenes/objects/DiscordLink.tscn" id="148_disc"]
 [ext_resource type="Texture2D" uid="uid://bhx3k1r4uh3ma" path="res://sprites/ui/gallery.png" id="148_tuav7"]
 [ext_resource type="Texture2D" uid="uid://bbf0fel1jr3xl" path="res://sprites/ui/elevator.png" id="152_tuav7"]
-[ext_resource type="Texture2D" uid="uid://ditgfk6m80iap" path="res://sprites/catclock-Sheet491 x 1080.png" id="153_cn8kp"]
 [ext_resource type="PackedScene" uid="uid://d2lld8pxrphp3" path="res://scenes/objects/SaveAssistantWorkButton.tscn" id="200_savebtn"]
 [ext_resource type="PackedScene" uid="uid://dfcanvasscn1" path="res://scenes/objects/AssistantFinishedCanvas.tscn" id="201_fcanvas"]
 [ext_resource type="Script" uid="uid://nvjrcsa5oaqc" path="res://scripts/BerkeyInteraction.gd" id="berkey_interaction"]
@@ -491,17 +490,17 @@ albedo_color = Color(1.0734373, 1.0734373, 0.15063755, 1)
 albedo_texture = ExtResource("82_mu18u")
 texture_filter = 0
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_kloan"]
+[sub_resource type="PlaneMesh" id="PlaneMesh_tq137"]
 resource_local_to_scene = true
 size = Vector2(2.5, 3)
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_sonb8"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_kloan"]
 resource_name = "_albedo"
 viewport_path = NodePath("../MirrorNew/SubViewport")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7n6r0"]
 resource_local_to_scene = true
-albedo_texture = SubResource("ViewportTexture_sonb8")
+albedo_texture = SubResource("ViewportTexture_kloan")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_1v02h"]
 size = Vector2(2.5, 3)
@@ -973,70 +972,6 @@ texture_filter = 0
 [sub_resource type="PlaneMesh" id="PlaneMesh_t1by1"]
 material = SubResource("StandardMaterial3D_e5kln")
 size = Vector2(3, 0.37)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_kloan"]
-atlas = ExtResource("153_cn8kp")
-region = Rect2(0, 0, 491, 1080)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_sonb8"]
-atlas = ExtResource("153_cn8kp")
-region = Rect2(491, 0, 491, 1080)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_fahuw"]
-atlas = ExtResource("153_cn8kp")
-region = Rect2(982, 0, 491, 1080)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_i688p"]
-atlas = ExtResource("153_cn8kp")
-region = Rect2(0, 1080, 491, 1080)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_yhtv1"]
-atlas = ExtResource("153_cn8kp")
-region = Rect2(491, 1080, 491, 1080)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_c7mri"]
-atlas = ExtResource("153_cn8kp")
-region = Rect2(982, 1080, 491, 1080)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_t2jyq"]
-atlas = ExtResource("153_cn8kp")
-region = Rect2(0, 2160, 491, 1080)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_7n6r0"]
-atlas = ExtResource("153_cn8kp")
-region = Rect2(491, 2160, 491, 1080)
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_gom0u"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_kloan")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_sonb8")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_fahuw")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_i688p")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_yhtv1")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_c7mri")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_t2jyq")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_7n6r0")
-}],
-"loop": true,
-"name": &"default",
-"speed": 5.0
-}]
 
 [node name="World" type="Node3D" unique_id=81477]
 script = ExtResource("1_qaasp")
@@ -2130,7 +2065,7 @@ surface_material_override/0 = SubResource("StandardMaterial3D_7b7y8")
 
 [node name="mirror" parent="." unique_id=1626491013 groups=["shop_prop"] instance=ExtResource("39_qaasp")]
 transform = Transform3D(-4.7902194e-08, -0.99488777, 0.10098683, -3.9073655e-08, 0.10098683, 0.99488777, -1, 4.3711392e-08, -4.3711385e-08, 2.8, 1.497, 5.232)
-mesh = SubResource("PlaneMesh_kloan")
+mesh = SubResource("PlaneMesh_tq137")
 surface_material_override/0 = SubResource("StandardMaterial3D_7n6r0")
 show_debug_logs = false
 metadata/mirror = "mirror"
@@ -2835,12 +2770,6 @@ transform = Transform3D(0.09, 0, 0, 0, -3.934025e-09, 0.09, 0, -0.09, -3.934025e
 [node name="elevator sign" type="MeshInstance3D" parent="." unique_id=435783017]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 8.351225, 4.356871, -0.65066266)
 mesh = SubResource("PlaneMesh_t1by1")
-
-[node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="." unique_id=2025812935]
-transform = Transform3D(0.14, 0, 0, 0, 0.14, 0, 0, 0, 0.14, 3.4214303, 2.0881543, 15.268718)
-texture_filter = 0
-sprite_frames = SubResource("SpriteFrames_gom0u")
-autoplay = "default"
 
 [node name="FortuneTeller" parent="." unique_id=430244168 instance=ExtResource("fortune_teller_scene")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -4.9279757, -13.587963, 9.5063715)

@@ -1,63 +1,30 @@
 extends Node3D
 
-## Status panel for Studio Assistant room
-## Shows progress, earnings, and next payout timer
-## Renders via SubViewport → ViewportTexture on a QuadMesh
+## Status panel for Studio Assistant room.
+## Renders via SubViewport → ViewportTexture on a QuadMesh.
 
-@export var timer_label: Label
-@export var progress_bar: ProgressBar
-@export var earnings_label: Label
-
-var total_earnings: int = 0
+@export var progress_bar: Control
 
 func _ready():
-	if not timer_label or not progress_bar or not earnings_label:
-		push_error("StudioAssistantStatusPanel: UI node exports not assigned!")
+	if not progress_bar:
+		push_error("StudioAssistantStatusPanel: progress_bar export not assigned!")
 		return
 
-	# Connect to AutomationManager signals
 	if has_node("/root/AutomationManager"):
 		AutomationManager.assistant_payout.connect(_on_assistant_payout)
-		AutomationManager.assistant_progress.connect(_on_assistant_progress)
 
 	_update_display()
 
 func _process(_delta: float):
-	# Update display every frame to show live timer
 	if has_node("/root/AutomationManager") and AutomationManager.is_assistant_active():
 		_update_display()
 
-func _on_assistant_payout(amount: int):
-	"""Called when assistant completes a painting"""
-	total_earnings += amount
+func _on_assistant_payout(_amount: int):
 	_update_display()
 
-func _on_assistant_progress(_time_remaining: float, _progress_percent: float):
-	"""Called periodically with progress updates"""
-	# Display updates in _process instead
-	pass
-
 func _update_display():
-	"""Update the status panel UI with current info"""
-	if not timer_label or not progress_bar or not earnings_label:
-		return
-	if not has_node("/root/AutomationManager"):
+	if not progress_bar or not has_node("/root/AutomationManager"):
 		return
 
 	var status = AutomationManager.get_assistant_status()
-
-	if not status.active:
-		timer_label.text = "Next payment: --:--"
-		progress_bar.value = 0.0
-		earnings_label.text = "Assisted Earnings: $0"
-		return
-
-	var time_remaining = status.time_remaining
-	@warning_ignore("integer_division")
-	var minutes: int = int(time_remaining) / 60
-	@warning_ignore("integer_division")
-	var seconds: int = int(time_remaining) % 60
-
-	timer_label.text = "Next payment: %d:%02d" % [minutes, seconds]
-	progress_bar.value = status.progress_percent
-	earnings_label.text = "Assisted Earnings: $%d" % total_earnings
+	progress_bar.value = status.progress_percent if status.active else 0.0
