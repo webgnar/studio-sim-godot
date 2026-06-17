@@ -397,6 +397,13 @@ Meyer himself described the origins of his inventions in deeply personal, spirit
 			"repeatable": true,
 		},
 		{
+			"id": "worklamp",
+			"display_name": "Work Lamp",
+			"title": "Work Lamp",
+			"description": "A sturdy adjustable work lamp. Light up your workspace, or carry it around to illuminate whatever catches your eye.",
+			"price": 500,
+		},
+		{
 			"id": "rf_receiver",
 			"display_name": "RF Receiver",
 			"title": "RF Receiver",
@@ -454,6 +461,7 @@ func _apply_desc_keys() -> void:
 		"coin_pusher": "SHOP_DESC_COIN_PUSHER",
 		"gallery_visitor": "SHOP_DESC_GALLERY_VISITOR",
 		"customstickerbutton": "SHOP_DESC_CUSTOM_STICKER",
+		"worklamp": "SHOP_DESC_WORKLAMP",
 		"rf_receiver": "SHOP_DESC_RF_RECEIVER",
 	}
 	for item in _catalog:

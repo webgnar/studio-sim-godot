@@ -155,6 +155,7 @@
 [ext_resource type="AudioStream" uid="uid://c443ekfhr0sru" path="res://sounds/ministudio.ogg" id="ministudio_audio"]
 [ext_resource type="PackedScene" path="res://scenes/UI/MoneyRainLayer.tscn" id="money_rain_layer"]
 [ext_resource type="AudioStream" uid="uid://cldonhpncb00b" path="res://sounds/(First Trip) To The Moon copy.ogg" id="moon_ogg"]
+[ext_resource type="PackedScene" uid="uid://cjg7s2n8fnpwh" path="res://scenes/objects/worklamp.tscn" id="worklamp_scene"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_t1by1"]
 render_priority = 0
@@ -524,6 +525,17 @@ uv1_offset = Vector3(-0.12, 0.01, 1.34)
 uv1_triplanar = true
 uv1_world_triplanar = true
 texture_filter = 1
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_iqfx1"]
+albedo_texture = ExtResource("31_c15v2")
+normal_enabled = true
+normal_scale = -6.44
+normal_texture = ExtResource("131_tq137")
+ao_enabled = true
+ao_light_affect = 0.08
+ao_texture = ExtResource("22_ygn2i")
+uv1_scale = Vector3(4.54, 2.16, 2.89)
+uv1_offset = Vector3(0, -1, 0)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_gyxkx"]
 size = Vector3(2.065918, 2.5327148, 1.9875488)
@@ -2179,7 +2191,7 @@ transform = Transform3D(10.31, 0, 0, 0, 0.06, 0, 0, 0, 22.9, 3.7250714, -0.36606
 use_collision = true
 collision_mask = 0
 size = Vector3(0.94774294, 12.45, 0.5690485)
-material = ExtResource("43_xiw03")
+material = SubResource("StandardMaterial3D_iqfx1")
 
 [node name="stairwell cut" type="CSGBox3D" parent="greenhouse/CSGCombiner3D" unique_id=1152142603]
 transform = Transform3D(0.46, 0, 0, 0, 7.49, 0, 0, 0, 22.64, -4.858467, -0.2633934, -2.1128464)
@@ -2785,6 +2797,14 @@ transform = Transform3D(4.371139e-09, -0.1, -8.742278e-09, -0.1, -4.371139e-09, 
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.059882, 0, 13.855978)
 metadata/shop_item_id = "coin_pusher"
 
+[node name="Worklamp" parent="." unique_id=739774998 groups=["shop_prop"] instance=ExtResource("worklamp_scene")]
+transform = Transform3D(-0.2116371, 0, 0.7714984, 0, 0.8, 0, -0.7714984, 0, -0.2116371, 5.881249, 0.4485867, 18.77097)
+metadata/shop_item_id = "worklamp"
+
+[node name="SpotLight3D" parent="Worklamp" index="1" unique_id=196477074]
+spot_range = 15.761
+spot_angle = 60.71
+
 [node name="BasketballRespawner" parent="." unique_id=564017162 instance=ExtResource("139_c3c7d")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.90279, -32.9953, 20.853844)
 
@@ -2842,3 +2862,4 @@ autoplay = &"float"
 [editable path="gallery/BasketballHoop"]
 [editable path="CanvasFormatToggle"]
 [editable path="CanvasFormatToggle/blue button"]
+[editable path="Worklamp"]
