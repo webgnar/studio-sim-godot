@@ -73,9 +73,6 @@ var preview_base_opacity: float = 0.5  # Set by PaintingRoot2D
 # Commission tracking: true if this canvas passed a commission validation
 var was_commission_validated: bool = false
 
-# Splat effect (pre-allocated, reused each stamp)
-var _splat_sprite: Sprite2D = null
-var _splat_tween: Tween = null
 
 func _ready():
 	# Find camera from the painting plane's world (not from SubViewport)
@@ -103,11 +100,6 @@ func _ready():
 	# Find or create background sprite for auto-bake
 	_setup_background_sprite()
 
-	# Pre-allocate splat sprite
-	_splat_sprite = Sprite2D.new()
-	_splat_sprite.visible = false
-	_splat_sprite.z_index = 0
-	add_child(_splat_sprite)
 
 func _setup_background_sprite():
 	var existing = get_node_or_null("BackgroundSprite") as Sprite2D
@@ -405,22 +397,6 @@ func _update_preview_scale():
 
 	preview_sprite.scale = Vector2(final_scale, final_scale)
 
-func _spawn_sticker_debris(sprite: Sprite2D) -> void:
-	if _splat_tween:
-		_splat_tween.kill()
-
-	_splat_sprite.texture = sprite.texture
-	_splat_sprite.position = sprite.position
-	_splat_sprite.rotation = sprite.rotation
-	_splat_sprite.scale = sprite.scale
-	_splat_sprite.modulate = Color(1, 1, 1, 0.5)
-	_splat_sprite.visible = true
-	move_child(_splat_sprite, sprite.get_index() - 1)
-
-	_splat_tween = create_tween().set_parallel(true)
-	_splat_tween.tween_property(_splat_sprite, "scale", sprite.scale * 2.5, 0.3)
-	_splat_tween.tween_property(_splat_sprite, "modulate:a", 0.0, 0.3)
-	_splat_tween.chain().tween_callback(func(): _splat_sprite.visible = false)
 
 
 func spawn_sticker(world_position: Vector3):
@@ -470,7 +446,6 @@ func spawn_sticker(world_position: Vector3):
 	placed.scale_multiplier = preview_scale_multiplier  # Track the scale multiplier
 	placed_layers.append(placed)
 	sticker_placed.emit()
-	_spawn_sticker_debris(sprite)
 
 	if DebugLogger and not OS.has_feature("editor"):
 		DebugLogger.write_log("[PaintingSystem2D] Sticker spawned successfully! Total placed: %d" % placed_layers.size())

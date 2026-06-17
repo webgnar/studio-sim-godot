@@ -49,6 +49,7 @@ func _ready():
 	# Find camera
 	camera = get_viewport().get_camera_3d()
 
+
 func _generate_surface_key(collider: Node, hit_position: Vector3, normal: Vector3) -> String:
 	"""Generate a unique key for a surface based on collider, position, and normal"""
 	# Combine collider ID with quantized position and normal to identify unique surfaces

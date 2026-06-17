@@ -6,7 +6,7 @@
 [ext_resource type="AudioStream" uid="uid://c2euptpopaex8" path="res://sounds/picotron/sticker1.ogg" id="3_co74h"]
 [ext_resource type="AudioStream" uid="uid://d4jugxumiyik2" path="res://sounds/picotron/sticker2.ogg" id="4_wru4m"]
 [ext_resource type="AudioStream" uid="uid://bfw6fbptdqnga" path="res://sounds/picotron/sticker5.ogg" id="7_aovqr"]
-[ext_resource type="Shader" uid="uid://cqvbr5nplx4e1" path="res://shaders/canvas_pulse.gdshader" id="7_mbn85"]
+[ext_resource type="Shader" path="res://shaders/canvas_radial_pulse.gdshader" id="7_mbn85"]
 [ext_resource type="Script" uid="uid://b4qrmhintcvs3" path="res://scripts/components/CanvasPulseHint.gd" id="8_ak2hp"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_5x3"]
@@ -23,11 +23,8 @@ size = Vector3(7.5, 0.1, 4.5)
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_mbn85"]
 render_priority = 0
 shader = ExtResource("7_mbn85")
-shader_parameter/speed = 0.294000013965
-shader_parameter/line_density = 4.0
-shader_parameter/line_width = 0.71200003382
-shader_parameter/edge_softness = 0.17200000817
-shader_parameter/glow = 0.87600004161
+shader_parameter/speed = 0.4
+shader_parameter/glow = 0.8
 shader_parameter/line_color = Color(0.92960846, 0.9095422, 0.77705264, 1)
 shader_parameter/opacity = 0.0
 
@@ -79,3 +76,4 @@ mesh = SubResource("PlaneMesh_42oov")
 
 [node name="CanvasPulseHint" type="Node" parent="." unique_id=1051090127]
 script = ExtResource("8_ak2hp")
+max_opacity = 0.5
