@@ -64,6 +64,7 @@ func _ready() -> void:
 	_setup_animation()
 
 	WorldStateManager.world_state_loaded.connect(_on_world_state_loaded, CONNECT_ONE_SHOT)
+	ShopManager.item_purchased.connect(_on_item_purchased)
 
 
 const _DEFAULT_STATIONS := [
@@ -79,13 +80,14 @@ func _build_playlist() -> void:
 		if s:
 			local_entries.append({"type": "local", "stream": s, "label": s.resource_path.get_file().get_basename()})
 
-	var stations := radio_stations if radio_stations.size() > 0 else _DEFAULT_STATIONS
 	var radio_entries: Array[Dictionary] = []
-	for r in stations:
-		var url: String = r.get("url", "")
-		var label: String = r.get("name", "Radio")
-		if url.length() > 0:
-			radio_entries.append({"type": "radio", "url": url, "label": label})
+	if ShopManager.is_purchased("rf_receiver"):
+		var stations := radio_stations if radio_stations.size() > 0 else _DEFAULT_STATIONS
+		for r in stations:
+			var url: String = r.get("url", "")
+			var label: String = r.get("name", "Radio")
+			if url.length() > 0:
+				radio_entries.append({"type": "radio", "url": url, "label": label})
 
 	# Stagger radio stations between songs: insert one radio entry after each song,
 	# cycling through stations if there are more songs than stations (or vice versa).
@@ -96,6 +98,21 @@ func _build_playlist() -> void:
 		if i < radio_entries.size():
 			_playlist.append(radio_entries[i])
 
+
+
+func _on_item_purchased(item_id: String) -> void:
+	if item_id == "rf_receiver":
+		var current_label := ""
+		if _current_index >= 0 and _current_index < _playlist.size():
+			current_label = _playlist[_current_index].get("label", "")
+		_playlist.clear()
+		_build_playlist()
+		if current_label != "":
+			for i in range(_playlist.size()):
+				if _playlist[i].get("label", "") == current_label:
+					_current_index = i
+					return
+		_current_index = maxi(_current_index, -1)
 
 
 func _setup_local_player() -> void:

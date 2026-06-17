@@ -34,6 +34,7 @@ const CRITICS: Array[Dictionary] = [
 ]
 
 var _current_critic: Dictionary = {}
+var _critic_bag: Array[Dictionary] = []
 
 var _critique_request: HTTPRequest
 var _scroll_offset: float = 0.0
@@ -135,7 +136,7 @@ func _on_upload_completed(gallery_id: String) -> void:
 	_pipe_generator.reset()
 	_set_text(tr("Getting critique..."))
 	dial_up_sound.play()
-	_current_critic = CRITICS[randi() % CRITICS.size()]
+	_current_critic = _pick_next_critic()
 	_request_critique(gallery_id)
 
 func _on_upload_failed(error_message: String) -> void:
@@ -185,9 +186,15 @@ func _on_critique_response(result: int, response_code: int, _headers: PackedStri
 	if _cached_painting_id != "":
 		WorldStateManager.save_critique_for_painting(_cached_painting_id, critique_text)
 
+func _pick_next_critic() -> Dictionary:
+	if _critic_bag.is_empty():
+		_critic_bag = CRITICS.duplicate()
+		_critic_bag.shuffle()
+	return _critic_bag.pop_back()
+
 func _show_critic() -> void:
 	if _current_critic.is_empty():
-		_current_critic = CRITICS[randi() % CRITICS.size()]
+		_current_critic = _pick_next_critic()
 	avatar_sprite.texture = load(_current_critic["avatar"])
 	avatar_sprite.visible = true
 

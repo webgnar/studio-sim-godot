@@ -973,6 +973,44 @@ texture_filter = 0
 material = SubResource("StandardMaterial3D_e5kln")
 size = Vector2(3, 0.37)
 
+[sub_resource type="Animation" id="Animation_gom0u"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(-4.9279757, -13.587963, 9.5063715)]
+}
+
+[sub_resource type="Animation" id="Animation_iqfx1"]
+resource_name = "float"
+length = 12.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 2.1, 5.4333334, 8.266666, 11.966666),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(-4.9279757, -13.587963, 9.5063715), Vector3(-4.9279757, -13.746043, 9.5063715), Vector3(-4.9279757, -13.587963, 9.5063715), Vector3(-4.9279757, -13.394214, 9.5063715), Vector3(-4.9279757, -13.587963, 9.5063715)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_x3v50"]
+_data = {
+&"RESET": SubResource("Animation_gom0u"),
+&"float": SubResource("Animation_iqfx1")
+}
+
 [node name="World" type="Node3D" unique_id=81477]
 script = ExtResource("1_qaasp")
 
@@ -2638,6 +2676,12 @@ transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, -4.5155826, 3.5932565, 
 [node name="SpotLight3D" parent="gallery/Spotlight" index="3"]
 spot_attenuation = 0.0
 
+[node name="Spotlight2" parent="gallery" unique_id=1854468385 instance=ExtResource("86_grmox")]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, -5.03957, -5.646488, 2.2306662)
+
+[node name="SpotLight3D" parent="gallery/Spotlight2" index="3"]
+spot_attenuation = 0.0
+
 [node name="SpotLight3D10" type="SpotLight3D" parent="gallery" unique_id=2060358847]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 23, 0, 0)
 spot_range = 34.999
@@ -2774,6 +2818,10 @@ mesh = SubResource("PlaneMesh_t1by1")
 [node name="FortuneTeller" parent="." unique_id=430244168 instance=ExtResource("fortune_teller_scene")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -4.9279757, -13.587963, 9.5063715)
 
+[node name="AnimationPlayer" type="AnimationPlayer" parent="FortuneTeller" unique_id=180959931]
+libraries/ = SubResource("AnimationLibrary_x3v50")
+autoplay = &"float"
+
 [editable path="Spotlight1"]
 [editable path="Spotlight2"]
 [editable path="Fluorescent1"]
@@ -2790,6 +2838,7 @@ transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -4.9
 [editable path="buttonGreen/green button"]
 [editable path="Fluorescent"]
 [editable path="gallery/Spotlight"]
+[editable path="gallery/Spotlight2"]
 [editable path="gallery/BasketballHoop"]
 [editable path="CanvasFormatToggle"]
 [editable path="CanvasFormatToggle/blue button"]
