@@ -1,0 +1,49 @@
+[gd_scene format=3 uid="uid://cjg7s2n8fnpwh"]
+
+[ext_resource type="PackedScene" uid="uid://dmnsh3sa5iyf0" path="res://models/props/worklamp.glb" id="1_l1xjb"]
+[ext_resource type="Script" uid="uid://cbwg344irqecy" path="res://scripts/components/CarryableComponent.gd" id="2_carry"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_l1xjb"]
+emission_enabled = true
+emission = Color(1, 1, 1, 1)
+emission_energy_multiplier = 5.23
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_dt5pj"]
+material = SubResource("StandardMaterial3D_l1xjb")
+size = Vector2(0.23, 0.15)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_l1xjb"]
+size = Vector3(0.90893555, 2.1895752, 0.76416016)
+
+[node name="Worklamp" type="RigidBody3D" unique_id=2105913077]
+collision_layer = 8
+collision_mask = 3
+mass = 3.0
+linear_damp = 2.0
+angular_damp = 3.0
+
+[node name="default" parent="." unique_id=1906747345 instance=ExtResource("1_l1xjb")]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
+
+[node name="SpotLight3D" type="SpotLight3D" parent="." unique_id=196477074]
+transform = Transform3D(1, 0, 0, 0, -1, 8.742278e-08, 0, -8.742278e-08, -1, 0, 1.4797089, 0.10967535)
+spot_range = 11.898
+spot_attenuation = 0.1
+spot_angle = 42.46
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1351252147]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, -0.345679, 1.4522094, 0.031546816)
+mesh = SubResource("PlaneMesh_dt5pj")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="." unique_id=187230575]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0.3646453, 1.4522094, 0.031546816)
+mesh = SubResource("PlaneMesh_dt5pj")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=940778823]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.01184082, 0.5947876, -0.0041503906)
+shape = SubResource("BoxShape3D_l1xjb")
+
+[node name="CarryableComponent" type="Node3D" parent="." unique_id=1796727894]
+script = ExtResource("2_carry")
+enable_rotation_while_carried = true
+use_interact_key_for_pickup = true

@@ -73,7 +73,7 @@ func export_painting(painting: CarryablePainting) -> Dictionary:
 			sf.close()
 
 	# Route to Downloads if saving locally, otherwise temp dir (still needed for gallery upload)
-	var temp_dir = OS.get_user_data_dir().path_join("temp_export")
+	var temp_dir = OS.get_temp_dir().path_join("studio_sim_temp_export")
 	DirAccess.make_dir_recursive_absolute(temp_dir)
 	var png_dest = downloads if save_png else temp_dir
 	var glb_dest = downloads if save_glb else temp_dir

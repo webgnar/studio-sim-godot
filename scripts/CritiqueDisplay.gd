@@ -30,6 +30,7 @@ const CRITICS: Array[Dictionary] = [
 ]
 
 var _current_critic: Dictionary = {}
+var _critic_bag: Array[Dictionary] = []
 
 var _scroll_offset: float = 0.0
 var _scroll_pause_timer: float = 0.0
@@ -120,7 +121,7 @@ func _on_upload_completed(_gallery_id: String) -> void:
 
 	_pipe_generator.reset()
 	dial_up_sound.play()
-	_current_critic = CRITICS[randi() % CRITICS.size()]
+	_current_critic = _pick_next_critic()
 
 	var critique_text := CritiqueGenerator.generate(
 		_current_critic.get("type", "guy"),
@@ -140,9 +141,15 @@ func _on_upload_failed(error_message: String) -> void:
 		_state = State.IDLE
 		_set_text(tr("Upload failed — no critique available."))
 
+func _pick_next_critic() -> Dictionary:
+	if _critic_bag.is_empty():
+		_critic_bag = CRITICS.duplicate()
+		_critic_bag.shuffle()
+	return _critic_bag.pop_back()
+
 func _show_critic() -> void:
 	if _current_critic.is_empty():
-		_current_critic = CRITICS[randi() % CRITICS.size()]
+		_current_critic = _pick_next_critic()
 	avatar_sprite.texture = load(_current_critic["avatar"])
 	avatar_sprite.visible = true
 

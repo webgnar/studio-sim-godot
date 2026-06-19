@@ -17,6 +17,7 @@ contact_monitor = true
 max_contacts_reported = 1
 script = ExtResource("2_projectile_nail")
 speed = 1.0
+lifetime = 30.0
 
 [node name="nail_model" parent="." instance=ExtResource("1_nail_model")]
 transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)

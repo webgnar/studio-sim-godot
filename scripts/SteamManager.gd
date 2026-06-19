@@ -34,6 +34,7 @@ func _ready():
 	# Retroactively unlock export achievements based on save data (fixes players affected by stat-tracking bug)
 	if WorldStateManager:
 		WorldStateManager.world_state_loaded.connect(_check_retroactive_export_achievements, CONNECT_ONE_SHOT)
+		WorldStateManager.world_state_loaded.connect(_check_retroactive_visitor_achievement, CONNECT_ONE_SHOT)
 
 func _process(_delta: float):
 	# Run Steam callbacks every frame (required for events)
@@ -118,6 +119,11 @@ func _check_retroactive_export_achievements() -> void:
 	if final_count >= 50:
 		unlock_achievement("ACH_EXPORT_50")
 
+func _check_retroactive_visitor_achievement() -> void:
+	"""On load, unlock ACH_ALL_VISITORS if the player has already seen all 12 visitor skins."""
+	if WorldStateManager.get_seen_visitor_skins().size() >= 12:
+		unlock_achievement("ACH_ALL_VISITORS")
+
 func setup_achievements() -> void:
 	"""Define all achievements (must match Steamworks backend)"""
 	achievements = {
@@ -147,11 +153,13 @@ func setup_achievements() -> void:
 		# Shop
 		"ACH_BRAVE_NEW_WORLD": false,  # Purchase all three free energy devices (GEET, Water Fuel Cell, SEG)
 		"ACH_CONSCIOUSNESS_CREATES_REALITY": false,  # Purchase the Custom Sticker button
-		"ACH_COIN_PUSHER": false,  # Purchase the coin pusher machine
-		"ACH_STUDIO_ASSISTANT": false,  # Purchase the studio assistant
+"ACH_STUDIO_ASSISTANT": false,  # Purchase the studio assistant
 
 		# Commissions
 		"ACH_ALL_MISSIONS_COMPLETED": false,  # Complete all commissions
+
+		# Gallery
+		"ACH_ALL_VISITORS": false,  # Encounter all 12 unique gallery visitors
 
 	}
 

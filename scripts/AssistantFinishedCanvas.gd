@@ -35,6 +35,7 @@ func _ready() -> void:
 		painting_system.preview_sprite.rotation_degrees = 0.0
 	painting_system._update_preview_texture()
 	PaintingModeManager.register_extra_2d_system(painting_system)
+	painting_system.auto_bake_threshold = 0  # AssistantFinishedCanvas manages its own baking
 
 	# Load persisted background PNG into BackgroundSprite
 	if FileAccess.file_exists(SAVE_PATH):

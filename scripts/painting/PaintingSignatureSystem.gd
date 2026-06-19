@@ -15,12 +15,19 @@ var signature_texture: ImageTexture
 var back_face_mesh: MeshInstance3D
 var has_any_strokes: bool = false
 var last_pixel_pos: Vector2i = Vector2i(-1, -1)
+var _plane_width: float = PLANE_SIZE
+var _plane_height: float = PLANE_SIZE
 
 func _ready():
 	back_face_mesh = get_parent().get_node_or_null("BackFaceMesh")
 	if not back_face_mesh:
 		push_warning("PaintingSignatureSystem: No BackFaceMesh sibling found")
 		return
+
+	var mesh := back_face_mesh.mesh as PlaneMesh
+	if mesh:
+		_plane_width = mesh.size.x
+		_plane_height = mesh.size.y
 
 	_create_blank_canvas()
 
@@ -66,8 +73,8 @@ func draw_at_world_position(world_pos: Vector3):
 
 	var local_pos = back_face_mesh.to_local(world_pos)
 	var uv = Vector2(
-		(local_pos.x / PLANE_SIZE) + 0.5,
-		(local_pos.z / PLANE_SIZE) + 0.5
+		(local_pos.x / _plane_width) + 0.5,
+		(local_pos.z / _plane_height) + 0.5
 	)
 	var pixel = Vector2i(
 		clampi(int(uv.x * TEXTURE_SIZE), 0, TEXTURE_SIZE - 1),

@@ -29,10 +29,10 @@ tracks/0/path = NodePath(".:scale")
 tracks/0/interp = 2
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 5.0333333, 10),
+"times": PackedFloat32Array(0, 5, 10),
 "transitions": PackedFloat32Array(1, 1, 1),
 "update": 0,
-"values": [Vector2(1, 1), Vector2(1.5, 2), Vector2(1, 1)]
+"values": [Vector2(1, 1), Vector2(1.3, 1.5), Vector2(1, 1)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_bhnaj"]
@@ -82,12 +82,12 @@ layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -400.0
+offset_left = -650.0
 offset_top = 106.68
-offset_right = 400.0
-offset_bottom = 256.68002
+offset_right = 650.0
+offset_bottom = 406.68
 grow_horizontal = 2
-pivot_offset = Vector2(400, 75)
+pivot_offset = Vector2(634.3391, 158.45335)
 texture = ExtResource("2_logo")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="TitleScreenUI/TextureRect" unique_id=1419999838]

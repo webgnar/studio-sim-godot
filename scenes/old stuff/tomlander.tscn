@@ -2,6 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://0y8yal87s5yd" path="res://models/outside/cross_lander.glb" id="1_wodpv"]
 [ext_resource type="Shader" uid="uid://bso0fjph0skk8" path="res://shaders/flame.gdshader" id="2_flame"]
+[ext_resource type="Script" path="res://scripts/Tomlander.gd" id="3_tomlander"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_hbnld"]
 render_priority = 0
@@ -57,7 +58,37 @@ _data = {
 &"float": SubResource("Animation_hbnld")
 }
 
+[sub_resource type="SphereShape3D" id="SphereShape3D_hit"]
+radius = 4.0
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_smoke"]
+direction = Vector3(0, 1, 0)
+spread = 80.0
+initial_velocity_min = 4.0
+initial_velocity_max = 10.0
+angular_velocity_min = -30.0
+angular_velocity_max = 30.0
+gravity = Vector3(0, 1.0, 0)
+scale_min = 4.0
+scale_max = 10.0
+color = Color(0.35, 0.35, 0.35, 0.9)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_smoke"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(0.45, 0.45, 0.45, 0.85)
+disable_receive_shadows = true
+billboard_mode = 3
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="QuadMesh" id="QuadMesh_smoke"]
+material = SubResource("StandardMaterial3D_smoke")
+size = Vector2(2.0, 2.0)
+
 [node name="Tomlander" type="Node3D" unique_id=465715765]
+script = ExtResource("3_tomlander")
 
 [node name="model" parent="." unique_id=161389223 instance=ExtResource("1_wodpv")]
 
@@ -112,3 +143,20 @@ skeleton = NodePath("../..")
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=198568982]
 libraries/ = SubResource("AnimationLibrary_shigr")
 autoplay = &"float"
+
+[node name="HitArea" type="Area3D" parent="."]
+collision_layer = 0
+collision_mask = 4
+monitoring = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="HitArea"]
+shape = SubResource("SphereShape3D_hit")
+
+[node name="SmokeEffect" type="GPUParticles3D" parent="."]
+emitting = false
+amount = 40
+lifetime = 3.0
+one_shot = true
+explosiveness = 0.8
+process_material = SubResource("ParticleProcessMaterial_smoke")
+draw_pass_1 = SubResource("QuadMesh_smoke")

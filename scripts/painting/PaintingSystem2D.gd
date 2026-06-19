@@ -7,6 +7,9 @@ class_name PaintingSystem2D
 # Signals
 @warning_ignore("UNUSED_SIGNAL")
 signal layer_equipped(index: int)  # Emitted when Q/E changes the equipped sticker
+signal sticker_placed               # Emitted when a sticker is successfully placed on the canvas
+signal cursor_entered_canvas
+signal cursor_exited_canvas
 
 # Node references (assign in inspector)
 @export var painting_plane: MeshInstance3D  # The plane mesh displaying the canvas
@@ -16,10 +19,15 @@ signal layer_equipped(index: int)  # Emitted when Q/E changes the equipped stick
 # Currently placed layers on canvas
 var placed_layers: Array[PlacedLayer2D] = []
 
+# Auto-bake background (flattens live Sprite2D nodes into a single texture for performance)
+@export var auto_bake_threshold: int = 150  # 0 = disabled
+var _background_sprite: Sprite2D = null
+
 # Current state
 var selected_sticker_index: int = 0  # Which sticker is selected from library
 var selected_layer: PlacedLayer2D = null  # Currently selected placed layer
 var input_enabled: bool = true  # Always enabled (routing handled by PaintingModeManager)
+var _cursor_on_canvas: bool = false
 
 # Input settings
 @export var raycast_distance: float = 10.0
@@ -65,6 +73,7 @@ var preview_base_opacity: float = 0.5  # Set by PaintingRoot2D
 # Commission tracking: true if this canvas passed a commission validation
 var was_commission_validated: bool = false
 
+
 func _ready():
 	# Find camera from the painting plane's world (not from SubViewport)
 	if painting_plane:
@@ -87,6 +96,22 @@ func _ready():
 
 	# Create preview sprite
 	_setup_preview_sprite()
+
+	# Find or create background sprite for auto-bake
+	_setup_background_sprite()
+
+
+func _setup_background_sprite():
+	var existing = get_node_or_null("BackgroundSprite") as Sprite2D
+	if existing:
+		_background_sprite = existing
+		return
+	_background_sprite = Sprite2D.new()
+	_background_sprite.name = "BackgroundSprite"
+	_background_sprite.centered = false
+	_background_sprite.z_index = -1000
+	add_child(_background_sprite)
+	move_child(_background_sprite, 0)
 
 func _setup_plane_material():
 	"""Assign SubViewport texture to the painting plane material"""
@@ -266,10 +291,28 @@ func _update_preview_position():
 
 		# Set z_index higher than all placed stickers to ensure it renders on top
 		preview_sprite.z_index = 100
+
+		# Ring suppression: only trigger when within actual canvas surface bounds.
+		# The collision box is 50% oversized to allow edge sticker placement, so we
+		# check viewport_pos bounds instead of relying on the raycast hit alone.
+		var on_canvas_surface: bool = (
+			viewport_pos.x >= 0.0 and viewport_pos.x <= viewport_size.x and
+			viewport_pos.y >= 0.0 and viewport_pos.y <= viewport_size.y
+		)
+		if on_canvas_surface and not _cursor_on_canvas:
+			_cursor_on_canvas = true
+			cursor_entered_canvas.emit()
+		elif not on_canvas_surface and _cursor_on_canvas:
+			_cursor_on_canvas = false
+			cursor_exited_canvas.emit()
 	else:
 		# Hide preview when not hovering over canvas
 		preview_sprite.visible = false
 		preview_idle_time = 0.0  # Reset timer when not visible
+
+		if _cursor_on_canvas:
+			_cursor_on_canvas = false
+			cursor_exited_canvas.emit()
 
 func _update_preview_fade(delta: float):
 	"""Handle fade-out effect for preview sprite when idle"""
@@ -354,6 +397,8 @@ func _update_preview_scale():
 
 	preview_sprite.scale = Vector2(final_scale, final_scale)
 
+
+
 func spawn_sticker(world_position: Vector3):
 	"""Spawn a new sticker at the given world position"""
 	if DebugLogger and not OS.has_feature("editor"):
@@ -400,6 +445,7 @@ func spawn_sticker(world_position: Vector3):
 	placed.rotation_deg = preview_rotation  # Track the rotation that was set in preview
 	placed.scale_multiplier = preview_scale_multiplier  # Track the scale multiplier
 	placed_layers.append(placed)
+	sticker_placed.emit()
 
 	if DebugLogger and not OS.has_feature("editor"):
 		DebugLogger.write_log("[PaintingSystem2D] Sticker spawned successfully! Total placed: %d" % placed_layers.size())
@@ -413,6 +459,9 @@ func spawn_sticker(world_position: Vector3):
 
 	# Select the newly placed sticker
 	selected_layer = placed
+
+	if auto_bake_threshold > 0 and placed_layers.size() >= auto_bake_threshold:
+		_bake_to_background()  # fire-and-forget coroutine
 	
 	# Play random sticker sound (create new player for each sound to allow overlap)
 	var sounds = [sticker_sound_1, sticker_sound_2, sticker_sound_3, sticker_sound_4, sticker_sound_5]
@@ -429,6 +478,27 @@ func spawn_sticker(world_position: Vector3):
 		audio_player.play()
 		# Auto-cleanup when sound finishes
 		audio_player.finished.connect(func(): audio_player.queue_free())
+
+func _bake_to_background() -> void:
+	if not canvas_viewport or not _background_sprite:
+		return
+	var was_visible = false
+	if preview_sprite:
+		was_visible = preview_sprite.visible
+		preview_sprite.visible = false
+	await RenderingServer.frame_post_draw
+	var image = canvas_viewport.get_texture().get_image()
+	if preview_sprite:
+		preview_sprite.visible = was_visible
+	if not image:
+		return
+	_background_sprite.texture = ImageTexture.create_from_image(image)
+	_background_sprite.scale = Vector2.ONE
+	for layer in placed_layers:
+		if layer.node:
+			layer.node.queue_free()
+	placed_layers.clear()
+	selected_layer = null
 
 func cycle_sticker(direction: int):
 	"""Cycle through available stickers in library (deprecated - use PaintingModeManager)"""

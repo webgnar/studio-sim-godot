@@ -96,7 +96,7 @@ func purchase(item_id: String) -> bool:
 		return false
 
 	# Only check for player blocking on one-time prop items
-	if not is_repeatable and is_player_blocking_spawn(item_id):
+	if not is_repeatable and not item.get("no_prop", false) and is_player_blocking_spawn(item_id):
 		return false
 
 	# Deduct money
@@ -108,15 +108,11 @@ func purchase(item_id: String) -> bool:
 		# Mark as purchased in WorldStateManager (persisted to disk on save)
 		WorldStateManager.add_purchased_item(item_id)
 		# Reveal the prop(s) in the world immediately
-		_reveal_item_props(item_id)
+		if not item.get("no_prop", false):
+			_reveal_item_props(item_id)
 
 	item_purchased.emit(item_id)
 	print("ShopManager: Purchased '%s' for $%d" % [item["display_name"], item["price"]])
-
-	# Achievement: Coin Pusher
-	if item_id == "coin_pusher":
-		if SteamManager:
-			SteamManager.unlock_achievement("ACH_COIN_PUSHER")
 
 	# Achievement: Consciousness Creates Reality
 	if item_id == "customstickerbutton":
@@ -139,6 +135,9 @@ func reveal_purchased_items() -> void:
 	the player has already purchased. Props were hidden by WorldSetup before load.
 	"""
 	for item_id in WorldStateManager.get_purchased_items():
+		var item = _get_item(item_id)
+		if item.get("no_prop", false):
+			continue
 		_reveal_item_props(item_id)
 
 
@@ -398,6 +397,21 @@ Meyer himself described the origins of his inventions in deeply personal, spirit
 			"repeatable": true,
 		},
 		{
+			"id": "worklamp",
+			"display_name": "Work Lamp",
+			"title": "Work Lamp",
+			"description": "A sturdy adjustable work lamp. Light up your workspace, or carry it around to illuminate whatever catches your eye.",
+			"price": 500,
+		},
+		{
+			"id": "rf_receiver",
+			"display_name": "RF Receiver",
+			"title": "RF Receiver",
+			"description": "A small radio frequency receiver module. Plug it into the boombox to pick up live radio stations from around the world. Without it, you're stuck with whatever tapes you've got.",
+			"price": 500,
+			"no_prop": true,
+		},
+		{
 			"id": "boombox",
 			"display_name": "Boombox",
 			"title": "Boombox",
@@ -447,6 +461,8 @@ func _apply_desc_keys() -> void:
 		"coin_pusher": "SHOP_DESC_COIN_PUSHER",
 		"gallery_visitor": "SHOP_DESC_GALLERY_VISITOR",
 		"customstickerbutton": "SHOP_DESC_CUSTOM_STICKER",
+		"worklamp": "SHOP_DESC_WORKLAMP",
+		"rf_receiver": "SHOP_DESC_RF_RECEIVER",
 	}
 	for item in _catalog:
 		if keys.has(item["id"]):

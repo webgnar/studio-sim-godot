@@ -6,6 +6,8 @@
 [ext_resource type="AudioStream" uid="uid://c2euptpopaex8" path="res://sounds/picotron/sticker1.ogg" id="3_co74h"]
 [ext_resource type="AudioStream" uid="uid://d4jugxumiyik2" path="res://sounds/picotron/sticker2.ogg" id="4_wru4m"]
 [ext_resource type="AudioStream" uid="uid://bfw6fbptdqnga" path="res://sounds/picotron/sticker5.ogg" id="7_aovqr"]
+[ext_resource type="Shader" path="res://shaders/canvas_radial_pulse.gdshader" id="8_pulse"]
+[ext_resource type="Script" uid="uid://b4qrmhintcvs3" path="res://scripts/components/CanvasPulseHint.gd" id="9_hint"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_m05bo"]
 size = Vector2(3, 3)
@@ -17,6 +19,18 @@ texture_filter = 0
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_616st"]
 size = Vector3(4.5, 0.1, 4.5)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_hg7j4"]
+render_priority = 0
+shader = ExtResource("8_pulse")
+shader_parameter/speed = 0.4
+shader_parameter/glow = 0.8
+shader_parameter/line_color = Color(0.92960846, 0.9095422, 0.77705264, 1)
+shader_parameter/opacity = 0.0
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_wvh0i"]
+material = SubResource("ShaderMaterial_hg7j4")
+size = Vector2(10, 10)
 
 [node name="PaintingRoot2d" type="Node3D" unique_id=1449395554]
 script = ExtResource("1_616st")
@@ -53,3 +67,11 @@ transform = Transform3D(0.045, 0, 0, 0, -1.9670126e-09, -0.045, 0, 0.045, -1.967
 
 [node name="SpawnMarker" type="Marker3D" parent="." unique_id=918331394]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.43519586, 0)
+
+[node name="pulse shader planemesh" type="MeshInstance3D" parent="." unique_id=27262665]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.119327486, 0)
+mesh = SubResource("PlaneMesh_wvh0i")
+
+[node name="CanvasPulseHint" type="Node" parent="." unique_id=938471201]
+script = ExtResource("9_hint")
+max_opacity = 0.5

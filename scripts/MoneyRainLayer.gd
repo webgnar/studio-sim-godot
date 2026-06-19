@@ -30,7 +30,7 @@ func _build_sfx():
 	_sfx = AudioStreamPlayer.new()
 	_sfx.process_mode = Node.PROCESS_MODE_ALWAYS
 	_sfx.bus = "SFX"
-	var stream = load("res://sounds/picotron/money.ogg")
+	var stream = load("res://sounds/picotron/get money.ogg")
 	if stream:
 		_sfx.stream = stream
 	add_child(_sfx)

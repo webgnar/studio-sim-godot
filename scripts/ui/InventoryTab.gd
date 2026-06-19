@@ -38,7 +38,6 @@ var _detail_col: int = 0  # 0=left (statement), 1=right (critique) — shipped o
 
 @onready var _critique_panel: VBoxContainer = $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ContentHBox/RightVBox
 @onready var _critique_display: TextEdit = $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ContentHBox/RightVBox/CritiqueDisplay
-@onready var _detail_vbox: VBoxContainer = $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer
 
 # Social stats
 const _STATS_BASE = "HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ContentHBox/RightVBox/StatsSection"

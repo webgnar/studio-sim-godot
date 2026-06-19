@@ -1,32 +1,112 @@
 [gd_scene format=3 uid="uid://dsstapanel001"]
 
 [ext_resource type="Script" uid="uid://c8uap2yk1tjju" path="res://scripts/components/StudioAssistantStatusPanel.gd" id="1_script"]
-[ext_resource type="PackedScene" path="res://scenes/UI/StudioAssistantPanelUI.tscn" id="2_ui"]
+[ext_resource type="Texture2D" uid="uid://ditgfk6m80iap" path="res://sprites/catclock-Sheet491 x 1080.png" id="2_s5vjx"]
+[ext_resource type="Script" path="res://scripts/components/CircularProgressBar.gd" id="3_script"]
 
 [sub_resource type="QuadMesh" id="QuadMesh_screen"]
-size = Vector2(1.2, 0.8)
+size = Vector2(0.8, 0.8)
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_panel"]
-resource_local_to_scene = true
 viewport_path = NodePath("SubViewport")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_screen"]
 resource_local_to_scene = true
-flags_unshaded = true
+shading_mode = 0
 albedo_texture = SubResource("ViewportTexture_panel")
+transparency = 1
 
-[node name="StudioAssistantStatusPanel" type="Node3D" node_paths=PackedStringArray("timer_label", "progress_bar", "earnings_label")]
+[sub_resource type="AtlasTexture" id="AtlasTexture_evh1w"]
+atlas = ExtResource("2_s5vjx")
+region = Rect2(0, 0, 491, 1080)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_y87vn"]
+atlas = ExtResource("2_s5vjx")
+region = Rect2(491, 0, 491, 1080)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wvbkx"]
+atlas = ExtResource("2_s5vjx")
+region = Rect2(982, 0, 491, 1080)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qhuyy"]
+atlas = ExtResource("2_s5vjx")
+region = Rect2(0, 1080, 491, 1080)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_g7e7r"]
+atlas = ExtResource("2_s5vjx")
+region = Rect2(491, 1080, 491, 1080)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vhdl7"]
+atlas = ExtResource("2_s5vjx")
+region = Rect2(982, 1080, 491, 1080)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2laom"]
+atlas = ExtResource("2_s5vjx")
+region = Rect2(0, 2160, 491, 1080)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pcgpt"]
+atlas = ExtResource("2_s5vjx")
+region = Rect2(491, 2160, 491, 1080)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_al3xu"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_evh1w")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_y87vn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wvbkx")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qhuyy")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_g7e7r")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vhdl7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2laom")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pcgpt")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="StudioAssistantStatusPanel" type="Node3D" unique_id=1933626020 node_paths=PackedStringArray("progress_bar")]
 script = ExtResource("1_script")
-timer_label = NodePath("SubViewport/StudioAssistantPanelUI/MarginContainer/VBoxContainer/TimerLabel")
-progress_bar = NodePath("SubViewport/StudioAssistantPanelUI/MarginContainer/VBoxContainer/ProgressBar")
-earnings_label = NodePath("SubViewport/StudioAssistantPanelUI/MarginContainer/VBoxContainer/EarningsLabel")
+progress_bar = NodePath("SubViewport/CircularProgressBar")
 
-[node name="Screen" type="MeshInstance3D" parent="."]
+[node name="Screen" type="MeshInstance3D" parent="." unique_id=1778107048]
 mesh = SubResource("QuadMesh_screen")
 surface_material_override/0 = SubResource("StandardMaterial3D_screen")
 
-[node name="SubViewport" type="SubViewport" parent="."]
-size = Vector2i(512, 340)
+[node name="SubViewport" type="SubViewport" parent="." unique_id=1163549631]
+size = Vector2i(256, 256)
+transparent_bg = true
 render_target_update_mode = 4
 
-[node name="StudioAssistantPanelUI" parent="SubViewport" instance=ExtResource("2_ui")]
+[node name="CircularProgressBar" type="Control" parent="SubViewport" unique_id=1851947343]
+script = ExtResource("3_script")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+radius = 110.0
+ring_width = 14.0
+show_percentage = false
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="SubViewport/CircularProgressBar" unique_id=2089634977]
+position = Vector2(128, 128)
+scale = Vector2(0.185, 0.185)
+sprite_frames = SubResource("SpriteFrames_al3xu")
+autoplay = "default"

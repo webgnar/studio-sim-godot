@@ -123,6 +123,13 @@ func _input(event):
 				pass
 		get_viewport().set_input_as_handled()
 
+	# ESC opens the pause menu from gameplay (mirrors tilde/start behavior)
+	if event is InputEventKey and event.pressed and event.keycode == KEY_ESCAPE:
+		match current_state:
+			GameState.GAMEPLAY, GameState.IN_MISSION:
+				change_state(GameState.PAUSE_MENU)
+				get_viewport().set_input_as_handled()
+
 func change_state(new_state: GameState):
 	"""Central state transition handler"""
 	if new_state == current_state:

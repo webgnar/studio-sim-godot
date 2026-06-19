@@ -1,64 +1,93 @@
-[gd_scene format=3 uid="uid://mebuwng8ggh1"]
+[gd_scene format=3 uid="uid://dj2tgf4vggly3"]
 
-[ext_resource type="Theme" uid="uid://cbtaxh5m7udor" path="res://themes/ui_theme.tres" id="1_theme"]
+[ext_resource type="Texture2D" uid="uid://ditgfk6m80iap" path="res://sprites/catclock-Sheet491 x 1080.png" id="1_s5vjx"]
+[ext_resource type="Script" uid="uid://ceaa62lpxojqn" path="res://scripts/components/CircularProgressBar.gd" id="2_script"]
 
-[node name="StudioAssistantPanelUI" type="PanelContainer" unique_id=1095983321]
-custom_minimum_size = Vector2(512, 340)
+[sub_resource type="AtlasTexture" id="AtlasTexture_evh1w"]
+atlas = ExtResource("1_s5vjx")
+region = Rect2(0, 0, 491, 1080)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_y87vn"]
+atlas = ExtResource("1_s5vjx")
+region = Rect2(491, 0, 491, 1080)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wvbkx"]
+atlas = ExtResource("1_s5vjx")
+region = Rect2(982, 0, 491, 1080)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qhuyy"]
+atlas = ExtResource("1_s5vjx")
+region = Rect2(0, 1080, 491, 1080)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_g7e7r"]
+atlas = ExtResource("1_s5vjx")
+region = Rect2(491, 1080, 491, 1080)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vhdl7"]
+atlas = ExtResource("1_s5vjx")
+region = Rect2(982, 1080, 491, 1080)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2laom"]
+atlas = ExtResource("1_s5vjx")
+region = Rect2(0, 2160, 491, 1080)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pcgpt"]
+atlas = ExtResource("1_s5vjx")
+region = Rect2(491, 2160, 491, 1080)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_al3xu"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_evh1w")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_y87vn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wvbkx")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qhuyy")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_g7e7r")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vhdl7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2laom")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pcgpt")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="StudioAssistantPanelUI" type="Control" unique_id=1095983321]
+custom_minimum_size = Vector2(256, 256)
+layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = ExtResource("1_theme")
 
-[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1603059708]
-layout_mode = 2
-theme_override_constants/margin_left = 20
-theme_override_constants/margin_top = 16
-theme_override_constants/margin_right = 20
-theme_override_constants/margin_bottom = 16
+[node name="CircularProgressBar" type="Control" parent="." unique_id=1851947343]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_script")
+radius = 110.0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=461831510]
-layout_mode = 2
-theme_override_constants/separation = 5
-
-[node name="TitleLabel" type="Label" parent="MarginContainer/VBoxContainer" unique_id=558465546]
-texture_filter = 1
-layout_mode = 2
-theme_override_colors/font_color = Color(1, 1, 0.43137255, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 9
-theme_override_font_sizes/font_size = 42
-text = "Passive Income!"
-horizontal_alignment = 1
-
-[node name="HSeparator" type="HSeparator" parent="MarginContainer/VBoxContainer" unique_id=2050572187]
-layout_mode = 2
-
-[node name="TimerLabel" type="Label" parent="MarginContainer/VBoxContainer" unique_id=462439149]
-layout_mode = 2
-theme_override_colors/font_shadow_color = Color(0.6901961, 0.21568628, 0.8509804, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 5
-theme_override_constants/shadow_outline_size = 6
-text = "Next payment: --:--"
-horizontal_alignment = 1
-
-[node name="ProgressBar" type="ProgressBar" parent="MarginContainer/VBoxContainer" unique_id=1851947343]
-texture_filter = 1
-layout_mode = 2
-theme_override_font_sizes/font_size = 35
-
-[node name="HSeparator2" type="HSeparator" parent="MarginContainer/VBoxContainer" unique_id=70433199]
-layout_mode = 2
-
-[node name="EarningsLabel" type="Label" parent="MarginContainer/VBoxContainer" unique_id=1228452882]
-layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.30588236, 0.24313726, 1)
-theme_override_colors/font_shadow_color = Color(0, 0.7764706, 0.7764706, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 2
-theme_override_constants/shadow_outline_size = 3
-theme_override_font_sizes/font_size = 29
-text = "Assisted Earnings: $0"
-horizontal_alignment = 1
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="CircularProgressBar" unique_id=2089634977]
+position = Vector2(128, 128)
+scale = Vector2(0.185, 0.185)
+sprite_frames = SubResource("SpriteFrames_al3xu")
+autoplay = "default"

@@ -2,13 +2,13 @@
 
 [ext_resource type="Texture2D" uid="uid://daneppyy5y8cp" path="res://sprites/textures/floor-cement-2.jpg" id="1_hhbp7"]
 [ext_resource type="Texture2D" uid="uid://dcij21opo0juo" path="res://sprites/normals/floor-cement-2_ambient.png" id="2_c2xdu"]
-[ext_resource type="Texture2D" uid="uid://lcah2yte71x6" path="res://sprites/normals/floor-cement-2_normal.png" id="3_l2teu"]
+[ext_resource type="Texture2D" uid="uid://bs8weekpjsm0b" path="res://sprites/normals/concrete normal.jpg" id="3_hhbp7"]
 
 [resource]
 albedo_texture = ExtResource("1_hhbp7")
 normal_enabled = true
-normal_scale = 0.24
-normal_texture = ExtResource("3_l2teu")
+normal_scale = -6.44
+normal_texture = ExtResource("3_hhbp7")
 ao_enabled = true
 ao_light_affect = 0.08
 ao_texture = ExtResource("2_c2xdu")

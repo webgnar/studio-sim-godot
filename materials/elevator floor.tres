@@ -1,0 +1,10 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://cajq53cn57rg0"]
+
+[ext_resource type="Texture2D" uid="uid://c8o3fpdx050g0" path="res://sprites/textures/elevator floor.jpg" id="1_u4vty"]
+[ext_resource type="Texture2D" uid="uid://fmangi4xvmt3" path="res://sprites/normals/elevator floor.png" id="2_kjugu"]
+
+[resource]
+albedo_texture = ExtResource("1_u4vty")
+normal_enabled = true
+normal_scale = 0.27
+normal_texture = ExtResource("2_kjugu")

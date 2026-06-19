@@ -1,0 +1,7 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://djacbkb2fkgem"]
+
+[ext_resource type="Texture2D" uid="uid://7d41okmvdpee" path="res://sprites/NPCs/fortune teller.jpeg" id="1_3g8ec"]
+
+[resource]
+albedo_texture = ExtResource("1_3g8ec")
+texture_filter = 0

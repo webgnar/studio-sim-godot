@@ -270,33 +270,43 @@ theme_override_constants/separation = 10
 
 [node name="Game" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer" unique_id=1111111103]
 layout_mode = 2
-theme_override_constants/separation = 20
 metadata/_tab_index = 4
 
-[node name="SaveGLBCheckbox" type="CheckBox" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game" unique_id=1111111104]
+[node name="ScrollContainer" type="ScrollContainer" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game" unique_id=1111111130]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+follow_focus = true
+
+[node name="GameSettings" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/ScrollContainer" unique_id=1111111131]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 20
+
+[node name="SaveGLBCheckbox" type="CheckBox" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/ScrollContainer/GameSettings" unique_id=1111111104]
 layout_mode = 2
 button_pressed = true
 text = "Save GLB to downloads folder"
 
-[node name="SavePNGCheckbox" type="CheckBox" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game" unique_id=1111111105]
+[node name="SavePNGCheckbox" type="CheckBox" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/ScrollContainer/GameSettings" unique_id=1111111105]
 layout_mode = 2
 button_pressed = true
 text = "Save PNG to downloads folder"
 
-[node name="GenerateCritiqueCheckbox" type="CheckBox" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game" unique_id=1111111106]
+[node name="GenerateCritiqueCheckbox" type="CheckBox" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/ScrollContainer/GameSettings" unique_id=1111111106]
 layout_mode = 2
 button_pressed = true
 text = "Generate Elevator Critique"
 
-[node name="PublishOnlineCheckbox" type="CheckBox" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game" unique_id=1111111107]
+[node name="PublishOnlineCheckbox" type="CheckBox" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/ScrollContainer/GameSettings" unique_id=1111111107]
 layout_mode = 2
 button_pressed = true
 text = "Publish painting online"
 
-[node name="InstagramRow" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game" unique_id=1111111108]
+[node name="InstagramRow" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/ScrollContainer/GameSettings" unique_id=1111111108]
 layout_mode = 2
 
-[node name="InstagramLabel" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/InstagramRow" unique_id=1111111109]
+[node name="InstagramLabel" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/ScrollContainer/GameSettings/InstagramRow" unique_id=1111111109]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.5254902, 1, 0.4117647, 1)
@@ -307,19 +317,19 @@ theme_override_constants/outline_size = 6
 theme_override_constants/shadow_outline_size = 3
 text = "Instagram:"
 
-[node name="InstagramAt" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/InstagramRow" unique_id=1111111114]
+[node name="InstagramAt" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/ScrollContainer/GameSettings/InstagramRow" unique_id=1111111114]
 layout_mode = 2
 text = "@"
 
-[node name="InstagramLineEdit" type="LineEdit" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/InstagramRow" unique_id=2022635048]
+[node name="InstagramLineEdit" type="LineEdit" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/ScrollContainer/GameSettings/InstagramRow" unique_id=2022635048]
 layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "handle"
 
-[node name="BlueSkyRow" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game" unique_id=1111111111]
+[node name="BlueSkyRow" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/ScrollContainer/GameSettings" unique_id=1111111111]
 layout_mode = 2
 
-[node name="BlueSkyLabel" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/BlueSkyRow" unique_id=1111111112]
+[node name="BlueSkyLabel" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/ScrollContainer/GameSettings/BlueSkyRow" unique_id=1111111112]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.37254903, 0.4627451, 0.99215686, 1)
@@ -330,14 +340,53 @@ theme_override_constants/outline_size = 6
 theme_override_constants/shadow_outline_size = 5
 text = "Bluesky:"
 
-[node name="BlueSkyAt" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/BlueSkyRow" unique_id=1111111115]
+[node name="BlueSkyAt" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/ScrollContainer/GameSettings/BlueSkyRow" unique_id=1111111115]
 layout_mode = 2
 text = "@"
 
-[node name="BlueSkyLineEdit" type="LineEdit" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/BlueSkyRow" unique_id=1111111113]
+[node name="BlueSkyLineEdit" type="LineEdit" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/ScrollContainer/GameSettings/BlueSkyRow" unique_id=1111111113]
 layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "handle"
+
+[node name="DOBRow" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/ScrollContainer/GameSettings" unique_id=1111111117]
+layout_mode = 2
+
+[node name="DOBLabel" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/ScrollContainer/GameSettings/DOBRow" unique_id=1111111118]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "DOB:"
+
+[node name="BirthDateLineEdit" type="LineEdit" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/ScrollContainer/GameSettings/DOBRow" unique_id=1111111119]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "YYYY-MM-DD"
+
+[node name="BirthLocRow" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/ScrollContainer/GameSettings" unique_id=1111111120]
+layout_mode = 2
+
+[node name="BirthLocLabel" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/ScrollContainer/GameSettings/BirthLocRow" unique_id=1111111122]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "Birth Loc.:"
+
+[node name="BirthLocationLineEdit" type="LineEdit" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/ScrollContainer/GameSettings/BirthLocRow" unique_id=1111111121]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "lat, lon (e.g. 40.71, -74.00)"
+
+[node name="BirthTimeRow" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/ScrollContainer/GameSettings" unique_id=1111111123]
+layout_mode = 2
+
+[node name="BirthTimeLabel" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/ScrollContainer/GameSettings/BirthTimeRow" unique_id=1111111124]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "Birth Time:"
+
+[node name="BirthTimeLineEdit" type="LineEdit" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/ScrollContainer/GameSettings/BirthTimeRow" unique_id=1111111125]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "HH:MM (optional)"
 
 [node name="ButtonNavSound" type="AudioStreamPlayer" parent="." unique_id=1505501763]
 stream = ExtResource("3_nav_sound")
