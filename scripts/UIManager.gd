@@ -107,6 +107,9 @@ func _input(event):
 	if OS.has_feature("editor") and event.is_action_pressed("ui_end"):
 		SteamManager.debug_unlock_all_achievements()
 
+	if SceneTransition.is_transitioning:
+		return
+
 	# "start" button (backtick) toggles mission selection menu
 	if event.is_action_pressed("start"):
 		match current_state:

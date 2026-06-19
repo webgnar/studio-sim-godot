@@ -19,7 +19,7 @@ extends Node
 var _sky_mat: ShaderMaterial
 var _sun_mat: ShaderMaterial
 var _phase: String = ""
-var _sun_deg: float = 5.0   # start at sunrise
+var _sun_deg: float = 60.0   # start at 10 AM (6 AM = 0°, each hour = 15°)
 
 # Phase angle boundaries
 const DEG_MID_MORNING   := 75.0

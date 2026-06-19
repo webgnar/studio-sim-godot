@@ -24,6 +24,7 @@ func _on_body_entered(body):
 	elif body.is_in_group("respawnable"):
 		body.respawn()
 	elif body is CarryablePainting:
+		_spawn_fire_effect(body.global_position)
 		body.queue_free()
 
 func _respawn(player):
@@ -91,3 +92,46 @@ func _respawn(player):
 	# Re-enable input
 	CameraManager.set_player_input(true)
 	_is_respawning = false
+
+var _flame_texture: Texture2D = preload("res://sprites/flame.png")
+
+func _spawn_fire_effect(pos: Vector3) -> void:
+	var mat := ParticleProcessMaterial.new()
+	mat.direction = Vector3(0, 1, 0)
+	mat.spread = 80.0
+	mat.initial_velocity_min = 4.0
+	mat.initial_velocity_max = 10.0
+	mat.angular_velocity_min = -30.0
+	mat.angular_velocity_max = 30.0
+	mat.gravity = Vector3(0, 1, 0)
+	mat.scale_min = 4.0
+	mat.scale_max = 10.0
+	mat.color = Color(1.0, 0.5, 0.1, 0.9)
+
+	var draw_mat := StandardMaterial3D.new()
+	draw_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	draw_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	draw_mat.albedo_texture = _flame_texture
+	draw_mat.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
+	draw_mat.disable_receive_shadows = true
+	draw_mat.billboard_mode = BaseMaterial3D.BILLBOARD_PARTICLES
+	draw_mat.particles_anim_h_frames = 1
+	draw_mat.particles_anim_v_frames = 1
+	draw_mat.particles_anim_loop = false
+
+	var mesh := QuadMesh.new()
+	mesh.material = draw_mat
+	mesh.size = Vector2(2, 2)
+
+	var particles := GPUParticles3D.new()
+	particles.emitting = true
+	particles.amount = 40
+	particles.lifetime = 3.0
+	particles.one_shot = true
+	particles.explosiveness = 0.8
+	particles.process_material = mat
+	particles.draw_pass_1 = mesh
+	particles.global_position = pos
+
+	get_tree().root.add_child(particles)
+	get_tree().create_timer(particles.lifetime + 1.0).timeout.connect(particles.queue_free)

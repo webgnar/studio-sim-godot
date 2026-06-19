@@ -15,6 +15,10 @@ func _on_interacted(_player: PlayerInteractionComponent) -> void:
 		cyclone.clear_all_labels()
 	else:
 		cyclone.stopped = true
+		var won := cyclone.is_winner(button_number)
 		var lbl := cyclone.get_result_label(button_number)
 		if lbl:
-			lbl.text = "Winner!" if cyclone.is_winner(button_number) else "Loser!"
+			lbl.text = "Winner!" if won else "Loser!"
+		if won:
+			var icon := preload("res://sprites/shop_previews/cyclone.png")
+			AchievementToast.show_toast("ACHIEVEMENT UNLOCKED", "Winner!", icon)

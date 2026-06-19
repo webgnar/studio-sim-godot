@@ -897,6 +897,15 @@ size = Vector3(74.13498, 1, 43.52961)
 [sub_resource type="BoxShape3D" id="BoxShape3D_h5nhj"]
 size = Vector3(8.818, 1.3930664, 9.446)
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3fb5j"]
+albedo_texture = ExtResource("24_grmox")
+normal_enabled = true
+normal_scale = 0.12
+normal_texture = ExtResource("26_kvmu4")
+ao_enabled = true
+ao_texture = ExtResource("25_xgy6y")
+uv1_scale = Vector3(0.71, -0.22, 1)
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gw1vw"]
 albedo_texture = ExtResource("101_mu18u")
 metallic = 1.0
@@ -911,13 +920,12 @@ texture_filter = 0
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_i688p"]
 albedo_texture = ExtResource("31_c15v2")
-normal_enabled = true
 normal_scale = -6.44
 normal_texture = ExtResource("131_tq137")
 ao_enabled = true
 ao_light_affect = 0.08
 ao_texture = ExtResource("22_ygn2i")
-uv1_scale = Vector3(0.73, 2.4, 2.89)
+uv1_scale = Vector3(0.73, 3.47, 2.89)
 uv1_offset = Vector3(0, -1, 0)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yhtv1"]
@@ -2448,7 +2456,7 @@ libraries/ = SubResource("AnimationLibrary_gyxkx")
 transform = Transform3D(-2.1855695e-09, 0, -0.05, 0, 0.05, 0, 0.05, 0, -2.1855695e-09, 3.6745884, 1.737043, 9.13512)
 
 [node name="DeathZone" type="Area3D" parent="." unique_id=990205795]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.592229, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -22.17981, 0)
 script = ExtResource("96_ufs10")
 spawn_position = Vector3(-0.947, 1.207, 12)
 
@@ -2500,6 +2508,12 @@ collision_layer = 2
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.105837, -3.4046488, 7.477894)
 size = Vector3(0.98, 15.390234, 34.60435)
 material = ExtResource("5_71j4m")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="gallery/CSGBox3D" unique_id=1442935328]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.4573097, 10.843164)
+operation = 2
+size = Vector3(1, 5.9176636, 0.51660156)
+material = SubResource("StandardMaterial3D_3fb5j")
 
 [node name="CSGBox3D4" type="CSGBox3D" parent="gallery" unique_id=450251449]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 38.208893, -3.4046488, 7.4751225)
@@ -2562,8 +2576,8 @@ size = Vector3(17.305416, 0.38232422, 1)
 material = SubResource("StandardMaterial3D_gw1vw")
 
 [node name="CSGBox3D5" type="CSGBox3D" parent="gallery" unique_id=1455443260]
-transform = Transform3D(0.7344291, -0.6786854, 0, 0.6786854, 0.7344291, 0, 0, 0, 1, 0.050621986, 1.8103878, 8.670744)
-size = Vector3(8.559082, 0.36865234, 2.2436523)
+transform = Transform3D(0.7344291, -0.6786854, 0, 0.6786854, 0.7344291, 0, 0, 0, 1, 0.053759806, 1.8132875, 8.670744)
+size = Vector3(8.567627, 0.36865234, 2.2436523)
 material = SubResource("StandardMaterial3D_i688p")
 
 [node name="CSGBox3D7" type="CSGBox3D" parent="gallery" unique_id=1361886888]
@@ -2810,7 +2824,7 @@ painting_ui = NodePath("../../PaintingUI_Layer/PaintingUi")
 transform = Transform3D(4.371139e-09, -0.1, -8.742278e-09, -0.1, -4.371139e-09, 0, -3.8213711e-16, 8.742278e-09, -0.1, 13.576837, 1.161165, 13.319655)
 
 [node name="CoinPusherMachine" parent="." unique_id=131192629 groups=["shop_prop"] instance=ExtResource("138_j7mh8")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.059882, 0, 13.855978)
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -4.2185297, -15.550892, 16.855978)
 metadata/shop_item_id = "coin_pusher"
 
 [node name="Worklamp" parent="." unique_id=739774998 groups=["shop_prop"] instance=ExtResource("worklamp_scene")]
@@ -2831,7 +2845,7 @@ transform = Transform3D(-0.2, 3.019916e-08, -1.3200473e-15, 0, -8.742278e-09, -0
 transform = Transform3D(-0.2, 0, 1.7484556e-08, -1.7484556e-08, -8.742278e-09, -0.2, 7.6427423e-16, -0.2, 8.742278e-09, 2.9587736, 1.2738194, 14.698681)
 
 [node name="InstagramDisplay" parent="." unique_id=100000001 instance=ExtResource("146_ctgs1")]
-transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 4.176862, 1.863181, 5)
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -8.459934, -14.19949, 16.611813)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="InstagramDisplay" unique_id=569799289]
 transform = Transform3D(1, -4.371139e-08, 4.371139e-08, 4.371139e-08, -4.371139e-08, -1, 4.371139e-08, 1, -4.3711385e-08, 0, 1.4718581, 0)
@@ -2843,8 +2857,8 @@ transform = Transform3D(1, -4.371139e-08, 4.371139e-08, 4.371139e-08, -4.371139e
 visible = false
 mesh = SubResource("PlaneMesh_i688p")
 
-[node name="SpiderWebLink" parent="." unique_id=200000010 instance=ExtResource("147_spweb")]
-transform = Transform3D(-6.8943287e-09, 3.950687e-09, 0.09, 0.00056235865, -0.08999824, 3.993689e-09, 0.08999824, 0.00056235865, 6.8695085e-09, 4.1625786, 1.0141416, 5.2197046)
+[node name="SpiderWebLink" parent="InstagramDisplay" unique_id=200000010 instance=ExtResource("147_spweb")]
+transform = Transform3D(-0.08999824, -0.00056235865, -1.0803534e-08, 0.00056235865, -0.08999824, 3.993689e-09, -1.0828277e-08, 3.926105e-09, 0.09, -0.21970463, -0.84903944, -0.01428318)
 
 [node name="DiscordLink" parent="." unique_id=200000011 instance=ExtResource("148_disc")]
 transform = Transform3D(0.09, 0, 0, 0, -3.934025e-09, 0.09, 0, -0.09, -3.934025e-09, 2.494263, 1.2698529, 8.7283325)

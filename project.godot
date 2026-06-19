@@ -70,6 +70,7 @@ StickerMarketplaceManager="*res://scripts/economy/StickerMarketplaceManager.gd"
 GameManager="*res://scenes/rubens_coin_pusher/scripts/game_manager.gd"
 SkinLibrary="*res://scripts/SkinLibrary.gd"
 FPSMonitor="*res://scripts/FPSMonitor.gd"
+AchievementToast="*res://scripts/ui/AchievementToast.gd"
 
 [display]
 

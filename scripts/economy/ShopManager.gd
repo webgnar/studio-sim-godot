@@ -331,8 +331,8 @@ Perfect for off-grid cabins, emergency preparedness, or anyone who enjoys their 
 		},
 		{
 			"id": "cyclone",
-			"display_name": "Tornado Game",
-			"title": "Tornado Game",
+			"display_name": "Cyclone",
+			"title": "Cyclone",
 			"description": "A spinning circle of false hope and questionable reflexes. Perfect for testing hand–eye coordination, patience, and your ability to blame the machine instead of yourself.",
 			"price": 300,
 		},
