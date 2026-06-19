@@ -17,6 +17,9 @@ var _is_flying: bool = false
 var _shoot_timer: float = 0.0
 var _mantis_texture: Texture2D = preload("res://sprites/mantis.png")
 var _spark_texture: Texture2D = preload("res://sprites/spark.png")
+var _thruster_sound: AudioStream = preload("res://sounds/picotron/thruster.ogg")
+var _tomhit_sound: AudioStream = preload("res://sounds/picotron/tomhit.ogg")
+var _alienthit_sound: AudioStream = preload("res://sounds/picotron/alienthit.ogg")
 var _mantis_frames: SpriteFrames
 
 func _ready() -> void:
@@ -32,6 +35,7 @@ func _process(delta: float) -> void:
 
 func _on_nail_hit(body: Node) -> void:
 	if body is ProjectileNail:
+		_play_sound_at(_tomhit_sound, body.global_position)
 		_emit_smoke(body.global_position)
 		_advance()
 
@@ -70,6 +74,7 @@ func _advance() -> void:
 
 func _fly_to(target_pos: Vector3) -> void:
 	_is_flying = true
+	_play_sound_at(_thruster_sound, global_position)
 	var tween := create_tween()
 	tween.tween_property(self, "global_position", target_pos, fly_duration).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN_OUT)
 	tween.finished.connect(func(): _is_flying = false)
@@ -86,8 +91,19 @@ func _shoot_mantis() -> void:
 	projectile.speed = projectile_speed
 	projectile.sprite_frames = _mantis_frames
 	projectile.spark_texture = _spark_texture
+	projectile.hit_player_sound = _alienthit_sound
 	get_tree().root.add_child(projectile)
 	projectile.global_position = global_position
+
+func _play_sound_at(stream: AudioStream, pos: Vector3) -> void:
+	var sfx := AudioStreamPlayer3D.new()
+	sfx.stream = stream
+	sfx.bus = "SFX"
+	sfx.max_distance = 50.0
+	get_tree().root.add_child(sfx)
+	sfx.global_position = pos
+	sfx.play()
+	sfx.finished.connect(sfx.queue_free)
 
 func _build_mantis_frames() -> SpriteFrames:
 	var frames := SpriteFrames.new()

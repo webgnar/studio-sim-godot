@@ -34,7 +34,48 @@ var original_parent: Node3D = null
 var last_shot_time: float = 0.0
 var is_pickup_animation_playing: bool = false
 
+# --- WALL CLIP PREVENTION ---
+var _gun_marker: Node3D = null
+var _gun_rest_position: Vector3 = Vector3.ZERO
+@export_group("Wall Clip Prevention")
+@export var wall_check_margin: float = 0.1
+@export var wall_check_radius: float = 0.15
+@export var wall_tuck_offset: Vector3 = Vector3(0.0, -0.1, 0.15)
+
 # --- GODOT METHODS ---
+
+func _physics_process(_delta: float) -> void:
+	if state != State.EQUIPPED or not _gun_marker or not player_ref:
+		return
+
+	var camera := player_ref.get_camera()
+	if not camera:
+		return
+
+	var cam_pos := camera.global_position
+	var target_pos := _gun_marker.global_position
+	var direction := target_pos - cam_pos
+	var dist := direction.length()
+	if dist < 0.01:
+		return
+
+	var space_state := get_world_3d().direct_space_state
+	var shape := SphereShape3D.new()
+	shape.radius = wall_check_radius
+	var params := PhysicsShapeQueryParameters3D.new()
+	params.shape = shape
+	params.collision_mask = 2
+	params.exclude = [parent_object.get_rid()]
+	params.transform = Transform3D(Basis.IDENTITY, cam_pos)
+	params.motion = direction
+
+	var results := space_state.cast_motion(params)
+	if results[0] < 1.0:
+		var safe_ratio := clampf(results[0] - wall_check_margin / dist, 0.1, 1.0)
+		parent_object.global_position = cam_pos + direction * safe_ratio
+		parent_object.position += wall_tuck_offset
+	else:
+		parent_object.position = _gun_rest_position
 
 func _ready() -> void:
 	super._ready()  # Call InteractionComponent._ready()
@@ -184,11 +225,13 @@ func pickup(player: PlayerInteractionComponent) -> void:
 
 	print("WeaponComponent: Reparenting to marker at: ", gun_marker.global_position)
 	print("WeaponComponent: Marker path: ", gun_marker.get_path())
+	_gun_marker = gun_marker
 	parent_rb.reparent(gun_marker)
 
 	# Set first-person position/rotation
 	parent_rb.position = equipped_position
 	parent_rb.rotation_degrees = equipped_rotation
+	_gun_rest_position = equipped_position
 
 	print("WeaponComponent: Gun equipped!")
 	print("  - Local position: ", parent_rb.position)
@@ -275,6 +318,7 @@ func drop() -> void:
 	# Tell player we're unequipped
 	player_ref.unequip_weapon()
 	player_ref = null
+	_gun_marker = null
 
 	# Update interaction text
 	interaction_text = "Pick Up Gun"

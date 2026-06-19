@@ -104,6 +104,9 @@ projectile_nail_scene = ExtResource("5_projectilenail")
 equipped_position = Vector3(0.18, 0, -0.1)
 equipped_rotation = Vector3(0, 20, 0)
 shoot_sound = ExtResource("4_7rh32")
+wall_check_margin = 0.5
+wall_check_radius = 0.1
+wall_tuck_offset = Vector3(0.1, -0.27, -0.29)
 
 [node name="CarryableComponent" type="Node3D" parent="." unique_id=498251370]
 script = ExtResource("2_tih70")

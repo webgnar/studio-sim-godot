@@ -96,7 +96,6 @@
 [ext_resource type="PackedScene" uid="uid://dca7mypiho8qy" path="res://scenes/Spotlight.tscn" id="86_grmox"]
 [ext_resource type="PackedScene" uid="uid://c8iqeb7qfo8rl" path="res://scenes/objects/Fluorescent.tscn" id="87_kvmu4"]
 [ext_resource type="PackedScene" uid="uid://b4nwg0q6ash8e" path="res://scenes/objects/cardboardBox.tscn" id="87_xgy6y"]
-[ext_resource type="PackedScene" uid="uid://dsw1cl0yimheg" path="res://models/props/security_camera.glb" id="89_5p8eo"]
 [ext_resource type="Texture2D" uid="uid://bhfm6dt1hofij" path="res://sprites/waterdrop.png" id="90_mlb8o"]
 [ext_resource type="Texture2D" uid="uid://bpm73kjoobl7k" path="res://sprites/textures/canvas texture 2.jpg" id="90_ou5tn"]
 [ext_resource type="Texture2D" uid="uid://cntrsinhjv1tx" path="res://sprites/waterdrop_hit.png" id="91_ebmc1"]
@@ -502,17 +501,17 @@ albedo_color = Color(1.0734373, 1.0734373, 0.15063755, 1)
 albedo_texture = ExtResource("82_mu18u")
 texture_filter = 0
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_kloan"]
+[sub_resource type="PlaneMesh" id="PlaneMesh_tq137"]
 resource_local_to_scene = true
 size = Vector2(2.5, 3)
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_sonb8"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_kloan"]
 resource_name = "_albedo"
 viewport_path = NodePath("../MirrorNew/SubViewport")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_x3v50"]
 resource_local_to_scene = true
-albedo_texture = SubResource("ViewportTexture_sonb8")
+albedo_texture = SubResource("ViewportTexture_kloan")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_1v02h"]
 size = Vector2(2.5, 3)
@@ -2177,7 +2176,7 @@ surface_material_override/0 = SubResource("StandardMaterial3D_7b7y8")
 
 [node name="mirror" parent="." unique_id=1626491013 groups=["shop_prop"] instance=ExtResource("39_qaasp")]
 transform = Transform3D(-4.7902194e-08, -0.99488777, 0.10098683, -3.9073655e-08, 0.10098683, 0.99488777, -1, 4.3711392e-08, -4.3711385e-08, 2.8, 1.497, 5.232)
-mesh = SubResource("PlaneMesh_kloan")
+mesh = SubResource("PlaneMesh_tq137")
 surface_material_override/0 = SubResource("StandardMaterial3D_x3v50")
 show_debug_logs = false
 metadata/mirror = "mirror"
@@ -2390,15 +2389,6 @@ transform = Transform3D(-1.3113417e-08, 0, -0.3, 0, 0.3, 0, 0.3, 0, -1.3113417e-
 
 [node name="OmniLight3D" parent="Fluorescent" index="4"]
 transform = Transform3D(3.333333, 0, 0, 0, 3.333333, 0, 0, 0, 3.333333, 0, -4.073043, 0)
-
-[node name="sec camera3" parent="." unique_id=678712659 instance=ExtResource("89_5p8eo")]
-transform = Transform3D(-0.031258054, 0, -0.039024793, 0, 0.05, 0, 0.039024793, 0, -0.031258054, 3.794696, 4.17496, -5.9969425)
-
-[node name="sec camera2" parent="." unique_id=448471004 instance=ExtResource("89_5p8eo")]
-transform = Transform3D(-0.05, 0, 4.371139e-09, 0, 0.05, 0, -4.371139e-09, 0, -0.05, 3.6587749, 3.662991, 7.1122212)
-
-[node name="sec camera" parent="." unique_id=210338497 instance=ExtResource("89_5p8eo")]
-transform = Transform3D(-0.05, 0, 4.371139e-09, 0, 0.05, 0, -4.371139e-09, 0, -0.05, 3.6587749, 4.041248, 13.682507)
 
 [node name="berkey" parent="." unique_id=574215945 groups=["no_outline", "shop_prop"] instance=ExtResource("91_pb8sg")]
 transform = Transform3D(-3.059797e-09, 0, -0.07, 0, 0.07, 0, 0.07, 0, -3.059797e-09, 0.8052486, 1.7242677, 8.420579)

@@ -5,11 +5,12 @@ var direction: Vector3
 var speed: float
 var sprite_frames: SpriteFrames
 var spark_texture: Texture2D
+var hit_player_sound: AudioStream
 var _lifetime: float = 0.0
 
 func _ready() -> void:
 	collision_layer = 0
-	collision_mask = 2
+	collision_mask = 3
 
 	var shape := SphereShape3D.new()
 	shape.radius = 0.2
@@ -33,9 +34,27 @@ func _physics_process(delta: float) -> void:
 	velocity = direction * speed
 	move_and_slide()
 
+	for i in get_slide_collision_count():
+		var collider := get_slide_collision(i).get_collider()
+		if collider is Node and collider.is_in_group("player"):
+			_play_sound(hit_player_sound)
+			queue_free()
+			return
 	if get_slide_collision_count() > 0:
 		_spawn_spark()
 		queue_free()
+
+func _play_sound(stream: AudioStream) -> void:
+	if not stream:
+		return
+	var sfx := AudioStreamPlayer3D.new()
+	sfx.stream = stream
+	sfx.bus = "SFX"
+	sfx.max_distance = 50.0
+	get_tree().root.add_child(sfx)
+	sfx.global_position = global_position
+	sfx.play()
+	sfx.finished.connect(sfx.queue_free)
 
 func _spawn_spark() -> void:
 	var mat := StandardMaterial3D.new()
@@ -43,6 +62,7 @@ func _spawn_spark() -> void:
 	mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	mat.albedo_texture = spark_texture
 	mat.billboard_mode = BaseMaterial3D.BILLBOARD_ENABLED
+	mat.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
 
 	var mesh := QuadMesh.new()
 	mesh.material = mat
