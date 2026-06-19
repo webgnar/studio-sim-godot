@@ -319,7 +319,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.34, 1.35, -0.62)
 script = ExtResource("10")
 
 [node name="Mesh" type="MeshInstance3D" parent="LeftGlass" unique_id=1518144078]
-transform = Transform3D(0.95925003, 0, 0, 0, 1, 0, 0, 0, 0.81413573, 0.013920724, 3.7670135e-05, 0.09450671)
+transform = Transform3D(0.95925003, 0, 0, 0, 1, 0, 0, 0, 0.81413573, 0.040828556, 0.08076167, 0.09737891)
 material_override = SubResource("s22")
 mesh = SubResource("s12")
 

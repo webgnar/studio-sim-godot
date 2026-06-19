@@ -19,10 +19,6 @@ enum State { IDLE, CHOOSING, WALKING, VIEWING }
 
 const GRAVITY := 9.8
 
-const DIALOGUE_API_URL = "https://studio-sim-gallery.vercel.app/api/visitor-dialogue"
-const ATTRACTION_API_URL = "https://studio-sim-gallery.vercel.app/api/attraction-dialogue"
-const API_KEY = "jupTtic3qGOULETb2w7E"
-const R2_BASE_URL = "https://pub-eba211d5cf614843a0f1582ec6c62c2e.r2.dev/paintings/"
 const DIALOGUE_COOLDOWN = 60.0
 
 const FALLBACK_LINES = [
@@ -111,7 +107,6 @@ var _is_thinking: bool = false
 var _think_cooldown: float = 0.0
 
 var _personality: String = "casual"
-var _http_request: HTTPRequest
 var _cached_dialogue: String = ""
 var _dialogue_cooldown: float = 0.0
 var _is_interacting: bool = false
@@ -147,12 +142,6 @@ func _ready() -> void:
 		push_warning("GalleryVisitor: AnimationPlayer not found inside humanrig!")
 	else:
 		_anim_player.animation_finished.connect(_on_animation_finished)
-
-	_http_request = HTTPRequest.new()
-	_http_request.name = "DialogueRequest"
-	_http_request.timeout = 15.0
-	add_child(_http_request)
-	_http_request.request_completed.connect(_on_dialogue_response)
 
 	_play_animation("idle")
 	get_tree().create_timer(1.0).timeout.connect(_choose_next_attraction, CONNECT_ONE_SHOT)
@@ -196,7 +185,7 @@ func interact(_player: Node) -> void:
 	if box and not box.dialogue_finished.is_connected(_on_dialogue_finished):
 		box.dialogue_finished.connect(_on_dialogue_finished, CONNECT_ONE_SHOT)
 
-	# Fresh cached line still within cooldown — show instantly, no API call
+	# Fresh cached line still within cooldown — show instantly
 	if _cached_dialogue != "" and _dialogue_cooldown > 0.0:
 		_start_dialogue(_cached_dialogue)
 		_is_interacting = false
@@ -208,32 +197,23 @@ func interact(_player: Node) -> void:
 		_is_interacting = false
 		return
 
-	# Show loading indicator and fetch dialogue
-	_start_dialogue("...")
 	_fetch_dialogue()
 
 
 func _fetch_dialogue() -> void:
 	var painting_name := ""
-	var artist_statement := ""
 	var artist_name := ""
-	var painting_critique := ""
-	var gallery_id := ""
 
 	if has_node("/root/WorldStateManager"):
 		for data in WorldStateManager.get_all_paintings():
 			if data.get("node") == _last_attraction:
 				painting_name = data.get("name", "")
-				artist_statement = data.get("artist_statement", "")
-				painting_critique = data.get("critique", "")
-				gallery_id = data.get("gallery_id", "")
 				break
 
 	if has_node("/root/SteamManager"):
 		artist_name = SteamManager.persona_name
 
 	if painting_name == "":
-		# Not a painting — check if it's a shop attraction with a catalog entry
 		if is_instance_valid(_last_attraction) and _last_attraction.is_in_group("shop_prop"):
 			var item_id: String = _last_attraction.get_meta("shop_item_id", "")
 			if item_id != "":
@@ -243,38 +223,11 @@ func _fetch_dialogue() -> void:
 		_is_interacting = false
 		return
 
-	var locale := "en"
-	if has_node("/root/LocaleManager"):
-		locale = LocaleManager.current_locale
-
-	if painting_critique != "":
-		var short := painting_critique.substr(0, 400)
-		var last_period := short.rfind(".")
-		if last_period > 100:
-			short = short.substr(0, last_period + 1)
-		painting_critique = short
-
-	var body_dict := {
-		"paintingName": painting_name,
-		"artistStatement": artist_statement,
-		"artistName": artist_name,
-		"visitorPersonality": _personality,
-		"locale": locale,
-	}
-	if painting_critique != "":
-		body_dict["paintingCritique"] = painting_critique
-	if gallery_id != "":
-		body_dict["imageUrl"] = R2_BASE_URL + gallery_id + ".png"
-	var body := JSON.stringify(body_dict)
-	var headers := [
-		"Content-Type: application/json",
-		"X-API-Key: " + API_KEY,
-	]
-	var error := _http_request.request(DIALOGUE_API_URL, headers, HTTPClient.METHOD_POST, body)
-	if error != OK:
-		_start_dialogue(_pick_fallback())
-		_is_interacting = false
-		push_error("GalleryVisitor: Failed to start dialogue request: " + str(error))
+	var line := VisitorDialogueGenerator.generate_painting_line(_personality, painting_name, artist_name)
+	_cached_dialogue = line
+	_dialogue_cooldown = DIALOGUE_COOLDOWN
+	_start_dialogue(line)
+	_is_interacting = false
 
 
 func _fetch_attraction_dialogue(item_id: String) -> void:
@@ -290,43 +243,13 @@ func _fetch_attraction_dialogue(item_id: String) -> void:
 		_is_interacting = false
 		return
 
-	var locale := "en"
-	if has_node("/root/LocaleManager"):
-		locale = LocaleManager.current_locale
-
-	var body_str := JSON.stringify({
-		"attractionTitle": item.get("title", item.get("display_name", "")),
-		"attractionDescription": item.get("description", ""),
-		"visitorPersonality": _personality,
-		"locale": locale,
-	})
-	var headers := [
-		"Content-Type: application/json",
-		"X-API-Key: " + API_KEY,
-	]
-	var error := _http_request.request(ATTRACTION_API_URL, headers, HTTPClient.METHOD_POST, body_str)
-	if error != OK:
-		_start_dialogue(_pick_fallback())
-		_is_interacting = false
-		push_error("GalleryVisitor: Failed to start attraction dialogue request: " + str(error))
-
-
-func _on_dialogue_response(result: int, response_code: int, _headers: PackedStringArray, body: PackedByteArray) -> void:
+	var item_title: String = item.get("title", item.get("display_name", ""))
+	var line := VisitorDialogueGenerator.generate_attraction_line(_personality, item_title)
+	_cached_dialogue = line
+	_dialogue_cooldown = DIALOGUE_COOLDOWN
+	_start_dialogue(line)
 	_is_interacting = false
-	if result != HTTPRequest.RESULT_SUCCESS or response_code < 200 or response_code >= 300:
-		_start_dialogue(_pick_fallback())
-		return
 
-	var json := JSON.new()
-	if json.parse(body.get_string_from_utf8()) == OK and typeof(json.data) == TYPE_DICTIONARY:
-		var line: String = json.data.get("dialogue", "")
-		if line != "":
-			_cached_dialogue = line
-			_dialogue_cooldown = DIALOGUE_COOLDOWN
-			_start_dialogue(line)
-			return
-
-	_start_dialogue(_pick_fallback())
 
 
 func _pick_fallback() -> String:
