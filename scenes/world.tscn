@@ -144,7 +144,7 @@
 [ext_resource type="Texture2D" uid="uid://ciyp25tao4x8l" path="res://sprites/ui/studio sim title.png" id="147_vuv1g"]
 [ext_resource type="PackedScene" uid="uid://b4j6krmtnx1p8" path="res://scenes/objects/DiscordLink.tscn" id="148_disc"]
 [ext_resource type="Texture2D" uid="uid://bhx3k1r4uh3ma" path="res://sprites/ui/gallery.png" id="148_tuav7"]
-[ext_resource type="Texture2D" uid="uid://bbf0fel1jr3xl" path="res://sprites/ui/elevator.png" id="152_tuav7"]
+[ext_resource type="Texture2D" uid="uid://baj220mrywpyb" path="res://sprites/elevator sign.png" id="156_kloan"]
 [ext_resource type="PackedScene" uid="uid://d2lld8pxrphp3" path="res://scenes/objects/SaveAssistantWorkButton.tscn" id="200_savebtn"]
 [ext_resource type="PackedScene" uid="uid://dfcanvasscn1" path="res://scenes/objects/AssistantFinishedCanvas.tscn" id="201_fcanvas"]
 [ext_resource type="Script" uid="uid://nvjrcsa5oaqc" path="res://scripts/BerkeyInteraction.gd" id="berkey_interaction"]
@@ -997,12 +997,12 @@ size = Vector2(1.66, 0.5)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_e5kln"]
 transparency = 1
-albedo_texture = ExtResource("152_tuav7")
+albedo_texture = ExtResource("156_kloan")
 texture_filter = 0
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_t1by1"]
 material = SubResource("StandardMaterial3D_e5kln")
-size = Vector2(3, 0.37)
+size = Vector2(1, 1)
 
 [sub_resource type="Animation" id="Animation_gom0u"]
 length = 0.001
@@ -1153,9 +1153,46 @@ transform = Transform3D(50, 0, 0, 0, -2.1855694e-06, -50, 0, 50, -2.1855694e-06,
 modulate = Color(1, 1, 1, 0.4509804)
 texture = ExtResource("17_6od3t")
 
-[node name="Tomlander" parent="outside Background" unique_id=465715765 node_paths=PackedStringArray("move_positions") instance=ExtResource("16_8bem1")]
+[node name="Tomlander" parent="outside Background" unique_id=465715765 node_paths=PackedStringArray("move_positions", "combat_positions") instance=ExtResource("16_8bem1")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -45, 91.772835, -33.078053)
-move_positions = [null]
+move_positions = [NodePath("../../Marker3D"), NodePath("../../Marker3D2"), NodePath("../../Marker3D3")]
+combat_positions = [NodePath("../../combat1"), NodePath("../../combat2"), NodePath("../../combat3"), NodePath("../../combat4"), NodePath("../../combat5"), NodePath("../../combat6"), NodePath("../../combat7"), NodePath("../../combat8"), NodePath("../../combat9")]
+
+[node name="Marker3D" type="Marker3D" parent="." unique_id=65988637]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40.49211, 22.069649, 4.5331154)
+
+[node name="Marker3D2" type="Marker3D" parent="." unique_id=1918223920]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.039604187, 10.787529, 55.665146)
+
+[node name="Marker3D3" type="Marker3D" parent="." unique_id=1069456492]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 44.922173, 10.851601, 6.30748)
+
+[node name="combat1" type="Marker3D" parent="." unique_id=315366869]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 44.922173, 10.851601, 49.146088)
+
+[node name="combat2" type="Marker3D" parent="." unique_id=1096679945]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.994827, 16.701107, 57.073837)
+
+[node name="combat3" type="Marker3D" parent="." unique_id=1350761014]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.997879, 8.28726, 50.21119)
+
+[node name="combat4" type="Marker3D" parent="." unique_id=2132985984]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -19.696297, 18.013739, 25.208439)
+
+[node name="combat5" type="Marker3D" parent="." unique_id=410328881]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.535299, 18.013739, -3.5151596)
+
+[node name="combat6" type="Marker3D" parent="." unique_id=1260321685]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.11868286, 18.013739, -19.883755)
+
+[node name="combat7" type="Marker3D" parent="." unique_id=1990848936]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30.092852, 18.013739, -17.246563)
+
+[node name="combat8" type="Marker3D" parent="." unique_id=329771978]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 47.866974, 8.0475445, -7.149925)
+
+[node name="combat9" type="Marker3D" parent="." unique_id=481136564]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 47.866974, 18.518526, 20.342495)
 
 [node name="Spotlight1" parent="." unique_id=468801462 instance=ExtResource("86_grmox")]
 transform = Transform3D(0.19553687, 0.04201586, 0, -0.04201586, 0.19553687, 0, 0, 0, 0.2, -2.5281055, 4.97409, -1.6068956)
@@ -1292,8 +1329,8 @@ material = ExtResource("3_qfnet")
 transform = Transform3D(-5.6824803e-09, 0, -0.12, 0, 0.16, 0, 0.13, 0, -5.2453664e-09, 13.81536, 2.8592591, 1.0591073)
 
 [node name="CSGBox3D" type="CSGBox3D" parent="hallway" unique_id=1606393407]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.311363, -12.234131, -5.6662564)
-size = Vector3(8.528, 35.846, 9.38482)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.311363, -8.966139, -5.6662564)
+size = Vector3(8.528, 42.381985, 9.38482)
 material = SubResource("StandardMaterial3D_gny1c")
 
 [node name="CSGBox3D" type="CSGBox3D" parent="hallway/CSGBox3D" unique_id=471511928]
@@ -2346,7 +2383,7 @@ metadata/shop_item_id = "madpalm"
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, -8, 3, -2)
 
 [node name="Door" parent="." unique_id=1914412036 groups=["no_outline"] instance=ExtResource("83_kcpaj")]
-transform = Transform3D(-4.196293e-08, 0, -0.95, 0, 0.95, 0, 0.96, 0, -4.152582e-08, 3.8344553, 1.6471603, 0.54472053)
+transform = Transform3D(-4.196293e-08, 0, -0.95, 0, 0.95, 0, 0.96, 0, -4.152582e-08, 3.8618395, 1.6471603, 0.54472053)
 
 [node name="Fluorescent" parent="." unique_id=864907143 instance=ExtResource("87_kvmu4")]
 transform = Transform3D(-1.3113417e-08, 0, -0.3, 0, 0.3, 0, 0.3, 0, -1.3113417e-08, 8.539603, 4.685627, 2.1567757)
@@ -2865,7 +2902,7 @@ transform = Transform3D(-0.08999824, -0.00056235865, -1.0803534e-08, 0.000562358
 transform = Transform3D(0.09, 0, 0, 0, -3.934025e-09, 0.09, 0, -0.09, -3.934025e-09, 2.494263, 1.2698529, 8.7283325)
 
 [node name="elevator sign" type="MeshInstance3D" parent="." unique_id=435783017]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 8.351225, 4.356871, -0.65066266)
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 5.1354976, 1.9277611, -0.65066266)
 mesh = SubResource("PlaneMesh_t1by1")
 
 [node name="FortuneTeller" parent="." unique_id=430244168 instance=ExtResource("fortune_teller_scene")]

@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://dps177cxwkqn" path="res://sprites/capn_sheet.png" id="4_lkes7"]
 [ext_resource type="Texture2D" uid="uid://by6lf766ghw8r" path="res://sprites/capn2-Sheet.jpeg" id="5_h1uuh"]
 [ext_resource type="Texture2D" uid="uid://ckvgxdvdac08x" path="res://sprites/capn3-Sheet.jpeg" id="6_h1r0s"]
+[ext_resource type="FontFile" uid="uid://tmjyio0w6cu0" path="res://fonts/studio-sim.ttf" id="7_7sd1u"]
 [ext_resource type="Script" uid="uid://lj1bkth5m7yn" path="res://scripts/ComputerClock.gd" id="7_clock"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_wvr1c"]
@@ -240,7 +241,9 @@ frame_progress = 0.6433568
 [node name="ClockLabel" type="Label3D" parent="." unique_id=48444165]
 transform = Transform3D(-0.012016308, 0, -0.09949739, 0, 0.09, 0, 0.11939685, 0, -0.010013588, 0.03064838, 0.5693331, 0.3983005)
 pixel_size = 0.01
+texture_filter = 0
 modulate = Color(0.5, 1, 0.5, 1)
 text = "12:00 AM"
+font = ExtResource("7_7sd1u")
 outline_size = 0
 script = ExtResource("7_clock")

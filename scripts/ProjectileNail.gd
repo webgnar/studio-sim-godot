@@ -124,6 +124,11 @@ func _on_body_entered(body: Node) -> void:
 	print("  Wall nail rotation: ", wall_nail.global_rotation)
 	print("  Surface normal: ", collision_normal)
 
+	if _find_breakable_component(body):
+		var nail_comp := wall_nail.get_node_or_null("NailComponent") as NailComponent
+		if nail_comp:
+			nail_comp.start_dither_fade(2.0, 1.0)
+
 	# Despawn projectile (completes the illusion)
 	print("  Despawning projectile nail...")
 	queue_free()

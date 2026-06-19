@@ -11,6 +11,7 @@ signal painting_left(painting: CarryablePainting)
 # --- PRIVATE VARIABLES ---
 var paintings_in_contact: Array[CarryablePainting] = []
 var nail_id: String = ""
+var _dither_shader: Shader = preload("res://shaders/dither_fade.gdshader")
 
 # --- GODOT METHODS ---
 
@@ -63,4 +64,34 @@ func _find_painting_from_area(area: Area3D) -> CarryablePainting:
 		var potential_painting = area.get_parent().get_parent()
 		if potential_painting is CarryablePainting:
 			return potential_painting
+	return null
+
+func start_dither_fade(delay: float = 2.0, duration: float = 1.0) -> void:
+	var parent := get_parent()
+	if not parent:
+		return
+
+	var mesh := _find_mesh_in(parent)
+	if not mesh:
+		return
+
+	await get_tree().create_timer(delay).timeout
+
+	var overlay_mat := ShaderMaterial.new()
+	overlay_mat.shader = _dither_shader
+	overlay_mat.set_shader_parameter("progress", 0.0)
+	overlay_mat.set_shader_parameter("dither_scale", 4.0)
+	mesh.material_overlay = overlay_mat
+
+	var tween := create_tween()
+	tween.tween_property(overlay_mat, "shader_parameter/progress", 1.0, duration)
+	tween.finished.connect(func(): parent.queue_free())
+
+func _find_mesh_in(node: Node) -> MeshInstance3D:
+	if node is MeshInstance3D:
+		return node
+	for child in node.get_children():
+		var result := _find_mesh_in(child)
+		if result:
+			return result
 	return null
