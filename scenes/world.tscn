@@ -1153,8 +1153,9 @@ transform = Transform3D(50, 0, 0, 0, -2.1855694e-06, -50, 0, 50, -2.1855694e-06,
 modulate = Color(1, 1, 1, 0.4509804)
 texture = ExtResource("17_6od3t")
 
-[node name="Tomlander" parent="outside Background" unique_id=465715765 instance=ExtResource("16_8bem1")]
+[node name="Tomlander" parent="outside Background" unique_id=465715765 node_paths=PackedStringArray("move_positions") instance=ExtResource("16_8bem1")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -45, 91.772835, -33.078053)
+move_positions = [null]
 
 [node name="Spotlight1" parent="." unique_id=468801462 instance=ExtResource("86_grmox")]
 transform = Transform3D(0.19553687, 0.04201586, 0, -0.04201586, 0.19553687, 0, 0, 0, 0.2, -2.5281055, 4.97409, -1.6068956)
@@ -2510,9 +2511,9 @@ size = Vector3(0.98, 15.390234, 34.60435)
 material = ExtResource("5_71j4m")
 
 [node name="CSGBox3D" type="CSGBox3D" parent="gallery/CSGBox3D" unique_id=1442935328]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.4573097, 10.843164)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.3852806, 10.843164)
 operation = 2
-size = Vector3(1, 5.9176636, 0.51660156)
+size = Vector3(1, 5.7736053, 0.51660156)
 material = SubResource("StandardMaterial3D_3fb5j")
 
 [node name="CSGBox3D4" type="CSGBox3D" parent="gallery" unique_id=450251449]
