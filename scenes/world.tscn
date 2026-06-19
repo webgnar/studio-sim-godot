@@ -73,6 +73,7 @@
 [ext_resource type="PackedScene" uid="uid://d2y06butup31i" path="res://scenes/objects/table.tscn" id="73_ca4ee"]
 [ext_resource type="PackedScene" uid="uid://bqbqfg2mfb0iw" path="res://scenes/UI/PaintingUI.tscn" id="74_ntuqo"]
 [ext_resource type="PackedScene" uid="uid://bshsrjrokypta" path="res://scenes/PaintingRoot2D.tscn" id="75_ca4ee"]
+[ext_resource type="Texture2D" uid="uid://cb7js3u2kca12" path="res://sprites/shop_previews/rf_receiver.png" id="75_kloan"]
 [ext_resource type="PackedScene" uid="uid://cddxg65fcm6bh" path="res://models/props/note.glb" id="75_q6do4"]
 [ext_resource type="PackedScene" uid="uid://cerojl5wo53gx" path="res://models/outside/skyscraper.gltf" id="75_qaasp"]
 [ext_resource type="PackedScene" uid="uid://c7vk8n8k7j8k8" path="res://scenes/UI/MissionAuthoringUI.tscn" id="76_author"]
@@ -310,6 +311,16 @@ _data = {
 [sub_resource type="BoxShape3D" id="BoxShape3D_4kmvx"]
 size = Vector3(0.24666992, 0.373563, 0.6891837)
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7n6r0"]
+transparency = 1
+cull_mode = 2
+albedo_texture = ExtResource("75_kloan")
+texture_filter = 0
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_gom0u"]
+material = SubResource("StandardMaterial3D_7n6r0")
+size = Vector2(0.1, 0.1)
+
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_q57r8"]
 height = 1.239502
 
@@ -491,17 +502,17 @@ albedo_color = Color(1.0734373, 1.0734373, 0.15063755, 1)
 albedo_texture = ExtResource("82_mu18u")
 texture_filter = 0
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_tq137"]
+[sub_resource type="PlaneMesh" id="PlaneMesh_iqfx1"]
 resource_local_to_scene = true
 size = Vector2(2.5, 3)
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_kloan"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_x3v50"]
 resource_name = "_albedo"
 viewport_path = NodePath("../MirrorNew/SubViewport")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7n6r0"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3fb5j"]
 resource_local_to_scene = true
-albedo_texture = SubResource("ViewportTexture_kloan")
+albedo_texture = SubResource("ViewportTexture_x3v50")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_1v02h"]
 size = Vector2(2.5, 3)
@@ -1781,6 +1792,11 @@ e_key_interaction_text = "Play Tape"
 can_interact_while_carried = true
 metadata/_custom_type_script = "uid://cdcxs0jsffsfb"
 
+[node name="RF" type="MeshInstance3D" parent="BOOMbox" unique_id=680262444]
+transform = Transform3D(-0.89063144, 0.01439783, 0.45449904, -0.07445227, 0.9813935, -0.17698441, -0.44859052, -0.19146615, -0.87298733, 0.004142761, 0.002438873, 0.4247136)
+visible = false
+mesh = SubResource("PlaneMesh_gom0u")
+
 [node name="trash can" type="RigidBody3D" parent="." unique_id=79434915 groups=["no_outline", "shop_prop"]]
 transform = Transform3D(0.9301743, 0, 0.3671182, 0, 1, 0, -0.3671182, 0, 0.9301743, 0.26508617, 0.070207834, -4.700662)
 collision_layer = 8
@@ -2115,8 +2131,8 @@ surface_material_override/0 = SubResource("StandardMaterial3D_7b7y8")
 
 [node name="mirror" parent="." unique_id=1626491013 groups=["shop_prop"] instance=ExtResource("39_qaasp")]
 transform = Transform3D(-4.7902194e-08, -0.99488777, 0.10098683, -3.9073655e-08, 0.10098683, 0.99488777, -1, 4.3711392e-08, -4.3711385e-08, 2.8, 1.497, 5.232)
-mesh = SubResource("PlaneMesh_tq137")
-surface_material_override/0 = SubResource("StandardMaterial3D_7n6r0")
+mesh = SubResource("PlaneMesh_iqfx1")
+surface_material_override/0 = SubResource("StandardMaterial3D_3fb5j")
 show_debug_logs = false
 metadata/mirror = "mirror"
 metadata/shop_item_id = "mirror"

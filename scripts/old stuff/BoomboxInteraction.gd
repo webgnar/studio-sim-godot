@@ -42,6 +42,7 @@ var _active_slot: AudioStreamPlayer3D
 var _inactive_slot: AudioStreamPlayer3D
 var _next_chunk: AudioStreamMP3 = null
 var _radio: RadioStreamPlayer
+var _rf_mesh: MeshInstance3D
 
 
 func _ready() -> void:
@@ -54,6 +55,10 @@ func _ready() -> void:
 	carry_distance_offset = 0.0
 	lock_rotation_when_carried = true
 	drop_distance = 2.0
+
+	_rf_mesh = get_parent().get_node_or_null("RF")
+	if _rf_mesh:
+		_rf_mesh.visible = ShopManager.is_purchased("rf_receiver")
 
 	_build_playlist()
 	_setup_local_player()
@@ -102,6 +107,8 @@ func _build_playlist() -> void:
 
 func _on_item_purchased(item_id: String) -> void:
 	if item_id == "rf_receiver":
+		if _rf_mesh:
+			_rf_mesh.visible = true
 		var current_label := ""
 		if _current_index >= 0 and _current_index < _playlist.size():
 			current_label = _playlist[_current_index].get("label", "")
