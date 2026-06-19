@@ -502,17 +502,17 @@ albedo_color = Color(1.0734373, 1.0734373, 0.15063755, 1)
 albedo_texture = ExtResource("82_mu18u")
 texture_filter = 0
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_iqfx1"]
+[sub_resource type="PlaneMesh" id="PlaneMesh_kloan"]
 resource_local_to_scene = true
 size = Vector2(2.5, 3)
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_x3v50"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_sonb8"]
 resource_name = "_albedo"
 viewport_path = NodePath("../MirrorNew/SubViewport")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3fb5j"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_x3v50"]
 resource_local_to_scene = true
-albedo_texture = SubResource("ViewportTexture_x3v50")
+albedo_texture = SubResource("ViewportTexture_sonb8")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_1v02h"]
 size = Vector2(2.5, 3)
@@ -1146,7 +1146,7 @@ modulate = Color(1, 1, 1, 0.4509804)
 texture = ExtResource("17_6od3t")
 
 [node name="Tomlander" parent="outside Background" unique_id=465715765 instance=ExtResource("16_8bem1")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -45, 34.814934, -101.735535)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -45, 91.772835, -33.078053)
 
 [node name="Spotlight1" parent="." unique_id=468801462 instance=ExtResource("86_grmox")]
 transform = Transform3D(0.19553687, 0.04201586, 0, -0.04201586, 0.19553687, 0, 0, 0, 0.2, -2.5281055, 4.97409, -1.6068956)
@@ -2131,8 +2131,8 @@ surface_material_override/0 = SubResource("StandardMaterial3D_7b7y8")
 
 [node name="mirror" parent="." unique_id=1626491013 groups=["shop_prop"] instance=ExtResource("39_qaasp")]
 transform = Transform3D(-4.7902194e-08, -0.99488777, 0.10098683, -3.9073655e-08, 0.10098683, 0.99488777, -1, 4.3711392e-08, -4.3711385e-08, 2.8, 1.497, 5.232)
-mesh = SubResource("PlaneMesh_iqfx1")
-surface_material_override/0 = SubResource("StandardMaterial3D_3fb5j")
+mesh = SubResource("PlaneMesh_kloan")
+surface_material_override/0 = SubResource("StandardMaterial3D_x3v50")
 show_debug_logs = false
 metadata/mirror = "mirror"
 metadata/shop_item_id = "mirror"

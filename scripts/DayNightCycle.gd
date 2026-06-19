@@ -127,6 +127,9 @@ func _update_lighting() -> void:
 		_sun_mat.set_shader_parameter("sun_color", sc)
 		_sun_mat.set_shader_parameter("hot_color", sc.lerp(Color(1.0, 0.98, 0.90), 0.5))
 
+func get_sun_degrees() -> float:
+	return _sun_deg
+
 func _current_speed() -> float:
 	match _phase:
 		"morning":       return speed_morning

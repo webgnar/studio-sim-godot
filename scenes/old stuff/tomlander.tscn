@@ -2,7 +2,8 @@
 
 [ext_resource type="PackedScene" uid="uid://0y8yal87s5yd" path="res://models/outside/cross_lander.glb" id="1_wodpv"]
 [ext_resource type="Shader" uid="uid://bso0fjph0skk8" path="res://shaders/flame.gdshader" id="2_flame"]
-[ext_resource type="Script" path="res://scripts/Tomlander.gd" id="3_tomlander"]
+[ext_resource type="Script" uid="uid://mo12ls10u8xu" path="res://scripts/Tomlander.gd" id="3_tomlander"]
+[ext_resource type="Texture2D" uid="uid://bhtvbosyn21lm" path="res://sprites/puff.png" id="4_bgmfy"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_hbnld"]
 render_priority = 0
@@ -59,7 +60,7 @@ _data = {
 }
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_hit"]
-radius = 4.0
+radius = 7.076967
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_smoke"]
 direction = Vector3(0, 1, 0)
@@ -68,7 +69,7 @@ initial_velocity_min = 4.0
 initial_velocity_max = 10.0
 angular_velocity_min = -30.0
 angular_velocity_max = 30.0
-gravity = Vector3(0, 1.0, 0)
+gravity = Vector3(0, 1, 0)
 scale_min = 4.0
 scale_max = 10.0
 color = Color(0.35, 0.35, 0.35, 0.9)
@@ -77,6 +78,8 @@ color = Color(0.35, 0.35, 0.35, 0.9)
 transparency = 1
 shading_mode = 0
 albedo_color = Color(0.45, 0.45, 0.45, 0.85)
+albedo_texture = ExtResource("4_bgmfy")
+texture_filter = 0
 disable_receive_shadows = true
 billboard_mode = 3
 particles_anim_h_frames = 1
@@ -85,7 +88,7 @@ particles_anim_loop = false
 
 [sub_resource type="QuadMesh" id="QuadMesh_smoke"]
 material = SubResource("StandardMaterial3D_smoke")
-size = Vector2(2.0, 2.0)
+size = Vector2(2, 2)
 
 [node name="Tomlander" type="Node3D" unique_id=465715765]
 script = ExtResource("3_tomlander")
@@ -144,15 +147,14 @@ skeleton = NodePath("../..")
 libraries/ = SubResource("AnimationLibrary_shigr")
 autoplay = &"float"
 
-[node name="HitArea" type="Area3D" parent="."]
+[node name="HitArea" type="Area3D" parent="." unique_id=1196275383]
 collision_layer = 0
 collision_mask = 4
-monitoring = true
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="HitArea"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="HitArea" unique_id=720664597]
 shape = SubResource("SphereShape3D_hit")
 
-[node name="SmokeEffect" type="GPUParticles3D" parent="."]
+[node name="SmokeEffect" type="GPUParticles3D" parent="." unique_id=1264584079]
 emitting = false
 amount = 40
 lifetime = 3.0
