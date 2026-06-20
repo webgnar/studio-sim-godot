@@ -29,6 +29,7 @@ func _on_interacted(player_interaction: PlayerInteractionComponent) -> void:
 	_original_damping = _player_controller.damping
 	_player_controller.damping = SNAPPY_DAMPING
 	_audio.play()
+	RetroEffectManager.cure()
 	is_disabled = true
 	_timer.start(EFFECT_DURATION)
 

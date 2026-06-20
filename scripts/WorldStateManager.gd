@@ -8,6 +8,7 @@ signal world_state_loaded
 const SAVE_VERSION = 4
 const WORLD_STATE_PATH = "user://world_state.json"
 const TEXTURES_DIR = "user://world_paintings"
+const CANVAS_DIR = "user://canvas_wip"
 const PLAYER_ID_PATH = "user://player_id.txt"
 
 # Preload scenes for instantiation
@@ -420,6 +421,9 @@ func save_world_state() -> bool:
 
 			save_data["stickers_3d"].append(sticker_data)
 
+	# Save in-progress 2D canvas
+	save_data["canvas_2d"] = _save_canvas_2d()
+
 	# Write to file
 	var file = FileAccess.open(WORLD_STATE_PATH, FileAccess.WRITE)
 	if not file:
@@ -523,6 +527,11 @@ func load_world_state(world_root: Node3D) -> void:
 	else:
 		push_warning("PaintingSystem not registered, skipping 3D sticker load")
 
+	# Load in-progress 2D canvas
+	var canvas_data = save_data.get("canvas_2d", {})
+	if not canvas_data.is_empty():
+		_load_canvas_2d(canvas_data)
+
 	# PHASE 0: Load economic state
 	var economy_data = save_data.get("economy", {})
 	_load_economic_state(economy_data)
@@ -583,6 +592,13 @@ func clear_world_state() -> void:
 	if _painting_system_3d:
 		_painting_system_3d.clear_canvas()
 
+	# Clear in-progress canvas data
+	if DirAccess.dir_exists_absolute(CANVAS_DIR):
+		_delete_directory_recursive(CANVAS_DIR)
+	var active_canvas = PaintingModeManager.painting_system_2d
+	if active_canvas:
+		active_canvas.clear_canvas_full()
+
 	# Clear player flags
 	_player_flags.clear()
 
@@ -609,6 +625,11 @@ func _ensure_directories() -> void:
 		var error = dir.make_dir("world_paintings")
 		if error != OK:
 			push_error("Failed to create world_paintings directory: " + str(error))
+
+	if not dir.dir_exists("canvas_wip"):
+		var error = dir.make_dir("canvas_wip")
+		if error != OK:
+			push_error("Failed to create canvas_wip directory: " + str(error))
 
 func _cleanup_orphaned_textures(valid_painting_ids: Array) -> void:
 	"""Delete texture files not referenced in current save data"""
@@ -1008,3 +1029,43 @@ func _load_economic_state(economy_data: Dictionary):
 	if has_node("/root/AutomationManager") and economy_data.has("automation"):
 		AutomationManager.load_save_data(economy_data["automation"])
 		print("Loaded automation state")
+
+
+# ============================================================================
+# In-Progress 2D Canvas Save/Load
+# ============================================================================
+
+func _save_canvas_2d() -> Dictionary:
+	"""Serialize the active PaintingSystem2D canvas for persistence"""
+	var painting_system = PaintingModeManager.painting_system_2d
+	if not painting_system or not painting_system.has_canvas_content():
+		return {}
+
+	var data = painting_system.serialize_canvas()
+
+	# Save baked background image as PNG
+	var bg_image = painting_system.get_background_image()
+	if bg_image:
+		DirAccess.make_dir_recursive_absolute(CANVAS_DIR)
+		var bg_path = CANVAS_DIR + "/background.png"
+		bg_image.save_png(bg_path)
+		data["background_path"] = bg_path
+
+	return data
+
+
+func _load_canvas_2d(data: Dictionary) -> void:
+	"""Restore the active PaintingSystem2D canvas from saved data"""
+	var painting_system = PaintingModeManager.painting_system_2d
+	if not painting_system:
+		push_warning("WorldStateManager: No 2D painting system registered, skipping canvas restore")
+		return
+
+	var bg_image: Image = null
+	var bg_path = data.get("background_path", "")
+	if bg_path != "" and FileAccess.file_exists(bg_path):
+		bg_image = Image.new()
+		if bg_image.load(bg_path) != OK:
+			bg_image = null
+
+	painting_system.restore_canvas(data, bg_image)

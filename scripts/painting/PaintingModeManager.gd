@@ -259,18 +259,21 @@ func _resolve_2d_system(collider: Node) -> PaintingSystem2D:
 
 
 func _perform_unified_raycast() -> Dictionary:
-	"""Perform raycast from camera through mouse position"""
+	"""Perform raycast from player camera through screen center.
+	Always uses the player camera so sticker placement works in camera zones."""
 	if not camera:
-		camera = get_viewport().get_camera_3d()
+		if CameraManager and CameraManager.player_camera:
+			camera = CameraManager.player_camera
+		else:
+			camera = get_viewport().get_camera_3d()
 		if not camera:
 			return {}
 
-	var mouse_pos: Vector2 = _get_aim_position()
+	# Raycast from the player camera's perspective (forward from Head)
+	var from = camera.global_position
+	var direction = -camera.global_transform.basis.z
+	var to = from + direction * raycast_distance
 
-	var from = camera.project_ray_origin(mouse_pos)
-	var to = from + camera.project_ray_normal(mouse_pos) * raycast_distance
-
-	# Get world from camera (Node extends Node, doesn't have get_world_3d)
 	var space_state = camera.get_world_3d().direct_space_state
 	var query = PhysicsRayQueryParameters3D.create(from, to)
 	query.collide_with_areas = false
@@ -357,12 +360,15 @@ func sync_sticker_selection(index: int):
 func _check_nail_raycast() -> Dictionary:
 	"""Raycast for nail DetectionAreas (collision layer 32)."""
 	if not camera:
-		camera = get_viewport().get_camera_3d()
+		if CameraManager and CameraManager.player_camera:
+			camera = CameraManager.player_camera
+		else:
+			camera = get_viewport().get_camera_3d()
 		if not camera:
 			return {}
-	var mouse_pos: Vector2 = _get_aim_position()
-	var from = camera.project_ray_origin(mouse_pos)
-	var to = from + camera.project_ray_normal(mouse_pos) * raycast_distance
+	var from = camera.global_position
+	var direction = -camera.global_transform.basis.z
+	var to = from + direction * raycast_distance
 	var space_state = camera.get_world_3d().direct_space_state
 	var query = PhysicsRayQueryParameters3D.create(from, to)
 	query.collision_mask = 32
@@ -385,13 +391,16 @@ func _remove_nail(raycast_result: Dictionary) -> void:
 func _check_back_face_raycast() -> Dictionary:
 	"""Raycast specifically for painting back face (layer 7 = bit 6 = mask 64)."""
 	if not camera:
-		camera = get_viewport().get_camera_3d()
+		if CameraManager and CameraManager.player_camera:
+			camera = CameraManager.player_camera
+		else:
+			camera = get_viewport().get_camera_3d()
 		if not camera:
 			return {}
 
-	var mouse_pos: Vector2 = _get_aim_position()
-	var from = camera.project_ray_origin(mouse_pos)
-	var to = from + camera.project_ray_normal(mouse_pos) * raycast_distance
+	var from = camera.global_position
+	var direction = -camera.global_transform.basis.z
+	var to = from + direction * raycast_distance
 
 	var space_state = camera.get_world_3d().direct_space_state
 	var query = PhysicsRayQueryParameters3D.create(from, to)

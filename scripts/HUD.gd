@@ -17,8 +17,6 @@ extends CanvasLayer
 @export var panel_corner_radius: int = 0
 @export var panel_padding_h: int = 12
 @export var panel_padding_v: int = 8
-@export var painting_panel_min_size_gamepad: Vector2 = Vector2(0, 0)
-@export var painting_panel_min_size_keyboard: Vector2 = Vector2(0, 0)
 
 # --- PRIVATE VARIABLES ---
 var _player: CharacterBody3D
@@ -440,113 +438,16 @@ func _update_painting_hint() -> void:
 		var is_gamepad = InputDeviceManager.current_device == InputDeviceManager.DeviceType.GAMEPAD
 
 		if _painting_panel:
-			var shared_x = max(painting_panel_min_size_keyboard.x, painting_panel_min_size_gamepad.x)
-			var h = painting_panel_min_size_gamepad.y if is_gamepad else painting_panel_min_size_keyboard.y
-			_painting_panel.custom_minimum_size = Vector2(shared_x, h)
+			_painting_panel.custom_minimum_size = Vector2.ZERO
+			_painting_panel.reset_size()
 			_painting_panel.grow_horizontal = Control.GROW_DIRECTION_BEGIN
 
-		# Update Rotate line
-		var rotate_r_icon = painting_hint.get_node("RotateLine/RotateRIcon")
-		var rotate_t_icon = painting_hint.get_node("RotateLine/RotateTIcon")
-		var rotate_label = painting_hint.get_node("RotateLine/RotateLabel")
-		if is_gamepad:
-			var d = InputDeviceManager.glyph_map.get("rotate_clockwise", {})
-			if d.has("gamepad_icon"):
-				rotate_r_icon.texture = load(d["gamepad_icon"])
-			rotate_r_icon.show()
-			rotate_t_icon.hide()
-			rotate_label.text = " " + tr("Rotate")
-		else:
-			rotate_r_icon.texture = load("res://sprites/ui/inputs/r.png")
-			rotate_t_icon.texture = load("res://sprites/ui/inputs/t.png")
-			rotate_r_icon.show()
-			rotate_t_icon.show()
-			rotate_label.text = " " + tr("Rotate")
-
-		# Update Scale line
-		var scale_z_icon = painting_hint.get_node("ScaleLine/ScaleZIcon")
-		var scale_x_icon = painting_hint.get_node("ScaleLine/ScaleXIcon")
-		var scale_label = painting_hint.get_node("ScaleLine/ScaleLabel")
-		if is_gamepad:
-			var d = InputDeviceManager.glyph_map.get("scale_sticker_down", {})
-			if d.has("gamepad_icon"):
-				scale_z_icon.texture = load(d["gamepad_icon"])
-			scale_z_icon.show()
-			scale_x_icon.hide()
-			scale_label.text = " " + tr("Scale")
-		else:
-			scale_z_icon.texture = load("res://sprites/ui/inputs/z.png")
-			scale_x_icon.texture = load("res://sprites/ui/inputs/x.png")
-			scale_z_icon.show()
-			scale_x_icon.show()
-			scale_label.text = " " + tr("Scale")
-
-		# Update Cycle line (has two icons)
-		var cycle_prev_icon = painting_hint.get_node("CycleLine/CyclePrevIcon")
-		var cycle_next_icon = painting_hint.get_node("CycleLine/CycleNextIcon")
-		var cycle_label = painting_hint.get_node("CycleLine/CycleLabel")
-		if is_gamepad:
-			var d_prev = InputDeviceManager.glyph_map.get("cycle_sticker_prev", {})
-			if d_prev.has("gamepad_icon"):
-				cycle_prev_icon.texture = load(d_prev["gamepad_icon"])
-			var d_next = InputDeviceManager.glyph_map.get("cycle_sticker_next", {})
-			if d_next.has("gamepad_icon"):
-				cycle_next_icon.texture = load(d_next["gamepad_icon"])
-			cycle_prev_icon.show()
-			cycle_next_icon.show()
-			cycle_label.text = " " + tr("Cycle")
-		else:
-			var d_prev = InputDeviceManager.glyph_map.get("cycle_sticker_prev", {})
-			var d_next = InputDeviceManager.glyph_map.get("cycle_sticker_next", {})
-			if d_prev.has("keyboard_icon"):
-				cycle_prev_icon.texture = load(d_prev["keyboard_icon"])
-				cycle_prev_icon.show()
-			else:
-				cycle_prev_icon.hide()
-			if d_next.has("keyboard_icon"):
-				cycle_next_icon.texture = load(d_next["keyboard_icon"])
-				cycle_next_icon.show()
-			else:
-				cycle_next_icon.hide()
-			cycle_label.text = " " + tr("Cycle")
-
-		# Update Place line
-		var place_icon = painting_hint.get_node("PlaceUndoLine/PlaceIcon")
-		var place_text = painting_hint.get_node("PlaceUndoLine/PlaceText")
-		if is_gamepad:
-			var d = InputDeviceManager.glyph_map.get("action_primary", {})
-			if d.has("gamepad_icon"):
-				place_icon.texture = load(d["gamepad_icon"])
-			place_icon.show()
-			place_text.text = " " + tr("Paint")
-		else:
-			var d = InputDeviceManager.glyph_map.get("action_primary", {})
-			if d.has("keyboard_icon"):
-				place_icon.texture = load(d["keyboard_icon"])
-				place_icon.show()
-				place_text.text = " " + tr("Paint")
-			else:
-				place_icon.hide()
-				place_text.text = "[Left Click] " + tr("Paint")
-
-		# Update Erase line
-		var undo_icon = painting_hint.get_node("HBoxContainer/UndoIcon")
-		var undo_text = painting_hint.get_node("HBoxContainer/UndoText")
-		if is_gamepad:
-			var d = InputDeviceManager.glyph_map.get("action_secondary", {})
-			if d.has("gamepad_icon"):
-				undo_icon.texture = load(d["gamepad_icon"])
-			undo_icon.show()
-			undo_text.text = " " + tr("Undo")
-		else:
-			var d = InputDeviceManager.glyph_map.get("action_secondary", {})
-			if d.has("keyboard_icon"):
-				undo_icon.texture = load(d["keyboard_icon"])
-				undo_icon.show()
-				undo_text.text = " " + tr("Undo")
-			else:
-				undo_icon.hide()
-				undo_text.text = "[Right Click] " + tr("Undo")
+		# Toggle KB/GP icon visibility across all lines
+		_toggle_input_icons(painting_hint.get_node("RotateLine"), is_gamepad)
+		_toggle_input_icons(painting_hint.get_node("ScaleLine"), is_gamepad)
+		_toggle_input_icons(painting_hint.get_node("CycleLine"), is_gamepad)
+		_toggle_input_icons(painting_hint.get_node("HBoxContainer2/PlaceUndoLine"), is_gamepad)
+		_toggle_input_icons(painting_hint.get_node("HBoxContainer2/HBoxContainer"), is_gamepad)
 
 		_painting_panel.show()
 
@@ -555,6 +456,14 @@ func _update_painting_hint() -> void:
 			_prompt_panel.hide()
 	else:
 		_painting_panel.hide()
+
+func _toggle_input_icons(container: Node, is_gamepad: bool) -> void:
+	for child in container.get_children():
+		if child is TextureRect:
+			if child.name.ends_with("_KB"):
+				child.visible = not is_gamepad
+			elif child.name.ends_with("_GP"):
+				child.visible = is_gamepad
 
 # --- PUBLIC METHODS ---
 

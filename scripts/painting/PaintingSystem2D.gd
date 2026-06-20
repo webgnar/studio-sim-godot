@@ -557,6 +557,89 @@ func clear_canvas():
 	placed_layers.clear()
 	selected_layer = null
 
+
+func clear_canvas_full():
+	"""Remove all placed stickers AND baked background"""
+	clear_canvas()
+	if _background_sprite:
+		_background_sprite.texture = null
+
+
+func serialize_canvas() -> Dictionary:
+	"""Serialize the current canvas state (layers + baked background) for saving"""
+	var data: Dictionary = {}
+
+	var layers_data: Array = []
+	for layer in placed_layers:
+		if not layer.node or not is_instance_valid(layer.node):
+			continue
+		layers_data.append({
+			"id": layer.id,
+			"position_x": layer.node.position.x,
+			"position_y": layer.node.position.y,
+			"rotation_deg": layer.rotation_deg,
+			"scale_multiplier": layer.scale_multiplier,
+			"scale_x": layer.node.scale.x,
+			"scale_y": layer.node.scale.y,
+		})
+	data["layers"] = layers_data
+	data["has_background"] = _background_sprite != null and _background_sprite.texture != null
+	data["preview_rotation"] = preview_rotation
+	data["preview_scale_multiplier"] = preview_scale_multiplier
+	return data
+
+
+func get_background_image() -> Image:
+	"""Return the baked background image for saving, or null if none"""
+	if _background_sprite and _background_sprite.texture:
+		return _background_sprite.texture.get_image()
+	return null
+
+
+func restore_canvas(data: Dictionary, background_image: Image = null) -> void:
+	"""Restore canvas state from serialized data"""
+	clear_canvas_full()
+
+	if background_image and data.get("has_background", false):
+		_background_sprite.texture = ImageTexture.create_from_image(background_image)
+		_background_sprite.scale = Vector2.ONE
+
+	preview_rotation = data.get("preview_rotation", -90.0)
+	preview_scale_multiplier = data.get("preview_scale_multiplier", 1.0)
+	if preview_sprite:
+		preview_sprite.rotation_degrees = preview_rotation
+	_update_preview_scale()
+
+	var layers_data: Array = data.get("layers", [])
+	for layer_data in layers_data:
+		var sticker_id: String = layer_data.get("id", "")
+		var definition = StickerLibrary.get_definition_by_id(sticker_id)
+		if not definition:
+			push_warning("PaintingSystem2D: Sticker '%s' not found in library, skipping" % sticker_id)
+			continue
+
+		var sprite = Sprite2D.new()
+		sprite.texture = definition.texture
+		sprite.centered = true
+		sprite.position = Vector2(layer_data.get("position_x", 0.0), layer_data.get("position_y", 0.0))
+		sprite.scale = Vector2(layer_data.get("scale_x", 1.0), layer_data.get("scale_y", 1.0))
+		sprite.rotation_degrees = layer_data.get("rotation_deg", 0.0)
+		add_child(sprite)
+
+		var placed = PlacedLayer2D.new(sticker_id, sprite)
+		placed.rotation_deg = layer_data.get("rotation_deg", 0.0)
+		placed.scale_multiplier = layer_data.get("scale_multiplier", 1.0)
+		placed_layers.append(placed)
+
+
+func has_canvas_content() -> bool:
+	"""Return true if the canvas has any placed layers or baked background"""
+	if not placed_layers.is_empty():
+		return true
+	if _background_sprite and _background_sprite.texture:
+		return true
+	return false
+
 # Validation system
 func verify_painting(target: PaintingMission) -> ValidationResult:
 	"""Check if current canvas matches the target painting using visual similarity"""
@@ -880,8 +963,7 @@ func start_mission(mission: PaintingMission):
 		return
 
 	was_commission_validated = false
-	# Clear the canvas
-	clear_canvas()
+	clear_canvas_full()
 
 func submit_painting():
 	"""Submit the current painting for validation"""

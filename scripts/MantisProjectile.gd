@@ -38,6 +38,7 @@ func _physics_process(delta: float) -> void:
 		var collider := get_slide_collision(i).get_collider()
 		if collider is Node and collider.is_in_group("player"):
 			_play_sound(hit_player_sound)
+			RetroEffectManager.apply_hit()
 			queue_free()
 			return
 	if get_slide_collision_count() > 0:
@@ -50,7 +51,7 @@ func _play_sound(stream: AudioStream) -> void:
 	var sfx := AudioStreamPlayer3D.new()
 	sfx.stream = stream
 	sfx.bus = "SFX"
-	sfx.max_distance = 50.0
+	sfx.max_distance = 150.0
 	get_tree().root.add_child(sfx)
 	sfx.global_position = global_position
 	sfx.play()

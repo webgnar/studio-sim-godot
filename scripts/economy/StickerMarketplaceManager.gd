@@ -177,7 +177,7 @@ func _on_presign_completed(result: int, response_code: int, _headers: PackedStri
 	_pending_listing_id = parsed["listing_id"]
 	var upload_url = parsed["upload_url"]
 
-	listing_step.emit("Uploading PNG (%d KB)..." % (_pending_listing_png_bytes.size() / 1024))
+	listing_step.emit("Uploading PNG (%d KB)..." % (_pending_listing_png_bytes.size() / 1024.0))
 	print("[Marketplace] Uploading PNG to R2 (%d bytes)..." % _pending_listing_png_bytes.size())
 	var headers = ["Content-Type: image/png"]
 	_upload_request.request_raw(upload_url, headers, HTTPClient.METHOD_PUT, _pending_listing_png_bytes)

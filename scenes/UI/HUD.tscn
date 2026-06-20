@@ -9,10 +9,16 @@
 [ext_resource type="Texture2D" uid="uid://canne3e2geuxw" path="res://sprites/ui/rt.png" id="7_m51yh"]
 [ext_resource type="Texture2D" uid="uid://bkayr38ljn01r" path="res://sprites/ui/lt.png" id="8_8d6le"]
 [ext_resource type="Texture2D" uid="uid://b2k3q4m0fbw8e" path="res://sprites/vxicon.png" id="9_vxicon"]
+[ext_resource type="Texture2D" uid="uid://bdmi21qcfu4c" path="res://sprites/ui/inputs/1.png" id="10_i5pcr"]
+[ext_resource type="Texture2D" uid="uid://dy3jj0agck2u3" path="res://sprites/ui/inputs/leftclick.png" id="12_kxwrb"]
+[ext_resource type="Texture2D" uid="uid://crrtxp3of7e31" path="res://sprites/ui/inputs/2.png" id="12_yx76t"]
+[ext_resource type="Texture2D" uid="uid://dchw45qhtlwj" path="res://sprites/ui/inputs/rightclick.png" id="14_o1axb"]
 [ext_resource type="Texture2D" uid="uid://cs1qm2kogtvqw" path="res://sprites/ui/inputs/r.png" id="key_r"]
 [ext_resource type="Texture2D" uid="uid://h6crti8rhorm" path="res://sprites/ui/inputs/t.png" id="key_t"]
 [ext_resource type="Texture2D" uid="uid://ccjamwl2mqd05" path="res://sprites/ui/inputs/x.png" id="key_x"]
 [ext_resource type="Texture2D" uid="uid://v258g8nnodtn" path="res://sprites/ui/inputs/z.png" id="key_z"]
+[ext_resource type="Texture2D" uid="uid://bnb0x8h7n08xg" path="res://sprites/ui/leftright.png" id="gp_leftright"]
+[ext_resource type="Texture2D" uid="uid://domflkr6l2qs" path="res://sprites/ui/updown.png" id="gp_updown"]
 [ext_resource type="Shader" uid="uid://br25jlx3cnm0r" path="res://shaders/crosshair_invert.gdshader" id="shader_crosshair"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_crosshair"]
@@ -25,7 +31,6 @@ script = ExtResource("1")
 panel_bg_color = Color(1, 0.3254902, 0, 0.5019608)
 panel_corner_radius = 9
 panel_padding_v = 18
-painting_panel_min_size_keyboard = Vector2(0, 300)
 
 [node name="CenterContainer" type="CenterContainer" parent="." unique_id=976094575]
 anchors_preset = 1
@@ -88,9 +93,10 @@ texture = ExtResource("4_e8ns6")
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = 655.89014
-offset_right = 942.89014
-offset_bottom = 701.0
+offset_left = 590.24
+offset_top = -9.71
+offset_right = 950.24
+offset_bottom = 691.29
 grow_horizontal = 2
 theme_override_constants/separation = 4
 
@@ -98,10 +104,17 @@ theme_override_constants/separation = 4
 layout_mode = 2
 alignment = 2
 
-[node name="RotateRIcon" type="TextureRect" parent="PaintingHint/RotateLine" unique_id=1539713680]
+[node name="RotateIcon1_KB" type="TextureRect" parent="PaintingHint/RotateLine" unique_id=238344760]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 texture = ExtResource("key_r")
+stretch_mode = 5
+
+[node name="RotateIcon1_GP" type="TextureRect" parent="PaintingHint/RotateLine" unique_id=1440040251]
+visible = false
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+texture = ExtResource("gp_leftright")
 stretch_mode = 5
 
 [node name="RotateLabel" type="Label" parent="PaintingHint/RotateLine" unique_id=1877327158]
@@ -115,20 +128,34 @@ theme_override_constants/shadow_outline_size = 5
 text = "Rotate "
 horizontal_alignment = 1
 
-[node name="RotateTIcon" type="TextureRect" parent="PaintingHint/RotateLine" unique_id=1539713682]
+[node name="RotateIcon2_KB" type="TextureRect" parent="PaintingHint/RotateLine" unique_id=913346168]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 texture = ExtResource("key_t")
+stretch_mode = 5
+
+[node name="RotateIcon2_GP" type="TextureRect" parent="PaintingHint/RotateLine" unique_id=1579764940]
+visible = false
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+texture = ExtResource("gp_leftright")
 stretch_mode = 5
 
 [node name="ScaleLine" type="HBoxContainer" parent="PaintingHint" unique_id=1114447611]
 layout_mode = 2
 alignment = 2
 
-[node name="ScaleZIcon" type="TextureRect" parent="PaintingHint/ScaleLine" unique_id=875419796]
+[node name="ScaleIcon1_KB" type="TextureRect" parent="PaintingHint/ScaleLine" unique_id=412357046]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 texture = ExtResource("key_z")
+stretch_mode = 5
+
+[node name="ScaleIcon1_GP" type="TextureRect" parent="PaintingHint/ScaleLine" unique_id=1934355870]
+visible = false
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+texture = ExtResource("gp_updown")
 stretch_mode = 5
 
 [node name="ScaleLabel" type="Label" parent="PaintingHint/ScaleLine" unique_id=1485998373]
@@ -142,17 +169,31 @@ theme_override_constants/shadow_outline_size = 6
 text = " Scale "
 horizontal_alignment = 1
 
-[node name="ScaleXIcon" type="TextureRect" parent="PaintingHint/ScaleLine" unique_id=875419798]
+[node name="ScaleIcon2_KB" type="TextureRect" parent="PaintingHint/ScaleLine" unique_id=661425696]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 texture = ExtResource("key_x")
+stretch_mode = 5
+
+[node name="ScaleIcon2_GP" type="TextureRect" parent="PaintingHint/ScaleLine" unique_id=1218391601]
+visible = false
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+texture = ExtResource("gp_updown")
 stretch_mode = 5
 
 [node name="CycleLine" type="HBoxContainer" parent="PaintingHint" unique_id=1491883034]
 layout_mode = 2
 alignment = 2
 
-[node name="CyclePrevIcon" type="TextureRect" parent="PaintingHint/CycleLine" unique_id=1446865686]
+[node name="CyclePrevIcon_KB" type="TextureRect" parent="PaintingHint/CycleLine" unique_id=1721913848]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+texture = ExtResource("10_i5pcr")
+stretch_mode = 5
+
+[node name="CyclePrevIcon_GP" type="TextureRect" parent="PaintingHint/CycleLine" unique_id=808429420]
+visible = false
 custom_minimum_size = Vector2(104.15, -12.74)
 layout_mode = 2
 texture = ExtResource("5_tohwf")
@@ -170,25 +211,42 @@ theme_override_constants/shadow_outline_size = 13
 text = "Cycle"
 horizontal_alignment = 1
 
-[node name="CycleNextIcon" type="TextureRect" parent="PaintingHint/CycleLine" unique_id=234186105]
+[node name="CycleNextIcon_KB" type="TextureRect" parent="PaintingHint/CycleLine" unique_id=264643176]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+texture = ExtResource("12_yx76t")
+stretch_mode = 5
+
+[node name="CycleNextIcon_GP" type="TextureRect" parent="PaintingHint/CycleLine" unique_id=1925063976]
+visible = false
 custom_minimum_size = Vector2(103.82, 114.18)
 layout_mode = 2
 texture = ExtResource("6_e8ns6")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="PlaceUndoLine" type="HBoxContainer" parent="PaintingHint" unique_id=88497604]
+[node name="HBoxContainer2" type="HBoxContainer" parent="PaintingHint" unique_id=753614483]
+layout_mode = 2
+
+[node name="PlaceUndoLine" type="HBoxContainer" parent="PaintingHint/HBoxContainer2" unique_id=88497604]
 layout_mode = 2
 alignment = 2
 
-[node name="PlaceIcon" type="TextureRect" parent="PaintingHint/PlaceUndoLine" unique_id=996579038]
+[node name="PlaceIcon_KB" type="TextureRect" parent="PaintingHint/HBoxContainer2/PlaceUndoLine" unique_id=163842778]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+texture = ExtResource("12_kxwrb")
+stretch_mode = 5
+
+[node name="PlaceIcon_GP" type="TextureRect" parent="PaintingHint/HBoxContainer2/PlaceUndoLine" unique_id=1444605232]
+visible = false
 custom_minimum_size = Vector2(108.29, 131.37)
 layout_mode = 2
 texture = ExtResource("7_m51yh")
 expand_mode = 1
 stretch_mode = 2
 
-[node name="PlaceText" type="Label" parent="PaintingHint/PlaceUndoLine" unique_id=75297682]
+[node name="PlaceText" type="Label" parent="PaintingHint/HBoxContainer2/PlaceUndoLine" unique_id=75297682]
 layout_mode = 2
 theme = ExtResource("2")
 theme_override_colors/font_color = Color(1, 0.63529414, 0.38039216, 1)
@@ -199,17 +257,24 @@ theme_override_constants/shadow_outline_size = 7
 text = "Paint"
 horizontal_alignment = 1
 
-[node name="HBoxContainer" type="HBoxContainer" parent="PaintingHint" unique_id=1953142721]
+[node name="HBoxContainer" type="HBoxContainer" parent="PaintingHint/HBoxContainer2" unique_id=1953142721]
 layout_mode = 2
 alignment = 2
 
-[node name="UndoIcon" type="TextureRect" parent="PaintingHint/HBoxContainer" unique_id=442450924]
+[node name="UndoIcon_KB" type="TextureRect" parent="PaintingHint/HBoxContainer2/HBoxContainer" unique_id=1654990513]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+texture = ExtResource("14_o1axb")
+stretch_mode = 5
+
+[node name="UndoIcon_GP" type="TextureRect" parent="PaintingHint/HBoxContainer2/HBoxContainer" unique_id=1335235685]
+visible = false
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 texture = ExtResource("8_8d6le")
 stretch_mode = 5
 
-[node name="UndoText" type="Label" parent="PaintingHint/HBoxContainer" unique_id=442161430]
+[node name="UndoText" type="Label" parent="PaintingHint/HBoxContainer2/HBoxContainer" unique_id=442161430]
 layout_mode = 2
 theme = ExtResource("2")
 theme_override_colors/font_color = Color(0.99607843, 0.13333334, 0.21176471, 1)

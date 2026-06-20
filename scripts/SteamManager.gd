@@ -120,8 +120,8 @@ func _check_retroactive_export_achievements() -> void:
 		unlock_achievement("ACH_EXPORT_50")
 
 func _check_retroactive_visitor_achievement() -> void:
-	"""On load, unlock ACH_ALL_VISITORS if the player has already seen all 12 visitor skins."""
-	if WorldStateManager.get_seen_visitor_skins().size() >= 12:
+	"""On load, unlock ACH_ALL_VISITORS if the player has already seen all 14 visitor skins."""
+	if WorldStateManager.get_seen_visitor_skins().size() >= 14:
 		unlock_achievement("ACH_ALL_VISITORS")
 
 func setup_achievements() -> void:
@@ -159,7 +159,13 @@ func setup_achievements() -> void:
 		"ACH_ALL_MISSIONS_COMPLETED": false,  # Complete all commissions
 
 		# Gallery
-		"ACH_ALL_VISITORS": false,  # Encounter all 12 unique gallery visitors
+		"ACH_ALL_VISITORS": false,  # Encounter all 14 unique gallery visitors
+
+		# Combat
+		"ACH_FULLY_PIXELATED": false,  # Absorb 21 mantis hits (max retro shader)
+
+		# Shop
+		"ACH_RF_RECEIVER": false,  # Purchase the RF Receiver
 
 	}
 

@@ -4,7 +4,6 @@
 [ext_resource type="PackedScene" uid="uid://gv6172d2ngws" path="res://scenes/humanrig_blender.tscn" id="2_tuyoq"]
 [ext_resource type="Script" uid="uid://bw58chvxj0io6" path="res://scripts/PlayerAnimation.gd" id="3_fjrip"]
 [ext_resource type="PackedScene" uid="uid://cmkthatew8dv2" path="res://scenes/UI/HUD.tscn" id="4_smehm"]
-[ext_resource type="Script" uid="uid://cmfquih6gna04" path="res://scripts/PlayerLaserBeam.gd" id="5_ur7pv"]
 [ext_resource type="Script" uid="uid://tox1q6x23gbc" path="res://scripts/PlayerCameraFade.gd" id="6_camerafade"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_k0juu"]
@@ -58,9 +57,6 @@ transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0.24
 
 [node name="FootstepSound" type="AudioStreamPlayer" parent="." unique_id=1215326069]
 bus = &"SFX"
-
-[node name="LaserBeamVisualizer" type="Node3D" parent="." unique_id=404532841]
-script = ExtResource("5_ur7pv")
 
 [node name="PlayerCameraFade" type="Node" parent="." unique_id=282278761]
 script = ExtResource("6_camerafade")

@@ -99,7 +99,7 @@ func _play_sound_at(stream: AudioStream, pos: Vector3) -> void:
 	var sfx := AudioStreamPlayer3D.new()
 	sfx.stream = stream
 	sfx.bus = "SFX"
-	sfx.max_distance = 50.0
+	sfx.max_distance = 150.0
 	get_tree().root.add_child(sfx)
 	sfx.global_position = pos
 	sfx.play()

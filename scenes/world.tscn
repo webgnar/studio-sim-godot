@@ -378,7 +378,31 @@ resource_local_to_scene = true
 albedo_texture = SubResource("ViewportTexture_e68xj")
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_r5yoc"]
-size = Vector3(6.555237, 4.649658, 3.814176)
+size = Vector3(6.555237, 4.649658, 7.9403605)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_t2jyq"]
+size = Vector3(7.758217, 4.480591, 7.6582336)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_c7mri"]
+size = Vector3(7.4287415, 4.649658, 8.43367)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_tq137"]
+size = Vector3(3, 4.649658, 9.790161)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_kloan"]
+size = Vector3(14.14502, 4.649658, 11.063416)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_sonb8"]
+size = Vector3(8.287598, 6.558655, 7)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_fahuw"]
+size = Vector3(6, 15, 15.879883)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_i688p"]
+size = Vector3(45.893555, 6, 31)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_yhtv1"]
+size = Vector3(6, 4.649658, 6)
 
 [sub_resource type="Gradient" id="Gradient_k2fqw"]
 
@@ -501,17 +525,17 @@ albedo_color = Color(1.0734373, 1.0734373, 0.15063755, 1)
 albedo_texture = ExtResource("82_mu18u")
 texture_filter = 0
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_tq137"]
+[sub_resource type="PlaneMesh" id="PlaneMesh_t2jyq"]
 resource_local_to_scene = true
 size = Vector2(2.5, 3)
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_kloan"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_7n6r0"]
 resource_name = "_albedo"
 viewport_path = NodePath("../MirrorNew/SubViewport")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_x3v50"]
 resource_local_to_scene = true
-albedo_texture = SubResource("ViewportTexture_kloan")
+albedo_texture = SubResource("ViewportTexture_7n6r0")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_1v02h"]
 size = Vector2(2.5, 3)
@@ -1958,15 +1982,15 @@ metadata/shop_item_id = "styrofoam_cube"
 impact_damage = 0.4
 
 [node name="CameraZone" parent="." unique_id=791826792 instance=ExtResource("71_dyafi")]
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -0.123270035, 0.96045446, -6.987212)
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -0.123270035, 0.96045446, -2.3668728)
 visible = false
 
 [node name="CollisionShape3D" parent="CameraZone" index="0"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.08316077, 1.6094971, 2.0615368)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.08316077, 1.6094971, -0.0015552044)
 shape = SubResource("BoxShape3D_r5yoc")
 
 [node name="SecurityCamera1" parent="CameraZone" index="1"]
-transform = Transform3D(0.8496623, -0.119170085, -0.5136851, -0.0009949702, 0.97376585, -0.2275502, 0.52732617, 0.19385192, 0.82725364, -2.8629904, 0.15246916, 3.1513882)
+transform = Transform3D(0.8496623, -0.119170085, -0.5136851, -0.0009949702, 0.97376585, -0.2275502, 0.52732617, 0.19385192, 0.82725364, -3.382709, 0.15246916, 3.8936381)
 
 [node name="Label3D" parent="CameraZone" index="3"]
 visible = false
@@ -1976,7 +2000,7 @@ transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -0.2
 visible = false
 
 [node name="CollisionShape3D" parent="CameraZone3 inside" index="0"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.2076321, 0.06352091, -1.8029405)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.6401882, 0.06352091, -0.24208862)
 
 [node name="SecurityCamera1" parent="CameraZone3 inside" index="1"]
 transform = Transform3D(0.9623225, 0.056403447, -0.26599646, -9.067214e-09, 0.9782491, 0.20743363, 0.27191073, -0.19961804, 0.94139105, 0, 2, 3)
@@ -1989,7 +2013,8 @@ transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -0.2
 visible = false
 
 [node name="CollisionShape3D" parent="CameraZone3 inside2" index="0"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.32690334, 0.06352091, -1.3563817)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.7734556, 0.1480546, 0.19197375)
+shape = SubResource("BoxShape3D_t2jyq")
 
 [node name="SecurityCamera1" parent="CameraZone3 inside2" index="1"]
 transform = Transform3D(0.9981081, -0.012753857, 0.060146708, -1.2652144e-08, 0.9782491, 0.20743363, -0.061484084, -0.20704119, 0.9763983, 0, 2, 3)
@@ -2002,12 +2027,97 @@ transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 8.39
 visible = false
 
 [node name="CollisionShape3D" parent="CameraZone3 inside4" index="0"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.32366848, -0.1977706, -0.07887745)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.84255874, -0.1977706, -0.21649075)
+shape = SubResource("BoxShape3D_c7mri")
 
 [node name="SecurityCamera1" parent="CameraZone3 inside4" index="1"]
 transform = Transform3D(-0.7243389, -0.4437286, 0.5276722, -0.092755705, 0.82112026, 0.56316775, -0.68317604, 0.35897982, -0.6359277, 1.6144035, 2.0265296, -4.0301986)
 
 [node name="Label3D" parent="CameraZone3 inside4" index="3"]
+visible = false
+
+[node name="CameraZone3 inside5" parent="." unique_id=1662979251 instance=ExtResource("71_dyafi")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 6.3960657, 1.0894096, 12.753134)
+visible = false
+
+[node name="CollisionShape3D" parent="CameraZone3 inside5" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.45395088, -0.1977706, 2.585906)
+shape = SubResource("BoxShape3D_tq137")
+
+[node name="SecurityCamera1" parent="CameraZone3 inside5" index="1"]
+transform = Transform3D(-0.96555007, -0.10297748, 0.23897453, -0.043047555, 0.96892166, 0.24359316, -0.25663227, 0.22491407, -0.93997526, 1.6144037, 2.0265296, -4.030198)
+
+[node name="Label3D" parent="CameraZone3 inside5" index="3"]
+visible = false
+
+[node name="CameraZone3 inside6" parent="." unique_id=558437142 instance=ExtResource("71_dyafi")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 6.3960657, 1.0894096, 18.753134)
+visible = false
+
+[node name="CollisionShape3D" parent="CameraZone3 inside6" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.23964787, -0.1977706, 1.4587975)
+shape = SubResource("BoxShape3D_kloan")
+
+[node name="SecurityCamera1" parent="CameraZone3 inside6" index="1"]
+transform = Transform3D(-0.7078748, -0.20163818, 0.6769457, -0.043047566, 0.9689218, 0.24359313, -0.705025, 0.14329259, -0.6945553, 1.6144037, 2.0265296, -4.030199)
+
+[node name="Label3D" parent="CameraZone3 inside6" index="3"]
+visible = false
+
+[node name="CameraZone3 inside8" parent="." unique_id=230743645 instance=ExtResource("71_dyafi")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -5.6039343, -4.91059, 18.753134)
+visible = false
+
+[node name="CollisionShape3D" parent="CameraZone3 inside8" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.1898444, 0.7567277, 1.6908226)
+shape = SubResource("BoxShape3D_sonb8")
+
+[node name="SecurityCamera1" parent="CameraZone3 inside8" index="1"]
+transform = Transform3D(-0.7078748, -0.20163818, 0.6769457, -0.043047566, 0.9689218, 0.24359313, -0.705025, 0.14329259, -0.6945553, 1.6144037, 2.0265296, -4.030199)
+
+[node name="Label3D" parent="CameraZone3 inside8" index="3"]
+visible = false
+
+[node name="CameraZone3 inside9" parent="." unique_id=1512056776 instance=ExtResource("71_dyafi")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 10.396066, -4.91059, 12.753134)
+visible = false
+
+[node name="CollisionShape3D" parent="CameraZone3 inside9" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.953953, -4.022599, 4.250883)
+shape = SubResource("BoxShape3D_fahuw")
+
+[node name="SecurityCamera1" parent="CameraZone3 inside9" index="1"]
+transform = Transform3D(0.013087923, -0.0151832085, -0.99979913, -0.04105922, 0.9990333, -0.015709067, 0.999071, 0.041256566, 0.012451859, -2.3855953, -3.9734707, 1.969801)
+
+[node name="Label3D" parent="CameraZone3 inside9" index="3"]
+visible = false
+
+[node name="CameraZone3 inside10" parent="." unique_id=2047282458 instance=ExtResource("71_dyafi")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 27.396065, -4.91059, 12.753134)
+visible = false
+
+[node name="CollisionShape3D" parent="CameraZone3 inside10" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.900719, -8.522599, -3.3091726)
+shape = SubResource("BoxShape3D_i688p")
+
+[node name="SecurityCamera1" parent="CameraZone3 inside10" index="1"]
+transform = Transform3D(0.6642445, 0.4952476, -0.55991876, -0.010163452, 0.754954, 0.655699, 0.74744636, -0.42985383, 0.5065077, -9.385599, 2.4670072, 9.969822)
+
+[node name="Label3D" parent="CameraZone3 inside10" index="3"]
+visible = false
+
+[node name="CameraZone3 inside7" parent="." unique_id=530377267 instance=ExtResource("71_dyafi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.396066, 1.0894096, 9.753134)
+visible = false
+
+[node name="CollisionShape3D" parent="CameraZone3 inside7" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.046048164, -0.1977706, -0.3091774)
+shape = SubResource("BoxShape3D_yhtv1")
+
+[node name="SecurityCamera1" parent="CameraZone3 inside7" index="1"]
+transform = Transform3D(-0.8662284, -0.15768068, 0.47411516, -0.043047566, 0.9689218, 0.24359317, -0.49779037, 0.19059782, -0.8460953, 1.6144037, 1.0265296, -5.030199)
+
+[node name="Label3D" parent="CameraZone3 inside7" index="3"]
 visible = false
 
 [node name="CameraZone3 inside3" parent="." unique_id=1815166673 instance=ExtResource("71_dyafi")]
@@ -2176,7 +2286,7 @@ surface_material_override/0 = SubResource("StandardMaterial3D_7b7y8")
 
 [node name="mirror" parent="." unique_id=1626491013 groups=["shop_prop"] instance=ExtResource("39_qaasp")]
 transform = Transform3D(-4.7902194e-08, -0.99488777, 0.10098683, -3.9073655e-08, 0.10098683, 0.99488777, -1, 4.3711392e-08, -4.3711385e-08, 2.8, 1.497, 5.232)
-mesh = SubResource("PlaneMesh_tq137")
+mesh = SubResource("PlaneMesh_t2jyq")
 surface_material_override/0 = SubResource("StandardMaterial3D_x3v50")
 show_debug_logs = false
 metadata/mirror = "mirror"
@@ -2912,6 +3022,12 @@ autoplay = &"float"
 [editable path="CameraZone3 inside"]
 [editable path="CameraZone3 inside2"]
 [editable path="CameraZone3 inside4"]
+[editable path="CameraZone3 inside5"]
+[editable path="CameraZone3 inside6"]
+[editable path="CameraZone3 inside8"]
+[editable path="CameraZone3 inside9"]
+[editable path="CameraZone3 inside10"]
+[editable path="CameraZone3 inside7"]
 [editable path="CameraZone3 inside3"]
 [editable path="buttonRed/redbutton"]
 [editable path="buttonGreen"]

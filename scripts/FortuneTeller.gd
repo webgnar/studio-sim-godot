@@ -23,7 +23,7 @@ func _process(delta: float) -> void:
 	if _cooldown_timer > 0.0:
 		_cooldown_timer -= delta
 
-func interact(player: Node) -> void:
+func interact(_player: Node) -> void:
 	var box: VisitorDialogueBox = _get_dialogue_box()
 
 	if box and box.is_open():

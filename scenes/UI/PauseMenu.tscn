@@ -169,6 +169,12 @@ stretch_mode = 5
 layout_mode = 2
 size_flags_horizontal = 3
 
+[node name="CloseButton" type="Button" parent="Dialog/MarginContainer/VBoxContainer/TabBar"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+focus_mode = 0
+text = "X"
+
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Dialog/MarginContainer/VBoxContainer/TabBar" unique_id=1597737652]
 libraries/ = SubResource("AnimationLibrary_wclpb")
 autoplay = &"pulse"

@@ -47,6 +47,8 @@ const SKIN_PERSONALITIES: Dictionary = {
 	"tinfoilguy": "conspiracist",
 	"maninblack": "disinfo",
 	"gw": "washington",
+	"kdog": "scholar",
+	"ian": "preacher",
 }
 
 const STREETWISE_FALLBACK_LINES = [
@@ -92,6 +94,24 @@ const AGENT_FALLBACK_LINES = [
 	"The subject matter is... noted.",
 	"We have no record of this artist. That's a good thing.",
 	"Lovely gallery. Very easy to surveil — I mean, navigate.",
+]
+
+const SCHOLAR_FALLBACK_LINES = [
+	"There's a clear lineage here... Rothko, maybe some Diebenkorn.",
+	"The negative space is doing a lot of heavy lifting. Respect.",
+	"You know, this reminds me of the post-minimalist movement. In a good way.",
+	"Compositionally? Chef's kiss. Real nice balance.",
+	"I wrote my thesis on work like this. Well, adjacent to this.",
+	"The palette is restrained but deliberate. I dig it.",
+]
+
+const PREACHER_FALLBACK_LINES = [
+	"The heavens declare the glory of God, and the sky proclaims the work of His hands. Psalm 19:1.",
+	"Whatever you do, work at it with all your heart, as working for the Lord. Colossians 3:23.",
+	"He has made everything beautiful in its time. Ecclesiastes 3:11.",
+	"For we are God's handiwork, created in Christ Jesus to do good works. Ephesians 2:10.",
+	"The earth is the Lord's, and everything in it. Psalm 24:1.",
+	"In the beginning God created the heavens and the earth. Genesis 1:1.",
 ]
 
 ## Exposed so PlayerInteractionComponent can show a prompt label.
@@ -264,6 +284,10 @@ func _pick_fallback() -> String:
 			return CONSPIRACIST_FALLBACK_LINES.pick_random()
 		"agent":
 			return AGENT_FALLBACK_LINES.pick_random()
+		"scholar":
+			return SCHOLAR_FALLBACK_LINES.pick_random()
+		"preacher":
+			return PREACHER_FALLBACK_LINES.pick_random()
 	return FALLBACK_LINES.pick_random()
 
 
@@ -517,7 +541,7 @@ func _record_visitor_skin(skin_key: String) -> void:
 	if not has_node("/root/WorldStateManager"):
 		return
 	WorldStateManager.add_seen_visitor_skin(skin_key)
-	if WorldStateManager.get_seen_visitor_skins().size() >= 12 and has_node("/root/SteamManager"):
+	if WorldStateManager.get_seen_visitor_skins().size() >= 14 and has_node("/root/SteamManager"):
 		SteamManager.unlock_achievement("ACH_ALL_VISITORS")
 
 

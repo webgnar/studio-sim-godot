@@ -48,7 +48,7 @@ var marketplace_tab: StickerMarketplaceTab = null
 @onready var money_label: Label = $Dialog/MarginContainer/VBoxContainer/TabBar/MarginContainer/MoneyLabel
 
 # Close button (keyboard/mouse only)
-var close_button: Button = null
+@onready var close_button: Button = $Dialog/MarginContainer/VBoxContainer/TabBar/CloseButton
 
 # State
 var current_tab: Tab = Tab.COMMISSIONS
@@ -102,30 +102,8 @@ func _ready():
 	if ShopManager:
 		ShopManager.item_purchased.connect(_on_item_purchased)
 
-	# Create keyboard/mouse-only close button (far right of TabBar, opposite MoneyLabel)
-	close_button = Button.new()
-	close_button.name = "CloseButton"
-	close_button.text = "X"
-	close_button.focus_mode = Control.FOCUS_NONE
-	close_button.custom_minimum_size = Vector2(40, 40)
+	# Connect close button (defined in scene)
 	close_button.pressed.connect(_close_menu)
-	tab_bar.add_child(close_button)
-
-	var style = StyleBoxFlat.new()
-	style.set_border_width_all(2)
-	style.border_color = Color(1, 1, 1, 0.8)
-	style.bg_color = Color(0, 0, 0, 0)
-	style.content_margin_left = 8
-	style.content_margin_right = 8
-	close_button.add_theme_stylebox_override("normal", style)
-	var hover_style = style.duplicate()
-	hover_style.bg_color = Color(1, 1, 1, 0.15)
-	close_button.add_theme_stylebox_override("hover", hover_style)
-	var pressed_style = style.duplicate()
-	pressed_style.bg_color = Color(1, 1, 1, 0.3)
-	close_button.add_theme_stylebox_override("pressed", pressed_style)
-	close_button.add_theme_font_size_override("font_size", 28)
-	close_button.add_theme_color_override("font_color", Color(1, 1, 1, 0.9))
 
 	if InputDeviceManager:
 		InputDeviceManager.device_changed.connect(_on_close_button_device_changed)
@@ -598,11 +576,30 @@ func _update_key_icon():
 
 func _update_money_display():
 	if money_label and EconomyManager:
-		money_label.text = "$ %d" % EconomyManager.get_money()
+		_money_display_value = EconomyManager.get_money()
+		_money_target_value = _money_display_value
+		money_label.text = "$ %d" % _money_display_value
+
+var _money_display_value: int = 0
+var _money_target_value: int = 0
+var _money_tween: Tween = null
 
 func _on_money_changed(new_amount: int):
-	if money_label:
-		money_label.text = "$ %d" % new_amount
+	if not money_label:
+		return
+	_money_target_value = new_amount
+	if _money_tween and _money_tween.is_valid():
+		_money_tween.kill()
+	var diff = absi(_money_target_value - _money_display_value)
+	if diff == 0:
+		return
+	var duration = clampf(float(diff) * 0.02, 0.3, 3.0)
+	_money_tween = create_tween()
+	_money_tween.tween_method(_set_money_display, _money_display_value, _money_target_value, duration)
+
+func _set_money_display(value: int) -> void:
+	_money_display_value = value
+	money_label.text = "$ %d" % value
 
 func _on_item_purchased(item_id: String):
 	if item_id == "customstickerbutton":

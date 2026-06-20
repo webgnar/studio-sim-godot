@@ -239,5 +239,3 @@ func _hide_ui():
 	# Animate position and scale
 	animation_tween.tween_property(self, "position:x", hidden_position_x, animation_duration)
 	animation_tween.tween_property(self, "scale", Vector2(hidden_scale, hidden_scale), animation_duration)
-
-
