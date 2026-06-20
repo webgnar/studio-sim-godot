@@ -41,7 +41,7 @@ const SKIN_PERSONALITIES: Dictionary = {
 	"garyskin": "casual",
 	"humanskin": "enthusiastic",
 	"skeletonskin": "confused",
-	"jollyrich": "enthusiastic",
+	"jollyrich": "collector",
 	"ronald": "canio",
 	"kylie": "kylie",
 	"tinfoilguy": "conspiracist",
@@ -87,31 +87,68 @@ const CONSPIRACIST_FALLBACK_LINES = [
 	"I'm not saying it's a psyop. I'm just saying... it could be.",
 ]
 
-const AGENT_FALLBACK_LINES = [
-	"Nothing unusual here. Move along.",
-	"I'm just a regular art enthusiast. Totally normal.",
-	"I've been assigned to — I mean, I enjoy this piece.",
-	"The subject matter is... noted.",
-	"We have no record of this artist. That's a good thing.",
-	"Lovely gallery. Very easy to surveil — I mean, navigate.",
-]
 
 const SCHOLAR_FALLBACK_LINES = [
-	"There's a clear lineage here... Rothko, maybe some Diebenkorn.",
-	"The negative space is doing a lot of heavy lifting. Respect.",
-	"You know, this reminds me of the post-minimalist movement. In a good way.",
-	"Compositionally? Chef's kiss. Real nice balance.",
-	"I wrote my thesis on work like this. Well, adjacent to this.",
-	"The palette is restrained but deliberate. I dig it.",
+	"There's a clear lineage here, dawg... Rothko, maybe some Diebenkorn.",
+	"The negative space is doing a lot of heavy lifting, dawg. Respect.",
+	"You know, this reminds me of the post-minimalist movement, dawg. In a good way.",
+	"Compositionally? Chef's kiss, dawg. Real nice balance.",
+	"I wrote my thesis on work like this, dawg. Well, adjacent to this.",
+	"The palette is restrained but deliberate, dawg. I dig it.",
 ]
 
 const PREACHER_FALLBACK_LINES = [
-	"The heavens declare the glory of God, and the sky proclaims the work of His hands. Psalm 19:1.",
-	"Whatever you do, work at it with all your heart, as working for the Lord. Colossians 3:23.",
-	"He has made everything beautiful in its time. Ecclesiastes 3:11.",
-	"For we are God's handiwork, created in Christ Jesus to do good works. Ephesians 2:10.",
-	"The earth is the Lord's, and everything in it. Psalm 24:1.",
-	"In the beginning God created the heavens and the earth. Genesis 1:1.",
+	"The heavens declare the glory of God, and the sky proclaims the work of His hands.",
+	"Whatever you do, work at it with all your heart, as working for the Lord.",
+	"He has made everything beautiful in its time.",
+	"For we are God's handiwork, created in Christ Jesus to do good works.",
+	"The earth is the Lord's, and everything in it.",
+	"In the beginning God created the heavens and the earth.",
+]
+
+const CANIO_FALLBACK_LINES = [
+	"Don't talk to me. I'm having the worst day of my life. Again.",
+	"Everything in here is terrible. Including me. Especially me.",
+	"I came to this gallery hoping to feel something. Mistake.",
+	"You ever just look around and think, what's the point? Yeah. Me too. Always.",
+	"I used to perform for thousands. Now I'm in here. Talking to you.",
+	"This gallery is fine. I'm the problem. I'm always the problem.",
+]
+
+const KYLIE_FALLBACK_LINES = [
+	"This place is literally so cute. Obsessed.",
+	"I'm getting major inspo from this gallery right now.",
+	"This would look so good on my feed.",
+	"Okay I'm totally coming back here with my friends.",
+	"The vibes in here? Immaculate.",
+	"I'm literally manifesting a gallery like this in my apartment.",
+]
+
+const WASHINGTON_FALLBACK_LINES = [
+	"A fine establishment. The Republic would approve.",
+	"In my day, we had no such galleries. We had battlefields.",
+	"I cannot tell a lie — this is a worthy institution.",
+	"Liberty and the arts go hand in hand.",
+	"The Founding Fathers would have been proud of this place.",
+	"A gallery of this caliber serves the nation well.",
+]
+
+const DISINFO_FALLBACK_LINES = [
+	"The agencies have been monitoring this gallery. I can't say which ones.",
+	"This place has been flagged. Probably nothing. Probably.",
+	"I've seen galleries like this before. The Getty Center had one. Before they moved everything underground.",
+	"Don't repeat this, but this gallery matches a profile from a classified briefing.",
+	"The royal family has people in places like this. Watching. Collecting. You didn't hear that from me.",
+	"Everything in here is being catalogued. By who? I've already said too much.",
+]
+
+const COLLECTOR_FALLBACK_LINES = [
+	"I need to speak with whoever curates this space.",
+	"My collection could use a few pieces from here.",
+	"This gallery has potential. I should make some acquisitions.",
+	"I've been collecting for thirty years. I know quality when I see it.",
+	"Everything here is undervalued. That's an opportunity.",
+	"I wonder if they'd sell me the whole gallery. Ha! Half-joking.",
 ]
 
 ## Exposed so PlayerInteractionComponent can show a prompt label.
@@ -243,6 +280,14 @@ func _fetch_dialogue() -> void:
 		_is_interacting = false
 		return
 
+	if _personality == "scholar" and not _is_painting_hung(_last_attraction):
+		var line := "Dawg, get that painting off the floor, dawg. Cmon, off the floor. Prop it up on a milk crate or at least some empty paint cans."
+		_cached_dialogue = line
+		_dialogue_cooldown = DIALOGUE_COOLDOWN
+		_start_dialogue(line)
+		_is_interacting = false
+		return
+
 	var line := VisitorDialogueGenerator.generate_painting_line(_personality, painting_name, artist_name)
 	_cached_dialogue = line
 	_dialogue_cooldown = DIALOGUE_COOLDOWN
@@ -282,13 +327,30 @@ func _pick_fallback() -> String:
 			return FABULOUS_FALLBACK_LINES.pick_random()
 		"conspiracist":
 			return CONSPIRACIST_FALLBACK_LINES.pick_random()
-		"agent":
-			return AGENT_FALLBACK_LINES.pick_random()
 		"scholar":
 			return SCHOLAR_FALLBACK_LINES.pick_random()
 		"preacher":
 			return PREACHER_FALLBACK_LINES.pick_random()
+		"canio":
+			return CANIO_FALLBACK_LINES.pick_random()
+		"kylie":
+			return KYLIE_FALLBACK_LINES.pick_random()
+		"washington":
+			return WASHINGTON_FALLBACK_LINES.pick_random()
+		"disinfo":
+			return DISINFO_FALLBACK_LINES.pick_random()
+		"collector":
+			return COLLECTOR_FALLBACK_LINES.pick_random()
 	return FALLBACK_LINES.pick_random()
+
+
+func _is_painting_hung(painting: Node3D) -> bool:
+	if not is_instance_valid(painting) or not painting is CarryablePainting:
+		return true
+	var hanging_comp: PaintingHangingComponent = painting.get_node_or_null("PaintingHangingComponent")
+	if not hanging_comp:
+		return true
+	return hanging_comp.current_nail != null
 
 
 func _apply_skin() -> void:

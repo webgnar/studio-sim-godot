@@ -13,6 +13,9 @@
 [ext_resource type="Material" uid="uid://kmhof4jis4to" path="res://materials/NPCs/kylie.tres" id="11_kyle"]
 [ext_resource type="Material" uid="uid://bhbnorqaryte7" path="res://materials/NPCs/tinfoilguy.tres" id="12_tnfl"]
 [ext_resource type="Material" uid="uid://cg7knu7q6a1dw" path="res://materials/NPCs/maninblack.tres" id="13_mnbl"]
+[ext_resource type="Material" uid="uid://ddv7h8j6qfi0m" path="res://materials/NPCs/gw.tres" id="14_gw"]
+[ext_resource type="Material" uid="uid://bk83h7ba4qf12" path="res://materials/NPCs/ian.tres" id="15_ian"]
+[ext_resource type="Material" uid="uid://btumk0al3ne4p" path="res://materials/NPCs/kdog.tres" id="16_kdog"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_kpybi"]
 resource_local_to_scene = true
@@ -46,7 +49,7 @@ shape = SubResource("BoxShape3D_mirror")
 
 [node name="MirrorInteraction" type="Node3D" parent="." unique_id=98364238]
 script = ExtResource("2_0dm0a")
-skin_materials = Array[Material]([ExtResource("3_7epyn"), ExtResource("4_ev2bd"), ExtResource("5_0dm0a"), ExtResource("6_brs01"), ExtResource("7_tnguy"), ExtResource("8_blnde"), ExtResource("9_jlrch"), ExtResource("10_rnld"), ExtResource("11_kyle"), ExtResource("12_tnfl"), ExtResource("13_mnbl")])
+skin_materials = Array[Material]([ExtResource("3_7epyn"), ExtResource("4_ev2bd"), ExtResource("5_0dm0a"), ExtResource("6_brs01"), ExtResource("7_tnguy"), ExtResource("8_blnde"), ExtResource("9_jlrch"), ExtResource("10_rnld"), ExtResource("11_kyle"), ExtResource("12_tnfl"), ExtResource("13_mnbl"), ExtResource("14_gw"), ExtResource("15_ian"), ExtResource("16_kdog")])
 interaction_text = "Change"
 
 [node name="SubViewport" type="SubViewport" parent="." unique_id=672330661]

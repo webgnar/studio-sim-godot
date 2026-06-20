@@ -1,6 +1,7 @@
 class_name FortuneTeller extends CharacterBody3D
 
 const COOLDOWN = 120.0
+const API_URL = "https://studio-sim-gallery.vercel.app/api/astrology"
 
 @export var skin_material: StandardMaterial3D
 
@@ -10,9 +11,13 @@ var _anim_player: AnimationPlayer
 var _cached_reading: String = ""
 var _cooldown_timer: float = 0.0
 var _is_busy: bool = false
+var _http_request: HTTPRequest
 
 func _ready() -> void:
 	add_to_group("interactable")
+
+	_http_request = HTTPRequest.new()
+	add_child(_http_request)
 
 	_anim_player = _find_animation_player($humanrig)
 	if skin_material:
@@ -50,11 +55,89 @@ func interact(_player: Node) -> void:
 		_is_busy = false
 		return
 
-	var reading := FortuneTellerGenerator.generate(bd)
+	var birth_time: String = settings.get("birth_time", "")
+	var birth_location: String = settings.get("birth_location", "")
+	var coords := _parse_lat_lon(birth_location)
+
+	if birth_time.strip_edges() != "" and coords.size() == 2:
+		_fetch_from_backend(bd, birth_time, coords[0], coords[1])
+	else:
+		var reading := FortuneTellerGenerator.generate(bd)
+		_cached_reading = reading
+		_cooldown_timer = COOLDOWN
+		_start_dialogue(reading)
+		_is_busy = false
+
+
+func _parse_lat_lon(location: String) -> Array:
+	var text := location.strip_edges()
+	var parts: PackedStringArray
+	if text.contains(","):
+		parts = text.split(",")
+	else:
+		var regex := RegEx.new()
+		regex.compile("\\s+")
+		parts = regex.sub(text, " ", true).split(" ")
+	if parts.size() != 2:
+		return []
+	var lat_str := parts[0].strip_edges()
+	var lon_str := parts[1].strip_edges()
+	if lat_str == "" or lon_str == "":
+		return []
+	var lat := lat_str.to_float()
+	var lon := lon_str.to_float()
+	if lat == 0.0 and lat_str != "0" and lat_str != "0.0":
+		return []
+	if lon == 0.0 and lon_str != "0" and lon_str != "0.0":
+		return []
+	return [lat, lon]
+
+
+func _fetch_from_backend(birth_date: String, birth_time: String, lat: float, lon: float) -> void:
+	var body := JSON.stringify({
+		"birthDate": birth_date,
+		"birthTime": birth_time,
+		"birthLat": lat,
+		"birthLon": lon,
+	})
+	var headers := ["Content-Type: application/json"]
+	var error := _http_request.request(API_URL, headers, HTTPClient.METHOD_POST, body)
+	if error != OK:
+		_fallback_local(birth_date)
+		return
+
+	var result: Array = await _http_request.request_completed
+	var http_result: int = result[0]
+	var response_code: int = result[1]
+	var response_body: PackedByteArray = result[3]
+
+	if http_result != HTTPRequest.RESULT_SUCCESS or response_code < 200 or response_code >= 300:
+		_fallback_local(birth_date)
+		return
+
+	var json := JSON.new()
+	if json.parse(response_body.get_string_from_utf8()) != OK or typeof(json.data) != TYPE_DICTIONARY:
+		_fallback_local(birth_date)
+		return
+
+	var horoscope: String = json.data.get("horoscope", "")
+	if horoscope.strip_edges() == "":
+		_fallback_local(birth_date)
+		return
+
+	_cached_reading = horoscope
+	_cooldown_timer = COOLDOWN
+	_start_dialogue(horoscope)
+	_is_busy = false
+
+
+func _fallback_local(birth_date: String) -> void:
+	var reading := FortuneTellerGenerator.generate(birth_date)
 	_cached_reading = reading
 	_cooldown_timer = COOLDOWN
 	_start_dialogue(reading)
 	_is_busy = false
+
 
 func _start_dialogue(text: String) -> void:
 	var box: VisitorDialogueBox = _get_dialogue_box()

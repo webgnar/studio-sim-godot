@@ -26,6 +26,8 @@ func _on_body_entered(body):
 	elif body is CarryablePainting:
 		_spawn_fire_effect(body.global_position)
 		body.queue_free()
+		if SteamManager:
+			SteamManager.unlock_achievement("ACH_BURN_PAINTING")
 
 func _respawn(player):
 	_is_respawning = true

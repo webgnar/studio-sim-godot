@@ -145,6 +145,7 @@ func setup_achievements() -> void:
 		"ACH_NAILGUN": false,  # Break a window with the nailgun
 		"ACH_ELEVATOR": false,  # Lock yourself in the elevator
 		"ACH_DIE": false,  # Cause the player to die
+		"ACH_BURN_PAINTING": false,  # Burn a painting in the death zone
 		"ACH_LET_THERE_BE_LIGHT": false,  # Turn on lightswitch3 in light switch box2
 
 		# Social
