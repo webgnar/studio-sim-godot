@@ -57,7 +57,11 @@ func show_dialogue(chunks: Array[String], personality: String, display_name: Str
 
 
 func advance() -> bool:
-	_stop_speech_and_typewriter()
+	if _typewriter_active:
+		_stop_speech_and_typewriter()
+		_dialogue_label.visible_characters = -1
+		return true
+
 	_chunk_index += 1
 	if _chunk_index >= _chunks.size():
 		hide_dialogue()
