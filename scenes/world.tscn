@@ -378,10 +378,10 @@ resource_local_to_scene = true
 albedo_texture = SubResource("ViewportTexture_e68xj")
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_r5yoc"]
-size = Vector3(6.555237, 4.649658, 7.9403605)
+size = Vector3(6.555237, 4.649658, 11.057095)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_t2jyq"]
-size = Vector3(7.758217, 4.480591, 7.6582336)
+size = Vector3(6.0998116, 4.480591, 7.6582336)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_c7mri"]
 size = Vector3(7.4287415, 4.649658, 8.43367)
@@ -390,7 +390,7 @@ size = Vector3(7.4287415, 4.649658, 8.43367)
 size = Vector3(3, 4.649658, 9.790161)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_kloan"]
-size = Vector3(14.14502, 4.649658, 11.063416)
+size = Vector3(9.448975, 4.649658, 11.063416)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_sonb8"]
 size = Vector3(8.287598, 6.558655, 7)
@@ -525,17 +525,17 @@ albedo_color = Color(1.0734373, 1.0734373, 0.15063755, 1)
 albedo_texture = ExtResource("82_mu18u")
 texture_filter = 0
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_t2jyq"]
+[sub_resource type="PlaneMesh" id="PlaneMesh_tq137"]
 resource_local_to_scene = true
 size = Vector2(2.5, 3)
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_7n6r0"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_kloan"]
 resource_name = "_albedo"
 viewport_path = NodePath("../MirrorNew/SubViewport")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_x3v50"]
 resource_local_to_scene = true
-albedo_texture = SubResource("ViewportTexture_7n6r0")
+albedo_texture = SubResource("ViewportTexture_kloan")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_1v02h"]
 size = Vector2(2.5, 3)
@@ -1983,10 +1983,9 @@ impact_damage = 0.4
 
 [node name="CameraZone" parent="." unique_id=791826792 instance=ExtResource("71_dyafi")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -0.123270035, 0.96045446, -2.3668728)
-visible = false
 
 [node name="CollisionShape3D" parent="CameraZone" index="0"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.08316077, 1.6094971, -0.0015552044)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.08316077, 1.6094971, -1.5599221)
 shape = SubResource("BoxShape3D_r5yoc")
 
 [node name="SecurityCamera1" parent="CameraZone" index="1"]
@@ -2013,7 +2012,7 @@ transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -0.2
 visible = false
 
 [node name="CollisionShape3D" parent="CameraZone3 inside2" index="0"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.7734556, 0.1480546, 0.19197375)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.055747032, 0.1480546, 0.19197376)
 shape = SubResource("BoxShape3D_t2jyq")
 
 [node name="SecurityCamera1" parent="CameraZone3 inside2" index="1"]
@@ -2055,7 +2054,7 @@ transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 6.39
 visible = false
 
 [node name="CollisionShape3D" parent="CameraZone3 inside6" index="0"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.23964787, -0.1977706, 1.4587975)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.587669, -0.1977706, 1.4587975)
 shape = SubResource("BoxShape3D_kloan")
 
 [node name="SecurityCamera1" parent="CameraZone3 inside6" index="1"]
@@ -2286,7 +2285,7 @@ surface_material_override/0 = SubResource("StandardMaterial3D_7b7y8")
 
 [node name="mirror" parent="." unique_id=1626491013 groups=["shop_prop"] instance=ExtResource("39_qaasp")]
 transform = Transform3D(-4.7902194e-08, -0.99488777, 0.10098683, -3.9073655e-08, 0.10098683, 0.99488777, -1, 4.3711392e-08, -4.3711385e-08, 2.8, 1.497, 5.232)
-mesh = SubResource("PlaneMesh_t2jyq")
+mesh = SubResource("PlaneMesh_tq137")
 surface_material_override/0 = SubResource("StandardMaterial3D_x3v50")
 show_debug_logs = false
 metadata/mirror = "mirror"
