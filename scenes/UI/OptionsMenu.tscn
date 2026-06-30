@@ -293,16 +293,6 @@ layout_mode = 2
 button_pressed = true
 text = "Save PNG to downloads folder"
 
-[node name="GenerateCritiqueCheckbox" type="CheckBox" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/ScrollContainer/GameSettings" unique_id=1111111106]
-layout_mode = 2
-button_pressed = true
-text = "Generate Elevator Critique"
-
-[node name="PublishOnlineCheckbox" type="CheckBox" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/ScrollContainer/GameSettings" unique_id=1111111107]
-layout_mode = 2
-button_pressed = true
-text = "Publish painting online"
-
 [node name="InstagramRow" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/ScrollContainer/GameSettings" unique_id=1111111108]
 layout_mode = 2
 

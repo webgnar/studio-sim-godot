@@ -104,21 +104,6 @@ func _on_upload_completed(_gallery_id: String) -> void:
 	if _state != State.WAITING_FOR_UPLOAD:
 		return
 
-	var generate_critique: bool = true
-	if FileAccess.file_exists("user://settings.json"):
-		var sf = FileAccess.open("user://settings.json", FileAccess.READ)
-		if sf:
-			var sj = JSON.new()
-			if sj.parse(sf.get_as_text()) == OK and typeof(sj.data) == TYPE_DICTIONARY:
-				if sj.data.has("generate_npc_critique"):
-					generate_critique = bool(sj.data["generate_npc_critique"])
-			sf.close()
-
-	if not generate_critique:
-		_state = State.DISPLAYING
-		_set_text("Nothing to see here folks!")
-		return
-
 	_pipe_generator.reset()
 	dial_up_sound.play()
 	_current_critic = _pick_next_critic()

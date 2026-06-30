@@ -10,12 +10,9 @@ const PaintingPromptDialogScene = preload("res://scenes/UI/PaintingPromptDialog.
 
 var last_pressed: float = 0.0
 var _pending_metadata_check: bool = false
-var _pulse_hint: CanvasPulseHint
 
 func _ready() -> void:
 	super._ready()
-
-	_pulse_hint = get_parent().get_node_or_null("CanvasPulseHint") as CanvasPulseHint
 
 	# Try to find elevator controller if not assigned
 	if not elevator_controller:
@@ -52,8 +49,6 @@ func _on_gate_state_changed() -> void:
 	_update_interaction_text()
 
 func _on_gate_closed() -> void:
-	if _pulse_hint:
-		_pulse_hint.hide_hint()
 	_update_interaction_text()
 
 	# Check for missing metadata after the gate finishes closing
@@ -64,11 +59,6 @@ func _on_gate_closed() -> void:
 			_show_metadata_prompt(painting)
 
 func _on_painting_changed(_painting: CarryablePainting) -> void:
-	if _pulse_hint:
-		if elevator_controller.paintings_inside.is_empty():
-			_pulse_hint.hide_hint()
-		elif elevator_controller.is_gate_open():
-			_pulse_hint.show_hint()
 	_update_interaction_text()
 
 func _on_foreign_object_changed(_body: RigidBody3D) -> void:

@@ -125,7 +125,7 @@ text = "Pixel Matching Analysis"
 horizontal_alignment = 1
 
 [node name="HeatmapImage" type="TextureRect" parent="ScrollContainer/VBoxContainer/HeatmapPanel" unique_id=1806998918]
-custom_minimum_size = Vector2(300, 300)
+custom_minimum_size = Vector2(600, 600)
 layout_mode = 2
 expand_mode = 1
 stretch_mode = 5
@@ -157,4 +157,3 @@ alignment = 1
 custom_minimum_size = Vector2(150, 50)
 layout_mode = 2
 text = "Retry"
-

@@ -8,16 +8,9 @@ class_name ElevatorExportButton
 @export var button_cooldown: float = 1.0
 
 var last_pressed: float = 0.0
-var _glow_overlay: MeshInstance3D
-var _pulse_hint: CanvasPulseHint
 
 func _ready() -> void:
 	super._ready()
-
-	_glow_overlay = get_node_or_null("../green button/button/GlowOverlay") as MeshInstance3D
-	_pulse_hint = get_parent().get_node_or_null("CanvasPulseHint") as CanvasPulseHint
-	if not _glow_overlay:
-		push_warning("ElevatorExportButton: GlowOverlay not found.")
 
 	# Try to find elevator controller if not assigned
 	if not elevator_controller:
@@ -49,25 +42,14 @@ func _find_elevator_controller() -> ElevatorController:
 	return null
 
 func _on_state_changed(_painting: CarryablePainting) -> void:
-	if _pulse_hint and elevator_controller.paintings_inside.is_empty():
-		_pulse_hint.hide_hint()
 	_update_interaction_text()
 
 func _on_gate_changed() -> void:
-	if _pulse_hint:
-		if elevator_controller.can_export():
-			_pulse_hint.show_hint()
-		else:
-			_pulse_hint.hide_hint()
 	_update_interaction_text()
 
 func _on_export_started(_painting: CarryablePainting) -> void:
 	interaction_text = "Sending..."
 	is_disabled = true
-	if _glow_overlay:
-		_glow_overlay.visible = false
-	if _pulse_hint:
-		_pulse_hint.hide_hint()
 
 func _on_export_completed(_png_path: String, _glb_path: String) -> void:
 	is_disabled = false
@@ -98,8 +80,6 @@ func _update_interaction_text() -> void:
 		interaction_text = "Send Painting"
 		is_disabled = true
 
-	if _glow_overlay:
-		_glow_overlay.visible = not is_disabled
 
 func _on_interacted(_player_interaction_component: PlayerInteractionComponent) -> void:
 	# Cooldown check

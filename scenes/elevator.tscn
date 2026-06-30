@@ -10,10 +10,7 @@
 [ext_resource type="Script" uid="uid://deln44y5ixtum" path="res://scripts/components/ElevatorGateButton.gd" id="8_gatebutton"]
 [ext_resource type="PackedScene" uid="uid://bryic0ubsrfjn" path="res://models/interactables/buttonGreen.glb" id="8_lldhi"]
 [ext_resource type="PackedScene" uid="uid://db8764j2674fq" path="res://models/props/outlet_box.glb" id="9_jkj2p"]
-[ext_resource type="Shader" uid="uid://cqvbr5nplx4e1" path="res://shaders/canvas_pulse.gdshader" id="11_ja3hn"]
 [ext_resource type="PackedScene" uid="uid://d2hcs1m04uvg7" path="res://models/interactables/button.glb" id="11_qricf"]
-[ext_resource type="Script" uid="uid://b4qrmhintcvs3" path="res://scripts/components/CanvasPulseHint.gd" id="12_hint"]
-[ext_resource type="Shader" uid="uid://buct2ufpju42v" path="res://shaders/commission_pulse.gdshader" id="export_pulse"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rtj8h"]
 albedo_texture = ExtResource("2_pr5mj")
@@ -112,20 +109,6 @@ albedo_color = Color(0.8, 0.2, 0.2, 1)
 [sub_resource type="BoxShape3D" id="BoxShape3D_button"]
 size = Vector3(0.2, 0.2, 0.15)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_export_pulse"]
-render_priority = 0
-shader = ExtResource("export_pulse")
-shader_parameter/glow_color = Color(0.47231573, 0.3108883, 0.90421957, 1)
-shader_parameter/glow_strength = 1.0
-shader_parameter/rim_power = 1.0
-shader_parameter/pulse_speed = 6.0
-
-[sub_resource type="CylinderMesh" id="CylinderMesh_export_pulse"]
-top_radius = 0.95
-bottom_radius = 0.95
-radial_segments = 16
-rings = 1
-
 [sub_resource type="Animation" id="Animation_ja3hn"]
 length = 0.001
 tracks/0/type = "value"
@@ -179,32 +162,6 @@ _data = {
 &"press": SubResource("Animation_uyl0v"),
 &"release": SubResource("Animation_fasgy")
 }
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_uyl0v"]
-render_priority = 0
-shader = ExtResource("11_ja3hn")
-shader_parameter/speed = 0.90400004294
-shader_parameter/line_density = 6.9600001406
-shader_parameter/line_width = 0.154000007315
-shader_parameter/edge_softness = 0.04
-shader_parameter/glow = 2.322000110295
-shader_parameter/line_color = Color(1, 0.9, 0.6, 1)
-shader_parameter/opacity = 0.0
-
-[sub_resource type="PlaneMesh" id="PlaneMesh_fasgy"]
-material = SubResource("ShaderMaterial_uyl0v")
-size = Vector2(3, 3)
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_export_plane_pulse"]
-render_priority = 0
-shader = ExtResource("11_ja3hn")
-shader_parameter/speed = 0.90400004294
-shader_parameter/line_density = 6.9600001406
-shader_parameter/line_width = 0.154000007315
-shader_parameter/edge_softness = 0.04
-shader_parameter/glow = 2.322000110295
-shader_parameter/line_color = Color(1, 0.9, 0.6, 1)
-shader_parameter/opacity = 0.0
 
 [sub_resource type="BoxMesh" id="BoxMesh_gatebutton"]
 size = Vector3(0.15, 0.15, 0.08)
@@ -267,17 +224,6 @@ _data = {
 &"press": SubResource("Animation_bclct"),
 &"release": SubResource("Animation_8g65c")
 }
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_gate_pulse"]
-render_priority = 0
-shader = ExtResource("11_ja3hn")
-shader_parameter/speed = 0.90400004294
-shader_parameter/line_density = 6.9600001406
-shader_parameter/line_width = 0.154000007315
-shader_parameter/edge_softness = 0.04
-shader_parameter/glow = 2.322000110295
-shader_parameter/line_color = Color(1, 0.9, 0.6, 1)
-shader_parameter/opacity = 0.0
 
 [node name="Elevator" type="Node3D" unique_id=765873842]
 script = ExtResource("6_elevator")
@@ -376,7 +322,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.3)
 shape = SubResource("BoxShape3D_gateclearance")
 
 [node name="ExportButton" type="StaticBody3D" parent="." unique_id=1591935125 groups=["interactable"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.013089, 0.5781703, 2.8037944)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.4924016, 0.6166427, 2.7934973)
 collision_layer = 8
 collision_mask = 0
 
@@ -397,27 +343,13 @@ transform = Transform3D(-4.371139e-09, 0, -0.1, 0, 0.1, 0, 0.1, 0, -4.371139e-09
 [node name="button" parent="ExportButton/green button" unique_id=1538473858 instance=ExtResource("8_lldhi")]
 transform = Transform3D(-3.4969112e-08, 0.8, 0, -0.8, -3.4969112e-08, 0, 0, 0, 0.8, 0.48055172, 0, 0)
 
-[node name="GlowOverlay" type="MeshInstance3D" parent="ExportButton/green button/button" unique_id=159292765]
-visible = false
-material_override = SubResource("ShaderMaterial_export_pulse")
-cast_shadow = 0
-mesh = SubResource("CylinderMesh_export_pulse")
-
 [node name="box" parent="ExportButton/green button" unique_id=1799514240 instance=ExtResource("9_jkj2p")]
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="ExportButton/green button" unique_id=1523978721]
 libraries/ = SubResource("AnimationLibrary_s8jgb")
 
-[node name="pulse shader planemesh" type="MeshInstance3D" parent="ExportButton" unique_id=1102557037]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0.00015926361, -0.0052532554, -0.00059986115)
-mesh = SubResource("PlaneMesh_fasgy")
-surface_material_override/0 = SubResource("ShaderMaterial_export_plane_pulse")
-
-[node name="CanvasPulseHint" type="Node" parent="ExportButton" unique_id=938471202]
-script = ExtResource("12_hint")
-
 [node name="GateButton" type="StaticBody3D" parent="." unique_id=1352173630 groups=["interactable"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.13667381, 0.61861205, 2.761587)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.14634442, 0.61861205, 2.761587)
 collision_layer = 8
 collision_mask = 0
 
@@ -442,13 +374,5 @@ transform = Transform3D(-3.4969112e-08, 0.8000001, 0, -0.8000001, -3.4969112e-08
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="GateButton/red button2" unique_id=689127585]
 libraries/ = SubResource("AnimationLibrary_cu5xf")
-
-[node name="pulse shader planemesh" type="MeshInstance3D" parent="GateButton" unique_id=1755686249]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, -0.008402288, 0)
-mesh = SubResource("PlaneMesh_fasgy")
-surface_material_override/0 = SubResource("ShaderMaterial_gate_pulse")
-
-[node name="CanvasPulseHint" type="Node" parent="GateButton" unique_id=938471203]
-script = ExtResource("12_hint")
 
 [editable path="MovingParts/Spotlight"]

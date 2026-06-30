@@ -30,8 +30,6 @@ var close_button: Button = null  # Removed from scene; closing handled by go_bac
 @onready var language_scroll_container: ScrollContainer = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Language/ScrollContainer
 @onready var save_glb_checkbox: CheckBox = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/ScrollContainer/GameSettings/SaveGLBCheckbox
 @onready var save_png_checkbox: CheckBox = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/ScrollContainer/GameSettings/SavePNGCheckbox
-@onready var generate_critique_checkbox: CheckBox = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/ScrollContainer/GameSettings/GenerateCritiqueCheckbox
-@onready var publish_online_checkbox: CheckBox = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/ScrollContainer/GameSettings/PublishOnlineCheckbox
 @onready var instagram_line_edit: LineEdit = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/ScrollContainer/GameSettings/InstagramRow/InstagramLineEdit
 @onready var bluesky_line_edit: LineEdit = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/ScrollContainer/GameSettings/BlueSkyRow/BlueSkyLineEdit
 @onready var birth_date_line_edit: LineEdit = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/ScrollContainer/GameSettings/DOBRow/BirthDateLineEdit
@@ -478,8 +476,6 @@ func save_settings():
 	# Save game settings
 	settings["save_glb_on_ship"] = save_glb_on_ship
 	settings["save_png_on_ship"] = save_png_on_ship
-	settings["generate_npc_critique"] = generate_npc_critique
-	settings["publish_online_on_ship"] = publish_online_on_ship
 	settings["instagram_handle"] = instagram_handle
 	settings["bluesky_handle"] = bluesky_handle
 	settings["birth_date"] = birth_date
@@ -605,10 +601,6 @@ func load_settings():
 		save_glb_on_ship = bool(settings["save_glb_on_ship"])
 	if settings.has("save_png_on_ship"):
 		save_png_on_ship = bool(settings["save_png_on_ship"])
-	if settings.has("generate_npc_critique"):
-		generate_npc_critique = bool(settings["generate_npc_critique"])
-	if settings.has("publish_online_on_ship"):
-		publish_online_on_ship = bool(settings["publish_online_on_ship"])
 	if settings.has("instagram_handle"):
 		instagram_handle = str(settings["instagram_handle"])
 		instagram_line_edit.text = instagram_handle
@@ -626,8 +618,6 @@ func load_settings():
 		birth_time_line_edit.text = birth_time
 	save_glb_checkbox.button_pressed = save_glb_on_ship
 	save_png_checkbox.button_pressed = save_png_on_ship
-	generate_critique_checkbox.button_pressed = generate_npc_critique
-	publish_online_checkbox.button_pressed = publish_online_on_ship
 
 	# Load sensitivity setting
 	if settings.has("joystick_sensitivity"):
@@ -676,8 +666,6 @@ var language_buttons: Array[Button] = []
 
 var save_glb_on_ship: bool = true
 var save_png_on_ship: bool = true
-var generate_npc_critique: bool = true
-var publish_online_on_ship: bool = true
 var instagram_handle: String = ""
 var bluesky_handle: String = ""
 var birth_date: String = ""
@@ -757,25 +745,12 @@ func _create_game_tab():
 	save_glb_checkbox.focus_mode = Control.FOCUS_ALL
 	save_png_checkbox.button_pressed = save_png_on_ship
 	save_png_checkbox.focus_mode = Control.FOCUS_ALL
-	generate_critique_checkbox.button_pressed = generate_npc_critique
-	generate_critique_checkbox.focus_mode = Control.FOCUS_ALL
 
-	publish_online_checkbox.button_pressed = publish_online_on_ship
-	publish_online_checkbox.focus_mode = Control.FOCUS_ALL
-
-	# Wire focus chain: glb → png → critique → publish
+	# Wire focus chain: glb → png → instagram → bluesky
 	save_glb_checkbox.focus_next = save_glb_checkbox.get_path_to(save_png_checkbox)
 	save_glb_checkbox.focus_neighbor_bottom = save_glb_checkbox.get_path_to(save_png_checkbox)
 	save_png_checkbox.focus_previous = save_png_checkbox.get_path_to(save_glb_checkbox)
 	save_png_checkbox.focus_neighbor_top = save_png_checkbox.get_path_to(save_glb_checkbox)
-	save_png_checkbox.focus_next = save_png_checkbox.get_path_to(generate_critique_checkbox)
-	save_png_checkbox.focus_neighbor_bottom = save_png_checkbox.get_path_to(generate_critique_checkbox)
-	generate_critique_checkbox.focus_previous = generate_critique_checkbox.get_path_to(save_png_checkbox)
-	generate_critique_checkbox.focus_neighbor_top = generate_critique_checkbox.get_path_to(save_png_checkbox)
-	generate_critique_checkbox.focus_next = generate_critique_checkbox.get_path_to(publish_online_checkbox)
-	generate_critique_checkbox.focus_neighbor_bottom = generate_critique_checkbox.get_path_to(publish_online_checkbox)
-	publish_online_checkbox.focus_previous = publish_online_checkbox.get_path_to(generate_critique_checkbox)
-	publish_online_checkbox.focus_neighbor_top = publish_online_checkbox.get_path_to(generate_critique_checkbox)
 
 	# Set up social handle inputs
 	instagram_line_edit.text = instagram_handle
@@ -783,11 +758,11 @@ func _create_game_tab():
 	bluesky_line_edit.text = bluesky_handle
 	bluesky_line_edit.focus_mode = Control.FOCUS_ALL
 
-	# Extend focus chain: publish → instagram → bluesky
-	publish_online_checkbox.focus_next = publish_online_checkbox.get_path_to(instagram_line_edit)
-	publish_online_checkbox.focus_neighbor_bottom = publish_online_checkbox.get_path_to(instagram_line_edit)
-	instagram_line_edit.focus_previous = instagram_line_edit.get_path_to(publish_online_checkbox)
-	instagram_line_edit.focus_neighbor_top = instagram_line_edit.get_path_to(publish_online_checkbox)
+	# Extend focus chain: png → instagram → bluesky
+	save_png_checkbox.focus_next = save_png_checkbox.get_path_to(instagram_line_edit)
+	save_png_checkbox.focus_neighbor_bottom = save_png_checkbox.get_path_to(instagram_line_edit)
+	instagram_line_edit.focus_previous = instagram_line_edit.get_path_to(save_png_checkbox)
+	instagram_line_edit.focus_neighbor_top = instagram_line_edit.get_path_to(save_png_checkbox)
 	instagram_line_edit.focus_next = instagram_line_edit.get_path_to(bluesky_line_edit)
 	instagram_line_edit.focus_neighbor_bottom = instagram_line_edit.get_path_to(bluesky_line_edit)
 	bluesky_line_edit.focus_previous = bluesky_line_edit.get_path_to(instagram_line_edit)
@@ -817,14 +792,12 @@ func _create_game_tab():
 	# Connect signals after setting button_pressed to avoid triggering save_settings()
 	save_glb_checkbox.toggled.connect(_on_save_glb_toggled)
 	save_png_checkbox.toggled.connect(_on_save_png_toggled)
-	generate_critique_checkbox.toggled.connect(_on_generate_critique_toggled)
-	publish_online_checkbox.toggled.connect(_on_publish_online_toggled)
 	instagram_line_edit.text_changed.connect(_on_instagram_changed)
 	bluesky_line_edit.text_changed.connect(_on_bluesky_changed)
 	birth_date_line_edit.text_changed.connect(_on_birth_date_changed)
 	birth_location_line_edit.text_changed.connect(_on_birth_location_changed)
 	birth_time_line_edit.text_changed.connect(_on_birth_time_changed)
-	game_checkboxes = [save_glb_checkbox, save_png_checkbox, generate_critique_checkbox, publish_online_checkbox]
+	game_checkboxes = [save_glb_checkbox, save_png_checkbox]
 
 func _on_save_glb_toggled(pressed: bool):
 	save_glb_on_ship = pressed
@@ -832,14 +805,6 @@ func _on_save_glb_toggled(pressed: bool):
 
 func _on_save_png_toggled(pressed: bool):
 	save_png_on_ship = pressed
-	save_settings()
-
-func _on_generate_critique_toggled(pressed: bool):
-	generate_npc_critique = pressed
-	save_settings()
-
-func _on_publish_online_toggled(pressed: bool):
-	publish_online_on_ship = pressed
 	save_settings()
 
 func _on_instagram_changed(new_text: String):

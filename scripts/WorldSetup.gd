@@ -41,12 +41,12 @@ func _ready():
 	if WorldStateManager:
 		WorldStateManager.restore_player_position_early()
 
+	# Hide all shop-gated props before the first frame renders (purchased ones are revealed
+	# by ShopManager inside load_world_state via WorldStateManager.reveal_purchased_items)
+	_hide_all_shop_props()
+
 	# Wait one frame for scene tree to fully initialize
 	await get_tree().process_frame
-
-	# Hide all shop-gated props before loading (purchased ones are revealed by ShopManager
-	# inside load_world_state via WorldStateManager.reveal_purchased_items)
-	_hide_all_shop_props()
 
 	# Load saved world state (spawn saved carryable paintings, reveal purchased shop items)
 	if WorldStateManager:
