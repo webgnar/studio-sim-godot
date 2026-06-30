@@ -21,6 +21,9 @@ var _cached_painting_name: String = ""
 var _cached_artist_statement: String = ""
 var _cached_artist_name: String = ""
 
+const AI_CRITIQUE_URL = "https://studio-sim-gallery.vercel.app/api/critique"
+var _http_request: HTTPRequest
+
 const CRITICS: Array[Dictionary] = [
 	{"avatar": "res://sprites/art critics/bum.png", "type": "bum"},
 	{"avatar": "res://sprites/art critics/general.png", "type": "general"},
@@ -53,6 +56,10 @@ func _ready() -> void:
 
 	GalleryUploader.upload_completed.connect(_on_upload_completed)
 	GalleryUploader.upload_failed.connect(_on_upload_failed)
+
+	_http_request = HTTPRequest.new()
+	_http_request.timeout = 10.0
+	add_child(_http_request)
 
 	# Pipes are always the background — ColorRect no longer needed
 	_color_rect.visible = false
@@ -107,18 +114,70 @@ func _on_upload_completed(_gallery_id: String) -> void:
 	_pipe_generator.reset()
 	dial_up_sound.play()
 	_current_critic = _pick_next_critic()
+	var critic_type: String = _current_critic.get("type", "guy")
 
-	var critique_text := CritiqueGenerator.generate(
-		_current_critic.get("type", "guy"),
-		_cached_painting_name,
-		_cached_artist_name,
-		_cached_artist_statement,
-	)
+	var critique_text: String
+	if _is_generative_ai_enabled():
+		critique_text = await _generate_ai_critique(critic_type)
+	else:
+		critique_text = _generate_template_critique(critic_type)
+
 	_state = State.DISPLAYING
 	_show_critic()
 	_set_text(critique_text)
 	if _cached_painting_id != "":
 		WorldStateManager.save_critique_for_painting(_cached_painting_id, critique_text)
+
+func _generate_template_critique(critic_type: String) -> String:
+	return CritiqueGenerator.generate(
+		critic_type,
+		_cached_painting_name,
+		_cached_artist_name,
+		_cached_artist_statement,
+	)
+
+func _generate_ai_critique(critic_type: String) -> String:
+	var body := JSON.stringify({
+		"imageUrl": "",
+		"title": _cached_painting_name,
+		"artistName": _cached_artist_name,
+		"artistStatement": _cached_artist_statement,
+		"locale": LocaleManager.current_locale,
+		"criticType": critic_type,
+	})
+	var headers := ["Content-Type: application/json"]
+	var error := _http_request.request(AI_CRITIQUE_URL, headers, HTTPClient.METHOD_POST, body)
+	if error != OK:
+		return _generate_template_critique(critic_type)
+
+	var result: Array = await _http_request.request_completed
+	var http_result: int = result[0]
+	var response_code: int = result[1]
+	var response_body: PackedByteArray = result[3]
+
+	if http_result != HTTPRequest.RESULT_SUCCESS or response_code < 200 or response_code >= 300:
+		return _generate_template_critique(critic_type)
+
+	var text := response_body.get_string_from_utf8().strip_edges()
+	if text == "":
+		return _generate_template_critique(critic_type)
+	return text
+
+func _is_generative_ai_enabled() -> bool:
+	if not FileAccess.file_exists("user://settings.json"):
+		return false
+	var file := FileAccess.open("user://settings.json", FileAccess.READ)
+	if not file:
+		return false
+	var json_string := file.get_as_text()
+	file.close()
+	var json := JSON.new()
+	if json.parse(json_string) != OK:
+		return false
+	var settings = json.data
+	if typeof(settings) != TYPE_DICTIONARY:
+		return false
+	return bool(settings.get("generative_ai_enabled", false))
 
 func _on_upload_failed(error_message: String) -> void:
 	push_error("CritiqueDisplay: Upload failed: " + error_message)

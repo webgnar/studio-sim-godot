@@ -56,6 +56,26 @@ func show_dialogue(chunks: Array[String], personality: String, display_name: Str
 	tween.tween_property(_panel, "modulate:a", 1.0, 0.15)
 
 
+func show_loading(personality: String, display_name: String = "") -> void:
+	## Pops the box open immediately with a "thinking" indicator while a
+	## generative-AI line is still being fetched. show_dialogue() replaces
+	## this once the real text arrives.
+	_stop_speech_and_typewriter()
+	_chunks = []
+	_chunk_index = 0
+	_open = true
+
+	_speech.base_pitch = PERSONALITY_PITCH.get(personality, 1.0)
+	_personality_label.text = "— %s —" % (display_name if display_name != "" else personality)
+	_continue_hint.visible = false
+	_dialogue_label.text = "..."
+	_dialogue_label.visible_characters = -1
+
+	_panel.visible = true
+	var tween := create_tween()
+	tween.tween_property(_panel, "modulate:a", 1.0, 0.15)
+
+
 func advance() -> bool:
 	if _typewriter_active:
 		_stop_speech_and_typewriter()

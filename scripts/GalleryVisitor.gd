@@ -170,6 +170,10 @@ var _is_interacting: bool = false
 var _facing_player: bool = false
 var _face_player_ref: Node3D = null
 
+const AI_VISITOR_DIALOGUE_URL = "https://studio-sim-gallery.vercel.app/api/visitor-dialogue"
+const AI_ATTRACTION_DIALOGUE_URL = "https://studio-sim-gallery.vercel.app/api/attraction-dialogue"
+var _http_request: HTTPRequest
+
 
 func _ready() -> void:
 	add_to_group("gallery_visitors")
@@ -202,6 +206,10 @@ func _ready() -> void:
 
 	_play_animation("idle")
 	get_tree().create_timer(1.0).timeout.connect(_choose_next_attraction, CONNECT_ONE_SHOT)
+
+	_http_request = HTTPRequest.new()
+	_http_request.timeout = 8.0
+	add_child(_http_request)
 
 
 func _physics_process(delta: float) -> void:
@@ -260,11 +268,13 @@ func interact(_player: Node) -> void:
 func _fetch_dialogue() -> void:
 	var painting_name := ""
 	var artist_name := ""
+	var painting_critique := ""
 
 	if has_node("/root/WorldStateManager"):
 		for data in WorldStateManager.get_all_paintings():
 			if data.get("node") == _last_attraction:
 				painting_name = data.get("name", "")
+				painting_critique = data.get("critique", "")
 				break
 
 	if has_node("/root/SteamManager"):
@@ -288,7 +298,12 @@ func _fetch_dialogue() -> void:
 		_is_interacting = false
 		return
 
-	var line := VisitorDialogueGenerator.generate_painting_line(_personality, painting_name, artist_name)
+	var line: String
+	if _is_generative_ai_enabled():
+		_show_loading_dialogue()
+		line = await _generate_ai_painting_line(painting_name, artist_name, painting_critique)
+	else:
+		line = VisitorDialogueGenerator.generate_painting_line(_personality, painting_name, artist_name)
 	_cached_dialogue = line
 	_dialogue_cooldown = DIALOGUE_COOLDOWN
 	_start_dialogue(line)
@@ -309,11 +324,92 @@ func _fetch_attraction_dialogue(item_id: String) -> void:
 		return
 
 	var item_title: String = item.get("title", item.get("display_name", ""))
-	var line := VisitorDialogueGenerator.generate_attraction_line(_personality, item_title)
+	var line: String
+	if _is_generative_ai_enabled():
+		_show_loading_dialogue()
+		line = await _generate_ai_attraction_line(item_title, item.get("description", ""), item_id)
+	else:
+		line = VisitorDialogueGenerator.generate_attraction_line(_personality, item_title)
 	_cached_dialogue = line
 	_dialogue_cooldown = DIALOGUE_COOLDOWN
 	_start_dialogue(line)
 	_is_interacting = false
+
+
+func _generate_ai_painting_line(painting_name: String, artist_name: String, painting_critique: String) -> String:
+	var body := JSON.stringify({
+		"paintingName": painting_name,
+		"artistStatement": "",
+		"artistName": artist_name,
+		"visitorPersonality": _personality,
+		"locale": LocaleManager.current_locale,
+		"paintingCritique": painting_critique,
+		"imageUrl": "",
+	})
+	var headers := ["Content-Type: application/json", "x-api-key: " + GalleryUploader.API_KEY]
+	var error := _http_request.request(AI_VISITOR_DIALOGUE_URL, headers, HTTPClient.METHOD_POST, body)
+	if error != OK:
+		return VisitorDialogueGenerator.generate_painting_line(_personality, painting_name, artist_name)
+
+	var result: Array = await _http_request.request_completed
+	var dialogue := _parse_ai_dialogue_response(result)
+	if dialogue == "":
+		return VisitorDialogueGenerator.generate_painting_line(_personality, painting_name, artist_name)
+	return dialogue
+
+
+func _generate_ai_attraction_line(item_title: String, item_description: String, device_id: String) -> String:
+	var body := JSON.stringify({
+		"attractionTitle": item_title,
+		"attractionDescription": item_description,
+		"deviceId": device_id,
+		"visitorPersonality": _personality,
+		"locale": LocaleManager.current_locale,
+	})
+	var headers := ["Content-Type: application/json", "x-api-key: " + GalleryUploader.API_KEY]
+	var error := _http_request.request(AI_ATTRACTION_DIALOGUE_URL, headers, HTTPClient.METHOD_POST, body)
+	if error != OK:
+		return VisitorDialogueGenerator.generate_attraction_line(_personality, item_title)
+
+	var result: Array = await _http_request.request_completed
+	var dialogue := _parse_ai_dialogue_response(result)
+	if dialogue == "":
+		return VisitorDialogueGenerator.generate_attraction_line(_personality, item_title)
+	return dialogue
+
+
+func _parse_ai_dialogue_response(result: Array) -> String:
+	var http_result: int = result[0]
+	var response_code: int = result[1]
+	var response_body: PackedByteArray = result[3]
+
+	if http_result != HTTPRequest.RESULT_SUCCESS or response_code < 200 or response_code >= 300:
+		return ""
+
+	var json := JSON.new()
+	if json.parse(response_body.get_string_from_utf8()) != OK:
+		return ""
+	var data = json.data
+	if typeof(data) != TYPE_DICTIONARY:
+		return ""
+	return str(data.get("dialogue", "")).strip_edges()
+
+
+func _is_generative_ai_enabled() -> bool:
+	if not FileAccess.file_exists("user://settings.json"):
+		return false
+	var file := FileAccess.open("user://settings.json", FileAccess.READ)
+	if not file:
+		return false
+	var json_string := file.get_as_text()
+	file.close()
+	var json := JSON.new()
+	if json.parse(json_string) != OK:
+		return false
+	var settings = json.data
+	if typeof(settings) != TYPE_DICTIONARY:
+		return false
+	return bool(settings.get("generative_ai_enabled", false))
 
 
 
@@ -374,6 +470,14 @@ func _start_dialogue(text: String) -> void:
 		return
 	var label := visitor_display_name if visitor_display_name != "" else _personality
 	box.show_dialogue(_split_into_chunks(text), _personality, label)
+
+
+func _show_loading_dialogue() -> void:
+	var box: VisitorDialogueBox = _get_dialogue_box()
+	if not box:
+		return
+	var label := visitor_display_name if visitor_display_name != "" else _personality
+	box.show_loading(_personality, label)
 
 
 func _on_dialogue_finished() -> void:

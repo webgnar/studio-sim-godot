@@ -293,6 +293,11 @@ layout_mode = 2
 button_pressed = true
 text = "Save PNG to downloads folder"
 
+[node name="GenerativeAICheckbox" type="CheckBox" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/ScrollContainer/GameSettings" unique_id=1111111106]
+layout_mode = 2
+button_pressed = false
+text = "Generative AI Critiques & Dialogue"
+
 [node name="InstagramRow" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/ScrollContainer/GameSettings" unique_id=1111111108]
 layout_mode = 2
 

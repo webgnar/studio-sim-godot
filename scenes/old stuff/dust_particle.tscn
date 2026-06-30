@@ -41,6 +41,3 @@ explosiveness = 0.28
 randomness = 1.0
 process_material = SubResource("ParticleProcessMaterial_dust")
 draw_pass_1 = SubResource("QuadMesh_lixhd")
-
-[node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 10)

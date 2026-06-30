@@ -36,6 +36,3 @@ draw_passes = 3
 draw_pass_1 = ExtResource("1_lhr0q")
 draw_pass_2 = ExtResource("2_o3x6w")
 draw_pass_3 = ExtResource("3_rejuq")
-
-[node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 15)

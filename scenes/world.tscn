@@ -615,7 +615,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_pb8sg")
 }],
-"loop": true,
+"loop": 1,
 "name": &"ripple",
 "speed": 5.0
 }]
@@ -744,7 +744,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_wui3h")
 }],
-"loop": true,
+"loop": 1,
 "name": &"ripple",
 "speed": 5.0
 }]
@@ -916,9 +916,6 @@ size = Vector3(36.712166, 1, 13.372541)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_i00a8"]
 size = Vector3(74.13498, 1, 43.52961)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_h5nhj"]
-size = Vector3(8.818, 1.3930664, 9.446)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3fb5j"]
 albedo_texture = ExtResource("24_grmox")
@@ -1363,8 +1360,32 @@ size = Vector3(6.2917633, 5.5410156, 36.63073)
 material = SubResource("StandardMaterial3D_frq1x")
 
 [node name="CSGBox3D2" type="CSGBox3D" parent="hallway" unique_id=169436616]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.333557, -4.1942825, -7.2930923)
-size = Vector3(5.640625, 16.888687, 1)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.333557, -4.1942825, -7.040651)
+size = Vector3(5.640625, 16.888687, 1.5048828)
+material = ExtResource("3_qfnet")
+
+[node name="CSGBox3D3" type="CSGBox3D" parent="hallway" unique_id=2106170746]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.546176, 6.232705, -5.5281096)
+operation = 2
+size = Vector3(2.9433594, 2.3081665, 1.9042969)
+material = ExtResource("3_qfnet")
+
+[node name="CSGBox3D6" type="CSGBox3D" parent="hallway" unique_id=826011170]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.0710444, 7.6569633, -5.5281096)
+operation = 2
+size = Vector3(2.0078125, 2.3081665, 1.9042969)
+material = ExtResource("3_qfnet")
+
+[node name="CSGBox3D4" type="CSGBox3D" parent="hallway" unique_id=1622264543]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.556202, 5.374082, -5.5281096)
+operation = 2
+size = Vector3(1.3560791, 1.3412476, 1.9042969)
+material = ExtResource("3_qfnet")
+
+[node name="CSGBox3D5" type="CSGBox3D" parent="hallway" unique_id=84774218]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.874631, 5.078666, -5.5281096)
+operation = 2
+size = Vector3(1.3560791, 1.3412476, 1.9042969)
 material = ExtResource("3_qfnet")
 
 [node name="AssistantStudio" type="Node3D" parent="." unique_id=1212904913]
@@ -2617,14 +2638,6 @@ shape = SubResource("BoxShape3D_7huuw")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.704544, 0, 54.989742)
 shape = SubResource("BoxShape3D_i00a8")
 
-[node name="DeathZone2" type="Area3D" parent="." unique_id=1658766208]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.352553, 0)
-script = ExtResource("96_ufs10")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="DeathZone2" unique_id=2086860833]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.491428, -0.16903782, -6.0622597)
-shape = SubResource("BoxShape3D_h5nhj")
-
 [node name="SpotLight3D" type="SpotLight3D" parent="." unique_id=16085599]
 transform = Transform3D(1, 0, 0, 0, -0.50000006, 0.8660254, 0, -0.8660254, -0.50000006, 0, 4, 6)
 light_color = Color(0.52156866, 1, 1, 1)
@@ -2806,7 +2819,7 @@ size = Vector3(0.5161133, 9.681091, 1)
 material = ExtResource("3_qfnet")
 
 [node name="Basketball" parent="gallery" unique_id=1380341004 groups=["shop_prop"] instance=ExtResource("121_gyxkx")]
-transform = Transform3D(-0.8660254, 0, -0.50000006, 0, 1, 0, 0.50000006, 0, -0.8660254, -4.850615, -0.2702918, 13.934031)
+transform = Transform3D(-0.14556402, 0.89771247, 0.4158406, 0.8624473, -0.09080858, 0.49793425, 0.4847637, 0.43112192, -0.76101124, 13.42936, 11.086607, 6.122342)
 metadata/shop_item_id = "basketball"
 
 [node name="basketballcourt" type="MeshInstance3D" parent="gallery" unique_id=965092255]

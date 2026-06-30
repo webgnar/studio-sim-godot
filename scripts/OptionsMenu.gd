@@ -30,6 +30,7 @@ var close_button: Button = null  # Removed from scene; closing handled by go_bac
 @onready var language_scroll_container: ScrollContainer = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Language/ScrollContainer
 @onready var save_glb_checkbox: CheckBox = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/ScrollContainer/GameSettings/SaveGLBCheckbox
 @onready var save_png_checkbox: CheckBox = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/ScrollContainer/GameSettings/SavePNGCheckbox
+@onready var generative_ai_checkbox: CheckBox = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/ScrollContainer/GameSettings/GenerativeAICheckbox
 @onready var instagram_line_edit: LineEdit = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/ScrollContainer/GameSettings/InstagramRow/InstagramLineEdit
 @onready var bluesky_line_edit: LineEdit = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/ScrollContainer/GameSettings/BlueSkyRow/BlueSkyLineEdit
 @onready var birth_date_line_edit: LineEdit = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Game/ScrollContainer/GameSettings/DOBRow/BirthDateLineEdit
@@ -476,6 +477,7 @@ func save_settings():
 	# Save game settings
 	settings["save_glb_on_ship"] = save_glb_on_ship
 	settings["save_png_on_ship"] = save_png_on_ship
+	settings["generative_ai_enabled"] = generative_ai_enabled
 	settings["instagram_handle"] = instagram_handle
 	settings["bluesky_handle"] = bluesky_handle
 	settings["birth_date"] = birth_date
@@ -601,6 +603,8 @@ func load_settings():
 		save_glb_on_ship = bool(settings["save_glb_on_ship"])
 	if settings.has("save_png_on_ship"):
 		save_png_on_ship = bool(settings["save_png_on_ship"])
+	if settings.has("generative_ai_enabled"):
+		generative_ai_enabled = bool(settings["generative_ai_enabled"])
 	if settings.has("instagram_handle"):
 		instagram_handle = str(settings["instagram_handle"])
 		instagram_line_edit.text = instagram_handle
@@ -618,6 +622,7 @@ func load_settings():
 		birth_time_line_edit.text = birth_time
 	save_glb_checkbox.button_pressed = save_glb_on_ship
 	save_png_checkbox.button_pressed = save_png_on_ship
+	generative_ai_checkbox.button_pressed = generative_ai_enabled
 
 	# Load sensitivity setting
 	if settings.has("joystick_sensitivity"):
@@ -666,6 +671,7 @@ var language_buttons: Array[Button] = []
 
 var save_glb_on_ship: bool = true
 var save_png_on_ship: bool = true
+var generative_ai_enabled: bool = false
 var instagram_handle: String = ""
 var bluesky_handle: String = ""
 var birth_date: String = ""
@@ -745,12 +751,18 @@ func _create_game_tab():
 	save_glb_checkbox.focus_mode = Control.FOCUS_ALL
 	save_png_checkbox.button_pressed = save_png_on_ship
 	save_png_checkbox.focus_mode = Control.FOCUS_ALL
+	generative_ai_checkbox.button_pressed = generative_ai_enabled
+	generative_ai_checkbox.focus_mode = Control.FOCUS_ALL
 
-	# Wire focus chain: glb → png → instagram → bluesky
+	# Wire focus chain: glb → png → ai → instagram → bluesky
 	save_glb_checkbox.focus_next = save_glb_checkbox.get_path_to(save_png_checkbox)
 	save_glb_checkbox.focus_neighbor_bottom = save_glb_checkbox.get_path_to(save_png_checkbox)
 	save_png_checkbox.focus_previous = save_png_checkbox.get_path_to(save_glb_checkbox)
 	save_png_checkbox.focus_neighbor_top = save_png_checkbox.get_path_to(save_glb_checkbox)
+	save_png_checkbox.focus_next = save_png_checkbox.get_path_to(generative_ai_checkbox)
+	save_png_checkbox.focus_neighbor_bottom = save_png_checkbox.get_path_to(generative_ai_checkbox)
+	generative_ai_checkbox.focus_previous = generative_ai_checkbox.get_path_to(save_png_checkbox)
+	generative_ai_checkbox.focus_neighbor_top = generative_ai_checkbox.get_path_to(save_png_checkbox)
 
 	# Set up social handle inputs
 	instagram_line_edit.text = instagram_handle
@@ -758,11 +770,11 @@ func _create_game_tab():
 	bluesky_line_edit.text = bluesky_handle
 	bluesky_line_edit.focus_mode = Control.FOCUS_ALL
 
-	# Extend focus chain: png → instagram → bluesky
-	save_png_checkbox.focus_next = save_png_checkbox.get_path_to(instagram_line_edit)
-	save_png_checkbox.focus_neighbor_bottom = save_png_checkbox.get_path_to(instagram_line_edit)
-	instagram_line_edit.focus_previous = instagram_line_edit.get_path_to(save_png_checkbox)
-	instagram_line_edit.focus_neighbor_top = instagram_line_edit.get_path_to(save_png_checkbox)
+	# Extend focus chain: ai → instagram → bluesky
+	generative_ai_checkbox.focus_next = generative_ai_checkbox.get_path_to(instagram_line_edit)
+	generative_ai_checkbox.focus_neighbor_bottom = generative_ai_checkbox.get_path_to(instagram_line_edit)
+	instagram_line_edit.focus_previous = instagram_line_edit.get_path_to(generative_ai_checkbox)
+	instagram_line_edit.focus_neighbor_top = instagram_line_edit.get_path_to(generative_ai_checkbox)
 	instagram_line_edit.focus_next = instagram_line_edit.get_path_to(bluesky_line_edit)
 	instagram_line_edit.focus_neighbor_bottom = instagram_line_edit.get_path_to(bluesky_line_edit)
 	bluesky_line_edit.focus_previous = bluesky_line_edit.get_path_to(instagram_line_edit)
@@ -792,12 +804,13 @@ func _create_game_tab():
 	# Connect signals after setting button_pressed to avoid triggering save_settings()
 	save_glb_checkbox.toggled.connect(_on_save_glb_toggled)
 	save_png_checkbox.toggled.connect(_on_save_png_toggled)
+	generative_ai_checkbox.toggled.connect(_on_generative_ai_toggled)
 	instagram_line_edit.text_changed.connect(_on_instagram_changed)
 	bluesky_line_edit.text_changed.connect(_on_bluesky_changed)
 	birth_date_line_edit.text_changed.connect(_on_birth_date_changed)
 	birth_location_line_edit.text_changed.connect(_on_birth_location_changed)
 	birth_time_line_edit.text_changed.connect(_on_birth_time_changed)
-	game_checkboxes = [save_glb_checkbox, save_png_checkbox]
+	game_checkboxes = [save_glb_checkbox, save_png_checkbox, generative_ai_checkbox]
 
 func _on_save_glb_toggled(pressed: bool):
 	save_glb_on_ship = pressed
@@ -805,6 +818,10 @@ func _on_save_glb_toggled(pressed: bool):
 
 func _on_save_png_toggled(pressed: bool):
 	save_png_on_ship = pressed
+	save_settings()
+
+func _on_generative_ai_toggled(pressed: bool):
+	generative_ai_enabled = pressed
 	save_settings()
 
 func _on_instagram_changed(new_text: String):

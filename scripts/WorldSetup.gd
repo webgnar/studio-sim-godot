@@ -5,7 +5,17 @@ extends Node3D  # or whatever your world root extends
 @onready var mission_authoring_ui = $DevTools_Layer/MissionAuthoringUi
 var camera_zone_switch: Node = null
 
+# Breakable window particle effects use unique shaders that Godot only compiles
+# on first draw. Firing them once here (while the scene-transition fade is still
+# black) moves that compile hitch off the first time the player breaks a window.
+const _BREAKABLE_WARMUP_SCENES := [
+	"res://scenes/old stuff/dust_particle.tscn",
+	"res://scenes/old stuff/glass_shard_particle.tscn",
+]
+
 func _ready():
+	_warmup_breakable_window_shaders()
+
 	# Register both painting systems with the mode manager
 	PaintingModeManager.register_3d_system(painting_root_3d, painting_root_3d)
 	PaintingModeManager.register_2d_system(painting_root_2d.get_node("CanvasViewport/CanvasRoot"), painting_root_2d)
@@ -51,6 +61,23 @@ func _ready():
 	# Load saved world state (spawn saved carryable paintings, reveal purchased shop items)
 	if WorldStateManager:
 		WorldStateManager.load_world_state(self)
+
+func _warmup_breakable_window_shaders() -> void:
+	"""Pre-compile the crack/shatter particle shaders during the load fade."""
+	for scene_path in _BREAKABLE_WARMUP_SCENES:
+		var instance: Node3D = load(scene_path).instantiate()
+		add_child(instance)
+		var particles := instance.get_node("GPUParticles3D") as GPUParticles3D
+		if particles:
+			particles.one_shot = true
+			particles.emitting = true
+			particles.restart()
+		instance.queue_free()
+
+	# Give the warmup particles a couple of frames to actually render and
+	# trigger shader compilation before gameplay can hit a window.
+	await get_tree().process_frame
+	await get_tree().process_frame
 
 func _hide_all_shop_props() -> void:
 	"""Hide and freeze all shop-gated props. ShopManager reveals purchased ones after load."""
