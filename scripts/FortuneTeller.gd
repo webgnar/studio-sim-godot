@@ -2,6 +2,7 @@ class_name FortuneTeller extends CharacterBody3D
 
 const COOLDOWN = 120.0
 const API_URL = "https://studio-sim-gallery.vercel.app/api/astrology"
+const ASTROLOGY_API_KEY = "jupTtic3qGOULETb2w7E"
 
 @export var skin_material: StandardMaterial3D
 
@@ -57,10 +58,9 @@ func interact(_player: Node) -> void:
 
 	var birth_time: String = settings.get("birth_time", "")
 	var birth_location: String = settings.get("birth_location", "")
-	var coords := _parse_lat_lon(birth_location)
 
-	if birth_time.strip_edges() != "" and coords.size() == 2:
-		_fetch_from_backend(bd, birth_time, coords[0], coords[1])
+	if birth_time.strip_edges() != "":
+		_fetch_from_backend(bd, birth_time, birth_location)
 	else:
 		var reading := FortuneTellerGenerator.generate(bd)
 		_cached_reading = reading
@@ -69,38 +69,18 @@ func interact(_player: Node) -> void:
 		_is_busy = false
 
 
-func _parse_lat_lon(location: String) -> Array:
-	var text := location.strip_edges()
-	var parts: PackedStringArray
-	if text.contains(","):
-		parts = text.split(",")
-	else:
-		var regex := RegEx.new()
-		regex.compile("\\s+")
-		parts = regex.sub(text, " ", true).split(" ")
-	if parts.size() != 2:
-		return []
-	var lat_str := parts[0].strip_edges()
-	var lon_str := parts[1].strip_edges()
-	if lat_str == "" or lon_str == "":
-		return []
-	var lat := lat_str.to_float()
-	var lon := lon_str.to_float()
-	if lat == 0.0 and lat_str != "0" and lat_str != "0.0":
-		return []
-	if lon == 0.0 and lon_str != "0" and lon_str != "0.0":
-		return []
-	return [lat, lon]
+func _fetch_from_backend(birth_date: String, birth_time: String, birth_location: String) -> void:
+	var use_ai := _is_generative_ai_enabled()
+	if use_ai:
+		_show_loading_dialogue()
 
-
-func _fetch_from_backend(birth_date: String, birth_time: String, lat: float, lon: float) -> void:
 	var body := JSON.stringify({
 		"birthDate": birth_date,
 		"birthTime": birth_time,
-		"birthLat": lat,
-		"birthLon": lon,
+		"birthLocation": birth_location,
+		"useAI": use_ai,
 	})
-	var headers := ["Content-Type: application/json"]
+	var headers := ["Content-Type: application/json", "x-api-key: " + ASTROLOGY_API_KEY]
 	var error := _http_request.request(API_URL, headers, HTTPClient.METHOD_POST, body)
 	if error != OK:
 		_fallback_local(birth_date)
@@ -144,6 +124,12 @@ func _start_dialogue(text: String) -> void:
 	if not box:
 		return
 	box.show_dialogue(_split_into_chunks(text), "spiritual", "The Fortune Teller")
+
+func _show_loading_dialogue() -> void:
+	var box: VisitorDialogueBox = _get_dialogue_box()
+	if not box:
+		return
+	box.show_loading("spiritual", "The Fortune Teller")
 
 func _on_dialogue_finished() -> void:
 	pass
@@ -223,3 +209,6 @@ func _load_settings() -> Dictionary:
 		return {}
 	file.close()
 	return json.data
+
+func _is_generative_ai_enabled() -> bool:
+	return bool(_load_settings().get("generative_ai_enabled", false))

@@ -1109,6 +1109,7 @@ painting_system_3d = NodePath("../../PaintingRoot")
 painting_system_2d = NodePath("../../PaintingRoot2d/CanvasViewport/CanvasRoot")
 
 [node name="GameplayUI_Layer" type="CanvasLayer" parent="." unique_id=497812470]
+layer = 10
 
 [node name="MissionHUD" parent="GameplayUI_Layer" unique_id=1077091467 instance=ExtResource("83_hud")]
 
