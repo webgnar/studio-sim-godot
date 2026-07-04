@@ -107,7 +107,7 @@ func _on_export_started(painting: CarryablePainting) -> void:
 	_state = State.WAITING_FOR_UPLOAD
 	_set_text(tr("Uploading painting..."))
 
-func _on_upload_completed(_gallery_id: String) -> void:
+func _on_upload_completed(_gallery_id: String, image_url: String = "") -> void:
 	if _state != State.WAITING_FOR_UPLOAD:
 		return
 
@@ -118,7 +118,7 @@ func _on_upload_completed(_gallery_id: String) -> void:
 
 	var critique_text: String
 	if _is_generative_ai_enabled():
-		critique_text = await _generate_ai_critique(critic_type)
+		critique_text = await _generate_ai_critique(critic_type, image_url)
 	else:
 		critique_text = _generate_template_critique(critic_type)
 
@@ -136,9 +136,9 @@ func _generate_template_critique(critic_type: String) -> String:
 		_cached_artist_statement,
 	)
 
-func _generate_ai_critique(critic_type: String) -> String:
+func _generate_ai_critique(critic_type: String, image_url: String = "") -> String:
 	var body := JSON.stringify({
-		"imageUrl": "",
+		"imageUrl": image_url,
 		"title": _cached_painting_name,
 		"artistName": _cached_artist_name,
 		"artistStatement": _cached_artist_statement,

@@ -280,11 +280,17 @@ func _build_catalog() -> void:
 			"id": "water_filter",
 			"display_name": "Water Filter",
 			"title": "Proprietary Water Filter",
-			"description": "Clean water for a clear mind. A sleek plastic tower of liquid clarity. Pour questionable water into the top, wait patiently, and watch as invisible microscopic villains are dramatically evicted before reaching your glass.
-
-Requires no electricity, no plumbing, and no trust in municipal optimism. Just gravity, confidence, and an unwavering belief that two metal cylinders stacked together can solve everything.
-
-Perfect for off-grid cabins, emergency preparedness, or anyone who enjoys their water filtered with a side of apocalypse readiness.",
+			"description": (
+				"Clean water for a clear mind. A sleek plastic tower of liquid clarity."
+				+ " Pour questionable water into the top, wait patiently, and watch as"
+				+ " invisible microscopic villains are dramatically evicted before reaching"
+				+ " your glass.\n\n"
+				+ "Requires no electricity, no plumbing, and no trust in municipal optimism."
+				+ " Just gravity, confidence, and an unwavering belief that two metal"
+				+ " cylinders stacked together can solve everything.\n\n"
+				+ "Perfect for off-grid cabins, emergency preparedness, or anyone who enjoys"
+				+ " their water filtered with a side of apocalypse readiness."
+			),
 			"price": 200,
 		},
 		{
@@ -333,7 +339,7 @@ Perfect for off-grid cabins, emergency preparedness, or anyone who enjoys their 
 			"id": "psywheel",
 			"display_name": "Psywheel",
 			"title": "Psywheel",
-			"description": "A homemade meditation device crafted out of an eraser, a toothpic, and a folded piece of paper. Used to practice telekinesis. When it's spinning, you know you are onto something.",
+			"description": "A homemade meditation device crafted out of an eraser, a toothpick, and a folded piece of paper. Used to practice telekinesis. When it's spinning, you know you are onto something.",
 			"price": 150,
 		},
 		{
@@ -347,45 +353,133 @@ Perfect for off-grid cabins, emergency preparedness, or anyone who enjoys their 
 			"id": "seg",
 			"display_name": "SEG",
 			"title": "Searl Effect Generator",
-			"description": "A legendary machine born somewhere between experimental engineering and late-night scientific rebellion. Inspired by the controversial designs attributed to inventor John Searl, this rotating assembly of magnetized rollers and concentric rings is said to unlock phenomena that mainstream physics politely refuses to acknowledge.
-
-Supporters claim that once the rollers reach a precise rotational harmony, the generator enters the Searl Effect, a self-sustaining electromagnetic state where motion feeds energy back into itself. The result, allegedly, is power generation without fuel, friction, or financial regret.
-
-Rumored capabilities include:
-- Free electrical energy produced directly from ambient fields.
-- Self-acceleration after startup, requiring little or no external power.
-- Gravity reduction effects, ranging from slight weight loss to full levitation of the device itself.
-- Silent propulsion, theoretically enabling hovering vehicles or anti-gravity transport.
-- Ionization of surrounding air, creating glowing corona effects and dramatic sci-fi ambiance.
-- Localized cooling, as nearby temperatures supposedly drop during operation.
-- Electromagnetic shielding, because ordinary reality struggles to keep up.
-- Reports of improved electronics efficiency nearby (and occasionally improved confidence).
-
-Whether a revolutionary breakthrough or an extremely sophisticated conversation piece, the Searl Effect Generator undeniably transforms any space into a cutting-edge research facility, or at least a place where bold ideas spin very, very fast.",
+			"description": (
+				"A legendary machine born somewhere between experimental engineering and"
+				+ " late-night scientific rebellion. Inspired by the controversial designs"
+				+ " attributed to inventor John Searl, this rotating assembly of magnetized"
+				+ " rollers and concentric rings is said to unlock phenomena that mainstream"
+				+ " physics politely refuses to acknowledge.\n\n"
+				+ "Supporters claim that once the rollers reach a precise rotational harmony,"
+				+ " the generator enters the Searl Effect, a self-sustaining electromagnetic"
+				+ " state where motion feeds energy back into itself. The result, allegedly,"
+				+ " is power generation without fuel, friction, or financial regret.\n\n"
+				+ "Rumored capabilities include:\n"
+				+ "- Free electrical energy produced directly from ambient fields.\n"
+				+ "- Self-acceleration after startup, requiring little or no external power.\n"
+				+ "- Gravity reduction effects, ranging from slight weight loss to full"
+				+ " levitation of the device itself.\n"
+				+ "- Silent propulsion, theoretically enabling hovering vehicles or"
+				+ " anti-gravity transport.\n"
+				+ "- Ionization of surrounding air, creating glowing corona effects and"
+				+ " dramatic sci-fi ambiance.\n"
+				+ "- Localized cooling, as nearby temperatures supposedly drop during"
+				+ " operation.\n"
+				+ "- Electromagnetic shielding, because ordinary reality struggles to keep"
+				+ " up.\n"
+				+ "- Reports of improved electronics efficiency nearby (and occasionally"
+				+ " improved confidence).\n\n"
+				+ "Whether a revolutionary breakthrough or an extremely sophisticated"
+				+ " conversation piece, the Searl Effect Generator undeniably transforms any"
+				+ " space into a cutting-edge research facility, or at least a place where"
+				+ " bold ideas spin very, very fast."
+			),
 			"price": 420,
 		},
 		{
 			"id": "geet",
 			"display_name": "GEET Engine",
 			"title": "GEET Plasma Reactor",
-			"description": "The GEET (Global Environmental Energy Technology) is, on its surface, a deceptively simple device: a fuel pre-treater consisting of ferromagnetic pipes, a calibrated steel rod, and a sealed vacuum chamber no bigger than a thermos. But what happens inside defies easy categorization. The engine's own exhaust heat is routed back through the incoming fuel vapor in a counterflow arrangement, hot gases moving one direction, raw fuel traveling the other, spiraling around a magnetized rod of precise, engine-specific length. Inside this vacuum-maintained chamber, something anomalous occurs. The heavier hydrocarbon molecules crack apart. The fuel transitions into a low-temperature plasma state, a thing that should, according to standard physics, require the heat of an electrical arc to achieve, yet somehow manifests here through thermodynamic resonance alone. Pantone's own documentation described over seventy simultaneous phenomena occurring within the reactor during operation. Scientists who witnessed it firsthand said they would not have believed it had they not seen it themselves.
-
-What came out the other end was cleaner than the air going in. Independent tests at a California smog certification station recorded zero detectable pollution from a gasoline engine running on crude oil. The reactor was documented running engines on diesel, vegetable oil, contaminated waste fluids, Mountain Dew, iced tea, and reportedly, at one demonstration in Arizona, on a mixture that was eighty percent water. Engineers watching the dyno tests described engines revving to twice their rated RPM and idling down to fractions of normal speed with no mechanical explanation. The plasma field generated by the device was measured as a pulsating direct current (self-generated, radial, and longitudinal), influenced by the Earth's own gravitational field and the direction of mass movement within the chamber. Pantone maintained that no external electrical enhancement could improve the effect; the energy had to arise naturally from within the system or it would not arise at all.
-
-When Paul Pantone refused to sell his patents to the interests circling him (the oil companies, the quiet men in suits who kept showing up at demonstrations and then disappearing), the machinery turned on him. In 2005, the state of Utah charged him with two counts of securities fraud. The case was prosecuted hard, and by the summer of that year Pantone was not in a prison cell but in a state mental hospital in Provo — a distinction that carries its own kind of weight. He remained institutionalized for nearly four years. His son David, convinced his father had full mental faculty, began releasing recorded audio interviews from inside the facility, building a public record. A sympathetic politician eventually intervened. Pantone was released in May 2009. Notably, two researchers at Los Alamos National Laboratory later published work on plasma-assisted combustion that closely mirrored GEET's core principles, and Pantone claimed both men had attended his private training courses.
-
-He died in December 2015, after a long illness, largely unknown outside fringe engineering circles and the European universities and hobbyist groups who had taken his technology further than his own country ever allowed. His US patent, number 5,794,601, filed in 1993, sits in the public record, quiet and unremarkable, describing a fuel pre-treater that makes no performance claims. The technology has been quietly reproduced in Brazil, Israel, France, and elsewhere. The original red Briggs & Stratton engine he dragged to demonstrations for thirty years, wrapped in its confusing tangle of piping, is gone. What remains are the schematics, the testimonies of engineers who walked away shaken, and the question that nobody with power ever seemed to want answered: if it didn't work, why did they work so hard to stop him?",
+			"description": (
+				"The GEET (Global Environmental Energy Technology) is, on its surface, a"
+				+ " deceptively simple device: a fuel pre-treater consisting of ferromagnetic"
+				+ " pipes, a calibrated steel rod, and a sealed vacuum chamber no bigger than"
+				+ " a thermos. But what happens inside defies easy categorization. The"
+				+ " engine's own exhaust heat is routed back through the incoming fuel vapor"
+				+ " in a counterflow arrangement, hot gases moving one direction, raw fuel"
+				+ " traveling the other, spiraling around a magnetized rod of precise,"
+				+ " engine-specific length. Inside this vacuum-maintained chamber, something"
+				+ " anomalous occurs. The heavier hydrocarbon molecules crack apart. The fuel"
+				+ " transitions into a low-temperature plasma state, a thing that should,"
+				+ " according to standard physics, require the heat of an electrical arc to"
+				+ " achieve, yet somehow manifests here through thermodynamic resonance alone."
+				+ " Pantone's own documentation described over seventy simultaneous phenomena"
+				+ " occurring within the reactor during operation. Scientists who witnessed it"
+				+ " firsthand said they would not have believed it had they not seen it"
+				+ " themselves.\n\n"
+				+ "What came out the other end was cleaner than the air going in. Independent"
+				+ " tests at a California smog certification station recorded zero detectable"
+				+ " pollution from a gasoline engine running on crude oil. The reactor was"
+				+ " documented running engines on diesel, vegetable oil, contaminated waste"
+				+ " fluids, Mountain Dew, iced tea, and reportedly, at one demonstration in"
+				+ " Arizona, on a mixture that was eighty percent water. Engineers watching"
+				+ " the dyno tests described engines revving to twice their rated RPM and"
+				+ " idling down to fractions of normal speed with no mechanical explanation."
+				+ " The plasma field generated by the device was measured as a pulsating"
+				+ " direct current (self-generated, radial, and longitudinal), influenced by"
+				+ " the Earth's own gravitational field and the direction of mass movement"
+				+ " within the chamber. Pantone maintained that no external electrical"
+				+ " enhancement could improve the effect; the energy had to arise naturally"
+				+ " from within the system or it would not arise at all.\n\n"
+				+ "When Paul Pantone refused to sell his patents to the interests circling"
+				+ " him (the oil companies, the quiet men in suits who kept showing up at"
+				+ " demonstrations and then disappearing), the machinery turned on him."
+				+ " In 2005, the state of Utah charged him with two counts of securities"
+				+ " fraud. The case was prosecuted hard, and by the summer of that year"
+				+ " Pantone was not in a prison cell but in a state mental hospital in"
+				+ " Provo — a distinction that carries its own kind of weight. He remained"
+				+ " institutionalized for nearly four years. His son David, convinced his"
+				+ " father had full mental faculty, began releasing recorded audio interviews"
+				+ " from inside the facility, building a public record. A sympathetic"
+				+ " politician eventually intervened. Pantone was released in May 2009."
+				+ " Notably, two researchers at Los Alamos National Laboratory later"
+				+ " published work on plasma-assisted combustion that closely mirrored"
+				+ " GEET's core principles, and Pantone claimed both men had attended his"
+				+ " private training courses.\n\n"
+				+ "He died in December 2015, after a long illness, largely unknown outside"
+				+ " fringe engineering circles and the European universities and hobbyist"
+				+ " groups who had taken his technology further than his own country ever"
+				+ " allowed. His US patent, number 5,794,601, filed in 1993, sits in the"
+				+ " public record, quiet and unremarkable, describing a fuel pre-treater"
+				+ " that makes no performance claims. The technology has been quietly"
+				+ " reproduced in Brazil, Israel, France, and elsewhere. The original red"
+				+ " Briggs & Stratton engine he dragged to demonstrations for thirty years,"
+				+ " wrapped in its confusing tangle of piping, is gone. What remains are"
+				+ " the schematics, the testimonies of engineers who walked away shaken,"
+				+ " and the question that nobody with power ever seemed to want answered:"
+				+ " if it didn't work, why did they work so hard to stop him?"
+			),
 			"price": 420,
 		},
 		{
 			"id": "wfc",
 			"display_name": "Water Fuel Cell",
 			"title": "Stanley Meyer Water Fuel Cell",
-			"description": "Inspired by the work of Stanley Meyer, this device represents one of the most captivating alternative energy visions of the modern era: a system said to unlock the power stored within ordinary water. Meyer proposed that water could be dissociated into hydrogen and oxygen not through brute-force electrolysis, but through precisely tuned high-voltage, low-current electrical pulses. His design centered around resonant charging coils and a carefully engineered water capacitor, where the molecular bonds of H2O were theorized to weaken under specific electrical frequencies. In his view, resonance, not raw amperage, was the key to dramatically increasing efficiency. If true, it suggested a paradigm shift in how electrical energy interacts with molecular structures.
-
-Stanley Meyer collapsed suddenly from a brain aneurysm just an hour after meeting with government officials at a small restaurant in Ohio. According to the story, he had refused to sell his patents for use in military applications, leaving those around him stunned as he fell before he could even leave the building. The abruptness of his death only deepened the aura of mystery surrounding his work.
-
-Meyer himself described the origins of his inventions in deeply personal, spiritual terms. He claimed that during moments between sleep and wakefulness, he received vivid visions of the Water Fuel Cell, images he believed were sent to him by angels. His Christian faith, he said, provided both the moral compass and the inspiration that guided him in turning those visions into mechanical reality.",
+			"description": (
+				"A replication of the work by Stanley Meyer, this device represents one of"
+				+ " the most captivating alternative energy visions of the modern era: a"
+				+ " system said to unlock the power stored within ordinary water. Meyer"
+				+ " proposed that water could be dissociated into hydrogen and oxygen not"
+				+ " through brute-force electrolysis, but through precisely tuned"
+				+ " high-voltage, low-current electrical pulses. His design centered around"
+				+ " resonant charging coils and a carefully engineered water capacitor,"
+				+ " where the molecular bonds of H2O were theorized to weaken under specific"
+				+ " electrical frequencies. In his view, resonance, not raw amperage, was"
+				+ " the key to dramatically increasing efficiency. If true, it suggested a"
+				+ " paradigm shift in how electrical energy interacts with molecular"
+				+ " structures.\n\n"
+				+ "Stanley Meyer collapsed suddenly from a brain aneurysm just an hour after"
+				+ " meeting with government officials at a Cracker Barrel restaurant in Ohio."
+				+ " According to the story, he had refused to sell his patents for use in"
+				+ " military applications, leaving those around him stunned as he fell before"
+				+ " he could even leave the building. The abruptness of his death only"
+				+ " deepened the aura of mystery surrounding his work.\n\n"
+				+ "Meyer himself described the origins of his inventions in deeply personal,"
+				+ " spiritual terms. He claimed that during moments between sleep and"
+				+ " wakefulness, he received vivid visions of the Water Fuel Cell, images"
+				+ " he believed were sent to him by angels. His Christian faith, he said,"
+				+ " provided both the moral compass and the inspiration that guided him in"
+				+ " turning those visions into mechanical reality."
+			),
 			"price": 555,
 		},
 		{

@@ -69,7 +69,7 @@ text = "— visitor —"
 custom_minimum_size = Vector2(0, 52)
 layout_mode = 2
 theme_override_fonts/normal_font = ExtResource("3_b10y2")
-theme_override_font_sizes/normal_font_size = 18
+theme_override_font_sizes/normal_font_size = 23
 fit_content = true
 
 [node name="HintContainer" type="HBoxContainer" parent="Control/PanelContainer/MarginContainer/VBoxContainer" unique_id=1090790476]

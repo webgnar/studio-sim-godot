@@ -39,6 +39,8 @@ func _ready() -> void:
 	_panel.visible = false
 	_speech = ProceduralSpeech.new()
 	add_child(_speech)
+	_update_continue_hint()
+	InputDeviceManager.device_changed.connect(_on_device_changed)
 
 
 func show_dialogue(chunks: Array[String], personality: String, display_name: String = "") -> void:
@@ -116,6 +118,15 @@ func _show_chunk() -> void:
 	var is_last := _chunk_index >= _chunks.size() - 1
 	_continue_hint.visible = not is_last
 	_typewrite_chunk(chunk)
+
+
+func _update_continue_hint() -> void:
+	var glyph := InputDeviceManager.get_action_glyph("interact")
+	_continue_hint.text = "[ %s ] continue  " % glyph
+
+
+func _on_device_changed(_device: InputDeviceManager.DeviceType) -> void:
+	_update_continue_hint()
 
 
 func _stop_speech_and_typewriter() -> void:

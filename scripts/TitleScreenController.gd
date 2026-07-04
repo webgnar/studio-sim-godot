@@ -72,14 +72,19 @@ func _ready():
 	# Set up controller/gamepad focus navigation
 	_setup_focus_navigation()
 
-	# Focus first available button (for gamepad; keyboard/mouse handler will release it below)
+	# Focus first available button so Continue (or New Game) is selected from the start,
+	# regardless of input device - the player can hit any direction to begin navigating
 	if has_save:
 		continue_button.grab_focus()
 	else:
 		new_game_button.grab_focus()
 
-	# Apply initial cursor/focus state based on current input device
-	_on_input_device_changed(InputDeviceManager.current_device)
+	# Apply initial mouse cursor state based on current input device without releasing
+	# the focus we just grabbed (that release only makes sense on later device switches)
+	if InputDeviceManager.current_device == InputDeviceManager.DeviceType.KEYBOARD_MOUSE:
+		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	else:
+		Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
 
 func _process(delta):
 	# Update input cooldown
@@ -95,15 +100,15 @@ func _input(_event):
 		_handle_confirm_input(viewport)
 		return
 
-	# Handle menu navigation with ui_up/ui_down
-	if Input.is_action_just_pressed("ui_up"):
+	# Handle menu navigation with ui_left/ui_right (buttons are laid out horizontally)
+	if Input.is_action_just_pressed("ui_left"):
 		if input_cooldown <= 0:
-			_navigate_menu(-1)  # Move up
+			_navigate_menu(-1)  # Move to previous button
 			input_cooldown = input_cooldown_time
 		viewport.set_input_as_handled()
-	elif Input.is_action_just_pressed("ui_down"):
+	elif Input.is_action_just_pressed("ui_right"):
 		if input_cooldown <= 0:
-			_navigate_menu(1)  # Move down
+			_navigate_menu(1)  # Move to next button
 			input_cooldown = input_cooldown_time
 		viewport.set_input_as_handled()
 	elif Input.is_action_just_pressed("jump"):

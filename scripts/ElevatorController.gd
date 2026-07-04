@@ -235,7 +235,7 @@ func is_painting_blocking_gate() -> bool:
 			return true
 	return false
 
-func _on_gallery_upload_completed(gallery_id: String) -> void:
+func _on_gallery_upload_completed(gallery_id: String, _image_url: String = "") -> void:
 	"""Save the gallery_id onto the painting that was just uploaded."""
 	if _pending_upload_painting_id != "":
 		WorldStateManager.save_gallery_id_for_painting(_pending_upload_painting_id, gallery_id)

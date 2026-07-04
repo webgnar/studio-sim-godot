@@ -4,7 +4,7 @@ extends Node
 ## Uses a 3-step presigned URL flow: get URLs → upload files → confirm
 
 signal upload_started(png_path: String, glb_path: String)
-signal upload_completed(gallery_id: String)
+signal upload_completed(gallery_id: String, image_url: String)
 signal upload_failed(error_message: String)
 
 const API_BASE_URL = "https://studio-sim-gallery.vercel.app/api"
@@ -181,15 +181,17 @@ func _check_uploads_complete() -> void:
 	if error != OK:
 		_fail("Failed to start confirm request: " + str(error))
 
-func _on_confirm_completed(result: int, response_code: int, _headers: PackedStringArray, _body: PackedByteArray) -> void:
+func _on_confirm_completed(result: int, response_code: int, _headers: PackedStringArray, body: PackedByteArray) -> void:
 	if result != HTTPRequest.RESULT_SUCCESS or response_code < 200 or response_code >= 300:
 		_fail("Confirm request failed (result: " + str(result) + ", status: " + str(response_code) + ")")
 		return
 
 	print("GalleryUploader: Upload completed! Gallery ID: " + _current_id)
 	var gallery_id = _current_id
+	var json = JSON.parse_string(body.get_string_from_utf8())
+	var image_url: String = json.get("imageUrl", "") if json is Dictionary else ""
 	_reset_state()
-	upload_completed.emit(gallery_id)
+	upload_completed.emit(gallery_id, image_url)
 
 func _fail(message: String) -> void:
 	if not is_uploading:

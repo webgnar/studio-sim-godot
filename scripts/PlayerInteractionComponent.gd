@@ -36,6 +36,14 @@ var equipped_weapon: WeaponComponent = null
 var is_weapon_equipped: bool:
 	get: return equipped_weapon != null
 
+# --- INPUT DEBOUNCE STATE ---
+# Analog triggers (action_primary/action_secondary) re-fire is_action_pressed()
+# on every InputEventJoypadMotion while held past the deadzone, unlike buttons.
+# Track our own press/release edges so pickup/throw/drop each fire once per squeeze
+# instead of chattering (e.g. pickup immediately followed by a throw).
+var _primary_action_held: bool = false
+var _secondary_action_held: bool = false
+
 # --- GODOT METHODS ---
 
 func _ready() -> void:
@@ -70,8 +78,15 @@ func _input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 		return
 
-	# LEFT CLICK - Pickup or Throw
+	# LEFT CLICK / RIGHT TRIGGER - Pickup or Throw
+	if event.is_action_released("action_primary"):
+		_primary_action_held = false
+
 	if event.is_action_pressed("action_primary"):
+		if _primary_action_held:
+			return  # Ignore trigger chatter - already handled this press
+		_primary_action_held = true
+
 		# If carrying, throw the object
 		if is_carrying and is_instance_valid(carried_object):
 			# Special case: carrying a power plug near an outlet
@@ -101,8 +116,15 @@ func _input(event: InputEvent) -> void:
 				get_viewport().set_input_as_handled()  # Prevent sticker placement
 				return
 	
-	# RIGHT CLICK - Drop (gentle release)
+	# RIGHT CLICK / LEFT TRIGGER - Drop (gentle release)
+	if event.is_action_released("action_secondary"):
+		_secondary_action_held = false
+
 	if event.is_action_pressed("action_secondary"):
+		if _secondary_action_held:
+			return  # Ignore trigger chatter - already handled this press
+		_secondary_action_held = true
+
 		if is_carrying and is_instance_valid(carried_object):
 			# Gentle drop
 			drop_carried_object()

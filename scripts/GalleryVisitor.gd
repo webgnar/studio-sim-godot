@@ -488,9 +488,10 @@ func _on_dialogue_finished() -> void:
 	, CONNECT_ONE_SHOT)
 
 
+const MAX_CHUNK_CHARS := 280
+
 func _split_into_chunks(text: String) -> Array[String]:
-	# Split on sentence-ending punctuation followed by a space or end of string
-	var chunks: Array[String] = []
+	var sentence_chunks: Array[String] = []
 	var remaining := text.strip_edges()
 	var delimiters := [". ", "! ", "? "]
 
@@ -504,16 +505,33 @@ func _split_into_chunks(text: String) -> Array[String]:
 				earliest_len = d.length()
 
 		if earliest_pos == -1:
-			# No more sentence boundaries — remainder is the last chunk
-			chunks.append(remaining)
+			sentence_chunks.append(remaining)
 			break
 		else:
-			# Include the punctuation mark but not the trailing space
-			chunks.append(remaining.substr(0, earliest_pos + 1))
+			sentence_chunks.append(remaining.substr(0, earliest_pos + 1))
 			remaining = remaining.substr(earliest_pos + earliest_len)
 
-	if chunks.is_empty():
-		chunks.append(text)
+	if sentence_chunks.is_empty():
+		sentence_chunks.append(text)
+
+	# Secondary pass: split any over-long chunk at a word boundary
+	var chunks: Array[String] = []
+	for chunk in sentence_chunks:
+		if chunk.length() <= MAX_CHUNK_CHARS:
+			chunks.append(chunk)
+		else:
+			var leftover := chunk
+			while leftover.length() > MAX_CHUNK_CHARS:
+				var split_pos := MAX_CHUNK_CHARS
+				while split_pos > 0 and leftover[split_pos] != " ":
+					split_pos -= 1
+				if split_pos == 0:
+					split_pos = MAX_CHUNK_CHARS
+				chunks.append(leftover.substr(0, split_pos).strip_edges())
+				leftover = leftover.substr(split_pos).strip_edges()
+			if leftover.length() > 0:
+				chunks.append(leftover)
+
 	return chunks
 
 
