@@ -58,7 +58,7 @@ func _ready() -> void:
 	GalleryUploader.upload_failed.connect(_on_upload_failed)
 
 	_http_request = HTTPRequest.new()
-	_http_request.timeout = 10.0
+	_http_request.timeout = 30.0
 	add_child(_http_request)
 
 	# Pipes are always the background — ColorRect no longer needed
