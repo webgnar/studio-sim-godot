@@ -90,6 +90,10 @@ project/assembly_name="fps"
 
 gallery_attraction="Gallery attraction — GalleryVisitor NPC will walk to and observe this node"
 
+[gui]
+
+timers/tooltip_delay_sec=0.2
+
 [input]
 
 ui_left={

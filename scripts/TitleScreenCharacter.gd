@@ -21,6 +21,8 @@ var current_state: State = State.IDLE
 var is_exiting: bool = false
 
 func _ready():
+	_apply_saved_skin()
+
 	# Find AnimationPlayer in children
 	animation_player = _find_animation_player(self)
 
@@ -123,6 +125,17 @@ func _play_animation(anim_name: String) -> void:
 		var available_anims = animation_player.get_animation_list()
 		push_warning("TitleScreenCharacter: Animation '%s' not found!" % anim_name)
 		push_warning("TitleScreenCharacter: Available animations are: %s" % str(available_anims))
+
+func _apply_saved_skin() -> void:
+	"""Show the same skin the player last chose at the in-game mirror, if any."""
+	if not WorldStateManager or not SkinLibrary:
+		return
+	var key = WorldStateManager.get_selected_skin_key()
+	if key == "":
+		return
+	var material = SkinLibrary.resolve_material(key)
+	if material:
+		SkinLibrary.apply_skin_to_root(self, material)
 
 func _find_animation_player(node: Node) -> AnimationPlayer:
 	"""Recursively search for AnimationPlayer in node tree"""

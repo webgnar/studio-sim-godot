@@ -12,6 +12,7 @@ const FALLBACK_NORMAL_PATH = "res://sprites/normals/human figure_0_normal.png"
 const AO_PATH = "res://sprites/normals/human figure_0_ambient.png"
 
 var custom_skin_materials: Array[StandardMaterial3D] = []
+var custom_skin_filenames: Array[String] = []  # Parallel to custom_skin_materials, used as save-file keys
 
 func _ready() -> void:
 	_ensure_custom_folder_exists()
@@ -20,6 +21,7 @@ func _ready() -> void:
 
 func _load_custom_skins() -> void:
 	custom_skin_materials.clear()
+	custom_skin_filenames.clear()
 
 	var dir = DirAccess.open(CUSTOM_SKINS_FOLDER)
 	if not dir:
@@ -71,6 +73,7 @@ func _load_custom_skins() -> void:
 		mat.ao_texture = ao_texture
 
 		custom_skin_materials.append(mat)
+		custom_skin_filenames.append(fname)
 
 	if not OS.has_feature("editor"):
 		print("[SkinLibrary] Loaded %d custom skin(s)" % custom_skin_materials.size())
@@ -124,3 +127,64 @@ Just keep the same 2:1 aspect ratio.
 func reload() -> void:
 	_load_custom_skins()
 	library_changed.emit()
+
+# ============================================================================
+# Skin persistence helpers (used to restore the player's chosen mirror skin
+# on the player model and on the title screen character)
+# ============================================================================
+
+## Resolve a save-file skin key back into a Material.
+## Built-in skins are keyed by their resource path (e.g. "res://materials/humanskin.tres").
+## Custom skins are keyed as "custom:<filename>" and looked up in custom_skin_filenames.
+func resolve_material(key: String) -> Material:
+	if key == "":
+		return null
+	if key.begins_with("custom:"):
+		var fname = key.substr(7)
+		var idx = custom_skin_filenames.find(fname)
+		if idx >= 0:
+			return custom_skin_materials[idx]
+		return null
+	if ResourceLoader.exists(key):
+		return load(key) as Material
+	return null
+
+## Apply a skin material to a character root (player or title screen model).
+## Looks for a "human" child (matches player.tscn structure); falls back to
+## the root itself (matches the title screen's humanrig node).
+func apply_skin_to_root(root: Node, material: Material) -> void:
+	if not root or not material:
+		return
+	var search_root: Node = root.get_node_or_null("human")
+	if not search_root:
+		search_root = root
+	for mesh in _find_all_mesh_instances(search_root):
+		_apply_material_to_mesh(mesh, material)
+
+func _find_all_mesh_instances(node: Node) -> Array[MeshInstance3D]:
+	var meshes: Array[MeshInstance3D] = []
+	if node is MeshInstance3D:
+		meshes.append(node)
+	for child in node.get_children():
+		meshes.append_array(_find_all_mesh_instances(child))
+	return meshes
+
+func _apply_material_to_mesh(mesh: MeshInstance3D, material: Material) -> void:
+	if not mesh or not material or not mesh.mesh:
+		return
+
+	var surface_count = mesh.mesh.get_surface_count()
+
+	for i in range(surface_count):
+		var existing = mesh.get_surface_override_material(i)
+		if existing is ShaderMaterial and material is StandardMaterial3D:
+			# Fade shader is active — update textures only, don't replace it
+			var sm := existing as ShaderMaterial
+			var std := material as StandardMaterial3D
+			sm.set_shader_parameter("albedo_texture", std.albedo_texture)
+			sm.set_shader_parameter("normal_texture",  std.normal_texture)
+			sm.set_shader_parameter("ao_texture",      std.ao_texture)
+			sm.set_shader_parameter("normal_enabled",  std.normal_enabled)
+			sm.set_shader_parameter("ao_enabled",      std.ao_enabled)
+		else:
+			mesh.set_surface_override_material(i, material)

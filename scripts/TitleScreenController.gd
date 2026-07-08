@@ -361,8 +361,8 @@ func _wipe_save_data():
 			fname = user_dir.get_next()
 		user_dir.list_dir_end()
 
-	# Clear all custom sticker PNGs (root folder + marketplace subfolder)
-	for sticker_path in ["user://custom_stickers", "user://custom_stickers/marketplace"]:
+	# Clear all custom sticker PNGs (root folder + bought_stickers subfolder)
+	for sticker_path in ["user://custom_stickers", "user://custom_stickers/bought_stickers"]:
 		var sdir = DirAccess.open(sticker_path)
 		if sdir:
 			sdir.list_dir_begin()

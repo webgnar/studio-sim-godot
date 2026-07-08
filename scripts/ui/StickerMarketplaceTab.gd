@@ -339,7 +339,7 @@ func _on_marketplace_loaded(listings: Array) -> void:
 		var listing = listings[i]
 		var card = LISTING_CARD_SCENE.instantiate()
 		listing_list.add_child(card)
-		card.setup(listing.get("name", "Sticker"), listing.get("price", 0), listing.get("seller_id", ""))
+		card.setup(listing.get("name", "Sticker"), listing.get("price", 0), listing.get("seller_id", ""), listing.get("seller_name", ""))
 		var url = listing.get("png_url", "")
 		if not url.is_empty() and _preview_cache.has(url):
 			card.set_preview(_preview_cache[url])
@@ -368,6 +368,7 @@ func _select_listing(index: int) -> void:
 	var price = int(listing.get("price", 0))
 	var sticker_name = listing.get("name", "Sticker")
 	var seller_id = listing.get("seller_id", "???")
+	var seller_name = listing.get("seller_name", "")
 	var png_url = listing.get("png_url", "")
 
 	item_name_label.text = sticker_name
@@ -375,7 +376,7 @@ func _select_listing(index: int) -> void:
 	price_text_label.visible = true
 	display_price_label.visible = true
 	price_input.visible = false
-	seller_label.text = "by %s" % seller_id.substr(0, 8)
+	seller_label.text = "by %s" % (seller_name if seller_name != "" else seller_id.substr(0, 8))
 	seller_label.visible = true
 
 	_load_preview(png_url)
@@ -453,7 +454,7 @@ func _populate_sticker_grid() -> void:
 	_custom_stickers = StickerLibrary.get_custom_stickers_for_marketplace()
 
 	if _custom_stickers.is_empty():
-		sell_status_label.text = "No custom stickers to sell.\nAdd PNGs to your custom stickers folder first."
+		sell_status_label.text = "No custom stickers to sell.\nUse the Custom Sticker Modder button to add PNGs to your custom stickers folder first."
 		sell_status_label.visible = true
 		_clear_right_panel()
 		return
@@ -464,7 +465,7 @@ func _populate_sticker_grid() -> void:
 		var sticker = _custom_stickers[i]
 		var card = STICKER_SELECT_CARD_SCENE.instantiate()
 		sticker_grid.add_child(card)
-		card.setup(sticker.texture, sticker.id.replace("custom_", ""))
+		card.setup(sticker.texture, StickerLibrary.get_sticker_display_name(sticker.id))
 		var idx = i
 		card.pressed.connect(func(): _select_sticker(idx))
 		_sticker_cards.append(card)
@@ -486,7 +487,7 @@ func _select_sticker(index: int) -> void:
 
 	var sticker = _custom_stickers[index]
 	preview_image.texture = sticker.texture
-	item_name_label.text = sticker.id.replace("custom_", "")
+	item_name_label.text = StickerLibrary.get_sticker_display_name(sticker.id)
 	price_text_label.visible = true
 	display_price_label.visible = false
 	price_input.visible = true
@@ -566,14 +567,14 @@ func _execute_list() -> void:
 		return
 
 	var sticker = _custom_stickers[_selected_sticker_index]
-	# sticker.id is like "custom_my_sticker" — filename is "my_sticker.png"
-	var base_name = sticker.id.replace("custom_", "")
+	# sticker.id is like "custom_my_sticker" or "bought_my_sticker" — resolve
+	# back to the actual file, which lives in a different folder for each.
+	var base_name = StickerLibrary.get_sticker_display_name(sticker.id)
 	if base_name in WorldStateManager.get_listed_sticker_ids():
 		feedback_label.text = "Already listed for sale!"
 		feedback_label.modulate = Color(1, 0.5, 0.2, 1)
 		return
-	var filename = base_name + ".png"
-	var path = StickerLibrary.CUSTOM_STICKERS_FOLDER + filename
+	var path = StickerLibrary.get_sticker_file_path(sticker.id)
 	var file = FileAccess.open(path, FileAccess.READ)
 	if not file:
 		# try absolute
@@ -591,7 +592,7 @@ func _execute_list() -> void:
 	action_button.text = "Listing..."
 	feedback_label.text = ""
 
-	StickerMarketplaceManager.list_sticker(filename, price, png_bytes)
+	StickerMarketplaceManager.list_sticker(base_name, price, png_bytes)
 
 
 # ============================================================================

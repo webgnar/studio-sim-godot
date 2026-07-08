@@ -13,8 +13,9 @@ signal credits_received(amount: int)
 
 const API_BASE = "https://studio-sim-gallery.vercel.app/api"
 const API_KEY = "jupTtic3qGOULETb2w7E"
-const MARKETPLACE_STICKERS_FOLDER = "user://custom_stickers/marketplace/"
+const BOUGHT_STICKERS_FOLDER = "user://custom_stickers/bought_stickers/"
 const REQUEST_TIMEOUT = 30.0
+const CREDITS_POLL_INTERVAL = 300.0  # Re-check for sales every 5 minutes during a session
 
 var is_listing: bool = false
 var is_buying: bool = false
@@ -39,11 +40,12 @@ var _confirm_request: HTTPRequest
 var _buy_request: HTTPRequest
 var _download_request: HTTPRequest
 var _credits_request: HTTPRequest
+var _credits_poll_timer: Timer
 
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
-	_ensure_marketplace_folder()
+	_ensure_bought_stickers_folder()
 	_marketplace_request = _make_request("MarketplaceRequest")
 	_presign_request = _make_request("PresignRequest")
 	_upload_request = _make_request("UploadRequest")
@@ -59,6 +61,21 @@ func _ready() -> void:
 	_buy_request.request_completed.connect(_on_buy_completed)
 	_download_request.request_completed.connect(_on_download_completed)
 	_credits_request.request_completed.connect(_on_credits_completed)
+
+	# Show a toast anywhere in the game when a sticker sale pays out, not just
+	# while the marketplace tab happens to be open (StickerMarketplaceTab.gd
+	# also listens to this signal for its own in-tab feedback label).
+	credits_received.connect(_show_credits_toast)
+
+	# Claim any pending sales as soon as the game starts (don't make the player
+	# remember to open the marketplace tab), then keep checking periodically
+	# in case a sale comes in during a long session.
+	fetch_pending_credits()
+	_credits_poll_timer = Timer.new()
+	_credits_poll_timer.wait_time = CREDITS_POLL_INTERVAL
+	_credits_poll_timer.timeout.connect(fetch_pending_credits)
+	add_child(_credits_poll_timer)
+	_credits_poll_timer.start()
 
 
 func _make_request(node_name: String) -> HTTPRequest:
@@ -105,6 +122,7 @@ func list_sticker(sticker_filename: String, price: int, png_bytes: PackedByteArr
 		"name": _pending_listing_name,
 		"price": price,
 		"seller_id": WorldStateManager.get_player_id(),
+		"seller_name": SteamManager.persona_name,  # "" if Steam unavailable; UI falls back to seller_id
 	})
 	listing_step.emit("Contacting server...")
 	print("[Marketplace] Sending list request: name=%s price=%d seller=%s" % [_pending_listing_name, price, WorldStateManager.get_player_id()])
@@ -254,10 +272,10 @@ func _on_download_completed(result: int, response_code: int, _headers: PackedStr
 		_buy_fail("PNG download failed (code %d)" % response_code)
 		return
 
-	# Save PNG to marketplace subfolder
-	_ensure_marketplace_folder()
+	# Save PNG to the bought-stickers subfolder
+	_ensure_bought_stickers_folder()
 	var filename = _pending_buy_sticker_name + ".png"
-	var save_path = MARKETPLACE_STICKERS_FOLDER + filename
+	var save_path = BOUGHT_STICKERS_FOLDER + filename
 	var absolute_path = ProjectSettings.globalize_path(save_path)
 	var file = FileAccess.open(save_path, FileAccess.WRITE)
 	if not file:
@@ -296,6 +314,9 @@ func _reset_buy_state() -> void:
 # Credits flow
 # ============================================================================
 
+func _show_credits_toast(amount: int) -> void:
+	AchievementToast.show_toast("STICKER SALE", "$%d from sticker sales deposited!" % amount)
+
 func _on_credits_completed(result: int, response_code: int, _headers: PackedStringArray, body: PackedByteArray) -> void:
 	if result != HTTPRequest.RESULT_SUCCESS or response_code != 200:
 		return
@@ -315,9 +336,14 @@ func _on_credits_completed(result: int, response_code: int, _headers: PackedStri
 		var listed_ids = WorldStateManager.get_listed_sticker_ids()
 		var changed = false
 		for sold_name in sold_ids:
-			var local_path = StickerLibrary.CUSTOM_STICKERS_FOLDER + sold_name + ".png"
-			if FileAccess.file_exists(local_path):
-				DirAccess.remove_absolute(ProjectSettings.globalize_path(local_path))
+			# A sold sticker may have been your own (root folder) or a resold
+			# purchase (bought_stickers subfolder) — check both locations.
+			for local_path in [
+				StickerLibrary.CUSTOM_STICKERS_FOLDER + sold_name + ".png",
+				BOUGHT_STICKERS_FOLDER + sold_name + ".png",
+			]:
+				if FileAccess.file_exists(local_path):
+					DirAccess.remove_absolute(ProjectSettings.globalize_path(local_path))
 			var idx = listed_ids.find(sold_name)
 			if idx >= 0:
 				listed_ids.remove_at(idx)
@@ -331,6 +357,19 @@ func _on_credits_completed(result: int, response_code: int, _headers: PackedStri
 # Helpers
 # ============================================================================
 
-func _ensure_marketplace_folder() -> void:
-	if not DirAccess.dir_exists_absolute(ProjectSettings.globalize_path(MARKETPLACE_STICKERS_FOLDER)):
-		DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(MARKETPLACE_STICKERS_FOLDER))
+func _ensure_bought_stickers_folder() -> void:
+	var absolute_folder = ProjectSettings.globalize_path(BOUGHT_STICKERS_FOLDER)
+	if not DirAccess.dir_exists_absolute(absolute_folder):
+		# Migrate stickers bought before this folder was renamed from "marketplace"
+		var old_absolute_folder = ProjectSettings.globalize_path("user://custom_stickers/marketplace/")
+		if DirAccess.dir_exists_absolute(old_absolute_folder):
+			DirAccess.rename_absolute(old_absolute_folder, absolute_folder)
+		else:
+			DirAccess.make_dir_recursive_absolute(absolute_folder)
+
+	var readme_path = BOUGHT_STICKERS_FOLDER + "README.txt"
+	if not FileAccess.file_exists(readme_path):
+		var file = FileAccess.open(readme_path, FileAccess.WRITE)
+		if file:
+			file.store_string("=== Bought Stickers ===\n\nThis folder is managed automatically by the game.\nStickers you buy from the sticker marketplace are downloaded here.\n\nDo NOT put your own stickers in this folder. Put them in the parent\ncustom_stickers folder instead so you can list them for sale.\n")
+			file.close()

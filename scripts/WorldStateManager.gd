@@ -42,8 +42,29 @@ var _purchased_items: Array[String] = []
 # Dictionary mapping switch_id -> LightSwitchInteraction node
 var _light_switches: Dictionary = {}
 
+# Save-file key of the player's currently selected mirror skin ("" = default)
+var _selected_skin_key: String = ""
+
 func _ready():
 	_ensure_directories()
+	# Read just the skin key from disk immediately (autoloads _ready() before any
+	# scene, including the player and title screen, so the skin is available by
+	# the time those nodes apply it in their own _ready()). The full
+	# load_world_state() runs later, after the world scene is set up.
+	_load_selected_skin_key_early()
+
+func _load_selected_skin_key_early() -> void:
+	if not FileAccess.file_exists(WORLD_STATE_PATH):
+		return
+	var file = FileAccess.open(WORLD_STATE_PATH, FileAccess.READ)
+	if not file:
+		return
+	var json_string = file.get_as_text()
+	file.close()
+	var json = JSON.new()
+	if json.parse(json_string) != OK:
+		return
+	_selected_skin_key = json.data.get("selected_skin_key", "")
 
 # ============================================================================
 # Registration (paintings auto-register on _ready)
@@ -281,6 +302,22 @@ func set_listed_sticker_ids(ids: Array) -> void:
 	_misc_data["listed_sticker_ids"] = ids
 
 # ============================================================================
+# Selected Player Skin (chosen at the mirror)
+# ============================================================================
+
+func get_selected_skin_key() -> String:
+	"""Return the save-key of the player's currently selected skin ('' = default)."""
+	return _selected_skin_key
+
+func set_selected_skin_key(key: String) -> void:
+	"""Record the player's chosen mirror skin in memory. Called by MirrorInteraction on
+	skin change. Does NOT trigger a full save_world_state() (that's a heavy operation -
+	painting/nail iteration, texture writes, JSON write to disk - and would stutter the
+	game if run on every skin cycle). The key rides along on the next full save
+	(manual save computer, elevator shipment, purchase, etc.)."""
+	_selected_skin_key = key
+
+# ============================================================================
 # Save/Load
 # ============================================================================
 
@@ -315,7 +352,8 @@ func save_world_state() -> bool:
 		"misc_data": _misc_data.duplicate(true),  # Generic arbitrary persistent data
 		"purchased_items": _purchased_items.duplicate(),  # Shop items bought by player
 		"light_switches": light_switch_states,  # Light switch on/off states
-		"player": _save_player_state()
+		"player": _save_player_state(),
+		"selected_skin_key": _selected_skin_key  # Player's chosen mirror skin
 	}
 
 	var valid_painting_ids = []
@@ -555,6 +593,9 @@ func load_world_state(world_root: Node3D) -> void:
 	# Load generic misc data
 	_misc_data = save_data.get("misc_data", {})
 
+	# Load selected player skin (already read early in _ready(), kept in sync here)
+	_selected_skin_key = save_data.get("selected_skin_key", "")
+
 	# Load purchased shop items and reveal them in the world
 	var purchased_raw = save_data.get("purchased_items", [])
 	_purchased_items.clear()
@@ -607,6 +648,9 @@ func clear_world_state() -> void:
 
 	# Clear shop purchases
 	_purchased_items.clear()
+
+	# Clear selected skin
+	_selected_skin_key = ""
 
 	print("World state cleared")
 

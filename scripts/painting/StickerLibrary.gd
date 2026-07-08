@@ -9,6 +9,7 @@ signal library_changed
 var sticker_library: Array[PaintingLayerDefinition] = []
 
 const CUSTOM_STICKERS_FOLDER = "user://custom_stickers/"
+const BOUGHT_STICKERS_SUBFOLDER = "bought_stickers/"
 
 func _ready():
 	_ensure_custom_folder_exists()
@@ -81,13 +82,17 @@ func _load_builtin_stickers():
 			push_error("Failed to load sticker texture: %s" % path)
 
 func _load_custom_stickers():
-	"""Load user-added PNG stickers from user://custom_stickers/ and its marketplace subfolder."""
+	"""Load user-added PNG stickers from user://custom_stickers/ and its bought_stickers subfolder."""
 	var listed_ids: Array = WorldStateManager.get_listed_sticker_ids() if has_node("/root/WorldStateManager") else []
+	var has_modder = has_node("/root/WorldStateManager") and "customstickerbutton" in WorldStateManager.get_purchased_items()
 
-	if has_node("/root/WorldStateManager") and "customstickerbutton" in WorldStateManager.get_purchased_items():
+	if has_modder:
 		_load_stickers_from_folder(CUSTOM_STICKERS_FOLDER, "custom_", listed_ids)
-
-	_load_stickers_from_folder(CUSTOM_STICKERS_FOLDER + "marketplace/", "marketplace_", [])
+		# Marketplace purchases require the same unlock (you can't reach the
+		# Marketplace tab without it) — gate the folder read too, so manually
+		# dropping a PNG in here can't bypass the purchase. Also pass listed_ids
+		# so a bought sticker currently re-listed for resale hides from the carousel.
+		_load_stickers_from_folder(CUSTOM_STICKERS_FOLDER + BOUGHT_STICKERS_SUBFOLDER, "bought_", listed_ids)
 
 
 func _load_stickers_from_folder(folder: String, id_prefix: String, exclude_base_names: Array) -> void:
@@ -132,20 +137,54 @@ func _ensure_custom_folder_exists():
 	if not FileAccess.file_exists(readme_path):
 		var file = FileAccess.open(readme_path, FileAccess.WRITE)
 		if file:
-			file.store_string("=== Custom Stickers ===\n\nDrop PNG images into this folder to add custom stickers to your game.\nThey will appear at the end of the sticker carousel.\nRestart the game after adding new stickers.\n\nRecommended max size: 1080px on the longest side.\nLarger images will still work but may affect performance.\n")
+			file.store_string("=== Custom Stickers ===\n\nDrop PNG images into this folder to add custom stickers to your game.\nThey will appear at the end of the sticker carousel.\nRestart the game after adding new stickers.\n\nRecommended max size: 1080px on the longest side.\nLarger images will still work but may affect performance.\n\nNote: the 'bought_stickers' subfolder is managed automatically by the\ngame — it holds stickers you've purchased from the marketplace. Don't\nput your own stickers there; add them directly to this folder instead.\n")
 			file.close()
+
+	_ensure_bought_stickers_folder_exists()
+
+func _ensure_bought_stickers_folder_exists() -> void:
+	"""Create the bought_stickers subfolder if missing. Also migrates the
+	pre-rename 'marketplace' folder so players updating from an older build
+	don't lose stickers they already bought. Runs here (not just in
+	StickerMarketplaceManager) because StickerLibrary's autoload _ready()
+	runs first (project.godot autoload order) and reads this folder
+	immediately — waiting for StickerMarketplaceManager to migrate it would
+	be one session too late."""
+	var absolute_folder = ProjectSettings.globalize_path(CUSTOM_STICKERS_FOLDER + BOUGHT_STICKERS_SUBFOLDER)
+	if DirAccess.dir_exists_absolute(absolute_folder):
+		return
+	var old_absolute_folder = ProjectSettings.globalize_path(CUSTOM_STICKERS_FOLDER + "marketplace/")
+	if DirAccess.dir_exists_absolute(old_absolute_folder):
+		DirAccess.rename_absolute(old_absolute_folder, absolute_folder)
+	else:
+		DirAccess.make_dir_recursive_absolute(absolute_folder)
 
 func reload():
 	"""Reload all stickers (call after user adds new files)"""
 	_load_all_stickers()
 
 func get_custom_stickers_for_marketplace() -> Array[PaintingLayerDefinition]:
-	"""Returns only unlisted custom stickers (id prefix 'custom_') available to sell."""
+	"""Returns unlisted stickers available to sell: your own custom stickers
+	(id prefix 'custom_') and stickers you've bought and can resell (id prefix 'bought_')."""
 	var result: Array[PaintingLayerDefinition] = []
 	for def in sticker_library:
-		if def.id.begins_with("custom_"):
+		if def.id.begins_with("custom_") or def.id.begins_with("bought_"):
 			result.append(def)
 	return result
+
+func get_sticker_file_path(sticker_id: String) -> String:
+	"""Map a custom/bought sticker id back to its PNG file path on disk (for the marketplace sell flow)."""
+	if sticker_id.begins_with("custom_"):
+		return CUSTOM_STICKERS_FOLDER + sticker_id.substr(7) + ".png"
+	if sticker_id.begins_with("bought_"):
+		return CUSTOM_STICKERS_FOLDER + BOUGHT_STICKERS_SUBFOLDER + sticker_id.substr(7) + ".png"
+	return ""
+
+func get_sticker_display_name(sticker_id: String) -> String:
+	"""Strip the internal id prefix ('custom_' or 'bought_') for display purposes."""
+	if sticker_id.begins_with("custom_") or sticker_id.begins_with("bought_"):
+		return sticker_id.substr(7)
+	return sticker_id
 
 func get_definition_by_id(sticker_id: String) -> PaintingLayerDefinition:
 	"""Find a sticker definition by its ID"""

@@ -532,8 +532,8 @@ func _build_catalog() -> void:
 			"id": "customstickerbutton",
 			"display_name": "Custom Sticker Modder",
 			"title": "Custom Sticker Modding button",
-			"description": "Modify Studio Sim by adding your own custom motifs to the painting UI array. Look under your desk.",
-			"price": 5000,
+			"description": "Purchasing this adds a Blue Button to the game in a hidden location. Pressing it allows you to Modify Studio Sim, by adding your own custom Stickers to the painting UI array. Hint: You will need to crouch to reach it.",
+			"price": 2500,
 		},
 	]
 	_apply_desc_keys()

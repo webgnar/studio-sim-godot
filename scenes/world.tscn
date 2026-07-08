@@ -53,7 +53,7 @@
 [ext_resource type="PackedScene" uid="uid://bsdobk5wd61u" path="res://models/interactables/fan/blade.glb" id="50_1dgkn"]
 [ext_resource type="Script" uid="uid://u01mbabuiguh" path="res://scripts/components/PoweredDeviceComponent.gd" id="51_iexy4"]
 [ext_resource type="Script" uid="uid://d1d8fhujnbpfy" path="res://scripts/components/PowerCordPlugComponent.gd" id="51_pf35h"]
-[ext_resource type="AudioStream" uid="uid://dyxboi83gw4vk" path="res://sounds/picotron/song.ogg" id="51_swu3i"]
+[ext_resource type="AudioStream" uid="uid://dyxboi83gw4vk" path="res://sounds/picotron/studio sim OST song.ogg" id="51_swu3i"]
 [ext_resource type="PackedScene" uid="uid://dtharqrj0cj5y" path="res://scenes/old stuff/test_box.tscn" id="52_e68xj"]
 [ext_resource type="Script" uid="uid://dqp07gb58nlbf" path="res://scripts/components/PowerCord.gd" id="52_iexy4"]
 [ext_resource type="PackedScene" uid="uid://bsy0q3lsvp7e3" path="res://models/interactables/plug.glb" id="53_pf35h"]
@@ -66,7 +66,7 @@
 [ext_resource type="PackedScene" uid="uid://bk1j8boxuauwf" path="res://models/outside/treeSmallOak2.gltf" id="69_40xph"]
 [ext_resource type="AudioStream" uid="uid://w1j8bql6nn1e" path="res://sounds/Wavy I.D. - dinner at my place (i can't wait).ogg" id="69_70d8d"]
 [ext_resource type="PackedScene" uid="uid://coe4uac2fu4vl" path="res://models/outside/crazy2.gltf" id="70_8lgfd"]
-[ext_resource type="AudioStream" uid="uid://ckdv6pqn7b5ws" path="res://sounds/blue whale.ogg" id="70_70d8d"]
+[ext_resource type="AudioStream" uid="uid://ckdv6pqn7b5ws" path="res://sounds/music_gnar - Blue Whale.ogg" id="70_70d8d"]
 [ext_resource type="PackedScene" uid="uid://k5bi7w8gtday" path="res://scenes/camera stuff/CameraZone.tscn" id="71_dyafi"]
 [ext_resource type="PackedScene" uid="uid://bsbvqf088sigr" path="res://models/props/woodPallet.gltf" id="71_r5yoc"]
 [ext_resource type="PackedScene" uid="uid://btuhdnbc2hjii" path="res://scenes/PaintingRoot.tscn" id="73_1m1ue"]
@@ -152,9 +152,9 @@
 [ext_resource type="AudioStream" uid="uid://cnjld2r5btwho" path="res://sounds/dial up.ogg" id="dial_up_ogg"]
 [ext_resource type="AudioStream" uid="uid://bukro42figtah" path="res://sounds/fan switch.ogg" id="fan_switch"]
 [ext_resource type="PackedScene" uid="uid://dft4un8r3mpqc" path="res://scenes/FortuneTeller.tscn" id="fortune_teller_scene"]
-[ext_resource type="AudioStream" uid="uid://c443ekfhr0sru" path="res://sounds/ministudio.ogg" id="ministudio_audio"]
+[ext_resource type="AudioStream" uid="uid://c443ekfhr0sru" path="res://sounds/music_gnar - Ministudio.ogg" id="ministudio_audio"]
 [ext_resource type="PackedScene" path="res://scenes/UI/MoneyRainLayer.tscn" id="money_rain_layer"]
-[ext_resource type="AudioStream" uid="uid://cldonhpncb00b" path="res://sounds/(First Trip) To The Moon copy.ogg" id="moon_ogg"]
+[ext_resource type="AudioStream" uid="uid://cldonhpncb00b" path="res://sounds/(First Trip) To The Moon.ogg" id="moon_ogg"]
 [ext_resource type="PackedScene" uid="uid://cjg7s2n8fnpwh" path="res://scenes/objects/worklamp.tscn" id="worklamp_scene"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_t1by1"]
@@ -1873,6 +1873,7 @@ transform = Transform3D(0.17, 0, 0, 0, 0.17, 0, 0, 0, 0.17, 0, 0, 0)
 script = ExtResource("36_boombox_new")
 auto_play_on_start = true
 songs = Array[AudioStream]([ExtResource("51_swu3i"), ExtResource("ministudio_audio"), ExtResource("moon_ogg"), ExtResource("70_70d8d"), ExtResource("69_70d8d")])
+song_names = Array[String](["Song 1", "Song 2", "Song 3", "Song 4", "Song 5"])
 switch_sound = ExtResource("boombox_switch")
 dial_up_sound = ExtResource("dial_up_ogg")
 default_volume = 1.0

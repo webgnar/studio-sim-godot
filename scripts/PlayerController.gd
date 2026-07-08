@@ -91,7 +91,9 @@ var current_speed: float:
 func _ready() -> void:
 	# Add player to group for easy reference
 	add_to_group("player")
-	
+
+	_apply_saved_skin()
+
 	# Get a reference to the Camera3D node.
 	# Try multiple possible paths for the camera
 	if has_node("Head/Camera3D"):
@@ -150,6 +152,17 @@ func _ready() -> void:
 
 	# Setup interaction component
 	_setup_interaction_component()
+
+func _apply_saved_skin() -> void:
+	"""Restore the skin the player last chose at the mirror (if any)."""
+	if not WorldStateManager or not SkinLibrary:
+		return
+	var key = WorldStateManager.get_selected_skin_key()
+	if key == "":
+		return
+	var material = SkinLibrary.resolve_material(key)
+	if material:
+		SkinLibrary.apply_skin_to_root(self, material)
 
 func apply_saved_rotation(rot_y: float, head_x: float) -> void:
 	rotation.y = rot_y

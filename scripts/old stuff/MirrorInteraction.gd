@@ -20,12 +20,44 @@ func _on_ready() -> void:
 	_find_player()
 	_find_meshes()
 	_build_materials_list()
+	_sync_skin_index_from_save()
 
 	if SkinLibrary.has_signal("library_changed"):
 		SkinLibrary.library_changed.connect(_build_materials_list)
 
 	if _all_skin_materials.is_empty():
 		push_warning("No skin materials set for mirror!")
+
+func _sync_skin_index_from_save() -> void:
+	"""Align _current_skin_index with the player's previously saved skin so
+	cycling continues from the right place (the material itself was already
+	applied to the player on spawn by PlayerController)."""
+	if not WorldStateManager:
+		return
+	var saved_key = WorldStateManager.get_selected_skin_key()
+	if saved_key == "":
+		return
+	for i in range(_all_skin_materials.size()):
+		if _key_for_index(i) == saved_key:
+			_current_skin_index = i
+			return
+
+func _key_for_index(index: int) -> String:
+	"""Build the save-file key for a skin at the given index in _all_skin_materials
+	(built-in skins first, then custom skins), matching SkinLibrary.resolve_material()."""
+	if index < 0:
+		return ""
+	if index < skin_materials.size():
+		var mat = skin_materials[index]
+		return mat.resource_path if mat else ""
+	var custom_index = index - skin_materials.size()
+	if custom_index >= 0 and custom_index < SkinLibrary.custom_skin_filenames.size():
+		return "custom:" + SkinLibrary.custom_skin_filenames[custom_index]
+	return ""
+
+func _save_current_skin() -> void:
+	if WorldStateManager:
+		WorldStateManager.set_selected_skin_key(_key_for_index(_current_skin_index))
 
 func _build_materials_list() -> void:
 	_all_skin_materials = skin_materials.duplicate()
@@ -104,6 +136,7 @@ func _cycle_skin() -> void:
 		_play_sound(toggle_sound)
 
 	skin_changed.emit(_current_skin_index)
+	_save_current_skin()
 
 func _apply_material_to_mesh(mesh: MeshInstance3D, material: Material) -> void:
 	if not mesh or not material:
@@ -143,3 +176,4 @@ func set_skin(index: int) -> void:
 	for mesh in _player_meshes:
 		_apply_material_to_mesh(mesh, target_material)
 	skin_changed.emit(_current_skin_index)
+	_save_current_skin()

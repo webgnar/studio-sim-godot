@@ -12,6 +12,7 @@ signal audio_stopped
 
 @export_group("Audio Settings")
 @export var songs: Array[AudioStream]
+@export var song_names: Array[String] = []  # Optional display names, parallel to `songs`. Falls back to the filename if empty/missing for that index.
 @export var switch_sound: AudioStream
 @export var dial_up_sound: AudioStream
 @export var default_volume: float = 0.5
@@ -21,10 +22,10 @@ signal audio_stopped
 
 @export_group("Radio Stations")
 @export var radio_stations: Array[Dictionary] = [
-	{"name": "Radio K", "url": "https://radiok.broadcasttool.stream/play_128"},
-	{"name": "WTJU / WXTJ", "url": "https://streams.wtju.net/wxtj-live.mp3"},
-	{"name": "KEXP Seattle", "url": "https://kexp-mp3-128.streamguys1.com/kexp128.mp3"},
-	{"name": "WREK Atlanta", "url": "http://streaming.wrek.org:8000/wrek_live-128kb"},
+	{"name": "Radio 1", "url": "https://radiok.broadcasttool.stream/play_128"},
+	{"name": "Radio 2", "url": "https://streams.wtju.net/wxtj-live.mp3"},
+	{"name": "Radio 3", "url": "https://kexp-mp3-128.streamguys1.com/kexp128.mp3"},
+	{"name": "Radio 4", "url": "http://streaming.wrek.org:8000/wrek_live-128kb"},
 ]
 
 var _current_state: BoomboxState = BoomboxState.OFF
@@ -70,20 +71,26 @@ func _ready() -> void:
 
 	WorldStateManager.world_state_loaded.connect(_on_world_state_loaded, CONNECT_ONE_SHOT)
 	ShopManager.item_purchased.connect(_on_item_purchased)
+	audio_started.connect(_on_audio_started)
 
 
 const _DEFAULT_STATIONS := [
-	{"name": "Radio K", "url": "https://radiok.broadcasttool.stream/play_128"},
-	{"name": "WTJU / WXTJ", "url": "https://streams.wtju.net/wxtj-live.mp3"},
-	{"name": "KEXP Seattle", "url": "https://kexp-mp3-128.streamguys1.com/kexp128.mp3"},
-	{"name": "WREK Atlanta", "url": "http://streaming.wrek.org:8000/wrek_live-128kb"},
+	{"name": "Radio 1", "url": "https://radiok.broadcasttool.stream/play_128"},
+	{"name": "Radio 2", "url": "https://streams.wtju.net/wxtj-live.mp3"},
+	{"name": "Radio 3", "url": "https://kexp-mp3-128.streamguys1.com/kexp128.mp3"},
+	{"name": "Radio 4", "url": "http://streaming.wrek.org:8000/wrek_live-128kb"},
 ]
 
 func _build_playlist() -> void:
 	var local_entries: Array[Dictionary] = []
-	for s in songs:
-		if s:
-			local_entries.append({"type": "local", "stream": s, "label": s.resource_path.get_file().get_basename()})
+	for i in range(songs.size()):
+		var s = songs[i]
+		if not s:
+			continue
+		var label: String = s.resource_path.get_file().get_basename()
+		if i < song_names.size() and song_names[i] != "":
+			label = song_names[i]
+		local_entries.append({"type": "local", "stream": s, "label": label})
 
 	var radio_entries: Array[Dictionary] = []
 	if ShopManager.is_purchased("rf_receiver"):
@@ -160,7 +167,9 @@ func _setup_radio_stream_player() -> void:
 	_radio = RadioStreamPlayer.new()
 	add_child(_radio)
 	_radio.chunk_ready.connect(_on_chunk_ready)
-	_radio.station_name_resolved.connect(func(n: String) -> void: audio_started.emit(n))
+	# Deliberately not wiring station_name_resolved (the real ICY-NAME from the
+	# live stream) into audio_started — station labels are simplified to
+	# "Radio 1/2/3/4" and shouldn't get silently overridden once a stream connects.
 	_radio.stream_error.connect(_on_stream_error)
 
 
@@ -248,7 +257,7 @@ func _play_entry(index: int) -> void:
 		_local_player.stream = entry["stream"]
 		_local_player.play()
 		_current_state = BoomboxState.PLAYING
-		e_key_interaction_text = "Play Tape"
+		e_key_interaction_text = "Stop Tape"
 		_start_animation()
 		audio_started.emit(entry["label"])
 		_save_state()
@@ -276,7 +285,7 @@ func _on_chunk_ready(stream: AudioStreamMP3) -> void:
 		_active_slot.stream = stream
 		_active_slot.play()
 		_current_state = BoomboxState.PLAYING
-		e_key_interaction_text = "Play Tape"
+		e_key_interaction_text = "Stop Radio"
 		_save_state()
 		_radio.resume()  # start buffering the next chunk immediately
 	else:
@@ -337,6 +346,10 @@ func _save_state() -> void:
 		"playlist_index": _current_index,
 		"is_playing": _current_state != BoomboxState.OFF,
 	})
+
+
+func _on_audio_started(label: String) -> void:
+	AchievementToast.show_toast("NOW PLAYING", label)
 
 
 func get_radio_state() -> BoomboxState:

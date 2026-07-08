@@ -30,7 +30,7 @@ theme_override_constants/separation = 8
 [node name="LeftHeader" type="Label" parent="HBoxContainer/LeftPanel" unique_id=1106295305]
 layout_mode = 2
 size_flags_horizontal = 4
-theme_override_font_sizes/font_size = 22
+theme_override_font_sizes/font_size = 48
 text = "STICKER MARKETPLACE"
 
 [node name="SubTabBar" type="HBoxContainer" parent="HBoxContainer/LeftPanel" unique_id=1286802226]
@@ -58,7 +58,7 @@ theme_override_constants/separation = 6
 [node name="StatusLabel" type="Label" parent="HBoxContainer/LeftPanel/BrowseContainer" unique_id=1648469821]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 50
 autowrap_mode = 3
 
 [node name="ScrollContainer" type="ScrollContainer" parent="HBoxContainer/LeftPanel/BrowseContainer" unique_id=662156373]
@@ -89,7 +89,7 @@ theme_override_constants/separation = 6
 [node name="StatusLabel" type="Label" parent="HBoxContainer/LeftPanel/SellContainer" unique_id=1787354953]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 50
 autowrap_mode = 3
 
 [node name="ScrollContainer" type="ScrollContainer" parent="HBoxContainer/LeftPanel/SellContainer" unique_id=1507497795]
