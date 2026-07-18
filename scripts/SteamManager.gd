@@ -22,6 +22,7 @@ var statistics: Dictionary = {}
 
 # User info
 var persona_name: String = ""
+var steam_id: int = 0
 
 
 # Debug mode
@@ -73,7 +74,7 @@ func initialize_steam() -> void:
 	is_online = Steam.loggedOn()
 
 	# Get user info
-	var steam_id: int = Steam.getSteamID()
+	steam_id = Steam.getSteamID()
 	persona_name = Steam.getPersonaName()
 
 	print("SteamManager: Steam initialized successfully!")
@@ -305,6 +306,12 @@ func get_stat(stat_id: String) -> int:
 func is_achievement_unlocked(achievement_id: String) -> bool:
 	"""Check if an achievement is unlocked"""
 	return achievements.get(achievement_id, false)
+
+func get_steam_account_number() -> String:
+	"""32-bit AccountID derived from the SteamID64 (low 32 bits). Empty if Steam unavailable."""
+	if not is_steam_available or steam_id == 0:
+		return ""
+	return str(steam_id & 0xFFFFFFFF)
 
 func reset_all_achievements_and_stats() -> void:
 	"""DEVELOPER ONLY: Reset all achievements and stats for testing"""

@@ -176,6 +176,9 @@ func _check_uploads_complete() -> void:
 		confirm_data["instagramHandle"] = _current_instagram_handle
 	if _current_bluesky_handle != "":
 		confirm_data["blueskyHandle"] = _current_bluesky_handle
+	var steam_account_number = SteamManager.get_steam_account_number()
+	if steam_account_number != "":
+		confirm_data["steamAccountNumber"] = steam_account_number
 	var body = JSON.stringify(confirm_data)
 	var error = _confirm_request.request(API_BASE_URL + "/upload/confirm", headers, HTTPClient.METHOD_POST, body)
 	if error != OK:

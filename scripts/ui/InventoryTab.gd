@@ -12,7 +12,7 @@ const VirtualKeyboardScene = preload("res://scenes/UI/VirtualKeyboard.tscn")
 @onready var scroll_container: ScrollContainer = $HBoxContainer/LeftPanel/ScrollContainer
 @onready var painting_list_container: VBoxContainer = $HBoxContainer/LeftPanel/ScrollContainer/PaintingList
 @onready var stats_label: Label = $HBoxContainer/LeftPanel/StatsLabel
-@onready var preview_image: TextureRect = $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/PaintingImage
+@onready var preview_image: TextureRect = $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/HBoxContainer/PaintingImage
 @onready var status_label: Label = get_node_or_null("HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ContentHBox/LeftVBox/StatusLabel")
 @onready var name_input: LineEdit = $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ContentHBox/LeftVBox/NameContainer/NameInput
 @onready var statement_label: Label = $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ContentHBox/LeftVBox/StatementLabel
@@ -40,14 +40,14 @@ var _detail_col: int = 0  # 0=left (statement), 1=right (critique) — shipped o
 @onready var _critique_display: TextEdit = $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ContentHBox/RightVBox/CritiqueDisplay
 
 # Social stats
-const _STATS_BASE = "HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ContentHBox/RightVBox/StatsSection"
-@onready var _stats_section: VBoxContainer = $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ContentHBox/RightVBox/StatsSection
-@onready var _stats_hbox: HBoxContainer = $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ContentHBox/RightVBox/StatsSection/StatsHBox
-@onready var _stats_status_label: Label = $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ContentHBox/RightVBox/StatsSection/StatsStatusLabel
+const _STATS_BASE = "HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/HBoxContainer/StatsSection"
+@onready var _stats_section: VBoxContainer = $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/HBoxContainer/StatsSection
+@onready var _stats_hbox: VBoxContainer = $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/HBoxContainer/StatsSection/StatsHBox
+@onready var _stats_status_label: Label = $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/HBoxContainer/StatsSection/StatsStatusLabel
 @onready var _platform_labels: Dictionary = {
-	"bluesky": $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ContentHBox/RightVBox/StatsSection/StatsHBox/BlueskyLabel,
-	"instagram": $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ContentHBox/RightVBox/StatsSection/StatsHBox/InstagramLabel,
-	"deviantart": $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ContentHBox/RightVBox/StatsSection/StatsHBox/DeviantArtLabel,
+	"bluesky": $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/HBoxContainer/StatsSection/StatsHBox/BlueskyLabel,
+	"instagram": $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/HBoxContainer/StatsSection/StatsHBox/InstagramLabel,
+	"deviantart": $HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/HBoxContainer/StatsSection/StatsHBox/DeviantArtLabel,
 }
 var _stats_http: HTTPRequest = null
 var _stats_cache: Dictionary = {}     # painting_id -> stats dict (session cache)

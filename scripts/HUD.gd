@@ -28,6 +28,7 @@ var _painting_panel: PanelContainer  # Background panel wrapping painting hint
 var _base_panel_bg_color: Color  # Original panel color before hue shift
 var _panel_styles: Array = []    # StyleBoxFlat refs for all HUD panels
 var _hud_bg_visible: bool = true
+var _painting_hud_visible: bool = true
 var _current_hud_hue_shift: float = 0.0
 var _interaction_separator: Label  # " | " between two-action prompts
 var _interaction_icon_2: TextureRect  # Second icon for dual-action prompts
@@ -120,6 +121,8 @@ func _ready() -> void:
 					apply_hud_hue(float(json.data["hud_hue"]))
 				if json.data.has("hud_bg"):
 					apply_hud_bg_visible(bool(json.data["hud_bg"]))
+				if json.data.has("painting_hud_visible"):
+					apply_painting_hud_visible(bool(json.data["painting_hud_visible"]))
 			f.close()
 
 # --- SETUP METHODS ---
@@ -176,6 +179,10 @@ func apply_hud_hue(hue_shift: float) -> void:
 func apply_hud_bg_visible(enabled: bool) -> void:
 	_hud_bg_visible = enabled
 	apply_hud_hue(_current_hud_hue_shift)
+
+func apply_painting_hud_visible(enabled: bool) -> void:
+	_painting_hud_visible = enabled
+	_update_painting_hint()
 
 func _setup_mouse_filters() -> void:
 	"""Set mouse_filter to IGNORE on all HUD Control nodes to prevent consuming mouse motion"""
@@ -432,22 +439,26 @@ func _update_painting_hint() -> void:
 	if not painting_hint or not _painting_panel:
 		return
 
-	var is_painting = _is_2d_painting_active()
+	var is_painting = _is_2d_painting_active() and _painting_hud_visible
 
 	if is_painting:
 		var is_gamepad = InputDeviceManager.current_device == InputDeviceManager.DeviceType.GAMEPAD
 
-		if _painting_panel:
-			_painting_panel.custom_minimum_size = Vector2.ZERO
-			_painting_panel.reset_size()
-			_painting_panel.grow_horizontal = Control.GROW_DIRECTION_BEGIN
-
-		# Toggle KB/GP icon visibility across all lines
+		# Toggle KB/GP icon visibility across all lines BEFORE resizing the
+		# panel below — reset_size() reads the container's combined minimum
+		# size synchronously, so if it ran first it would size against the
+		# previous frame's icon set and visibly lag/shift when the device
+		# changes (icons vs. text glyphs differ in width).
 		_toggle_input_icons(painting_hint.get_node("RotateLine"), is_gamepad)
 		_toggle_input_icons(painting_hint.get_node("ScaleLine"), is_gamepad)
 		_toggle_input_icons(painting_hint.get_node("CycleLine"), is_gamepad)
 		_toggle_input_icons(painting_hint.get_node("HBoxContainer2/PlaceUndoLine"), is_gamepad)
 		_toggle_input_icons(painting_hint.get_node("HBoxContainer2/HBoxContainer"), is_gamepad)
+
+		if _painting_panel:
+			_painting_panel.custom_minimum_size = Vector2.ZERO
+			_painting_panel.reset_size()
+			_painting_panel.grow_horizontal = Control.GROW_DIRECTION_BEGIN
 
 		_painting_panel.show()
 

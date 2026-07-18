@@ -55,6 +55,7 @@ text = "Paintings: 3"
 [node name="RightPanel" type="VBoxContainer" parent="HBoxContainer" unique_id=748231515]
 layout_mode = 2
 size_flags_horizontal = 3
+size_flags_vertical = 4
 
 [node name="PreviewPanel" type="PanelContainer" parent="HBoxContainer/RightPanel" unique_id=2146974402]
 layout_mode = 2
@@ -72,12 +73,54 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 12
 
-[node name="PaintingImage" type="TextureRect" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer" unique_id=1001707753]
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer" unique_id=2133122114]
+layout_mode = 2
+
+[node name="PaintingImage" type="TextureRect" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1001707753]
 custom_minimum_size = Vector2(0, 420)
 layout_mode = 2
 size_flags_horizontal = 3
 expand_mode = 1
 stretch_mode = 5
+
+[node name="StatsSection" type="VBoxContainer" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/HBoxContainer" unique_id=-994967295]
+layout_mode = 2
+size_flags_horizontal = 8
+theme_override_constants/separation = 4
+
+[node name="SocialStatsHeader" type="Label" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/HBoxContainer/StatsSection" unique_id=-994967294]
+layout_mode = 2
+size_flags_horizontal = 8
+theme_override_colors/font_color = Color(0.4, 0.8, 1, 1)
+theme_override_colors/font_shadow_color = Color(0.68235296, 0.43529412, 1, 1)
+theme_override_constants/shadow_outline_size = 4
+theme_override_font_sizes/font_size = 37
+text = "Social Status"
+
+[node name="StatsHBox" type="VBoxContainer" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/HBoxContainer/StatsSection" unique_id=1715195158]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="InstagramLabel" type="Label" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/HBoxContainer/StatsSection/StatsHBox" unique_id=-994967291]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.98353285, 0, 0.4347024, 1)
+text = "Instagram: 5 ♥"
+
+[node name="DeviantArtLabel" type="Label" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/HBoxContainer/StatsSection/StatsHBox" unique_id=-994967290]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.9490196, 0.2784314, 1)
+text = "DeviantArt: 5 ♥"
+
+[node name="BlueskyLabel" type="Label" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/HBoxContainer/StatsSection/StatsHBox" unique_id=-994967292]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.37254903, 0.6156863, 0.99215686, 1)
+theme_override_font_sizes/font_size = 34
+text = "Bluesky: 12 ♥"
+
+[node name="StatsStatusLabel" type="Label" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/HBoxContainer/StatsSection" unique_id=-994967288]
+visible = false
+layout_mode = 2
+text = "Fetching..."
 
 [node name="ContentHBox" type="HBoxContainer" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer" unique_id=843837310]
 custom_minimum_size = Vector2(0, 400)
@@ -120,45 +163,6 @@ wrap_mode = 1
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 8
-
-[node name="StatsSection" type="VBoxContainer" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ContentHBox/RightVBox" unique_id=-994967295]
-layout_mode = 2
-size_flags_horizontal = 8
-theme_override_constants/separation = 4
-
-[node name="SocialStatsHeader" type="Label" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ContentHBox/RightVBox/StatsSection" unique_id=-994967294]
-layout_mode = 2
-size_flags_horizontal = 8
-theme_override_colors/font_color = Color(0.4, 0.8, 1, 1)
-theme_override_colors/font_shadow_color = Color(0.68235296, 0.43529412, 1, 1)
-theme_override_constants/shadow_outline_size = 4
-theme_override_font_sizes/font_size = 37
-text = "Social Status"
-
-[node name="StatsHBox" type="HBoxContainer" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ContentHBox/RightVBox/StatsSection" unique_id=-994967293]
-layout_mode = 2
-theme_override_constants/separation = 16
-
-[node name="BlueskyLabel" type="Label" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ContentHBox/RightVBox/StatsSection/StatsHBox" unique_id=-994967292]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.37254903, 0.6156863, 0.99215686, 1)
-theme_override_font_sizes/font_size = 34
-text = "Bluesky: 12 ♥"
-
-[node name="InstagramLabel" type="Label" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ContentHBox/RightVBox/StatsSection/StatsHBox" unique_id=-994967291]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.98353285, 0, 0.4347024, 1)
-text = "Instagram: 5 ♥"
-
-[node name="DeviantArtLabel" type="Label" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ContentHBox/RightVBox/StatsSection/StatsHBox" unique_id=-994967290]
-layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.9490196, 0.2784314, 1)
-text = "DeviantArt: 5 ♥"
-
-[node name="StatsStatusLabel" type="Label" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ContentHBox/RightVBox/StatsSection" unique_id=-994967288]
-visible = false
-layout_mode = 2
-text = "Fetching..."
 
 [node name="CritiqueHeader" type="Label" parent="HBoxContainer/RightPanel/PreviewPanel/MarginContainer/VBoxContainer/ContentHBox/RightVBox" unique_id=1111111101]
 layout_mode = 2

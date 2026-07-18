@@ -32,8 +32,16 @@ func _input(event: InputEvent) -> void:
 	# Detect input device type from event
 	var detected_device: DeviceType = current_device
 
-	if event is InputEventKey or event is InputEventMouseButton:
-		# Keyboard or mouse button (not motion to avoid false positives)
+	if event is InputEventKey:
+		detected_device = DeviceType.KEYBOARD_MOUSE
+	elif event is InputEventMouseButton:
+		# Not motion, to avoid false positives. On Steam Deck, Steam Input
+		# translates trackpad clicks into synthetic mouse button events —
+		# there's no real mouse to switch to, so treat those as noise rather
+		# than a device change (a physical keyboard press still switches
+		# correctly if one's ever attached).
+		if ControllerMapper and ControllerMapper.is_steam_deck:
+			return
 		detected_device = DeviceType.KEYBOARD_MOUSE
 	elif event is InputEventJoypadButton or event is InputEventJoypadMotion:
 		# Gamepad button or stick/trigger motion

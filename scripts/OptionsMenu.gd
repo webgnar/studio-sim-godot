@@ -20,6 +20,7 @@ signal closed
 @onready var hud_hue_slider: HSlider = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/ScrollContainer/VisualSettings/HudHueSlider
 @onready var hud_hue_value_label: Label = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/ScrollContainer/VisualSettings/HBoxContainer/HudHueHeader/HudHueValue
 @onready var hud_bg_checkbox: CheckBox = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/ScrollContainer/VisualSettings/HBoxContainer/HudBgCheckbox
+@onready var show_painting_hud_checkbox: CheckBox = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/ScrollContainer/VisualSettings/HBoxContainer/ShowPaintingHudCheckbox
 @onready var visual_scroll_container: ScrollContainer = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Visual/ScrollContainer
 var close_button: Button = null  # Removed from scene; closing handled by go_back/ESC
 @onready var controls_list: VBoxContainer = $PanelContainer/MarginContainer/VBoxContainer/TabContainer/Controls/ScrollContainer/ControlsList
@@ -50,6 +51,7 @@ var current_hue: float = 0.0  # Hue value 0-360
 var current_saturation: float = 0.3  # Saturation value 0.0-1.0
 var current_hud_hue: float = 0.0  # HUD hue shift 0-360
 var hud_bg_enabled: bool = true
+var painting_hud_visible_enabled: bool = true
 var _is_loading: bool = false
 var slider_hold_timer: float = 0.0
 var slider_hold_delay: float = 0.3  # Initial delay before repeating
@@ -108,6 +110,8 @@ func _ready():
 		hud_hue_slider.value_changed.connect(_on_hud_hue_slider_changed)
 	if hud_bg_checkbox:
 		hud_bg_checkbox.toggled.connect(_on_hud_bg_toggled)
+	if show_painting_hud_checkbox:
+		show_painting_hud_checkbox.toggled.connect(_on_show_painting_hud_toggled)
 	stick_sensitivity_slider.value_changed.connect(_on_stick_sensitivity_changed)
 	# Get theme panel style
 	var theme_res = load("res://themes/ui_theme.tres")
@@ -422,6 +426,14 @@ func _on_hud_bg_toggled(pressed: bool):
 		hud.apply_hud_bg_visible(pressed)
 	save_settings()
 
+func _on_show_painting_hud_toggled(pressed: bool):
+	"""Handle Show Painting HUD checkbox toggle"""
+	painting_hud_visible_enabled = pressed
+	var hud = get_tree().get_first_node_in_group("hud")
+	if hud and hud.has_method("apply_painting_hud_visible"):
+		hud.apply_painting_hud_visible(pressed)
+	save_settings()
+
 func _on_stick_sensitivity_changed(value: float):
 	"""Handle right stick sensitivity slider change"""
 	joystick_sensitivity = value
@@ -473,6 +485,7 @@ func save_settings():
 	settings["bg_saturation"] = current_saturation
 	settings["hud_hue"] = current_hud_hue
 	settings["hud_bg"] = hud_bg_enabled
+	settings["painting_hud_visible"] = painting_hud_visible_enabled
 
 	# Save game settings
 	settings["save_glb_on_ship"] = save_glb_on_ship
@@ -597,6 +610,17 @@ func load_settings():
 			hud_bg_node.apply_hud_bg_visible(hud_bg_enabled)
 	elif hud_bg_checkbox:
 		hud_bg_checkbox.set_pressed_no_signal(true)
+
+	# Load Show Painting HUD setting
+	if settings.has("painting_hud_visible"):
+		painting_hud_visible_enabled = bool(settings["painting_hud_visible"])
+		if show_painting_hud_checkbox:
+			show_painting_hud_checkbox.set_pressed_no_signal(painting_hud_visible_enabled)
+		var painting_hud_node = get_tree().get_first_node_in_group("hud")
+		if painting_hud_node and painting_hud_node.has_method("apply_painting_hud_visible"):
+			painting_hud_node.apply_painting_hud_visible(painting_hud_visible_enabled)
+	elif show_painting_hud_checkbox:
+		show_painting_hud_checkbox.set_pressed_no_signal(true)
 
 	# Load game settings
 	if settings.has("save_glb_on_ship"):
@@ -1002,12 +1026,20 @@ func _setup_focus_navigation():
 		hud_bg_checkbox.focus_previous = hud_bg_checkbox.get_path_to(saturation_slider)
 		hud_bg_checkbox.focus_neighbor_top = hud_bg_checkbox.get_path_to(saturation_slider)
 
-	if hud_bg_checkbox and hud_hue_slider:
-		hud_bg_checkbox.focus_next = hud_bg_checkbox.get_path_to(hud_hue_slider)
-		hud_bg_checkbox.focus_neighbor_bottom = hud_bg_checkbox.get_path_to(hud_hue_slider)
+	if hud_bg_checkbox and show_painting_hud_checkbox:
+		hud_bg_checkbox.focus_next = hud_bg_checkbox.get_path_to(show_painting_hud_checkbox)
+		hud_bg_checkbox.focus_neighbor_bottom = hud_bg_checkbox.get_path_to(show_painting_hud_checkbox)
+		show_painting_hud_checkbox.focus_mode = Control.FOCUS_ALL
+		show_painting_hud_checkbox.focus_previous = show_painting_hud_checkbox.get_path_to(hud_bg_checkbox)
+		show_painting_hud_checkbox.focus_neighbor_top = show_painting_hud_checkbox.get_path_to(hud_bg_checkbox)
+
+	var hud_bg_row_last: CheckBox = show_painting_hud_checkbox if show_painting_hud_checkbox else hud_bg_checkbox
+	if hud_bg_row_last and hud_hue_slider:
+		hud_bg_row_last.focus_next = hud_bg_row_last.get_path_to(hud_hue_slider)
+		hud_bg_row_last.focus_neighbor_bottom = hud_bg_row_last.get_path_to(hud_hue_slider)
 		hud_hue_slider.focus_mode = Control.FOCUS_ALL
-		hud_hue_slider.focus_previous = hud_hue_slider.get_path_to(hud_bg_checkbox)
-		hud_hue_slider.focus_neighbor_top = hud_hue_slider.get_path_to(hud_bg_checkbox)
+		hud_hue_slider.focus_previous = hud_hue_slider.get_path_to(hud_bg_row_last)
+		hud_hue_slider.focus_neighbor_top = hud_hue_slider.get_path_to(hud_bg_row_last)
 
 	if close_button != null:
 		if is_embedded:
