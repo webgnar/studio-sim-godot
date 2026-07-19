@@ -194,6 +194,15 @@ func _make_3d_player(node_name: String, bus: String) -> AudioStreamPlayer3D:
 
 
 func _on_world_state_loaded() -> void:
+	# Purchased items (including rf_receiver) only become known once world state
+	# finishes loading, a frame after this node's _ready() already built the
+	# playlist and RF mesh visibility against is_purchased() == false. Re-sync
+	# both now that the real purchase data is available.
+	if _rf_mesh:
+		_rf_mesh.visible = ShopManager.is_purchased("rf_receiver")
+	_playlist.clear()
+	_build_playlist()
+
 	var saved = WorldStateManager.get_data("boombox_" + boombox_id, null)
 	if saved != null:
 		_current_index = saved.get("playlist_index", -1)
