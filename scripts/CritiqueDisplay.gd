@@ -35,6 +35,15 @@ const CRITICS: Array[Dictionary] = [
 var _current_critic: Dictionary = {}
 var _critic_bag: Array[Dictionary] = []
 
+const CRITIC_VOICE_DESCRIPTIONS: Dictionary = {
+	"bum": "a gruff, world-weary washed-up artist, rough smoker's voice, a little slurred and bitter, speaks plainly and crudely",
+	"general": "a calm, mystical astrologer speaking with slow, quiet authority and an ancient, knowing tone",
+	"govtpig": "a dry, monotone government bureaucrat reading a policy memo out loud, flat and administrative",
+	"guy": "an overly enthusiastic young art school graduate, fast-talking and breathless with nervous excitement",
+	"woman": "a heavyset, warm Southern Black woman with a slow, direct storyteller's rhythm",
+}
+var _voice_player: AudioStreamPlayer3D
+
 var _scroll_offset: float = 0.0
 var _scroll_pause_timer: float = 0.0
 var _waiting_at_bottom: bool = false
@@ -60,6 +69,12 @@ func _ready() -> void:
 	_http_request = HTTPRequest.new()
 	_http_request.timeout = 30.0
 	add_child(_http_request)
+
+	_voice_player = AudioStreamPlayer3D.new()
+	_voice_player.name = "CritiqueVoicePlayer"
+	_voice_player.max_distance = 15.0
+	_voice_player.bus = "SFX"
+	add_child(_voice_player)
 
 	# Pipes are always the background — ColorRect no longer needed
 	_color_rect.visible = false
@@ -127,6 +142,10 @@ func _on_upload_completed(_gallery_id: String, image_url: String = "") -> void:
 	_set_text(critique_text)
 	if _cached_painting_id != "":
 		WorldStateManager.save_critique_for_painting(_cached_painting_id, critique_text)
+
+	if _is_generative_ai_enabled():
+		var voice_description: String = CRITIC_VOICE_DESCRIPTIONS.get(critic_type, "")
+		PioneerAPI.speak_streaming(critique_text, voice_description, _voice_player)
 
 func _generate_template_critique(critic_type: String) -> String:
 	return CritiqueGenerator.generate(

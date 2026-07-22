@@ -32,7 +32,7 @@ const VISITOR_ROSTER: Array = [
 	{"skin_path": "res://materials/NPCs/maninblack.tres",          "display_name": "Agent Smith"},
 	{"skin_path": "res://materials/NPCs/gw.tres",                  "display_name": "George Washington"},
 	{"skin_path": "res://materials/garyskin.tres",                  "display_name": "Gary"},
-	{"skin_path": "res://materials/humanskin.tres",                 "display_name": "Zack"},
+	{"skin_path": "res://materials/humanskin.tres",                 "display_name": "Thrasher Guy"},
 	{"skin_path": "res://materials/skeletonskin.tres",              "display_name": "Mort"},
 	{"skin_path": "res://materials/NPCs/kdog.tres",                "display_name": "K-Dog"},
 	{"skin_path": "res://materials/NPCs/ian.tres",                 "display_name": "Ian"},

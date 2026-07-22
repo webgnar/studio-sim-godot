@@ -887,7 +887,7 @@ func _is_last_in_tab(focused_control: Control) -> bool:
 		3:  # Language
 			return language_buttons.size() > 0 and focused_control == language_buttons[-1]
 		4:  # Game
-			return focused_control == birth_location_line_edit
+			return focused_control == birth_time_line_edit
 	return false
 
 func _focus_last_content_item():
@@ -911,7 +911,7 @@ func _focus_last_content_item():
 			if language_buttons.size() > 0:
 				language_buttons[-1].grab_focus()
 		4:  # Game
-			birth_location_line_edit.grab_focus()
+			birth_time_line_edit.grab_focus()
 
 func _navigate_focus(direction: int):
 	"""Navigate focus up/down through controls"""

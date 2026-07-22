@@ -25,6 +25,7 @@ config/icon="uid://ch1yuq51ghyde"
 
 [audio]
 
+driver/enable_input=true
 buses/SFX/solo=false
 buses/SFX/mute=false
 buses/SFX/bypass_fx=false
@@ -67,6 +68,10 @@ PaintingExporter="*res://scripts/PaintingExporter.gd"
 GalleryUploader="*res://scripts/GalleryUploader.gd"
 LocaleManager="*res://scripts/LocaleManager.gd"
 StickerLibrary="*res://scripts/painting/StickerLibrary.gd"
+PioneerAPI="*res://scripts/PioneerAPI.gd"
+MicRecorder="*res://scripts/MicRecorder.gd"
+PioneerVoiceDebugOverlay="*res://scripts/PioneerVoiceDebugOverlay.gd"
+VoiceInputIndicator="*res://scripts/VoiceInputIndicator.gd"
 StickerMarketplaceManager="*res://scripts/economy/StickerMarketplaceManager.gd"
 GameManager="*res://scenes/rubens_coin_pusher/scripts/game_manager.gd"
 SkinLibrary="*res://scripts/SkinLibrary.gd"

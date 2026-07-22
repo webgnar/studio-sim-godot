@@ -2,8 +2,56 @@
 
 [ext_resource type="PackedScene" uid="uid://gv6172d2ngws" path="res://scenes/humanrig_blender.tscn" id="1_hrig"]
 [ext_resource type="Script" uid="uid://c3j7m2nqpxr81" path="res://scripts/StudioAssistantCharacter.gd" id="2_asst"]
+[ext_resource type="Script" uid="uid://d6hsnqw1yy71" path="res://scripts/StudioAssistantVoiceChat.gd" id="3_voice"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_asst"]
+radius = 0.91748047
+height = 8.376465
 
 [node name="StudioAssistantCharacter" type="Node3D" unique_id=1595952688]
 script = ExtResource("2_asst")
 
 [node name="humanrig" parent="." unique_id=873958708 instance=ExtResource("1_hrig")]
+
+[node name="Skeleton3D" parent="humanrig/Armature" parent_id_path=PackedInt32Array(873958708, 1193931879) index="0" unique_id=1796714392]
+bones/1/position = Vector3(-0.51109934, 0.2602241, 1.7876365)
+bones/1/rotation = Quaternion(2.552231e-07, 0.7071068, 0.7071068, -3.0626617e-07)
+bones/2/rotation = Quaternion(-2.903144e-09, -0.11692221, 0.9930877, 0.010298796)
+bones/3/rotation = Quaternion(0.11692198, 1.02057305e-08, 0.010298425, 0.9930877)
+bones/4/position = Vector3(0.07894207, -1.9590576, 2.2711082)
+bones/5/position = Vector3(0.5111021, 0.2602241, 1.7876365)
+bones/6/rotation = Quaternion(2.903144e-09, -0.11692221, 0.9930877, -0.010298796)
+bones/7/rotation = Quaternion(0.11692198, -1.02057305e-08, -0.010298425, 0.9930877)
+bones/8/position = Vector3(-0.07894207, -1.9590576, 2.2711082)
+bones/9/rotation = Quaternion(-0.006370074, 0.7070781, 0.70707816, -0.0063700737)
+bones/11/rotation = Quaternion(0, 0.7071068, 0.7071068, 0)
+bones/12/position = Vector3(-5.2553846e-09, 2.842845e-08, 1.5746767e-07)
+bones/12/rotation = Quaternion(-0.0067373835, -0.6729507, 0.7396209, -0.0072731776)
+bones/13/rotation = Quaternion(0.01441229, 0.29485294, 0.00087404624, 0.95543355)
+bones/14/rotation = Quaternion(-0.051831607, 0.044080373, -0.045909896, 0.99662566)
+bones/15/rotation = Quaternion(0.008417007, -0.27934846, -0.020852908, 0.9599265)
+bones/16/rotation = Quaternion(-0.051831413, -0.044080377, 0.045909703, 0.99662566)
+bones/17/rotation = Quaternion(3.4446412e-08, 0.7500041, 0.66143316, 2.3543865e-07)
+bones/18/rotation = Quaternion(-0.062629126, 1.9083753e-07, 1.4212296e-07, 0.99803686)
+bones/19/rotation = Quaternion(-0.04225928, 3.3011432e-08, 3.3011407e-08, 0.99910676)
+bones/20/rotation = Quaternion(-0.020596845, 0.009475401, 0.010312363, 0.9996898)
+bones/22/rotation = Quaternion(-0.71291965, 0.40051854, -0.08251304, 0.5696684)
+bones/23/rotation = Quaternion(0.025156576, -0.004344751, -0.30681947, 0.9514253)
+bones/24/position = Vector3(-1.2179985, -1.4123049, -0.33258283)
+bones/25/rotation = Quaternion(-0.7067472, -0.13876548, 0.6580161, 0.21969853)
+bones/27/rotation = Quaternion(-0.7303932, -0.33391607, 0.13739356, 0.57978356)
+bones/28/rotation = Quaternion(0.010756048, 0.0045267814, 0.13118488, 0.99128926)
+bones/29/position = Vector3(1.3128431, -1.5007753, -0.3797989)
+bones/29/rotation = Quaternion(-4.9077653e-09, 2.2666647e-22, 4.5359502e-30, 1)
+bones/30/rotation = Quaternion(-0.7339679, 0.06620296, -0.6441785, 0.2047984)
+
+[node name="InteractionBody" type="StaticBody3D" parent="." unique_id=801105779 groups=["interactable"]]
+collision_layer = 8
+collision_mask = 0
+script = ExtResource("3_voice")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="InteractionBody" unique_id=1339132031]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.138232, 0)
+shape = SubResource("CapsuleShape3D_asst")
+
+[editable path="humanrig"]
