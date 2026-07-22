@@ -315,9 +315,12 @@ func _update_interaction_prompt() -> void:
 
 	# Show weapon controls when equipped
 	if is_weapon_equipped:
-		var shoot_glyph = InputDeviceManager.get_formatted_prompt("action_primary")
 		var drop_glyph = InputDeviceManager.get_formatted_prompt("interact")
-		interaction_prompt_changed.emit("%s Shoot | %s Drop Gun" % [shoot_glyph, drop_glyph])
+		if equipped_weapon.show_shoot_prompt:
+			var shoot_glyph = InputDeviceManager.get_formatted_prompt("action_primary")
+			interaction_prompt_changed.emit("%s Shoot | %s Drop %s" % [shoot_glyph, drop_glyph, equipped_weapon.weapon_display_name])
+		else:
+			interaction_prompt_changed.emit("%s Drop %s" % [drop_glyph, equipped_weapon.weapon_display_name])
 		return
 
 	# Don't show interaction prompts while carrying (show carry controls instead)
@@ -332,9 +335,13 @@ func _update_interaction_prompt() -> void:
 		if is_carrying:
 			interaction_prompt_changed.emit("")
 			return
-		var pick_up_glyph = InputDeviceManager.get_formatted_prompt("action_primary")
 		var equip_glyph = InputDeviceManager.get_formatted_prompt("interact")
-		interaction_prompt_changed.emit("%s %s | %s %s" % [pick_up_glyph, tr("Pick Up"), equip_glyph, tr("Equip Nailgun")])
+		# Only show the physical "Pick Up" option if this weapon also has a CarryableComponent sibling
+		if weapon_component.carryable_component:
+			var pick_up_glyph = InputDeviceManager.get_formatted_prompt("action_primary")
+			interaction_prompt_changed.emit("%s %s | %s %s %s" % [pick_up_glyph, tr("Pick Up"), equip_glyph, tr("Equip"), weapon_component.weapon_display_name])
+		else:
+			interaction_prompt_changed.emit("%s %s %s" % [equip_glyph, tr("Equip"), weapon_component.weapon_display_name])
 		return
 	
 	# Check if object is carryable

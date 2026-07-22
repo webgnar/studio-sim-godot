@@ -25,6 +25,13 @@ var last_placement_time: float = 0.0
 var _is_signing: bool = false
 var _active_signature: PaintingSignatureSystem = null
 
+# Pencil drawing state
+var _is_pencil_drawing: bool = false
+var _was_pencil_equipped: bool = false
+var _active_pencil_canvas: PaintingSystem2D = null
+var _pending_pencil_canvases: Array[PaintingSystem2D] = []  # Canvases with an unfinalized stroke, finalized when the pencil is unequipped
+var _player_interaction: PlayerInteractionComponent = null
+
 # Gyro cursor
 var gyro_cursor_offset: Vector2 = Vector2.ZERO
 @export var gyro_sensitivity: float = 350.0
@@ -81,6 +88,32 @@ func _process(delta):
 		else:
 			_finish_signing()
 		return
+
+	# Handle pencil drawing while equipped. Polled here (not via _unhandled_input) because
+	# PlayerInteractionComponent._input() swallows action_primary whenever any weapon is
+	# equipped (it calls equipped_weapon.shoot()), so the event never reaches _unhandled_input.
+	# Input.is_action_pressed() polling is unaffected by that "handled" flag either way.
+	var pencil_equipped_now = is_pencil_equipped()
+	if pencil_equipped_now:
+		_accumulate_gyro(delta)
+		if Input.is_action_pressed("action_primary"):
+			if _is_pencil_drawing:
+				_continue_pencil_drawing()
+			else:
+				_begin_pencil_drawing()
+		elif _is_pencil_drawing:
+			_finish_pencil_stroke()
+		_was_pencil_equipped = true
+		return
+	elif _was_pencil_equipped:
+		# Pencil was just unequipped (E key, or force-unequipped) — finalize any drawing
+		if _is_pencil_drawing:
+			_finish_pencil_stroke()
+		for canvas in _pending_pencil_canvases:
+			if is_instance_valid(canvas):
+				canvas.finalize_pencil_layer()
+		_pending_pencil_canvases.clear()
+		_was_pencil_equipped = false
 
 	# Reset gyro drift when not actively painting
 	gyro_cursor_offset = Vector2.ZERO
@@ -165,6 +198,10 @@ func _unhandled_input(event):
 
 	# Check for signing on painting back face (before sticker logic)
 	# Guard against re-triggering while already signing (analog trigger fires multiple events)
+	# Note: while the pencil (or any weapon) is equipped, PlayerInteractionComponent._input()
+	# swallows action_primary before it ever reaches _unhandled_input, so this — and the
+	# sticker-placement block below — are naturally unreachable while pencil-drawing. No extra
+	# guard needed here; see is_pencil_equipped()/_process() for the pencil's own draw routing.
 	if should_place and not _is_signing:
 		var back_face_result = _check_back_face_raycast()
 		if back_face_result:
@@ -457,3 +494,56 @@ func _finish_signing():
 		_active_signature.finish_stroke()
 	_active_signature = null
 	_is_signing = false
+
+# --- Pencil Drawing Helpers ---
+
+func _get_player_interaction() -> PlayerInteractionComponent:
+	"""Lazily resolve and cache the player's interaction component."""
+	if _player_interaction and is_instance_valid(_player_interaction):
+		return _player_interaction
+	var player = get_tree().get_first_node_in_group("player")
+	if player:
+		_player_interaction = player.get_node_or_null("PlayerInteractionComponent")
+	return _player_interaction
+
+func is_pencil_equipped() -> bool:
+	"""Check if the player currently has the pencil equipped (E-key weapon slot, not carried)."""
+	var player_interaction = _get_player_interaction()
+	return player_interaction != null and player_interaction.is_weapon_equipped and player_interaction.equipped_weapon is PencilWeaponComponent
+
+func _begin_pencil_drawing():
+	"""Called when the primary action is first pressed while the pencil is equipped.
+	Only actually starts a stroke once the raycast lands on a canvas; otherwise keeps
+	retrying each frame the button is held, so aiming at the canvas mid-hold still works."""
+	var result = _perform_unified_raycast()
+	if not (result and _is_canvas_plane(result)):
+		return
+	var target_2d = _resolve_2d_system(result.collider)
+	if not target_2d:
+		return
+	_active_pencil_canvas = target_2d
+	_is_pencil_drawing = true
+	if not _pending_pencil_canvases.has(target_2d):
+		_pending_pencil_canvases.append(target_2d)
+	target_2d.begin_pencil_stroke(result.position)
+
+func _continue_pencil_drawing():
+	"""Called each frame while pencil-drawing to draw at the current raycast position."""
+	if not _active_pencil_canvas:
+		_finish_pencil_stroke()
+		return
+
+	var result = _perform_unified_raycast()
+	if result and _is_canvas_plane(result) and _resolve_2d_system(result.collider) == _active_pencil_canvas:
+		_active_pencil_canvas.continue_pencil_stroke(result.position)
+		return
+
+	# Raycast missed or hit a different canvas — end the stroke but stay in drawing mode
+	_active_pencil_canvas.end_pencil_stroke()
+
+func _finish_pencil_stroke():
+	"""End the current pencil stroke (does not finalize the layer — that happens on unequip)."""
+	if _active_pencil_canvas:
+		_active_pencil_canvas.end_pencil_stroke()
+	_active_pencil_canvas = null
+	_is_pencil_drawing = false

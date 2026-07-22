@@ -1,0 +1,26 @@
+[gd_scene format=3 uid="uid://0pira7rmf11k"]
+
+[ext_resource type="PackedScene" uid="uid://b1b366jypn21" path="res://models/interactables/pencil.glb" id="1_mesh"]
+[ext_resource type="Script" uid="uid://bao3fprkl5oik" path="res://scripts/components/PencilWeaponComponent.gd" id="2_pencil_weapon"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_pencil"]
+radius = 0.03
+height = 0.531
+
+[node name="Pencil" type="RigidBody3D" unique_id=1264337789]
+collision_layer = 8
+collision_mask = 2
+freeze = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=347615018]
+shape = SubResource("CapsuleShape3D_pencil")
+
+[node name="PencilMesh" parent="." unique_id=1713093971 instance=ExtResource("1_mesh")]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
+
+[node name="PencilWeaponComponent" type="Node3D" parent="." unique_id=1908207375]
+script = ExtResource("2_pencil_weapon")
+equipped_position = Vector3(0.296, -0.206, -0.088)
+equipped_rotation = Vector3(0, 19, 19)
+weapon_display_name = "Pencil"
+show_shoot_prompt = false

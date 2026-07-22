@@ -103,6 +103,7 @@ nail_scene = ExtResource("4_wallnail")
 projectile_nail_scene = ExtResource("5_projectilenail")
 equipped_position = Vector3(0.18, 0, -0.1)
 equipped_rotation = Vector3(0, 20, 0)
+weapon_display_name = "Nailgun"
 shoot_sound = ExtResource("4_7rh32")
 wall_check_margin = 0.5
 wall_check_radius = 0.1

@@ -144,7 +144,7 @@
 [ext_resource type="PackedScene" uid="uid://b4j6krmtnx1p8" path="res://scenes/objects/DiscordLink.tscn" id="148_disc"]
 [ext_resource type="Texture2D" uid="uid://bhx3k1r4uh3ma" path="res://sprites/ui/gallery.png" id="148_tuav7"]
 [ext_resource type="Texture2D" uid="uid://baj220mrywpyb" path="res://sprites/elevator sign.png" id="156_kloan"]
-[ext_resource type="PackedScene" uid="uid://b1b366jypn21" path="res://models/interactables/pencil.glb" id="157_kloan"]
+[ext_resource type="PackedScene" path="res://scenes/objects/Pencil.tscn" id="157_pencil_carryable"]
 [ext_resource type="PackedScene" uid="uid://d2lld8pxrphp3" path="res://scenes/objects/SaveAssistantWorkButton.tscn" id="200_savebtn"]
 [ext_resource type="PackedScene" uid="uid://dfcanvasscn1" path="res://scenes/objects/AssistantFinishedCanvas.tscn" id="201_fcanvas"]
 [ext_resource type="Script" uid="uid://nvjrcsa5oaqc" path="res://scripts/BerkeyInteraction.gd" id="berkey_interaction"]
@@ -3027,8 +3027,8 @@ transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -4.9
 libraries/ = SubResource("AnimationLibrary_x3v50")
 autoplay = &"float"
 
-[node name="pencil" parent="." unique_id=115134464 instance=ExtResource("157_kloan")]
-transform = Transform3D(-3.6591155e-09, 0.083710805, 0.05470376, -0.1, -4.371139e-09, 0, 2.3911775e-09, -0.05470376, 0.083710805, 1.3375152, 0.9959953, 8.329819)
+[node name="pencil" parent="." unique_id=115134464 instance=ExtResource("157_pencil_carryable")]
+transform = Transform3D(-3.6591155e-08, 0.83710805, 0.5470376, -1.0, -4.371139e-08, 0, 2.3911775e-08, -0.5470376, 0.83710805, 1.3375152, 0.9959953, 8.329819)
 
 [editable path="Spotlight1"]
 [editable path="Spotlight2"]

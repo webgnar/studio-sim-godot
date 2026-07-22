@@ -13,6 +13,8 @@ enum State { WORLD, EQUIPPED }
 @export var bullet_scene: PackedScene  ## Bullet.tscn scene
 @export var equipped_position: Vector3 = Vector3(0.5, -0.3, -0.5)  ## Local position when equipped (right, down, forward)
 @export var equipped_rotation: Vector3 = Vector3(0, 0, 0)  ## Local rotation degrees when equipped
+@export var weapon_display_name: String = "Gun"  ## Shown in HUD prompts ("Equip <name>" / "Drop <name>")
+@export var show_shoot_prompt: bool = true  ## Whether the equipped-state HUD prompt includes a "Shoot" hint
 
 @export_group("Audio")
 @export var shoot_sound: AudioStream

@@ -73,6 +73,15 @@ var preview_base_opacity: float = 0.5  # Set by PaintingRoot2D
 # Commission tracking: true if this canvas passed a commission validation
 var was_commission_validated: bool = false
 
+# --- Pencil freehand drawing ---
+# Drawing goes directly into the background image (same one _bake_to_background()
+# produces). Starting a pencil session bakes any currently-placed stickers first,
+# which is a deliberate one-way commit: undo no longer reaches pre-pencil stickers.
+const PENCIL_BRUSH_RADIUS: int = 2
+const PENCIL_BRUSH_COLOR: Color = Color(0.1, 0.1, 0.1, 0.3)  # Matches PaintingSignatureSystem's look
+var _canvas_image: Image = null  # Non-null only while a pencil session is active
+var _pencil_last_pixel: Vector2i = Vector2i(-1, -1)
+
 
 func _ready():
 	# Find camera from the painting plane's world (not from SubViewport)
@@ -272,6 +281,16 @@ func _world_to_viewport_coords(world_pos: Vector3) -> Vector2:
 func _update_preview_position():
 	"""Update preview sprite position based on raycast from mouse"""
 	if not preview_sprite:
+		return
+
+	# Holding the pencil draws, it doesn't place stickers — hide the sticker ghost preview entirely
+	if PaintingModeManager and PaintingModeManager.is_pencil_equipped():
+		if preview_sprite.visible:
+			preview_sprite.visible = false
+			preview_idle_time = 0.0
+		if _cursor_on_canvas:
+			_cursor_on_canvas = false
+			cursor_exited_canvas.emit()
 		return
 
 	var raycast_result = _raycast_from_mouse()
@@ -499,6 +518,82 @@ func _bake_to_background() -> void:
 			layer.node.queue_free()
 	placed_layers.clear()
 	selected_layer = null
+
+# --- Pencil freehand drawing ---
+
+func begin_pencil_stroke(world_position: Vector3) -> void:
+	"""Start (or continue) a pencil-drawing session at the given world hit position."""
+	if not _canvas_image:
+		if not placed_layers.is_empty():
+			await _bake_to_background()  # One-way commit: flattens & clears undoable stickers
+		if _background_sprite and _background_sprite.texture:
+			_canvas_image = _background_sprite.texture.get_image()
+		else:
+			_canvas_image = Image.create(int(viewport_size.x), int(viewport_size.y), false, Image.FORMAT_RGBA8)
+			_canvas_image.fill(Color(0, 0, 0, 0))
+		if _background_sprite:
+			_background_sprite.texture = ImageTexture.create_from_image(_canvas_image)
+			_background_sprite.scale = Vector2.ONE
+	_pencil_last_pixel = Vector2i(-1, -1)
+	continue_pencil_stroke(world_position)
+
+func continue_pencil_stroke(world_position: Vector3) -> void:
+	"""Draw at the given world hit position, interpolating from the last sample."""
+	if not _canvas_image:
+		return
+
+	var viewport_pos := _world_to_viewport_coords(world_position)
+	var width := _canvas_image.get_width()
+	var height := _canvas_image.get_height()
+	var pixel := Vector2i(int(viewport_pos.x), int(viewport_pos.y))
+
+	if pixel.x < 0 or pixel.y < 0 or pixel.x >= width or pixel.y >= height:
+		# Off-canvas: lift the pen so re-entering doesn't draw a streak from a stale position
+		_pencil_last_pixel = Vector2i(-1, -1)
+		return
+
+	if _pencil_last_pixel != Vector2i(-1, -1):
+		_draw_pencil_line(_pencil_last_pixel, pixel)
+	else:
+		_draw_pencil_circle(pixel)
+
+	_pencil_last_pixel = pixel
+	(_background_sprite.texture as ImageTexture).update(_canvas_image)
+
+func end_pencil_stroke() -> void:
+	"""Called when the draw input is released, to break line interpolation between strokes."""
+	_pencil_last_pixel = Vector2i(-1, -1)
+
+func finalize_pencil_layer() -> void:
+	"""Called when the pencil is dropped. Strokes are already live in the background texture."""
+	_canvas_image = null
+	_pencil_last_pixel = Vector2i(-1, -1)
+
+func _draw_pencil_line(from: Vector2i, to: Vector2i) -> void:
+	"""Draw a line of circles from one pixel to another (Bresenham-style stepping)."""
+	var diff := to - from
+	var steps := maxi(absi(diff.x), absi(diff.y))
+	if steps == 0:
+		_draw_pencil_circle(to)
+		return
+	for i in range(steps + 1):
+		var t := float(i) / float(steps)
+		var px := Vector2i(int(lerpf(from.x, to.x, t)), int(lerpf(from.y, to.y, t)))
+		_draw_pencil_circle(px)
+
+func _draw_pencil_circle(center: Vector2i) -> void:
+	"""Fill a circle of pixels at the given center, alpha-blended onto the canvas image."""
+	var width := _canvas_image.get_width()
+	var height := _canvas_image.get_height()
+	for dy in range(-PENCIL_BRUSH_RADIUS, PENCIL_BRUSH_RADIUS + 1):
+		for dx in range(-PENCIL_BRUSH_RADIUS, PENCIL_BRUSH_RADIUS + 1):
+			if dx * dx + dy * dy <= PENCIL_BRUSH_RADIUS * PENCIL_BRUSH_RADIUS:
+				var px := center.x + dx
+				var py := center.y + dy
+				if px >= 0 and px < width and py >= 0 and py < height:
+					var existing: Color = _canvas_image.get_pixel(px, py)
+					var blended_alpha: float = existing.a + PENCIL_BRUSH_COLOR.a * (1.0 - existing.a)
+					_canvas_image.set_pixel(px, py, Color(PENCIL_BRUSH_COLOR.r, PENCIL_BRUSH_COLOR.g, PENCIL_BRUSH_COLOR.b, blended_alpha))
 
 func cycle_sticker(direction: int):
 	"""Cycle through available stickers in library (deprecated - use PaintingModeManager)"""
