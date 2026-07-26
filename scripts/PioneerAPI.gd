@@ -167,6 +167,7 @@ func _feed_stream_bytes(chunk: PackedByteArray) -> void:
 ## discarding audio (audible as choppiness). Draining a little each frame in
 ## _drain_pending_frames() smooths that out without ever losing samples.
 func _enqueue_pcm_bytes(bytes: PackedByteArray) -> void:
+	@warning_ignore("integer_division")  # Intentional: 2 bytes per 16-bit PCM sample
 	var frame_count := bytes.size() / 2
 	if frame_count == 0:
 		return

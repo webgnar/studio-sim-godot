@@ -15,6 +15,7 @@ enum State { WORLD, EQUIPPED }
 @export var equipped_rotation: Vector3 = Vector3(0, 0, 0)  ## Local rotation degrees when equipped
 @export var weapon_display_name: String = "Gun"  ## Shown in HUD prompts ("Equip <name>" / "Drop <name>")
 @export var show_shoot_prompt: bool = true  ## Whether the equipped-state HUD prompt includes a "Shoot" hint
+@export var expects_carryable_component: bool = true  ## Warn if no CarryableComponent sibling is found (set false for equip-only weapons like the pencil, which intentionally have none)
 
 @export_group("Audio")
 @export var shoot_sound: AudioStream
@@ -93,7 +94,7 @@ func _ready() -> void:
 
 	# Get CarryableComponent reference
 	carryable_component = _find_carryable_component(parent_object)
-	if not carryable_component:
+	if not carryable_component and expects_carryable_component:
 		push_warning("WeaponComponent: No CarryableComponent found - gun won't work as carryable object when dropped")
 
 	# Set initial interaction text

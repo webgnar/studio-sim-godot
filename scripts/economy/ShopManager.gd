@@ -298,7 +298,7 @@ func _build_catalog() -> void:
 				+ "Perfect for off-grid cabins, emergency preparedness, or anyone who enjoys"
 				+ " their water filtered with a side of apocalypse readiness."
 			),
-			"price": 200,
+			"price": 300,
 		},
 		{
 			"id": "phone",

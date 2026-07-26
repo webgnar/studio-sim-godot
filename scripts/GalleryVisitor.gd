@@ -291,10 +291,10 @@ func _fetch_dialogue() -> void:
 		return
 
 	if _personality == "scholar" and not _is_painting_hung(_last_attraction):
-		var line := "Dawg, get that painting off the floor, dawg. Cmon, off the floor. Prop it up on a milk crate or at least some empty paint cans."
-		_cached_dialogue = line
+		var scholar_floor_line := "Dawg, get that painting off the floor, dawg. Cmon, off the floor. Prop it up on a milk crate or at least some empty paint cans."
+		_cached_dialogue = scholar_floor_line
 		_dialogue_cooldown = DIALOGUE_COOLDOWN
-		_start_dialogue(line)
+		_start_dialogue(scholar_floor_line)
 		_is_interacting = false
 		return
 

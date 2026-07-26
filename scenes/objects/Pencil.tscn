@@ -24,3 +24,4 @@ equipped_position = Vector3(0.296, -0.206, -0.088)
 equipped_rotation = Vector3(0, 19, 19)
 weapon_display_name = "Pencil"
 show_shoot_prompt = false
+expects_carryable_component = false

@@ -41,6 +41,7 @@
 [ext_resource type="PackedScene" uid="uid://dg4dh5bn60pel" path="res://scenes/objects/psywheel.tscn" id="36_xullu"]
 [ext_resource type="PackedScene" uid="uid://dpj22wle7aktq" path="res://models/props/plant_stand.glb" id="37_ld7xo"]
 [ext_resource type="PackedScene" uid="uid://guuhi66wtyyp" path="res://models/paintings/stretcher.glb" id="39_bbgx3"]
+[ext_resource type="Script" uid="uid://brs61oi4kj0i4" path="res://scripts/components/MirrorStickerCatcher.gd" id="39_mirror_sticker_catcher"]
 [ext_resource type="PackedScene" uid="uid://bxi8jlwr1acc4" path="res://scenes/mirror.tscn" id="39_qaasp"]
 [ext_resource type="PackedScene" uid="uid://ddornft2ln8sq" path="res://models/interactables/boomBox.glb" id="41_rga7q"]
 [ext_resource type="Material" uid="uid://s7aanj1sph6l" path="res://materials/floor.tres" id="43_xiw03"]
@@ -144,7 +145,7 @@
 [ext_resource type="PackedScene" uid="uid://b4j6krmtnx1p8" path="res://scenes/objects/DiscordLink.tscn" id="148_disc"]
 [ext_resource type="Texture2D" uid="uid://bhx3k1r4uh3ma" path="res://sprites/ui/gallery.png" id="148_tuav7"]
 [ext_resource type="Texture2D" uid="uid://baj220mrywpyb" path="res://sprites/elevator sign.png" id="156_kloan"]
-[ext_resource type="PackedScene" path="res://scenes/objects/Pencil.tscn" id="157_pencil_carryable"]
+[ext_resource type="PackedScene" uid="uid://0pira7rmf11k" path="res://scenes/objects/Pencil.tscn" id="157_pencil_carryable"]
 [ext_resource type="PackedScene" uid="uid://d2lld8pxrphp3" path="res://scenes/objects/SaveAssistantWorkButton.tscn" id="200_savebtn"]
 [ext_resource type="PackedScene" uid="uid://dfcanvasscn1" path="res://scenes/objects/AssistantFinishedCanvas.tscn" id="201_fcanvas"]
 [ext_resource type="Script" uid="uid://nvjrcsa5oaqc" path="res://scripts/BerkeyInteraction.gd" id="berkey_interaction"]
@@ -546,6 +547,9 @@ albedo_color = Color(0.30692267, 0.3069227, 0.3069227, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_qaasp"]
 size = Vector3(2.0865479, 0.50549316, 1.3994751)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_mirror_sticker_catcher"]
+size = Vector3(2.5, 0.02, 3)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kvmu4"]
 albedo_texture = ExtResource("83_c15v2")
@@ -2312,7 +2316,6 @@ transform = Transform3D(-4.7902194e-08, -0.99488777, 0.10098683, -3.9073655e-08,
 mesh = SubResource("PlaneMesh_fahuw")
 surface_material_override/0 = SubResource("StandardMaterial3D_x3v50")
 show_debug_logs = false
-metadata/mirror = "mirror"
 metadata/shop_item_id = "mirror"
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="mirror" unique_id=399456008]
@@ -2341,6 +2344,15 @@ transform = Transform3D(0.05999574, -0.0011920407, 0, 0.00071522593, 0.0999929, 
 
 [node name="default4" parent="mirror/pallete stack" unique_id=1016114551 instance=ExtResource("71_r5yoc")]
 transform = Transform3D(-0.024906214, 0.06936846, 0, -0.04335528, -0.039849952, 0, 0, 0, 0.079999976, 1.4378908, 0.36619115, 0.40393543)
+
+[node name="MirrorStickerCatcher" type="StaticBody3D" parent="." unique_id=869141821]
+transform = Transform3D(-4.813235e-08, -0.99427336, 0.106866494, -3.8789786e-08, 0.106866494, 0.99427336, -1, 4.3711392e-08, -4.3711385e-08, 2.7727475, 1.497, 5.232)
+collision_layer = 16
+collision_mask = 0
+script = ExtResource("39_mirror_sticker_catcher")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MirrorStickerCatcher" unique_id=1854361047]
+shape = SubResource("BoxShape3D_mirror_sticker_catcher")
 
 [node name="SaveComputer" parent="." unique_id=880102419 instance=ExtResource("79_l137e")]
 transform = Transform3D(-0.047106393, 0, 0.99888986, 0, 1, 0, -0.99888986, 0, -0.047106393, 1.9871993, 1.5039661, 8.739948)
@@ -3028,7 +3040,7 @@ libraries/ = SubResource("AnimationLibrary_x3v50")
 autoplay = &"float"
 
 [node name="pencil" parent="." unique_id=115134464 groups=["shop_prop"] instance=ExtResource("157_pencil_carryable")]
-transform = Transform3D(-3.6591155e-08, 0.83710805, 0.5470376, -1.0, -4.371139e-08, 0, 2.3911775e-08, -0.5470376, 0.83710805, 1.3375152, 0.9959953, 8.329819)
+transform = Transform3D(-3.6591157e-08, 0.8371081, 0.5470376, -1, -4.371139e-08, 0, 2.3911776e-08, -0.5470376, 0.8371081, 1.3375152, 0.9959953, 8.329819)
 metadata/shop_item_id = "pencil"
 
 [editable path="Spotlight1"]
