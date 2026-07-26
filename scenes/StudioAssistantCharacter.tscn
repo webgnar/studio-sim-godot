@@ -3,6 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://gv6172d2ngws" path="res://scenes/humanrig_blender.tscn" id="1_hrig"]
 [ext_resource type="Script" uid="uid://c3j7m2nqpxr81" path="res://scripts/StudioAssistantCharacter.gd" id="2_asst"]
 [ext_resource type="Script" uid="uid://d6hsnqw1yy71" path="res://scripts/StudioAssistantVoiceChat.gd" id="3_voice"]
+[ext_resource type="FontFile" uid="uid://tmjyio0w6cu0" path="res://fonts/studio-sim.ttf" id="4_33gsm"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_asst"]
 radius = 0.91748047
@@ -53,5 +54,14 @@ script = ExtResource("3_voice")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="InteractionBody" unique_id=1339132031]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.138232, 0)
 shape = SubResource("CapsuleShape3D_asst")
+
+[node name="ThinkingIndicator" type="Label3D" parent="InteractionBody" unique_id=881150183]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8.811787, 0)
+visible = false
+billboard = 1
+text = "..."
+font = ExtResource("4_33gsm")
+font_size = 534
+outline_size = 24
 
 [editable path="humanrig"]

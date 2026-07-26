@@ -19,6 +19,8 @@ const STATUS_MESSAGE_DURATION := 2.0
 ## ~93.75 KB/sec, so anything longer than ~47s risks a 413 from /api/voice/stt
 ## before it even reaches Pioneer. Capping well under that.
 const MAX_RECORDING_SECONDS := 30.0
+## How often the floating "..." indicator's dot count advances while thinking.
+const THINKING_DOT_INTERVAL := 0.4
 
 ## Exposed so PlayerInteractionComponent can show a prompt label.
 var interaction_text: String = IDLE_TEXT
@@ -30,6 +32,13 @@ var _http_request: HTTPRequest
 var _voice_player: AudioStreamPlayer3D
 var _status_message_gen: int = 0
 
+## Floating billboarded label above the NPC's head, visible across the room,
+## so the player doesn't need to be looking directly at the crosshair prompt
+## to tell a reply is being generated.
+var _thinking_indicator: Label3D
+var _thinking_dot_timer: float = 0.0
+var _thinking_dot_count: int = 0
+
 func _ready() -> void:
 	_http_request = HTTPRequest.new()
 	_http_request.timeout = 15.0
@@ -40,6 +49,17 @@ func _ready() -> void:
 	_voice_player.max_distance = 15.0
 	_voice_player.bus = "SFX"
 	add_child(_voice_player)
+
+	_thinking_indicator = get_node_or_null("ThinkingIndicator")
+
+func _process(delta: float) -> void:
+	if not _is_processing_queue or not _thinking_indicator:
+		return
+	_thinking_dot_timer += delta
+	if _thinking_dot_timer >= THINKING_DOT_INTERVAL:
+		_thinking_dot_timer = 0.0
+		_thinking_dot_count = (_thinking_dot_count % 3) + 1
+		_thinking_indicator.text = ".".repeat(_thinking_dot_count)
 
 func interact(_player: Node) -> void:
 	if not _is_generative_ai_enabled():
@@ -72,15 +92,21 @@ func _stop_recording_and_enqueue() -> void:
 	_refresh_status_text()
 	if not _is_processing_queue:
 		_is_processing_queue = true
+		_thinking_dot_timer = 0.0
+		_thinking_dot_count = 0
 		_process_next_in_queue()
 
 func _process_next_in_queue() -> void:
 	if _pending_audio_queue.is_empty():
 		_is_processing_queue = false
+		if _thinking_indicator:
+			_thinking_indicator.visible = false
 		_refresh_status_text()
 		return
 
 	var bytes: PackedByteArray = _pending_audio_queue.pop_front()
+	if _thinking_indicator:
+		_thinking_indicator.visible = true
 	_refresh_status_text()
 
 	if not PioneerAPI.transcript_ready.is_connected(_on_transcript_ready):
@@ -171,6 +197,8 @@ func _show_reply(reply: String) -> void:
 	PioneerAPI.speak(reply, VOICE_DESCRIPTION)
 
 func _on_speech_ready(stream: AudioStream) -> void:
+	if _thinking_indicator:
+		_thinking_indicator.visible = false
 	_voice_player.stream = stream
 	_voice_player.play()
 	_refresh_status_text()
