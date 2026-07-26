@@ -249,6 +249,13 @@ func _build_catalog() -> void:
 			"price": 300,
 		},
 		{
+			"id": "pencil",
+			"display_name": "Pencil",
+			"title": "Pencil",
+			"description": "A thin graphite cylinder imbedded in a wooden stick. Used for psychological mark-making. The eraser is so old its rock-hard and doesnt work.",
+			"price": 1000,
+		},
+		{
 			"id": "trash_can",
 			"display_name": "Trash Can",
 			"title": "Trash Can",
@@ -279,15 +286,15 @@ func _build_catalog() -> void:
 		{
 			"id": "water_filter",
 			"display_name": "Water Filter",
-			"title": "Proprietary Water Filter",
+			"title": "Berkey",
 			"description": (
 				"Clean water for a clear mind. A sleek plastic tower of liquid clarity."
 				+ " Pour questionable water into the top, wait patiently, and watch as"
 				+ " invisible microscopic villains are dramatically evicted before reaching"
 				+ " your glass.\n\n"
 				+ "Requires no electricity, no plumbing, and no trust in municipal optimism."
-				+ " Just gravity, confidence, and an unwavering belief that two metal"
-				+ " cylinders stacked together can solve everything.\n\n"
+				+ " Just gravity, confidence, and an unwavering belief that two Nano-tech carbon"
+				+ " filters stacked together can solve everything.\n\n"
 				+ "Perfect for off-grid cabins, emergency preparedness, or anyone who enjoys"
 				+ " their water filtered with a side of apocalypse readiness."
 			),
@@ -297,7 +304,7 @@ func _build_catalog() -> void:
 			"id": "phone",
 			"display_name": "Phone",
 			"title": "Phone",
-			"description": "A smartphone with a mysterious website loaded onto its home screen.",
+			"description": "A smartphone with a mysterious Brazilian website loaded onto its home screen.",
 			"price": 150,
 		},
 		{
@@ -502,13 +509,13 @@ func _build_catalog() -> void:
 			"display_name": "Work Lamp",
 			"title": "Work Lamp",
 			"description": "A sturdy adjustable work lamp. Light up your workspace, or carry it around to illuminate whatever catches your eye.",
-			"price": 500,
+			"price": 1500,
 		},
 		{
 			"id": "rf_receiver",
 			"display_name": "RF Receiver",
 			"title": "RF Receiver",
-			"description": "A small radio frequency receiver module. Plug it into the boombox to pick up live radio stations from around the world. Without it, you're stuck with whatever tapes you've got.",
+			"description": "A small radio frequency receiver module. Plug it into the boombox to pick up live \"cool-girl\" radio stations from around the world. Without it, you're stuck with whatever tapes you've got.",
 			"price": 500,
 			"no_prop": true,
 		},

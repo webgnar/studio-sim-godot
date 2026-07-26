@@ -302,18 +302,21 @@ func _clear_interactable() -> void:
 	if current_interactable:
 		current_interactable = null
 		nothing_detected.emit()
-		interaction_prompt_changed.emit("")
+		# Re-evaluate rather than blindly emitting "" — if a weapon is equipped, the
+		# equipped-state prompt (e.g. "Drop Pencil") should keep showing even when
+		# nothing else is being looked at.
+		_update_interaction_prompt()
 
 		# Hide outline
 		if outline_manager:
 			outline_manager.hide_outline()
 
 func _update_interaction_prompt() -> void:
-	if not current_interactable:
-		interaction_prompt_changed.emit("")
-		return
-
-	# Show weapon controls when equipped
+	# Show weapon controls whenever a weapon is equipped, regardless of what's currently
+	# being looked at — this must come before the "not current_interactable" check below,
+	# otherwise the equipped prompt (e.g. "Drop Pencil") disappears the moment the player
+	# looks away from some unrelated interactable instead of staying up the whole time
+	# the weapon is held.
 	if is_weapon_equipped:
 		var drop_glyph = InputDeviceManager.get_formatted_prompt("interact")
 		if equipped_weapon.show_shoot_prompt:
@@ -321,6 +324,10 @@ func _update_interaction_prompt() -> void:
 			interaction_prompt_changed.emit("%s Shoot | %s Drop %s" % [shoot_glyph, drop_glyph, equipped_weapon.weapon_display_name])
 		else:
 			interaction_prompt_changed.emit("%s Drop %s" % [drop_glyph, equipped_weapon.weapon_display_name])
+		return
+
+	if not current_interactable:
+		interaction_prompt_changed.emit("")
 		return
 
 	# Don't show interaction prompts while carrying (show carry controls instead)

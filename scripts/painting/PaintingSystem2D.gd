@@ -582,18 +582,29 @@ func _draw_pencil_line(from: Vector2i, to: Vector2i) -> void:
 		_draw_pencil_circle(px)
 
 func _draw_pencil_circle(center: Vector2i) -> void:
-	"""Fill a circle of pixels at the given center, alpha-blended onto the canvas image."""
+	"""Fill a circle of pixels at the given center, alpha-composited ('over') onto the canvas image.
+	Unlike PaintingSignatureSystem's brush (which only tracks alpha since its canvas always starts
+	blank), this canvas can already have opaque sticker pixels underneath, so both color and alpha
+	need to be properly composited or the brush color would just replace the sticker outright."""
 	var width := _canvas_image.get_width()
 	var height := _canvas_image.get_height()
+	var src := PENCIL_BRUSH_COLOR
 	for dy in range(-PENCIL_BRUSH_RADIUS, PENCIL_BRUSH_RADIUS + 1):
 		for dx in range(-PENCIL_BRUSH_RADIUS, PENCIL_BRUSH_RADIUS + 1):
 			if dx * dx + dy * dy <= PENCIL_BRUSH_RADIUS * PENCIL_BRUSH_RADIUS:
 				var px := center.x + dx
 				var py := center.y + dy
 				if px >= 0 and px < width and py >= 0 and py < height:
-					var existing: Color = _canvas_image.get_pixel(px, py)
-					var blended_alpha: float = existing.a + PENCIL_BRUSH_COLOR.a * (1.0 - existing.a)
-					_canvas_image.set_pixel(px, py, Color(PENCIL_BRUSH_COLOR.r, PENCIL_BRUSH_COLOR.g, PENCIL_BRUSH_COLOR.b, blended_alpha))
+					var dst: Color = _canvas_image.get_pixel(px, py)
+					var out_a: float = src.a + dst.a * (1.0 - src.a)
+					var out_r := 0.0
+					var out_g := 0.0
+					var out_b := 0.0
+					if out_a > 0.0001:
+						out_r = (src.r * src.a + dst.r * dst.a * (1.0 - src.a)) / out_a
+						out_g = (src.g * src.a + dst.g * dst.a * (1.0 - src.a)) / out_a
+						out_b = (src.b * src.a + dst.b * dst.a * (1.0 - src.a)) / out_a
+					_canvas_image.set_pixel(px, py, Color(out_r, out_g, out_b, out_a))
 
 func cycle_sticker(direction: int):
 	"""Cycle through available stickers in library (deprecated - use PaintingModeManager)"""

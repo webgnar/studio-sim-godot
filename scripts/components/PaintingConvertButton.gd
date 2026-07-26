@@ -16,7 +16,7 @@ func _on_hover_started() -> void:
 
 func _refresh_text() -> void:
 	var ps = PaintingModeManager.painting_system_2d
-	if not ps or ps.placed_layers.is_empty():
+	if not ps or not ps.has_canvas_content():
 		interaction_text = "Canvas is Empty"
 	else:
 		interaction_text = "Detach Painting"
@@ -31,7 +31,7 @@ func _on_interacted(_player_interaction_component: PlayerInteractionComponent) -
 	last_pressed = current_time
 
 	var ps = PaintingModeManager.painting_system_2d
-	if not ps or ps.placed_layers.is_empty():
+	if not ps or not ps.has_canvas_content():
 		interaction_text = "Canvas is Empty"
 		return
 

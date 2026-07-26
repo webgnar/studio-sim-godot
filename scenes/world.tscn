@@ -3027,8 +3027,9 @@ transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -4.9
 libraries/ = SubResource("AnimationLibrary_x3v50")
 autoplay = &"float"
 
-[node name="pencil" parent="." unique_id=115134464 instance=ExtResource("157_pencil_carryable")]
+[node name="pencil" parent="." unique_id=115134464 groups=["shop_prop"] instance=ExtResource("157_pencil_carryable")]
 transform = Transform3D(-3.6591155e-08, 0.83710805, 0.5470376, -1.0, -4.371139e-08, 0, 2.3911775e-08, -0.5470376, 0.83710805, 1.3375152, 0.9959953, 8.329819)
+metadata/shop_item_id = "pencil"
 
 [editable path="Spotlight1"]
 [editable path="Spotlight2"]

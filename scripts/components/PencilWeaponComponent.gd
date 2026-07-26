@@ -26,6 +26,18 @@ func _process(_delta: float) -> void:
 		parent_object.position = equipped_position
 		parent_object.rotation_degrees = equipped_rotation
 
+func _physics_process(delta: float) -> void:
+	super._physics_process(delta)
+	# Keep the pencil frozen whenever it isn't actively equipped. This also guards
+	# against ShopManager._reveal_prop() unfreezing + impulsing RigidBody3D props on
+	# purchase (meant for physics-based props) — the pencil has no physics by design,
+	# so it self-corrects back to frozen within one physics tick instead of falling
+	# or rolling off the desk the moment it's bought.
+	if state != State.EQUIPPED:
+		var parent_rb := parent_object as RigidBody3D
+		if parent_rb and not parent_rb.freeze:
+			parent_rb.freeze = true
+
 func shoot() -> void:
 	pass  # No-op: drawing is handled by PaintingModeManager polling, not a per-click shot
 
