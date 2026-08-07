@@ -311,10 +311,14 @@ func is_achievement_unlocked(achievement_id: String) -> bool:
 	return achievements.get(achievement_id, false)
 
 func get_steam_account_number() -> String:
-	"""32-bit AccountID derived from the SteamID64 (low 32 bits). Empty if Steam unavailable."""
+	"""Full 64-bit SteamID (SteamID64), as a string. Empty if Steam unavailable.
+	NOTE: despite the name (kept for backend/API compatibility), this is the
+	complete un-truncated SteamID64 — not just the 32-bit account ID — since
+	that's what's needed to rebuild a profile link (steamcommunity.com/profiles/<id>),
+	add as a friend, or message the player."""
 	if not is_steam_available or steam_id == 0:
 		return ""
-	return str(steam_id & 0xFFFFFFFF)
+	return str(steam_id)
 
 func reset_all_achievements_and_stats() -> void:
 	"""DEVELOPER ONLY: Reset all achievements and stats for testing"""

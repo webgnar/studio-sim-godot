@@ -72,7 +72,8 @@ func _ready() -> void:
 
 	_voice_player = AudioStreamPlayer3D.new()
 	_voice_player.name = "CritiqueVoicePlayer"
-	_voice_player.max_distance = 15.0
+	_voice_player.max_distance = 6.0  # short range - player needs to be close to the TV to hear it
+	_voice_player.unit_size = 1.5  # steep falloff near the source, not a gentle taper
 	_voice_player.bus = "SFX"
 	add_child(_voice_player)
 
