@@ -22,10 +22,10 @@ signal audio_stopped
 
 @export_group("Radio Stations")
 @export var radio_stations: Array[Dictionary] = [
-	{"name": "Radio 1", "url": "https://radiok.broadcasttool.stream/play_128"},
-	{"name": "Radio 2", "url": "https://streams.wtju.net/wxtj-live.mp3"},
-	{"name": "Radio 3", "url": "https://kexp-mp3-128.streamguys1.com/kexp128.mp3"},
-	{"name": "Radio 4", "url": "http://streaming.wrek.org:8000/wrek_live-128kb"},
+	{"name": "Radio K", "url": "https://radiok.broadcasttool.stream/play_128"},
+	{"name": "WXTJ", "url": "https://streams.wtju.net/wxtj-live.mp3"},
+	{"name": "KEXP", "url": "https://kexp-mp3-128.streamguys1.com/kexp128.mp3"},
+	{"name": "WREK", "url": "http://streaming.wrek.org:8000/wrek_live-128kb"},
 ]
 
 var _current_state: BoomboxState = BoomboxState.OFF
@@ -75,10 +75,10 @@ func _ready() -> void:
 
 
 const _DEFAULT_STATIONS := [
-	{"name": "Radio 1", "url": "https://radiok.broadcasttool.stream/play_128"},
-	{"name": "Radio 2", "url": "https://streams.wtju.net/wxtj-live.mp3"},
-	{"name": "Radio 3", "url": "https://kexp-mp3-128.streamguys1.com/kexp128.mp3"},
-	{"name": "Radio 4", "url": "http://streaming.wrek.org:8000/wrek_live-128kb"},
+	{"name": "Radio K", "url": "https://radiok.broadcasttool.stream/play_128"},
+	{"name": "WXTJ", "url": "https://streams.wtju.net/wxtj-live.mp3"},
+	{"name": "KEXP", "url": "https://kexp-mp3-128.streamguys1.com/kexp128.mp3"},
+	{"name": "WREK", "url": "http://streaming.wrek.org:8000/wrek_live-128kb"},
 ]
 
 func _build_playlist() -> void:
@@ -168,8 +168,8 @@ func _setup_radio_stream_player() -> void:
 	add_child(_radio)
 	_radio.chunk_ready.connect(_on_chunk_ready)
 	# Deliberately not wiring station_name_resolved (the real ICY-NAME from the
-	# live stream) into audio_started — station labels are simplified to
-	# "Radio 1/2/3/4" and shouldn't get silently overridden once a stream connects.
+	# live stream) into audio_started — station labels come from radio_stations
+	# above and shouldn't get silently overridden once a stream connects.
 	_radio.stream_error.connect(_on_stream_error)
 
 
@@ -358,7 +358,7 @@ func _save_state() -> void:
 
 
 func _on_audio_started(label: String) -> void:
-	AchievementToast.show_toast("NOW PLAYING", label)
+	MusicToast.show_toast(label)
 
 
 func get_radio_state() -> BoomboxState:

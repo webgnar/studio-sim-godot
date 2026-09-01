@@ -400,6 +400,15 @@ func _select_listing(index: int) -> void:
 	seller_label.text = "by %s" % (seller_name if seller_name != "" else seller_id.substr(0, 8))
 	seller_label.visible = true
 
+	# _load_preview() no-ops if png_url is already cached (very common — every
+	# card's thumbnail is pre-fetched as soon as the marketplace list loads), and
+	# only _on_preview_downloaded() assigns preview_image.texture, which only
+	# fires for a fresh download. So handle the cache-hit case here directly,
+	# and clear the old image while a genuinely new one is still loading.
+	if _preview_cache.has(png_url):
+		preview_image.texture = _preview_cache[png_url]
+	else:
+		preview_image.texture = null
 	_load_preview(png_url)
 
 	var own_listing = seller_id == WorldStateManager.get_player_id()
