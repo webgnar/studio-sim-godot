@@ -90,6 +90,7 @@ func _process(delta: float) -> void:
 		return
 	if input_cooldown > 0:
 		input_cooldown -= delta
+	_update_sub_tab_bar_focus_visual()
 
 
 func _input(event: InputEvent) -> void:
@@ -100,10 +101,14 @@ func _input(event: InputEvent) -> void:
 
 	if nav_mode == NavMode.SUB_TAB_BAR:
 		if event.is_action_pressed("ui_left") or event.is_action_pressed("move_left"):
-			_switch_sub_tab(SubTab.BROWSE)
+			if input_cooldown <= 0:
+				_switch_sub_tab(SubTab.BROWSE)
+				input_cooldown = input_cooldown_time
 			viewport.set_input_as_handled()
 		elif event.is_action_pressed("ui_right") or event.is_action_pressed("move_right"):
-			_switch_sub_tab(SubTab.SELL)
+			if input_cooldown <= 0:
+				_switch_sub_tab(SubTab.SELL)
+				input_cooldown = input_cooldown_time
 			viewport.set_input_as_handled()
 		elif event.is_action_pressed("ui_down") or event.is_action_pressed("move_back") \
 				or event.is_action_pressed("jump") or event.is_action_pressed("ui_accept"):
@@ -111,6 +116,12 @@ func _input(event: InputEvent) -> void:
 				nav_mode = NavMode.LISTING_LIST
 				input_cooldown = input_cooldown_time
 				_focus_first_item()
+			viewport.set_input_as_handled()
+		elif event.is_action_pressed("ui_up") or event.is_action_pressed("move_forward"):
+			# Already at the top of the tab's internal nav — swallow this so repeat
+			# chatter from a held analog stick (move_forward is axis-bound and refires
+			# is_action_pressed every frame past the deadzone, unlike a button) doesn't
+			# leak to PauseMenu's boundary handler and kick us out of the whole tab.
 			viewport.set_input_as_handled()
 
 	elif nav_mode == NavMode.LISTING_LIST:
@@ -273,6 +284,17 @@ func _apply_hover_style(button: Button, on: bool) -> void:
 		button.remove_theme_stylebox_override("normal")
 
 
+func _update_sub_tab_bar_focus_visual() -> void:
+	# The dim/bright modulate on browse_button/sell_button (set in _switch_sub_tab)
+	# always shows which sub-tab is active. This separately shows the hover-style
+	# "focus box" only while keyboard nav is actually sitting on the sub-tab bar,
+	# so the buttons read as unfocused once nav_mode has moved into the list/grid
+	# or detail panel — otherwise they always looked focused even while browsing.
+	var focused = nav_mode == NavMode.SUB_TAB_BAR
+	_apply_hover_style(browse_button, focused and current_sub_tab == SubTab.BROWSE)
+	_apply_hover_style(sell_button, focused and current_sub_tab == SubTab.SELL)
+
+
 # ============================================================================
 # Activation contract (called by PauseMenu)
 # ============================================================================
@@ -300,8 +322,7 @@ func _switch_sub_tab(tab: SubTab) -> void:
 	sell_container.visible = (tab == SubTab.SELL)
 	browse_button.modulate = Color(1, 1, 1, 1) if tab == SubTab.BROWSE else Color(0.6, 0.6, 0.6, 1)
 	sell_button.modulate = Color(1, 1, 1, 1) if tab == SubTab.SELL else Color(0.6, 0.6, 0.6, 1)
-	_apply_hover_style(browse_button, tab == SubTab.BROWSE)
-	_apply_hover_style(sell_button, tab == SubTab.SELL)
+	_update_sub_tab_bar_focus_visual()
 
 	if tab == SubTab.SELL:
 		StickerLibrary.reload()

@@ -1172,7 +1172,7 @@ transform = Transform3D(-0.204136, 0, 0.38978007, 0, 0.44, 0, -0.38978007, 0, -0
 transform = Transform3D(-3.8946845e-07, 2.97, 2.5964567e-07, 2.97, 3.8946845e-07, -2.2698936e-14, -5.674736e-14, 2.5964567e-07, -2.97, -58.9851, -8.151672, 17.451527)
 
 [node name="skyscraper" parent="outside Background" unique_id=1622378402 instance=ExtResource("75_qaasp")]
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 16.498226, 29.75174, 23.823051)
+transform = Transform3D(-1, 0, -1.509958e-07, 0, 0.82, 0, 1.509958e-07, 0, -1, 16.498226, 27.726456, 23.823051)
 
 [node name="vortexmath" type="Sprite3D" parent="outside Background" unique_id=1373111303]
 transform = Transform3D(50, 0, 0, 0, -2.1855694e-06, -50, 0, 50, -2.1855694e-06, 29, 812.7767, 14)
