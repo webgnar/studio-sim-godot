@@ -1,11 +1,13 @@
 extends CanvasLayer
 
 const UI_THEME: Theme = preload("res://themes/ui_theme.tres")
+const STEAM_ICON: Texture2D = preload("res://sprites/steam icon.png")
 
 enum _State { IDLE, SLIDING_IN, HOLDING, SLIDING_OUT }
 
 var _panel: PanelContainer
 var _icon: TextureRect
+var _steam_badge: TextureRect
 var _title_label: Label
 var _desc_label: Label
 var _state: _State = _State.IDLE
@@ -31,11 +33,14 @@ func _ready() -> void:
 ## always takes precedence immediately: content refreshes in place and the
 ## display timer resets, rather than queuing behind whatever came before
 ## (e.g. rapidly cycling boombox tracks would otherwise lag behind reality).
-func show_toast(title: String, description: String, icon: Texture2D = null) -> void:
+## show_steam_badge adds a small Steam logo next to the title, for toasts
+## meant to read as a fake Steam achievement popup (e.g. the Cyclone win).
+func show_toast(title: String, description: String, icon: Texture2D = null, show_steam_badge: bool = false) -> void:
 	_title_label.text = title
 	_desc_label.text = description
 	_icon.texture = icon
 	_icon.visible = icon != null
+	_steam_badge.visible = show_steam_badge
 	_panel.reset_size()  # shrink/grow to fit the new content (e.g. short "Song 1" vs a longer sentence)
 	# Keep the panel pinned to the bottom-right regardless of how its height
 	# changed (e.g. hiding the icon shrinks it vertically too).
@@ -119,12 +124,27 @@ func _build_ui() -> void:
 	vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	vbox.add_theme_constant_override("separation", 2)
 
+	var title_row := HBoxContainer.new()
+	title_row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	title_row.add_theme_constant_override("separation", 5)
+
+	_steam_badge = TextureRect.new()
+	_steam_badge.texture = STEAM_ICON
+	_steam_badge.custom_minimum_size = Vector2(14, 14)
+	_steam_badge.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	_steam_badge.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	_steam_badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_steam_badge.visible = false  # only shown when show_toast() is called with show_steam_badge = true
+	title_row.add_child(_steam_badge)
+
 	_title_label = Label.new()
 	_title_label.add_theme_font_override("font", UI_THEME.default_font)
 	_title_label.add_theme_font_size_override("font_size", 15)
 	_title_label.add_theme_color_override("font_color", Color(1, 1, 1, 0.65))
 	_title_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	vbox.add_child(_title_label)
+	title_row.add_child(_title_label)
+
+	vbox.add_child(title_row)
 
 	_desc_label = Label.new()
 	_desc_label.add_theme_font_override("font", UI_THEME.default_font)

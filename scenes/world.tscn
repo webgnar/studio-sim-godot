@@ -154,6 +154,7 @@
 [ext_resource type="AudioStream" uid="uid://cnjld2r5btwho" path="res://sounds/dial up.ogg" id="dial_up_ogg"]
 [ext_resource type="AudioStream" uid="uid://bukro42figtah" path="res://sounds/fan switch.ogg" id="fan_switch"]
 [ext_resource type="PackedScene" uid="uid://dft4un8r3mpqc" path="res://scenes/FortuneTeller.tscn" id="fortune_teller_scene"]
+[ext_resource type="Script" uid="uid://dy7jwhh2qgx4s" path="res://scripts/components/HiddenDoorFog.gd" id="hidden_door_fog_script"]
 [ext_resource type="AudioStream" uid="uid://c443ekfhr0sru" path="res://sounds/music_gnar - Ministudio.ogg" id="ministudio_audio"]
 [ext_resource type="PackedScene" path="res://scenes/UI/MoneyRainLayer.tscn" id="money_rain_layer"]
 [ext_resource type="AudioStream" uid="uid://cldonhpncb00b" path="res://sounds/(First Trip) To The Moon.ogg" id="moon_ogg"]
@@ -3207,10 +3208,11 @@ shape = SubResource("BoxShape3D_vevsf")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.9378147, -9.185848, 24.707813)
 
 [node name="CSGBox3D" type="CSGBox3D" parent="gallery/Hidden Door" unique_id=67182411]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.15899658, 1.5500488, -0.22583008)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.15899658, 1.5500488, -0.4407959)
 use_collision = true
-size = Vector3(4.5306396, 6.1782227, 1.4516602)
+size = Vector3(4.5306396, 6.1782227, 1.0217285)
 material = SubResource("StandardMaterial3D_2xejd")
+script = ExtResource("hidden_door_fog_script")
 
 [node name="GallerySpawnPoint" type="Node3D" parent="." unique_id=837462901]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.722805, -9.6, 15.43)

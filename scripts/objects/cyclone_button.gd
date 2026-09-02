@@ -21,4 +21,4 @@ func _on_interacted(_player: PlayerInteractionComponent) -> void:
 			lbl.text = "Winner!" if won else "Loser!"
 		if won:
 			var icon := preload("res://sprites/shop_previews/cyclone.png")
-			AchievementToast.show_toast("ACHIEVEMENT UNLOCKED", "Winner!", icon)
+			AchievementToast.show_toast("ACHIEVEMENT UNLOCKED", "Winner!", icon, true)

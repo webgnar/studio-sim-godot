@@ -1,8 +1,15 @@
 extends Node3D
 
+const EARTH_SHADER: Shader = preload("res://shaders/earth_globe.gdshader")
+
 var _win_sound: AudioStreamPlayer3D
 
 func _ready():
+	# Warm the ball's earth shader now, off-screen, during load — otherwise it
+	# compiles for the first time (and stutters) the moment the player's first
+	# ball actually drops, same issue the fog_door shader had.
+	ShaderPrewarmer.prewarm(EARTH_SHADER, self)
+
 	GameManager.main_scene = self
 	GameManager.coin_spawn_point = $CoinSpawnBox
 	GameManager.score_3d = $DisplayPanel/Score3D
@@ -28,6 +35,7 @@ func _on_score(body: Node3D):
 		body.queue_free()
 		GameManager.add_dollars(10)
 		_win_sound.play()
+		GameManager.on_ball_scored()
 
 func _prespawn_coins():
 	var sample_coin = GameManager.coin_scene.instantiate()

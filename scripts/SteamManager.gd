@@ -162,6 +162,7 @@ func setup_achievements() -> void:
 
 		# Gallery
 		"ACH_ALL_VISITORS": false,  # Encounter all 14 unique gallery visitors
+		"ACH_MORE_GALLERY_SPACE": false,  # Traverse the fog door into the expanded gallery room
 
 		# Combat
 		"ACH_FULLY_PIXELATED": false,  # Absorb 21 mantis hits (max retro shader)
