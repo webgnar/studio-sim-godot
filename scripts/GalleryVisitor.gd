@@ -16,6 +16,7 @@ enum State { IDLE, CHOOSING, WALKING, VIEWING }
 @export var think_interval_min: float = 2.0
 @export var think_interval_max: float = 5.0
 @export var gallery_floor_y: float = -5.0  ## gallery_attraction nodes above this Y are skipped (studio level)
+@export var new_room_min_z: float = 30.0  ## world Z of the "wall south" doorway (~32.66) minus some margin — anything past this is the expanded room
 
 const GRAVITY := 9.8
 
@@ -158,6 +159,7 @@ var _state: State = State.IDLE
 var _nav_agent: NavigationAgent3D
 var _anim_player: AnimationPlayer
 var _last_attraction: Node3D = null
+var _route_queue: Array[Vector3] = []  ## waypoint(s) still to pass through before the real target; the real target is always the last entry
 var _view_timer: float = 0.0
 var _view_duration: float = 0.0
 var _is_thinking: bool = false
@@ -550,13 +552,26 @@ func _get_dialogue_box() -> VisitorDialogueBox:
 
 
 func _on_navigation_finished() -> void:
-	if _state == State.WALKING:
-		_enter_viewing()
+	if _state != State.WALKING:
+		return
+	if not _route_queue.is_empty():
+		_advance_route_queue()
+		return
+	_enter_viewing()
+
+
+func _advance_route_queue() -> void:
+	var next_stop: Vector3 = _route_queue.pop_front()
+	var map := _nav_agent.get_navigation_map()
+	_nav_agent.set_target_position(NavigationServer3D.map_get_closest_point(map, next_stop))
 
 
 func _update_walking(delta: float) -> void:
-	# Manual distance fallback in case the signal fires late or not at all
-	if is_instance_valid(_last_attraction) and _last_attraction.is_inside_tree():
+	# Manual distance fallback in case the signal fires late or not at all.
+	# Skipped while still routing through doorway waypoints — this checks
+	# distance to the real destination, which could coincidentally already be
+	# within stop_distance while we're still supposed to be at a waypoint.
+	if _route_queue.is_empty() and is_instance_valid(_last_attraction) and _last_attraction.is_inside_tree():
 		var flat_dist := Vector2(global_position.x, global_position.z).distance_to(
 			Vector2(_last_attraction.global_position.x, _last_attraction.global_position.z))
 		if flat_dist <= stop_distance:
@@ -635,6 +650,7 @@ func _enter_viewing() -> void:
 func _choose_next_attraction() -> void:
 	remove_from_group("interactable")
 	_facing_player = false
+	_route_queue.clear()  ## a fresh pick always starts a fresh route
 	_state = State.CHOOSING
 	var all_attractions := _get_attraction_nodes()
 
@@ -659,9 +675,40 @@ func _choose_next_attraction() -> void:
 	raw_target.x += cos(angle) * offset_radius
 	raw_target.z += sin(angle) * offset_radius
 	var nav_target := NavigationServer3D.map_get_closest_point(map, raw_target)
-	_nav_agent.set_target_position(nav_target)
+
+	# Crossing between the original gallery and the expanded room means going
+	# through the "wall south" doorway. Rather than trust a straight Recast
+	# path through the narrow opening (which can cut the doorway corner
+	# awkwardly), always funnel through this room's own doorway waypoint
+	# first, then the destination room's waypoint, then the real target —
+	# same two-stop choke point every time, in either direction.
+	var start_in_new_room := _is_new_room(global_position)
+	var target_in_new_room := _is_new_room(nav_target)
+	if start_in_new_room != target_in_new_room:
+		var own_waypoint := _get_doorway_waypoint(start_in_new_room)
+		var dest_waypoint := _get_doorway_waypoint(target_in_new_room)
+		if own_waypoint:
+			_route_queue.append(own_waypoint.global_position)
+		if dest_waypoint:
+			_route_queue.append(dest_waypoint.global_position)
+
+	_route_queue.append(nav_target)
+	_advance_route_queue()
 	_state = State.WALKING
 	_play_animation("walk")
+
+
+func _is_new_room(pos: Vector3) -> bool:
+	return pos.z > new_room_min_z
+
+
+## Returns the doorway waypoint landing in whichever room want_new_room points to
+## (there's one marker per room — see "gallery_doorway_waypoint" group in world.tscn).
+func _get_doorway_waypoint(want_new_room: bool) -> Node3D:
+	for node in get_tree().get_nodes_in_group("gallery_doorway_waypoint"):
+		if node is Node3D and _is_new_room(node.global_position) == want_new_room:
+			return node
+	return null
 
 
 func _get_attraction_nodes() -> Array[Node3D]:

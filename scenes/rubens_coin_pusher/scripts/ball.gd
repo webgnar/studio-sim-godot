@@ -1,5 +1,7 @@
 extends RigidBody3D
 
+const EARTH_SHADER: Shader = preload("res://shaders/earth_globe.gdshader")
+
 func _ready():
 	mass = 0.005
 	add_to_group("balls")
@@ -21,16 +23,16 @@ func _ready():
 	mesh.radius = 0.06
 	mesh.height = 0.12
 	mi.mesh = mesh
-	var mat = StandardMaterial3D.new()
-	mat.albedo_color = Color(0.9, 0.1, 0.1)
-	mat.metallic = 0.5
-	mat.roughness = 0.3
-	mat.emission_enabled = true
-	mat.emission = Color(0.5, 0.05, 0.05)
-	mat.emission_energy_multiplier = 0.5
+	# earth_globe normalizes object-space position before sampling, so the
+	# pattern looks the same regardless of the sphere's actual radius here.
+	var mat = ShaderMaterial.new()
+	mat.shader = EARTH_SHADER
 	mi.material_override = mat
 	add_child(mi)
 
 func _physics_process(_delta):
-	if global_position.y < -5:
+	# Relative to the machine's own position, not a hardcoded world Y — see the
+	# same fix in coin.gd for why (the machine isn't guaranteed to sit near
+	# world Y 0).
+	if GameManager.main_scene and global_position.y < GameManager.main_scene.global_position.y - 5:
 		queue_free()

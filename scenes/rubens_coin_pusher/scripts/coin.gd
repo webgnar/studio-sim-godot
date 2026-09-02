@@ -31,5 +31,9 @@ func _on_body_entered(_body: Node):
 func _physics_process(delta):
 	if _cooldown > 0.0:
 		_cooldown -= delta
-	if global_position.y < -5:
+	# "Fell through the floor" cleanup, relative to the machine's own position —
+	# not a hardcoded world Y. The machine can be (and has been) moved anywhere
+	# in the world, so an absolute world-space threshold would delete every coin
+	# immediately if the machine sits low in world coordinates (as it now does).
+	if GameManager.main_scene and global_position.y < GameManager.main_scene.global_position.y - 5:
 		queue_free()

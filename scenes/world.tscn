@@ -922,6 +922,17 @@ size = Vector3(36.712166, 1, 13.372541)
 [sub_resource type="BoxShape3D" id="BoxShape3D_i00a8"]
 size = Vector3(74.13498, 1, 43.52961)
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3r8ca"]
+albedo_texture = ExtResource("101_mu18u")
+metallic = 1.0
+metallic_texture = ExtResource("3_o8fc1")
+normal_enabled = true
+normal_texture = ExtResource("4_xo05s")
+ao_enabled = true
+ao_texture = ExtResource("2_jhx03")
+uv1_scale = Vector3(4.327, 3.141, 3.9)
+uv1_offset = Vector3(0.98, 0, 0)
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gw1vw"]
 albedo_texture = ExtResource("101_mu18u")
 metallic = 1.0
@@ -978,7 +989,7 @@ normal_texture = ExtResource("131_tq137")
 ao_enabled = true
 ao_light_affect = 0.08
 ao_texture = ExtResource("22_ygn2i")
-uv1_scale = Vector3(6.42, 5.89, 2.89)
+uv1_scale = Vector3(16.681, 15.26, 7.53)
 uv1_offset = Vector3(0, -1, 0)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sjp3e"]
@@ -1010,6 +1021,16 @@ size = Vector2(12, 17.93)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_vevsf"]
 size = Vector3(37.429077, 3.4591064, 32.6156)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2xejd"]
+albedo_texture = ExtResource("24_grmox")
+normal_enabled = true
+normal_scale = 0.12
+normal_texture = ExtResource("26_kvmu4")
+ao_enabled = true
+ao_texture = ExtResource("25_xgy6y")
+uv1_scale = Vector3(0.251, 1.1, 0.251)
+uv1_offset = Vector3(0.84, 0.73, 0)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kloan"]
 transparency = 1
@@ -2690,6 +2711,102 @@ material = ExtResource("1_4mrxx")
 [node name="roof wood2" type="CSGBox3D" parent="gallery" unique_id=479325888]
 transform = Transform3D(1, 0, 0, 0, 0.9659258, -0.25881904, 0, 0.25881904, 0.9659258, 14.751099, 1.218735, 33.97642)
 size = Vector3(48, 1, 19)
+material = SubResource("StandardMaterial3D_3r8ca")
+
+[node name="cutout" type="CSGBox3D" parent="gallery/roof wood2" unique_id=1809950002]
+transform = Transform3D(1, 0, 0, 0, 1.0000012, 0, 0, 0, 1.0000012, 3.0531387, -0.123288155, -0.18946075)
+operation = 2
+size = Vector3(1, 2.0424805, 7.927246)
+material = ExtResource("1_4mrxx")
+
+[node name="cutout2" type="CSGBox3D" parent="gallery/roof wood2" unique_id=1979073469]
+transform = Transform3D(1, 0, 0, 0, 1.0000012, 0, 0, 0, 1.0000012, 5.205374, -0.123288155, -0.18946457)
+operation = 2
+size = Vector3(1, 2.0424805, 7.927246)
+material = ExtResource("1_4mrxx")
+
+[node name="cutout3" type="CSGBox3D" parent="gallery/roof wood2" unique_id=677763268]
+transform = Transform3D(1, 0, 0, 0, 1.0000012, 0, 0, 0, 1.0000012, 7.4002323, -0.1232872, -0.18946457)
+operation = 2
+size = Vector3(1, 2.0424805, 7.927246)
+material = ExtResource("1_4mrxx")
+
+[node name="cutout4" type="CSGBox3D" parent="gallery/roof wood2" unique_id=139181828]
+transform = Transform3D(1, 0, 0, 0, 1.0000012, 0, 0, 0, 1.0000012, 9.545332, -0.12328625, -0.18946457)
+operation = 2
+size = Vector3(1, 2.0424805, 7.927246)
+material = ExtResource("1_4mrxx")
+
+[node name="cutout5" type="CSGBox3D" parent="gallery/roof wood2" unique_id=1415718385]
+transform = Transform3D(1, 0, 0, 0, 1.0000012, 0, 0, 0, 1.0000012, 11.688545, -0.12328529, -0.18946838)
+operation = 2
+size = Vector3(1, 2.0424805, 7.927246)
+material = ExtResource("1_4mrxx")
+
+[node name="cutout6" type="CSGBox3D" parent="gallery/roof wood2" unique_id=1400448088]
+transform = Transform3D(1, 0, 0, 0, 1.0000012, 0, 0, 0, 1.0000012, 13.77261, -0.12328434, -0.1894722)
+operation = 2
+size = Vector3(1, 2.0424805, 7.927246)
+material = ExtResource("1_4mrxx")
+
+[node name="cutout7" type="CSGBox3D" parent="gallery/roof wood2" unique_id=1966629877]
+transform = Transform3D(1, 0, 0, 0, 1.0000012, 0, 0, 0, 1.0000012, 15.657661, -0.12328434, -0.1894722)
+operation = 2
+size = Vector3(1, 2.0424805, 7.927246)
+material = ExtResource("1_4mrxx")
+
+[node name="cutout8" type="CSGBox3D" parent="gallery/roof wood2" unique_id=2050111812]
+transform = Transform3D(1, 0, 0, 0, 1.0000012, 0, 0, 0, 1.0000012, 17.643864, -0.12328434, -0.1894722)
+operation = 2
+size = Vector3(1, 2.0424805, 7.927246)
+material = ExtResource("1_4mrxx")
+
+[node name="cutout9" type="CSGBox3D" parent="gallery/roof wood2" unique_id=528981904]
+transform = Transform3D(1, 0, 0, 0, 1.0000012, 0, 0, 0, 1.0000012, -19.524078, -0.123288155, -0.18946457)
+operation = 2
+size = Vector3(1, 2.0424805, 7.927246)
+material = ExtResource("1_4mrxx")
+
+[node name="cutout10" type="CSGBox3D" parent="gallery/roof wood2" unique_id=1950974847]
+transform = Transform3D(1, 0, 0, 0, 1.0000012, 0, 0, 0, 1.0000012, -17.371843, -0.1232872, -0.18946457)
+operation = 2
+size = Vector3(1, 2.0424805, 7.927246)
+material = ExtResource("1_4mrxx")
+
+[node name="cutout11" type="CSGBox3D" parent="gallery/roof wood2" unique_id=518985230]
+transform = Transform3D(1, 0, 0, 0, 1.0000012, 0, 0, 0, 1.0000012, -15.176985, -0.12328625, -0.18946457)
+operation = 2
+size = Vector3(1, 2.0424805, 7.927246)
+material = ExtResource("1_4mrxx")
+
+[node name="cutout12" type="CSGBox3D" parent="gallery/roof wood2" unique_id=777220274]
+transform = Transform3D(1, 0, 0, 0, 1.0000012, 0, 0, 0, 1.0000012, -13.031885, -0.12328529, -0.18946838)
+operation = 2
+size = Vector3(1, 2.0424805, 7.927246)
+material = ExtResource("1_4mrxx")
+
+[node name="cutout13" type="CSGBox3D" parent="gallery/roof wood2" unique_id=655492522]
+transform = Transform3D(1, 0, 0, 0, 1.0000012, 0, 0, 0, 1.0000012, -10.888672, -0.12328434, -0.1894722)
+operation = 2
+size = Vector3(1, 2.0424805, 7.927246)
+material = ExtResource("1_4mrxx")
+
+[node name="cutout14" type="CSGBox3D" parent="gallery/roof wood2" unique_id=1825460062]
+transform = Transform3D(1, 0, 0, 0, 1.0000012, 0, 0, 0, 1.0000012, -8.804607, -0.12328434, -0.1894722)
+operation = 2
+size = Vector3(1, 2.0424805, 7.927246)
+material = ExtResource("1_4mrxx")
+
+[node name="cutout15" type="CSGBox3D" parent="gallery/roof wood2" unique_id=2075198149]
+transform = Transform3D(1, 0, 0, 0, 1.0000012, 0, 0, 0, 1.0000012, -6.9195557, -0.12328434, -0.1894722)
+operation = 2
+size = Vector3(1, 2.0424805, 7.927246)
+material = ExtResource("1_4mrxx")
+
+[node name="cutout16" type="CSGBox3D" parent="gallery/roof wood2" unique_id=1038503519]
+transform = Transform3D(1, 0, 0, 0, 1.0000012, 0, 0, 0, 1.0000012, -4.9333534, -0.12328434, -0.1894722)
+operation = 2
+size = Vector3(1, 2.0424805, 7.927246)
 material = ExtResource("1_4mrxx")
 
 [node name="roof beam" type="CSGBox3D" parent="gallery" unique_id=1479267165]
@@ -2830,9 +2947,9 @@ size = Vector3(1, 3.8667908, 4.399414)
 material = ExtResource("5_71j4m")
 
 [node name="CSGCylinder3D" type="CSGCylinder3D" parent="gallery/NavigationRegion3D/wall south" unique_id=1714113253]
-transform = Transform3D(-4.3711385e-08, -1, 4.371139e-08, 1, -4.371139e-08, -4.371139e-08, 4.371139e-08, 4.371139e-08, 1, 0, -2.5019217, 6.5899134)
+transform = Transform3D(-4.3711385e-08, -1, 4.371139e-08, 1, -4.371139e-08, -4.371139e-08, 4.371139e-08, 4.371139e-08, 1, 0, -3.4589663, 6.7167706)
 operation = 2
-radius = 2.616
+radius = 2.2089844
 sides = 46
 material = ExtResource("5_71j4m")
 
@@ -2956,12 +3073,64 @@ spot_range = 20.187
 transform = Transform3D(-1, -7.557135e-08, 7.573867e-08, 2.7805942e-08, 0.49999994, 0.86602545, -1.0331604e-07, 0.86602545, -0.49999994, 30.800316, -1.8827114, 20.481049)
 spot_range = 20.187
 
+[node name="SpotLight3D11" type="SpotLight3D" parent="gallery" unique_id=1946117132]
+transform = Transform3D(-1, -7.557135e-08, 7.573867e-08, 7.605934e-08, -0.004252345, 0.999991, -7.524859e-08, 0.999991, 0.004252345, 30.800316, -1.6074367, 26.697807)
+spot_range = 20.187
+
+[node name="SpotLight3D15" type="SpotLight3D" parent="gallery" unique_id=64370519]
+transform = Transform3D(-0.5681906, -0.82288957, -0.003499198, 7.605933e-08, -0.0042523444, 0.999991, -0.82289696, 0.56818545, 0.002416205, 36.129208, -1.3348956, 30.294537)
+spot_range = 20.187
+
+[node name="SpotLight3D16" type="SpotLight3D" parent="gallery" unique_id=906705922]
+transform = Transform3D(-0.5681906, -0.82288957, -0.003499198, 7.605933e-08, -0.0042523444, 0.999991, -0.82289696, 0.56818545, 0.002416205, 36.129208, -1.3348956, 37.33182)
+spot_range = 20.187
+
+[node name="SpotLight3D17" type="SpotLight3D" parent="gallery" unique_id=1251198822]
+transform = Transform3D(-0.5681906, -0.82288957, -0.003499198, 7.605933e-08, -0.0042523444, 0.999991, -0.82289696, 0.56818545, 0.002416205, 29.013618, -1.3348956, 37.712704)
+spot_range = 20.187
+
+[node name="SpotLight3D18" type="SpotLight3D" parent="gallery" unique_id=1983020967]
+transform = Transform3D(-0.5681906, -0.82288957, -0.003499198, 7.605933e-08, -0.0042523444, 0.999991, -0.82289696, 0.56818545, 0.002416205, 22.248686, -1.3348956, 37.712704)
+spot_range = 20.187
+
+[node name="SpotLight3D19" type="SpotLight3D" parent="gallery" unique_id=1956949365]
+transform = Transform3D(-0.5681906, -0.82288957, -0.003499198, 7.605933e-08, -0.0042523444, 0.999991, -0.82289696, 0.56818545, 0.002416205, 14.581923, -1.3348956, 37.712704)
+spot_range = 20.187
+
+[node name="SpotLight3D20" type="SpotLight3D" parent="gallery" unique_id=1331236972]
+transform = Transform3D(-0.5681906, -0.82288957, -0.003499198, 7.605933e-08, -0.0042523444, 0.999991, -0.82289696, 0.56818545, 0.002416205, 6.56164, -1.3348956, 37.712704)
+spot_range = 20.187
+
+[node name="SpotLight3D21" type="SpotLight3D" parent="gallery" unique_id=691270042]
+transform = Transform3D(-0.5681906, -0.82288957, -0.003499198, 7.605933e-08, -0.0042523444, 0.999991, -0.82289696, 0.56818545, 0.002416205, -2.0449085, -1.3348956, 37.712704)
+spot_range = 20.187
+
+[node name="SpotLight3D22" type="SpotLight3D" parent="gallery" unique_id=391454644]
+transform = Transform3D(-0.5681906, -0.82288957, -0.003499198, 7.605933e-08, -0.0042523444, 0.999991, -0.82289696, 0.56818545, 0.002416205, -6.108736, -1.3348956, 35.82862)
+spot_range = 20.187
+
+[node name="SpotLight3D23" type="SpotLight3D" parent="gallery" unique_id=1117714014]
+transform = Transform3D(-0.5681906, -0.82288957, -0.003499198, 7.605933e-08, -0.0042523444, 0.999991, -0.82289696, 0.56818545, 0.002416205, -6.108736, -1.3348956, 29.21222)
+spot_range = 20.187
+
+[node name="SpotLight3D12" type="SpotLight3D" parent="gallery" unique_id=1122099534]
+transform = Transform3D(-1, -7.557135e-08, 7.573867e-08, 7.605934e-08, -0.004252345, 0.999991, -7.524859e-08, 0.999991, 0.004252345, 23.288431, -1.6074367, 26.697807)
+spot_range = 20.187
+
+[node name="SpotLight3D13" type="SpotLight3D" parent="gallery" unique_id=916596049]
+transform = Transform3D(-1, -7.557135e-08, 7.573867e-08, 7.605934e-08, -0.004252345, 0.999991, -7.524859e-08, 0.999991, 0.004252345, 15.761646, -1.6074367, 26.697807)
+spot_range = 20.187
+
+[node name="SpotLight3D14" type="SpotLight3D" parent="gallery" unique_id=2082462840]
+transform = Transform3D(-1, -7.557135e-08, 7.573867e-08, 7.605934e-08, -0.004252345, 0.999991, -7.524859e-08, 0.999991, 0.004252345, -1.3571701, -1.6074367, 26.697807)
+spot_range = 20.187
+
 [node name="SpotLight3D8" type="SpotLight3D" parent="gallery" unique_id=2057574739]
-transform = Transform3D(-1, -7.557135e-08, 7.573867e-08, 2.7805942e-08, 0.49999994, 0.86602545, -1.0331604e-07, 0.86602545, -0.49999994, 19.800316, -1.8827114, 20.481049)
+transform = Transform3D(-1, -7.557135e-08, 7.573867e-08, 2.7805942e-08, 0.49999994, 0.86602545, -1.0331604e-07, 0.86602545, -0.49999994, 17.64172, -1.8827114, 20.481049)
 spot_range = 20.187
 
 [node name="SpotLight3D9" type="SpotLight3D" parent="gallery" unique_id=2050515740]
-transform = Transform3D(-1, -7.557135e-08, 7.573867e-08, 2.7805942e-08, 0.49999994, 0.86602545, -1.0331604e-07, 0.86602545, -0.49999994, 8.800316, -1.8827114, 20.481049)
+transform = Transform3D(-1, -7.557135e-08, 7.573867e-08, 2.7805942e-08, 0.49999994, 0.86602545, -1.0331604e-07, 0.86602545, -0.49999994, -1.0874128, -1.8827114, 20.481049)
 spot_range = 20.187
 
 [node name="Spotlight" parent="gallery" unique_id=1527255998 instance=ExtResource("86_grmox")]
@@ -3034,8 +3203,23 @@ script = ExtResource("138_7m3dx")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.214539, -9.175521, 7.194519)
 shape = SubResource("BoxShape3D_vevsf")
 
+[node name="Hidden Door" type="Node3D" parent="gallery" unique_id=1661530778]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.9378147, -9.185848, 24.707813)
+
+[node name="CSGBox3D" type="CSGBox3D" parent="gallery/Hidden Door" unique_id=67182411]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.15899658, 1.5500488, -0.22583008)
+use_collision = true
+size = Vector3(4.5306396, 6.1782227, 1.4516602)
+material = SubResource("StandardMaterial3D_2xejd")
+
 [node name="GallerySpawnPoint" type="Node3D" parent="." unique_id=837462901]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.722805, -9.6, 15.43)
+
+[node name="GalleryDoorwayWaypoint" type="Node3D" parent="." unique_id=837462950 groups=["gallery_doorway_waypoint"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.904314, -13.887131, 39)
+
+[node name="GalleryDoorwayWaypointRoom1" type="Node3D" parent="." unique_id=837462951 groups=["gallery_doorway_waypoint"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.904314, -13.887131, 28.377434)
 
 [node name="Skateboard" parent="." unique_id=1008444628 groups=["shop_prop"] instance=ExtResource("120_kegyo")]
 transform = Transform3D(-0.027325666, 0.09617619, -0.0018572444, -0.09566553, -0.027372573, -0.00994233, -0.010070532, -0.0009400654, 0.09948719, 3.5502706, 0.698125, 3.7168148)

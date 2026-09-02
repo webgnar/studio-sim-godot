@@ -65,9 +65,9 @@ func drop_next_ball():
 	main_scene.add_child(ball)
 	ball.global_position = main_scene.to_global(Vector3(randf_range(-0.08, 0.08), 1.7, randf_range(-0.65, -0.45)))
 
-func spawn_coin(pos: Vector3, impulse: Vector3 = Vector3.ZERO, z_rotation: float = 0.0):
+func spawn_coin(pos: Vector3, impulse: Vector3 = Vector3.ZERO, z_rotation: float = 0.0) -> RigidBody3D:
 	if not main_scene:
-		return
+		return null
 	var coins = get_tree().get_nodes_in_group("coins")
 	if coins.size() >= MAX_COINS:
 		coins[0].queue_free()
@@ -78,3 +78,4 @@ func spawn_coin(pos: Vector3, impulse: Vector3 = Vector3.ZERO, z_rotation: float
 		coin.rotation.z = z_rotation
 	if impulse != Vector3.ZERO:
 		coin.apply_central_impulse(impulse)
+	return coin
