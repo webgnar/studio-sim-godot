@@ -3210,6 +3210,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.9378147, -9.185848, 24.7078
 [node name="CSGBox3D" type="CSGBox3D" parent="gallery/Hidden Door" unique_id=67182411]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.15899658, 1.5500488, -0.4407959)
 use_collision = true
+collision_layer = 2
+collision_mask = 0
 size = Vector3(4.5306396, 6.1782227, 1.0217285)
 material = SubResource("StandardMaterial3D_2xejd")
 script = ExtResource("hidden_door_fog_script")
