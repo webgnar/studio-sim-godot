@@ -37,6 +37,9 @@ extends CharacterBody3D
 @export var mirror_facing_dot: float = 0.5
 @export var mirror_still_delay: float = 1.5
 
+@export_group("Ladder Climbing")
+@export var ladder_jump_off_speed: float = 2.0  ## Push-away speed when letting go of a ladder
+
 # --- PRIVATE VARIABLES ---
 
 # We get a reference to the camera in _ready().
@@ -78,6 +81,11 @@ var _near_mirror_facing: bool = false
 
 # Platform velocity tracking (Jolt physics fix)
 var _was_on_floor := false
+
+# Ladder climbing state (driven by LadderClimbZone.start_climbing/stop_climbing)
+var _is_climbing: bool = false
+var _climb_rail: Node3D = null
+var _climb_speed: float = 3.0
 
 # Current speed property - returns appropriate speed based on movement state
 var current_speed: float:
@@ -253,20 +261,26 @@ func _physics_process(delta: float) -> void:
 	if _is_crouching:
 		move_speed = crouch_speed
 
-	# --- GRAVITY ---
-	# Add gravity. If the character is on the floor, we don't apply gravity.
-	if not is_on_floor():
-		velocity.y -= gravity * delta
+	# --- CLIMBING ---
+	# While climbing, vertical movement and sticking to the ladder fully replace
+	# gravity/jumping/normal movement for this frame (see _process_climbing).
+	if _is_climbing and is_instance_valid(_climb_rail):
+		_process_climbing(delta)
+	else:
+		# --- GRAVITY ---
+		# Add gravity. If the character is on the floor, we don't apply gravity.
+		if not is_on_floor():
+			velocity.y -= gravity * delta
 
-	# --- JUMPING ---
-	# Handle the jump action.
-	if SteamInput.is_action_just_pressed("jump") and is_on_floor():
-		if _is_crouching:
-			# Un-crouch instead of jumping
-			_is_crouching = false
-			_apply_crouch_shape()
-		else:
-			velocity.y = jump_velocity
+		# --- JUMPING ---
+		# Handle the jump action.
+		if SteamInput.is_action_just_pressed("jump") and is_on_floor():
+			if _is_crouching:
+				# Un-crouch instead of jumping
+				_is_crouching = false
+				_apply_crouch_shape()
+			else:
+				velocity.y = jump_velocity
 
 	# --- CROUCH TOGGLE ---
 	if SteamInput.is_action_just_pressed("crouch"):
@@ -279,34 +293,37 @@ func _physics_process(delta: float) -> void:
 		_head_node.position.y = lerp(_head_node.position.y, target_head_y, 10.0 * delta)
 
 	# --- MOVEMENT ---
-	# Get the input direction vector from the input actions.
-	var input_dir := SteamInput.get_vector("move_left", "move_right", "move_forward", "move_back")
-	
-	# Convert the 2D input vector to a 3D direction vector.
-	var direction := (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
-	
-	if is_on_floor():
-		# Full control when on the ground
-		if direction != Vector3.ZERO:
-			velocity.x = direction.x * move_speed
-			velocity.z = direction.z * move_speed
-		else:
-			# If no input, apply inertia-based friction to stop the character smoothly.
-			var horizontal_velocity := Vector3(velocity.x, 0, velocity.z)
-			horizontal_velocity = horizontal_velocity.lerp(Vector3.ZERO, inertia * delta)
-			velocity.x = horizontal_velocity.x
-			velocity.z = horizontal_velocity.z
-	else:
-		# Limited air control - uses same move_speed as ground so sprint carries through jumps
-		if direction != Vector3.ZERO:
-			var target_velocity := Vector3(direction.x * move_speed, velocity.y, direction.z * move_speed)
-			var current_horizontal := Vector3(velocity.x, 0, velocity.z)
-			var target_horizontal := Vector3(target_velocity.x, 0, target_velocity.z)
+	# Skip normal ground/air movement while climbing — _process_climbing already
+	# owns velocity.x/y/z for this frame.
+	if not _is_climbing:
+		# Get the input direction vector from the input actions.
+		var input_dir := SteamInput.get_vector("move_left", "move_right", "move_forward", "move_back")
 
-			# Lerp horizontal velocity towards target with limited air control
-			var new_horizontal := current_horizontal.lerp(target_horizontal, air_control * delta * 3.0)
-			velocity.x = new_horizontal.x
-			velocity.z = new_horizontal.z
+		# Convert the 2D input vector to a 3D direction vector.
+		var direction := (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
+
+		if is_on_floor():
+			# Full control when on the ground
+			if direction != Vector3.ZERO:
+				velocity.x = direction.x * move_speed
+				velocity.z = direction.z * move_speed
+			else:
+				# If no input, apply inertia-based friction to stop the character smoothly.
+				var horizontal_velocity := Vector3(velocity.x, 0, velocity.z)
+				horizontal_velocity = horizontal_velocity.lerp(Vector3.ZERO, inertia * delta)
+				velocity.x = horizontal_velocity.x
+				velocity.z = horizontal_velocity.z
+		else:
+			# Limited air control - uses same move_speed as ground so sprint carries through jumps
+			if direction != Vector3.ZERO:
+				var target_velocity := Vector3(direction.x * move_speed, velocity.y, direction.z * move_speed)
+				var current_horizontal := Vector3(velocity.x, 0, velocity.z)
+				var target_horizontal := Vector3(target_velocity.x, 0, target_velocity.z)
+
+				# Lerp horizontal velocity towards target with limited air control
+				var new_horizontal := current_horizontal.lerp(target_horizontal, air_control * delta * 3.0)
+				velocity.x = new_horizontal.x
+				velocity.z = new_horizontal.z
 
 	# --- JOYSTICK CAMERA LOOK ---
 	# Handle camera rotation with right stick (accumulate into target rotation)
@@ -457,6 +474,47 @@ func _exit_tree() -> void:
 	# Make sure to release the mouse when the player object is removed.
 	# This is good practice for when changing scenes or quitting the game.
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+
+## Called by LadderClimbZone when the player touches a deployed ladder.
+## Handing off velocity.y to forward/back input and sticking horizontally to
+## `rail` is what makes the player feel attached to the ladder.
+func start_climbing(rail: Node3D, speed: float = 3.0) -> void:
+	_is_climbing = true
+	_climb_rail = rail
+	_climb_speed = speed
+	velocity.y = 0.0
+
+## Called by LadderClimbZone when the player leaves the ladder's zone
+## (stepped off the top/bottom, or let go with jump).
+func stop_climbing() -> void:
+	_is_climbing = false
+	_climb_rail = null
+
+func _process_climbing(_delta: float) -> void:
+	# Jump lets go of the ladder and pushes the player back away from it.
+	if SteamInput.is_action_just_pressed("jump"):
+		var away := global_transform.basis.z  # opposite of forward (-Z)
+		var release_velocity := velocity
+		stop_climbing()
+		velocity = away.normalized() * ladder_jump_off_speed + Vector3.UP * jump_velocity * 0.5
+		velocity.y = max(velocity.y, release_velocity.y)
+		return
+
+	# Forward/back input climbs up/down the rungs. move_forward maps to a negative
+	# Y in SteamInput.get_vector, so flip the sign to make "forward" mean "up".
+	var input_dir := SteamInput.get_vector("move_left", "move_right", "move_forward", "move_back")
+	velocity.y = -input_dir.y * _climb_speed
+	velocity.x = 0.0
+	velocity.z = 0.0
+
+	# Stick to the ladder's rail horizontally so the player can't drift off it
+	# while climbing — only Y is left free to move via move_and_slide below.
+	if _climb_rail:
+		global_position.x = _climb_rail.global_position.x
+		global_position.z = _climb_rail.global_position.z
+
+	# Reaching the top or bottom of the ladder's climb zone releases the player
+	# automatically via LadderClimbZone's body_exited -> stop_climbing().
 
 func _is_sprinting() -> bool:
 	"""Check if player is sprinting. Routes through SteamInput which handles both

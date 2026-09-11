@@ -1,0 +1,16 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://cap7850orjn1k"]
+
+[ext_resource type="Texture2D" uid="uid://dc88fbkg3vc5p" path="res://sprites/textures/floorboards.png" id="1_1uvyr"]
+[ext_resource type="Texture2D" uid="uid://dcij21opo0juo" path="res://sprites/normals/floor-cement-2_ambient.png" id="2_oebfj"]
+[ext_resource type="Texture2D" uid="uid://lcah2yte71x6" path="res://sprites/normals/floor-cement-2_normal.png" id="3_qgkrc"]
+
+[resource]
+albedo_texture = ExtResource("1_1uvyr")
+normal_enabled = true
+normal_scale = 0.24
+normal_texture = ExtResource("3_qgkrc")
+ao_enabled = true
+ao_light_affect = 0.08
+ao_texture = ExtResource("2_oebfj")
+uv1_scale = Vector3(3.353, 3.481, 3.131)
+uv1_offset = Vector3(0, -1, 0)

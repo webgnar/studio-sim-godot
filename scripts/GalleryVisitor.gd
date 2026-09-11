@@ -746,7 +746,23 @@ func _get_attraction_nodes() -> Array[Node3D]:
 			if is_instance_valid(body) and body not in result:
 				result.append(body)
 
+	# Never send visitors after anything past a locked doorway — the room
+	# beyond it (e.g. the studio, behind "wall south") isn't reachable yet,
+	# no matter which source above surfaced the candidate (a painting can be
+	# SHIPPED and physically sitting back there from an earlier session even
+	# though the door's never actually been opened).
+	if _is_new_room_locked():
+		result = result.filter(func(n: Node3D) -> bool: return not _is_new_room(n.global_position))
+
 	return result
+
+
+## True if any locking door gating the expanded room is still locked.
+func _is_new_room_locked() -> bool:
+	for door in get_tree().get_nodes_in_group("locking_door"):
+		if is_instance_valid(door) and door.get("is_locked"):
+			return true
+	return false
 
 
 func _on_animation_finished(anim_name: StringName) -> void:

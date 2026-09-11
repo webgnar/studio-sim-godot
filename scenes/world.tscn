@@ -18,7 +18,6 @@
 [ext_resource type="PackedScene" uid="uid://fjppju80c5ic" path="res://models/props/pipe_yellow.glb" id="17_kpybi"]
 [ext_resource type="PackedScene" uid="uid://44g07prjgs5x" path="res://models/props/pipe_gray bent.glb" id="19_kpybi"]
 [ext_resource type="PackedScene" uid="uid://cmaavrflrf4d4" path="res://models/props/pipe_gray.glb" id="19_xgqkh"]
-[ext_resource type="Texture2D" uid="uid://dc88fbkg3vc5p" path="res://sprites/textures/floorboards.png" id="21_l137e"]
 [ext_resource type="PackedScene" uid="uid://dce7w6dm5rfx5" path="res://models/props/light_switch box.glb" id="21_ts3gi"]
 [ext_resource type="PackedScene" uid="uid://l436njx1xm1p" path="res://models/interactables/light_switch.glb" id="22_0nbtd"]
 [ext_resource type="Texture2D" uid="uid://dcij21opo0juo" path="res://sprites/normals/floor-cement-2_ambient.png" id="22_ygn2i"]
@@ -51,6 +50,7 @@
 [ext_resource type="PackedScene" uid="uid://dxk1gusj3uuj7" path="res://models/interactables/fan/legs.glb" id="48_x28ej"]
 [ext_resource type="PackedScene" uid="uid://d334ujfwmx8lp" path="res://models/interactables/fan/cage.glb" id="49_1jxku"]
 [ext_resource type="Script" uid="uid://c63c2n2vhd5r6" path="res://scripts/old stuff/FanController.gd" id="49_npbic"]
+[ext_resource type="Material" uid="uid://cap7850orjn1k" path="res://materials/wood_studio.tres" id="49_yhtv1"]
 [ext_resource type="PackedScene" uid="uid://bsdobk5wd61u" path="res://models/interactables/fan/blade.glb" id="50_1dgkn"]
 [ext_resource type="Script" uid="uid://u01mbabuiguh" path="res://scripts/components/PoweredDeviceComponent.gd" id="51_iexy4"]
 [ext_resource type="Script" uid="uid://d1d8fhujnbpfy" path="res://scripts/components/PowerCordPlugComponent.gd" id="51_pf35h"]
@@ -155,6 +155,8 @@
 [ext_resource type="AudioStream" uid="uid://bukro42figtah" path="res://sounds/fan switch.ogg" id="fan_switch"]
 [ext_resource type="PackedScene" uid="uid://dft4un8r3mpqc" path="res://scenes/FortuneTeller.tscn" id="fortune_teller_scene"]
 [ext_resource type="Script" uid="uid://dy7jwhh2qgx4s" path="res://scripts/components/HiddenDoorFog.gd" id="hidden_door_fog_script"]
+[ext_resource type="Script" uid="uid://bxbaq2ohbhuwg" path="res://scripts/components/LadderClimbZone.gd" id="ladder_climb_zone_script"]
+[ext_resource type="Script" uid="uid://6mn7hcha5ru5" path="res://scripts/components/LadderComponent.gd" id="ladder_component_script"]
 [ext_resource type="AudioStream" uid="uid://c443ekfhr0sru" path="res://sounds/music_gnar - Ministudio.ogg" id="ministudio_audio"]
 [ext_resource type="PackedScene" path="res://scenes/UI/MoneyRainLayer.tscn" id="money_rain_layer"]
 [ext_resource type="AudioStream" uid="uid://cldonhpncb00b" path="res://sounds/(First Trip) To The Moon.ogg" id="moon_ogg"]
@@ -227,17 +229,6 @@ size = Vector3(5.7043457, 14.934555, 5.9116364)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ce70q"]
 size = Vector3(1.644928, 1, 0.17285156)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_oexs8"]
-albedo_texture = ExtResource("21_l137e")
-normal_enabled = true
-normal_scale = 0.24
-normal_texture = ExtResource("23_swu3i")
-ao_enabled = true
-ao_light_affect = 0.08
-ao_texture = ExtResource("22_ygn2i")
-uv1_scale = Vector3(3.353, 3.481, 3.131)
-uv1_offset = Vector3(0, -1, 0)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gom0u"]
 albedo_texture = ExtResource("101_mu18u")
@@ -528,17 +519,17 @@ albedo_color = Color(1.0734373, 1.0734373, 0.15063755, 1)
 albedo_texture = ExtResource("82_mu18u")
 texture_filter = 0
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_fahuw"]
+[sub_resource type="PlaneMesh" id="PlaneMesh_yhtv1"]
 resource_local_to_scene = true
 size = Vector2(2.5, 3)
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_i688p"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_c7mri"]
 resource_name = "_albedo"
 viewport_path = NodePath("../MirrorNew/SubViewport")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_x3v50"]
 resource_local_to_scene = true
-albedo_texture = SubResource("ViewportTexture_i688p")
+albedo_texture = SubResource("ViewportTexture_c7mri")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_1v02h"]
 size = Vector2(2.5, 3)
@@ -1098,6 +1089,36 @@ _data = {
 &"float": SubResource("Animation_iqfx1")
 }
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_uanl7"]
+albedo_color = Color(0.07082722, 0.07082721, 0.07082722, 1)
+metallic = 1.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_se2tq"]
+albedo_color = Color(0, 0, 0, 1)
+metallic = 1.0
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ladder_climb"]
+size = Vector3(0.9, 5.9349, 1.4)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0qdas"]
+albedo_color = Color(0.3459457, 0.34594572, 0.3459457, 1)
+metallic = 1.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5aihc"]
+transparency = 1
+albedo_color = Color(0.44705883, 1, 1, 0.53333336)
+metallic = 1.0
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_uanl7"]
+material = SubResource("StandardMaterial3D_5aihc")
+size = Vector2(1.43, 3.05)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vg5or"]
+albedo_color = Color(0.64398086, 0.64398086, 0.6439808, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_uanl7"]
+size = Vector3(1.4228516, 3.1479492, 0.18707275)
+
 [node name="World" type="Node3D" unique_id=81477]
 script = ExtResource("1_qaasp")
 
@@ -1536,7 +1557,7 @@ transform = Transform3D(-9.797052e-07, 0, -49.782604, 0, 0.00801068, 0, 0.455388
 use_collision = true
 collision_mask = 0
 size = Vector3(0.795, 12.27, 0.348)
-material = SubResource("StandardMaterial3D_oexs8")
+material = ExtResource("49_yhtv1")
 
 [node name="wall" type="CSGBox3D" parent="studio" unique_id=601196792]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.173913, -0.099999994, -0.010650635)
@@ -2343,7 +2364,7 @@ surface_material_override/0 = SubResource("StandardMaterial3D_7b7y8")
 
 [node name="mirror" parent="." unique_id=1626491013 groups=["shop_prop"] instance=ExtResource("39_qaasp")]
 transform = Transform3D(-4.7902194e-08, -0.99488777, 0.10098683, -3.9073655e-08, 0.10098683, 0.99488777, -1, 4.3711392e-08, -4.3711385e-08, 2.8, 1.497, 5.232)
-mesh = SubResource("PlaneMesh_fahuw")
+mesh = SubResource("PlaneMesh_yhtv1")
 surface_material_override/0 = SubResource("StandardMaterial3D_x3v50")
 show_debug_logs = false
 metadata/shop_item_id = "mirror"
@@ -3019,9 +3040,9 @@ size = Vector3(0.51490235, 15.69414, 47.415874)
 material = ExtResource("5_71j4m")
 
 [node name="cutout" type="CSGBox3D" parent="gallery/NavigationRegion3D/wall north" unique_id=120670611]
-transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0.124539316, 2.1316023, 21.308462)
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0.12453908, 3.5537214, 21.750483)
 operation = 2
-size = Vector3(1.2297363, 7.0566406, 1)
+size = Vector3(1.2297363, 4.2124023, 1)
 
 [node name="cutout2" type="CSGBox3D" parent="gallery/NavigationRegion3D/wall north" unique_id=1891993600]
 transform = Transform3D(1.9106855e-15, 4.371139e-08, 1, 1, -4.371139e-08, 0, 4.371139e-08, 1, -4.371139e-08, -0.023630023, 5.2424674, -16.704184)
@@ -3037,6 +3058,12 @@ size = Vector3(1.2297363, 7.0566406, 1)
 transform = Transform3D(1.9106855e-15, 4.371139e-08, 1, 1, -4.371139e-08, 0, 4.371139e-08, 1, -4.371139e-08, -0.023629189, 5.2424674, 0.2931614)
 operation = 2
 size = Vector3(1.2297363, 3.0019531, 1)
+
+[node name="CSGBox3D" type="CSGBox3D" parent="gallery/NavigationRegion3D/wall north" unique_id=2040900867]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.66893e-06, -5.8803425, 20.651342)
+operation = 2
+size = Vector3(1, 3.1375732, 1.4226265)
+material = ExtResource("3_qfnet")
 
 [node name="Basketball" parent="gallery" unique_id=1380341004 groups=["shop_prop"] instance=ExtResource("121_gyxkx")]
 transform = Transform3D(-0.14556402, 0.89771247, 0.4158406, 0.8624473, -0.09080858, 0.49793425, 0.4847637, 0.43112192, -0.76101124, 13.42936, 11.086607, 6.122342)
@@ -3193,7 +3220,6 @@ mom
 
 [node name="BasketballHoop" parent="gallery" unique_id=641032447 instance=ExtResource("133_j7mh8")]
 transform = Transform3D(-1.3113417e-08, 0, -0.3, 0, 0.3, 0, 0.3, 0, -1.3113417e-08, 35.290443, 9.433124, 16.647125)
-script = null
 
 [node name="GalleryZone" type="Area3D" parent="gallery" unique_id=1880804030]
 collision_layer = 0
@@ -3297,6 +3323,152 @@ autoplay = &"float"
 [node name="pencil" parent="." unique_id=115134464 groups=["shop_prop"] instance=ExtResource("157_pencil_carryable")]
 transform = Transform3D(-3.6591157e-08, 0.8371081, 0.5470376, -1, -4.371139e-08, 0, 2.3911776e-08, -0.5470376, 0.8371081, 1.3375152, 0.9959953, 8.329819)
 metadata/shop_item_id = "pencil"
+
+[node name="ladder" type="Node3D" parent="." unique_id=79011543]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.115, 8.452505, 4.067)
+
+[node name="CSGBox3D" type="CSGBox3D" parent="ladder" unique_id=1766383667]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.45111084)
+use_collision = true
+collision_layer = 2
+size = Vector3(0.19140625, 5.8349, 0.09777832)
+material = SubResource("StandardMaterial3D_uanl7")
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="ladder" unique_id=1977044455]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.64342594)
+use_collision = true
+collision_layer = 2
+size = Vector3(0.19140625, 5.8349, 0.09777832)
+material = SubResource("StandardMaterial3D_uanl7")
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="ladder" unique_id=259292970]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, -2.2313428, -0.09863281)
+radius = 0.068
+height = 1.1191406
+material = SubResource("StandardMaterial3D_se2tq")
+
+[node name="CSGCylinder3D2" type="CSGCylinder3D" parent="ladder" unique_id=1376969992]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, -1.2922454, -0.09863281)
+radius = 0.068
+height = 1.1191406
+material = SubResource("StandardMaterial3D_se2tq")
+
+[node name="CSGCylinder3D3" type="CSGCylinder3D" parent="ladder" unique_id=952828531]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, -0.2874241, -0.09863281)
+radius = 0.068
+height = 1.1191406
+material = SubResource("StandardMaterial3D_se2tq")
+
+[node name="CSGCylinder3D4" type="CSGCylinder3D" parent="ladder" unique_id=1769721257]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0.6911411, -0.09863281)
+radius = 0.068
+height = 1.1191406
+material = SubResource("StandardMaterial3D_se2tq")
+
+[node name="CSGCylinder3D5" type="CSGCylinder3D" parent="ladder" unique_id=856274050]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 1.6289701, -0.09863281)
+radius = 0.068
+height = 1.1191406
+material = SubResource("StandardMaterial3D_se2tq")
+
+[node name="CSGCylinder3D6" type="CSGCylinder3D" parent="ladder" unique_id=740836464]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 2.5049877, -0.09863281)
+radius = 0.068
+height = 1.1191406
+material = SubResource("StandardMaterial3D_se2tq")
+
+[node name="ClimbZone" type="Area3D" parent="ladder" unique_id=847213590]
+collision_layer = 0
+script = ExtResource("ladder_climb_zone_script")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ladder/ClimbZone" unique_id=847213591]
+shape = SubResource("BoxShape3D_ladder_climb")
+
+[node name="LadderInteraction" type="Node3D" parent="ladder" unique_id=847213592]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0)
+script = ExtResource("ladder_component_script")
+interaction_text = "Drop Ladder"
+
+[node name="hall of fame" type="CSGCombiner3D" parent="." unique_id=1084655370]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.921214, -14.367619, -11.921288)
+
+[node name="wall" type="CSGBox3D" parent="hall of fame" unique_id=1104060604]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.8465548, 1.7315063, -5.5179634)
+size = Vector3(0.4477539, 5.942993, 32.595093)
+material = ExtResource("5_71j4m")
+
+[node name="wall5" type="CSGBox3D" parent="hall of fame" unique_id=429801877]
+transform = Transform3D(-0.62854594, 0.7777725, 0, -0.7777725, -0.62854594, 0, 0, 0, 1, 4.2386427, 6.4833965, -5.5179634)
+size = Vector3(0.4477539, 6.343094, 32.595093)
+material = ExtResource("1_4mrxx")
+
+[node name="wall6" type="CSGBox3D" parent="hall of fame" unique_id=674932891]
+transform = Transform3D(0.6774746, 0.7355462, 0, -0.7355462, 0.6774746, 0, 0, 0, 1, -0.73595524, 6.4833965, -5.5179634)
+size = Vector3(0.4477539, 6.343094, 32.595093)
+material = ExtResource("1_4mrxx")
+
+[node name="wall4" type="CSGBox3D" parent="hall of fame" unique_id=1733981740]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 1.8558989, 1.7315063, -21.517963)
+size = Vector3(0.4477539, 5.942993, 10)
+material = ExtResource("5_71j4m")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="hall of fame/wall4" unique_id=3038502]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8936157, 0.10391235)
+operation = 2
+size = Vector3(1, 2.4278564, 6.6552124)
+
+[node name="wall2" type="CSGBox3D" parent="hall of fame" unique_id=1697364277]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.6291485, 1.7315063, -5.5179634)
+size = Vector3(0.4477539, 5.942993, 32.595093)
+material = ExtResource("5_71j4m")
+
+[node name="wall3" type="CSGBox3D" parent="hall of fame" unique_id=170066137]
+transform = Transform3D(1.1924881e-08, -1, 0, 1, 1.1924881e-08, 0, 0, 0, 1, 1.8822021, -1.2684937, -5.5179634)
+size = Vector3(0.4477539, 9.887604, 32.595093)
+material = ExtResource("49_yhtv1")
+
+[node name="HOF door" type="Node3D" parent="hall of fame" unique_id=864612172]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.67910385, 10.597043)
+
+[node name="CSGBox3D" type="CSGBox3D" parent="hall of fame/HOF door" unique_id=1841230877]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.43954468, 1.0679626, 0.23773193)
+size = Vector3(0.124938965, 3.1359253, 0.11193848)
+material = SubResource("StandardMaterial3D_0qdas")
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="hall of fame/HOF door" unique_id=1959620393]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.9022975, 1.0679626, 0.23773193)
+size = Vector3(0.124938965, 3.1359253, 0.11193848)
+material = SubResource("StandardMaterial3D_0qdas")
+
+[node name="CSGBox3D3" type="CSGBox3D" parent="hall of fame/HOF door" unique_id=804081068]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0.23340368, 2.5857744, 0.23773193)
+size = Vector3(0.124938965, 1.2303162, 0.11193848)
+material = SubResource("StandardMaterial3D_0qdas")
+
+[node name="CSGBox3D4" type="CSGBox3D" parent="hall of fame/HOF door" unique_id=607990652]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0.23340368, -0.42070198, 0.23773193)
+size = Vector3(0.124938965, 1.2303162, 0.11193848)
+material = SubResource("StandardMaterial3D_0qdas")
+
+[node name="glass" type="MeshInstance3D" parent="hall of fame/HOF door" unique_id=443415823]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0.24938297, 1.1000023, 0.25370896)
+mesh = SubResource("PlaneMesh_uanl7")
+
+[node name="glass2" type="MeshInstance3D" parent="hall of fame/HOF door" unique_id=1066327301]
+transform = Transform3D(-1, -8.742278e-08, 3.821371e-15, 0, -4.371139e-08, -1, 8.742278e-08, -1, 4.371139e-08, 0.24938297, 1.1000023, 0.21675515)
+mesh = SubResource("PlaneMesh_uanl7")
+
+[node name="CSGBox3D5" type="CSGBox3D" parent="hall of fame/HOF door" unique_id=1068028284]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.7841563, 1.0380602, 0.30445063)
+size = Vector3(0.22705078, 0.03125, 0.034240723)
+material = SubResource("StandardMaterial3D_vg5or")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="hall of fame/HOF door" unique_id=1225851016]
+collision_layer = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="hall of fame/HOF door/StaticBody3D" unique_id=967562618]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.21142578, 1.0739746, 0.22299194)
+shape = SubResource("BoxShape3D_uanl7")
 
 [editable path="Spotlight1"]
 [editable path="Spotlight2"]

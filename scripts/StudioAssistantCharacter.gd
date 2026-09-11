@@ -15,12 +15,14 @@ const SKIN_MATERIAL = preload("res://materials/NPCs/assistantguy_skin.tres")
 @export var shrink_scale: float = 0.25  ## Scale when working
 @export var walk_position_delta: Vector3 = Vector3(-0.7672639, 0, -2.819965)  ## Position offset from rest to desk
 @export var walk_rotation_delta: Vector3 = Vector3(0, 0.25043726, 0)           ## Rotation offset over walk
+@export var meditate_collision_scale: float = 0.5  ## Collision shrink while sitting/meditating (pre-hire giant pose reaches too far up otherwise)
 
 const WALK_DURATION := 3.0
 const WALK_TURN_DURATION := 1.5
 const SHRINK_DURATION := 3.0
 
 var rig_anim_player: AnimationPlayer
+var interaction_body: Node3D
 var _is_hired: bool = false
 
 
@@ -34,6 +36,8 @@ func _ready() -> void:
 	if not rig_anim_player:
 		push_warning("StudioAssistantCharacter: Rig AnimationPlayer not found inside humanrig!")
 
+	interaction_body = get_node_or_null("InteractionBody")
+
 	if has_node("/root/AutomationManager") and AutomationManager.is_assistant_active():
 		_start_work_immediately()
 	else:
@@ -45,6 +49,7 @@ func _ready() -> void:
 
 func _start_meditation_sequence() -> void:
 	"""Play sit then loop meditate — default state before hiring"""
+	_set_interaction_scale(meditate_collision_scale)  # seated/meditating pose sits much lower than the standing rig the capsule was sized for
 	if not rig_anim_player:
 		return
 	_play_rig_animation("sit")
@@ -58,7 +63,13 @@ func _start_work_immediately() -> void:
 	scale = Vector3(shrink_scale, shrink_scale, shrink_scale)
 	position += walk_position_delta
 	rotation += walk_rotation_delta
+	_set_interaction_scale(1.0)  # standing/working pose — full capsule already shrinks along with self.scale
 	_play_rig_animation("idle")
+
+
+func _set_interaction_scale(s: float) -> void:
+	if interaction_body:
+		interaction_body.scale = Vector3(s, s, s)
 
 
 func _on_assistant_purchased() -> void:
@@ -66,6 +77,7 @@ func _on_assistant_purchased() -> void:
 	if _is_hired:
 		return
 	_is_hired = true
+	_set_interaction_scale(1.0)  # standing up out of the meditate pose — capsule returns to full size, self.scale shrink below handles the rest
 
 	# --- Phase 1: Shrink (tween) + stand up from sit (rig AP) simultaneously ---
 	# Tween from current scale — no snap, no absolute keyframe issues
