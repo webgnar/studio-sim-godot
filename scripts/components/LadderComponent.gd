@@ -20,7 +20,7 @@ func _on_ready() -> void:
 		interaction_text = "Drop Ladder"
 
 	if WorldStateManager.has_flag(deployed_flag):
-		_apply_deployed_state(true)
+		_apply_deployed_state(false)
 	else:
 		# Flag data may not be loaded from the save file yet when this node's own
 		# _ready() runs (same reasoning as HiddenDoorFog.gd's re-sync) — re-check
@@ -29,7 +29,7 @@ func _on_ready() -> void:
 
 func _recheck_deployed_flag() -> void:
 	if not is_deployed and WorldStateManager.has_flag(deployed_flag):
-		_apply_deployed_state(true)
+		_apply_deployed_state(false)
 
 func _on_interacted(_player_interaction_component: PlayerInteractionComponent) -> void:
 	if is_deployed:

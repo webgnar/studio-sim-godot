@@ -360,6 +360,12 @@ func _update_interaction_prompt() -> void:
 		interaction_prompt_changed.emit("")
 		return
 
+	# Let an interaction component opt out of showing any prompt at all (e.g. a
+	# secret/hidden interactable that shouldn't telegraph itself with a HUD hint)
+	if interaction_component and "hide_prompt" in interaction_component and interaction_component.hide_prompt:
+		interaction_prompt_changed.emit("")
+		return
+
 	var prompt_text = ""
 
 	# If it's carryable with E-key interaction enabled, show both prompts

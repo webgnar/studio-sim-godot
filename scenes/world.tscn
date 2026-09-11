@@ -150,6 +150,8 @@
 [ext_resource type="PackedScene" uid="uid://d2lld8pxrphp3" path="res://scenes/objects/SaveAssistantWorkButton.tscn" id="200_savebtn"]
 [ext_resource type="PackedScene" uid="uid://dfcanvasscn1" path="res://scenes/objects/AssistantFinishedCanvas.tscn" id="201_fcanvas"]
 [ext_resource type="Script" uid="uid://di1n2iwa1eny" path="res://scripts/hall_of_fame_gallery.gd" id="202_hof"]
+[ext_resource type="Script" uid="uid://cf3qogfe8ovlm" path="res://scripts/objects/HOFDoor.gd" id="203_hofdoor"]
+[ext_resource type="Script" uid="uid://c6fwfj202t4lx" path="res://scripts/objects/HOFDoorInteraction.gd" id="205_hofdoor_interact"]
 [ext_resource type="Script" uid="uid://nvjrcsa5oaqc" path="res://scripts/BerkeyInteraction.gd" id="berkey_interaction"]
 [ext_resource type="AudioStream" uid="uid://b8pj17m4nhgjm" path="res://sounds/boomboxSwitch.ogg" id="boombox_switch"]
 [ext_resource type="Script" uid="uid://dy1equdk316u6" path="res://scripts/DayNightCycle.gd" id="day_night_cycle"]
@@ -521,17 +523,17 @@ albedo_color = Color(1.0734373, 1.0734373, 0.15063755, 1)
 albedo_texture = ExtResource("82_mu18u")
 texture_filter = 0
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_t2jyq"]
+[sub_resource type="PlaneMesh" id="PlaneMesh_iqfx1"]
 resource_local_to_scene = true
 size = Vector2(2.5, 3)
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_7n6r0"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_x3v50"]
 resource_name = "_albedo"
 viewport_path = NodePath("../MirrorNew/SubViewport")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_x3v50"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hg3bl"]
 resource_local_to_scene = true
-albedo_texture = SubResource("ViewportTexture_7n6r0")
+albedo_texture = SubResource("ViewportTexture_x3v50")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_1v02h"]
 size = Vector2(2.5, 3)
@@ -1091,16 +1093,42 @@ _data = {
 &"float": SubResource("Animation_iqfx1")
 }
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_uanl7"]
-albedo_color = Color(0.07082722, 0.07082721, 0.07082722, 1)
-metallic = 1.0
+[sub_resource type="Animation" id="Animation_hofdoor_reset"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Hinge:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_se2tq"]
-albedo_color = Color(0, 0, 0, 1)
-metallic = 1.0
+[sub_resource type="Animation" id="Animation_hofdoor_open"]
+resource_name = "open"
+length = 0.9
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Hinge:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.9),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, 1.7453293, 0)]
+}
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_ladder_climb"]
-size = Vector3(0.9, 5.9349, 1.4)
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_hofdoor"]
+_data = {
+&"RESET": SubResource("Animation_hofdoor_reset"),
+&"open": SubResource("Animation_hofdoor_open")
+}
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0qdas"]
 albedo_color = Color(0.3459457, 0.34594572, 0.3459457, 1)
@@ -1119,7 +1147,34 @@ size = Vector2(1.43, 3.05)
 albedo_color = Color(0.64398086, 0.64398086, 0.6439808, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_uanl7"]
-size = Vector3(1.4228516, 3.1479492, 0.18707275)
+size = Vector3(1.4228516, 3.1479492, 0.16501617)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_uanl7"]
+albedo_color = Color(0.07082722, 0.07082721, 0.07082722, 1)
+metallic = 1.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_se2tq"]
+albedo_color = Color(0, 0, 0, 1)
+metallic = 1.0
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ladder_climb"]
+size = Vector3(0.9, 5.9349, 1.4)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7echp"]
+transparency = 1
+cull_mode = 2
+albedo_color = Color(0.45490196, 1, 1, 1)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_se2tq"]
+material = SubResource("StandardMaterial3D_7echp")
+size = Vector2(5.69, 114.62)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_se2tq"]
+size = Vector3(4.8884277, 0.6564331, 115.294525)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_edbjg"]
+material = SubResource("StandardMaterial3D_7echp")
+size = Vector2(4.53, 62.38)
 
 [node name="World" type="Node3D" unique_id=81477]
 script = ExtResource("1_qaasp")
@@ -2367,8 +2422,8 @@ surface_material_override/0 = SubResource("StandardMaterial3D_7b7y8")
 
 [node name="mirror" parent="." unique_id=1626491013 groups=["shop_prop"] instance=ExtResource("39_qaasp")]
 transform = Transform3D(-4.7902194e-08, -0.99488777, 0.10098683, -3.9073655e-08, 0.10098683, 0.99488777, -1, 4.3711392e-08, -4.3711385e-08, 2.8, 1.497, 5.232)
-mesh = SubResource("PlaneMesh_t2jyq")
-surface_material_override/0 = SubResource("StandardMaterial3D_x3v50")
+mesh = SubResource("PlaneMesh_iqfx1")
+surface_material_override/0 = SubResource("StandardMaterial3D_hg3bl")
 show_debug_logs = false
 metadata/shop_item_id = "mirror"
 
@@ -3221,7 +3276,7 @@ mom
 - Ruben
 - The Gamedev Den"
 
-[node name="BasketballHoop" parent="gallery" unique_id=641032447 instance=ExtResource("133_j7mh8")]
+[node name="BasketballHoop" parent="gallery" unique_id=641032447 groups=["basketball_hoop"] instance=ExtResource("133_j7mh8")]
 transform = Transform3D(-1.3113417e-08, 0, -0.3, 0, 0.3, 0, 0.3, 0, -1.3113417e-08, 35.290443, 9.433124, 16.647125)
 
 [node name="GalleryZone" type="Area3D" parent="gallery" unique_id=1880804030]
@@ -3327,6 +3382,73 @@ autoplay = &"float"
 transform = Transform3D(-3.6591157e-08, 0.8371081, 0.5470376, -1, -4.371139e-08, 0, 2.3911776e-08, -0.5470376, 0.8371081, 1.3375152, 0.9959953, 8.329819)
 metadata/shop_item_id = "pencil"
 
+[node name="HOF door" type="Node3D" parent="." unique_id=864612172 groups=["no_outline"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.921213, -15.046722, -1.3242445)
+script = ExtResource("203_hofdoor")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="HOF door" unique_id=317699757]
+libraries/ = SubResource("AnimationLibrary_hofdoor")
+
+[node name="HOFDoorInteraction" type="Node3D" parent="HOF door" unique_id=1017525836]
+script = ExtResource("205_hofdoor_interact")
+
+[node name="Hinge" type="Node3D" parent="HOF door" unique_id=375492487]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5020142, 0, 0.23773193)
+
+[node name="CSGBox3D" type="CSGBox3D" parent="HOF door/Hinge" unique_id=1841230877]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0624693, 1.0679626, 0)
+size = Vector3(0.124938965, 3.1359253, 0.11193848)
+material = SubResource("StandardMaterial3D_0qdas")
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="HOF door/Hinge" unique_id=1959620393]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.4043115, 1.0679626, 0)
+size = Vector3(0.124938965, 3.1359253, 0.11193848)
+material = SubResource("StandardMaterial3D_0qdas")
+
+[node name="CSGBox3D3" type="CSGBox3D" parent="HOF door/Hinge" unique_id=804081068]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0.7254177, 2.5857744, 0)
+size = Vector3(0.124938965, 1.2303162, 0.11193848)
+material = SubResource("StandardMaterial3D_0qdas")
+
+[node name="CSGBox3D4" type="CSGBox3D" parent="HOF door/Hinge" unique_id=607990652]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0.7254177, -0.42070198, 0)
+size = Vector3(0.124938965, 1.2303162, 0.11193848)
+material = SubResource("StandardMaterial3D_0qdas")
+
+[node name="glass" type="MeshInstance3D" parent="HOF door/Hinge" unique_id=443415823]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0.751397, 1.1000023, 0.01597703)
+mesh = SubResource("PlaneMesh_uanl7")
+
+[node name="glass2" type="MeshInstance3D" parent="HOF door/Hinge" unique_id=1066327301]
+transform = Transform3D(-1, -8.742278e-08, 3.821371e-15, 0, -4.371139e-08, -1, 8.742278e-08, -1, 4.371139e-08, 0.751397, 1.1000023, -0.02097678)
+mesh = SubResource("PlaneMesh_uanl7")
+
+[node name="handle" type="Node3D" parent="HOF door/Hinge" unique_id=1269444987]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.2975276, 1.0649424, -0.00234055)
+
+[node name="CSGBox3D5" type="CSGBox3D" parent="HOF door/Hinge/handle" unique_id=1068028284]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.07112205)
+size = Vector3(0.22705078, 0.03125, 0.034240723)
+material = SubResource("StandardMaterial3D_vg5or")
+
+[node name="CSGBox3D6" type="CSGBox3D" parent="HOF door/Hinge/handle" unique_id=1008244188]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.07731223)
+size = Vector3(0.22705078, 0.03125, 0.034240723)
+material = SubResource("StandardMaterial3D_vg5or")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="HOF door/Hinge" unique_id=1225851016]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5020142, 0, -0.23773193)
+collision_layer = 10
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="HOF door/Hinge/StaticBody3D" unique_id=967562618]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.21142578, 1.0739746, 0.21196365)
+shape = SubResource("BoxShape3D_uanl7")
+
+[node name="Sprite3D" type="Sprite3D" parent="HOF door/Hinge" unique_id=79009333]
+transform = Transform3D(0.22, 0, 0, 0, 0.22, 0, 0, 0, 0.22, 0.7300814, 1.8432512, -0.00393783)
+texture_filter = 0
+texture = ExtResource("162_t2jyq")
+
 [node name="ladder" type="Node3D" parent="." unique_id=79011543]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.115, 8.452505, 4.067)
 
@@ -3413,15 +3535,23 @@ size = Vector3(0.4477539, 5.942993, 48.5614)
 material = ExtResource("5_71j4m")
 
 [node name="wall5" type="CSGBox3D" parent="hall of fame" unique_id=429801877]
-transform = Transform3D(-0.62854594, 0.7777725, 0, -0.7777725, -0.62854594, 0, 0, 0, 1, 5.4144144, 5.5332127, -47.05425)
-visible = false
-size = Vector3(0.4477539, 3.3196602, 115.66766)
+transform = Transform3D(-0.62854594, 0.7777725, 0, -0.7777725, -0.62854594, 0, 0, 0, 1, 5.4144144, 5.5332127, -44.002567)
+size = Vector3(0.4477539, 3.3196602, 109.5643)
 material = ExtResource("1_4mrxx")
 
 [node name="wall6" type="CSGBox3D" parent="hall of fame" unique_id=674932891]
 transform = Transform3D(0.6774746, 0.7355462, 0, -0.7355462, 0.6774746, 0, 0, 0, 1, -1.8010235, 5.5024166, -47.055714)
-visible = false
 size = Vector3(0.4477539, 3.4471016, 115.67059)
+material = ExtResource("1_4mrxx")
+
+[node name="wall11" type="CSGBox3D" parent="hall of fame" unique_id=189860507]
+transform = Transform3D(-2.9613355e-08, -3.2151743e-08, -1, -0.7355462, 0.6774746, 0, 0.6774746, 0.7355462, -4.371139e-08, 26.034275, 5.5024166, -103.05572)
+size = Vector3(0.4477539, 3.4471016, 58)
+material = ExtResource("1_4mrxx")
+
+[node name="wall12" type="CSGBox3D" parent="hall of fame" unique_id=1328730055]
+transform = Transform3D(-2.9613355e-08, -3.2151743e-08, -1, -0.8447636, -0.5351397, 4.222196e-08, -0.5351397, 0.8447636, -1.1313341e-08, 26.034275, 5.917926, -96.71163)
+size = Vector3(0.4477539, 5, 58)
 material = ExtResource("1_4mrxx")
 
 [node name="wall4" type="CSGBox3D" parent="hall of fame" unique_id=1733981740]
@@ -3459,86 +3589,30 @@ transform = Transform3D(-5.2125306e-16, 4.371139e-08, 1, 1, 1.1924881e-08, 0, -1
 size = Vector3(0.4477539, 11, 48)
 material = ExtResource("49_yhtv1")
 
-[node name="HOF door" type="Node3D" parent="hall of fame" unique_id=864612172]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.67910385, 10.597043)
-
-[node name="CSGBox3D" type="CSGBox3D" parent="hall of fame/HOF door" unique_id=1841230877]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.43954468, 1.0679626, 0.23773193)
-size = Vector3(0.124938965, 3.1359253, 0.11193848)
-material = SubResource("StandardMaterial3D_0qdas")
-
-[node name="CSGBox3D2" type="CSGBox3D" parent="hall of fame/HOF door" unique_id=1959620393]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.9022975, 1.0679626, 0.23773193)
-size = Vector3(0.124938965, 3.1359253, 0.11193848)
-material = SubResource("StandardMaterial3D_0qdas")
-
-[node name="CSGBox3D3" type="CSGBox3D" parent="hall of fame/HOF door" unique_id=804081068]
-transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0.23340368, 2.5857744, 0.23773193)
-size = Vector3(0.124938965, 1.2303162, 0.11193848)
-material = SubResource("StandardMaterial3D_0qdas")
-
-[node name="CSGBox3D4" type="CSGBox3D" parent="hall of fame/HOF door" unique_id=607990652]
-transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0.23340368, -0.42070198, 0.23773193)
-size = Vector3(0.124938965, 1.2303162, 0.11193848)
-material = SubResource("StandardMaterial3D_0qdas")
-
-[node name="glass" type="MeshInstance3D" parent="hall of fame/HOF door" unique_id=443415823]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0.24938297, 1.1000023, 0.25370896)
-mesh = SubResource("PlaneMesh_uanl7")
-
-[node name="glass2" type="MeshInstance3D" parent="hall of fame/HOF door" unique_id=1066327301]
-transform = Transform3D(-1, -8.742278e-08, 3.821371e-15, 0, -4.371139e-08, -1, 8.742278e-08, -1, 4.371139e-08, 0.24938297, 1.1000023, 0.21675515)
-mesh = SubResource("PlaneMesh_uanl7")
-
-[node name="handle" type="Node3D" parent="hall of fame/HOF door" unique_id=1269444987]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.79551363, 1.0649424, 0.23539138)
-
-[node name="CSGBox3D5" type="CSGBox3D" parent="hall of fame/HOF door/handle" unique_id=1068028284]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.07112205)
-size = Vector3(0.22705078, 0.03125, 0.034240723)
-material = SubResource("StandardMaterial3D_vg5or")
-
-[node name="CSGBox3D6" type="CSGBox3D" parent="hall of fame/HOF door/handle" unique_id=1008244188]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.07731223)
-size = Vector3(0.22705078, 0.03125, 0.034240723)
-material = SubResource("StandardMaterial3D_vg5or")
-
-[node name="StaticBody3D" type="StaticBody3D" parent="hall of fame/HOF door" unique_id=1225851016]
-collision_layer = 2
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="hall of fame/HOF door/StaticBody3D" unique_id=967562618]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.21142578, 1.0739746, 0.22299194)
-shape = SubResource("BoxShape3D_uanl7")
-
-[node name="Sprite3D" type="Sprite3D" parent="hall of fame/HOF door" unique_id=79009333]
-transform = Transform3D(0.22, 0, 0, 0, 0.22, 0, 0, 0, 0.22, 0.2280674, 1.8432512, 0.2337941)
-texture_filter = 0
-texture = ExtResource("162_t2jyq")
-
 [node name="HallOfFameGallery" type="Node3D" parent="hall of fame" unique_id=2051154870]
 script = ExtResource("202_hof")
 rail_margin = 3.0
 
 [node name="Wall1_West" type="Node3D" parent="hall of fame" unique_id=1780954122]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5426779, 1.7315063, -47.13294)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5667982, 1.7315063, -47.13294)
 
 [node name="Wall1_West_Start" type="Node3D" parent="hall of fame/Wall1_West" unique_id=1819329037 groups=["hall_of_fame_rail"]]
 transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 0, 0, -53.412525)
 
 [node name="Wall1_West_End" type="Node3D" parent="hall of fame/Wall1_West" unique_id=347377581 groups=["hall_of_fame_rail"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 49.41252)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 55.488094)
 
 [node name="Wall2_East" type="Node3D" parent="hall of fame" unique_id=616498957]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.3252716, 1.7315063, -47.13013)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.357058, 1.7315063, -47.13013)
 
 [node name="Wall2_East_Start" type="Node3D" parent="hall of fame/Wall2_East" unique_id=1975061140 groups=["hall_of_fame_rail"]]
 transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 0, 0, -45.409718)
 
 [node name="Wall2_East_End" type="Node3D" parent="hall of fame/Wall2_East" unique_id=1356350392 groups=["hall_of_fame_rail"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 51.409714)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 56.77034)
 
 [node name="Wall3_South" type="Node3D" parent="hall of fame" unique_id=673361241]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.8558989, 1.7315063, -103.544624)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.8558989, 1.7315063, -104.437004)
 
 [node name="Wall3_South_Start" type="Node3D" parent="hall of fame/Wall3_South" unique_id=1777589566 groups=["hall_of_fame_rail"]]
 transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 5.5, 0, 0)
@@ -3547,13 +3621,35 @@ transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 5.5, 0, 0)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 49.5, 0, 0)
 
 [node name="Wall4_South" type="Node3D" parent="hall of fame" unique_id=500627656]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.855899, 1.7315063, -94.544624)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.855899, 1.7315063, -94.35611)
 
 [node name="Wall4_South_Start" type="Node3D" parent="hall of fame/Wall4_South" unique_id=2086165884 groups=["hall_of_fame_rail"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0, 0)
 
 [node name="Wall4_South_End" type="Node3D" parent="hall of fame/Wall4_South" unique_id=1299613571 groups=["hall_of_fame_rail"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 39.5, 0, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="hall of fame" unique_id=1116988907]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.842351, 6.48585, -46.98182)
+mesh = SubResource("PlaneMesh_se2tq")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="hall of fame/MeshInstance3D" unique_id=221300198]
+collision_layer = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="hall of fame/MeshInstance3D/StaticBody3D" unique_id=568369057]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.028686523, -0.17178392, -0.0627594)
+shape = SubResource("BoxShape3D_se2tq")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="hall of fame" unique_id=1649800279]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 25.84235, 6.48585, -99.98182)
+mesh = SubResource("PlaneMesh_edbjg")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="hall of fame/MeshInstance3D2" unique_id=1289364317]
+collision_layer = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="hall of fame/MeshInstance3D2/StaticBody3D" unique_id=296528838]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.028686523, -0.17178392, -0.0627594)
+shape = SubResource("BoxShape3D_se2tq")
 
 [editable path="Spotlight1"]
 [editable path="Spotlight2"]
