@@ -3592,6 +3592,7 @@ material = ExtResource("49_yhtv1")
 [node name="HallOfFameGallery" type="Node3D" parent="hall of fame" unique_id=2051154870]
 script = ExtResource("202_hof")
 rail_margin = 3.0
+show_labels = false
 
 [node name="Wall1_West" type="Node3D" parent="hall of fame" unique_id=1780954122]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5667982, 1.7315063, -47.13294)

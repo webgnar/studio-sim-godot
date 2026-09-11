@@ -46,9 +46,11 @@ const GROUP_SPAWNED := "hall_of_fame_painting"
 @export var default_canvas_size: Vector2 = Vector2(3, 3)
 
 ## Label3D shown under each painting with title / artist / statement.
+@export var show_labels: bool = true ## off = no label at all
 @export var label_font_size: int = 32
 @export var label_forward_offset: float = 0.05 ## how far off the wall, along the painting's normal
 @export var label_drop: float = 0.3 ## extra gap below the painting's own bottom edge
+@export var show_artist_info: bool = false ## off = title only; on = title + artist + statement
 @export var label_max_statement_chars: int = 160
 
 var _current_rail: int = 0
@@ -304,6 +306,9 @@ func _finalize_painting(instance: Node, entry: Dictionary, placement: Dictionary
 	instance.global_transform = _build_standing_transform(placement["position"], placement["wall_dir"], placement["facing"])
 	_disable_backface_culling(instance)
 
+	if not show_labels:
+		return
+
 	var title := _string_or(entry, "title", "Untitled")
 	var artist := _string_or(entry, "artistName", "Unknown Artist")
 	var statement := _string_or(entry, "artistStatement", "")
@@ -344,6 +349,9 @@ func _disable_backface_culling(node: Node) -> void:
 
 func _build_label_text(title: String, artist: String, statement: String) -> String:
 	var text := title
+	if not show_artist_info:
+		return text
+
 	text += "\nby " + artist
 
 	if not statement.is_empty():
