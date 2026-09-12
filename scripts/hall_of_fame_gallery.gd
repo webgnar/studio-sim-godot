@@ -4,8 +4,9 @@ class_name HallOfFameGallery
 ##
 ## Build-time only: no runtime network calls. Run the website's
 ## `scripts/download-hall-of-fame.mjs`, copy the resulting `hall-of-fame/` folder into this
-## project as `res://hall_of_fame/`, reopen/focus the editor so the .glb files import, then
-## attach this script to an empty Node3D wherever the gallery should live.
+## project as `res://hall_of_fame/` (only `manifest.json` + `.png` files matter now - see
+## _load_painting_instance), then attach this script to an empty Node3D wherever the gallery
+## should live.
 ##
 ## LAYOUT: paintings are auto-flowed along "rails" instead of one marker per painting (the
 ## manifest can have dozens of mixed square/landscape paintings and keeps growing every re-sync,
@@ -14,15 +15,24 @@ class_name HallOfFameGallery
 ## height. The Start marker's rotation defines which way paintings on that rail face: its local Z
 ## axis (blue arrow in the editor gizmo) should point away from the wall, into the room — only
 ## rotate it around the vertical axis, don't tilt it. Rails are visited in name order (natural
-## sort, so "Wall2" comes before "Wall10"); each painting's real width (read from its own mesh, so
-## square and landscape both just work) is packed along the current rail with `rail_margin`
-## between paintings, wrapping to a higher row (up to `max_rows_per_rail`) when a rail fills, then
-## moving to the next rail. Anything left over after every rail/row combo is full falls back to a
-## flat grid so nothing is silently dropped.
+## sort, so "Wall2" comes before "Wall10"); each painting's real width (a fixed constant per
+## format - square vs landscape is detected from its own PNG's pixel dimensions) is packed along
+## the current rail with `rail_margin` between paintings, wrapping to a higher row (up to
+## `max_rows_per_rail`) when a rail fills, then moving to the next rail. Anything left over after
+## every rail/row combo is full falls back to a flat grid so nothing is silently dropped.
 
 const HALL_OF_FAME_DIR := "res://hall_of_fame/"
 const MANIFEST_PATH := HALL_OF_FAME_DIR + "manifest.json"
 const GROUP_SPAWNED := "hall_of_fame_painting"
+
+## Shared display meshes - every painting is always one of exactly two sizes (PaintingExporter.gd
+## only ever exports 3x3 or 5x3 canvases), so one scene per format is reused for every painting
+## instead of importing a unique .glb per painting. Texture is applied at runtime (see
+## _load_painting_instance) instead of being baked in.
+const _SQUARE_SCENE: PackedScene = preload("res://scenes/HallOfFameDisplayPainting.tscn")
+const _LANDSCAPE_SCENE: PackedScene = preload("res://scenes/HallOfFameDisplayPainting5x3.tscn")
+const SQUARE_CANVAS_SIZE := Vector2(3, 3)
+const LANDSCAPE_CANVAS_SIZE := Vector2(5, 3)
 
 ## Group shared by every rail's Start/End marker pair.
 @export var rail_group: String = "hall_of_fame_rail"
@@ -227,49 +237,57 @@ func _grid_position(index: int) -> Vector3:
 
 # --- PAINTING INSTANCING ---
 
+## Loads the painting's PNG once, uses its own pixel dimensions to pick the square or landscape
+## shared display scene (matches the convention already established in
+## PaintingExporter.export_painting_png: square canvases save out exactly square, landscape ones
+## save out wider than tall), instances that scene, and applies the PNG as the Canvas material -
+## no per-painting .glb needed since every painting is always one of exactly two shapes.
 func _load_painting_instance(entry: Dictionary) -> Node:
-	var glb_file := _string_or(entry, "glb", "")
-	var painting_id := _string_or(entry, "id", glb_file.get_basename())
+	var png_file := _string_or(entry, "png", "")
+	var painting_id := _string_or(entry, "id", png_file.get_basename())
 
-	if glb_file.is_empty():
-		push_warning("HallOfFameGallery: manifest entry '%s' has no glb file, skipping" % painting_id)
+	if png_file.is_empty():
+		push_warning("HallOfFameGallery: manifest entry '%s' has no png file, skipping" % painting_id)
 		return null
 
-	var glb_path := HALL_OF_FAME_DIR + glb_file
-	if not ResourceLoader.exists(glb_path):
-		push_warning("HallOfFameGallery: %s not found - copy hall-of-fame/ into res://hall_of_fame/ and reopen the editor so it imports" % glb_path)
+	var png_path := HALL_OF_FAME_DIR + png_file
+	if not FileAccess.file_exists(png_path):
+		push_warning("HallOfFameGallery: %s not found - copy hall-of-fame/ into res://hall_of_fame/" % png_path)
 		return null
 
-	var packed := load(glb_path)
-	if not (packed is PackedScene):
-		push_warning("HallOfFameGallery: %s did not import as a PackedScene, skipping" % glb_path)
+	var image := Image.new()
+	var err := image.load(png_path)
+	if err != OK:
+		push_warning("HallOfFameGallery: failed to load %s (%s), skipping" % [png_path, err])
 		return null
 
-	return (packed as PackedScene).instantiate()
+	var is_landscape := image.get_width() > image.get_height()
+	var scene := _LANDSCAPE_SCENE if is_landscape else _SQUARE_SCENE
+	var instance := scene.instantiate()
 
-
-## Reads the painting's real on-canvas size from its own mesh (the "Canvas" child that
-## PaintingExporter.gd bakes into every exported .glb) so square vs. landscape just works without
-## the manifest needing to say which is which.
-func _measure_canvas_size(instance: Node) -> Vector2:
 	var canvas := instance.get_node_or_null("Canvas") as MeshInstance3D
 	if canvas == null:
-		canvas = _find_first_plane_mesh(instance)
-	if canvas == null or canvas.mesh == null:
-		return default_canvas_size
+		push_warning("HallOfFameGallery: shared display scene has no 'Canvas' child, skipping %s" % painting_id)
+		instance.queue_free()
+		return null
 
-	var aabb := canvas.mesh.get_aabb()
-	return Vector2(aabb.size.x * canvas.scale.x, aabb.size.z * canvas.scale.z)
+	# Fresh StandardMaterial3D per instance (never mutate a shared one), matching the same
+	# recipe WorldStateManager._load_painting already uses to restore saved paintings from disk.
+	var material := StandardMaterial3D.new()
+	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	material.albedo_texture = ImageTexture.create_from_image(image)
+	material.cull_mode = BaseMaterial3D.CULL_DISABLED
+	canvas.set_surface_override_material(0, material)
+
+	instance.set_meta("hof_canvas_size", LANDSCAPE_CANVAS_SIZE if is_landscape else SQUARE_CANVAS_SIZE)
+	return instance
 
 
-func _find_first_plane_mesh(node: Node) -> MeshInstance3D:
-	for child in node.get_children():
-		if child is MeshInstance3D and child.mesh is PlaneMesh:
-			return child
-		var found := _find_first_plane_mesh(child)
-		if found:
-			return found
-	return null
+## Size is a fixed constant per format now (set as instance metadata in _load_painting_instance)
+## rather than measured from mesh geometry, since every painting is always exactly 3x3 or 5x3.
+func _measure_canvas_size(instance: Node) -> Vector2:
+	return instance.get_meta("hof_canvas_size", default_canvas_size)
 
 
 ## Canvas meshes import flat (PlaneMesh default: normal +Y, "size.y" along local Z) since that's

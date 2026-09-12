@@ -1,0 +1,15 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" uid="uid://13s1cg3g8erj" path="res://models/paintings/stretcher5by3.glb" id="1_stretcher5x3"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_hof_5x3"]
+size = Vector2(5, 3)
+
+[node name="HallOfFameDisplayPainting5x3" type="Node3D"]
+
+[node name="Canvas" type="MeshInstance3D" parent="."]
+transform = Transform3D(1.01, 0, 0, 0, 1.01, 0, 0, 0, 1.01, 0, 0, 0)
+mesh = SubResource("PlaneMesh_hof_5x3")
+
+[node name="stretcher" parent="." instance=ExtResource("1_stretcher5x3")]
+transform = Transform3D(0.048, 0, 0, 0, -2.0981465e-09, -0.045, 0, 0.048, -1.9670126e-09, 0, -0.11265105, 0)

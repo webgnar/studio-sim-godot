@@ -1174,7 +1174,7 @@ size = Vector3(4.8884277, 0.6564331, 115.294525)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_edbjg"]
 material = SubResource("StandardMaterial3D_7echp")
-size = Vector2(4.53, 62.38)
+size = Vector2(4.53, 54.91)
 
 [node name="World" type="Node3D" unique_id=81477]
 script = ExtResource("1_qaasp")
@@ -3535,8 +3535,8 @@ size = Vector3(0.4477539, 5.942993, 48.5614)
 material = ExtResource("5_71j4m")
 
 [node name="wall5" type="CSGBox3D" parent="hall of fame" unique_id=429801877]
-transform = Transform3D(-0.62854594, 0.7777725, 0, -0.7777725, -0.62854594, 0, 0, 0, 1, 5.4144144, 5.5332127, -44.002567)
-size = Vector3(0.4477539, 3.3196602, 109.5643)
+transform = Transform3D(-0.62854594, 0.7777725, 0, -0.7777725, -0.62854594, 0, 0, 0, 1, 5.4144144, 5.5332127, -43.182293)
+size = Vector3(0.4477539, 3.3196602, 107.92375)
 material = ExtResource("1_4mrxx")
 
 [node name="wall6" type="CSGBox3D" parent="hall of fame" unique_id=674932891]
@@ -3550,8 +3550,8 @@ size = Vector3(0.4477539, 3.4471016, 58)
 material = ExtResource("1_4mrxx")
 
 [node name="wall12" type="CSGBox3D" parent="hall of fame" unique_id=1328730055]
-transform = Transform3D(-2.9613355e-08, -3.2151743e-08, -1, -0.8447636, -0.5351397, 4.222196e-08, -0.5351397, 0.8447636, -1.1313341e-08, 26.034275, 5.917926, -96.71163)
-size = Vector3(0.4477539, 5, 58)
+transform = Transform3D(-2.9613355e-08, -3.2151743e-08, -1, -0.8447636, -0.5351397, 4.222196e-08, -0.5351397, 0.8447636, -1.1313341e-08, 29.788715, 5.917926, -96.19642)
+size = Vector3(0.4477539, 5, 50.49112)
 material = ExtResource("1_4mrxx")
 
 [node name="wall4" type="CSGBox3D" parent="hall of fame" unique_id=1733981740]
@@ -3560,17 +3560,17 @@ size = Vector3(0.4477539, 5.942993, 10)
 material = ExtResource("5_71j4m")
 
 [node name="CSGBox3D" type="CSGBox3D" parent="hall of fame/wall4" unique_id=3038502]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8936157, 0.10391235)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.8356743, 0.10391235)
 operation = 2
 size = Vector3(1, 2.4278564, 6.6552124)
 
 [node name="wall10" type="CSGBox3D" parent="hall of fame" unique_id=1537670221]
-transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 54.8559, 1.7315063, -99.3485)
-size = Vector3(0.4477539, 5.942993, 11)
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 54.8559, 2.6944275, -99.3485)
+size = Vector3(0.4477539, 7.8688354, 11)
 material = ExtResource("5_71j4m")
 
 [node name="CSGBox3D" type="CSGBox3D" parent="hall of fame/wall10" unique_id=488363475]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8936157, 0.10391235)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.2628775, 0.10391235)
 operation = 2
 size = Vector3(1, 2.4278564, 6.6552124)
 
@@ -3581,12 +3581,12 @@ material = ExtResource("5_71j4m")
 
 [node name="wall3" type="CSGBox3D" parent="hall of fame" unique_id=170066137]
 transform = Transform3D(1.1924881e-08, -1, 0, 1, 1.1924881e-08, 0, 0, 0, 1, 1.8822021, -1.2684937, -47.11646)
-size = Vector3(0.4477539, 9.887604, 115.79208)
+size = Vector3(0.238, 9.428, 115.792)
 material = ExtResource("49_yhtv1")
 
 [node name="wall9" type="CSGBox3D" parent="hall of fame" unique_id=1064293671]
-transform = Transform3D(-5.2125306e-16, 4.371139e-08, 1, 1, 1.1924881e-08, 0, -1.1924881e-08, 1, -4.371139e-08, 30.778244, -1.2684937, -99.560265)
-size = Vector3(0.4477539, 11, 48)
+transform = Transform3D(-5.2125306e-16, 4.371139e-08, 1, 1, 1.1924881e-08, 0, -1.1924881e-08, 1, -4.371139e-08, 30.672531, -1.2684937, -99.560265)
+size = Vector3(0.238, 10.94, 48.211)
 material = ExtResource("49_yhtv1")
 
 [node name="HallOfFameGallery" type="Node3D" parent="hall of fame" unique_id=2051154870]
@@ -3642,7 +3642,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.028686523, -0.17178392, -0.
 shape = SubResource("BoxShape3D_se2tq")
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="hall of fame" unique_id=1649800279]
-transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 25.84235, 6.48585, -99.98182)
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 27.715313, 6.48585, -99.98182)
 mesh = SubResource("PlaneMesh_edbjg")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="hall of fame/MeshInstance3D2" unique_id=1289364317]
