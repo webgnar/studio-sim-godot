@@ -537,17 +537,17 @@ albedo_color = Color(1.0734373, 1.0734373, 0.15063755, 1)
 albedo_texture = ExtResource("82_mu18u")
 texture_filter = 0
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_3fb5j"]
+[sub_resource type="PlaneMesh" id="PlaneMesh_iqfx1"]
 resource_local_to_scene = true
 size = Vector2(2.5, 3)
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_sjp3e"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_x3v50"]
 resource_name = "_albedo"
 viewport_path = NodePath("../MirrorNew/SubViewport")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hg3bl"]
 resource_local_to_scene = true
-albedo_texture = SubResource("ViewportTexture_sjp3e")
+albedo_texture = SubResource("ViewportTexture_x3v50")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_1v02h"]
 size = Vector2(2.5, 3)
@@ -1181,7 +1181,7 @@ albedo_color = Color(0.45490196, 1, 1, 1)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_se2tq"]
 material = SubResource("StandardMaterial3D_7echp")
-size = Vector2(5.69, 114.62)
+size = Vector2(5.69, 112.28)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_se2tq"]
 size = Vector3(4.8884277, 0.6564331, 115.294525)
@@ -2436,7 +2436,7 @@ surface_material_override/0 = SubResource("StandardMaterial3D_7b7y8")
 
 [node name="mirror" parent="." unique_id=1626491013 groups=["shop_prop"] instance=ExtResource("39_qaasp")]
 transform = Transform3D(-4.7902194e-08, -0.99488777, 0.10098683, -3.9073655e-08, 0.10098683, 0.99488777, -1, 4.3711392e-08, -4.3711385e-08, 2.8, 1.497, 5.232)
-mesh = SubResource("PlaneMesh_3fb5j")
+mesh = SubResource("PlaneMesh_iqfx1")
 surface_material_override/0 = SubResource("StandardMaterial3D_hg3bl")
 show_debug_logs = false
 metadata/shop_item_id = "mirror"
@@ -3305,7 +3305,7 @@ shape = SubResource("BoxShape3D_vevsf")
 [node name="Hidden Door" type="Node3D" parent="gallery" unique_id=1661530778]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.9378147, -9.185848, 24.707813)
 
-[node name="CSGBox3D" type="CSGBox3D" parent="gallery/Hidden Door" unique_id=67182411]
+[node name="CSGBox3D" type="CSGBox3D" parent="gallery/Hidden Door" unique_id=67182411 groups=["gallery_expansion_gate"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.15899658, 1.5500488, -0.4407959)
 use_collision = true
 collision_layer = 2
@@ -3554,8 +3554,8 @@ size = Vector3(0.4477539, 3.3196602, 107.92375)
 material = ExtResource("1_4mrxx")
 
 [node name="wall6" type="CSGBox3D" parent="hall of fame" unique_id=674932891]
-transform = Transform3D(0.6774746, 0.7355462, 0, -0.7355462, 0.6774746, 0, 0, 0, 1, -1.8010235, 5.5024166, -47.055714)
-size = Vector3(0.4477539, 3.4471016, 115.67059)
+transform = Transform3D(0.6774746, 0.7355462, 0, -0.7355462, 0.6774746, 0, 0, 0, 1, -1.8010235, 5.5024166, -46.83533)
+size = Vector3(0.4477539, 3.4471016, 115.22983)
 material = ExtResource("1_4mrxx")
 
 [node name="wall11" type="CSGBox3D" parent="hall of fame" unique_id=189860507]
@@ -3645,7 +3645,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0, 0)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 39.5, 0, 0)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="hall of fame" unique_id=1116988907]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.842351, 6.48585, -46.98182)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.842351, 6.48585, -45.89172)
 mesh = SubResource("PlaneMesh_se2tq")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="hall of fame/MeshInstance3D" unique_id=221300198]

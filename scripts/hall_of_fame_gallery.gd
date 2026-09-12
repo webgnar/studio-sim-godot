@@ -242,6 +242,11 @@ func _grid_position(index: int) -> Vector3:
 ## PaintingExporter.export_painting_png: square canvases save out exactly square, landscape ones
 ## save out wider than tall), instances that scene, and applies the PNG as the Canvas material -
 ## no per-painting .glb needed since every painting is always one of exactly two shapes.
+## NOTE: this file lives under res:// with its own .import - always load it through the normal
+## resource system (ResourceLoader/load()), never via FileAccess/Image.load() on the raw path.
+## Exported builds ship the compiled texture, not the original file bytes at that literal path -
+## reading it as a raw file only works in the editor and silently finds nothing once exported
+## (confirmed: this is exactly what caused every painting to fail to spawn on a real Steam build).
 func _load_painting_instance(entry: Dictionary) -> Node:
 	var png_file := _string_or(entry, "png", "")
 	var painting_id := _string_or(entry, "id", png_file.get_basename())
@@ -251,17 +256,16 @@ func _load_painting_instance(entry: Dictionary) -> Node:
 		return null
 
 	var png_path := HALL_OF_FAME_DIR + png_file
-	if not FileAccess.file_exists(png_path):
+	if not ResourceLoader.exists(png_path):
 		push_warning("HallOfFameGallery: %s not found - copy hall-of-fame/ into res://hall_of_fame/" % png_path)
 		return null
 
-	var image := Image.new()
-	var err := image.load(png_path)
-	if err != OK:
-		push_warning("HallOfFameGallery: failed to load %s (%s), skipping" % [png_path, err])
+	var texture := load(png_path) as Texture2D
+	if texture == null:
+		push_warning("HallOfFameGallery: failed to load %s as a Texture2D, skipping" % png_path)
 		return null
 
-	var is_landscape := image.get_width() > image.get_height()
+	var is_landscape := texture.get_width() > texture.get_height()
 	var scene := _LANDSCAPE_SCENE if is_landscape else _SQUARE_SCENE
 	var instance := scene.instantiate()
 
@@ -271,12 +275,13 @@ func _load_painting_instance(entry: Dictionary) -> Node:
 		instance.queue_free()
 		return null
 
-	# Fresh StandardMaterial3D per instance (never mutate a shared one), matching the same
-	# recipe WorldStateManager._load_painting already uses to restore saved paintings from disk.
+	# Fresh StandardMaterial3D per instance (never mutate a shared one). The loaded texture is
+	# used directly - no need to decode into an Image and rebuild it, since load() already gives
+	# us a ready-to-use Texture2D that works the same in editor and export.
 	var material := StandardMaterial3D.new()
 	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-	material.albedo_texture = ImageTexture.create_from_image(image)
+	material.albedo_texture = texture
 	material.cull_mode = BaseMaterial3D.CULL_DISABLED
 	canvas.set_surface_override_material(0, material)
 

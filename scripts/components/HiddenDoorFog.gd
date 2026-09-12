@@ -17,6 +17,12 @@ const ACHIEVEMENT_ID := "ACH_MORE_GALLERY_SPACE"
 
 var interaction_text: String = "Traverse the White Light?"
 
+## Generic lock-state duck-typed by other systems (e.g. GalleryVisitor's
+## "gallery_expansion_gate" check) the same way they'd read a plain
+## DoorInteraction.is_locked export — true until the passage is dissolved.
+var is_locked: bool:
+	get: return not _dissolved
+
 var _mat: ShaderMaterial
 var _dissolved := false
 var _sound: AudioStreamPlayer3D

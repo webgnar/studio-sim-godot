@@ -45,7 +45,7 @@ transform = Transform3D(0.1, 0, 0, 0, 3.42, 0, 0, 0, 0.16, 0, -0.06940389, 0)
 visible = false
 shape = SubResource("ConvexPolygonShape3D_xm0wp")
 
-[node name="DoorInteraction" type="Node3D" parent="." unique_id=303881840 groups=["locking_door"]]
+[node name="DoorInteraction" type="Node3D" parent="." unique_id=303881840]
 script = ExtResource("2_uw3m6")
 drag_force = 400.0
 mouse_sensitivity = 0.01

@@ -16,9 +16,12 @@ enum State { IDLE, CHOOSING, WALKING, VIEWING }
 @export var think_interval_min: float = 2.0
 @export var think_interval_max: float = 5.0
 @export var gallery_floor_y: float = -5.0  ## gallery_attraction nodes above this Y are skipped (studio level)
-@export var new_room_min_z: float = 30.0  ## world Z of the "wall south" doorway (~32.66) minus some margin — anything past this is the expanded room
+@export var new_room_min_z: float = 33.2  ## world Z past the FAR face of the "wall south" doorway — anything past this is the expanded room. The wall centres on 32.66 and is 0.98 thick, so it spans 32.17..33.15; this has to sit past 33.15, not before it. At the old 30.0 ("doorway minus some margin") a 2.17m strip of ordinary gallery floor along the inside of the south wall counted as the expanded room, and any visitor standing in it routed itself to a doorway waypoint behind the still-solid wall
 
 const GRAVITY := 9.8
+
+const STUCK_CHECK_INTERVAL := 3.0  ## seconds of walking between progress checks
+const STUCK_MIN_PROGRESS := 0.5    ## metres that must be covered in that window
 
 const DIALOGUE_COOLDOWN = 60.0
 
@@ -162,6 +165,8 @@ var _last_attraction: Node3D = null
 var _route_queue: Array[Vector3] = []  ## waypoint(s) still to pass through before the real target; the real target is always the last entry
 var _view_timer: float = 0.0
 var _view_duration: float = 0.0
+var _stuck_timer: float = 0.0  ## how long we've been walking without covering ground
+var _stuck_check_pos: Vector3 = Vector3.ZERO
 var _is_thinking: bool = false
 var _think_cooldown: float = 0.0
 
@@ -595,6 +600,20 @@ func _update_walking(delta: float) -> void:
 
 	move_and_slide()
 
+	# Walking but not actually getting anywhere means the destination can't be
+	# reached — a target the navmesh thinks is walkable but geometry blocks, or
+	# a wedge against a prop. Without this the visitor pushes into it forever:
+	# navigation_finished never fires, and the distance fallback above is
+	# skipped while waypoints remain, so nothing ever re-picks.
+	_stuck_timer += delta
+	if _stuck_timer >= STUCK_CHECK_INTERVAL:
+		if global_position.distance_to(_stuck_check_pos) < STUCK_MIN_PROGRESS:
+			_route_queue.clear()
+			_choose_next_attraction()
+			return
+		_stuck_check_pos = global_position
+		_stuck_timer = 0.0
+
 
 func _update_viewing(delta: float) -> void:
 	velocity.x = 0.0
@@ -676,25 +695,43 @@ func _choose_next_attraction() -> void:
 	raw_target.z += sin(angle) * offset_radius
 	var nav_target := NavigationServer3D.map_get_closest_point(map, raw_target)
 
+	var gate_locked := _is_new_room_locked()
+
+	# The scatter offset above can nudge a target that sits near the south wall
+	# past the doorway plane. With the gate shut that would aim the visitor at
+	# a wall it can't pass, so fall back to the attraction's own spot.
+	if gate_locked and _is_new_room(nav_target):
+		nav_target = NavigationServer3D.map_get_closest_point(map, _last_attraction.global_position)
+
 	# Crossing between the original gallery and the expanded room means going
 	# through the "wall south" doorway. Rather than trust a straight Recast
 	# path through the narrow opening (which can cut the doorway corner
 	# awkwardly), always funnel through this room's own doorway waypoint
 	# first, then the destination room's waypoint, then the real target —
 	# same two-stop choke point every time, in either direction.
-	var start_in_new_room := _is_new_room(global_position)
-	var target_in_new_room := _is_new_room(nav_target)
-	if start_in_new_room != target_in_new_room:
-		var own_waypoint := _get_doorway_waypoint(start_in_new_room)
-		var dest_waypoint := _get_doorway_waypoint(target_in_new_room)
-		if own_waypoint:
-			_route_queue.append(own_waypoint.global_position)
-		if dest_waypoint:
-			_route_queue.append(dest_waypoint.global_position)
+	#
+	# Skipped entirely while the gate is locked. The expanded room's waypoint
+	# sits behind a solid wall, and the navmesh has the doorway baked open (the
+	# Hidden Door isn't bake source geometry), so the agent believes it's
+	# reachable, never arrives, and never fires navigation_finished — the
+	# visitor walks into the wall forever. Going direct also recovers a visitor
+	# that's somehow already on the far side of the classification line.
+	if not gate_locked:
+		var start_in_new_room := _is_new_room(global_position)
+		var target_in_new_room := _is_new_room(nav_target)
+		if start_in_new_room != target_in_new_room:
+			var own_waypoint := _get_doorway_waypoint(start_in_new_room)
+			var dest_waypoint := _get_doorway_waypoint(target_in_new_room)
+			if own_waypoint:
+				_route_queue.append(own_waypoint.global_position)
+			if dest_waypoint:
+				_route_queue.append(dest_waypoint.global_position)
 
 	_route_queue.append(nav_target)
 	_advance_route_queue()
 	_state = State.WALKING
+	_stuck_timer = 0.0
+	_stuck_check_pos = global_position
 	_play_animation("walk")
 
 
@@ -746,21 +783,25 @@ func _get_attraction_nodes() -> Array[Node3D]:
 			if is_instance_valid(body) and body not in result:
 				result.append(body)
 
-	# Never send visitors after anything past a locked doorway — the room
-	# beyond it (e.g. the studio, behind "wall south") isn't reachable yet,
-	# no matter which source above surfaced the candidate (a painting can be
+	# Never send visitors after anything past the Hidden Door — the expanded
+	# room beyond "wall south" isn't reachable until it's been traversed, no
+	# matter which source above surfaced the candidate (a painting can be
 	# SHIPPED and physically sitting back there from an earlier session even
-	# though the door's never actually been opened).
+	# though the passage itself is still a solid, undissolved wall).
 	if _is_new_room_locked():
 		result = result.filter(func(n: Node3D) -> bool: return not _is_new_room(n.global_position))
 
 	return result
 
 
-## True if any locking door gating the expanded room is still locked.
+## True if the gate to the expanded gallery room (the Hidden Door, tagged
+## "gallery_expansion_gate" — see HiddenDoorFog.gd) hasn't been traversed yet.
+## Node lookup + duck-typed `is_locked`, not a hardcoded HiddenDoorFog
+## reference, so any future gate for this room only needs to expose the same
+## property to participate.
 func _is_new_room_locked() -> bool:
-	for door in get_tree().get_nodes_in_group("locking_door"):
-		if is_instance_valid(door) and door.get("is_locked"):
+	for gate in get_tree().get_nodes_in_group("gallery_expansion_gate"):
+		if is_instance_valid(gate) and gate.get("is_locked"):
 			return true
 	return false
 
