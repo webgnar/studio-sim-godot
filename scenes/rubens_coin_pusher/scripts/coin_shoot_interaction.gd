@@ -31,16 +31,9 @@ func interact(_interactor) -> void:
 	var pos = spawn_point.global_position
 	pos += Vector3(randf_range(-0.02, 0.02), 0, 0)
 	var impulse = dir * 0.015 + Vector3(randf_range(-0.004, 0.004), 0, 0)
-	var coin := GameManager.spawn_coin(pos, impulse, PI / 2)
-	# CoinShootArea's own clickable hitbox physically overlaps CoinSpawnBox (both
-	# default to collision_layer/mask 1), so a freshly fired coin spawns embedded
-	# in that StaticBody3D's collision and gets stuck instead of flying out. This
-	# script is shared by 4 nodes (CoinShootArea + the 3 glass panels), so `self`
-	# isn't necessarily the overlapping one — look up CoinShootArea specifically
-	# (a sibling of coin_spawn_point) rather than assuming it's whichever panel
-	# was actually clicked. A collision exception stops the physical interaction
-	# without touching collision_layer, which would also break raycast detection.
-	if coin:
-		var shoot_area := spawn_point.get_parent().get_node_or_null("CoinShootArea")
-		if shoot_area:
-			shoot_area.add_collision_exception_with(coin)
+	# CoinShootArea's clickable hitbox is a big box inside the playfield, so it
+	# sits on collision layer 4 (Interactables) only: the player's interaction
+	# raycast (mask 15) still hits it, but coins/balls (mask 1) pass through.
+	# On layer 1 it blocked every ball from reaching the front edge — they piled
+	# up behind it forever and the growing pile of physics bodies tanked FPS.
+	GameManager.spawn_coin(pos, impulse, PI / 2)

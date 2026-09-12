@@ -582,6 +582,7 @@ libraries/ = SubResource("AnimationLibrary_qbh0s")
 
 [node name="CoinShootArea" type="StaticBody3D" parent="." unique_id=1469301002 groups=["interactable"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.3, -0.3)
+collision_layer = 8
 script = ExtResource("10")
 
 [node name="Col" type="CollisionShape3D" parent="CoinShootArea" unique_id=618655043]

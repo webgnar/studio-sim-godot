@@ -10,6 +10,7 @@ class_name HOFDoor
 signal unlocked
 
 const UNLOCK_FLAG: String = "hof_door_unlocked"
+const ACHIEVEMENT_ID: String = "ACH_HALL_OF_FAME"
 
 @export var basketball_hoop: BasketballHoop
 @export var animation_player: AnimationPlayer
@@ -64,6 +65,7 @@ func open_door() -> void:
 		return
 	_is_open = true
 	print("[HOFDoor] Door opened")
+	SteamManager.unlock_achievement(ACHIEVEMENT_ID)
 	if animation_player and animation_player.has_animation(open_animation_name):
 		animation_player.play(open_animation_name)
 	else:
@@ -71,6 +73,9 @@ func open_door() -> void:
 
 func _snap_open() -> void:
 	_is_open = true
+	# Retroactive — covers saves where the door was already unlocked before this
+	# achievement existed. unlock_achievement() is idempotent.
+	SteamManager.unlock_achievement(ACHIEVEMENT_ID)
 	if animation_player and animation_player.has_animation(open_animation_name):
 		animation_player.play(open_animation_name)
 		animation_player.seek(animation_player.current_animation_length, true)
