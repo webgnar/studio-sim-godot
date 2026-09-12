@@ -234,6 +234,20 @@ size = Vector3(5.7043457, 14.934555, 5.9116364)
 [sub_resource type="BoxShape3D" id="BoxShape3D_ce70q"]
 size = Vector3(1.644928, 1, 0.17285156)
 
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_ckufv"]
+load_path = "res://.godot/imported/floorboards.png-4b94c2fb8fbebc24a9e7bbccf64e4f1f.s3tc.ctex"
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_x3v50"]
+albedo_texture = SubResource("CompressedTexture2D_ckufv")
+normal_enabled = true
+normal_scale = 0.24
+normal_texture = ExtResource("23_swu3i")
+ao_enabled = true
+ao_light_affect = 0.08
+ao_texture = ExtResource("22_ygn2i")
+uv1_scale = Vector3(2.683, 2.031, 3.131)
+uv1_offset = Vector3(0, -1, 0)
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gom0u"]
 albedo_texture = ExtResource("101_mu18u")
 metallic = 1.0
@@ -523,17 +537,17 @@ albedo_color = Color(1.0734373, 1.0734373, 0.15063755, 1)
 albedo_texture = ExtResource("82_mu18u")
 texture_filter = 0
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_iqfx1"]
+[sub_resource type="PlaneMesh" id="PlaneMesh_3fb5j"]
 resource_local_to_scene = true
 size = Vector2(2.5, 3)
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_x3v50"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_sjp3e"]
 resource_name = "_albedo"
 viewport_path = NodePath("../MirrorNew/SubViewport")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hg3bl"]
 resource_local_to_scene = true
-albedo_texture = SubResource("ViewportTexture_x3v50")
+albedo_texture = SubResource("ViewportTexture_sjp3e")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_1v02h"]
 size = Vector2(2.5, 3)
@@ -1614,7 +1628,7 @@ transform = Transform3D(-9.797052e-07, 0, -49.782604, 0, 0.00801068, 0, 0.455388
 use_collision = true
 collision_mask = 0
 size = Vector3(0.795, 12.27, 0.348)
-material = ExtResource("49_yhtv1")
+material = SubResource("StandardMaterial3D_x3v50")
 
 [node name="wall" type="CSGBox3D" parent="studio" unique_id=601196792]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.173913, -0.099999994, -0.010650635)
@@ -2422,7 +2436,7 @@ surface_material_override/0 = SubResource("StandardMaterial3D_7b7y8")
 
 [node name="mirror" parent="." unique_id=1626491013 groups=["shop_prop"] instance=ExtResource("39_qaasp")]
 transform = Transform3D(-4.7902194e-08, -0.99488777, 0.10098683, -3.9073655e-08, 0.10098683, 0.99488777, -1, 4.3711392e-08, -4.3711385e-08, 2.8, 1.497, 5.232)
-mesh = SubResource("PlaneMesh_iqfx1")
+mesh = SubResource("PlaneMesh_3fb5j")
 surface_material_override/0 = SubResource("StandardMaterial3D_hg3bl")
 show_debug_logs = false
 metadata/shop_item_id = "mirror"
