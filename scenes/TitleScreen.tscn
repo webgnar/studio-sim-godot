@@ -63,6 +63,8 @@ shader_parameter/cover_scale = 0.10000000149012
 shader_parameter/cover_modulate = Color(0.2901961, 0.2784314, 1, 1)
 shader_parameter/ground_bottom_color = Color(0.040938452, 0.02977152, 0.019598706, 1)
 shader_parameter/ground_horizon_color = Color(0.81732345, 0.50142115, 0.794899, 1)
+shader_parameter/night_blend = 0.0
+shader_parameter/star_density = 0.985
 
 [sub_resource type="Sky" id="Sky_rwgxs"]
 sky_material = SubResource("ShaderMaterial_sky")
@@ -794,7 +796,7 @@ transform = Transform3D(-0.06961743, 0, 0.0073084896, 0, 0.07000696, 0, -0.00730
 shape = SubResource("BoxShape3D_u3ctg")
 
 [node name="humanrig" parent="." unique_id=400842112 instance=ExtResource("38_3yl86")]
-transform = Transform3D(-0.29999998, 0, 2.6226832e-08, 0, 0.29999998, 0, -2.6226832e-08, 0, -0.29999998, 0, 0, 7.5253544)
+transform = Transform3D(-0.29999998, 0, 2.6226832e-08, 0, 0.29999998, 0, -2.6226832e-08, 0, -0.29999998, -0.042350292, 0.028307319, 7.647989)
 script = ExtResource("40_5h1vy")
 idle_duration = 2.0
 

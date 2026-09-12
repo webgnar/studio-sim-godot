@@ -1,6 +1,10 @@
-[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://624cv0t17tb6"]
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://624cv0t17tb6"]
 
 [ext_resource type="Texture2D" uid="uid://bw5ieg2l0umui" path="res://resources/missions/zack8_ref.png" id="1_u46yh"]
+[ext_resource type="Texture2D" uid="uid://chqusbpsw1nrv" path="res://sprites/normals/paintings/zack8_ref_normal.png" id="2_iew1b"]
 
 [resource]
 albedo_texture = ExtResource("1_u46yh")
+normal_enabled = true
+normal_scale = 4.25
+normal_texture = ExtResource("2_iew1b")
