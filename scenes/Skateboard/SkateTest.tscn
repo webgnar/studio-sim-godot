@@ -1,0 +1,64 @@
+[gd_scene format=3 uid="uid://c125dquo8046o"]
+
+[ext_resource type="PackedScene" uid="uid://cugtdfp4dt78m" path="res://scenes/player.tscn" id="1_player"]
+[ext_resource type="PackedScene" path="res://scenes/objects/SkateboardAnimated.tscn" id="2_skateboard"]
+[ext_resource type="Script" uid="uid://ci5212xcdsorl" path="res://scripts/SkateboardCamera.gd" id="4_skate_camera"]
+
+[sub_resource type="Environment" id="Environment_skate"]
+background_mode = 2
+ambient_light_source = 3
+ambient_light_color = Color(1, 1, 1, 1)
+ambient_light_energy = 0.6
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ground"]
+size = Vector3(6, 1, 44)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ground"]
+size = Vector3(6, 1, 44)
+
+[node name="SkateTest" type="Node3D" unique_id=1857036223]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1632822106]
+environment = SubResource("Environment_skate")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=2120250369]
+transform = Transform3D(0.8137977, -0.4545195, 0.3612514, 0, 0.6225147, 0.7826171, -0.5811541, -0.6367823, 0.5064172, 0, 5, -20)
+shadow_enabled = true
+
+[node name="Ground" type="StaticBody3D" parent="." unique_id=727538592]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, -20)
+collision_layer = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Ground" unique_id=1361017253]
+shape = SubResource("BoxShape3D_ground")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Ground" unique_id=1464689819]
+mesh = SubResource("BoxMesh_ground")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="Ground" unique_id=97912931]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -12.124687, 0)
+mesh = SubResource("BoxMesh_ground")
+
+[node name="Ground2" type="StaticBody3D" parent="." unique_id=1330795602]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -5.5040445, 0.6175499)
+collision_layer = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Ground2" unique_id=1949920572]
+shape = SubResource("BoxShape3D_ground")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Ground2" unique_id=1385276698]
+mesh = SubResource("BoxMesh_ground")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="Ground2" unique_id=1334792108]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -15.269721, 0)
+mesh = SubResource("BoxMesh_ground")
+
+[node name="Player" parent="." unique_id=1395847006 instance=ExtResource("1_player")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+
+[node name="SkateboardMount" parent="." unique_id=27803077 instance=ExtResource("2_skateboard")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, -5)
+
+[node name="SkateboardCameraRig" type="Camera3D" parent="." unique_id=1841869992 groups=["skate_camera"]]
+transform = Transform3D(0.7071068, 0, -0.7071068, 0, 1, 0, 0.7071068, 0, 0.7071068, 10, 2.5, -5)
+script = ExtResource("4_skate_camera")

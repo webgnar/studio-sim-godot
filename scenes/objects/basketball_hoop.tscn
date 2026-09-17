@@ -13,7 +13,7 @@ size = Vector3(1.9143066, 1, 2.3359985)
 size = Vector3(1, 21.88874, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_4vyy7"]
-size = Vector3(0.29833984, 3.2995605, 2.1118774)
+size = Vector3(0.29833984, 3.2923584, 2.1118774)
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_hoop"]
 height = 0.4
@@ -40,7 +40,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -6.5522194, -7.5301743)
 shape = SubResource("BoxShape3D_avwpq")
 
 [node name="rim wall" type="CollisionShape3D" parent="StaticBody3D" unique_id=2086740190]
-transform = Transform3D(0.86125684, 0, -0.5081699, 0, 1, 0, 0.5081699, 0, 0.86125684, -1.9362878, 1.4459739, 6.8173003)
+transform = Transform3D(0.7959642, -0.3819354, -0.46964508, 0.40372545, 0.9130228, -0.058266878, 0.45105085, -0.14322935, 0.8809306, -1.6077003, 1.449575, 6.976008)
 shape = SubResource("BoxShape3D_4vyy7")
 
 [node name="rim wall2" type="CollisionShape3D" parent="StaticBody3D" unique_id=1779796959]
@@ -48,19 +48,19 @@ transform = Transform3D(0.01642277, 0, -0.99986506, 0, 1, 0, 0.99986506, 0, 0.01
 shape = SubResource("BoxShape3D_4vyy7")
 
 [node name="rim wall3" type="CollisionShape3D" parent="StaticBody3D" unique_id=2108923444]
-transform = Transform3D(-0.87367034, 0, -0.48651832, 0, 1, 0, 0.48651832, 0, -0.87367034, 1.6732284, 1.4459739, 6.693176)
+transform = Transform3D(-0.77569896, 0.4397445, -0.45267648, 0.48448923, 0.8745823, 0.019384779, 0.40442735, -0.20428021, -0.89146405, 1.6243998, 1.4459739, 6.645262)
 shape = SubResource("BoxShape3D_4vyy7")
 
 [node name="rim wall4" type="CollisionShape3D" parent="StaticBody3D" unique_id=1635993847]
-transform = Transform3D(-0.8641079, 0, 0.50330657, 0, 1, 0, -0.50330657, 0, -0.8641079, 1.6630174, 1.4459739, 8.789322)
+transform = Transform3D(-0.80243266, 0.37101835, 0.46738333, 0.3859375, 0.9200344, -0.06774046, -0.45514175, 0.12602364, -0.88145566, 1.6785702, 1.4459739, 8.742693)
 shape = SubResource("BoxShape3D_4vyy7")
 
 [node name="rim wall5" type="CollisionShape3D" parent="StaticBody3D" unique_id=786491119]
-transform = Transform3D(-0.037655264, 0, 0.9992907, 0, 1, 0, -0.9992907, 0, -0.037655264, -0.16476929, 1.4459739, 9.79139)
+transform = Transform3D(-0.037655268, 0, 0.9992907, 0.3212102, 0.9469306, 0.012103841, -0.94625896, 0.3214382, -0.035656925, -0.16476929, 1.4459739, 9.577018)
 shape = SubResource("BoxShape3D_4vyy7")
 
 [node name="rim wall6" type="CollisionShape3D" parent="StaticBody3D" unique_id=2129545322]
-transform = Transform3D(0.83685017, 0, 0.5474317, 0, 1, 0, -0.5474317, 0, 0.83685017, -1.9231522, 1.4459739, 8.870757)
+transform = Transform3D(0.814691, -0.29605183, 0.49862966, 0.3674064, 0.9287768, -0.04884746, -0.44865426, 0.22299534, 0.8654373, -1.6858062, 1.4459739, 8.750428)
 shape = SubResource("BoxShape3D_4vyy7")
 
 [node name="HoopTrigger" type="Area3D" parent="." unique_id=392847165]

@@ -918,7 +918,7 @@ _data = {
 }
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_j7mh8"]
-size = Vector3(31.41216, 2, 16.23669)
+size = Vector3(89.73433, 2, 129.4826)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_c3c7d"]
 size = Vector3(71.74925, 2, 32.47933)
@@ -2757,7 +2757,7 @@ script = ExtResource("96_ufs10")
 spawn_position = Vector3(-0.947, 1.207, 12)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="DeathZone" unique_id=2059192584]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.00464, 0, -10.493185)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.156445, 0, -67.11614)
 shape = SubResource("BoxShape3D_j7mh8")
 
 [node name="CollisionShape3D2" type="CollisionShape3D" parent="DeathZone" unique_id=553582230]
@@ -3544,8 +3544,8 @@ size = Vector3(0.4477539, 5.942993, 48.5614)
 material = ExtResource("5_71j4m")
 
 [node name="wall8" type="CSGBox3D" parent="hall of fame" unique_id=1290407915]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 30.785267, 1.7315063, -94.04337)
-size = Vector3(0.4477539, 5.942993, 48.5614)
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 27.414204, 1.7315063, -94.04337)
+size = Vector3(0.4477539, 5.942993, 41.819275)
 material = ExtResource("5_71j4m")
 
 [node name="wall5" type="CSGBox3D" parent="hall of fame" unique_id=429801877]

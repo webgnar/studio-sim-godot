@@ -40,10 +40,20 @@ extends CharacterBody3D
 @export_group("Ladder Climbing")
 @export var ladder_jump_off_speed: float = 2.0  ## Push-away speed when letting go of a ladder
 
+@export_group("Skateboarding")
+@export var skate_accel: float = 6.0
+@export var skate_friction: float = 3.0
+@export var skate_brake: float = 12.0
+@export var skate_max_speed: float = 9.0
+@export var skate_ollie_impulse: float = 5.0
+
 # --- PRIVATE VARIABLES ---
 
 # We get a reference to the camera in _ready().
 var _camera: Camera3D
+
+# Attach point near the feet that the skateboard's visual model reparents to while riding.
+@onready var _skate_attach: Marker3D = get_node_or_null("SkateAttach")
 
 # Camera rotation smoothing variables
 var _target_rot: Vector2 = Vector2.ZERO  # Target rotation (pitch, yaw)
@@ -86,6 +96,15 @@ var _was_on_floor := false
 var _is_climbing: bool = false
 var _climb_rail: Node3D = null
 var _climb_speed: float = 3.0
+
+# Skateboard riding state (driven by SkateboardComponent.start_skating/SkateExitZone.stop_skating)
+var _is_skating: bool = false
+var _skate_axis: Vector3 = Vector3.FORWARD
+var _skate_speed: float = 0.0
+var _skate_board_model: Node3D = null
+var _skate_board_original_parent: Node = null
+var _skate_board_original_transform: Transform3D
+var _skate_board_collision: CollisionShape3D = null
 
 # Current speed property - returns appropriate speed based on movement state
 var current_speed: float:
@@ -245,6 +264,19 @@ func _process(_delta) -> void:
 		get_tree().call_group("mirrors", "update_cam", _camera.global_transform)
 
 func _physics_process(delta: float) -> void:
+	# --- SKATEBOARDING ---
+	# Skating owns the whole frame (no mouse-look/crouch/head-bob/FOV) since it
+	# drives a fully scripted side-scroll camera instead of the FPS Head/Camera3D.
+	# This must run before the player_input_enabled early-return below, because
+	# start_skating() sets that flag false to kill mouse-look.
+	if _is_skating:
+		_process_skating(delta)
+		move_and_slide()
+		if _player_animation:
+			var time_to_land := _compute_skate_time_to_land() if not is_on_floor() else -1.0
+			_player_animation.update_skate_animation_state(_skate_speed, is_on_floor(), velocity.y, time_to_land)
+		return
+
 	# Skip movement if CameraManager has disabled input (e.g., cinematic camera zones)
 	if not CameraManager.player_input_enabled:
 		# Still apply gravity and move_and_slide to keep physics working
@@ -513,8 +545,114 @@ func _process_climbing(_delta: float) -> void:
 		global_position.x = _climb_rail.global_position.x
 		global_position.z = _climb_rail.global_position.z
 
-	# Reaching the top or bottom of the ladder's climb zone releases the player
-	# automatically via LadderClimbZone's body_exited -> stop_climbing().
+## Called by SkateboardComponent when the player mounts the board. Locks the
+## ride axis to whichever way the player was already facing, hands the
+## camera over to the scripted side-scroll follow cam, and reparents the
+## board's visual model onto SkateAttach so it actually rides along under
+## the feet instead of staying wherever it was interacted with.
+func start_skating(skate_cam: Camera3D, board_anim: AnimationPlayer = null, board_model: Node3D = null, board_collision: CollisionShape3D = null) -> void:
+	_is_skating = true
+	_skate_speed = 0.0
+	_skate_axis = -transform.basis.z
+	_skate_axis.y = 0.0
+	_skate_axis = _skate_axis.normalized()
+	# Face the side-scroll camera (perpendicular to the ride axis) rather than
+	# facing down the track — same cross-product SkateboardCamera uses to place
+	# itself, so this lines up with wherever the camera actually ends up.
+	var face_dir := Vector3.UP.cross(_skate_axis).normalized()
+	rotation.y = atan2(face_dir.x, face_dir.z)
+	velocity = Vector3.ZERO
+	CameraManager.set_player_input(false)
+	skate_cam.begin_follow(self, _skate_axis)
+	CameraManager.switch_to_camera(skate_cam, 0.6)
+	if _player_animation:
+		_player_animation.set_skate_board_animation_player(board_anim)
+		if gravity > 0.0:
+			_player_animation.set_skate_ollie_apex_time(skate_ollie_impulse / gravity)
+	if board_model and _skate_attach:
+		_skate_board_model = board_model
+		_skate_board_original_parent = board_model.get_parent()
+		_skate_board_original_transform = board_model.transform
+		board_model.reparent(_skate_attach, false)
+		# Restore the model's own authored local transform (its baked-in scale
+		# correction) rather than identity — reparent(..., false) leaves the
+		# local transform untouched, but we set it explicitly here for clarity
+		# and because it's what actually snaps the model to sit at the marker's
+		# origin, still at the right size.
+		board_model.transform = _skate_board_original_transform
+	if board_collision:
+		_skate_board_collision = board_collision
+		_skate_board_collision.disabled = true
+
+## Called by SkateExitZone when the player rides into the end-of-track trigger.
+func stop_skating() -> void:
+	_is_skating = false
+	velocity.x = 0.0
+	velocity.z = 0.0
+	CameraManager.switch_to_camera(_camera, 0.6)
+	CameraManager.set_player_input(true)
+	if _player_animation:
+		_player_animation.set_skate_board_animation_player(null)
+	if _skate_board_collision and is_instance_valid(_skate_board_collision):
+		_skate_board_collision.disabled = false
+	_skate_board_collision = null
+	if _skate_board_model and is_instance_valid(_skate_board_model) and _skate_board_original_parent:
+		_skate_board_model.reparent(_skate_board_original_parent, false)
+		_skate_board_model.transform = _skate_board_original_transform
+	_skate_board_model = null
+	_skate_board_original_parent = null
+
+func _process_skating(delta: float) -> void:
+	if not is_on_floor():
+		velocity.y -= gravity * delta
+	elif SteamInput.is_action_just_pressed("jump"):
+		velocity.y = skate_ollie_impulse
+
+	# Left/right steer the board along the locked ride axis (positive = move_right).
+	var input_dir := SteamInput.get_vector("move_left", "move_right", "move_forward", "move_back")
+	var push := input_dir.x
+
+	if is_on_floor():
+		if push > 0.1:
+			_skate_speed += skate_accel * delta
+		elif push < -0.1 and _skate_speed > 0.0:
+			# Holding the opposite direction while still moving brakes harder than passive friction.
+			_skate_speed = max(0.0, _skate_speed - skate_brake * delta)
+		elif push < -0.1:
+			_skate_speed -= skate_accel * delta
+		else:
+			_skate_speed = move_toward(_skate_speed, 0.0, skate_friction * delta)
+		_skate_speed = clamp(_skate_speed, -skate_max_speed, skate_max_speed)
+
+	var horizontal := _skate_axis * _skate_speed
+	velocity.x = horizontal.x
+	velocity.z = horizontal.z
+
+## Raycasts straight down from the player to the ground and solves the
+## constant-gravity fall equation for time-to-impact, so PlayerAnimation can
+## scale "skate_freefall" to finish exactly on landing. Returns -1.0 if no
+## ground is found within range (skate_freefall_speed is used as a fallback).
+func _compute_skate_time_to_land() -> float:
+	if gravity <= 0.0:
+		return -1.0
+	var space_state := get_world_3d().direct_space_state
+	var query := PhysicsRayQueryParameters3D.create(global_position, global_position + Vector3.DOWN * 100.0)
+	query.collision_mask = 2  # Static World layer (matches ground geometry elsewhere in the project)
+	var result := space_state.intersect_ray(query)
+	if result.is_empty():
+		return -1.0
+	# global_position is the capsule's center, but is_on_floor() triggers when
+	# its bottom touches down — standing_height / 2.0 below origin, per the
+	# same invariant _apply_crouch_shape() keeps fixed regardless of crouch state.
+	var feet_y := global_position.y - standing_height / 2.0
+	var distance_to_ground: float = feet_y - result.position.y
+	if distance_to_ground <= 0.0:
+		return 0.0
+	var fall_speed: float = max(-velocity.y, 0.0)
+	var discriminant := fall_speed * fall_speed + 2.0 * gravity * distance_to_ground
+	if discriminant < 0.0:
+		return -1.0
+	return (-fall_speed + sqrt(discriminant)) / gravity
 
 func _is_sprinting() -> bool:
 	"""Check if player is sprinting. Routes through SteamInput which handles both

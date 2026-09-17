@@ -892,11 +892,11 @@ spot_angle = 59.56
 
 [node name="SpotLight3D" type="SpotLight3D" parent="." unique_id=1707224694]
 transform = Transform3D(1, 0, 0, 0, 0.20997697, 0.9777064, 0, -0.9777064, 0.20997697, 0, 3.3764446, 7.834524)
-light_color = Color(0.27450982, 1, 1, 1)
+light_color = Color(0.6804138, 0.9439996, 0.93286866, 1)
 light_energy = 0.107
 shadow_enabled = true
 spot_range = 5.324
-spot_attenuation = 0.48
+spot_attenuation = -1.79
 spot_angle = 51.11
 
 [node name="SpotLight3D4" type="SpotLight3D" parent="." unique_id=1169039013]
@@ -905,7 +905,7 @@ light_color = Color(0.27450982, 1, 1, 1)
 light_energy = 0.107
 shadow_enabled = true
 spot_range = 5.324
-spot_attenuation = 0.48
+spot_attenuation = -3.91
 spot_angle = 51.11
 
 [node name="SpotLight3D3" type="SpotLight3D" parent="." unique_id=1179110901]
@@ -914,7 +914,7 @@ light_color = Color(0.27450982, 1, 1, 1)
 light_energy = 0.107
 shadow_enabled = true
 spot_range = 5.324
-spot_attenuation = 0.48
+spot_attenuation = -1.72
 spot_angle = 51.11
 
 [node name="SpotLight3D2" type="SpotLight3D" parent="." unique_id=1596436601]
@@ -923,7 +923,7 @@ light_color = Color(0.27450982, 1, 1, 1)
 light_energy = 0.107
 shadow_enabled = true
 spot_range = 5.324
-spot_attenuation = 0.48
+spot_attenuation = -2.37
 spot_angle = 51.11
 
 [editable path="PaintingProp2"]

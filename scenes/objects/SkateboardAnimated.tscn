@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="PackedScene" uid="uid://41jqk6ve2gv6" path="res://models/blender/skateboardAnim.glb" id="1_model"]
+[ext_resource type="Script" path="res://scripts/components/SkateboardComponent.gd" id="2_skate_component"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_board"]
+size = Vector3(0.81, 0.15, 0.26)
+
+[node name="SkateboardAnimated" type="Node3D"]
+
+[node name="model" parent="." instance=ExtResource("1_model")]
+transform = Transform3D(0.18, 0, 0, 0, 0.18, 0, 0, 0, 0.18, 0, 0, 0)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+collision_layer = 8
+collision_mask = 3
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+shape = SubResource("BoxShape3D_board")
+
+[node name="SkateboardComponent" type="Node3D" parent="."]
+script = ExtResource("2_skate_component")

@@ -41,6 +41,9 @@ walk_speed = 3.0
 run_speed = 3.0
 jump_speed = 2.0
 
+[node name="SkateAttach" type="Marker3D" parent="." unique_id=-417705356]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.0958273e-09, -0.8403389, 0.11657894)
+
 [node name="Head" type="Node3D" parent="." unique_id=1785393483]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.64091873, 0)
 
