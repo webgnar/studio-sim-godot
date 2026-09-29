@@ -46,6 +46,8 @@ extends CharacterBody3D
 @export var skate_brake: float = 12.0
 @export var skate_max_speed: float = 9.0
 @export var skate_ollie_impulse: float = 5.0
+@export var skate_min_ollie_impulse: float = 2.5  ## Rise velocity clamp when jump is tapped instead of held
+@export var skate_fall_gravity_multiplier: float = 2.0  ## Falling pulls harder than rising, for a snappier arc
 
 # --- PRIVATE VARIABLES ---
 
@@ -604,7 +606,12 @@ func stop_skating() -> void:
 
 func _process_skating(delta: float) -> void:
 	if not is_on_floor():
-		velocity.y -= gravity * delta
+		var effective_gravity := gravity * skate_fall_gravity_multiplier if velocity.y < 0.0 else gravity
+		velocity.y -= effective_gravity * delta
+		# Variable jump height: releasing early clamps the rise short of the
+		# full impulse, same idea as Mario/Celeste-style tap-vs-hold jumps.
+		if velocity.y > skate_min_ollie_impulse and not SteamInput.is_action_pressed("jump"):
+			velocity.y = skate_min_ollie_impulse
 	elif SteamInput.is_action_just_pressed("jump"):
 		velocity.y = skate_ollie_impulse
 
@@ -633,7 +640,11 @@ func _process_skating(delta: float) -> void:
 ## scale "skate_freefall" to finish exactly on landing. Returns -1.0 if no
 ## ground is found within range (skate_freefall_speed is used as a fallback).
 func _compute_skate_time_to_land() -> float:
-	if gravity <= 0.0:
+	# This is only ever used once velocity.y <= 0 (see the freefall branch in
+	# update_skate_animation_state), so the fall gravity multiplier already
+	# applies for the whole remaining descent — matches _process_skating.
+	var fall_gravity := gravity * skate_fall_gravity_multiplier
+	if fall_gravity <= 0.0:
 		return -1.0
 	var space_state := get_world_3d().direct_space_state
 	var query := PhysicsRayQueryParameters3D.create(global_position, global_position + Vector3.DOWN * 100.0)
@@ -649,10 +660,10 @@ func _compute_skate_time_to_land() -> float:
 	if distance_to_ground <= 0.0:
 		return 0.0
 	var fall_speed: float = max(-velocity.y, 0.0)
-	var discriminant := fall_speed * fall_speed + 2.0 * gravity * distance_to_ground
+	var discriminant := fall_speed * fall_speed + 2.0 * fall_gravity * distance_to_ground
 	if discriminant < 0.0:
 		return -1.0
-	return (-fall_speed + sqrt(discriminant)) / gravity
+	return (-fall_speed + sqrt(discriminant)) / fall_gravity
 
 func _is_sprinting() -> bool:
 	"""Check if player is sprinting. Routes through SteamInput which handles both
