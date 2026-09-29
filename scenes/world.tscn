@@ -3701,6 +3701,7 @@ material = ExtResource("5_71j4m")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.64, 1.925)
 operation = 2
 size = Vector3(0.85, 2.8, 2)
+material = ExtResource("3_qfnet")
 
 [node name="NorthEast_RoofOuter" type="CSGBox3D" parent="hall of fame" unique_id=1586852161]
 transform = Transform3D(0, 0, 1, 0.735512, 0.677511, 0, -0.677511, 0.735512, 0, 36.411213, 5.517619, 2.371288)
