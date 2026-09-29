@@ -13,13 +13,19 @@ class_name HallOfFameGallery
 ## so a 1:1 marker count would mean constant manual upkeep). A rail is a pair of Node3D markers
 ## in `rail_group`, named "<name>_Start" and "<name>_End", both placed along one wall at hanging
 ## height. The Start marker's rotation defines which way paintings on that rail face: its local Z
-## axis (blue arrow in the editor gizmo) should point away from the wall, into the room — only
+## axis (blue arrow in the editor gizmo) should point INTO the wall the paintings hang on (the
+## canvas front is the side facing away from it, the stretcher bars sit on the wall side) — only
 ## rotate it around the vertical axis, don't tilt it. Rails are visited in name order (natural
-## sort, so "Wall2" comes before "Wall10"); each painting's real width (a fixed constant per
-## format - square vs landscape is detected from its own PNG's pixel dimensions) is packed along
-## the current rail with `rail_margin` between paintings, wrapping to a higher row (up to
-## `max_rows_per_rail`) when a rail fills, then moving to the next rail. Anything left over after
-## every rail/row combo is full falls back to a flat grid so nothing is silently dropped.
+## sort, so "Wall2" comes before "Wall10"); each painting's real width is a fixed constant per
+## format (square vs landscape is detected from its own PNG's pixel dimensions).
+##
+## With `spread_evenly` on (default), the collection is shared out across every rail in
+## proportion to its length and spaced evenly along each one, so the whole hall is hung
+## uniformly and just gets denser as the manifest grows. With it off - or once the collection
+## outgrows the walls at `rail_margin` spacing - paintings are packed along the current rail with
+## `rail_margin` between them, wrapping to a higher row (up to `max_rows_per_rail`) when a rail
+## fills, then moving to the next rail. Anything left over after every rail/row combo is full
+## falls back to a flat grid so nothing is silently dropped.
 
 const HALL_OF_FAME_DIR := "res://hall_of_fame/"
 const MANIFEST_PATH := HALL_OF_FAME_DIR + "manifest.json"
@@ -37,9 +43,12 @@ const LANDSCAPE_CANVAS_SIZE := Vector2(5, 3)
 ## Group shared by every rail's Start/End marker pair.
 @export var rail_group: String = "hall_of_fame_rail"
 
-## Gap left between adjacent paintings along a rail, in meters.
+## Gap left between adjacent paintings along a rail, in meters (the minimum gap when spreading).
 @export var rail_margin: float = 0.25
-## How many rows a single rail can stack before overflow moves on to the next rail.
+## Spread paintings evenly over every rail instead of filling rails one after another.
+@export var spread_evenly: bool = true
+## How many rows a single rail can stack before overflow moves on to the next rail (packed
+## layout only).
 @export var max_rows_per_rail: int = 1
 ## Vertical center-to-center gap between stacked rows on the same rail.
 @export var row_spacing: float = 1.3
@@ -74,16 +83,11 @@ func _ready() -> void:
 		return
 
 	var rails := _collect_rails()
-	var cursors: Array = []
-	for r in rails:
-		cursors.append({"used": 0.0, "row": 0})
 	if rails.is_empty():
 		push_warning("HallOfFameGallery: no '%s' Start/End marker pairs found - using the fallback grid for all %d painting(s)" % [rail_group, manifest.size()])
 
-	_current_rail = 0
-	var grid_index := 0
-	var overflow_count := 0
-
+	# Load everything first - spreading needs every painting's width before placing any of them.
+	var paintings: Array[Dictionary] = []
 	for i in manifest.size():
 		var entry: Variant = manifest[i]
 		if typeof(entry) != TYPE_DICTIONARY:
@@ -94,17 +98,23 @@ func _ready() -> void:
 		if instance == null:
 			continue
 
-		var size := _measure_canvas_size(instance)
-		var width := size.x * painting_scale
-		var height := size.y * painting_scale
+		var size := _measure_canvas_size(instance) * painting_scale
+		paintings.append({"instance": instance, "entry": entry, "width": size.x, "height": size.y})
 
-		var placement := {}
-		if not rails.is_empty():
-			placement = _try_place_on_rail(rails, cursors, width)
-			if placement.is_empty():
-				overflow_count += 1
+	var placements: Array = []
+	if spread_evenly and not rails.is_empty():
+		placements = _spread_across_rails(rails, paintings)
+	if placements.is_empty():
+		placements = _pack_rails(rails, paintings)
 
+	var grid_index := 0
+	var overflow_count := 0
+
+	for i in paintings.size():
+		var placement: Dictionary = placements[i]
 		if placement.is_empty():
+			if not rails.is_empty():
+				overflow_count += 1
 			placement = {
 				"position": _grid_position(grid_index),
 				"wall_dir": global_transform.basis * Vector3.RIGHT,
@@ -112,12 +122,12 @@ func _ready() -> void:
 			}
 			grid_index += 1
 
-		_finalize_painting(instance, entry, placement, height)
+		_finalize_painting(paintings[i]["instance"], paintings[i]["entry"], placement, paintings[i]["height"])
 
 	if overflow_count > 0:
 		push_warning("HallOfFameGallery: %d painting(s) didn't fit any rail row, placed on the fallback grid instead" % overflow_count)
 
-	print("HallOfFameGallery: spawned %d painting(s) from %s" % [manifest.size(), MANIFEST_PATH])
+	print("HallOfFameGallery: spawned %d painting(s) from %s" % [paintings.size(), MANIFEST_PATH])
 
 
 func _load_manifest() -> Array:
@@ -189,7 +199,7 @@ func _collect_rails() -> Array[Dictionary]:
 		# standing-transform math below degenerates to an all-zero basis - no crash, no warning,
 		# the painting just silently collapses to a point. Catch it here instead so it's obvious.
 		if absf(facing.dot(wall_dir)) > 0.95:
-			push_warning("HallOfFameGallery: rail '%s' Start marker's blue (Z) axis points along the wall instead of away from it - rotate it ~90° around the vertical axis so it faces into the room. Using a guessed facing direction for now so paintings stay visible." % key)
+			push_warning("HallOfFameGallery: rail '%s' Start marker's blue (Z) axis points along the wall instead of away from it - rotate it ~90° around the vertical axis so it points at the wall. Using a guessed facing direction for now so paintings stay visible." % key)
 			facing = Vector3.UP.cross(wall_dir).normalized()
 
 		rails.append({
@@ -200,6 +210,79 @@ func _collect_rails() -> Array[Dictionary]:
 		})
 
 	return rails
+
+
+## Shares the paintings out across the rails in proportion to each rail's length (a painting goes
+## to whichever rail its centre lands on when the whole row of paintings is stretched over the
+## combined rail length), then spaces each rail's share evenly along it with half a gap at each end.
+## Returns [] if any rail's share can't keep `rail_margin` between neighbours - the collection has
+## outgrown the walls, so the caller falls back to _pack_rails.
+func _spread_across_rails(rails: Array[Dictionary], paintings: Array[Dictionary]) -> Array:
+	var total_length := 0.0
+	for rail in rails:
+		total_length += rail["length"]
+	var total_width := 0.0
+	for p in paintings:
+		total_width += p["width"]
+	if paintings.is_empty() or total_width <= 0.0:
+		return []
+
+	var shares: Array = []
+	for r in rails:
+		shares.append([])
+	var rail_i := 0
+	var rail_end: float = rails[0]["length"] / total_length * total_width
+	var cursor := 0.0
+	for i in paintings.size():
+		var centre: float = cursor + paintings[i]["width"] / 2.0
+		cursor += paintings[i]["width"]
+		while centre > rail_end and rail_i < rails.size() - 1:
+			rail_i += 1
+			rail_end += rails[rail_i]["length"] / total_length * total_width
+		shares[rail_i].append(i)
+
+	var placements: Array = []
+	placements.resize(paintings.size())
+	for r in rails.size():
+		var share: Array = shares[r]
+		if share.is_empty():
+			continue
+		var rail: Dictionary = rails[r]
+		var used := 0.0
+		for i in share:
+			used += paintings[i]["width"]
+		var spare: float = rail["length"] - used
+		if spare < rail_margin * (share.size() - 1):
+			return []
+
+		# Equal gaps with half a gap at each end, unless that squeezes the gaps under rail_margin -
+		# then run end to end (still >= rail_margin apart, checked above).
+		var gap := spare / share.size()
+		var d := gap / 2.0
+		if gap < rail_margin:
+			gap = spare / (share.size() - 1) if share.size() > 1 else 0.0
+			d = 0.0 if share.size() > 1 else spare / 2.0
+		for i in share:
+			var w: float = paintings[i]["width"]
+			var pos: Vector3 = rail["start"] + rail["wall_dir"] * (d + w / 2.0)
+			placements[i] = {"position": pos, "wall_dir": rail["wall_dir"], "facing": rail["facing"]}
+			d += w + gap
+
+	return placements
+
+
+## Sequential layout: fills each rail (row by row) before moving on to the next. {} entries are
+## paintings that didn't fit anywhere (or every painting, when there are no rails).
+func _pack_rails(rails: Array[Dictionary], paintings: Array[Dictionary]) -> Array:
+	var cursors: Array = []
+	for r in rails:
+		cursors.append({"used": 0.0, "row": 0})
+	_current_rail = 0
+
+	var placements: Array = []
+	for p in paintings:
+		placements.append({} if rails.is_empty() else _try_place_on_rail(rails, cursors, p["width"]))
+	return placements
 
 
 ## Tries to fit `width` on the current rail/row, advancing rows then rails as each fills up.
