@@ -16,6 +16,11 @@ func _ready():
 	_load_all_stickers()
 	if ShopManager:
 		ShopManager.item_purchased.connect(_on_item_purchased)
+	# The first load above runs before the save is restored, so purchased items
+	# and listed sticker ids are still empty and custom/bought stickers get
+	# skipped. Reload once the save is actually applied.
+	if WorldStateManager:
+		WorldStateManager.world_state_loaded.connect(reload)
 
 func _on_item_purchased(item_id: String) -> void:
 	if item_id == "customstickerbutton":

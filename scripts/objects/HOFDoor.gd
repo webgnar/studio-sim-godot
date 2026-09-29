@@ -38,10 +38,21 @@ func _ready() -> void:
 	else:
 		push_warning("HOFDoor: no BasketballHoop found (group 'basketball_hoop') — door will never unlock")
 
-	# Already unlocked from a previous session — snap straight to open, no re-interaction needed.
-	if WorldStateManager and WorldStateManager.has_flag(UNLOCK_FLAG):
-		_is_unlocked = true
-		_snap_open()
+	# Player flags are only loaded from disk in WorldStateManager.load_world_state(), which
+	# runs a frame AFTER this _ready() — so checking the flag here alone always sees an empty
+	# dict on a fresh launch. Restore now (covers the flag already being in memory) and again
+	# once the save has actually been loaded.
+	if WorldStateManager:
+		WorldStateManager.world_state_loaded.connect(_restore_unlock_state)
+		_restore_unlock_state()
+
+## Already unlocked from a previous session — snap straight to open, no re-interaction needed.
+func _restore_unlock_state() -> void:
+	if _is_unlocked or not WorldStateManager.has_flag(UNLOCK_FLAG):
+		return
+	_is_unlocked = true
+	_snap_open()
+	unlocked.emit()  # lets HOFDoorInteraction refresh its (now "Open"/disabled) state
 
 func is_unlocked() -> bool:
 	return _is_unlocked

@@ -31,6 +31,7 @@ var _skate_pending_landing: bool = false  # true whenever airborne, so landing t
 var _skate_playing_impact: bool = false   # true while the one-shot impact clip is still playing
 var _skate_ollie_apex_time: float = 0.0   # physics time-to-apex (skate_ollie_impulse / gravity); 0 = unset
 var _skate_freefall_locked_speed: float = 1.0  # speed_scale locked in once at freefall entry
+var _skate_freefall_active: bool = false  # true from freefall start until landing/re-ollie — survives the clip naturally finishing
 
 func _ready() -> void:
 	# Get reference to AnimationPlayer node
@@ -124,6 +125,7 @@ func set_skate_board_animation_player(player: AnimationPlayer) -> void:
 	_skate_board_animation_player = player
 	_skate_pending_landing = false
 	_skate_playing_impact = false
+	_skate_freefall_active = false
 	if player and player.has_animation("board_freefall"):
 		player.get_animation("board_freefall").loop_mode = Animation.LOOP_NONE
 
@@ -144,18 +146,25 @@ func update_skate_animation_state(_skate_speed: float, is_on_floor: bool, vertic
 		_skate_pending_landing = true
 		_skate_playing_impact = false
 		if vertical_velocity > 0.0:
+			_skate_freefall_active = false
 			_play_skate_pair("skate_ollie", "board_ollie", _compute_ollie_speed())
 		else:
-			# Lock the speed in once, on the frame freefall starts, instead of
-			# recomputing every physics frame — see _compute_freefall_speed.
-			if animation_player.current_animation != "skate_freefall":
+			# Trigger once on entry, then leave the AnimationPlayer alone for
+			# the rest of the fall. Godot resets current_animation to "" once
+			# a LOOP_NONE clip finishes on its own, so re-checking that here
+			# would re-trigger .play() from frame 0 for the remainder of any
+			# fall longer than the (slowed-down) clip — this flag is what
+			# actually prevents the restart-loop, not the loop_mode alone.
+			if not _skate_freefall_active:
+				_skate_freefall_active = true
 				_skate_freefall_locked_speed = _compute_freefall_speed(time_to_land)
-			_play_skate_pair("skate_freefall", "board_freefall", _skate_freefall_locked_speed)
+				_play_skate_pair("skate_freefall", "board_freefall", _skate_freefall_locked_speed)
 		return
 
 	if _skate_pending_landing:
 		_skate_pending_landing = false
 		_skate_playing_impact = true
+		_skate_freefall_active = false
 		_play_skate_pair("skate_impact", "board_impact", skate_impact_speed)
 		return
 
