@@ -1509,9 +1509,9 @@ size = Vector3(8.528, 42.381985, 9.38482)
 material = SubResource("StandardMaterial3D_gny1c")
 
 [node name="CSGBox3D" type="CSGBox3D" parent="hallway/CSGBox3D" unique_id=471511928]
-transform = Transform3D(1.9106855e-15, 1, 4.371139e-08, 4.371139e-08, -4.371139e-08, 1, 1, 0, -4.371139e-08, 0.017606735, -1.8016491, 1.841896)
+transform = Transform3D(1.9106855e-15, 1, 4.371139e-08, 4.371139e-08, -4.371139e-08, 1, 1, 0, -4.371139e-08, 0.017606735, -2.760666, 1.841896)
 operation = 2
-size = Vector3(6.2917633, 5.5410156, 36.63073)
+size = Vector3(6.2917633, 5.5410156, 38.548763)
 material = SubResource("StandardMaterial3D_frq1x")
 
 [node name="CSGBox3D2" type="CSGBox3D" parent="hallway" unique_id=169436616]
@@ -3020,11 +3020,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.021667004, -9.536743e-07, 0
 navigation_mesh = SubResource("NavigationMesh_fmmry")
 
 [node name="floor" type="CSGBox3D" parent="gallery/NavigationRegion3D" unique_id=1848299723]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.722805, -12.399488, 15.244794)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.722805, -18.951353, 15.244794)
 use_collision = true
 collision_layer = 2
 collision_mask = 0
-size = Vector3(47.839737, 3.44, 51.508144)
+size = Vector3(47.839737, 16.54373, 51.508144)
 material = SubResource("StandardMaterial3D_t2jyq")
 
 [node name="pedestal" type="CSGBox3D" parent="gallery/NavigationRegion3D" unique_id=1193496576]
@@ -3701,6 +3701,7 @@ material = ExtResource("5_71j4m")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.64, 1.925)
 operation = 2
 size = Vector3(0.85, 2.8, 2)
+material = ExtResource("3_qfnet")
 
 [node name="NorthEast_RoofOuter" type="CSGBox3D" parent="hall of fame" unique_id=1586852161]
 transform = Transform3D(0, 0, 1, 0.735512, 0.677511, 0, -0.677511, 0.735512, 0, 36.411213, 5.517619, 2.371288)
@@ -3986,6 +3987,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.81, 0, 0)
 
 [node name="Rail10_NorthEast_Inner_End" type="Node3D" parent="hall of fame/Rail10_NorthEast_Inner" unique_id=890918755 groups=["hall_of_fame_rail"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.81, 0, 0)
+
+[node name="SpotLight3D" type="SpotLight3D" parent="hall of fame" unique_id=1392592879]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 13.927158, 1.648324, 7.8477836)
+spot_range = 8.270282
 
 [editable path="Spotlight1"]
 [editable path="Spotlight2"]
