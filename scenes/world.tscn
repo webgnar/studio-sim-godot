@@ -1179,17 +1179,6 @@ transparency = 1
 cull_mode = 2
 albedo_color = Color(0.45490196, 1, 1, 1)
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_se2tq"]
-material = SubResource("StandardMaterial3D_7echp")
-size = Vector2(5.69, 112.28)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_se2tq"]
-size = Vector3(4.8884277, 0.6564331, 115.294525)
-
-[sub_resource type="PlaneMesh" id="PlaneMesh_edbjg"]
-material = SubResource("StandardMaterial3D_7echp")
-size = Vector2(4.53, 54.91)
-
 [node name="World" type="Node3D" unique_id=81477]
 script = ExtResource("1_qaasp")
 
@@ -3533,139 +3522,250 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.921214, -14.367619, -11.92
 use_collision = true
 collision_layer = 2
 
-[node name="wall" type="CSGBox3D" parent="hall of fame" unique_id=1104060604]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.8465548, 1.7315063, -47.13294)
-size = Vector3(0.4477539, 5.942993, 115.82504)
+[node name="West_OuterWall" type="CSGBox3D" parent="hall of fame" unique_id=733235009]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.353786, 1.732119, 37.211288)
+size = Vector3(0.45, 5.943, 72.22)
 material = ExtResource("5_71j4m")
 
-[node name="wall7" type="CSGBox3D" parent="hall of fame" unique_id=277160713]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 30.785267, 1.7315063, -104.75721)
-size = Vector3(0.4477539, 5.942993, 48.5614)
+[node name="West_InnerWall" type="CSGBox3D" parent="hall of fame" unique_id=1327520043]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.853786, 1.732119, 37.196288)
+size = Vector3(0.55, 5.943, 53.35)
 material = ExtResource("5_71j4m")
 
-[node name="wall8" type="CSGBox3D" parent="hall of fame" unique_id=1290407915]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 27.414204, 1.7315063, -94.04337)
-size = Vector3(0.4477539, 5.942993, 41.819275)
-material = ExtResource("5_71j4m")
-
-[node name="wall5" type="CSGBox3D" parent="hall of fame" unique_id=429801877]
-transform = Transform3D(-0.62854594, 0.7777725, 0, -0.7777725, -0.62854594, 0, 0, 0, 1, 5.4144144, 5.5332127, -43.182293)
-size = Vector3(0.4477539, 3.3196602, 107.92375)
-material = ExtResource("1_4mrxx")
-
-[node name="wall6" type="CSGBox3D" parent="hall of fame" unique_id=674932891]
-transform = Transform3D(0.6774746, 0.7355462, 0, -0.7355462, 0.6774746, 0, 0, 0, 1, -1.8010235, 5.5024166, -46.83533)
-size = Vector3(0.4477539, 3.4471016, 115.22983)
-material = ExtResource("1_4mrxx")
-
-[node name="wall11" type="CSGBox3D" parent="hall of fame" unique_id=189860507]
-transform = Transform3D(-2.9613355e-08, -3.2151743e-08, -1, -0.7355462, 0.6774746, 0, 0.6774746, 0.7355462, -4.371139e-08, 26.034275, 5.5024166, -103.05572)
-size = Vector3(0.4477539, 3.4471016, 58)
-material = ExtResource("1_4mrxx")
-
-[node name="wall12" type="CSGBox3D" parent="hall of fame" unique_id=1328730055]
-transform = Transform3D(-2.9613355e-08, -3.2151743e-08, -1, -0.8447636, -0.5351397, 4.222196e-08, -0.5351397, 0.8447636, -1.1313341e-08, 29.788715, 5.917926, -96.19642)
-size = Vector3(0.4477539, 5, 50.49112)
-material = ExtResource("1_4mrxx")
-
-[node name="wall4" type="CSGBox3D" parent="hall of fame" unique_id=1733981740]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 1.8558989, 1.7315063, -104.8485)
-size = Vector3(0.4477539, 5.942993, 10)
-material = ExtResource("5_71j4m")
-
-[node name="CSGBox3D" type="CSGBox3D" parent="hall of fame/wall4" unique_id=3038502]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.8356743, 0.10391235)
-operation = 2
-size = Vector3(1, 2.4278564, 6.6552124)
-
-[node name="wall10" type="CSGBox3D" parent="hall of fame" unique_id=1537670221]
-transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 54.8559, 2.6944275, -99.3485)
-size = Vector3(0.4477539, 7.8688354, 11)
-material = ExtResource("5_71j4m")
-
-[node name="CSGBox3D" type="CSGBox3D" parent="hall of fame/wall10" unique_id=488363475]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.2628775, 0.10391235)
-operation = 2
-size = Vector3(1, 2.4278564, 6.6552124)
-
-[node name="wall2" type="CSGBox3D" parent="hall of fame" unique_id=1697364277]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.6291485, 1.7315063, -41.73764)
-size = Vector3(0.4477539, 5.942993, 105.03445)
-material = ExtResource("5_71j4m")
-
-[node name="wall3" type="CSGBox3D" parent="hall of fame" unique_id=170066137]
-transform = Transform3D(1.1924881e-08, -1, 0, 1, 1.1924881e-08, 0, 0, 0, 1, 1.8822021, -1.2684937, -47.11646)
-size = Vector3(0.238, 9.428, 115.792)
+[node name="West_Floor" type="CSGBox3D" parent="hall of fame" unique_id=510049940]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.578786, -1.272381, 37.211288)
+size = Vector3(10, 0.24, 72.22)
 material = ExtResource("49_yhtv1")
 
-[node name="wall9" type="CSGBox3D" parent="hall of fame" unique_id=1064293671]
-transform = Transform3D(-5.2125306e-16, 4.371139e-08, 1, 1, 1.1924881e-08, 0, -1.1924881e-08, 1, -4.371139e-08, 30.672531, -1.2684937, -99.560265)
-size = Vector3(0.238, 10.94, 48.211)
+[node name="West_RoofOuter" type="CSGBox3D" parent="hall of fame" unique_id=1075095213]
+transform = Transform3D(0.677511, 0.735512, 0, -0.735512, 0.677511, 0, 0, 0, 1, -12.308786, 5.517619, 37.211288)
+size = Vector3(0.45, 3.447, 72.22)
+material = ExtResource("1_4mrxx")
+
+[node name="West_RoofInner" type="CSGBox3D" parent="hall of fame" unique_id=546759472]
+transform = Transform3D(0.677511, -0.735512, 0, 0.735512, 0.677511, 0, 0, 0, 1, -4.948786, 5.517619, 37.211288)
+size = Vector3(0.45, 3.447, 72.22)
+material = ExtResource("1_4mrxx")
+
+[node name="West_Ceiling" type="CSGBox3D" parent="hall of fame" unique_id=2131431256]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.628786, 6.537619, 37.211288)
+size = Vector3(5.69, 0.1, 71.32)
+material = SubResource("StandardMaterial3D_7echp")
+
+[node name="East_OuterWall" type="CSGBox3D" parent="hall of fame" unique_id=2144827739]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 54.446214, 1.732119, 37.211288)
+size = Vector3(0.45, 5.943, 72.22)
+material = ExtResource("5_71j4m")
+
+[node name="East_InnerWall" type="CSGBox3D" parent="hall of fame" unique_id=560084579]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 44.896214, 1.732119, 37.196288)
+size = Vector3(0.65, 5.943, 53.35)
+material = ExtResource("5_71j4m")
+
+[node name="East_Floor" type="CSGBox3D" parent="hall of fame" unique_id=1334803065]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 49.621214, -1.272381, 37.211288)
+size = Vector3(10.1, 0.24, 72.22)
 material = ExtResource("49_yhtv1")
+
+[node name="East_RoofOuter" type="CSGBox3D" parent="hall of fame" unique_id=1571074630]
+transform = Transform3D(0.677511, -0.735512, 0, 0.735512, 0.677511, 0, 0, 0, 1, 53.401214, 5.517619, 37.211288)
+size = Vector3(0.45, 3.447, 72.22)
+material = ExtResource("1_4mrxx")
+
+[node name="East_RoofInner" type="CSGBox3D" parent="hall of fame" unique_id=407118184]
+transform = Transform3D(0.677511, 0.735512, 0, -0.735512, 0.677511, 0, 0, 0, 1, 46.041214, 5.517619, 37.211288)
+size = Vector3(0.45, 3.447, 72.22)
+material = ExtResource("1_4mrxx")
+
+[node name="East_Ceiling" type="CSGBox3D" parent="hall of fame" unique_id=2011264752]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 49.721214, 6.537619, 37.211288)
+size = Vector3(5.69, 0.1, 71.32)
+material = SubResource("StandardMaterial3D_7echp")
+
+[node name="South_OuterWall" type="CSGBox3D" parent="hall of fame" unique_id=570573502]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.546214, 1.732119, 73.096288)
+size = Vector3(68.25, 5.943, 0.45)
+material = ExtResource("5_71j4m")
+
+[node name="South_InnerWall" type="CSGBox3D" parent="hall of fame" unique_id=1810785440]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.546214, 1.732119, 63.596288)
+size = Vector3(49.35, 5.943, 0.55)
+material = ExtResource("5_71j4m")
+
+[node name="South_Floor" type="CSGBox3D" parent="hall of fame" unique_id=384585004]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.496214, -1.272381, 68.321288)
+size = Vector3(48.15, 0.24, 10)
+material = ExtResource("49_yhtv1")
+
+[node name="South_RoofOuter" type="CSGBox3D" parent="hall of fame" unique_id=1884234659]
+transform = Transform3D(0, 0, 1, -0.735512, 0.677511, 0, -0.677511, -0.735512, 0, 20.546214, 5.517619, 72.051288)
+size = Vector3(0.45, 3.447, 68.25)
+material = ExtResource("1_4mrxx")
+
+[node name="South_RoofInner" type="CSGBox3D" parent="hall of fame" unique_id=633993672]
+transform = Transform3D(0, 0, 1, 0.735512, 0.677511, 0, -0.677511, 0.735512, 0, 20.546214, 5.517619, 64.691288)
+size = Vector3(0.45, 3.447, 68.25)
+material = ExtResource("1_4mrxx")
+
+[node name="South_Ceiling" type="CSGBox3D" parent="hall of fame" unique_id=1846049923]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.546214, 6.537619, 68.371288)
+size = Vector3(67.35, 0.1, 5.69)
+material = SubResource("StandardMaterial3D_7echp")
+
+[node name="NorthWest_OuterWall" type="CSGBox3D" parent="hall of fame" unique_id=1792170124]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.628786, 1.732119, 1.326288)
+size = Vector3(23.9, 5.943, 0.45)
+material = ExtResource("5_71j4m")
+
+[node name="NorthWest_Floor" type="CSGBox3D" parent="hall of fame" unique_id=496269579]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.371214, -1.272381, 5.826288)
+size = Vector3(13.9, 0.24, 9.45)
+material = ExtResource("49_yhtv1")
+
+[node name="NorthWest_ShaftCap" type="CSGBox3D" parent="hall of fame" unique_id=2142189030]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.096214, 2.787619, 5.826288)
+size = Vector3(0.45, 8.36, 9.45)
+material = ExtResource("5_71j4m")
+
+[node name="NorthWest_RoofOuter" type="CSGBox3D" parent="hall of fame" unique_id=815449009]
+transform = Transform3D(0, 0, 1, 0.735512, 0.677511, 0, -0.677511, 0.735512, 0, -1.628786, 5.517619, 2.371288)
+size = Vector3(0.45, 3.447, 23.9)
+material = ExtResource("1_4mrxx")
+
+[node name="NorthWest_RoofInner" type="CSGBox3D" parent="hall of fame" unique_id=700531770]
+transform = Transform3D(0, 0, 1, -0.735512, 0.677511, 0, -0.677511, -0.735512, 0, -1.628786, 5.517619, 9.431288)
+size = Vector3(0.45, 3.447, 23.9)
+material = ExtResource("1_4mrxx")
+
+[node name="NorthWest_Ceiling" type="CSGBox3D" parent="hall of fame" unique_id=40767107]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.403786, 6.537619, 6.051288)
+size = Vector3(23.45, 0.1, 5.69)
+material = SubResource("StandardMaterial3D_7echp")
+
+[node name="NorthEast_OuterWall" type="CSGBox3D" parent="hall of fame" unique_id=913102582]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 36.411214, 1.732119, 1.326288)
+size = Vector3(36.52, 5.943, 0.45)
+material = ExtResource("5_71j4m")
+
+[node name="NorthEast_Floor" type="CSGBox3D" parent="hall of fame" unique_id=2026010338]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 31.361214, -1.272381, 5.826288)
+size = Vector3(26.42, 0.24, 9.45)
+material = ExtResource("49_yhtv1")
+
+[node name="NorthEast_ShaftCap" type="CSGBox3D" parent="hall of fame" unique_id=12353941]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.376214, 2.787619, 5.826288)
+size = Vector3(0.45, 8.36, 9.45)
+material = ExtResource("5_71j4m")
+
+[node name="NorthEast_RoofOuter" type="CSGBox3D" parent="hall of fame" unique_id=1586852161]
+transform = Transform3D(0, 0, 1, 0.735512, 0.677511, 0, -0.677511, 0.735512, 0, 36.411214, 5.517619, 2.371288)
+size = Vector3(0.45, 3.447, 36.52)
+material = ExtResource("1_4mrxx")
+
+[node name="NorthEast_RoofInner" type="CSGBox3D" parent="hall of fame" unique_id=133859182]
+transform = Transform3D(0, 0, 1, -0.735512, 0.677511, 0, -0.677511, -0.735512, 0, 36.411214, 5.517619, 9.431288)
+size = Vector3(0.45, 3.447, 36.52)
+material = ExtResource("1_4mrxx")
+
+[node name="NorthEast_Ceiling" type="CSGBox3D" parent="hall of fame" unique_id=954758592]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 36.186214, 6.537619, 6.051288)
+size = Vector3(36.07, 0.1, 5.69)
+material = SubResource("StandardMaterial3D_7echp")
 
 [node name="HallOfFameGallery" type="Node3D" parent="hall of fame" unique_id=2051154870]
 script = ExtResource("202_hof")
 rail_margin = 3.0
 show_labels = false
 
-[node name="Wall1_West" type="Node3D" parent="hall of fame" unique_id=1780954122]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5667982, 1.7315063, -47.13294)
+[node name="Rail01_NorthWest_Outer" type="Node3D" parent="hall of fame" unique_id=150385172]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.628786, 1.731619, 1.631288)
 
-[node name="Wall1_West_Start" type="Node3D" parent="hall of fame/Wall1_West" unique_id=1819329037 groups=["hall_of_fame_rail"]]
-transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 0, 0, -53.412525)
+[node name="Rail01_NorthWest_Outer_Start" type="Node3D" parent="hall of fame/Rail01_NorthWest_Outer" unique_id=154034407 groups=["hall_of_fame_rail"]]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 11, 0, 0)
 
-[node name="Wall1_West_End" type="Node3D" parent="hall of fame/Wall1_West" unique_id=347377581 groups=["hall_of_fame_rail"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 55.488094)
+[node name="Rail01_NorthWest_Outer_End" type="Node3D" parent="hall of fame/Rail01_NorthWest_Outer" unique_id=250894278 groups=["hall_of_fame_rail"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 0, 0)
 
-[node name="Wall2_East" type="Node3D" parent="hall of fame" unique_id=616498957]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.357058, 1.7315063, -47.13013)
+[node name="Rail02_NorthWest_Inner" type="Node3D" parent="hall of fame" unique_id=1384573515]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.446214, 1.731619, 10.471288)
 
-[node name="Wall2_East_Start" type="Node3D" parent="hall of fame/Wall2_East" unique_id=1975061140 groups=["hall_of_fame_rail"]]
-transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 0, 0, -45.409718)
+[node name="Rail02_NorthWest_Inner_Start" type="Node3D" parent="hall of fame/Rail02_NorthWest_Inner" unique_id=1041263227 groups=["hall_of_fame_rail"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.925, 0, 0)
 
-[node name="Wall2_East_End" type="Node3D" parent="hall of fame/Wall2_East" unique_id=1356350392 groups=["hall_of_fame_rail"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 56.77034)
+[node name="Rail02_NorthWest_Inner_End" type="Node3D" parent="hall of fame/Rail02_NorthWest_Inner" unique_id=676539134 groups=["hall_of_fame_rail"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.925, 0, 0)
 
-[node name="Wall3_South" type="Node3D" parent="hall of fame" unique_id=673361241]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.8558989, 1.7315063, -104.437004)
+[node name="Rail03_West_Outer" type="Node3D" parent="hall of fame" unique_id=1989460389]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.048786, 1.731619, 37.211288)
 
-[node name="Wall3_South_Start" type="Node3D" parent="hall of fame/Wall3_South" unique_id=1777589566 groups=["hall_of_fame_rail"]]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 5.5, 0, 0)
+[node name="Rail03_West_Outer_Start" type="Node3D" parent="hall of fame/Rail03_West_Outer" unique_id=727114188 groups=["hall_of_fame_rail"]]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 0, 0, -35.16)
 
-[node name="Wall3_South_End" type="Node3D" parent="hall of fame/Wall3_South" unique_id=133700033 groups=["hall_of_fame_rail"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 49.5, 0, 0)
+[node name="Rail03_West_Outer_End" type="Node3D" parent="hall of fame/Rail03_West_Outer" unique_id=1795956399 groups=["hall_of_fame_rail"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 35.16)
 
-[node name="Wall4_South" type="Node3D" parent="hall of fame" unique_id=500627656]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.855899, 1.7315063, -94.35611)
+[node name="Rail04_West_Inner" type="Node3D" parent="hall of fame" unique_id=1694301836]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.208786, 1.731619, 37.211288)
 
-[node name="Wall4_South_Start" type="Node3D" parent="hall of fame/Wall4_South" unique_id=2086165884 groups=["hall_of_fame_rail"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0, 0)
+[node name="Rail04_West_Inner_Start" type="Node3D" parent="hall of fame/Rail04_West_Inner" unique_id=570159625 groups=["hall_of_fame_rail"]]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 0, 0, -26.16)
 
-[node name="Wall4_South_End" type="Node3D" parent="hall of fame/Wall4_South" unique_id=1299613571 groups=["hall_of_fame_rail"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 39.5, 0, 0)
+[node name="Rail04_West_Inner_End" type="Node3D" parent="hall of fame/Rail04_West_Inner" unique_id=210933196 groups=["hall_of_fame_rail"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 26.16)
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="hall of fame" unique_id=1116988907]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.842351, 6.48585, -45.89172)
-mesh = SubResource("PlaneMesh_se2tq")
+[node name="Rail05_South_Outer" type="Node3D" parent="hall of fame" unique_id=125461060]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.546214, 1.731619, 72.791288)
 
-[node name="StaticBody3D" type="StaticBody3D" parent="hall of fame/MeshInstance3D" unique_id=221300198]
-collision_layer = 2
+[node name="Rail05_South_Outer_Start" type="Node3D" parent="hall of fame/Rail05_South_Outer" unique_id=371014828 groups=["hall_of_fame_rail"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -33.175, 0, 0)
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="hall of fame/MeshInstance3D/StaticBody3D" unique_id=568369057]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.028686523, -0.17178392, -0.0627594)
-shape = SubResource("BoxShape3D_se2tq")
+[node name="Rail05_South_Outer_End" type="Node3D" parent="hall of fame/Rail05_South_Outer" unique_id=1536332546 groups=["hall_of_fame_rail"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 33.175, 0, 0)
 
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="hall of fame" unique_id=1649800279]
-transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 27.715313, 6.48585, -99.98182)
-mesh = SubResource("PlaneMesh_edbjg")
+[node name="Rail06_South_Inner" type="Node3D" parent="hall of fame" unique_id=135935683]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.546214, 1.731619, 63.951288)
 
-[node name="StaticBody3D" type="StaticBody3D" parent="hall of fame/MeshInstance3D2" unique_id=1289364317]
-collision_layer = 2
+[node name="Rail06_South_Inner_Start" type="Node3D" parent="hall of fame/Rail06_South_Inner" unique_id=396410344 groups=["hall_of_fame_rail"]]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -24.175, 0, 0)
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="hall of fame/MeshInstance3D2/StaticBody3D" unique_id=296528838]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.028686523, -0.17178392, -0.0627594)
-shape = SubResource("BoxShape3D_se2tq")
+[node name="Rail06_South_Inner_End" type="Node3D" parent="hall of fame/Rail06_South_Inner" unique_id=104871080 groups=["hall_of_fame_rail"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24.175, 0, 0)
 
+[node name="Rail07_East_Outer" type="Node3D" parent="hall of fame" unique_id=1515508518]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 54.141214, 1.731619, 37.211288)
+
+[node name="Rail07_East_Outer_Start" type="Node3D" parent="hall of fame/Rail07_East_Outer" unique_id=1296927272 groups=["hall_of_fame_rail"]]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 0, 0, 35.16)
+
+[node name="Rail07_East_Outer_End" type="Node3D" parent="hall of fame/Rail07_East_Outer" unique_id=315691234 groups=["hall_of_fame_rail"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -35.16)
+
+[node name="Rail08_East_Inner" type="Node3D" parent="hall of fame" unique_id=1536956663]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 45.301214, 1.731619, 37.211288)
+
+[node name="Rail08_East_Inner_Start" type="Node3D" parent="hall of fame/Rail08_East_Inner" unique_id=1189685153 groups=["hall_of_fame_rail"]]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 0, 0, 26.16)
+
+[node name="Rail08_East_Inner_End" type="Node3D" parent="hall of fame/Rail08_East_Inner" unique_id=2104880212 groups=["hall_of_fame_rail"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -26.16)
+
+[node name="Rail09_NorthEast_Outer" type="Node3D" parent="hall of fame" unique_id=1024281862]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 36.411214, 1.731619, 1.631288)
+
+[node name="Rail09_NorthEast_Outer_Start" type="Node3D" parent="hall of fame/Rail09_NorthEast_Outer" unique_id=96318184 groups=["hall_of_fame_rail"]]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 17.31, 0, 0)
+
+[node name="Rail09_NorthEast_Outer_End" type="Node3D" parent="hall of fame/Rail09_NorthEast_Outer" unique_id=1513106439 groups=["hall_of_fame_rail"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17.31, 0, 0)
+
+[node name="Rail10_NorthEast_Inner" type="Node3D" parent="hall of fame" unique_id=502646246]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 31.911214, 1.731619, 10.471288)
+
+[node name="Rail10_NorthEast_Inner_Start" type="Node3D" parent="hall of fame/Rail10_NorthEast_Inner" unique_id=1174836739 groups=["hall_of_fame_rail"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.81, 0, 0)
+
+[node name="Rail10_NorthEast_Inner_End" type="Node3D" parent="hall of fame/Rail10_NorthEast_Inner" unique_id=890918755 groups=["hall_of_fame_rail"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.81, 0, 0)
 [editable path="Spotlight1"]
 [editable path="Spotlight2"]
 [editable path="Fluorescent1"]
