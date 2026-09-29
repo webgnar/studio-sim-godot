@@ -3,7 +3,7 @@ extends CharacterBody3D
 ## Gallery Visitor NPC — walks between paintings and other gallery attractions.
 ## Add any node to the "gallery_attraction" group to make it a visitable target.
 
-enum State { IDLE, CHOOSING, WALKING, VIEWING }
+enum State { IDLE, CHOOSING, WALKING, VIEWING, DANCING }
 
 @export var skin_material: StandardMaterial3D
 @export var visitor_display_name: String = ""
@@ -146,6 +146,18 @@ const DISINFO_FALLBACK_LINES = [
 	"Everything in here is being catalogued. By who? I've already said too much.",
 ]
 
+const PARTY_LINES = [
+	"This DJ goes hard!",
+	"I did not expect a rave in an art gallery tonight.",
+	"Don't talk to me, I'm in the zone.",
+	"The projections are syncing with my soul right now.",
+	"Best opening I've ever been to.",
+	"Turn it up!",
+]
+
+const DANCE_SWITCH_MIN := 12.0 ## seconds on one dance before picking another
+const DANCE_SWITCH_MAX := 25.0
+
 const COLLECTOR_FALLBACK_LINES = [
 	"I need to speak with whoever curates this space.",
 	"My collection could use a few pieces from here.",
@@ -176,6 +188,8 @@ var _dialogue_cooldown: float = 0.0
 var _is_interacting: bool = false
 var _facing_player: bool = false
 var _face_player_ref: Node3D = null
+var _current_dance: String = ""
+var _dance_timer: float = 0.0
 
 const AI_VISITOR_DIALOGUE_URL = "https://studio-sim-gallery.vercel.app/api/visitor-dialogue"
 const AI_ATTRACTION_DIALOGUE_URL = "https://studio-sim-gallery.vercel.app/api/attraction-dialogue"
@@ -205,6 +219,7 @@ func _ready() -> void:
 	_nav_agent.target_desired_distance = stop_distance
 	_nav_agent.navigation_finished.connect(_on_navigation_finished)
 
+	_hide_skateboard()
 	_anim_player = _find_animation_player($humanrig)
 	if not _anim_player:
 		push_warning("GalleryVisitor: AnimationPlayer not found inside humanrig!")
@@ -213,6 +228,10 @@ func _ready() -> void:
 
 	_play_animation("idle")
 	get_tree().create_timer(1.0).timeout.connect(_choose_next_attraction, CONNECT_ONE_SHOT)
+
+	var party := DanceParty.find_in(get_tree())
+	if party and party.is_active:
+		start_dancing.call_deferred()
 
 	_http_request = HTTPRequest.new()
 	_http_request.timeout = 8.0
@@ -231,6 +250,8 @@ func _physics_process(delta: float) -> void:
 			_update_walking(delta)
 		State.VIEWING:
 			_update_viewing(delta)
+		State.DANCING:
+			_update_dancing(delta)
 		_:
 			move_and_slide()
 
@@ -421,6 +442,8 @@ func _is_generative_ai_enabled() -> bool:
 
 
 func _pick_fallback() -> String:
+	if _state == State.DANCING:
+		return PARTY_LINES.pick_random()
 	match _personality:
 		"streetwise":
 			return STREETWISE_FALLBACK_LINES.pick_random()
@@ -454,6 +477,13 @@ func _is_painting_hung(painting: Node3D) -> bool:
 	if not hanging_comp:
 		return true
 	return hanging_comp.current_nail != null
+
+
+## The shared humanrig carries the player's skateboard mesh; visitors never skate.
+func _hide_skateboard() -> void:
+	var board := $humanrig.find_child("skateboard", true, false) as Node3D
+	if board:
+		board.visible = false
 
 
 func _apply_skin() -> void:
@@ -667,6 +697,9 @@ func _enter_viewing() -> void:
 
 
 func _choose_next_attraction() -> void:
+	# Stray retry timers (spawn / idle) can land mid-party; stay on the dance floor.
+	if _state == State.DANCING:
+		return
 	remove_from_group("interactable")
 	_facing_player = false
 	_route_queue.clear()  ## a fresh pick always starts a fresh route
@@ -804,6 +837,55 @@ func _is_new_room_locked() -> bool:
 		if is_instance_valid(gate) and gate.get("is_locked"):
 			return true
 	return false
+
+
+## Called by DanceParty when the DJ starts the party: stop right where we are and dance.
+func start_dancing() -> void:
+	if _state == State.DANCING:
+		return
+	_state = State.DANCING
+	_route_queue.clear()
+	_is_thinking = false
+	velocity.x = 0.0
+	velocity.z = 0.0
+	add_to_group("interactable")  # still chattable (party lines) while dancing
+	_switch_dance()
+
+
+## Called by DanceParty when the party ends: go back to browsing the gallery.
+func stop_dancing() -> void:
+	if _state != State.DANCING:
+		return
+	_state = State.IDLE
+	_current_dance = ""
+	_choose_next_attraction()
+
+
+func _update_dancing(delta: float) -> void:
+	velocity.x = 0.0
+	velocity.z = 0.0
+	move_and_slide()
+	_dance_timer -= delta
+	if _dance_timer <= 0.0:
+		_switch_dance()
+
+
+func _switch_dance() -> void:
+	_dance_timer = randf_range(DANCE_SWITCH_MIN, DANCE_SWITCH_MAX)
+	var party := DanceParty.find_in(get_tree())
+	if not _anim_player or not party:
+		return
+	var dance := party.pick_dance(_anim_player, _current_dance)
+	if dance == "":
+		return
+	var starting := _current_dance == ""
+	_current_dance = dance
+	var anim := _anim_player.get_animation(dance)
+	anim.loop_mode = Animation.LOOP_LINEAR
+	_anim_player.play(dance, 0.4)
+	if starting:
+		# Random start point so a crowd that starts together doesn't dance in lockstep.
+		_anim_player.seek(randf() * anim.length, true)
 
 
 func _on_animation_finished(anim_name: StringName) -> void:

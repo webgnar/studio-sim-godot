@@ -1,0 +1,344 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/party/DanceParty.gd" id="1_party"]
+[ext_resource type="Script" path="res://scripts/party/DiscoLight.gd" id="2_disco"]
+[ext_resource type="Script" path="res://scripts/party/PartyProjector.gd" id="3_projector"]
+[ext_resource type="Script" path="res://scripts/party/MirrorBall.gd" id="4_ball"]
+[ext_resource type="Shader" path="res://shaders/party_projection.gdshader" id="5_projshader"]
+[ext_resource type="Shader" path="res://shaders/mirror_ball.gdshader" id="6_ballshader"]
+[ext_resource type="AudioStream" path="res://sounds/music_gnar - Gnar Loops Bass.ogg" id="7_music"]
+
+[sub_resource type="ShaderMaterial" id="Mat_ball"]
+render_priority = 0
+shader = ExtResource("6_ballshader")
+
+[sub_resource type="SphereMesh" id="Mesh_ball"]
+material = SubResource("Mat_ball")
+radius = 0.75
+height = 1.5
+radial_segments = 32
+rings = 16
+
+[sub_resource type="StandardMaterial3D" id="Mat_rod"]
+albedo_color = Color(0.2, 0.2, 0.22, 1)
+metallic = 0.8
+roughness = 0.4
+
+[sub_resource type="CylinderMesh" id="Mesh_rod"]
+material = SubResource("Mat_rod")
+top_radius = 0.03
+bottom_radius = 0.03
+height = 1
+radial_segments = 8
+rings = 1
+
+[sub_resource type="StandardMaterial3D" id="Mat_housing"]
+albedo_color = Color(0.06, 0.06, 0.07, 1)
+metallic = 0.6
+roughness = 0.4
+
+[sub_resource type="StandardMaterial3D" id="Mat_lens"]
+albedo_color = Color(0.8, 0.9, 1, 1)
+metallic = 0
+roughness = 0.1
+emission_enabled = true
+emission = Color(0.9, 0.95, 1, 1)
+emission_energy_multiplier = 2.5
+
+[sub_resource type="BoxMesh" id="Mesh_housing"]
+material = SubResource("Mat_housing")
+size = Vector3(0.5, 0.35, 0.7)
+
+[sub_resource type="CylinderMesh" id="Mesh_lens"]
+material = SubResource("Mat_lens")
+top_radius = 0.1
+bottom_radius = 0.12
+height = 0.12
+radial_segments = 16
+rings = 1
+
+[sub_resource type="CylinderMesh" id="Mesh_can"]
+material = SubResource("Mat_housing")
+top_radius = 0.16
+bottom_radius = 0.2
+height = 0.4
+radial_segments = 16
+rings = 1
+
+[sub_resource type="ShaderMaterial" id="Mat_projection"]
+render_priority = 0
+shader = ExtResource("5_projshader")
+
+[sub_resource type="QuadMesh" id="Quad_ProjectorEast"]
+size = Vector2(8, 8)
+
+[sub_resource type="QuadMesh" id="Quad_ProjectorSouth"]
+size = Vector2(7.5, 7.5)
+
+[sub_resource type="QuadMesh" id="Quad_ProjectorNorth"]
+size = Vector2(7, 7)
+
+[sub_resource type="QuadMesh" id="Quad_ProjectorFloor"]
+size = Vector2(9, 9)
+
+[sub_resource type="ShaderMaterial" id="Mat_SpecksEast"]
+render_priority = 0
+shader = ExtResource("5_projshader")
+shader_parameter/pattern = 4
+shader_parameter/circular_mask = false
+shader_parameter/intensity = 0.9
+shader_parameter/speed = 0.5
+shader_parameter/speck_scale = Vector2(23.076923, 4.615385)
+
+[sub_resource type="QuadMesh" id="Quad_SpecksEast"]
+size = Vector2(30, 6)
+
+[sub_resource type="ShaderMaterial" id="Mat_SpecksSouth"]
+render_priority = 0
+shader = ExtResource("5_projshader")
+shader_parameter/pattern = 4
+shader_parameter/circular_mask = false
+shader_parameter/intensity = 0.9
+shader_parameter/speed = 0.5
+shader_parameter/speck_scale = Vector2(30.769231, 4.615385)
+
+[sub_resource type="QuadMesh" id="Quad_SpecksSouth"]
+size = Vector2(40, 6)
+
+[sub_resource type="ShaderMaterial" id="Mat_SpecksNorth"]
+render_priority = 0
+shader = ExtResource("5_projshader")
+shader_parameter/pattern = 4
+shader_parameter/circular_mask = false
+shader_parameter/intensity = 0.9
+shader_parameter/speed = 0.5
+shader_parameter/speck_scale = Vector2(27.692308, 3.846154)
+
+[sub_resource type="QuadMesh" id="Quad_SpecksNorth"]
+size = Vector2(36, 5)
+
+[node name="DanceParty" type="Node3D" unique_id=996124960]
+script = ExtResource("1_party")
+music = ExtResource("7_music")
+
+[node name="Rig" type="Node3D" parent="." unique_id=1555789606]
+
+[node name="Music" type="AudioStreamPlayer3D" parent="." unique_id=841670083]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5, 2.03, -14.5)
+unit_size = 14.0
+max_distance = 80.0
+bus = &"Music"
+
+[node name="MirrorBall" type="Node3D" parent="Rig" unique_id=1293732523]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 9.53, -2.5)
+script = ExtResource("4_ball")
+
+[node name="Ball" type="MeshInstance3D" parent="Rig/MirrorBall" unique_id=1020536801]
+cast_shadow = 0
+mesh = SubResource("Mesh_ball")
+
+[node name="Rod" type="MeshInstance3D" parent="Rig" unique_id=360899900]
+transform = Transform3D(1, 0, 0, 0, 4.35, 0, 0, 0, 1, 0.5, 12.455, -2.5)
+cast_shadow = 0
+mesh = SubResource("Mesh_rod")
+
+[node name="FillLight" type="OmniLight3D" parent="Rig" unique_id=1256281958]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 8.53, -0.5)
+light_color = Color(0.5, 0.25, 1, 1)
+light_energy = 0.9
+omni_range = 32.0
+omni_attenuation = 0.6
+
+[node name="DiscoLight1" type="SpotLight3D" parent="Rig" unique_id=2136605259]
+transform = Transform3D(-0.6, 0.631373, -0.491292, 0, 0.614115, 0.789217, 0.8, 0.47353, -0.368469, -10.5, 12.53, -9.5)
+light_energy = 9.0
+light_specular = 0.3
+spot_range = 22.0
+spot_angle = 14.0
+spot_attenuation = 0.5
+script = ExtResource("2_disco")
+phase = 0
+sweep_speed = 0.5
+
+[node name="Can" type="MeshInstance3D" parent="Rig/DiscoLight1" unique_id=1202464182]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0.15)
+cast_shadow = 0
+mesh = SubResource("Mesh_can")
+
+[node name="DiscoLight2" type="SpotLight3D" parent="Rig" unique_id=1167025043]
+transform = Transform3D(-1, 0, 0, 0, 0.478336, 0.878177, 0, 0.878177, -0.478336, 1.5, 12.53, -11)
+light_energy = 9.0
+light_specular = 0.3
+spot_range = 22.0
+spot_angle = 14.0
+spot_attenuation = 0.5
+script = ExtResource("2_disco")
+phase = 1.37
+sweep_speed = 0.58
+
+[node name="Can" type="MeshInstance3D" parent="Rig/DiscoLight2" unique_id=1481344190]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0.15)
+cast_shadow = 0
+mesh = SubResource("Mesh_can")
+
+[node name="DiscoLight3" type="SpotLight3D" parent="Rig" unique_id=353244785]
+transform = Transform3D(-0.540758, -0.636704, 0.549718, 0, 0.653509, 0.756919, -0.841178, 0.40931, -0.35339, 15.5, 12.53, -9.5)
+light_energy = 9.0
+light_specular = 0.3
+spot_range = 22.0
+spot_angle = 14.0
+spot_attenuation = 0.5
+script = ExtResource("2_disco")
+phase = 2.74
+sweep_speed = 0.66
+
+[node name="Can" type="MeshInstance3D" parent="Rig/DiscoLight3" unique_id=2105503693]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0.15)
+cast_shadow = 0
+mesh = SubResource("Mesh_can")
+
+[node name="DiscoLight4" type="SpotLight3D" parent="Rig" unique_id=1122586401]
+transform = Transform3D(0.675725, 0.5632, -0.475607, 0, 0.645193, 0.76402, 0.737154, -0.516267, 0.435973, -10.5, 12.53, 10.5)
+light_energy = 9.0
+light_specular = 0.3
+spot_range = 22.0
+spot_angle = 14.0
+spot_attenuation = 0.5
+script = ExtResource("2_disco")
+phase = 4.11
+sweep_speed = 0.74
+
+[node name="Can" type="MeshInstance3D" parent="Rig/DiscoLight4" unique_id=1278010248]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0.15)
+cast_shadow = 0
+mesh = SubResource("Mesh_can")
+
+[node name="DiscoLight5" type="SpotLight3D" parent="Rig" unique_id=1166748345]
+transform = Transform3D(1, 0, 0, 0, 0.54407, 0.83904, 0, -0.83904, 0.54407, 1.5, 12.53, 12)
+light_energy = 9.0
+light_specular = 0.3
+spot_range = 22.0
+spot_angle = 14.0
+spot_attenuation = 0.5
+script = ExtResource("2_disco")
+phase = 5.48
+sweep_speed = 0.82
+
+[node name="Can" type="MeshInstance3D" parent="Rig/DiscoLight5" unique_id=496832677]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0.15)
+cast_shadow = 0
+mesh = SubResource("Mesh_can")
+
+[node name="DiscoLight6" type="SpotLight3D" parent="Rig" unique_id=227017211]
+transform = Transform3D(0.617822, -0.577634, 0.533513, 0, 0.678494, 0.734606, -0.786318, -0.453855, 0.419188, 15.5, 12.53, 10.5)
+light_energy = 9.0
+light_specular = 0.3
+spot_range = 22.0
+spot_angle = 14.0
+spot_attenuation = 0.5
+script = ExtResource("2_disco")
+phase = 6.85
+sweep_speed = 0.9
+
+[node name="Can" type="MeshInstance3D" parent="Rig/DiscoLight6" unique_id=1534276294]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0.15)
+cast_shadow = 0
+mesh = SubResource("Mesh_can")
+
+[node name="ProjectorEast" type="Node3D" parent="Rig" unique_id=1996359039]
+transform = Transform3D(0.145076, 0.307025, -0.940579, 0, 0.950636, 0.310308, 0.98942, -0.045018, 0.137915, 9.5, 11.53, -3.5)
+script = ExtResource("3_projector")
+procedural_patterns = PackedInt32Array(0, 1, 2, 3)
+
+[node name="Housing" type="MeshInstance3D" parent="Rig/ProjectorEast" unique_id=678947537]
+cast_shadow = 0
+mesh = SubResource("Mesh_housing")
+
+[node name="Lens" type="MeshInstance3D" parent="Rig/ProjectorEast" unique_id=425618838]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, -0.38)
+cast_shadow = 0
+mesh = SubResource("Mesh_lens")
+
+[node name="Screen" type="MeshInstance3D" parent="Rig/ProjectorEast" unique_id=903842322]
+transform = Transform3D(0.98942, 0, -0.145076, -0.045018, 0.950636, -0.307025, 0.137915, 0.310308, 0.940579, 0, 0, -14.50171)
+cast_shadow = 0
+mesh = SubResource("Quad_ProjectorEast")
+material_override = SubResource("Mat_projection")
+
+[node name="ProjectorSouth" type="Node3D" parent="Rig" unique_id=2092203757]
+transform = Transform3D(-0.984124, 0.070772, -0.162759, 0, 0.917056, 0.398759, 0.17748, 0.392428, -0.902497, 5.5, 11.53, 5.5)
+script = ExtResource("3_projector")
+procedural_patterns = PackedInt32Array(1, 2, 3, 0)
+
+[node name="Housing" type="MeshInstance3D" parent="Rig/ProjectorSouth" unique_id=1647920462]
+cast_shadow = 0
+mesh = SubResource("Mesh_housing")
+
+[node name="Lens" type="MeshInstance3D" parent="Rig/ProjectorSouth" unique_id=302836101]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, -0.38)
+cast_shadow = 0
+mesh = SubResource("Mesh_lens")
+
+[node name="Screen" type="MeshInstance3D" parent="Rig/ProjectorSouth" unique_id=1093516848]
+transform = Transform3D(0.984124, 0, -0.17748, -0.070772, 0.917056, -0.392428, 0.162759, 0.398759, 0.902497, 0, 0, -12.288128)
+cast_shadow = 0
+mesh = SubResource("Quad_ProjectorSouth")
+material_override = SubResource("Mat_projection")
+
+[node name="ProjectorNorth" type="Node3D" parent="Rig" unique_id=603408282]
+transform = Transform3D(1, 0, 0, 0, 0.925441, 0.378891, 0, -0.378891, 0.925441, -2.5, 11.53, -6.5)
+script = ExtResource("3_projector")
+procedural_patterns = PackedInt32Array(2, 3, 0, 1)
+
+[node name="Housing" type="MeshInstance3D" parent="Rig/ProjectorNorth" unique_id=289862608]
+cast_shadow = 0
+mesh = SubResource("Mesh_housing")
+
+[node name="Lens" type="MeshInstance3D" parent="Rig/ProjectorNorth" unique_id=2021771870]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, -0.38)
+cast_shadow = 0
+mesh = SubResource("Mesh_lens")
+
+[node name="Screen" type="MeshInstance3D" parent="Rig/ProjectorNorth" unique_id=507998003]
+transform = Transform3D(1, 0, 0, 0, 0.925441, -0.378891, 0, 0.378891, 0.925441, 0, 0, -10.557126)
+cast_shadow = 0
+mesh = SubResource("Quad_ProjectorNorth")
+material_override = SubResource("Mat_projection")
+
+[node name="ProjectorFloor" type="Node3D" parent="Rig" unique_id=555532864]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 1.5, 10.53, -1.5)
+script = ExtResource("3_projector")
+procedural_patterns = PackedInt32Array(3, 0, 1, 2)
+
+[node name="Housing" type="MeshInstance3D" parent="Rig/ProjectorFloor" unique_id=672585484]
+cast_shadow = 0
+mesh = SubResource("Mesh_housing")
+
+[node name="Lens" type="MeshInstance3D" parent="Rig/ProjectorFloor" unique_id=1684562483]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, -0.38)
+cast_shadow = 0
+mesh = SubResource("Mesh_lens")
+
+[node name="Screen" type="MeshInstance3D" parent="Rig/ProjectorFloor" unique_id=886935288]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -10.5)
+cast_shadow = 0
+mesh = SubResource("Quad_ProjectorFloor")
+material_override = SubResource("Mat_projection")
+
+[node name="SpecksEast" type="MeshInstance3D" parent="Rig" unique_id=175539242]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 23.14, 8.53, 0.5)
+cast_shadow = 0
+mesh = SubResource("Quad_SpecksEast")
+material_override = SubResource("Mat_SpecksEast")
+
+[node name="SpecksSouth" type="MeshInstance3D" parent="Rig" unique_id=81315236]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 8.33, 16.59)
+cast_shadow = 0
+mesh = SubResource("Quad_SpecksSouth")
+material_override = SubResource("Mat_SpecksSouth")
+
+[node name="SpecksNorth" type="MeshInstance3D" parent="Rig" unique_id=534463468]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 8.73, -16.27)
+cast_shadow = 0
+mesh = SubResource("Quad_SpecksNorth")
+material_override = SubResource("Mat_SpecksNorth")
