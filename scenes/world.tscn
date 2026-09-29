@@ -2993,15 +2993,15 @@ size = Vector3(18.950443, 0.45007324, 6.267456)
 material = SubResource("StandardMaterial3D_yhtv1")
 
 [node name="CSGBox3D6" type="CSGBox3D" parent="gallery" unique_id=1796157694]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.8282504, -1.0484972, 11.517204)
-size = Vector3(6.1931763, 0.37182617, 7.990631)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.211597, -1.0484972, 11.517204)
+size = Vector3(18.95987, 0.37182617, 7.990631)
 material = SubResource("StandardMaterial3D_c7mri")
 
 [node name="StaticBody3D" parent="gallery" unique_id=229945136 instance=ExtResource("66_4kmvx")]
-transform = Transform3D(0.69, 0, 0, 0, -1.6872596e-08, -0.69, 0, 0.386, -3.016086e-08, -2.7078075, 4.0961657, 19.02516)
+transform = Transform3D(0.74, 0, 0, 0, -1.8183938e-08, -0.69, 0, 0.416, -3.016086e-08, -2.8981404, 4.1086345, 19.51969)
 
 [node name="StaticBody3D2" parent="gallery" unique_id=1945467411 instance=ExtResource("66_4kmvx")]
-transform = Transform3D(-5.7699033e-08, 0.19, -2.8849517e-08, 0, -8.305164e-09, -0.66, -1.32, -8.305164e-09, 1.2610525e-15, -6.300403, 4.0961657, 2.0468483)
+transform = Transform3D(-4.9830984e-08, 0.26, -2.8849517e-08, 0, -1.13649605e-08, -0.66, -1.14, -1.13649605e-08, 1.2610525e-15, -6.3, 4.340269, 0.49497986)
 
 [node name="Seg" parent="gallery" unique_id=1485231188 groups=["gallery_attraction", "shop_prop"] instance=ExtResource("109_pwx6t")]
 transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 32.96471, -9.571679, 6.756235)
@@ -3109,9 +3109,9 @@ size = Vector3(0.98, 15.390234, 34.60435)
 material = ExtResource("5_71j4m")
 
 [node name="CSGBox3D" type="CSGBox3D" parent="gallery/NavigationRegion3D/wall west" unique_id=1442935328]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.3852806, 10.843164)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.1251297, 4.9944763, 5.008484)
 operation = 2
-size = Vector3(1, 5.7736053, 0.51660156)
+size = Vector3(1.3500977, 5.7736053, 3.4285278)
 material = SubResource("StandardMaterial3D_3fb5j")
 
 [node name="wall east" type="CSGBox3D" parent="gallery/NavigationRegion3D" unique_id=450251449]
