@@ -165,6 +165,8 @@
 [ext_resource type="PackedScene" path="res://scenes/UI/MoneyRainLayer.tscn" id="money_rain_layer"]
 [ext_resource type="AudioStream" uid="uid://cldonhpncb00b" path="res://sounds/(First Trip) To The Moon.ogg" id="moon_ogg"]
 [ext_resource type="PackedScene" uid="uid://cjg7s2n8fnpwh" path="res://scenes/objects/worklamp.tscn" id="worklamp_scene"]
+[ext_resource type="Material" uid="uid://dfjjs1rkdw2bi" path="res://materials/metal.tres" id="catwalk_metal"]
+[ext_resource type="Material" uid="uid://dnkxcpkaygoci" path="res://materials/orange metal.tres" id="catwalk_orange"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_t1by1"]
 render_priority = 0
@@ -1506,6 +1508,16 @@ operation = 2
 size = Vector3(1.3560791, 1.3412476, 1.9042969)
 material = ExtResource("3_qfnet")
 
+[node name="HOFDoorwayWest" type="CSGBox3D" parent="hallway" unique_id=1862099019]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.78, -14.22, -4.17)
+operation = 2
+size = Vector3(1.76, 2.6, 1.8)
+
+[node name="HOFDoorwayEast" type="CSGBox3D" parent="hallway" unique_id=2047822335]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.875, -14.22, -4.17)
+operation = 2
+size = Vector3(1.75, 2.6, 1.8)
+
 [node name="AssistantStudio" type="Node3D" parent="." unique_id=1212904913]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.778659, 1.5494895, 8.896082)
 
@@ -1587,6 +1599,8 @@ transform = Transform3D(0, -1, 4.371139e-08, 4.371139e-08, -4.371139e-08, -1, 1,
 
 [node name="Elevator" parent="." unique_id=904124064 instance=ExtResource("29_xgy6y")]
 transform = Transform3D(1.44, 0, 0, 0, 1.44, 0, 0, 0, 1.44, 5.35633, 0.44715643, -4.551083)
+descent_duration = 1.65
+descent_distance = 8.5
 
 [node name="CritiqueTV" parent="." unique_id=1552722384 node_paths=PackedStringArray("elevator_controller") instance=ExtResource("97_crtq")]
 transform = Transform3D(-2.8167248, 0, -1.0325029, 0, 3, 0, 1.0325029, 0, -2.8167248, 10.004766, 2.0000713, 5.076662)
@@ -3627,6 +3641,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.096214, 2.787619, 5.826288
 size = Vector3(0.45, 8.36, 9.45)
 material = ExtResource("5_71j4m")
 
+[node name="Doorway" type="CSGBox3D" parent="hall of fame/NorthWest_ShaftCap" unique_id=902695476]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.64, 1.925)
+operation = 2
+size = Vector3(0.85, 2.6, 1.8)
+
 [node name="NorthWest_RoofOuter" type="CSGBox3D" parent="hall of fame" unique_id=815449009]
 transform = Transform3D(0, 0, 1, 0.735512, 0.677511, 0, -0.677511, 0.735512, 0, -1.628786, 5.517619, 2.371288)
 size = Vector3(0.45, 3.447, 23.9)
@@ -3657,6 +3676,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.376214, 2.787619, 5.826288
 size = Vector3(0.45, 8.36, 9.45)
 material = ExtResource("5_71j4m")
 
+[node name="Doorway" type="CSGBox3D" parent="hall of fame/NorthEast_ShaftCap" unique_id=292947329]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.64, 1.925)
+operation = 2
+size = Vector3(0.85, 2.6, 1.8)
+
 [node name="NorthEast_RoofOuter" type="CSGBox3D" parent="hall of fame" unique_id=1586852161]
 transform = Transform3D(0, 0, 1, 0.735512, 0.677511, 0, -0.677511, 0.735512, 0, 36.411214, 5.517619, 2.371288)
 size = Vector3(0.45, 3.447, 36.52)
@@ -3671,6 +3695,141 @@ material = ExtResource("1_4mrxx")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 36.186214, 6.537619, 6.051288)
 size = Vector3(36.07, 0.1, 5.69)
 material = SubResource("StandardMaterial3D_7echp")
+
+[node name="ShaftDoorWest_JambN" type="CSGBox3D" parent="hall of fame" unique_id=71098808]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.851214, 0.207619, 6.791288)
+size = Vector3(0.08, 2.72, 0.12)
+material = SubResource("StandardMaterial3D_0qdas")
+
+[node name="ShaftDoorWest_JambS" type="CSGBox3D" parent="hall of fame" unique_id=1334107815]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.851214, 0.207619, 8.711288)
+size = Vector3(0.08, 2.72, 0.12)
+material = SubResource("StandardMaterial3D_0qdas")
+
+[node name="ShaftDoorWest_Lintel" type="CSGBox3D" parent="hall of fame" unique_id=848085127]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.851214, 1.507619, 7.751288)
+size = Vector3(0.08, 0.12, 2.04)
+material = SubResource("StandardMaterial3D_0qdas")
+
+[node name="ShaftDoorEast_JambN" type="CSGBox3D" parent="hall of fame" unique_id=823788856]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.621214, 0.207619, 6.791288)
+size = Vector3(0.08, 2.72, 0.12)
+material = SubResource("StandardMaterial3D_0qdas")
+
+[node name="ShaftDoorEast_JambS" type="CSGBox3D" parent="hall of fame" unique_id=699317830]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.621214, 0.207619, 8.711288)
+size = Vector3(0.08, 2.72, 0.12)
+material = SubResource("StandardMaterial3D_0qdas")
+
+[node name="ShaftDoorEast_Lintel" type="CSGBox3D" parent="hall of fame" unique_id=600803523]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.621214, 1.507619, 7.751288)
+size = Vector3(0.08, 0.12, 2.04)
+material = SubResource("StandardMaterial3D_0qdas")
+
+[node name="Catwalk_Deck" type="CSGBox3D" parent="hall of fame" unique_id=407091625]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.251214, -1.227381, 7.751288)
+size = Vector3(5.66, 0.15, 1.8)
+material = ExtResource("catwalk_metal")
+
+[node name="Catwalk_StringerN" type="CSGBox3D" parent="hall of fame" unique_id=1117121707]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.251214, -1.427381, 7.001288)
+size = Vector3(5.66, 0.25, 0.12)
+material = ExtResource("catwalk_orange")
+
+[node name="Catwalk_StringerS" type="CSGBox3D" parent="hall of fame" unique_id=1070106688]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.251214, -1.427381, 8.501288)
+size = Vector3(5.66, 0.25, 0.12)
+material = ExtResource("catwalk_orange")
+
+[node name="Catwalk_PostN1" type="CSGBox3D" parent="hall of fame" unique_id=61411011]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.561214, -0.627381, 6.891288)
+size = Vector3(0.06, 1.05, 0.06)
+material = ExtResource("catwalk_orange")
+
+[node name="Catwalk_PostN2" type="CSGBox3D" parent="hall of fame" unique_id=1757350149]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.637214, -0.627381, 6.891288)
+size = Vector3(0.06, 1.05, 0.06)
+material = ExtResource("catwalk_orange")
+
+[node name="Catwalk_PostN3" type="CSGBox3D" parent="hall of fame" unique_id=1017537441]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.713214, -0.627381, 6.891288)
+size = Vector3(0.06, 1.05, 0.06)
+material = ExtResource("catwalk_orange")
+
+[node name="Catwalk_PostN4" type="CSGBox3D" parent="hall of fame" unique_id=347974951]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.789214, -0.627381, 6.891288)
+size = Vector3(0.06, 1.05, 0.06)
+material = ExtResource("catwalk_orange")
+
+[node name="Catwalk_PostN5" type="CSGBox3D" parent="hall of fame" unique_id=344643198]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.865214, -0.627381, 6.891288)
+size = Vector3(0.06, 1.05, 0.06)
+material = ExtResource("catwalk_orange")
+
+[node name="Catwalk_PostN6" type="CSGBox3D" parent="hall of fame" unique_id=1242208055]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.941214, -0.627381, 6.891288)
+size = Vector3(0.06, 1.05, 0.06)
+material = ExtResource("catwalk_orange")
+
+[node name="Catwalk_TopRailN" type="CSGBox3D" parent="hall of fame" unique_id=1648842013]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.251214, -0.122381, 6.891288)
+size = Vector3(5.66, 0.06, 0.06)
+material = ExtResource("catwalk_orange")
+
+[node name="Catwalk_MidRailN" type="CSGBox3D" parent="hall of fame" unique_id=1452939279]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.251214, -0.627381, 6.891288)
+size = Vector3(5.66, 0.05, 0.05)
+material = ExtResource("catwalk_orange")
+
+[node name="Catwalk_KickplateN" type="CSGBox3D" parent="hall of fame" unique_id=1033125168]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.251214, -1.102381, 6.891288)
+size = Vector3(5.66, 0.1, 0.02)
+material = ExtResource("catwalk_orange")
+
+[node name="Catwalk_PostS1" type="CSGBox3D" parent="hall of fame" unique_id=267483575]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.561214, -0.627381, 8.611288)
+size = Vector3(0.06, 1.05, 0.06)
+material = ExtResource("catwalk_orange")
+
+[node name="Catwalk_PostS2" type="CSGBox3D" parent="hall of fame" unique_id=67929671]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.637214, -0.627381, 8.611288)
+size = Vector3(0.06, 1.05, 0.06)
+material = ExtResource("catwalk_orange")
+
+[node name="Catwalk_PostS3" type="CSGBox3D" parent="hall of fame" unique_id=282251355]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.713214, -0.627381, 8.611288)
+size = Vector3(0.06, 1.05, 0.06)
+material = ExtResource("catwalk_orange")
+
+[node name="Catwalk_PostS4" type="CSGBox3D" parent="hall of fame" unique_id=1096159748]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.789214, -0.627381, 8.611288)
+size = Vector3(0.06, 1.05, 0.06)
+material = ExtResource("catwalk_orange")
+
+[node name="Catwalk_PostS5" type="CSGBox3D" parent="hall of fame" unique_id=315098590]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.865214, -0.627381, 8.611288)
+size = Vector3(0.06, 1.05, 0.06)
+material = ExtResource("catwalk_orange")
+
+[node name="Catwalk_PostS6" type="CSGBox3D" parent="hall of fame" unique_id=396200156]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.941214, -0.627381, 8.611288)
+size = Vector3(0.06, 1.05, 0.06)
+material = ExtResource("catwalk_orange")
+
+[node name="Catwalk_TopRailS" type="CSGBox3D" parent="hall of fame" unique_id=733475996]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.251214, -0.122381, 8.611288)
+size = Vector3(5.66, 0.06, 0.06)
+material = ExtResource("catwalk_orange")
+
+[node name="Catwalk_MidRailS" type="CSGBox3D" parent="hall of fame" unique_id=270296977]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.251214, -0.627381, 8.611288)
+size = Vector3(5.66, 0.05, 0.05)
+material = ExtResource("catwalk_orange")
+
+[node name="Catwalk_KickplateS" type="CSGBox3D" parent="hall of fame" unique_id=378166758]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.251214, -1.102381, 8.611288)
+size = Vector3(5.66, 0.1, 0.02)
+material = ExtResource("catwalk_orange")
 
 [node name="HallOfFameGallery" type="Node3D" parent="hall of fame" unique_id=2051154870]
 script = ExtResource("202_hof")
