@@ -3736,22 +3736,22 @@ material = SubResource("StandardMaterial3D_0qdas")
 [node name="ShaftDoorWest_LinerN" type="CSGBox3D" parent="hall of fame" unique_id=877536308]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.676214, 0.147619, 6.801288)
 size = Vector3(1.73, 2.8, 0.1)
-material = SubResource("StandardMaterial3D_0qdas")
+material = ExtResource("3_qfnet")
 
 [node name="ShaftDoorWest_LinerS" type="CSGBox3D" parent="hall of fame" unique_id=827660058]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.676214, 0.147619, 8.701288)
 size = Vector3(1.73, 2.8, 0.1)
-material = SubResource("StandardMaterial3D_0qdas")
+material = ExtResource("3_qfnet")
 
 [node name="ShaftDoorWest_LinerTop" type="CSGBox3D" parent="hall of fame" unique_id=439658751]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.676214, 1.497619, 7.751288)
 size = Vector3(1.73, 0.1, 2)
-material = SubResource("StandardMaterial3D_0qdas")
+material = ExtResource("3_qfnet")
 
 [node name="ShaftDoorWest_Threshold" type="CSGBox3D" parent="hall of fame" unique_id=1297285677]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.676214, -1.202381, 7.751288)
 size = Vector3(1.73, 0.1, 2)
-material = SubResource("StandardMaterial3D_0qdas")
+material = ExtResource("3_qfnet")
 
 [node name="ShaftDoorEast_JambN" type="CSGBox3D" parent="hall of fame" unique_id=823788856]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.621214, 0.207619, 6.791288)
@@ -3771,22 +3771,22 @@ material = SubResource("StandardMaterial3D_0qdas")
 [node name="ShaftDoorEast_LinerN" type="CSGBox3D" parent="hall of fame" unique_id=393975070]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.811214, 0.147619, 6.801288)
 size = Vector3(1.7, 2.8, 0.1)
-material = SubResource("StandardMaterial3D_0qdas")
+material = ExtResource("3_qfnet")
 
 [node name="ShaftDoorEast_LinerS" type="CSGBox3D" parent="hall of fame" unique_id=504485440]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.811214, 0.147619, 8.701288)
 size = Vector3(1.7, 2.8, 0.1)
-material = SubResource("StandardMaterial3D_0qdas")
+material = ExtResource("3_qfnet")
 
 [node name="ShaftDoorEast_LinerTop" type="CSGBox3D" parent="hall of fame" unique_id=543502199]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.811214, 1.497619, 7.751288)
 size = Vector3(1.7, 0.1, 2)
-material = SubResource("StandardMaterial3D_0qdas")
+material = ExtResource("3_qfnet")
 
 [node name="ShaftDoorEast_Threshold" type="CSGBox3D" parent="hall of fame" unique_id=296140160]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.811214, -1.202381, 7.751288)
 size = Vector3(1.7, 0.1, 2)
-material = SubResource("StandardMaterial3D_0qdas")
+material = ExtResource("3_qfnet")
 
 [node name="Catwalk_Deck" type="CSGBox3D" parent="hall of fame" unique_id=407091625]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.251214, -1.227381, 7.751288)
