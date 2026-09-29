@@ -1,0 +1,172 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/objects/DJBooth.gd" id="1_djbooth"]
+[ext_resource type="PackedScene" uid="uid://gv6172d2ngws" path="res://scenes/humanrig_blender.tscn" id="2_rig"]
+
+[sub_resource type="StandardMaterial3D" id="Mat_black"]
+albedo_color = Color(0.05, 0.05, 0.06, 1)
+metallic = 0.1
+roughness = 0.55
+
+[sub_resource type="StandardMaterial3D" id="Mat_metal"]
+albedo_color = Color(0.32, 0.33, 0.37, 1)
+metallic = 0.85
+roughness = 0.3
+
+[sub_resource type="StandardMaterial3D" id="Mat_glow"]
+albedo_color = Color(0.9, 0.1, 0.7, 1)
+metallic = 0
+roughness = 0.4
+emission_enabled = true
+emission = Color(1, 0.12, 0.75, 1)
+emission_energy_multiplier = 3
+
+[sub_resource type="StandardMaterial3D" id="Mat_glow_blue"]
+albedo_color = Color(0.1, 0.5, 1, 1)
+metallic = 0
+roughness = 0.4
+emission_enabled = true
+emission = Color(0.15, 0.55, 1, 1)
+emission_energy_multiplier = 3
+
+[sub_resource type="StandardMaterial3D" id="Mat_platter"]
+albedo_color = Color(0.02, 0.02, 0.02, 1)
+metallic = 0.2
+roughness = 0.25
+
+[sub_resource type="BoxMesh" id="Box_desk"]
+material = SubResource("Mat_black")
+size = Vector3(3.2, 1, 0.8)
+
+[sub_resource type="BoxMesh" id="Box_top"]
+material = SubResource("Mat_metal")
+size = Vector3(3.4, 0.06, 1)
+
+[sub_resource type="BoxMesh" id="Box_strip"]
+material = SubResource("Mat_glow")
+size = Vector3(3, 0.07, 0.02)
+
+[sub_resource type="BoxMesh" id="Box_strip2"]
+material = SubResource("Mat_glow_blue")
+size = Vector3(3, 0.05, 0.02)
+
+[sub_resource type="BoxMesh" id="Box_mixer"]
+material = SubResource("Mat_metal")
+size = Vector3(0.5, 0.08, 0.45)
+
+[sub_resource type="CylinderMesh" id="Cyl_platter"]
+material = SubResource("Mat_platter")
+top_radius = 0.2
+bottom_radius = 0.2
+height = 0.04
+radial_segments = 24
+rings = 1
+
+[sub_resource type="BoxMesh" id="Box_speaker"]
+material = SubResource("Mat_black")
+size = Vector3(0.7, 1.6, 0.6)
+
+[sub_resource type="CylinderMesh" id="Cyl_woofer"]
+material = SubResource("Mat_metal")
+top_radius = 0.25
+bottom_radius = 0.25
+height = 0.03
+radial_segments = 24
+rings = 1
+
+[sub_resource type="CylinderMesh" id="Cyl_tweeter"]
+material = SubResource("Mat_metal")
+top_radius = 0.09
+bottom_radius = 0.09
+height = 0.03
+radial_segments = 24
+rings = 1
+
+[sub_resource type="BoxShape3D" id="Shape_desk"]
+size = Vector3(3.4, 1.06, 1)
+
+[sub_resource type="BoxShape3D" id="Shape_speaker"]
+size = Vector3(0.7, 1.6, 0.6)
+
+[sub_resource type="CapsuleShape3D" id="Shape_dj"]
+radius = 0.35
+height = 1.8
+
+[node name="DJBooth" type="StaticBody3D" unique_id=1218477492]
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("1_djbooth")
+
+[node name="Desk" type="MeshInstance3D" parent="." unique_id=794140548]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+mesh = SubResource("Box_desk")
+
+[node name="Top" type="MeshInstance3D" parent="." unique_id=303054671]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.03, 0)
+mesh = SubResource("Box_top")
+
+[node name="GlowStrip" type="MeshInstance3D" parent="." unique_id=615866250]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.78, 0.41)
+mesh = SubResource("Box_strip")
+
+[node name="GlowStrip2" type="MeshInstance3D" parent="." unique_id=1237918081]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0.41)
+mesh = SubResource("Box_strip2")
+
+[node name="Mixer" type="MeshInstance3D" parent="." unique_id=644072520]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, -0.1)
+mesh = SubResource("Box_mixer")
+
+[node name="TurntableL" type="MeshInstance3D" parent="." unique_id=359485912]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.9, 1.08, -0.1)
+mesh = SubResource("Cyl_platter")
+
+[node name="TurntableR" type="MeshInstance3D" parent="." unique_id=1857799053]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.9, 1.08, -0.1)
+mesh = SubResource("Cyl_platter")
+
+[node name="SpeakerL" type="MeshInstance3D" parent="." unique_id=687529915]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.15, 0.8, 0)
+mesh = SubResource("Box_speaker")
+
+[node name="SpeakerLWoofer" type="MeshInstance3D" parent="." unique_id=317794462]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, -2.15, 0.55, 0.31)
+mesh = SubResource("Cyl_woofer")
+
+[node name="SpeakerLTweeter" type="MeshInstance3D" parent="." unique_id=714576493]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, -2.15, 1.22, 0.31)
+mesh = SubResource("Cyl_tweeter")
+
+[node name="SpeakerR" type="MeshInstance3D" parent="." unique_id=791247230]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.15, 0.8, 0)
+mesh = SubResource("Box_speaker")
+
+[node name="SpeakerRWoofer" type="MeshInstance3D" parent="." unique_id=990215282]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 2.15, 0.55, 0.31)
+mesh = SubResource("Cyl_woofer")
+
+[node name="SpeakerRTweeter" type="MeshInstance3D" parent="." unique_id=1491402173]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 2.15, 1.22, 0.31)
+mesh = SubResource("Cyl_tweeter")
+
+[node name="DeskCollision" type="CollisionShape3D" parent="." unique_id=1541104202]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.53, 0)
+shape = SubResource("Shape_desk")
+
+[node name="SpeakerLCollision" type="CollisionShape3D" parent="." unique_id=778234819]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.15, 0.8, 0)
+shape = SubResource("Shape_speaker")
+
+[node name="SpeakerRCollision" type="CollisionShape3D" parent="." unique_id=2004053214]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.15, 0.8, 0)
+shape = SubResource("Shape_speaker")
+
+[node name="DJCollision" type="CollisionShape3D" parent="." unique_id=1615847523]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, -0.9)
+shape = SubResource("Shape_dj")
+
+[node name="DJ" type="Node3D" parent="." unique_id=413862356]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.9)
+
+[node name="humanrig" parent="DJ" unique_id=1364438148 instance=ExtResource("2_rig")]
+transform = Transform3D(-0.25, 0, 0, 0, 0.25, 0, 0, 0, -0.25, 0, 0, 0)
