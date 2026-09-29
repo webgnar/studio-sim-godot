@@ -1,0 +1,408 @@
+{
+ "type": "graph",
+ "label": "Graph",
+ "name": "purple_carpet",
+ "node_position": {
+  "x": 0,
+  "y": 0
+ },
+ "parameters": {},
+ "nodes": [
+  {
+   "name": "Material",
+   "type": "material",
+   "parameters": {
+    "albedo_color": {
+     "r": 1,
+     "g": 1,
+     "b": 1,
+     "a": 1,
+     "type": "Color"
+    },
+    "ao_light_affect": 1,
+    "depth_scale": 0.3,
+    "emission_energy": 1,
+    "metallic": 0,
+    "normal_scale": 1,
+    "resolution": 1,
+    "roughness": 1,
+    "size": 10,
+    "subsurf_scatter_strength": 0
+   },
+   "node_position": {
+    "x": 900,
+    "y": 200
+   }
+  },
+  {
+   "name": "tufts",
+   "type": "pattern",
+   "parameters": {
+    "mix": 0,
+    "x_wave": 0,
+    "x_scale": 8.0,
+    "y_wave": 0,
+    "y_scale": 8.0
+   },
+   "node_position": {
+    "x": -400,
+    "y": 0
+   }
+  },
+  {
+   "name": "tufts_soft",
+   "type": "math",
+   "parameters": {
+    "op": 6,
+    "default_in1": 0,
+    "default_in2": 0.6,
+    "clamp": false
+   },
+   "node_position": {
+    "x": -200,
+    "y": 0
+   }
+  },
+  {
+   "name": "pile",
+   "type": "fbm2",
+   "parameters": {
+    "noise": 0,
+    "scale_x": 192,
+    "scale_y": 192,
+    "folds": 0,
+    "iterations": 2,
+    "persistence": 0.55,
+    "offset": 0
+   },
+   "node_position": {
+    "x": -400,
+    "y": 200
+   }
+  },
+  {
+   "name": "mottle",
+   "type": "fbm2",
+   "parameters": {
+    "noise": 1,
+    "scale_x": 5,
+    "scale_y": 5,
+    "folds": 0,
+    "iterations": 4,
+    "persistence": 0.5,
+    "offset": 0
+   },
+   "node_position": {
+    "x": -400,
+    "y": 400
+   }
+  },
+  {
+   "name": "tufts_w",
+   "type": "math",
+   "parameters": {
+    "op": 2,
+    "default_in1": 0,
+    "default_in2": 0.8,
+    "clamp": false
+   },
+   "node_position": {
+    "x": 0,
+    "y": 0
+   }
+  },
+  {
+   "name": "pile_w",
+   "type": "math",
+   "parameters": {
+    "op": 2,
+    "default_in1": 0,
+    "default_in2": 0.22,
+    "clamp": false
+   },
+   "node_position": {
+    "x": 0,
+    "y": 200
+   }
+  },
+  {
+   "name": "height",
+   "type": "math",
+   "parameters": {
+    "op": 0,
+    "default_in1": 0,
+    "default_in2": 0,
+    "clamp": false
+   },
+   "node_position": {
+    "x": 200,
+    "y": 100
+   }
+  },
+  {
+   "name": "mottle_w",
+   "type": "math",
+   "parameters": {
+    "op": 2,
+    "default_in1": 0,
+    "default_in2": 0.3,
+    "clamp": false
+   },
+   "node_position": {
+    "x": 0,
+    "y": 400
+   }
+  },
+  {
+   "name": "mottle_off",
+   "type": "math",
+   "parameters": {
+    "op": 0,
+    "default_in1": 0,
+    "default_in2": 0.7,
+    "clamp": false
+   },
+   "node_position": {
+    "x": 200,
+    "y": 400
+   }
+  },
+  {
+   "name": "shade",
+   "type": "math",
+   "parameters": {
+    "op": 2,
+    "default_in1": 0,
+    "default_in2": 0,
+    "clamp": false
+   },
+   "node_position": {
+    "x": 400,
+    "y": 200
+   }
+  },
+  {
+   "name": "albedo",
+   "type": "colorize",
+   "parameters": {
+    "gradient": {
+     "interpolation": 1,
+     "type": "Gradient",
+     "points": [
+      {
+       "pos": 0.0,
+       "r": 0.01,
+       "g": 0.0,
+       "b": 0.03,
+       "a": 1
+      },
+      {
+       "pos": 0.3,
+       "r": 0.12,
+       "g": 0.01,
+       "b": 0.26,
+       "a": 1
+      },
+      {
+       "pos": 0.62,
+       "r": 0.42,
+       "g": 0.06,
+       "b": 0.78,
+       "a": 1
+      },
+      {
+       "pos": 0.88,
+       "r": 0.62,
+       "g": 0.16,
+       "b": 1.0,
+       "a": 1
+      },
+      {
+       "pos": 1.0,
+       "r": 0.78,
+       "g": 0.34,
+       "b": 1.0,
+       "a": 1
+      }
+     ]
+    }
+   },
+   "node_position": {
+    "x": 600,
+    "y": 100
+   }
+  },
+  {
+   "name": "normal",
+   "type": "normal_map2",
+   "parameters": {
+    "buffer": 1,
+    "param2": 0,
+    "size": 10,
+    "strength": 1.4
+   },
+   "node_position": {
+    "x": 600,
+    "y": 300
+   }
+  },
+  {
+   "name": "ao",
+   "type": "occlusion2",
+   "parameters": {
+    "param0": 10,
+    "param1": 14,
+    "param2": 1.2,
+    "param3": 1
+   },
+   "node_position": {
+    "x": 600,
+    "y": 450
+   }
+  },
+  {
+   "name": "rough_w",
+   "type": "math",
+   "parameters": {
+    "op": 2,
+    "default_in1": 0,
+    "default_in2": 0.12,
+    "clamp": false
+   },
+   "node_position": {
+    "x": 400,
+    "y": 550
+   }
+  },
+  {
+   "name": "rough",
+   "type": "math",
+   "parameters": {
+    "op": 0,
+    "default_in1": 0,
+    "default_in2": 0.84,
+    "clamp": false
+   },
+   "node_position": {
+    "x": 600,
+    "y": 550
+   }
+  }
+ ],
+ "connections": [
+  {
+   "from": "tufts",
+   "from_port": 0,
+   "to": "tufts_soft",
+   "to_port": 0
+  },
+  {
+   "from": "tufts_soft",
+   "from_port": 0,
+   "to": "tufts_w",
+   "to_port": 0
+  },
+  {
+   "from": "pile",
+   "from_port": 0,
+   "to": "pile_w",
+   "to_port": 0
+  },
+  {
+   "from": "tufts_w",
+   "from_port": 0,
+   "to": "height",
+   "to_port": 0
+  },
+  {
+   "from": "pile_w",
+   "from_port": 0,
+   "to": "height",
+   "to_port": 1
+  },
+  {
+   "from": "mottle",
+   "from_port": 0,
+   "to": "mottle_w",
+   "to_port": 0
+  },
+  {
+   "from": "mottle_w",
+   "from_port": 0,
+   "to": "mottle_off",
+   "to_port": 0
+  },
+  {
+   "from": "height",
+   "from_port": 0,
+   "to": "shade",
+   "to_port": 0
+  },
+  {
+   "from": "mottle_off",
+   "from_port": 0,
+   "to": "shade",
+   "to_port": 1
+  },
+  {
+   "from": "shade",
+   "from_port": 0,
+   "to": "albedo",
+   "to_port": 0
+  },
+  {
+   "from": "albedo",
+   "from_port": 0,
+   "to": "Material",
+   "to_port": 0
+  },
+  {
+   "from": "pile",
+   "from_port": 0,
+   "to": "rough_w",
+   "to_port": 0
+  },
+  {
+   "from": "rough_w",
+   "from_port": 0,
+   "to": "rough",
+   "to_port": 0
+  },
+  {
+   "from": "rough",
+   "from_port": 0,
+   "to": "Material",
+   "to_port": 2
+  },
+  {
+   "from": "height",
+   "from_port": 0,
+   "to": "normal",
+   "to_port": 0
+  },
+  {
+   "from": "normal",
+   "from_port": 0,
+   "to": "Material",
+   "to_port": 4
+  },
+  {
+   "from": "height",
+   "from_port": 0,
+   "to": "ao",
+   "to_port": 0
+  },
+  {
+   "from": "ao",
+   "from_port": 0,
+   "to": "Material",
+   "to_port": 5
+  },
+  {
+   "from": "height",
+   "from_port": 0,
+   "to": "Material",
+   "to_port": 6
+  }
+ ]
+}

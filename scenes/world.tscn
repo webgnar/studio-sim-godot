@@ -167,6 +167,8 @@
 [ext_resource type="PackedScene" path="res://scenes/UI/MoneyRainLayer.tscn" id="money_rain_layer"]
 [ext_resource type="AudioStream" uid="uid://cldonhpncb00b" path="res://sounds/(First Trip) To The Moon.ogg" id="moon_ogg"]
 [ext_resource type="PackedScene" uid="uid://cjg7s2n8fnpwh" path="res://scenes/objects/worklamp.tscn" id="worklamp_scene"]
+[ext_resource type="PackedScene" path="res://scenes/objects/DJBooth.tscn" id="dj_booth_scene"]
+[ext_resource type="PackedScene" path="res://scenes/objects/DanceParty.tscn" id="dance_party_scene"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_t1by1"]
 render_priority = 0
@@ -1803,7 +1805,7 @@ transform = Transform3D(-1.1175871e-08, 0, -0.14, 0, 0.14, 0, 0.14, 0, -1.117587
 transform = Transform3D(-6.119594e-09, 0, -0.11, 0, 0.14, 0, 0.14, 0, -4.808253e-09, -3.6186662, 1.6572046, 3.6067662)
 
 [node name="Player" parent="." unique_id=1378579681 instance=ExtResource("27_l137e")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.14252, 1.0146583, 10.445705)
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 2.14252, 1.0146583, 10.445705)
 
 [node name="hvac group" type="Node3D" parent="." unique_id=179664338]
 
@@ -3991,6 +3993,13 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.81, 0, 0)
 [node name="SpotLight3D" type="SpotLight3D" parent="hall of fame" unique_id=1392592879]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 13.927158, 1.648324, 7.8477836)
 spot_range = 8.270282
+
+[node name="DJBooth" parent="." unique_id=97919635 groups=["shop_prop"] instance=ExtResource("dj_booth_scene")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22, -15.53, 1.05)
+metadata/shop_item_id = "dj"
+
+[node name="DanceParty" parent="." unique_id=1626250434 instance=ExtResource("dance_party_scene")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5, -15.53, 15.5)
 
 [editable path="Spotlight1"]
 [editable path="Spotlight2"]

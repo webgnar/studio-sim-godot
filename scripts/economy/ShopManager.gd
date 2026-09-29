@@ -126,6 +126,11 @@ func purchase(item_id: String) -> bool:
 		if SteamManager:
 			SteamManager.unlock_achievement("ACH_RF_RECEIVER")
 
+	# Achievement: DJ
+	if item_id == "dj":
+		if SteamManager:
+			SteamManager.unlock_achievement("ACH_UNLOCK_DJ")
+
 	# Achievement: Brave New World (all three free energy devices)
 	var free_energy_ids = ["geet", "wfc", "seg"]
 	if item_id in free_energy_ids:
@@ -495,6 +500,18 @@ func _build_catalog() -> void:
 			"title": "Coin Pusher Machine",
 			"description": "A fully functional arcade coin pusher machine for your studio. Insert coins, watch them fall, and try your luck at the spinning wheel bonus.",
 			"price": 12000,
+		},
+		{
+			"id": "dj",
+			"display_name": "DJ",
+			"title": "Resident DJ",
+			"description": (
+				"A resident DJ set up on a booth in your gallery. Talk to them to turn the"
+				+ " gallery into a dance party: the house lights drop, the disco lights and"
+				+ " projectors come on, and every visitor starts dancing wherever they're"
+				+ " standing. Talk to them again to send everyone back to looking at art."
+			),
+			"price": 16000,
 		},
 		{
 			"id": "gallery_visitor",

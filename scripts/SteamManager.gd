@@ -170,6 +170,7 @@ func setup_achievements() -> void:
 
 		# Shop
 		"ACH_RF_RECEIVER": false,  # Purchase the RF Receiver
+		"ACH_UNLOCK_DJ": false,  # Purchase the DJ
 
 		# Studio Assistant
 		"ACH_MADE_ZACK_SWEAR": false,  # Get the Studio Assistant to say a real swear word

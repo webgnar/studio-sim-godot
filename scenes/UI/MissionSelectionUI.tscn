@@ -37,7 +37,7 @@ layout_mode = 2
 
 [node name="TitleLabel" type="Label" parent="MarginContainer/HBoxContainer/LeftPanel" unique_id=830121203]
 layout_mode = 2
-text = "SELECT A COMMISSION"
+text = "DO A COMMISSION"
 horizontal_alignment = 1
 
 [node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/HBoxContainer/LeftPanel" unique_id=1920428539]
