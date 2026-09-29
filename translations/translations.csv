@@ -199,6 +199,7 @@ Turn On,Turn On,打开,オンにする,켜기,Ligar,Encender,Включить
 Turn Off,Turn Off,关闭,オフにする,끄기,Desligar,Apagar,Выключить
 "Commissions Completed: %d","Commissions Completed: %d",完成的委托: %d,完了したコミッション: %d,완료된 의뢰: %d,"Comissões Concluídas: %d","Comisiones Completadas: %d","Заказов выполнено: %d"
 SELECT A COMMISSION,SELECT A COMMISSION,选择委托,コミッションを選択,의뢰 선택,SELECIONAR UMA COMISSÃO,SELECCIONAR UNA COMISIÓN,ВЫБРАТЬ ЗАКАЗ
+DO A COMMISSION,DO A COMMISSION,接受委托,コミッションを受ける,의뢰 수행하기,FAZER UMA COMISSÃO,HACER UNA COMISIÓN,ВЫПОЛНИТЬ ЗАКАЗ
 View Results,View Results,查看结果,結果を見る,결과 보기,Ver Resultados,Ver Resultados,Посмотреть результаты
 Start Mission,Start Mission,开始任务,ミッション開始,미션 시작,Iniciar Missão,Iniciar Misión,Начать задание
 Abort Mission,Abort Mission,中止任务,ミッション中止,미션 중단,Cancelar Missão,Cancelar Misión,Отменить задание

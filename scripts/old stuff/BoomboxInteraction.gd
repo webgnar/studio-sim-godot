@@ -44,6 +44,7 @@ var _inactive_slot: AudioStreamPlayer3D
 var _next_chunk: AudioStreamMP3 = null
 var _radio: RadioStreamPlayer
 var _rf_mesh: MeshInstance3D
+var _toast_enabled: bool = true  ## off while resuming playback on load / new game
 
 
 func _ready() -> void:
@@ -203,6 +204,9 @@ func _on_world_state_loaded() -> void:
 	_playlist.clear()
 	_build_playlist()
 
+	# Resuming (or auto-starting) the tape on load / new game shouldn't pop the
+	# "now playing" toast - that's only for the player switching tracks.
+	_toast_enabled = false
 	var saved = WorldStateManager.get_data("boombox_" + boombox_id, null)
 	if saved != null:
 		_current_index = saved.get("playlist_index", -1)
@@ -211,6 +215,7 @@ func _on_world_state_loaded() -> void:
 	elif auto_play_on_start:
 		_current_index = 0
 		_play_entry(0)
+	_toast_enabled = true
 
 
 func _process(_delta: float) -> void:
@@ -358,7 +363,8 @@ func _save_state() -> void:
 
 
 func _on_audio_started(label: String) -> void:
-	MusicToast.show_toast(label)
+	if _toast_enabled:
+		MusicToast.show_toast(label)
 
 
 func get_radio_state() -> BoomboxState:
