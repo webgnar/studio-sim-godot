@@ -154,6 +154,8 @@
 [ext_resource type="Script" uid="uid://c6fwfj202t4lx" path="res://scripts/objects/HOFDoorInteraction.gd" id="205_hofdoor_interact"]
 [ext_resource type="Script" uid="uid://nvjrcsa5oaqc" path="res://scripts/BerkeyInteraction.gd" id="berkey_interaction"]
 [ext_resource type="AudioStream" uid="uid://b8pj17m4nhgjm" path="res://sounds/boomboxSwitch.ogg" id="boombox_switch"]
+[ext_resource type="Material" uid="uid://dfjjs1rkdw2bi" path="res://materials/metal.tres" id="catwalk_metal"]
+[ext_resource type="Material" uid="uid://dnkxcpkaygoci" path="res://materials/orange metal.tres" id="catwalk_orange"]
 [ext_resource type="Script" uid="uid://dy1equdk316u6" path="res://scripts/DayNightCycle.gd" id="day_night_cycle"]
 [ext_resource type="AudioStream" uid="uid://cnjld2r5btwho" path="res://sounds/dial up.ogg" id="dial_up_ogg"]
 [ext_resource type="AudioStream" uid="uid://bukro42figtah" path="res://sounds/fan switch.ogg" id="fan_switch"]
@@ -165,8 +167,6 @@
 [ext_resource type="PackedScene" path="res://scenes/UI/MoneyRainLayer.tscn" id="money_rain_layer"]
 [ext_resource type="AudioStream" uid="uid://cldonhpncb00b" path="res://sounds/(First Trip) To The Moon.ogg" id="moon_ogg"]
 [ext_resource type="PackedScene" uid="uid://cjg7s2n8fnpwh" path="res://scenes/objects/worklamp.tscn" id="worklamp_scene"]
-[ext_resource type="Material" uid="uid://dfjjs1rkdw2bi" path="res://materials/metal.tres" id="catwalk_metal"]
-[ext_resource type="Material" uid="uid://dnkxcpkaygoci" path="res://materials/orange metal.tres" id="catwalk_orange"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_t1by1"]
 render_priority = 0
@@ -539,17 +539,17 @@ albedo_color = Color(1.0734373, 1.0734373, 0.15063755, 1)
 albedo_texture = ExtResource("82_mu18u")
 texture_filter = 0
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_iqfx1"]
+[sub_resource type="PlaneMesh" id="PlaneMesh_x3v50"]
 resource_local_to_scene = true
 size = Vector2(2.5, 3)
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_x3v50"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_3fb5j"]
 resource_name = "_albedo"
 viewport_path = NodePath("../MirrorNew/SubViewport")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hg3bl"]
 resource_local_to_scene = true
-albedo_texture = SubResource("ViewportTexture_x3v50")
+albedo_texture = SubResource("ViewportTexture_3fb5j")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_1v02h"]
 size = Vector2(2.5, 3)
@@ -1547,11 +1547,13 @@ material = ExtResource("3_qfnet")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.78, -14.22, -4.17)
 operation = 2
 size = Vector3(1.76, 2.6, 1.8)
+material = ExtResource("3_qfnet")
 
 [node name="HOFDoorwayEast" type="CSGBox3D" parent="hallway" unique_id=2047822335]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.875, -14.22, -4.17)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.827881, -14.198907, -4.17)
 operation = 2
-size = Vector3(1.75, 2.6, 1.8)
+size = Vector3(1.6557617, 2.5578125, 1.8)
+material = ExtResource("3_qfnet")
 
 [node name="AssistantStudio" type="Node3D" parent="." unique_id=1212904913]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.778659, 1.5494895, 8.896082)
@@ -2474,7 +2476,7 @@ surface_material_override/0 = SubResource("StandardMaterial3D_7b7y8")
 
 [node name="mirror" parent="." unique_id=1626491013 groups=["shop_prop"] instance=ExtResource("39_qaasp")]
 transform = Transform3D(-4.7902194e-08, -0.99488777, 0.10098683, -3.9073655e-08, 0.10098683, 0.99488777, -1, 4.3711392e-08, -4.3711385e-08, 2.8, 1.497, 5.232)
-mesh = SubResource("PlaneMesh_iqfx1")
+mesh = SubResource("PlaneMesh_x3v50")
 surface_material_override/0 = SubResource("StandardMaterial3D_hg3bl")
 show_debug_logs = false
 metadata/shop_item_id = "mirror"
