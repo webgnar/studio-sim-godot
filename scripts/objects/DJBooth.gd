@@ -25,6 +25,10 @@ func _ready() -> void:
 	var rig := get_node_or_null(dj_rig_path)
 	if rig:
 		_apply_random_skin(rig)
+		# The shared humanrig carries the player's skateboard mesh; the DJ doesn't skate.
+		var board := rig.find_child("skateboard", true, false) as Node3D
+		if board:
+			board.visible = false
 		_start_booth_animation(rig)
 	else:
 		push_warning("DJBooth: no DJ rig at %s" % dj_rig_path)

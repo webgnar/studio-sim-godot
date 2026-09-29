@@ -219,6 +219,7 @@ func _ready() -> void:
 	_nav_agent.target_desired_distance = stop_distance
 	_nav_agent.navigation_finished.connect(_on_navigation_finished)
 
+	_hide_skateboard()
 	_anim_player = _find_animation_player($humanrig)
 	if not _anim_player:
 		push_warning("GalleryVisitor: AnimationPlayer not found inside humanrig!")
@@ -476,6 +477,13 @@ func _is_painting_hung(painting: Node3D) -> bool:
 	if not hanging_comp:
 		return true
 	return hanging_comp.current_nail != null
+
+
+## The shared humanrig carries the player's skateboard mesh; visitors never skate.
+func _hide_skateboard() -> void:
+	var board := $humanrig.find_child("skateboard", true, false) as Node3D
+	if board:
+		board.visible = false
 
 
 func _apply_skin() -> void:
