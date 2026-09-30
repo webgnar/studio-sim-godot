@@ -361,8 +361,13 @@ func _load_painting_instance(entry: Dictionary) -> Node:
 	# Fresh StandardMaterial3D per instance (never mutate a shared one). The loaded texture is
 	# used directly - no need to decode into an Image and rebuild it, since load() already gives
 	# us a ready-to-use Texture2D that works the same in editor and export.
+	# Alpha scissor, not alpha blend: it still cuts out transparent pixels, but renders in the
+	# opaque pass. Alpha-blended canvases get depth-sorted against the Hall of Fame's cyan
+	# ceiling glass (itself alpha-blended so the sun shines through it) and showed through it
+	# when seen from above.
 	var material := StandardMaterial3D.new()
-	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR
+	material.alpha_scissor_threshold = 0.5
 	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	material.albedo_texture = texture
 	material.cull_mode = BaseMaterial3D.CULL_DISABLED

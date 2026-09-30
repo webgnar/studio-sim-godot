@@ -3911,7 +3911,7 @@ rail_margin = 3.0
 show_labels = false
 
 [node name="Rail01_NorthWest_Outer" type="Node3D" parent="hall of fame" unique_id=150385172]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.628786, 1.731619, 1.631288)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.628786, 0.747619, 1.631288)
 
 [node name="Rail01_NorthWest_Outer_Start" type="Node3D" parent="hall of fame/Rail01_NorthWest_Outer" unique_id=154034407 groups=["hall_of_fame_rail"]]
 transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 11, 0, 0)
@@ -3920,7 +3920,7 @@ transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 11, 0, 0)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 0, 0)
 
 [node name="Rail02_NorthWest_Inner" type="Node3D" parent="hall of fame" unique_id=1384573515]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.446214, 1.731619, 10.471288)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.446214, 0.747619, 10.471288)
 
 [node name="Rail02_NorthWest_Inner_Start" type="Node3D" parent="hall of fame/Rail02_NorthWest_Inner" unique_id=1041263227 groups=["hall_of_fame_rail"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.925, 0, 0)
@@ -3929,7 +3929,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.925, 0, 0)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.925, 0, 0)
 
 [node name="Rail03_West_Outer" type="Node3D" parent="hall of fame" unique_id=1989460389]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.048786, 1.731619, 37.21129)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.048786, 0.747619, 37.21129)
 
 [node name="Rail03_West_Outer_Start" type="Node3D" parent="hall of fame/Rail03_West_Outer" unique_id=727114188 groups=["hall_of_fame_rail"]]
 transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 0, 0, -35.16)
@@ -3938,7 +3938,7 @@ transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 0, 0, -35.16)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 35.16)
 
 [node name="Rail04_West_Inner" type="Node3D" parent="hall of fame" unique_id=1694301836]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.208786, 1.731619, 37.21129)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.208786, 0.747619, 37.21129)
 
 [node name="Rail04_West_Inner_Start" type="Node3D" parent="hall of fame/Rail04_West_Inner" unique_id=570159625 groups=["hall_of_fame_rail"]]
 transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 0, 0, -26.16)
@@ -3947,7 +3947,7 @@ transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 0, 0, -26.16)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 26.16)
 
 [node name="Rail05_South_Outer" type="Node3D" parent="hall of fame" unique_id=125461060]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.546213, 1.731619, 72.79129)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.546213, 0.747619, 72.79129)
 
 [node name="Rail05_South_Outer_Start" type="Node3D" parent="hall of fame/Rail05_South_Outer" unique_id=371014828 groups=["hall_of_fame_rail"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -33.175, 0, 0)
@@ -3956,7 +3956,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -33.175, 0, 0)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 33.175, 0, 0)
 
 [node name="Rail06_South_Inner" type="Node3D" parent="hall of fame" unique_id=135935683]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.546213, 1.731619, 63.951286)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.546213, 0.747619, 63.951286)
 
 [node name="Rail06_South_Inner_Start" type="Node3D" parent="hall of fame/Rail06_South_Inner" unique_id=396410344 groups=["hall_of_fame_rail"]]
 transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -24.175, 0, 0)
@@ -3965,7 +3965,7 @@ transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -24.175, 0, 0)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24.175, 0, 0)
 
 [node name="Rail07_East_Outer" type="Node3D" parent="hall of fame" unique_id=1515508518]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 54.141212, 1.731619, 37.21129)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 54.141212, 0.747619, 37.21129)
 
 [node name="Rail07_East_Outer_Start" type="Node3D" parent="hall of fame/Rail07_East_Outer" unique_id=1296927272 groups=["hall_of_fame_rail"]]
 transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 0, 0, 35.16)
@@ -3974,7 +3974,7 @@ transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 0, 0, 35.16)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -35.16)
 
 [node name="Rail08_East_Inner" type="Node3D" parent="hall of fame" unique_id=1536956663]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 45.301212, 1.731619, 37.21129)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 45.301212, 0.747619, 37.21129)
 
 [node name="Rail08_East_Inner_Start" type="Node3D" parent="hall of fame/Rail08_East_Inner" unique_id=1189685153 groups=["hall_of_fame_rail"]]
 transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 0, 0, 26.16)
@@ -3983,7 +3983,7 @@ transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 0, 0, 26.16)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -26.16)
 
 [node name="Rail09_NorthEast_Outer" type="Node3D" parent="hall of fame" unique_id=1024281862]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 36.411213, 1.731619, 1.631288)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 36.411213, 0.747619, 1.631288)
 
 [node name="Rail09_NorthEast_Outer_Start" type="Node3D" parent="hall of fame/Rail09_NorthEast_Outer" unique_id=96318184 groups=["hall_of_fame_rail"]]
 transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 17.31, 0, 0)
@@ -3992,7 +3992,7 @@ transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 17.31, 0, 0)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17.31, 0, 0)
 
 [node name="Rail10_NorthEast_Inner" type="Node3D" parent="hall of fame" unique_id=502646246]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 31.911215, 1.731619, 10.471288)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 31.911215, 0.747619, 10.471288)
 
 [node name="Rail10_NorthEast_Inner_Start" type="Node3D" parent="hall of fame/Rail10_NorthEast_Inner" unique_id=1174836739 groups=["hall_of_fame_rail"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.81, 0, 0)
