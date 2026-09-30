@@ -156,8 +156,10 @@
 [ext_resource type="AudioStream" uid="uid://b8pj17m4nhgjm" path="res://sounds/boomboxSwitch.ogg" id="boombox_switch"]
 [ext_resource type="Material" uid="uid://dfjjs1rkdw2bi" path="res://materials/metal.tres" id="catwalk_metal"]
 [ext_resource type="Material" uid="uid://dnkxcpkaygoci" path="res://materials/orange metal.tres" id="catwalk_orange"]
+[ext_resource type="PackedScene" path="res://scenes/objects/DanceParty.tscn" id="dance_party_scene"]
 [ext_resource type="Script" uid="uid://dy1equdk316u6" path="res://scripts/DayNightCycle.gd" id="day_night_cycle"]
 [ext_resource type="AudioStream" uid="uid://cnjld2r5btwho" path="res://sounds/dial up.ogg" id="dial_up_ogg"]
+[ext_resource type="PackedScene" path="res://scenes/objects/DJBooth.tscn" id="dj_booth_scene"]
 [ext_resource type="AudioStream" uid="uid://bukro42figtah" path="res://sounds/fan switch.ogg" id="fan_switch"]
 [ext_resource type="PackedScene" uid="uid://dft4un8r3mpqc" path="res://scenes/FortuneTeller.tscn" id="fortune_teller_scene"]
 [ext_resource type="Script" uid="uid://dy7jwhh2qgx4s" path="res://scripts/components/HiddenDoorFog.gd" id="hidden_door_fog_script"]
@@ -167,8 +169,6 @@
 [ext_resource type="PackedScene" path="res://scenes/UI/MoneyRainLayer.tscn" id="money_rain_layer"]
 [ext_resource type="AudioStream" uid="uid://cldonhpncb00b" path="res://sounds/(First Trip) To The Moon.ogg" id="moon_ogg"]
 [ext_resource type="PackedScene" uid="uid://cjg7s2n8fnpwh" path="res://scenes/objects/worklamp.tscn" id="worklamp_scene"]
-[ext_resource type="PackedScene" path="res://scenes/objects/DJBooth.tscn" id="dj_booth_scene"]
-[ext_resource type="PackedScene" path="res://scenes/objects/DanceParty.tscn" id="dance_party_scene"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_t1by1"]
 render_priority = 0
@@ -541,17 +541,17 @@ albedo_color = Color(1.0734373, 1.0734373, 0.15063755, 1)
 albedo_texture = ExtResource("82_mu18u")
 texture_filter = 0
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_x3v50"]
+[sub_resource type="PlaneMesh" id="PlaneMesh_sjp3e"]
 resource_local_to_scene = true
 size = Vector2(2.5, 3)
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_3fb5j"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_3r8ca"]
 resource_name = "_albedo"
 viewport_path = NodePath("../MirrorNew/SubViewport")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hg3bl"]
 resource_local_to_scene = true
-albedo_texture = SubResource("ViewportTexture_3fb5j")
+albedo_texture = SubResource("ViewportTexture_3r8ca")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_1v02h"]
 size = Vector2(2.5, 3)
@@ -2478,7 +2478,7 @@ surface_material_override/0 = SubResource("StandardMaterial3D_7b7y8")
 
 [node name="mirror" parent="." unique_id=1626491013 groups=["shop_prop"] instance=ExtResource("39_qaasp")]
 transform = Transform3D(-4.7902194e-08, -0.99488777, 0.10098683, -3.9073655e-08, 0.10098683, 0.99488777, -1, 4.3711392e-08, -4.3711385e-08, 2.8, 1.497, 5.232)
-mesh = SubResource("PlaneMesh_x3v50")
+mesh = SubResource("PlaneMesh_sjp3e")
 surface_material_override/0 = SubResource("StandardMaterial3D_hg3bl")
 show_debug_logs = false
 metadata/shop_item_id = "mirror"
@@ -2997,6 +2997,16 @@ material = SubResource("StandardMaterial3D_yhtv1")
 [node name="CSGBox3D6" type="CSGBox3D" parent="gallery" unique_id=1796157694]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.211597, -1.0484972, 11.517204)
 size = Vector3(18.95987, 0.37182617, 7.990631)
+material = SubResource("StandardMaterial3D_c7mri")
+
+[node name="CSGBox3D8" type="CSGBox3D" parent="gallery" unique_id=826577826]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, -15.191532, 0.94681835, 7.5172043)
+size = Vector3(13, 0.37182617, 4)
+material = SubResource("StandardMaterial3D_c7mri")
+
+[node name="CSGBox3D9" type="CSGBox3D" parent="gallery" unique_id=222119287]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, -15.191532, 0.94681835, 15.517204)
+size = Vector3(13, 0.37182617, 4)
 material = SubResource("StandardMaterial3D_c7mri")
 
 [node name="StaticBody3D" parent="gallery" unique_id=229945136 instance=ExtResource("66_4kmvx")]
