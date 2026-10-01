@@ -33,7 +33,7 @@ const BACKGROUND := Color("#2a2a2a")
 		audio_enabled = value
 		_apply_audio_state()
 
-## Where scores are stored/shown. Defaults to a local JSON board.
+## Where scores are stored/shown. Defaults to Steam leaderboards when available, else a local JSON board.
 var leaderboard: LouGnarLeaderboard:
 	set(value):
 		if leaderboard == value:
@@ -68,7 +68,7 @@ func _ready() -> void:
 	_ensure_input_action()
 	_build()
 	if leaderboard == null:
-		leaderboard = LouGnarLocalLeaderboard.new()
+		leaderboard = _default_leaderboard()
 	else:
 		_adopt_leaderboard()
 	_apply_audio_state()
@@ -209,6 +209,13 @@ func _on_ufo_destroyed(pos: Vector2, ufo: LouGnarUfo, value: int) -> void:
 
 
 # ---------------------------------------------------------------- leaderboard
+
+## Steam leaderboard when GodotSteam is present (it falls back to the local board
+## by itself if Steam is offline), otherwise the local JSON board.
+func _default_leaderboard() -> LouGnarLeaderboard:
+	if Engine.has_singleton("Steam"):
+		return LouGnarSteamLeaderboard.new()
+	return LouGnarLocalLeaderboard.new()
 
 func _adopt_leaderboard() -> void:
 	if leaderboard == null or not is_node_ready():
