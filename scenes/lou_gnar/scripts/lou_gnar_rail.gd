@@ -1,4 +1,4 @@
-class_name ExSkateRail
+class_name LouGnarRail
 extends Node2D
 ## Grindable rail. Origin is the bottom-left corner; the grind surface is
 ## position.y - rail_height.
@@ -17,9 +17,9 @@ func setup(x: float, y: float, width: float) -> void:
 
 func _draw() -> void:
 	var top := -rail_height
-	draw_texture(ExSkateAssets.RAIL_CAP_LEFT, Vector2(0, top))
+	draw_texture(LouGnarAssets.RAIL_CAP_LEFT, Vector2(0, top))
 	var x := TILE_SIZE
 	while x < rail_width - TILE_SIZE:
-		draw_texture(ExSkateAssets.RAIL_TILE, Vector2(x, top))
+		draw_texture(LouGnarAssets.RAIL_TILE, Vector2(x, top))
 		x += TILE_SIZE
-	draw_texture(ExSkateAssets.RAIL_CAP_RIGHT, Vector2(rail_width - TILE_SIZE, top))
+	draw_texture(LouGnarAssets.RAIL_CAP_RIGHT, Vector2(rail_width - TILE_SIZE, top))

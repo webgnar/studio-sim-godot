@@ -1,19 +1,19 @@
 extends StaticBody3D
-class_name ExSkateCabinet
-## Placeholder arcade cabinet for ExcaliburSkate.
+class_name LouGnarCabinet
+## Placeholder arcade cabinet for LouGnar.
 ##
 ## Look at it and press interact to play: the player is locked, the camera
 ## blends to the cabinet's PlayCamera and the game gets input + sound. Press
 ## interact (E / gamepad X) or go_back to step away. Out of play the screen
 ## shows the (silent) attract/title card.
 
-@export var game: ExSkateGame
+@export var game: LouGnarGame
 @export var screen: MeshInstance3D
 @export var play_camera: Camera3D
 @export var screen_material: Material
 @export var blend_time: float = 0.5
 
-var interaction_text: String = "Play ExcaliburSkate"
+var interaction_text: String = "Play Lou Gnar"
 
 var _playing: bool = false
 var _enter_frame: int = 0
@@ -93,7 +93,7 @@ func _show_hint(on: bool) -> void:
 		add_child(_hint_layer)
 		var label := Label.new()
 		label.text = "%s Leave" % InputDeviceManager.get_formatted_prompt("interact")
-		label.add_theme_font_override("font", ExSkateAssets.FONT)
+		label.add_theme_font_override("font", LouGnarAssets.FONT)
 		label.add_theme_font_size_override("font_size", 28)
 		label.add_theme_color_override("font_outline_color", Color.BLACK)
 		label.add_theme_constant_override("outline_size", 6)

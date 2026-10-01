@@ -1,4 +1,4 @@
-class_name ExSkateAudio
+class_name LouGnarAudio
 extends Node
 ## Music + one-voice-per-effect SFX (same behaviour as audio-manager.ts).
 ## Plays on the project's "SFX"/"Music" buses when they exist, else "Master".
@@ -31,10 +31,10 @@ var _wanted_music: String = ""
 
 func _ready() -> void:
 	var streams := {
-		"ollie": ExSkateAssets.SFX_OLLIE, "trick": ExSkateAssets.SFX_TRICK,
-		"impact": ExSkateAssets.SFX_IMPACT, "grind": ExSkateAssets.SFX_GRIND,
-		"die": ExSkateAssets.SFX_DIE, "coinCollect": ExSkateAssets.SFX_COIN,
-		"ufoExplode": ExSkateAssets.SFX_UFO_EXPLODE, "gameStart": ExSkateAssets.SFX_GAME_START,
+		"ollie": LouGnarAssets.SFX_OLLIE, "trick": LouGnarAssets.SFX_TRICK,
+		"impact": LouGnarAssets.SFX_IMPACT, "grind": LouGnarAssets.SFX_GRIND,
+		"die": LouGnarAssets.SFX_DIE, "coinCollect": LouGnarAssets.SFX_COIN,
+		"ufoExplode": LouGnarAssets.SFX_UFO_EXPLODE, "gameStart": LouGnarAssets.SFX_GAME_START,
 	}
 	for key: String in streams:
 		var player := AudioStreamPlayer.new()
@@ -45,15 +45,15 @@ func _ready() -> void:
 	_music = AudioStreamPlayer.new()
 	_music.bus = _bus("Music")
 	add_child(_music)
-	(ExSkateAssets.MUSIC_TITLE as AudioStreamOggVorbis).loop = true
-	(ExSkateAssets.MUSIC_GAMEPLAY as AudioStreamOggVorbis).loop = true
+	(LouGnarAssets.MUSIC_TITLE as AudioStreamOggVorbis).loop = true
+	(LouGnarAssets.MUSIC_GAMEPLAY as AudioStreamOggVorbis).loop = true
 
 
 func play_music(kind: String) -> void:
 	_wanted_music = kind
 	if not enabled:
 		return
-	_music.stream = ExSkateAssets.MUSIC_TITLE if kind == "title" else ExSkateAssets.MUSIC_GAMEPLAY
+	_music.stream = LouGnarAssets.MUSIC_TITLE if kind == "title" else LouGnarAssets.MUSIC_GAMEPLAY
 	_music.volume_db = linear_to_db(MUSIC_VOLUME[kind])
 	_music.play()
 

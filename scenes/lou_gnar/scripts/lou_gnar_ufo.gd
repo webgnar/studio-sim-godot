@@ -1,4 +1,4 @@
-class_name ExSkateUfo
+class_name LouGnarUfo
 extends Node2D
 ## Hovering UFO. Origin is bottom-centre; stompable from above.
 
@@ -20,7 +20,7 @@ func setup(x: float, y: float) -> void:
 
 func _ready() -> void:
 	_sprite = Sprite2D.new()
-	_sprite.texture = ExSkateAssets.SHEET_UFO
+	_sprite.texture = LouGnarAssets.SHEET_UFO
 	_sprite.hframes = 9
 	_sprite.centered = false
 	_sprite.offset = Vector2(-29, -39) # 58x39 frame, bottom-centre anchored

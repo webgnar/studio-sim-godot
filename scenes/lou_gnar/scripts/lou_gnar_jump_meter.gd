@@ -1,4 +1,4 @@
-class_name ExSkateJumpMeter
+class_name LouGnarJumpMeter
 extends Control
 ## Circular "POP" gauge showing remaining jumps (of 3).
 
@@ -41,10 +41,10 @@ func _draw() -> void:
 		for i in steps + 1:
 			var a := lerpf(start, end, float(i) / steps)
 			points.append(c + Vector2(cos(a), sin(a)) * RADIUS)
-		draw_colored_polygon(points, ExSkateUI.LIME)
+		draw_colored_polygon(points, LouGnarUI.LIME)
 		draw_arc(c, RADIUS, start, end, 48, Color.WHITE, 4.0, true)
 
-	var font := ExSkateAssets.FONT
+	var font := LouGnarAssets.FONT
 	var text_size := font.get_string_size("POP", HORIZONTAL_ALIGNMENT_LEFT, -1, 24)
 	var baseline := c.y + 5.0 + (font.get_ascent(24) - font.get_descent(24)) / 2.0
 	var origin := Vector2(c.x - text_size.x / 2.0, baseline)

@@ -1,10 +1,10 @@
-class_name ExSkateHud
+class_name LouGnarHud
 extends CanvasLayer
 ## Score readout (top-left) and POP double-jump meter (top-right).
 
 var _score_value: Label
 var _score_prefix: Label
-var _meter: ExSkateJumpMeter
+var _meter: LouGnarJumpMeter
 
 
 func _ready() -> void:
@@ -14,15 +14,15 @@ func _ready() -> void:
 	root.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	add_child(root)
 
-	_score_prefix = ExSkateUI.make_label("Score: ", 32, Color.WHITE, 4)
+	_score_prefix = LouGnarUI.make_label("Score: ", 32, Color.WHITE, 4)
 	_score_prefix.position = Vector2(50, 50)
 	root.add_child(_score_prefix)
-	_score_value = ExSkateUI.make_label("0", 32, ExSkateUI.LIME, 4)
+	_score_value = LouGnarUI.make_label("0", 32, LouGnarUI.LIME, 4)
 	root.add_child(_score_value)
 	_place_score()
 
-	_meter = ExSkateJumpMeter.new()
-	_meter.position = Vector2(750, 50) - ExSkateJumpMeter.SIZE / 2.0
+	_meter = LouGnarJumpMeter.new()
+	_meter.position = Vector2(750, 50) - LouGnarJumpMeter.SIZE / 2.0
 	root.add_child(_meter)
 
 

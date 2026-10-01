@@ -1,4 +1,4 @@
-class_name ExSkateCameraFx
+class_name LouGnarCameraFx
 extends RefCounted
 ## Zoom punch on tricks / grinds (port of camera-effects-manager.ts).
 
@@ -11,7 +11,7 @@ const ZOOM_IN_SPEED := 3.0
 const ZOOM_OUT_SPEED := 1.5
 const TRICK_DURATION := 0.7
 
-var _player: ExSkatePlayer
+var _player: LouGnarPlayer
 var _camera: Camera2D
 var _state: Zoom = Zoom.NORMAL
 var _current: float = 1.0
@@ -20,7 +20,7 @@ var _trick_timer: float = 0.0
 var _was_grinding: bool = false
 
 
-func _init(player: ExSkatePlayer, camera: Camera2D) -> void:
+func _init(player: LouGnarPlayer, camera: Camera2D) -> void:
 	_player = player
 	_camera = camera
 	player.trick_performed.connect(_on_trick)

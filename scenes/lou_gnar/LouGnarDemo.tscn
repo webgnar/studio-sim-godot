@@ -1,9 +1,9 @@
 [gd_scene format=3]
 
-[ext_resource type="Script" path="res://scenes/excalibur_skate/scripts/excalibur_skate_demo.gd" id="1_demo"]
-[ext_resource type="PackedScene" path="res://scenes/excalibur_skate/ExcaliburSkate.tscn" id="2_game"]
+[ext_resource type="Script" path="res://scenes/lou_gnar/scripts/lou_gnar_demo.gd" id="1_demo"]
+[ext_resource type="PackedScene" path="res://scenes/lou_gnar/LouGnar.tscn" id="2_game"]
 
-[node name="ExcaliburSkateDemo" type="Control"]
+[node name="LouGnarDemo" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -23,4 +23,4 @@ texture_filter = 1
 offset_right = 800.0
 offset_bottom = 600.0
 
-[node name="ExcaliburSkate" parent="SubViewportContainer" instance=ExtResource("2_game")]
+[node name="LouGnar" parent="SubViewportContainer" instance=ExtResource("2_game")]

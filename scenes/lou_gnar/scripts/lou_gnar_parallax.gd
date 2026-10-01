@@ -1,4 +1,4 @@
-class_name ExSkateParallax
+class_name LouGnarParallax
 extends Node2D
 ## Five horizontally-tiling background layers (port of parallax-manager.ts).
 ## Each layer is a texture strip kept just left of the camera, offset by
@@ -13,11 +13,11 @@ var _layers: Array = []
 
 func _ready() -> void:
 	var configs := [
-		[ExSkateAssets.BG_SKY, 0.05, -400.0, -50],
-		[ExSkateAssets.BG_FAR_MOUNTAINS, 0.15, 250.0, -40],
-		[ExSkateAssets.BG_MID_HILLS, 0.35, 300.0, -30],
-		[ExSkateAssets.BG_NEAR_TREES, 0.65, 350.0, -20],
-		[ExSkateAssets.BG_FOREGROUND, 0.85, 500.0, -10],
+		[LouGnarAssets.BG_SKY, 0.05, -400.0, -50],
+		[LouGnarAssets.BG_FAR_MOUNTAINS, 0.15, 250.0, -40],
+		[LouGnarAssets.BG_MID_HILLS, 0.35, 300.0, -30],
+		[LouGnarAssets.BG_NEAR_TREES, 0.65, 350.0, -20],
+		[LouGnarAssets.BG_FOREGROUND, 0.85, 500.0, -10],
 	]
 	for config: Array in configs:
 		var tex: Texture2D = config[0]

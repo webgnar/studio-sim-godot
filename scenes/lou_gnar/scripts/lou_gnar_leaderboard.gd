@@ -1,11 +1,11 @@
-class_name ExSkateLeaderboard
+class_name LouGnarLeaderboard
 extends Node
-## Leaderboard provider interface for ExcaliburSkate.
+## Leaderboard provider interface for LouGnar.
 ##
 ## The game auto-submits the Steam persona name + score on game over and shows
 ## the entries from request_entries(). To use Steam leaderboards, subclass this,
 ## override the two methods below, and hand it to the game:
-##     $ExcaliburSkate.leaderboard = MySteamLeaderboard.new()
+##     $LouGnar.leaderboard = MySteamLeaderboard.new()
 ##
 ## Entry format (Array[Dictionary]): {"rank": int, "name": String, "score": int, "is_player": bool}
 

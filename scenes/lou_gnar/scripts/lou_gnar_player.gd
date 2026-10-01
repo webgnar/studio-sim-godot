@@ -1,4 +1,4 @@
-class_name ExSkatePlayer
+class_name LouGnarPlayer
 extends Node2D
 ## Skater: physics, state machine, tricks and animation (port of player.ts).
 ## Origin is the bottom-centre of the 30x75 collision box (feet).
@@ -6,7 +6,7 @@ extends Node2D
 signal died
 signal trick_performed(trick_name: StringName)
 ## Emitted when a UFO is stomped. `value` is already multiplied by the speed tier.
-signal ufo_destroyed(pos: Vector2, ufo: ExSkateUfo, value: int)
+signal ufo_destroyed(pos: Vector2, ufo: LouGnarUfo, value: int)
 
 enum State { GROUNDED, AIRBORNE, GRINDING, LANDING }
 
@@ -51,10 +51,10 @@ const JUMP := -900.0
 const TERMINAL_VELOCITY := 1200.0
 const LANDING_TOLERANCE := 10.0
 
-var terrain: ExSkateTerrain
-var audio: ExSkateAudio
+var terrain: LouGnarTerrain
+var audio: LouGnarAudio
 
-var current_grind_rail: ExSkateRail = null
+var current_grind_rail: LouGnarRail = null
 var is_dead: bool = false
 
 var _velocity_y: float = 0.0
@@ -97,7 +97,7 @@ func _ready() -> void:
 	position = START_POS
 	_sprite = Sprite2D.new()
 	_sprite.centered = false
-	_sprite.offset = Vector2(-ExSkateAssets.PLAYER_FRAME_SIZE.x / 2.0, -ExSkateAssets.PLAYER_FRAME_SIZE.y)
+	_sprite.offset = Vector2(-LouGnarAssets.PLAYER_FRAME_SIZE.x / 2.0, -LouGnarAssets.PLAYER_FRAME_SIZE.y)
 	add_child(_sprite)
 	_setup_animations()
 	_play_animation(A_IDLE)
@@ -309,7 +309,7 @@ func _swept_aabb(top: float, left: float, right: float) -> bool:
 	return crossed or tunnelled
 
 
-func _check_landing_on_platform(platform: ExSkatePlatform) -> bool:
+func _check_landing_on_platform(platform: LouGnarPlatform) -> bool:
 	var top := platform.position.y
 	if _swept_aabb(top, platform.position.x, platform.position.x + platform.building_width):
 		position.y = top
@@ -318,7 +318,7 @@ func _check_landing_on_platform(platform: ExSkatePlatform) -> bool:
 	return false
 
 
-func _check_landing_on_rail(rail: ExSkateRail) -> bool:
+func _check_landing_on_rail(rail: LouGnarRail) -> bool:
 	var top := rail.position.y - rail.rail_height
 	if _swept_aabb(top, rail.position.x, rail.position.x + rail.rail_width):
 		position.y = top
@@ -327,9 +327,9 @@ func _check_landing_on_rail(rail: ExSkateRail) -> bool:
 	return false
 
 
-func _check_landing_on_ufo(ufo: ExSkateUfo) -> bool:
-	var top := ufo.position.y - ExSkateUfo.HIT_HEIGHT
-	var half := ExSkateUfo.HIT_WIDTH / 2.0
+func _check_landing_on_ufo(ufo: LouGnarUfo) -> bool:
+	var top := ufo.position.y - LouGnarUfo.HIT_HEIGHT
+	var half := LouGnarUfo.HIT_WIDTH / 2.0
 	if _swept_aabb(top, ufo.position.x - half, ufo.position.x + half):
 		position.y = top
 		_velocity_y = 0.0
@@ -397,21 +397,21 @@ func _add_anim(anim_name: StringName, sheet: Texture2D, hframes: int, frames: Ar
 
 
 func _setup_animations() -> void:
-	_add_anim(A_IDLE, ExSkateAssets.SHEET_IDLE, 4, [0, 1, 2, 3], 100.0, true)
-	_add_anim(A_PUSH, ExSkateAssets.SHEET_PUSH, 14, range(14), 80.0, true)
-	_add_anim(A_GRIND1, ExSkateAssets.SHEET_GRIND1, 3, [0, 1, 2], 80.0, true)
-	_add_anim(A_GRIND2, ExSkateAssets.SHEET_GRIND2, 3, [0, 1, 2], 80.0, true)
-	_add_anim(A_FREEFALL, ExSkateAssets.SHEET_FREEFALL, 4, [0, 1, 2, 3], 80.0, true)
+	_add_anim(A_IDLE, LouGnarAssets.SHEET_IDLE, 4, [0, 1, 2, 3], 100.0, true)
+	_add_anim(A_PUSH, LouGnarAssets.SHEET_PUSH, 14, range(14), 80.0, true)
+	_add_anim(A_GRIND1, LouGnarAssets.SHEET_GRIND1, 3, [0, 1, 2], 80.0, true)
+	_add_anim(A_GRIND2, LouGnarAssets.SHEET_GRIND2, 3, [0, 1, 2], 80.0, true)
+	_add_anim(A_FREEFALL, LouGnarAssets.SHEET_FREEFALL, 4, [0, 1, 2, 3], 80.0, true)
 	# Ollie: first 4 frames fast (40ms), remaining 6 at 100ms.
-	_add_anim(A_OLLIE, ExSkateAssets.SHEET_OLLIE, 10, range(10),
+	_add_anim(A_OLLIE, LouGnarAssets.SHEET_OLLIE, 10, range(10),
 		[40.0, 40.0, 40.0, 40.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0], false)
-	_add_anim(A_KICKFLIP, ExSkateAssets.SHEET_KICKFLIP, 7, range(7), 100.0, false)
-	_add_anim(A_HEELFLIP, ExSkateAssets.SHEET_HEELFLIP, 6, range(6), 100.0, false)
-	_add_anim(A_SHUV1, ExSkateAssets.SHEET_SHUV1, 7, range(7), 100.0, false)
-	_add_anim(A_SHUV2, ExSkateAssets.SHEET_SHUV2, 7, range(7), 100.0, false)
-	_add_anim(A_IMPACT, ExSkateAssets.SHEET_IMPACT, 7, range(7), 50.0, false)
+	_add_anim(A_KICKFLIP, LouGnarAssets.SHEET_KICKFLIP, 7, range(7), 100.0, false)
+	_add_anim(A_HEELFLIP, LouGnarAssets.SHEET_HEELFLIP, 6, range(6), 100.0, false)
+	_add_anim(A_SHUV1, LouGnarAssets.SHEET_SHUV1, 7, range(7), 100.0, false)
+	_add_anim(A_SHUV2, LouGnarAssets.SHEET_SHUV2, 7, range(7), 100.0, false)
+	_add_anim(A_IMPACT, LouGnarAssets.SHEET_IMPACT, 7, range(7), 50.0, false)
 	# UFO bounce reuses the last 3 frames of the ollie.
-	_add_anim(A_UFO_BOUNCE, ExSkateAssets.SHEET_OLLIE, 10, [7, 8, 9], 100.0, false)
+	_add_anim(A_UFO_BOUNCE, LouGnarAssets.SHEET_OLLIE, 10, [7, 8, 9], 100.0, false)
 
 
 func _play_animation(anim_name: StringName) -> void:
@@ -429,7 +429,7 @@ func _play_animation(anim_name: StringName) -> void:
 		y_off = 5.0
 	elif anim_name == A_GRIND2:
 		y_off = 23.0
-	_sprite.offset = Vector2(-ExSkateAssets.PLAYER_FRAME_SIZE.x / 2.0, -ExSkateAssets.PLAYER_FRAME_SIZE.y + y_off)
+	_sprite.offset = Vector2(-LouGnarAssets.PLAYER_FRAME_SIZE.x / 2.0, -LouGnarAssets.PLAYER_FRAME_SIZE.y + y_off)
 	_apply_frame()
 
 

@@ -1,4 +1,4 @@
-class_name ExSkateEffects
+class_name LouGnarEffects
 extends Node2D
 ## Particles, pickup flash and floating score text
 ## (port of particle-manager.ts + floating-text-manager.ts). Lives in world space.
@@ -18,20 +18,20 @@ func _ready() -> void:
 	_make_grind_emitter()
 
 
-func update(player: ExSkatePlayer) -> void:
+func update(player: LouGnarPlayer) -> void:
 	_grind.position = player.position
 
 	var state := player.get_state()
-	if state == ExSkatePlayer.State.LANDING and _previous_state != ExSkatePlayer.State.LANDING \
+	if state == LouGnarPlayer.State.LANDING and _previous_state != LouGnarPlayer.State.LANDING \
 			and not player.get_is_ufo_bounce():
-		_burst(ExSkateAssets.DUST_PUFF, player.position, randi_range(8, 12), 0.5,
+		_burst(LouGnarAssets.DUST_PUFF, player.position, randi_range(8, 12), 0.5,
 			Vector2.RIGHT, 180.0, 100.0, 200.0, 1.0, 1.5, 10.0, Vector2.ZERO)
 	_previous_state = state
 
 	var grinding := player.current_grind_rail != null
 	_grind.emitting = grinding
 	if grinding and randf() < 0.1:
-		_grind.texture = ExSkateAssets.SPARKS[randi() % ExSkateAssets.SPARKS.size()]
+		_grind.texture = LouGnarAssets.SPARKS[randi() % LouGnarAssets.SPARKS.size()]
 
 
 func on_collectible(value: int, pos: Vector2) -> void:
@@ -41,7 +41,7 @@ func on_collectible(value: int, pos: Vector2) -> void:
 
 func on_ufo_destroyed(pos: Vector2, value: int) -> void:
 	# Upward star spray.
-	_burst(ExSkateAssets.STAR, pos, randi_range(12, 17), 0.6,
+	_burst(LouGnarAssets.STAR, pos, randi_range(12, 17), 0.6,
 		Vector2.UP, 54.0, 150.0, 250.0, 0.8, 1.5, 5.0, Vector2(0, 100))
 	_floating_text("+%d" % value, pos, CYAN)
 
@@ -60,7 +60,7 @@ func _make_grind_emitter() -> void:
 	p.amount = 6 # 10/s at 0.6s lifetime
 	p.lifetime = 0.6
 	p.local_coords = false
-	p.texture = ExSkateAssets.SPARKS[0]
+	p.texture = LouGnarAssets.SPARKS[0]
 	# Sparks spray left/back and down: 90deg..252deg => centre 171deg, +-81deg.
 	p.direction = Vector2.from_angle(deg_to_rad(171.0))
 	p.spread = 81.0
@@ -103,7 +103,7 @@ func _burst(tex: Texture2D, pos: Vector2, count: int, life: float, dir: Vector2,
 
 func _pickup_smash(pos: Vector2) -> void:
 	var smash := Sprite2D.new()
-	smash.texture = ExSkateAssets.GREEN_SMASH
+	smash.texture = LouGnarAssets.GREEN_SMASH
 	smash.position = pos
 	smash.scale = Vector2(0.2, 0.2)
 	_transient.add_child(smash)
@@ -116,7 +116,7 @@ func _pickup_smash(pos: Vector2) -> void:
 func _floating_text(text: String, pos: Vector2, color: Color) -> void:
 	var holder := Node2D.new()
 	holder.position = pos
-	var label := ExSkateUI.make_label(text, 48, color)
+	var label := LouGnarUI.make_label(text, 48, color)
 	holder.add_child(label)
 	_transient.add_child(holder)
 	label.reset_size()

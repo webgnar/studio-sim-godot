@@ -1,4 +1,4 @@
-class_name ExSkatePlatform
+class_name LouGnarPlatform
 extends Node2D
 ## Solid building. Origin is the top-left corner (landing surface = position.y).
 
@@ -13,7 +13,7 @@ func setup(x: float, y: float, width: float, height: float) -> void:
 	position = Vector2(x, y)
 	building_width = width
 	building_height = height
-	_tile = ExSkateAssets.BUILDING_TILES[randi() % ExSkateAssets.BUILDING_TILES.size()]
+	_tile = LouGnarAssets.BUILDING_TILES[randi() % LouGnarAssets.BUILDING_TILES.size()]
 	queue_redraw()
 
 

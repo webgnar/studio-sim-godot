@@ -1,4 +1,4 @@
-class_name ExSkateUI
+class_name LouGnarUI
 extends RefCounted
 ## Small helpers for building the game's Labels / panels.
 
@@ -9,7 +9,7 @@ static func make_label(text: String, font_size: int, color: Color, outline: int 
 	var label := Label.new()
 	label.text = text
 	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	label.add_theme_font_override("font", ExSkateAssets.FONT)
+	label.add_theme_font_override("font", LouGnarAssets.FONT)
 	label.add_theme_font_size_override("font_size", font_size)
 	label.add_theme_color_override("font_color", color)
 	if outline > 0:

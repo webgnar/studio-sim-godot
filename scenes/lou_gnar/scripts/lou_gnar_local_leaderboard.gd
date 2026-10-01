@@ -1,9 +1,9 @@
-class_name ExSkateLocalLeaderboard
-extends ExSkateLeaderboard
-## Default provider: top-10 stored in user://excalibur_skate_scores.json.
+class_name LouGnarLocalLeaderboard
+extends LouGnarLeaderboard
+## Default provider: top-10 stored in user://lou_gnar_scores.json.
 ## Used until a Steam leaderboard provider is plugged in.
 
-const SAVE_PATH := "user://excalibur_skate_scores.json"
+const SAVE_PATH := "user://lou_gnar_scores.json"
 
 var _last_name: String = ""
 var _last_score: int = -1

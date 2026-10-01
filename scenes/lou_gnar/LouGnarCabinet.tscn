@@ -1,7 +1,7 @@
 [gd_scene format=3]
 
-[ext_resource type="Script" path="res://scenes/excalibur_skate/scripts/excalibur_skate_cabinet.gd" id="1_cab"]
-[ext_resource type="PackedScene" path="res://scenes/excalibur_skate/ExcaliburSkate.tscn" id="2_game"]
+[ext_resource type="Script" path="res://scenes/lou_gnar/scripts/lou_gnar_cabinet.gd" id="1_cab"]
+[ext_resource type="PackedScene" path="res://scenes/lou_gnar/LouGnar.tscn" id="2_game"]
 [ext_resource type="Material" path="res://materials/tv.tres" id="3_tv"]
 [ext_resource type="FontFile" path="res://fonts/studio-sim.ttf" id="4_font"]
 
@@ -77,9 +77,9 @@ top_radius = 0.03
 bottom_radius = 0.03
 height = 0.02
 
-[node name="ExcaliburSkateCabinet" type="StaticBody3D" groups=["interactable"] node_paths=PackedStringArray("game", "screen", "play_camera")]
+[node name="LouGnarCabinet" type="StaticBody3D" groups=["interactable"] node_paths=PackedStringArray("game", "screen", "play_camera")]
 script = ExtResource("1_cab")
-game = NodePath("ExcaliburSkate")
+game = NodePath("LouGnar")
 screen = NodePath("Screen")
 play_camera = NodePath("PlayCamera")
 screen_material = ExtResource("3_tv")
@@ -135,8 +135,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.1, 0.245)
 pixel_size = 0.0022
 modulate = Color(0.1, 1, 0.2, 1)
 outline_modulate = Color(0, 0.15, 0, 1)
-text = "EXCALIBUR
-SKATE"
+text = "LOU
+GNAR"
 font = ExtResource("4_font")
 font_size = 64
 outline_size = 12
@@ -162,7 +162,7 @@ transform = Transform3D(1, 0, 0, 0, 0.99, 0.14, 0, -0.14, 0.99, 0.24, 1.12, 0.5)
 mesh = SubResource("mesh_button")
 surface_material_override/0 = SubResource("mat_trim")
 
-[node name="ExcaliburSkate" parent="." instance=ExtResource("2_game")]
+[node name="LouGnar" parent="." instance=ExtResource("2_game")]
 
 [node name="PlayCamera" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.48, 1.0)

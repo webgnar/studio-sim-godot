@@ -1,17 +1,17 @@
-class_name ExSkateGame
+class_name LouGnarGame
 extends SubViewport
-## ExcaliburSkate - arcade skate runner, ported from the Excalibur.js web game.
+## Lou Gnar - arcade skate runner, ported from the Excalibur.js web game.
 ##
 ## This node IS the 800x600 viewport: put get_texture() on the cabinet screen
 ## (like CreditsTV does) or show it in a SubViewportContainer. Controls are one
-## button (action "skate_jump": Space / Enter / left click / gamepad A).
+## button (action "lou_gnar_jump": Space / Enter / left click / gamepad A).
 ##
 ## Hooks for the cabinet:
 ##   input_enabled   - ignore input unless someone is playing
 ##   audio_enabled   - silence music + sfx unless someone is at the machine
 ##   set_running()   - freeze simulation + rendering when nobody is around
 ##   press_jump()    - feed a jump from your own interaction code
-##   leaderboard     - assign an ExSkateLeaderboard subclass (e.g. Steam)
+##   leaderboard     - assign an LouGnarLeaderboard subclass (e.g. Steam)
 ## Signals: game_started, score_changed, game_over, returned_to_title
 
 signal game_started
@@ -24,7 +24,7 @@ enum Phase { TITLE, PLAYING, GAME_OVER }
 const SCREEN_SIZE := Vector2i(800, 600)
 const MAX_DELTA := 0.05
 const START_OVER_DELAY := 0.75 # ignore input briefly so death-mashing doesn't skip the board
-const JUMP_ACTION := &"skate_jump"
+const JUMP_ACTION := &"lou_gnar_jump"
 const BACKGROUND := Color("#2a2a2a")
 
 @export var input_enabled: bool = true
@@ -34,7 +34,7 @@ const BACKGROUND := Color("#2a2a2a")
 		_apply_audio_state()
 
 ## Where scores are stored/shown. Defaults to a local JSON board.
-var leaderboard: ExSkateLeaderboard:
+var leaderboard: LouGnarLeaderboard:
 	set(value):
 		if leaderboard == value:
 			return
@@ -51,15 +51,15 @@ var _phase_time: float = 0.0
 
 var _world: Node2D
 var _camera: Camera2D
-var _parallax: ExSkateParallax
-var _terrain: ExSkateTerrain
-var _player: ExSkatePlayer
-var _effects: ExSkateEffects
-var _camera_fx: ExSkateCameraFx
-var _audio: ExSkateAudio
-var _hud: ExSkateHud
-var _title: ExSkateTitleScreen
-var _game_over: ExSkateGameOverScreen
+var _parallax: LouGnarParallax
+var _terrain: LouGnarTerrain
+var _player: LouGnarPlayer
+var _effects: LouGnarEffects
+var _camera_fx: LouGnarCameraFx
+var _audio: LouGnarAudio
+var _hud: LouGnarHud
+var _title: LouGnarTitleScreen
+var _game_over: LouGnarGameOverScreen
 
 
 func _ready() -> void:
@@ -68,7 +68,7 @@ func _ready() -> void:
 	_ensure_input_action()
 	_build()
 	if leaderboard == null:
-		leaderboard = ExSkateLocalLeaderboard.new()
+		leaderboard = LouGnarLocalLeaderboard.new()
 	else:
 		_adopt_leaderboard()
 	_apply_audio_state()
@@ -186,7 +186,7 @@ func _on_player_died() -> void:
 	_hud.visible = false
 	_game_over.visible = true
 
-	var player_name := ExSkateLeaderboard.resolve_player_name()
+	var player_name := LouGnarLeaderboard.resolve_player_name()
 	_game_over.show_results(score, player_name)
 	if leaderboard:
 		leaderboard.request_entries()
@@ -202,7 +202,7 @@ func _on_collectible(value: int, pos: Vector2) -> void:
 	_effects.on_collectible(value, pos)
 
 
-func _on_ufo_destroyed(pos: Vector2, ufo: ExSkateUfo, value: int) -> void:
+func _on_ufo_destroyed(pos: Vector2, ufo: LouGnarUfo, value: int) -> void:
 	_terrain.remove_ufo(ufo)
 	add_score(value)
 	_effects.on_ufo_destroyed(pos, value)
@@ -252,18 +252,18 @@ func _build() -> void:
 	bg.size = Vector2(SCREEN_SIZE)
 	bg_layer.add_child(bg)
 
-	_audio = ExSkateAudio.new()
+	_audio = LouGnarAudio.new()
 	add_child(_audio)
 
 	_world = Node2D.new()
 	add_child(_world)
-	_parallax = ExSkateParallax.new()
+	_parallax = LouGnarParallax.new()
 	_world.add_child(_parallax)
-	_terrain = ExSkateTerrain.new()
+	_terrain = LouGnarTerrain.new()
 	_world.add_child(_terrain)
-	_player = ExSkatePlayer.new()
+	_player = LouGnarPlayer.new()
 	_world.add_child(_player)
-	_effects = ExSkateEffects.new()
+	_effects = LouGnarEffects.new()
 	_world.add_child(_effects)
 
 	_camera = Camera2D.new()
@@ -276,13 +276,13 @@ func _build() -> void:
 	_player.died.connect(_on_player_died)
 	_player.ufo_destroyed.connect(_on_ufo_destroyed)
 	_terrain.collectible_collected.connect(_on_collectible)
-	_camera_fx = ExSkateCameraFx.new(_player, _camera)
+	_camera_fx = LouGnarCameraFx.new(_player, _camera)
 
-	_hud = ExSkateHud.new()
+	_hud = LouGnarHud.new()
 	add_child(_hud)
-	_title = ExSkateTitleScreen.new()
+	_title = LouGnarTitleScreen.new()
 	add_child(_title)
-	_game_over = ExSkateGameOverScreen.new()
+	_game_over = LouGnarGameOverScreen.new()
 	add_child(_game_over)
 
 

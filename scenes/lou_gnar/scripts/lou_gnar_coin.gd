@@ -1,4 +1,4 @@
-class_name ExSkateCoin
+class_name LouGnarCoin
 extends Node2D
 ## Collectible flower/coin: 6-frame spinner that sways +-15 degrees.
 
@@ -12,7 +12,7 @@ var _time: float = 0.0
 
 func _ready() -> void:
 	_sprite = Sprite2D.new()
-	_sprite.texture = ExSkateAssets.SHEET_COIN
+	_sprite.texture = LouGnarAssets.SHEET_COIN
 	_sprite.hframes = 6
 	add_child(_sprite)
 	# 0 -> +15 -> -15 -> 0, one second per leg, forever.

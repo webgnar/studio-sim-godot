@@ -1,4 +1,4 @@
-class_name ExSkateTerrain
+class_name LouGnarTerrain
 extends Node2D
 ## Endless platform / rail / pickup / UFO spawner (port of terrain-manager.ts).
 
@@ -20,11 +20,11 @@ const Y_STEP_MAX := 150
 const Y_RANGE_MIN := 350.0
 const Y_RANGE_MAX := 550.0
 
-var platforms: Array[ExSkatePlatform] = []
-var rails: Array[ExSkateRail] = []
-var coins: Array[ExSkateCoin] = []
-var ufos: Array[ExSkateUfo] = []
-var player: ExSkatePlayer
+var platforms: Array[LouGnarPlatform] = []
+var rails: Array[LouGnarRail] = []
+var coins: Array[LouGnarCoin] = []
+var ufos: Array[LouGnarUfo] = []
+var player: LouGnarPlayer
 
 var _right_edge: float = 0.0
 var _current_y: float = 500.0
@@ -91,7 +91,7 @@ func update(camera_x: float) -> void:
 
 
 ## Called when the player stomps a UFO.
-func remove_ufo(ufo: ExSkateUfo) -> void:
+func remove_ufo(ufo: LouGnarUfo) -> void:
 	var idx := ufos.find(ufo)
 	if idx != -1:
 		ufos.remove_at(idx)
@@ -110,28 +110,28 @@ func cleanup() -> void:
 
 
 func _add_platform(x: float, y: float, width: float, height: float) -> void:
-	var platform := ExSkatePlatform.new()
+	var platform := LouGnarPlatform.new()
 	add_child(platform)
 	platform.setup(x, y, width, height)
 	platforms.append(platform)
 
 
 func _add_rail(x: float, y: float, width: float) -> void:
-	var rail := ExSkateRail.new()
+	var rail := LouGnarRail.new()
 	add_child(rail)
 	rail.setup(x, y, width)
 	rails.append(rail)
 
 
 func _add_coin(x: float, y: float) -> void:
-	var coin := ExSkateCoin.new()
+	var coin := LouGnarCoin.new()
 	coin.position = Vector2(x, y)
 	add_child(coin)
 	coins.append(coin)
 
 
 func _add_ufo(x: float, y: float) -> void:
-	var ufo := ExSkateUfo.new()
+	var ufo := LouGnarUfo.new()
 	add_child(ufo)
 	ufo.setup(x, y)
 	ufos.append(ufo)
