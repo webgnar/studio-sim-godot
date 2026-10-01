@@ -1,0 +1,175 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/excalibur_skate/scripts/excalibur_skate_cabinet.gd" id="1_cab"]
+[ext_resource type="PackedScene" path="res://scenes/excalibur_skate/ExcaliburSkate.tscn" id="2_game"]
+[ext_resource type="Material" path="res://materials/tv.tres" id="3_tv"]
+[ext_resource type="FontFile" path="res://fonts/studio-sim.ttf" id="4_font"]
+
+[sub_resource type="StandardMaterial3D" id="mat_body"]
+albedo_color = Color(0.07, 0.07, 0.2, 1)
+roughness = 0.6
+
+[sub_resource type="StandardMaterial3D" id="mat_deck"]
+albedo_color = Color(0.12, 0.12, 0.14, 1)
+roughness = 0.5
+
+[sub_resource type="StandardMaterial3D" id="mat_trim"]
+albedo_color = Color(0.0, 0.9, 0.1, 1)
+emission_enabled = true
+emission = Color(0.0, 0.9, 0.1, 1)
+emission_energy_multiplier = 1.5
+
+[sub_resource type="StandardMaterial3D" id="mat_bezel"]
+albedo_color = Color(0.02, 0.02, 0.02, 1)
+
+[sub_resource type="StandardMaterial3D" id="mat_red"]
+albedo_color = Color(0.9, 0.1, 0.1, 1)
+emission_enabled = true
+emission = Color(0.9, 0.1, 0.1, 1)
+emission_energy_multiplier = 0.6
+
+[sub_resource type="StandardMaterial3D" id="mat_marquee"]
+albedo_color = Color(0.05, 0.05, 0.05, 1)
+emission_enabled = true
+emission = Color(0.05, 0.3, 0.05, 1)
+
+[sub_resource type="BoxShape3D" id="shape_lower"]
+size = Vector3(0.8, 1.05, 0.75)
+
+[sub_resource type="BoxShape3D" id="shape_upper"]
+size = Vector3(0.8, 0.95, 0.6)
+
+[sub_resource type="BoxShape3D" id="shape_deck"]
+size = Vector3(0.8, 0.1, 0.4)
+
+[sub_resource type="BoxMesh" id="mesh_lower"]
+size = Vector3(0.8, 1.05, 0.75)
+
+[sub_resource type="BoxMesh" id="mesh_upper"]
+size = Vector3(0.8, 0.95, 0.6)
+
+[sub_resource type="BoxMesh" id="mesh_deck"]
+size = Vector3(0.8, 0.08, 0.4)
+
+[sub_resource type="BoxMesh" id="mesh_bezel"]
+size = Vector3(0.72, 0.58, 0.02)
+
+[sub_resource type="BoxMesh" id="mesh_marquee"]
+size = Vector3(0.8, 0.18, 0.62)
+
+[sub_resource type="BoxMesh" id="mesh_trim"]
+size = Vector3(0.82, 0.03, 0.77)
+
+[sub_resource type="QuadMesh" id="mesh_screen"]
+size = Vector2(0.64, 0.48)
+
+[sub_resource type="CylinderMesh" id="mesh_stick"]
+top_radius = 0.01
+bottom_radius = 0.012
+height = 0.1
+
+[sub_resource type="SphereMesh" id="mesh_ball"]
+radius = 0.03
+height = 0.06
+
+[sub_resource type="CylinderMesh" id="mesh_button"]
+top_radius = 0.03
+bottom_radius = 0.03
+height = 0.02
+
+[node name="ExcaliburSkateCabinet" type="StaticBody3D" groups=["interactable"] node_paths=PackedStringArray("game", "screen", "play_camera")]
+script = ExtResource("1_cab")
+game = NodePath("ExcaliburSkate")
+screen = NodePath("Screen")
+play_camera = NodePath("PlayCamera")
+screen_material = ExtResource("3_tv")
+
+[node name="LowerCol" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.525, 0)
+shape = SubResource("shape_lower")
+
+[node name="UpperCol" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.525, -0.07)
+shape = SubResource("shape_upper")
+
+[node name="DeckCol" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.07, 0.5)
+shape = SubResource("shape_deck")
+
+[node name="LowerBody" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.525, 0)
+mesh = SubResource("mesh_lower")
+surface_material_override/0 = SubResource("mat_body")
+
+[node name="UpperBody" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.525, -0.07)
+mesh = SubResource("mesh_upper")
+surface_material_override/0 = SubResource("mat_body")
+
+[node name="ControlDeck" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.99, 0.14, 0, -0.14, 0.99, 0, 1.07, 0.5)
+mesh = SubResource("mesh_deck")
+surface_material_override/0 = SubResource("mat_deck")
+
+[node name="Trim" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.04, 0)
+mesh = SubResource("mesh_trim")
+surface_material_override/0 = SubResource("mat_trim")
+
+[node name="Bezel" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.48, 0.231)
+mesh = SubResource("mesh_bezel")
+surface_material_override/0 = SubResource("mat_bezel")
+
+[node name="Screen" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.48, 0.242)
+mesh = SubResource("mesh_screen")
+
+[node name="Marquee" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.1, -0.07)
+mesh = SubResource("mesh_marquee")
+surface_material_override/0 = SubResource("mat_marquee")
+
+[node name="MarqueeText" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.1, 0.245)
+pixel_size = 0.0022
+modulate = Color(0.1, 1, 0.2, 1)
+outline_modulate = Color(0, 0.15, 0, 1)
+text = "EXCALIBUR
+SKATE"
+font = ExtResource("4_font")
+font_size = 64
+outline_size = 12
+line_spacing = -8.0
+
+[node name="Stick" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.99, 0.14, 0, -0.14, 0.99, -0.2, 1.13, 0.5)
+mesh = SubResource("mesh_stick")
+surface_material_override/0 = SubResource("mat_deck")
+
+[node name="StickBall" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.2, 1.2, 0.49)
+mesh = SubResource("mesh_ball")
+surface_material_override/0 = SubResource("mat_red")
+
+[node name="JumpButton" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.99, 0.14, 0, -0.14, 0.99, 0.12, 1.12, 0.5)
+mesh = SubResource("mesh_button")
+surface_material_override/0 = SubResource("mat_red")
+
+[node name="JumpButton2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.99, 0.14, 0, -0.14, 0.99, 0.24, 1.12, 0.5)
+mesh = SubResource("mesh_button")
+surface_material_override/0 = SubResource("mat_trim")
+
+[node name="ExcaliburSkate" parent="." instance=ExtResource("2_game")]
+
+[node name="PlayCamera" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.48, 1.0)
+fov = 45.0
+
+[node name="ScreenGlow" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0.7)
+light_color = Color(0.6, 0.9, 1, 1)
+light_energy = 0.5
+omni_range = 3.0

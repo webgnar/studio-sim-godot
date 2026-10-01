@@ -38,6 +38,15 @@ define it; define it in Project Settings to rebind.
 
 Audio plays non-positionally on the `SFX` / `Music` buses (falls back to `Master`).
 
+## Placeholder cabinet
+`ExcaliburSkateCabinet.tscn` is a primitive-built arcade machine (swap the meshes for a real
+model any time) that already does the hookup above. Instance it anywhere; front faces local **+Z**.
+- Look at it and press interact to play: player input is locked, the camera blends to
+  `PlayCamera`, the game gets input + sound. Interact (E / gamepad X) or go_back leaves.
+- Idle, the screen shows the silent title card. Uses `tv.tres` for the CRT look.
+- Relies on the project autoloads `CameraManager` and `InputDeviceManager`, and on
+  `PlayerInteractionComponent` (it pauses that component while you play).
+
 ## Leaderboard / Steam
 The player name is the Steam persona name (`SteamManager.persona_name` when Steam is
 available, otherwise `PLAYER`), so there is no name entry. On game over the score is
