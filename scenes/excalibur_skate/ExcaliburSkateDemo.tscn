@@ -1,0 +1,26 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/excalibur_skate/scripts/excalibur_skate_demo.gd" id="1_demo"]
+[ext_resource type="PackedScene" path="res://scenes/excalibur_skate/ExcaliburSkate.tscn" id="2_game"]
+
+[node name="ExcaliburSkateDemo" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_demo")
+
+[node name="Backdrop" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.05, 0.05, 0.05, 1)
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
+layout_mode = 0
+texture_filter = 1
+offset_right = 800.0
+offset_bottom = 600.0
+
+[node name="ExcaliburSkate" parent="SubViewportContainer" instance=ExtResource("2_game")]
