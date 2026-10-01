@@ -147,6 +147,7 @@
 [ext_resource type="Texture2D" uid="uid://baj220mrywpyb" path="res://sprites/elevator sign.png" id="156_kloan"]
 [ext_resource type="PackedScene" uid="uid://0pira7rmf11k" path="res://scenes/objects/Pencil.tscn" id="157_pencil_carryable"]
 [ext_resource type="Texture2D" uid="uid://ujinewcgbau5" path="res://sprites/basketball ghost.png" id="162_t2jyq"]
+[ext_resource type="PackedScene" path="res://scenes/lou_gnar/LouGnarCabinet.tscn" id="170_3r8ca"]
 [ext_resource type="PackedScene" uid="uid://d2lld8pxrphp3" path="res://scenes/objects/SaveAssistantWorkButton.tscn" id="200_savebtn"]
 [ext_resource type="PackedScene" uid="uid://dfcanvasscn1" path="res://scenes/objects/AssistantFinishedCanvas.tscn" id="201_fcanvas"]
 [ext_resource type="Script" uid="uid://di1n2iwa1eny" path="res://scripts/hall_of_fame_gallery.gd" id="202_hof"]
@@ -541,17 +542,17 @@ albedo_color = Color(1.0734373, 1.0734373, 0.15063755, 1)
 albedo_texture = ExtResource("82_mu18u")
 texture_filter = 0
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_sjp3e"]
+[sub_resource type="PlaneMesh" id="PlaneMesh_2xejd"]
 resource_local_to_scene = true
 size = Vector2(2.5, 3)
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_3r8ca"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_5aihc"]
 resource_name = "_albedo"
 viewport_path = NodePath("../MirrorNew/SubViewport")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hg3bl"]
 resource_local_to_scene = true
-albedo_texture = SubResource("ViewportTexture_3r8ca")
+albedo_texture = SubResource("ViewportTexture_5aihc")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_1v02h"]
 size = Vector2(2.5, 3)
@@ -1217,6 +1218,45 @@ ao_light_affect = 0.08
 ao_texture = ExtResource("22_ygn2i")
 uv1_scale = Vector3(1.973, 3.201, 3.131)
 uv1_offset = Vector3(0, -1, 0)
+
+[sub_resource type="Shader" id="Shader_dbi58"]
+code = "shader_type spatial;
+
+uniform sampler2D tv_tex : source_color;
+
+uniform float scanline_strength = 0.3;
+uniform float noise_strength = 0.04;
+uniform float flicker_strength = 0.03;
+
+void fragment() {
+    vec2 uv = UV;
+
+    vec3 col = texture(tv_tex, uv).rgb;
+
+    float scan = sin(uv.y * 900.0) * 0.5 + 0.5;
+    col *= mix(1.0, scan, scanline_strength);
+
+    float n = fract(sin(dot(uv * TIME, vec2(12.9898,78.233))) * 43758.5453);
+    col += (n - 0.5) * noise_strength;
+
+    col *= 1.0 + sin(TIME * 60.0) * flicker_strength;
+
+    ALBEDO = col;
+    EMISSION = col * 0.4;
+}
+"
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_edbjg"]
+viewport_path = NodePath("SubViewport")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_hl1kq"]
+resource_local_to_scene = true
+render_priority = 0
+shader = SubResource("Shader_dbi58")
+shader_parameter/tv_tex = SubResource("ViewportTexture_edbjg")
+shader_parameter/scanline_strength = 0.2
+shader_parameter/noise_strength = 0.24
+shader_parameter/flicker_strength = 0.02
 
 [node name="World" type="Node3D" unique_id=81477]
 script = ExtResource("1_qaasp")
@@ -2478,7 +2518,7 @@ surface_material_override/0 = SubResource("StandardMaterial3D_7b7y8")
 
 [node name="mirror" parent="." unique_id=1626491013 groups=["shop_prop"] instance=ExtResource("39_qaasp")]
 transform = Transform3D(-4.7902194e-08, -0.99488777, 0.10098683, -3.9073655e-08, 0.10098683, 0.99488777, -1, 4.3711392e-08, -4.3711385e-08, 2.8, 1.497, 5.232)
-mesh = SubResource("PlaneMesh_sjp3e")
+mesh = SubResource("PlaneMesh_2xejd")
 surface_material_override/0 = SubResource("StandardMaterial3D_hg3bl")
 show_debug_logs = false
 metadata/shop_item_id = "mirror"
@@ -4010,6 +4050,10 @@ metadata/shop_item_id = "dj"
 
 [node name="DanceParty" parent="." unique_id=1626250434 instance=ExtResource("dance_party_scene")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5, -15.53, 15.5)
+
+[node name="LouGnarCabinet" parent="." unique_id=1932707950 instance=ExtResource("170_3r8ca")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.43975115, -0.05071509, 2.5767365)
+screen_material = SubResource("ShaderMaterial_hl1kq")
 
 [editable path="Spotlight1"]
 [editable path="Spotlight2"]
