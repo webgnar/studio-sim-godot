@@ -197,6 +197,7 @@ func _on_player_died() -> void:
 
 
 func _on_collectible(value: int, pos: Vector2) -> void:
+	_audio.play_sfx("coinCollect")
 	add_score(value)
 	_effects.on_collectible(value, pos)
 
