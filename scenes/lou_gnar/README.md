@@ -48,27 +48,27 @@ model any time) that already does the hookup above. Instance it anywhere; front 
   `PlayerInteractionComponent` (it pauses that component while you play).
 
 ## Leaderboard / Steam
-The player name is the Steam persona name (`SteamManager.persona_name` when Steam is
-available, otherwise `PLAYER`), so there is no name entry. On game over the score is
-auto-submitted and the top 10 shown.
+The player name is the Steam persona name, so there is no name entry. On game over the score
+is auto-submitted and the top 10 shown.
 
-`LouGnarLocalLeaderboard` (default) stores a top 10 in `user://lou_gnar_scores.json`.
-For Steam, subclass `LouGnarLeaderboard`:
+`LouGnarSteamLeaderboard` is the default whenever GodotSteam is present. It uses a Steam
+leaderboard called `LouGnar_HighScores` (change `leaderboard_name`), created on first use,
+sorted high-to-low, keep-best per player. If Steam is offline, unavailable, or silent for 8s
+it falls back to `LouGnarLocalLeaderboard` (a top 10 in `user://lou_gnar_scores.json`) for the
+rest of the session. Without GodotSteam (e.g. the F6 demo) the local board is used directly.
 
-```gdscript
-extends LouGnarLeaderboard
-func request_entries() -> void:
-    # Steam.downloadLeaderboardEntries(...) -> on callback:
-    entries_loaded.emit([{"rank": 1, "name": "...", "score": 123, "is_player": false}])
-func submit_score(_player_name: String, score: int) -> void:
-    # Steam.uploadLeaderboardScore(score, true, [], handle) -> on callback:
-    score_submitted.emit(true)
-```
-then `_game.leaderboard = MySteamLeaderboard.new()`.
+To use something else, subclass `LouGnarLeaderboard` (`request_entries()` / `submit_score()`
+plus the `entries_loaded` / `score_submitted` signals) and set `game.leaderboard`.
+Entry format: `{"rank": int, "name": String, "score": int, "is_player": bool}`.
+
+**Steamworks:** with a dev/partner account the leaderboard is created automatically on first
+use; check it appears under Stats & Achievements > Leaderboards. Only the top 10 is shown --
+the board will outgrow that, see the display TODO.
 
 ## Layout
 - `scripts/lou_gnar.gd` - game root (phases, wiring, public API)
 - `scripts/lou_gnar_player.gd` - physics, state machine, tricks, animation
+- `scripts/lou_gnar_steam_leaderboard.gd` / `lou_gnar_local_leaderboard.gd` - score providers
 - `scripts/lou_gnar_terrain.gd` (+ platform/rail/coin/ufo) - endless level generation
 - `scripts/lou_gnar_parallax.gd`, `lou_gnar_effects.gd`, `lou_gnar_camera_fx.gd`, `lou_gnar_hud.gd`, title/game-over screens
 - `assets/` - sprites, sounds and font copied from the web game
