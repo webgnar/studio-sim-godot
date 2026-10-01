@@ -4,8 +4,8 @@ class_name LouGnarCabinet
 ##
 ## Look at it and press interact to play: the player is locked, the camera
 ## blends to the cabinet's PlayCamera and the game gets input + sound. Press
-## interact (E / gamepad X) or go_back to step away. Out of play the screen
-## shows the (silent) attract/title card.
+## interact (E / gamepad X), go_back (Esc / B) or start to step away. Out of
+## play the screen shows the (silent) attract/title card.
 
 @export var game: LouGnarGame
 @export var screen: MeshInstance3D
@@ -27,7 +27,7 @@ func _ready() -> void:
 	var mat := screen_material.duplicate() as ShaderMaterial
 	mat.set_shader_parameter("tv_tex", game.get_texture())
 	screen.material_override = mat
-	set_process(false)
+	set_process_input(false)
 
 
 func interact(interactor: Variant) -> void:
@@ -36,11 +36,17 @@ func interact(interactor: Variant) -> void:
 	_begin_play(interactor)
 
 
-func _process(_delta: float) -> void:
-	# Ignore the press that started the session (it is still "just pressed" this frame).
+## Only active while playing. _input reaches this node before the UIManager
+## autoload does, so consuming the event here keeps Esc from opening the pause menu.
+func _input(event: InputEvent) -> void:
+	# Ignore the press that started the session (same frame as the interact event).
 	if Engine.get_process_frames() <= _enter_frame:
 		return
-	if Input.is_action_just_pressed("interact") or Input.is_action_just_pressed("go_back"):
+	if event.is_echo():
+		return
+	if event.is_action_pressed("interact") or event.is_action_pressed("go_back") \
+			or event.is_action_pressed("start"):
+		get_viewport().set_input_as_handled()
 		_end_play()
 
 
@@ -66,13 +72,15 @@ func _begin_play(interactor: PlayerInteractionComponent) -> void:
 	game.input_enabled = true
 	game.audio_enabled = true
 	_show_hint(true)
-	set_process(true)
+	_set_crosshair_visible(false)
+	set_process_input(true)
 
 
 func _end_play() -> void:
 	_playing = false
-	set_process(false)
+	set_process_input(false)
 	_show_hint(false)
+	_set_crosshair_visible(true)
 	game.input_enabled = false
 	game.audio_enabled = false
 	game.return_to_title()
@@ -84,6 +92,13 @@ func _end_play() -> void:
 		CameraManager.switch_to_camera(CameraManager.player_camera, blend_time)
 	CameraManager.set_player_input(true)
 	_interactor = null
+
+
+## The HUD crosshair reads as a stray mouse cursor over the screen.
+func _set_crosshair_visible(on: bool) -> void:
+	var hud := get_tree().get_first_node_in_group("hud")
+	if hud and hud.has_method("set_crosshair_visible"):
+		hud.set_crosshair_visible(on)
 
 
 func _show_hint(on: bool) -> void:
