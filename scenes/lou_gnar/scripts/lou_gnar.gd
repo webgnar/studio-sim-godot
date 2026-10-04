@@ -42,6 +42,10 @@ var leaderboard: LouGnarLeaderboard:
 		leaderboard = value
 		_adopt_leaderboard()
 
+## Steam achievement for reaching this score in a single run.
+const SCORE_ACHIEVEMENT_ID := "ACH_LOU_GNAR_1500"
+const SCORE_ACHIEVEMENT_THRESHOLD := 1500
+
 var score: int = 0
 var phase: Phase = Phase.TITLE
 
@@ -121,10 +125,22 @@ func return_to_title() -> void:
 
 
 func add_score(points: int) -> void:
+	var previous := score
 	score += points
 	_player.update_speed(score)
 	_hud.set_score(score)
 	score_changed.emit(score)
+	if phase == Phase.PLAYING and previous < SCORE_ACHIEVEMENT_THRESHOLD \
+			and score >= SCORE_ACHIEVEMENT_THRESHOLD:
+		_unlock_achievement(SCORE_ACHIEVEMENT_ID)
+
+
+## Looked up by path (like the leaderboards) so LouGnar still runs standalone without the
+## project's SteamManager autoload. SteamManager.unlock_achievement is idempotent.
+func _unlock_achievement(id: String) -> void:
+	var steam_manager := get_tree().root.get_node_or_null("SteamManager") if get_tree() else null
+	if steam_manager and steam_manager.has_method("unlock_achievement"):
+		steam_manager.unlock_achievement(id)
 
 
 # ---------------------------------------------------------------- phases
