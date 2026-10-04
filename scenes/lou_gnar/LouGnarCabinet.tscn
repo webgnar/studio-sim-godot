@@ -17,7 +17,7 @@ size = Vector3(1.002, 0.159, 0.477)
 [sub_resource type="QuadMesh" id="mesh_screen"]
 size = Vector2(0.648, 0.486)
 
-[node name="LouGnarCabinet" type="StaticBody3D" unique_id=1505718753 node_paths=PackedStringArray("game", "screen", "play_camera") groups=["interactable"]]
+[node name="LouGnarCabinet" type="StaticBody3D" unique_id=1505718753 node_paths=PackedStringArray("game", "screen", "play_camera") groups=["interactable", "no_outline"]]
 script = ExtResource("1_cab")
 game = NodePath("LouGnar")
 screen = NodePath("Screen")
