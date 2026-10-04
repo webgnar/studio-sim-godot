@@ -12,7 +12,7 @@ extends Node
 signal entries_loaded(entries: Array)
 signal score_submitted(success: bool)
 
-const MAX_ENTRIES := 10
+const MAX_ENTRIES := 50
 
 
 ## Fetch the top MAX_ENTRIES and emit entries_loaded (may be async).

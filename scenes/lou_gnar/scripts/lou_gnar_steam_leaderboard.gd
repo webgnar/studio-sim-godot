@@ -28,6 +28,7 @@ var _entries_pending: int = 0
 var _submits_pending: Array[Dictionary] = []
 var _last_result: Array = []
 var _unresolved_names: Dictionary = {}
+var _emit_queued: bool = false
 
 
 func _ready() -> void:
@@ -124,11 +125,14 @@ func _on_score_uploaded(...args: Array) -> void:
 
 func _on_persona_state_change(...args: Array) -> void:
 	var steam_id := int(args[0])
-	if _unresolved_names.has(steam_id) and not _last_result.is_empty():
-		_emit_entries()
+	if _unresolved_names.has(steam_id) and not _last_result.is_empty() and not _emit_queued:
+		# Up to 50 names can resolve in a burst; redraw the board once for the lot.
+		_emit_queued = true
+		_emit_entries.call_deferred()
 
 
 func _emit_entries() -> void:
+	_emit_queued = false
 	var me := int(_steam.getSteamID())
 	var entries: Array = []
 	_unresolved_names.clear()

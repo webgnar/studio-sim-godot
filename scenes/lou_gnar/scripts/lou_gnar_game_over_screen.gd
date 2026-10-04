@@ -1,10 +1,18 @@
 class_name LouGnarGameOverScreen
 extends CanvasLayer
-## GAME OVER card: score, submit status, top-10 board and a START OVER prompt.
+## GAME OVER card: score, submit status, top-50 board and a START OVER prompt.
+## The board shows 10 rows at a time: it holds still on the top 10, then after
+## SCROLL_DELAY seconds rolls slowly up through the rest, pauses on the last rows
+## and jumps back to the top.
 
 const BOARD_ORIGIN := Vector2(450, 260)
 const BOARD_RIGHT := 320.0
 const ROW_HEIGHT := 28.0
+const LIST_TOP := 35.0 # rows start below the board title
+const VISIBLE_ROWS := 10
+const SCROLL_DELAY := 3.0 # seconds the top 10 stay still before the list starts rolling
+const SCROLL_SPEED := 22.0 # px/s, a little under a row per second
+const END_HOLD := 3.0 # seconds on the last rows before jumping back to the top
 
 var _score_label: Label
 var _name_label: Label
@@ -12,6 +20,10 @@ var _status_label: Label
 var _start_box: Panel
 var _start_text: Label
 var _board: Control
+var _list: Control
+var _row_count: int = 0
+var _scroll: float = 0.0
+var _scroll_wait: float = 0.0
 var _pulse: float = 0.0
 var _lit: bool = false
 
@@ -56,6 +68,18 @@ func _ready() -> void:
 	_board.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_board.position = BOARD_ORIGIN
 	root.add_child(_board)
+	_board.add_child(LouGnarUI.make_label("TOP %d LEADERBOARD" % LouGnarLeaderboard.MAX_ENTRIES, 24, LouGnarUI.LIME))
+
+	# 10-row window onto the full list; _list slides up inside it.
+	var window := Control.new()
+	window.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	window.clip_contents = true
+	window.position = Vector2(0, LIST_TOP)
+	window.size = Vector2(BOARD_RIGHT, VISIBLE_ROWS * ROW_HEIGHT)
+	_board.add_child(window)
+	_list = Control.new()
+	_list.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	window.add_child(_list)
 	_draw_board([])
 
 
@@ -64,6 +88,7 @@ func show_results(final_score: int, player_name: String) -> void:
 	LouGnarUI.set_text_centered(_name_label, _fit_name(player_name), Vector2(200, 280))
 	set_status("SUBMITTING...")
 	_draw_board([])
+	_reset_scroll()
 	_pulse = 0.0
 	_lit = false
 	LouGnarUI.style_box(_start_box, false)
@@ -85,25 +110,59 @@ func update(dt: float) -> void:
 		_lit = lit
 		LouGnarUI.style_box(_start_box, lit)
 		_start_text.add_theme_color_override("font_color", Color.BLACK if lit else LouGnarUI.LIME)
+	_update_scroll(dt)
 
 
+## Redraws keep the current scroll position: Steam re-sends the list as player
+## names resolve, and that shouldn't yank the board back to the top.
 func _draw_board(entries: Array) -> void:
-	for child in _board.get_children():
+	for child in _list.get_children():
 		child.queue_free()
-
-	var title := LouGnarUI.make_label("TOP 10 LEADERBOARD", 24, LouGnarUI.LIME)
-	_board.add_child(title)
 
 	for i in entries.size():
 		var entry: Dictionary = entries[i]
 		var color := Color.YELLOW if entry.get("is_player", false) else Color.WHITE
-		var y := 35.0 + i * ROW_HEIGHT
+		var y := i * ROW_HEIGHT
 		var name_label := LouGnarUI.make_label("%d. %s" % [entry["rank"], _fit_name(str(entry["name"]), 16)], 22, color)
 		name_label.position = Vector2(0, y)
-		_board.add_child(name_label)
+		_list.add_child(name_label)
 		var score_label := LouGnarUI.make_label(str(entry["score"]), 22, color)
-		_board.add_child(score_label)
+		_list.add_child(score_label)
 		LouGnarUI.set_text_right(score_label, str(entry["score"]), Vector2(BOARD_RIGHT, y))
+
+	_row_count = entries.size()
+	_scroll = minf(_scroll, _max_scroll())
+	_apply_scroll()
+
+
+func _reset_scroll() -> void:
+	_scroll = 0.0
+	_scroll_wait = 0.0
+	_apply_scroll()
+
+
+func _update_scroll(dt: float) -> void:
+	var max_scroll := _max_scroll()
+	if max_scroll <= 0.0:
+		return
+	_scroll_wait += dt
+	if _scroll >= max_scroll:
+		if _scroll_wait >= END_HOLD:
+			_reset_scroll()
+		return
+	if _scroll_wait >= SCROLL_DELAY:
+		_scroll = minf(_scroll + SCROLL_SPEED * dt, max_scroll)
+		if _scroll >= max_scroll:
+			_scroll_wait = 0.0 # start the END_HOLD pause
+		_apply_scroll()
+
+
+func _max_scroll() -> float:
+	return maxf(0.0, (_row_count - VISIBLE_ROWS) * ROW_HEIGHT)
+
+
+func _apply_scroll() -> void:
+	_list.position.y = -roundf(_scroll) # whole pixels keep the pixel font crisp
 
 
 static func _fit_name(player_name: String, max_chars: int = 18) -> String:
