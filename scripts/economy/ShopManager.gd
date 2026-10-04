@@ -511,7 +511,7 @@ func _build_catalog() -> void:
 				+ " projectors come on, and every visitor starts dancing wherever they're"
 				+ " standing. Talk to them again to send everyone back to looking at art."
 			),
-			"price": 16000,
+			"price": 7000,
 		},
 		{
 			"id": "lou_gnar",
