@@ -173,7 +173,7 @@ func setup_achievements() -> void:
 		"ACH_UNLOCK_DJ": false,  # Purchase the DJ
 
 		# Lou Gnar arcade cabinet
-		"ACH_LOU_GNAR_1500": false,  # Score 1,500+ in a single Lou Gnar run
+		"ACH_LOU_GNAR_1500": false,  # Score 1,000+ in a single Lou Gnar run (ID kept from the old 1,500 target)
 
 		# Studio Assistant
 		"ACH_MADE_ZACK_SWEAR": false,  # Get the Studio Assistant to say a real swear word

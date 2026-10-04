@@ -44,7 +44,7 @@ var leaderboard: LouGnarLeaderboard:
 
 ## Steam achievement for reaching this score in a single run.
 const SCORE_ACHIEVEMENT_ID := "ACH_LOU_GNAR_1500"
-const SCORE_ACHIEVEMENT_THRESHOLD := 1500
+const SCORE_ACHIEVEMENT_THRESHOLD := 1000  # ID keeps "1500" to match Steamworks
 
 var score: int = 0
 var phase: Phase = Phase.TITLE
