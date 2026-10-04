@@ -3,7 +3,8 @@
 [ext_resource type="Script" uid="uid://c4m4tx5r07437" path="res://scenes/lou_gnar/scripts/lou_gnar_cabinet.gd" id="1_cab"]
 [ext_resource type="PackedScene" path="res://scenes/lou_gnar/LouGnar.tscn" id="2_game"]
 [ext_resource type="Material" path="res://materials/crt_screen.tres" id="3_crt"]
-[ext_resource type="PackedScene" path="res://models/interactables/lou gnar/lougnar cabinet.glb" id="4_model"]
+[ext_resource type="PackedScene" uid="uid://6nnfilm4jyb7" path="res://models/interactables/lou gnar/lougnar cabinet.glb" id="4_model"]
+[ext_resource type="Texture2D" uid="uid://br16qns0ud3de" path="res://models/interactables/lou gnar/lougnar cabinet_lougnartrim.png" id="4_wvo5n"]
 
 [sub_resource type="BoxShape3D" id="shape_lower"]
 size = Vector3(0.801, 0.7845, 0.84)
@@ -13,6 +14,13 @@ size = Vector3(0.801, 1.146, 0.594)
 
 [sub_resource type="BoxShape3D" id="shape_deck"]
 size = Vector3(1.002, 0.159, 0.477)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_h5oys"]
+cull_mode = 2
+albedo_texture = ExtResource("4_wvo5n")
+metallic = 0.94
+emission = Color(0.11803272, 0.19347642, 0.05299506, 1)
+emission_energy_multiplier = 13.1
 
 [sub_resource type="QuadMesh" id="mesh_screen"]
 size = Vector2(0.648, 0.486)
@@ -39,6 +47,9 @@ shape = SubResource("shape_deck")
 [node name="Model" parent="." unique_id=1786484036 instance=ExtResource("4_model")]
 transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 0, 0, 0)
 
+[node name="trim and buttons" parent="Model" index="1" unique_id=98503685]
+surface_material_override/0 = SubResource("StandardMaterial3D_h5oys")
+
 [node name="Screen" type="MeshInstance3D" parent="." unique_id=367441928]
 transform = Transform3D(1, 0, 0, 0, 0.917582, 0.397546, 0, -0.397546, 0.917582, -0.0045, 1.244277, 0.007875)
 cast_shadow = 0
@@ -55,3 +66,5 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0045, 1.383418, 0.329029)
 light_color = Color(0.6, 0.9, 1, 1)
 light_energy = 0.5
 omni_range = 3.0
+
+[editable path="Model"]

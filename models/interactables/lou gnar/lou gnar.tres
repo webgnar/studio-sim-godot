@@ -1,0 +1,11 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://5yth5xhuqcdd"]
+
+[ext_resource type="Texture2D" uid="uid://pphkguqqfyqg" path="res://models/interactables/lou gnar/lougnar cabinet_lougnarcab.png" id="1_tegid"]
+[ext_resource type="Texture2D" uid="uid://t87sj4td08sq" path="res://models/interactables/lou gnar/lougnar cabinet_lougnarcab_normal.png" id="2_7buw5"]
+
+[resource]
+albedo_texture = ExtResource("1_tegid")
+normal_enabled = true
+normal_scale = -0.63
+normal_texture = ExtResource("2_7buw5")
+texture_filter = 0
