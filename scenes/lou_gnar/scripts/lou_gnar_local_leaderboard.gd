@@ -1,6 +1,6 @@
 class_name LouGnarLocalLeaderboard
 extends LouGnarLeaderboard
-## Default provider: top-10 stored in user://lou_gnar_scores.json.
+## Default provider: top MAX_ENTRIES stored in user://lou_gnar_scores.json.
 ## Used until a Steam leaderboard provider is plugged in.
 
 const SAVE_PATH := "user://lou_gnar_scores.json"
