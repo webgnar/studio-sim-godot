@@ -147,7 +147,7 @@
 [ext_resource type="Texture2D" uid="uid://baj220mrywpyb" path="res://sprites/elevator sign.png" id="156_kloan"]
 [ext_resource type="PackedScene" uid="uid://0pira7rmf11k" path="res://scenes/objects/Pencil.tscn" id="157_pencil_carryable"]
 [ext_resource type="Texture2D" uid="uid://ujinewcgbau5" path="res://sprites/basketball ghost.png" id="162_t2jyq"]
-[ext_resource type="PackedScene" path="res://scenes/lou_gnar/LouGnarCabinet.tscn" id="170_3r8ca"]
+[ext_resource type="PackedScene" uid="uid://wi42mn0cbp6q" path="res://scenes/lou_gnar/LouGnarCabinet.tscn" id="170_3r8ca"]
 [ext_resource type="PackedScene" uid="uid://d2lld8pxrphp3" path="res://scenes/objects/SaveAssistantWorkButton.tscn" id="200_savebtn"]
 [ext_resource type="PackedScene" uid="uid://dfcanvasscn1" path="res://scenes/objects/AssistantFinishedCanvas.tscn" id="201_fcanvas"]
 [ext_resource type="Script" uid="uid://di1n2iwa1eny" path="res://scripts/hall_of_fame_gallery.gd" id="202_hof"]
@@ -542,17 +542,17 @@ albedo_color = Color(1.0734373, 1.0734373, 0.15063755, 1)
 albedo_texture = ExtResource("82_mu18u")
 texture_filter = 0
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_2xejd"]
+[sub_resource type="PlaneMesh" id="PlaneMesh_3r8ca"]
 resource_local_to_scene = true
 size = Vector2(2.5, 3)
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_5aihc"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_2xejd"]
 resource_name = "_albedo"
 viewport_path = NodePath("../MirrorNew/SubViewport")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hg3bl"]
 resource_local_to_scene = true
-albedo_texture = SubResource("ViewportTexture_5aihc")
+albedo_texture = SubResource("ViewportTexture_2xejd")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_1v02h"]
 size = Vector2(2.5, 3)
@@ -2518,7 +2518,7 @@ surface_material_override/0 = SubResource("StandardMaterial3D_7b7y8")
 
 [node name="mirror" parent="." unique_id=1626491013 groups=["shop_prop"] instance=ExtResource("39_qaasp")]
 transform = Transform3D(-4.7902194e-08, -0.99488777, 0.10098683, -3.9073655e-08, 0.10098683, 0.99488777, -1, 4.3711392e-08, -4.3711385e-08, 2.8, 1.497, 5.232)
-mesh = SubResource("PlaneMesh_2xejd")
+mesh = SubResource("PlaneMesh_3r8ca")
 surface_material_override/0 = SubResource("StandardMaterial3D_hg3bl")
 show_debug_logs = false
 metadata/shop_item_id = "mirror"
@@ -2567,7 +2567,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.917138, 0)
 metadata/shop_item_id = "nail_gun"
 
 [node name="CardboardBox" parent="." unique_id=1349751666 groups=["no_outline", "shop_prop"] instance=ExtResource("87_xgy6y")]
-transform = Transform3D(0.19946352, 0, 0.22408547, 0, 0.29999998, 0, -0.22408547, 0, 0.19946352, 1.6987343, 0.25670362, 12.923679)
+transform = Transform3D(0.19946352, 0, 0.22408547, 0, 0.29999998, 0, -0.22408547, 0, 0.19946352, 0.8832705, 0.25670362, 12.939561)
 metadata/shop_item_id = "cardboard_box"
 
 [node name="Key" parent="CardboardBox" unique_id=188385642 groups=["no_outline"] instance=ExtResource("83_n78cu")]
@@ -4052,7 +4052,7 @@ metadata/shop_item_id = "dj"
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5, -15.53, 15.5)
 
 [node name="LouGnarCabinet" parent="." unique_id=1932707950 instance=ExtResource("170_3r8ca")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.43975115, -0.05071509, 2.5767365)
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 3.3071356, -0.05071509, 12.284582)
 screen_material = SubResource("ShaderMaterial_hl1kq")
 
 [editable path="Spotlight1"]
