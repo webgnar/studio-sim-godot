@@ -514,6 +514,17 @@ func _build_catalog() -> void:
 			"price": 16000,
 		},
 		{
+			"id": "lou_gnar",
+			"display_name": "Lou Gnar",
+			"title": "Lou Gnar Arcade Cabinet",
+			"description": (
+				"A stand-up arcade cabinet loaded with Lou Gnar, the endless skate game. Step up,"
+				+ " grab the stick and see how far you can shred before you eat it. High scores go"
+				+ " on the leaderboard."
+			),
+			"price": 500,
+		},
+		{
 			"id": "gallery_visitor",
 			"display_name": "Gallery Visitor",
 			"title": "Gallery Visitor Pass",

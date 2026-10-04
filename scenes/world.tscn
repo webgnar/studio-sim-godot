@@ -1219,45 +1219,6 @@ ao_texture = ExtResource("22_ygn2i")
 uv1_scale = Vector3(1.973, 3.201, 3.131)
 uv1_offset = Vector3(0, -1, 0)
 
-[sub_resource type="Shader" id="Shader_dbi58"]
-code = "shader_type spatial;
-
-uniform sampler2D tv_tex : source_color;
-
-uniform float scanline_strength = 0.3;
-uniform float noise_strength = 0.04;
-uniform float flicker_strength = 0.03;
-
-void fragment() {
-    vec2 uv = UV;
-
-    vec3 col = texture(tv_tex, uv).rgb;
-
-    float scan = sin(uv.y * 900.0) * 0.5 + 0.5;
-    col *= mix(1.0, scan, scanline_strength);
-
-    float n = fract(sin(dot(uv * TIME, vec2(12.9898,78.233))) * 43758.5453);
-    col += (n - 0.5) * noise_strength;
-
-    col *= 1.0 + sin(TIME * 60.0) * flicker_strength;
-
-    ALBEDO = col;
-    EMISSION = col * 0.4;
-}
-"
-
-[sub_resource type="ViewportTexture" id="ViewportTexture_edbjg"]
-viewport_path = NodePath("SubViewport")
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_hl1kq"]
-resource_local_to_scene = true
-render_priority = 0
-shader = SubResource("Shader_dbi58")
-shader_parameter/tv_tex = SubResource("ViewportTexture_edbjg")
-shader_parameter/scanline_strength = 0.2
-shader_parameter/noise_strength = 0.24
-shader_parameter/flicker_strength = 0.02
-
 [node name="World" type="Node3D" unique_id=81477]
 script = ExtResource("1_qaasp")
 
@@ -4051,9 +4012,9 @@ metadata/shop_item_id = "dj"
 [node name="DanceParty" parent="." unique_id=1626250434 instance=ExtResource("dance_party_scene")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5, -15.53, 15.5)
 
-[node name="LouGnarCabinet" parent="." unique_id=1932707950 instance=ExtResource("170_3r8ca")]
+[node name="LouGnarCabinet" parent="." unique_id=1932707950 groups=["shop_prop"] instance=ExtResource("170_3r8ca")]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 3.3071356, -0.05071509, 12.284582)
-screen_material = SubResource("ShaderMaterial_hl1kq")
+metadata/shop_item_id = "lou_gnar"
 
 [editable path="Spotlight1"]
 [editable path="Spotlight2"]

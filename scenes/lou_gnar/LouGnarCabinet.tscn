@@ -2,173 +2,56 @@
 
 [ext_resource type="Script" uid="uid://c4m4tx5r07437" path="res://scenes/lou_gnar/scripts/lou_gnar_cabinet.gd" id="1_cab"]
 [ext_resource type="PackedScene" path="res://scenes/lou_gnar/LouGnar.tscn" id="2_game"]
-[ext_resource type="Material" uid="uid://bl43iap4a4kjl" path="res://materials/tv.tres" id="3_tv"]
-[ext_resource type="FontFile" uid="uid://tmjyio0w6cu0" path="res://fonts/studio-sim.ttf" id="4_font"]
+[ext_resource type="Material" path="res://materials/crt_screen.tres" id="3_crt"]
+[ext_resource type="PackedScene" path="res://models/interactables/lou gnar/lougnar cabinet.glb" id="4_model"]
 
 [sub_resource type="BoxShape3D" id="shape_lower"]
-size = Vector3(0.8, 1.05, 0.75)
+size = Vector3(0.801, 0.7845, 0.84)
 
 [sub_resource type="BoxShape3D" id="shape_upper"]
-size = Vector3(0.8, 0.95, 0.6)
+size = Vector3(0.801, 1.146, 0.594)
 
 [sub_resource type="BoxShape3D" id="shape_deck"]
-size = Vector3(0.8, 0.1, 0.4)
-
-[sub_resource type="BoxMesh" id="mesh_lower"]
-size = Vector3(0.8, 1.05, 0.75)
-
-[sub_resource type="StandardMaterial3D" id="mat_body"]
-albedo_color = Color(0.07, 0.07, 0.2, 1)
-roughness = 0.6
-
-[sub_resource type="BoxMesh" id="mesh_upper"]
-size = Vector3(0.8, 0.95, 0.6)
-
-[sub_resource type="BoxMesh" id="mesh_deck"]
-size = Vector3(0.8, 0.08, 0.4)
-
-[sub_resource type="StandardMaterial3D" id="mat_deck"]
-albedo_color = Color(0.12, 0.12, 0.14, 1)
-roughness = 0.5
-
-[sub_resource type="BoxMesh" id="mesh_trim"]
-size = Vector3(0.82, 0.03, 0.77)
-
-[sub_resource type="StandardMaterial3D" id="mat_trim"]
-albedo_color = Color(0, 0.9, 0.1, 1)
-emission_enabled = true
-emission = Color(0, 0.9, 0.1, 1)
-emission_energy_multiplier = 1.5
-
-[sub_resource type="BoxMesh" id="mesh_bezel"]
-size = Vector3(0.72, 0.58, 0.02)
-
-[sub_resource type="StandardMaterial3D" id="mat_bezel"]
-albedo_color = Color(0.02, 0.02, 0.02, 1)
+size = Vector3(1.002, 0.159, 0.477)
 
 [sub_resource type="QuadMesh" id="mesh_screen"]
-size = Vector2(0.64, 0.48)
-
-[sub_resource type="BoxMesh" id="mesh_marquee"]
-size = Vector3(0.8, 0.18, 0.62)
-
-[sub_resource type="StandardMaterial3D" id="mat_marquee"]
-albedo_color = Color(0.05, 0.05, 0.05, 1)
-emission_enabled = true
-emission = Color(0.05, 0.3, 0.05, 1)
-
-[sub_resource type="CylinderMesh" id="mesh_stick"]
-top_radius = 0.01
-bottom_radius = 0.012
-height = 0.1
-
-[sub_resource type="SphereMesh" id="mesh_ball"]
-radius = 0.03
-height = 0.06
-
-[sub_resource type="StandardMaterial3D" id="mat_red"]
-albedo_color = Color(0.9, 0.1, 0.1, 1)
-emission_enabled = true
-emission = Color(0.9, 0.1, 0.1, 1)
-emission_energy_multiplier = 0.6
-
-[sub_resource type="CylinderMesh" id="mesh_button"]
-top_radius = 0.03
-bottom_radius = 0.03
-height = 0.02
+size = Vector2(0.648, 0.486)
 
 [node name="LouGnarCabinet" type="StaticBody3D" unique_id=1505718753 node_paths=PackedStringArray("game", "screen", "play_camera") groups=["interactable"]]
 script = ExtResource("1_cab")
 game = NodePath("LouGnar")
 screen = NodePath("Screen")
 play_camera = NodePath("PlayCamera")
-screen_material = ExtResource("3_tv")
+screen_material = ExtResource("3_crt")
 
 [node name="LowerCol" type="CollisionShape3D" parent="." unique_id=401278688]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.525, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0105, 0.38775, 0.033)
 shape = SubResource("shape_lower")
 
 [node name="UpperCol" type="CollisionShape3D" parent="." unique_id=789095864]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.525, -0.07)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0105, 1.353, -0.09)
 shape = SubResource("shape_upper")
 
 [node name="DeckCol" type="CollisionShape3D" parent="." unique_id=477266481]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.07, 0.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.015, 0.8085, 0.3825)
 shape = SubResource("shape_deck")
 
-[node name="LowerBody" type="MeshInstance3D" parent="." unique_id=1786484036]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.525, 0)
-mesh = SubResource("mesh_lower")
-surface_material_override/0 = SubResource("mat_body")
-
-[node name="UpperBody" type="MeshInstance3D" parent="." unique_id=1622922157]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.525, -0.07)
-mesh = SubResource("mesh_upper")
-surface_material_override/0 = SubResource("mat_body")
-
-[node name="ControlDeck" type="MeshInstance3D" parent="." unique_id=1206396616]
-transform = Transform3D(1, 0, 0, 0, 0.99, 0.14, 0, -0.14, 0.99, 0, 1.07, 0.5)
-mesh = SubResource("mesh_deck")
-surface_material_override/0 = SubResource("mat_deck")
-
-[node name="Trim" type="MeshInstance3D" parent="." unique_id=1064635114]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.04, 0)
-mesh = SubResource("mesh_trim")
-surface_material_override/0 = SubResource("mat_trim")
-
-[node name="Bezel" type="MeshInstance3D" parent="." unique_id=1379766226]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.48, 0.231)
-mesh = SubResource("mesh_bezel")
-surface_material_override/0 = SubResource("mat_bezel")
+[node name="Model" parent="." unique_id=1786484036 instance=ExtResource("4_model")]
+transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 0, 0, 0)
 
 [node name="Screen" type="MeshInstance3D" parent="." unique_id=367441928]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.48, 0.242)
+transform = Transform3D(1, 0, 0, 0, 0.917582, 0.397546, 0, -0.397546, 0.917582, -0.0045, 1.244277, 0.007875)
+cast_shadow = 0
 mesh = SubResource("mesh_screen")
-
-[node name="Marquee" type="MeshInstance3D" parent="." unique_id=1875751335]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.1, -0.07)
-mesh = SubResource("mesh_marquee")
-surface_material_override/0 = SubResource("mat_marquee")
-
-[node name="MarqueeText" type="Label3D" parent="." unique_id=287226956]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.0847678, 0.245)
-pixel_size = 0.0022
-texture_filter = 0
-modulate = Color(0.1, 1, 0.2, 1)
-outline_modulate = Color(0, 0.15, 0, 1)
-text = "LOU   GNAR"
-font = ExtResource("4_font")
-font_size = 64
-line_spacing = -8.0
-
-[node name="Stick" type="MeshInstance3D" parent="." unique_id=1696677866]
-transform = Transform3D(1, 0, 0, 0, 0.99, 0.14, 0, -0.14, 0.99, -0.2, 1.13, 0.5)
-mesh = SubResource("mesh_stick")
-surface_material_override/0 = SubResource("mat_deck")
-
-[node name="StickBall" type="MeshInstance3D" parent="." unique_id=673689814]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.2, 1.2, 0.49)
-mesh = SubResource("mesh_ball")
-surface_material_override/0 = SubResource("mat_red")
-
-[node name="JumpButton" type="MeshInstance3D" parent="." unique_id=1542067641]
-transform = Transform3D(1, 0, 0, 0, 0.99, 0.14, 0, -0.14, 0.99, 0.12, 1.12, 0.5)
-mesh = SubResource("mesh_button")
-surface_material_override/0 = SubResource("mat_red")
-
-[node name="JumpButton2" type="MeshInstance3D" parent="." unique_id=1143248000]
-transform = Transform3D(1, 0, 0, 0, 0.99, 0.14, 0, -0.14, 0.99, 0.24, 1.12, 0.5)
-mesh = SubResource("mesh_button")
-surface_material_override/0 = SubResource("mat_trim")
 
 [node name="LouGnar" parent="." unique_id=713920079 instance=ExtResource("2_game")]
 
 [node name="PlayCamera" type="Camera3D" parent="." unique_id=684735150]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.48, 1)
+transform = Transform3D(1, 0, 0, 0, 0.917582, 0.397546, 0, -0.397546, 0.917582, -0.0045, 1.522559, 0.650183)
 fov = 45.0
 
 [node name="ScreenGlow" type="OmniLight3D" parent="." unique_id=824719659]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0.7)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0045, 1.383418, 0.329029)
 light_color = Color(0.6, 0.9, 1, 1)
 light_energy = 0.5
 omni_range = 3.0
