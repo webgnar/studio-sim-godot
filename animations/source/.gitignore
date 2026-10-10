@@ -1,3 +1,6 @@
 # Raw Mixamo FBX files -- large binaries, not tracked. Only the resulting
 # baked Actions in humanrig.blend (and processed/manifest.json) are tracked.
 *.fbx
+
+# Exception: tracked so the rapping animation can be shared/imported.
+![Rr]apping*.fbx
