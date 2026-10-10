@@ -23,6 +23,7 @@ func show_outline(object: Node3D) -> void:
 
 	# Check if this object should be excluded from outlines
 	if _is_excluded(object):
+		hide_outline()  # don't leave the previous object's outline behind
 		return
 
 	# Clear previous outline
@@ -55,8 +56,11 @@ func _is_excluded(object: Node3D) -> bool:
 
 	return false
 
-## Recursively find MeshInstance3D nodes and create outline duplicates
+## Recursively find MeshInstance3D nodes and create outline duplicates.
+## Subtrees in the "no_outline" group are skipped (e.g. the DJ standing in the DJ booth).
 func _create_outline_for_node(node: Node) -> void:
+	if node != current_outlined_object and node.is_in_group("no_outline"):
+		return
 	if node is MeshInstance3D:
 		_create_outline_duplicate(node)
 

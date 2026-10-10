@@ -8,7 +8,7 @@
 radius = 0.4
 height = 1.2
 
-[node name="FortuneTeller" type="CharacterBody3D" unique_id=2061334966]
+[node name="FortuneTeller" type="CharacterBody3D" unique_id=2061334966 groups=["no_outline"]]
 collision_layer = 8
 collision_mask = 2
 script = ExtResource("1_fteller")

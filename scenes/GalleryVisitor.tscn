@@ -6,7 +6,7 @@
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_gvis"]
 radius = 0.4
 
-[node name="GalleryVisitor" type="CharacterBody3D"]
+[node name="GalleryVisitor" type="CharacterBody3D" groups=["no_outline"]]
 collision_layer = 32
 collision_mask = 2
 script = ExtResource("1_gvis")

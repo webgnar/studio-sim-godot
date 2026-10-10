@@ -36,7 +36,7 @@ shape = SubResource("Shape_speaker")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, -0.9)
 shape = SubResource("Shape_dj")
 
-[node name="DJ" type="Node3D" parent="." unique_id=413862356]
+[node name="DJ" type="Node3D" parent="." unique_id=413862356 groups=["no_outline"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.9)
 
 [node name="humanrig" parent="DJ" unique_id=1364438148 instance=ExtResource("2_rig")]
