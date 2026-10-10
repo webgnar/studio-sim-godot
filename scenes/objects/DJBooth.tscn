@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://cveo66c888gfb" path="res://scripts/objects/DJBooth.gd" id="1_djbooth"]
 [ext_resource type="PackedScene" uid="uid://gv6172d2ngws" path="res://scenes/humanrig_blender.tscn" id="2_rig"]
 [ext_resource type="PackedScene" uid="uid://bc2tdgimnea3q" path="res://models/props/djbooth.glb" id="3_xlwwd"]
+[ext_resource type="Script" path="res://scripts/navigation/NavCarve.gd" id="4_navcarve"]
 
 [sub_resource type="StandardMaterial3D" id="Mat_black"]
 albedo_color = Color(0.05, 0.05, 0.06, 1)
@@ -176,3 +177,6 @@ transform = Transform3D(-0.25, 0, 0, 0, 0.25, 0, 0, 0, -0.25, 0, 0, 0)
 
 [node name="djbooth" parent="." unique_id=1576739974 instance=ExtResource("3_xlwwd")]
 transform = Transform3D(-2.3167035e-08, 0, -0.53, 0, 0.53, 0, 0.53, 0, -2.3167035e-08, 0, 0, 0)
+
+[node name="NavCarve" type="Node3D" parent="." unique_id=1873402219]
+script = ExtResource("4_navcarve")
