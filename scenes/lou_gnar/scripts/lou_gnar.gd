@@ -253,13 +253,16 @@ func _release_leaderboard() -> void:
 
 func _on_entries_loaded(entries: Array) -> void:
 	if phase == Phase.GAME_OVER:
-		_game_over.set_entries(entries)
+		_game_over.set_entries(entries, leaderboard.is_offline())
 
 
 func _on_score_submitted(success: bool) -> void:
 	if phase != Phase.GAME_OVER:
 		return
-	_game_over.set_status("SUBMITTED!" if success else "SUBMIT FAILED")
+	var status := "SUBMIT FAILED"
+	if success:
+		status = "SAVED OFFLINE" if leaderboard.is_offline() else "SUBMITTED!"
+	_game_over.set_status(status)
 	if success and leaderboard:
 		leaderboard.request_entries() # refresh with the new score
 

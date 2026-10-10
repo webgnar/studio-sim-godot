@@ -25,6 +25,11 @@ func submit_score(_player_name: String, _score: int) -> void:
 	score_submitted.emit(false)
 
 
+## True when the last entries/submit came from this device instead of the global board.
+func is_offline() -> bool:
+	return false
+
+
 ## Steam persona name via the project's SteamManager autoload when available.
 static func resolve_player_name() -> String:
 	var tree := Engine.get_main_loop() as SceneTree

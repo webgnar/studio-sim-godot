@@ -20,6 +20,7 @@ var _status_label: Label
 var _start_box: Panel
 var _start_text: Label
 var _board: Control
+var _board_title: Label
 var _list: Control
 var _row_count: int = 0
 var _scroll: float = 0.0
@@ -68,7 +69,9 @@ func _ready() -> void:
 	_board.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_board.position = BOARD_ORIGIN
 	root.add_child(_board)
-	_board.add_child(LouGnarUI.make_label("TOP %d LEADERBOARD" % LouGnarLeaderboard.MAX_ENTRIES, 24, LouGnarUI.LIME))
+	_board_title = LouGnarUI.make_label("", 24, LouGnarUI.LIME)
+	_board.add_child(_board_title)
+	_set_board_title("TOP %d LEADERBOARD" % LouGnarLeaderboard.MAX_ENTRIES, LouGnarUI.LIME)
 
 	# 10-row window onto the full list; _list slides up inside it.
 	var window := Control.new()
@@ -87,6 +90,7 @@ func show_results(final_score: int, player_name: String) -> void:
 	LouGnarUI.set_text_centered(_score_label, "Score: %d" % final_score, Vector2(400, 200))
 	LouGnarUI.set_text_centered(_name_label, _fit_name(player_name), Vector2(200, 280))
 	set_status("SUBMITTING...")
+	_set_board_title("TOP %d LEADERBOARD" % LouGnarLeaderboard.MAX_ENTRIES, LouGnarUI.LIME)
 	_draw_board([])
 	_reset_scroll()
 	_pulse = 0.0
@@ -99,8 +103,18 @@ func set_status(text: String) -> void:
 	LouGnarUI.set_text_centered(_status_label, text, Vector2(200, 350))
 
 
-func set_entries(entries: Array) -> void:
+## `offline`: the entries are this device's saved runs, not the Steam board.
+func set_entries(entries: Array, offline: bool = false) -> void:
+	if offline:
+		_set_board_title("OFFLINE TOP %d" % LouGnarLeaderboard.MAX_ENTRIES, Color.ORANGE)
+	else:
+		_set_board_title("GLOBAL TOP %d" % LouGnarLeaderboard.MAX_ENTRIES, LouGnarUI.LIME)
 	_draw_board(entries)
+
+
+func _set_board_title(text: String, color: Color) -> void:
+	_board_title.text = text
+	_board_title.add_theme_color_override("font_color", color)
 
 
 func update(dt: float) -> void:

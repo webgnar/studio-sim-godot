@@ -1,7 +1,8 @@
 class_name LouGnarLocalLeaderboard
 extends LouGnarLeaderboard
-## Default provider: top MAX_ENTRIES stored in user://lou_gnar_scores.json.
-## Used until a Steam leaderboard provider is plugged in.
+## Device board: the top MAX_ENTRIES runs stored in user://lou_gnar_scores.json.
+## Used on its own without GodotSteam, and by the Steam provider as the offline
+## board and a record of every run.
 
 const SAVE_PATH := "user://lou_gnar_scores.json"
 
@@ -21,7 +22,16 @@ func request_entries() -> void:
 	entries_loaded.emit(entries)
 
 
+func is_offline() -> bool:
+	return true
+
+
 func submit_score(player_name: String, score: int) -> void:
+	score_submitted.emit(record_score(player_name, score))
+
+
+## Save a run without signalling. Returns false if the file couldn't be written.
+func record_score(player_name: String, score: int) -> bool:
 	var rows := _load()
 	rows.append({"name": player_name, "score": score})
 	rows.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return int(a["score"]) > int(b["score"]))
@@ -30,11 +40,19 @@ func submit_score(player_name: String, score: int) -> void:
 	_last_score = score
 	var file := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
 	if file == null:
-		score_submitted.emit(false)
-		return
+		return false
 	file.store_string(JSON.stringify(rows))
 	file.close()
-	score_submitted.emit(true)
+	return true
+
+
+## Highest saved score for this name (0 if none).
+func best_score(player_name: String) -> int:
+	var best := 0
+	for row: Dictionary in _load():
+		if row["name"] == player_name:
+			best = maxi(best, int(row["score"]))
+	return best
 
 
 func _load() -> Array:
