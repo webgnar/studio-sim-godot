@@ -5,9 +5,11 @@ class_name DJBooth
 ##
 ## The DJ wears a random NPC skin from ShopManager.VISITOR_ROSTER, re-rolled every time the game
 ## boots. They loop `booth_animation`, or just stand in "idle" if the rig doesn't have it.
+## While the dance party is on they loop `party_animation` instead.
 
 @export var booth_animation: String = "bartending"
 @export var idle_animation: String = "idle"
+@export var party_animation: String = "Dance_Rapping"
 @export var dj_rig_path: NodePath = ^"DJ/humanrig"
 @export var start_text: String = "Start the Party"
 @export var stop_text: String = "End the Party"
@@ -16,6 +18,7 @@ class_name DJBooth
 var interaction_text: String = "Start the Party"
 
 var _party: DanceParty
+var _anim_player: AnimationPlayer
 
 
 func _ready() -> void:
@@ -51,24 +54,33 @@ func _connect_party() -> void:
 		return
 	_party = DanceParty.find_in(get_tree())
 	if _party:
-		_party.party_started.connect(_refresh_text)
-		_party.party_ended.connect(_refresh_text)
-		_refresh_text()
+		_party.party_started.connect(_on_party_changed)
+		_party.party_ended.connect(_on_party_changed)
+		_on_party_changed()
 
 
-func _refresh_text() -> void:
-	interaction_text = stop_text if _party and _party.is_active else start_text
+func _on_party_changed() -> void:
+	var partying := _party != null and _party.is_active
+	interaction_text = stop_text if partying else start_text
+	_play_loop([party_animation, booth_animation, idle_animation] if partying \
+			else [booth_animation, idle_animation])
 
 
 func _start_booth_animation(rig: Node) -> void:
-	var anim_player := _find_animation_player(rig)
-	if not anim_player:
+	_anim_player = _find_animation_player(rig)
+	_play_loop([booth_animation, idle_animation])
+
+
+## Loop the first animation in `names` the rig has.
+func _play_loop(names: Array) -> void:
+	if not _anim_player:
 		return
-	var anim := booth_animation if anim_player.has_animation(booth_animation) else idle_animation
-	if not anim_player.has_animation(anim):
-		return
-	anim_player.get_animation(anim).loop_mode = Animation.LOOP_LINEAR
-	anim_player.play(anim)
+	for anim: String in names:
+		if _anim_player.has_animation(anim):
+			if _anim_player.current_animation != anim:
+				_anim_player.get_animation(anim).loop_mode = Animation.LOOP_LINEAR
+				_anim_player.play(anim, 0.3)
+			return
 
 
 func _apply_random_skin(rig: Node) -> void:
