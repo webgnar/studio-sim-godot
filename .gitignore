@@ -11,3 +11,6 @@
 
 # Material Maker autosave/recovery files
 *.mmcr
+
+# macOS folder metadata
+.DS_Store
