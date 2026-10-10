@@ -160,7 +160,7 @@
 [ext_resource type="PackedScene" path="res://scenes/objects/DanceParty.tscn" id="dance_party_scene"]
 [ext_resource type="Script" uid="uid://dy1equdk316u6" path="res://scripts/DayNightCycle.gd" id="day_night_cycle"]
 [ext_resource type="AudioStream" uid="uid://cnjld2r5btwho" path="res://sounds/dial up.ogg" id="dial_up_ogg"]
-[ext_resource type="PackedScene" path="res://scenes/objects/DJBooth.tscn" id="dj_booth_scene"]
+[ext_resource type="PackedScene" uid="uid://ba176mk08dx0n" path="res://scenes/objects/DJBooth.tscn" id="dj_booth_scene"]
 [ext_resource type="AudioStream" uid="uid://bukro42figtah" path="res://sounds/fan switch.ogg" id="fan_switch"]
 [ext_resource type="PackedScene" uid="uid://dft4un8r3mpqc" path="res://scenes/FortuneTeller.tscn" id="fortune_teller_scene"]
 [ext_resource type="Script" uid="uid://dy7jwhh2qgx4s" path="res://scripts/components/HiddenDoorFog.gd" id="hidden_door_fog_script"]
@@ -4013,8 +4013,7 @@ metadata/shop_item_id = "dj"
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5, -15.53, 15.5)
 
 [node name="LouGnarCabinet" parent="." unique_id=1932707950 groups=["shop_prop"] instance=ExtResource("170_3r8ca")]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 3.3071356, -0.05071509, 12.284582)
-metadata/shop_item_id = "lou_gnar"
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 3.3071356, -0.007634282, 12.284582)
 
 [editable path="Spotlight1"]
 [editable path="Spotlight2"]
