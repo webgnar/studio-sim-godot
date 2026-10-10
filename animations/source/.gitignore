@@ -2,5 +2,6 @@
 # baked Actions in humanrig.blend (and processed/manifest.json) are tracked.
 *.fbx
 
-# Exception: tracked so the rapping animation can be shared/imported.
+# Exceptions: tracked so these animations can be shared/imported.
 ![Rr]apping*.fbx
+![Bb]artending*.fbx
