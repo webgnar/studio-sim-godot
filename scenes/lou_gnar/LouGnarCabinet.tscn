@@ -59,7 +59,7 @@ mesh = SubResource("mesh_screen")
 
 [node name="PlayCamera" type="Camera3D" parent="." unique_id=684735150]
 transform = Transform3D(1, 0, 0, 0, 0.917582, 0.397546, 0, -0.397546, 0.917582, -0.0045, 1.522559, 0.650183)
-fov = 45.0
+fov = 40.0
 
 [node name="ScreenGlow" type="OmniLight3D" parent="." unique_id=824719659]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0045, 1.383418, 0.329029)
