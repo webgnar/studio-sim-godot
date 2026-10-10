@@ -5,11 +5,14 @@ class_name DJBooth
 ##
 ## The DJ wears a random NPC skin from ShopManager.VISITOR_ROSTER, re-rolled every time the game
 ## boots. They loop `booth_animation`, or just stand in "idle" if the rig doesn't have it.
-## While the dance party is on they loop `party_animation` instead.
+## While the dance party is on they take turns through `party_animations`, switching every
+## party_switch_min..max seconds.
 
-@export var booth_animation: String = "bartending"
+@export var booth_animation: String = "Dance_Bartending"
 @export var idle_animation: String = "idle"
-@export var party_animation: String = "Dance_Rapping"
+@export var party_animations: PackedStringArray = ["Dance_Rapping", "Dance_Bartending"]
+@export var party_switch_min: float = 12.0
+@export var party_switch_max: float = 20.0
 @export var dj_rig_path: NodePath = ^"DJ/humanrig"
 @export var start_text: String = "Start the Party"
 @export var stop_text: String = "End the Party"
@@ -19,6 +22,8 @@ var interaction_text: String = "Start the Party"
 
 var _party: DanceParty
 var _anim_player: AnimationPlayer
+var _party_index: int = 0
+var _switch_timer: float = 0.0
 
 
 func _ready() -> void:
@@ -59,11 +64,31 @@ func _connect_party() -> void:
 		_on_party_changed()
 
 
+func _process(delta: float) -> void:
+	if not (_party and _party.is_active) or party_animations.size() < 2:
+		return
+	_switch_timer -= delta
+	if _switch_timer <= 0.0:
+		_party_index = (_party_index + 1) % party_animations.size()
+		_play_party_animation()
+
+
 func _on_party_changed() -> void:
 	var partying := _party != null and _party.is_active
 	interaction_text = stop_text if partying else start_text
-	_play_loop([party_animation, booth_animation, idle_animation] if partying \
-			else [booth_animation, idle_animation])
+	if partying:
+		_party_index = 0
+		_play_party_animation()
+	else:
+		_play_loop([booth_animation, idle_animation])
+
+
+func _play_party_animation() -> void:
+	_switch_timer = randf_range(party_switch_min, party_switch_max)
+	if party_animations.is_empty():
+		_play_loop([booth_animation, idle_animation])
+	else:
+		_play_loop([party_animations[_party_index], booth_animation, idle_animation])
 
 
 func _start_booth_animation(rig: Node) -> void:
