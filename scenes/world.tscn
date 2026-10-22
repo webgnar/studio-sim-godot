@@ -4162,6 +4162,368 @@ mesh = ExtResource("lm_gallery_NavigationRegion3D_wall_east")
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 14.923136, -3.252695, -9.546974)
 mesh = ExtResource("lm_gallery_NavigationRegion3D_wall_north")
 
+[node name="HallOfFameLights" type="Node3D" parent="." unique_id=222880721]
+
+[node name="CeilingSpot01" type="SpotLight3D" parent="HallOfFameLights" unique_id=1973624229]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, -14.55, -8.3, -8)
+light_color = Color(1, 0.96, 0.9, 1)
+light_energy = 3.0
+light_bake_mode = 1
+spot_range = 10.0
+spot_attenuation = 0.8
+spot_angle = 65.0
+
+[node name="CeilingSpot02" type="SpotLight3D" parent="HallOfFameLights" unique_id=454498223]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 43.8, -8.3, -8)
+light_color = Color(1, 0.96, 0.9, 1)
+light_energy = 3.0
+light_bake_mode = 1
+spot_range = 10.0
+spot_attenuation = 0.8
+spot_angle = 65.0
+
+[node name="CeilingSpot03" type="SpotLight3D" parent="HallOfFameLights" unique_id=1223085554]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, -14.55, -8.3, -2)
+light_color = Color(1, 0.96, 0.9, 1)
+light_energy = 3.0
+light_bake_mode = 1
+spot_range = 10.0
+spot_attenuation = 0.8
+spot_angle = 65.0
+
+[node name="CeilingSpot04" type="SpotLight3D" parent="HallOfFameLights" unique_id=1733154322]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 43.8, -8.3, -2)
+light_color = Color(1, 0.96, 0.9, 1)
+light_energy = 3.0
+light_bake_mode = 1
+spot_range = 10.0
+spot_attenuation = 0.8
+spot_angle = 65.0
+
+[node name="CeilingSpot05" type="SpotLight3D" parent="HallOfFameLights" unique_id=986960156]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, -14.55, -8.3, 4)
+light_color = Color(1, 0.96, 0.9, 1)
+light_energy = 3.0
+light_bake_mode = 1
+spot_range = 10.0
+spot_attenuation = 0.8
+spot_angle = 65.0
+
+[node name="CeilingSpot06" type="SpotLight3D" parent="HallOfFameLights" unique_id=141906109]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 43.8, -8.3, 4)
+light_color = Color(1, 0.96, 0.9, 1)
+light_energy = 3.0
+light_bake_mode = 1
+spot_range = 10.0
+spot_attenuation = 0.8
+spot_angle = 65.0
+
+[node name="CeilingSpot07" type="SpotLight3D" parent="HallOfFameLights" unique_id=1526646363]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, -14.55, -8.3, 10)
+light_color = Color(1, 0.96, 0.9, 1)
+light_energy = 3.0
+light_bake_mode = 1
+spot_range = 10.0
+spot_attenuation = 0.8
+spot_angle = 65.0
+
+[node name="CeilingSpot08" type="SpotLight3D" parent="HallOfFameLights" unique_id=608056605]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 43.8, -8.3, 10)
+light_color = Color(1, 0.96, 0.9, 1)
+light_energy = 3.0
+light_bake_mode = 1
+spot_range = 10.0
+spot_attenuation = 0.8
+spot_angle = 65.0
+
+[node name="CeilingSpot09" type="SpotLight3D" parent="HallOfFameLights" unique_id=493138729]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, -14.55, -8.3, 16)
+light_color = Color(1, 0.96, 0.9, 1)
+light_energy = 3.0
+light_bake_mode = 1
+spot_range = 10.0
+spot_attenuation = 0.8
+spot_angle = 65.0
+
+[node name="CeilingSpot10" type="SpotLight3D" parent="HallOfFameLights" unique_id=1448410796]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 43.8, -8.3, 16)
+light_color = Color(1, 0.96, 0.9, 1)
+light_energy = 3.0
+light_bake_mode = 1
+spot_range = 10.0
+spot_attenuation = 0.8
+spot_angle = 65.0
+
+[node name="CeilingSpot11" type="SpotLight3D" parent="HallOfFameLights" unique_id=1942421022]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, -14.55, -8.3, 22)
+light_color = Color(1, 0.96, 0.9, 1)
+light_energy = 3.0
+light_bake_mode = 1
+spot_range = 10.0
+spot_attenuation = 0.8
+spot_angle = 65.0
+
+[node name="CeilingSpot12" type="SpotLight3D" parent="HallOfFameLights" unique_id=1745781174]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 43.8, -8.3, 22)
+light_color = Color(1, 0.96, 0.9, 1)
+light_energy = 3.0
+light_bake_mode = 1
+spot_range = 10.0
+spot_attenuation = 0.8
+spot_angle = 65.0
+
+[node name="CeilingSpot13" type="SpotLight3D" parent="HallOfFameLights" unique_id=1222393972]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, -14.55, -8.3, 28)
+light_color = Color(1, 0.96, 0.9, 1)
+light_energy = 3.0
+light_bake_mode = 1
+spot_range = 10.0
+spot_attenuation = 0.8
+spot_angle = 65.0
+
+[node name="CeilingSpot14" type="SpotLight3D" parent="HallOfFameLights" unique_id=195847007]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 43.8, -8.3, 28)
+light_color = Color(1, 0.96, 0.9, 1)
+light_energy = 3.0
+light_bake_mode = 1
+spot_range = 10.0
+spot_attenuation = 0.8
+spot_angle = 65.0
+
+[node name="CeilingSpot15" type="SpotLight3D" parent="HallOfFameLights" unique_id=917413780]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, -14.55, -8.3, 34)
+light_color = Color(1, 0.96, 0.9, 1)
+light_energy = 3.0
+light_bake_mode = 1
+spot_range = 10.0
+spot_attenuation = 0.8
+spot_angle = 65.0
+
+[node name="CeilingSpot16" type="SpotLight3D" parent="HallOfFameLights" unique_id=1151789417]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 43.8, -8.3, 34)
+light_color = Color(1, 0.96, 0.9, 1)
+light_energy = 3.0
+light_bake_mode = 1
+spot_range = 10.0
+spot_attenuation = 0.8
+spot_angle = 65.0
+
+[node name="CeilingSpot17" type="SpotLight3D" parent="HallOfFameLights" unique_id=1961136845]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, -14.55, -8.3, 40)
+light_color = Color(1, 0.96, 0.9, 1)
+light_energy = 3.0
+light_bake_mode = 1
+spot_range = 10.0
+spot_attenuation = 0.8
+spot_angle = 65.0
+
+[node name="CeilingSpot18" type="SpotLight3D" parent="HallOfFameLights" unique_id=785763239]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 43.8, -8.3, 40)
+light_color = Color(1, 0.96, 0.9, 1)
+light_energy = 3.0
+light_bake_mode = 1
+spot_range = 10.0
+spot_attenuation = 0.8
+spot_angle = 65.0
+
+[node name="CeilingSpot19" type="SpotLight3D" parent="HallOfFameLights" unique_id=556991029]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, -14.55, -8.3, 46)
+light_color = Color(1, 0.96, 0.9, 1)
+light_energy = 3.0
+light_bake_mode = 1
+spot_range = 10.0
+spot_attenuation = 0.8
+spot_angle = 65.0
+
+[node name="CeilingSpot20" type="SpotLight3D" parent="HallOfFameLights" unique_id=1405122403]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 43.8, -8.3, 46)
+light_color = Color(1, 0.96, 0.9, 1)
+light_energy = 3.0
+light_bake_mode = 1
+spot_range = 10.0
+spot_attenuation = 0.8
+spot_angle = 65.0
+
+[node name="CeilingSpot21" type="SpotLight3D" parent="HallOfFameLights" unique_id=650543889]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, -14.55, -8.3, 52)
+light_color = Color(1, 0.96, 0.9, 1)
+light_energy = 3.0
+light_bake_mode = 1
+spot_range = 10.0
+spot_attenuation = 0.8
+spot_angle = 65.0
+
+[node name="CeilingSpot22" type="SpotLight3D" parent="HallOfFameLights" unique_id=686680719]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 43.8, -8.3, 52)
+light_color = Color(1, 0.96, 0.9, 1)
+light_energy = 3.0
+light_bake_mode = 1
+spot_range = 10.0
+spot_attenuation = 0.8
+spot_angle = 65.0
+
+[node name="CeilingSpot23" type="SpotLight3D" parent="HallOfFameLights" unique_id=888207191]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, -14.55, -8.3, 58)
+light_color = Color(1, 0.96, 0.9, 1)
+light_energy = 3.0
+light_bake_mode = 1
+spot_range = 10.0
+spot_attenuation = 0.8
+spot_angle = 65.0
+
+[node name="CeilingSpot24" type="SpotLight3D" parent="HallOfFameLights" unique_id=733252707]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 43.8, -8.3, 58)
+light_color = Color(1, 0.96, 0.9, 1)
+light_energy = 3.0
+light_bake_mode = 1
+spot_range = 10.0
+spot_attenuation = 0.8
+spot_angle = 65.0
+
+[node name="CeilingSpot25" type="SpotLight3D" parent="HallOfFameLights" unique_id=614287751]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, -8, -8.3, 56.45)
+light_color = Color(1, 0.96, 0.9, 1)
+light_energy = 3.0
+light_bake_mode = 1
+spot_range = 10.0
+spot_attenuation = 0.8
+spot_angle = 65.0
+
+[node name="CeilingSpot26" type="SpotLight3D" parent="HallOfFameLights" unique_id=187415464]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, -2, -8.3, 56.45)
+light_color = Color(1, 0.96, 0.9, 1)
+light_energy = 3.0
+light_bake_mode = 1
+spot_range = 10.0
+spot_attenuation = 0.8
+spot_angle = 65.0
+
+[node name="CeilingSpot27" type="SpotLight3D" parent="HallOfFameLights" unique_id=1926039684]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 4, -8.3, 56.45)
+light_color = Color(1, 0.96, 0.9, 1)
+light_energy = 3.0
+light_bake_mode = 1
+spot_range = 10.0
+spot_attenuation = 0.8
+spot_angle = 65.0
+
+[node name="CeilingSpot28" type="SpotLight3D" parent="HallOfFameLights" unique_id=1057659740]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 10, -8.3, 56.45)
+light_color = Color(1, 0.96, 0.9, 1)
+light_energy = 3.0
+light_bake_mode = 1
+spot_range = 10.0
+spot_attenuation = 0.8
+spot_angle = 65.0
+
+[node name="CeilingSpot29" type="SpotLight3D" parent="HallOfFameLights" unique_id=631223667]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 16, -8.3, 56.45)
+light_color = Color(1, 0.96, 0.9, 1)
+light_energy = 3.0
+light_bake_mode = 1
+spot_range = 10.0
+spot_attenuation = 0.8
+spot_angle = 65.0
+
+[node name="CeilingSpot30" type="SpotLight3D" parent="HallOfFameLights" unique_id=549398107]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 22, -8.3, 56.45)
+light_color = Color(1, 0.96, 0.9, 1)
+light_energy = 3.0
+light_bake_mode = 1
+spot_range = 10.0
+spot_attenuation = 0.8
+spot_angle = 65.0
+
+[node name="CeilingSpot31" type="SpotLight3D" parent="HallOfFameLights" unique_id=1070538096]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 28, -8.3, 56.45)
+light_color = Color(1, 0.96, 0.9, 1)
+light_energy = 3.0
+light_bake_mode = 1
+spot_range = 10.0
+spot_attenuation = 0.8
+spot_angle = 65.0
+
+[node name="CeilingSpot32" type="SpotLight3D" parent="HallOfFameLights" unique_id=1695130567]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 34, -8.3, 56.45)
+light_color = Color(1, 0.96, 0.9, 1)
+light_energy = 3.0
+light_bake_mode = 1
+spot_range = 10.0
+spot_attenuation = 0.8
+spot_angle = 65.0
+
+[node name="CeilingSpot33" type="SpotLight3D" parent="HallOfFameLights" unique_id=1615230712]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, -7, -8.3, -5.87)
+light_color = Color(1, 0.96, 0.9, 1)
+light_energy = 3.0
+light_bake_mode = 1
+spot_range = 10.0
+spot_attenuation = 0.8
+spot_angle = 65.0
+
+[node name="CeilingSpot34" type="SpotLight3D" parent="HallOfFameLights" unique_id=1048621376]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, -2, -8.3, -5.87)
+light_color = Color(1, 0.96, 0.9, 1)
+light_energy = 3.0
+light_bake_mode = 1
+spot_range = 10.0
+spot_attenuation = 0.8
+spot_angle = 65.0
+
+[node name="CeilingSpot35" type="SpotLight3D" parent="HallOfFameLights" unique_id=691829696]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 2.5, -8.3, -5.87)
+light_color = Color(1, 0.96, 0.9, 1)
+light_energy = 3.0
+light_bake_mode = 1
+spot_range = 10.0
+spot_attenuation = 0.8
+spot_angle = 65.0
+
+[node name="CeilingSpot36" type="SpotLight3D" parent="HallOfFameLights" unique_id=1126561950]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 15, -8.3, -5.87)
+light_color = Color(1, 0.96, 0.9, 1)
+light_energy = 3.0
+light_bake_mode = 1
+spot_range = 10.0
+spot_attenuation = 0.8
+spot_angle = 65.0
+
+[node name="CeilingSpot37" type="SpotLight3D" parent="HallOfFameLights" unique_id=443890965]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 21, -8.3, -5.87)
+light_color = Color(1, 0.96, 0.9, 1)
+light_energy = 3.0
+light_bake_mode = 1
+spot_range = 10.0
+spot_attenuation = 0.8
+spot_angle = 65.0
+
+[node name="CeilingSpot38" type="SpotLight3D" parent="HallOfFameLights" unique_id=1332887634]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 27, -8.3, -5.87)
+light_color = Color(1, 0.96, 0.9, 1)
+light_energy = 3.0
+light_bake_mode = 1
+spot_range = 10.0
+spot_attenuation = 0.8
+spot_angle = 65.0
+
+[node name="CeilingSpot39" type="SpotLight3D" parent="HallOfFameLights" unique_id=972492987]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 33, -8.3, -5.87)
+light_color = Color(1, 0.96, 0.9, 1)
+light_energy = 3.0
+light_bake_mode = 1
+spot_range = 10.0
+spot_attenuation = 0.8
+spot_angle = 65.0
+
+[node name="CeilingSpot40" type="SpotLight3D" parent="HallOfFameLights" unique_id=1852978724]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 38, -8.3, -5.87)
+light_color = Color(1, 0.96, 0.9, 1)
+light_energy = 3.0
+light_bake_mode = 1
+spot_range = 10.0
+spot_attenuation = 0.8
+spot_angle = 65.0
+
 [node name="ReflectionProbes" type="Node3D" parent="." unique_id=1041869173]
 
 [node name="studio" type="ReflectionProbe" parent="ReflectionProbes" unique_id=985129545]
