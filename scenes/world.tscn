@@ -1206,7 +1206,10 @@ uv1_offset = Vector3(0, -1, 0)
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7echp"]
 transparency = 1
 cull_mode = 2
-albedo_color = Color(0.45490196, 1, 1, 1)
+albedo_color = Color(0.9, 0.93, 0.95, 0.55)
+roughness = 0.85
+refraction_enabled = true
+refraction_scale = 0.03
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8j4su"]
 albedo_texture = SubResource("CompressedTexture2D_edbjg")
