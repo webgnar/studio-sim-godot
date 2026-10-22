@@ -52,7 +52,7 @@ const C_SUN_DUSK          := Color(1.0,  0.45, 0.55)  # pink sunset
 const C_SUN_NIGHT         := Color(0.0,  0.0,  0.0 )
 
 # Fill/moon light color
-const C_FILL_DAY   := Color(0.80, 0.85, 1.00)
+const C_FILL_DAY   := Color(1.00, 0.96, 0.90)  # neutral warm; moonlight below stays cool
 const C_FILL_NIGHT := Color(0.15, 0.20, 0.35)
 
 func _ready() -> void:

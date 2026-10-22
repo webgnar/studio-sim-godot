@@ -143,6 +143,7 @@ cast_shadow = 0
 mesh = SubResource("Mesh_rod")
 
 [node name="FillLight" type="OmniLight3D" parent="Rig" unique_id=1256281958]
+light_bake_mode = 0
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 8.53, -0.5)
 light_color = Color(0.5, 0.25, 1, 1)
 light_energy = 0.9
@@ -150,6 +151,7 @@ omni_range = 32.0
 omni_attenuation = 0.6
 
 [node name="DiscoLight1" type="SpotLight3D" parent="Rig" unique_id=2136605259]
+light_bake_mode = 0
 transform = Transform3D(-0.6, 0.631373, -0.491292, 0, 0.614115, 0.789217, 0.8, 0.47353, -0.368469, -10.5, 12.53, -9.5)
 light_energy = 9.0
 light_specular = 0.3
@@ -166,6 +168,7 @@ cast_shadow = 0
 mesh = SubResource("Mesh_can")
 
 [node name="DiscoLight2" type="SpotLight3D" parent="Rig" unique_id=1167025043]
+light_bake_mode = 0
 transform = Transform3D(-1, 0, 0, 0, 0.478336, 0.878177, 0, 0.878177, -0.478336, 1.5, 12.53, -11)
 light_energy = 9.0
 light_specular = 0.3
@@ -182,6 +185,7 @@ cast_shadow = 0
 mesh = SubResource("Mesh_can")
 
 [node name="DiscoLight3" type="SpotLight3D" parent="Rig" unique_id=353244785]
+light_bake_mode = 0
 transform = Transform3D(-0.540758, -0.636704, 0.549718, 0, 0.653509, 0.756919, -0.841178, 0.40931, -0.35339, 15.5, 12.53, -9.5)
 light_energy = 9.0
 light_specular = 0.3
@@ -198,6 +202,7 @@ cast_shadow = 0
 mesh = SubResource("Mesh_can")
 
 [node name="DiscoLight4" type="SpotLight3D" parent="Rig" unique_id=1122586401]
+light_bake_mode = 0
 transform = Transform3D(0.675725, 0.5632, -0.475607, 0, 0.645193, 0.76402, 0.737154, -0.516267, 0.435973, -10.5, 12.53, 10.5)
 light_energy = 9.0
 light_specular = 0.3
@@ -214,6 +219,7 @@ cast_shadow = 0
 mesh = SubResource("Mesh_can")
 
 [node name="DiscoLight5" type="SpotLight3D" parent="Rig" unique_id=1166748345]
+light_bake_mode = 0
 transform = Transform3D(1, 0, 0, 0, 0.54407, 0.83904, 0, -0.83904, 0.54407, 1.5, 12.53, 12)
 light_energy = 9.0
 light_specular = 0.3
@@ -230,6 +236,7 @@ cast_shadow = 0
 mesh = SubResource("Mesh_can")
 
 [node name="DiscoLight6" type="SpotLight3D" parent="Rig" unique_id=227017211]
+light_bake_mode = 0
 transform = Transform3D(0.617822, -0.577634, 0.533513, 0, 0.678494, 0.734606, -0.786318, -0.453855, 0.419188, 15.5, 12.53, 10.5)
 light_energy = 9.0
 light_specular = 0.3
