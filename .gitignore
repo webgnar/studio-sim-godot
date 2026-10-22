@@ -14,3 +14,6 @@
 
 # macOS folder metadata
 .DS_Store
+
+# Baked lightmap must import as a layered texture (see docs/BAKED_LIGHTING.md)
+!scenes/world.exr.import
