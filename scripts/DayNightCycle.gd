@@ -11,6 +11,10 @@ extends Node
 @export_group("Lighting")
 @export var light_energy_max: float = 1.2
 @export_range(0.1, 1.0) var light_rise_curve: float = 0.5  # lower = faster fade in at sunrise/sunset
+## The fill light stands in for daylight bouncing indoors; the lightmap bake
+## only holds the lamps, so nights go dark unless the lamps light the room.
+@export var fill_energy_day: float = 0.6
+@export var fill_energy_night: float = 0.05
 
 @onready var _dir_light: DirectionalLight3D = get_node_or_null("sun root/SunSphere/DirectionalLight3D2")
 @onready var _fill_light: DirectionalLight3D = get_parent().get_node_or_null("DirectionalLight3D")
@@ -120,7 +124,7 @@ func _update_lighting() -> void:
 
 	if _fill_light:
 		_fill_light.light_color  = C_FILL_DAY.lerp(C_FILL_NIGHT, night_blend)
-		_fill_light.light_energy = lerpf(0.15, 0.4, night_blend)
+		_fill_light.light_energy = lerpf(fill_energy_day, fill_energy_night, night_blend)
 
 	if _sun_mat:
 		var sc := _phase_color(C_SUN_MORNING, C_SUN_MID_MORNING, C_SUN_DAY, C_SUN_MID_AFTERNOON, C_SUN_DUSK, C_SUN_NIGHT)

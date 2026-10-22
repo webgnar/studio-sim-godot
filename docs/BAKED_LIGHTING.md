@@ -15,15 +15,20 @@ moon fill light and everything that moves stay real time.
   stay live. The sun (`DayNightCycle/.../DirectionalLight3D2`), the fill/moon
   `DirectionalLight3D`, the DanceParty rig and the Lou Gnar screen glow are
   bake **Disabled** because they move, change color or switch off.
-- **Skylight.** `LightmapGI.environment_mode` is Custom Color (a neutral
-  warm grey), not the sky: the sky changes through the day, and its blue
-  would come back into every room.
+- **No skylight in the bake.** `LightmapGI.environment_mode` is Disabled, so
+  the bake holds only the lamps: at night rooms are lit by their fixtures
+  and windows go dark, like the real studio. Daylight indoors comes from the
+  live fill `DirectionalLight3D`, which `DayNightCycle` fades between
+  `fill_energy_day` and `fill_energy_night`.
+- **Reflection probes** (`ReflectionProbes`, one box per room) replace sky
+  reflections. Refit them if room walls move.
 
 ## Environment (`materials/world_environ.tres`)
 
 Ambient is a neutral Color (not the sky) and sky reflections are off: the
 sky shader paints the whole sphere with the blue cloud image, which tinted
-every surface blue. Tonemap is AgX; SSAO gives moving things contact shadows.
+every surface blue. Tonemap is AgX; SSAO gives moving things contact shadows. Debanding is on in
+project settings so smooth light falloff on white walls doesn't band.
 
 ## After editing walls or moving lights
 
