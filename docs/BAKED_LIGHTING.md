@@ -10,11 +10,14 @@ moon fill light and everything that moves stay real time.
   `<name> (baked)` MeshInstance3D twin next to it with a UV2 mesh from
   `scenes/world_lightmap/`. The CSG nodes are still there for collision and
   navmesh, drawn on render layer 0 (invisible, no shadow).
-- **Lights.** Lamps (gallery spots, fluorescents) use the default
-  bake mode Dynamic: their bounce is baked, their direct light and shadows
-  stay live. The sun (`DayNightCycle/.../DirectionalLight3D2`), the fill/moon
+- **Lights.** Always-on lamps (gallery spots) use the default bake mode
+  Dynamic: their bounce is baked, their direct light and shadows stay live.
+  Fluorescent and Spotlight fixtures are bake **Disabled** because the wall
+  switches toggle them; each Fluorescent has a live `BounceFill` light and
+  glowing tubes that follow its SpotLight3D (`FluorescentFixture.gd`). The sun (`DayNightCycle/.../DirectionalLight3D2`), the fill/moon
   `DirectionalLight3D`, the DanceParty rig and the Lou Gnar screen glow are
-  bake **Disabled** because they move, change color or switch off.
+  also bake **Disabled** because they move or change color. Any new light a
+  switch or script turns off must be bake Disabled too, or its bounce stays.
 - **No skylight in the bake.** `LightmapGI.environment_mode` is Disabled, so
   the bake holds only the lamps: at night rooms are lit by their fixtures
   and windows go dark, like the real studio. Daylight indoors comes from the
