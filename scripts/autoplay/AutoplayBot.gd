@@ -68,7 +68,8 @@ func still_running(token: int) -> bool:
 # --- Main loop ---
 
 func _run(token: int) -> void:
-	if not await nav.ensure_baked(get_tree().current_scene):
+	# Rebake every session: props get moved around between sessions
+	if not await nav.ensure_baked(get_tree().current_scene, true):
 		return
 	if not still_running(token):
 		return
@@ -133,6 +134,8 @@ func _paint_canvas(token: int) -> bool:
 
 	var stand := _stand_point_for(plane)
 	if not nav.can_reach(player.global_position, stand):
+		return false
+	if not _canvas_visible_from(stand, plane):
 		return false
 	if not await _go_to(token, stand):
 		return false
@@ -277,14 +280,34 @@ func _aim_uv(system: PaintingSystem2D) -> Vector2:
 
 
 func _stand_point_for(plane: MeshInstance3D) -> Vector3:
-	"""A spot on the open side of the canvas. The canvas hangs on a wall, so
-	the side whose ray hits something right away is the back."""
+	"""A spot on the open side of the canvas: the side the player can walk to.
+	There can be walkable floor behind the wall too (another room), so when
+	both sides are reachable or neither is, fall back to the side whose ray
+	doesn't hit the wall right away."""
 	var normal := plane.global_basis.y.normalized()
 	var front := normal
 	if _blocked_within(plane.global_position, normal, STAND_DISTANCE):
 		front = -normal
+	var preferred := _floor_in_front_of(plane, front)
+	if nav.can_reach(player.global_position, preferred):
+		return preferred
+	var other := _floor_in_front_of(plane, -front)
+	return other if nav.can_reach(player.global_position, other) else preferred
+
+
+func _floor_in_front_of(plane: MeshInstance3D, dir: Vector3) -> Vector3:
 	# Snap to the walkable floor in front of the canvas
-	return nav.closest_point(plane.global_position + front * STAND_DISTANCE + Vector3.DOWN * 1.5)
+	return nav.closest_point(plane.global_position + dir * STAND_DISTANCE + Vector3.DOWN * 1.5)
+
+
+func _canvas_visible_from(stand: Vector3, plane: MeshInstance3D) -> bool:
+	"""Detached paintings land right in front of the fresh canvas, and the bot
+	never carries them away. Don't go and paint stickers onto their backs."""
+	var eye := stand + Vector3.UP * EYE_HEIGHT
+	var beyond := plane.global_position + (plane.global_position - eye).normalized() * 0.3
+	var query := PhysicsRayQueryParameters3D.create(eye, beyond)
+	query.exclude = [player.get_rid()]
+	return PaintingModeManager._is_canvas_plane(player.get_world_3d().direct_space_state.intersect_ray(query))
 
 
 func _blocked_within(from: Vector3, dir: Vector3, dist: float) -> bool:
@@ -308,6 +331,10 @@ func _go_to(token: int, destination: Vector3) -> bool:
 		var result := await _follow_path(token, path)
 		if result:
 			return _flat_distance(player.global_position, nav.closest_point(destination)) <= ARRIVE_DISTANCE + 0.3
+		if not still_running(token):
+			return false
+		# Bumped into something that's moved since the bake: rebake so the new path goes around it
+		await nav.ensure_baked(get_tree().current_scene, true)
 		if not still_running(token):
 			return false
 	return false
