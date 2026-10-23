@@ -153,6 +153,7 @@
 [ext_resource type="Script" uid="uid://di1n2iwa1eny" path="res://scripts/hall_of_fame_gallery.gd" id="202_hof"]
 [ext_resource type="Script" uid="uid://cf3qogfe8ovlm" path="res://scripts/objects/HOFDoor.gd" id="203_hofdoor"]
 [ext_resource type="Script" uid="uid://c6fwfj202t4lx" path="res://scripts/objects/HOFDoorInteraction.gd" id="205_hofdoor_interact"]
+[ext_resource type="Script" uid="uid://b8uvh08d8yjqu" path="res://scripts/components/BakedOnlyLights.gd" id="baked_only_lights"]
 [ext_resource type="Script" uid="uid://nvjrcsa5oaqc" path="res://scripts/BerkeyInteraction.gd" id="berkey_interaction"]
 [ext_resource type="AudioStream" uid="uid://b8pj17m4nhgjm" path="res://sounds/boomboxSwitch.ogg" id="boombox_switch"]
 [ext_resource type="Material" uid="uid://dfjjs1rkdw2bi" path="res://materials/metal.tres" id="catwalk_metal"]
@@ -166,34 +167,33 @@
 [ext_resource type="Script" uid="uid://dy7jwhh2qgx4s" path="res://scripts/components/HiddenDoorFog.gd" id="hidden_door_fog_script"]
 [ext_resource type="Script" uid="uid://bxbaq2ohbhuwg" path="res://scripts/components/LadderClimbZone.gd" id="ladder_climb_zone_script"]
 [ext_resource type="Script" uid="uid://6mn7hcha5ru5" path="res://scripts/components/LadderComponent.gd" id="ladder_component_script"]
-[ext_resource type="AudioStream" uid="uid://c443ekfhr0sru" path="res://sounds/music_gnar - Ministudio.ogg" id="ministudio_audio"]
-[ext_resource type="PackedScene" path="res://scenes/UI/MoneyRainLayer.tscn" id="money_rain_layer"]
-[ext_resource type="AudioStream" uid="uid://cldonhpncb00b" path="res://sounds/(First Trip) To The Moon.ogg" id="moon_ogg"]
-[ext_resource type="PackedScene" uid="uid://cjg7s2n8fnpwh" path="res://scenes/objects/worklamp.tscn" id="worklamp_scene"]
+[ext_resource type="LightmapGIData" uid="uid://chn0vty60qapb" path="res://scenes/world.lmbake" id="lightmap_data"]
+[ext_resource type="ArrayMesh" path="res://scenes/world_lightmap/AssistantStudio_CSGCombiner3D.res" id="lm_AssistantStudio_CSGCombiner3D"]
 [ext_resource type="ArrayMesh" path="res://scenes/world_lightmap/celing.res" id="lm_celing"]
 [ext_resource type="ArrayMesh" path="res://scenes/world_lightmap/celing2.res" id="lm_celing2"]
-[ext_resource type="ArrayMesh" path="res://scenes/world_lightmap/hallway.res" id="lm_hallway"]
-[ext_resource type="ArrayMesh" path="res://scenes/world_lightmap/studio.res" id="lm_studio"]
 [ext_resource type="ArrayMesh" path="res://scenes/world_lightmap/gallery.res" id="lm_gallery"]
-[ext_resource type="ArrayMesh" path="res://scenes/world_lightmap/hall_of_fame.res" id="lm_hall_of_fame"]
-[ext_resource type="ArrayMesh" path="res://scenes/world_lightmap/AssistantStudio_CSGCombiner3D.res" id="lm_AssistantStudio_CSGCombiner3D"]
-[ext_resource type="ArrayMesh" path="res://scenes/world_lightmap/hvac_group_CSGCombiner3D.res" id="lm_hvac_group_CSGCombiner3D"]
-[ext_resource type="ArrayMesh" path="res://scenes/world_lightmap/greenhouse_CSGCombiner3D.res" id="lm_greenhouse_CSGCombiner3D"]
+[ext_resource type="ArrayMesh" path="res://scenes/world_lightmap/gallery_Hidden_Door_CSGBox3D.res" id="lm_gallery_Hidden_Door_CSGBox3D"]
+[ext_resource type="ArrayMesh" path="res://scenes/world_lightmap/gallery_NavigationRegion3D_CSGBox3D.res" id="lm_gallery_NavigationRegion3D_CSGBox3D"]
 [ext_resource type="ArrayMesh" path="res://scenes/world_lightmap/gallery_NavigationRegion3D_floor.res" id="lm_gallery_NavigationRegion3D_floor"]
 [ext_resource type="ArrayMesh" path="res://scenes/world_lightmap/gallery_NavigationRegion3D_pedestal.res" id="lm_gallery_NavigationRegion3D_pedestal"]
 [ext_resource type="ArrayMesh" path="res://scenes/world_lightmap/gallery_NavigationRegion3D_pedestal2.res" id="lm_gallery_NavigationRegion3D_pedestal2"]
 [ext_resource type="ArrayMesh" path="res://scenes/world_lightmap/gallery_NavigationRegion3D_pedestal3.res" id="lm_gallery_NavigationRegion3D_pedestal3"]
-[ext_resource type="ArrayMesh" path="res://scenes/world_lightmap/gallery_NavigationRegion3D_CSGBox3D.res" id="lm_gallery_NavigationRegion3D_CSGBox3D"]
-[ext_resource type="ArrayMesh" path="res://scenes/world_lightmap/gallery_NavigationRegion3D_wall_south.res" id="lm_gallery_NavigationRegion3D_wall_south"]
+[ext_resource type="ArrayMesh" path="res://scenes/world_lightmap/gallery_NavigationRegion3D_wall_east.res" id="lm_gallery_NavigationRegion3D_wall_east"]
 [ext_resource type="ArrayMesh" path="res://scenes/world_lightmap/gallery_NavigationRegion3D_wall_g2_south.res" id="lm_gallery_NavigationRegion3D_wall_g2_south"]
 [ext_resource type="ArrayMesh" path="res://scenes/world_lightmap/gallery_NavigationRegion3D_wall_g2_south3.res" id="lm_gallery_NavigationRegion3D_wall_g2_south3"]
 [ext_resource type="ArrayMesh" path="res://scenes/world_lightmap/gallery_NavigationRegion3D_wall_g2_south4.res" id="lm_gallery_NavigationRegion3D_wall_g2_south4"]
-[ext_resource type="ArrayMesh" path="res://scenes/world_lightmap/gallery_NavigationRegion3D_wall_west.res" id="lm_gallery_NavigationRegion3D_wall_west"]
-[ext_resource type="ArrayMesh" path="res://scenes/world_lightmap/gallery_NavigationRegion3D_wall_east.res" id="lm_gallery_NavigationRegion3D_wall_east"]
 [ext_resource type="ArrayMesh" path="res://scenes/world_lightmap/gallery_NavigationRegion3D_wall_north.res" id="lm_gallery_NavigationRegion3D_wall_north"]
-[ext_resource type="LightmapGIData" uid="uid://chn0vty60qapb" path="res://scenes/world.lmbake" id="lightmap_data"]
-[ext_resource type="Script" path="res://scripts/components/BakedOnlyLights.gd" id="baked_only_lights"]
-[ext_resource type="ArrayMesh" path="res://scenes/world_lightmap/gallery_Hidden_Door_CSGBox3D.res" id="lm_gallery_Hidden_Door_CSGBox3D"]
+[ext_resource type="ArrayMesh" path="res://scenes/world_lightmap/gallery_NavigationRegion3D_wall_south.res" id="lm_gallery_NavigationRegion3D_wall_south"]
+[ext_resource type="ArrayMesh" path="res://scenes/world_lightmap/gallery_NavigationRegion3D_wall_west.res" id="lm_gallery_NavigationRegion3D_wall_west"]
+[ext_resource type="ArrayMesh" path="res://scenes/world_lightmap/greenhouse_CSGCombiner3D.res" id="lm_greenhouse_CSGCombiner3D"]
+[ext_resource type="ArrayMesh" path="res://scenes/world_lightmap/hallway.res" id="lm_hallway"]
+[ext_resource type="ArrayMesh" path="res://scenes/world_lightmap/hall_of_fame.res" id="lm_hall_of_fame"]
+[ext_resource type="ArrayMesh" path="res://scenes/world_lightmap/hvac_group_CSGCombiner3D.res" id="lm_hvac_group_CSGCombiner3D"]
+[ext_resource type="ArrayMesh" path="res://scenes/world_lightmap/studio.res" id="lm_studio"]
+[ext_resource type="AudioStream" uid="uid://c443ekfhr0sru" path="res://sounds/music_gnar - Ministudio.ogg" id="ministudio_audio"]
+[ext_resource type="PackedScene" path="res://scenes/UI/MoneyRainLayer.tscn" id="money_rain_layer"]
+[ext_resource type="AudioStream" uid="uid://cldonhpncb00b" path="res://sounds/(First Trip) To The Moon.ogg" id="moon_ogg"]
+[ext_resource type="PackedScene" uid="uid://cjg7s2n8fnpwh" path="res://scenes/objects/worklamp.tscn" id="worklamp_scene"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_t1by1"]
 render_priority = 0
@@ -566,17 +566,17 @@ albedo_color = Color(1.0734373, 1.0734373, 0.15063755, 1)
 albedo_texture = ExtResource("82_mu18u")
 texture_filter = 0
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_3r8ca"]
+[sub_resource type="PlaneMesh" id="PlaneMesh_0480k"]
 resource_local_to_scene = true
 size = Vector2(2.5, 3)
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_2xejd"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_t6th7"]
 resource_name = "_albedo"
 viewport_path = NodePath("../MirrorNew/SubViewport")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hg3bl"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_47d22"]
 resource_local_to_scene = true
-albedo_texture = SubResource("ViewportTexture_2xejd")
+albedo_texture = SubResource("ViewportTexture_t6th7")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_1v02h"]
 size = Vector2(2.5, 3)
@@ -1253,9 +1253,9 @@ script = ExtResource("1_qaasp")
 environment = ExtResource("2_pb8sg")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=583888582]
-light_bake_mode = 0
 transform = Transform3D(1, 0, 0, 0, 0.024990592, -0.9996877, 0, 0.9996877, 0.024990592, 0, 9.141167, 0)
 light_energy = 0.2
+light_bake_mode = 0
 
 [node name="DayNightCycle" type="Node" parent="." unique_id=1453921235]
 script = ExtResource("day_night_cycle")
@@ -1277,8 +1277,8 @@ mesh = SubResource("SphereMesh_sun")
 skeleton = NodePath("../..")
 
 [node name="DirectionalLight3D2" type="DirectionalLight3D" parent="DayNightCycle/sun root/SunSphere" unique_id=627802137]
-light_bake_mode = 0
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.6)
+light_bake_mode = 0
 shadow_enabled = true
 shadow_bias = 0.188
 shadow_normal_bias = 0.94
@@ -1450,12 +1450,12 @@ spot_angle = 90.0
 
 [node name="celing" type="CSGBox3D" parent="." unique_id=266199176]
 transform = Transform3D(-2.0107239e-08, 7.49, 0, -0.46, -3.2739828e-07, 0, 0, 0, 22.64, 0.003834039, 5.5446606, 4)
+layers = 0
+cast_shadow = 0
 use_collision = true
 collision_layer = 2
 size = Vector3(1, 1.0957489, 1)
 material = ExtResource("1_4mrxx")
-cast_shadow = 0
-layers = 0
 
 [node name="strut" type="CSGBox3D" parent="celing" unique_id=1466166137]
 transform = Transform3D(-7.562069e-08, -7.117353e-07, -0.9843476, -4.644262e-09, 0.99999994, -2.642525e-09, 0.035150174, 1.4461054e-08, -8.742276e-10, 0.6765671, 4.656613e-10, -0.21965799)
@@ -1479,12 +1479,12 @@ material = SubResource("StandardMaterial3D_dss4m")
 
 [node name="celing2" type="CSGBox3D" parent="." unique_id=1965046731]
 transform = Transform3D(-2.0107239e-08, 7.49, 0, -0.46, -3.2739828e-07, 0, 0, 0, 22.64, 9.075461, 5.5446606, 7.073203)
+layers = 0
+cast_shadow = 0
 use_collision = true
 collision_layer = 2
 size = Vector3(1, 1.3276367, 0.7285156)
 material = ExtResource("1_4mrxx")
-cast_shadow = 0
-layers = 0
 
 [node name="strut" type="CSGBox3D" parent="celing2" unique_id=1806494600]
 transform = Transform3D(-7.562069e-08, -7.117353e-07, -0.9843476, -4.644262e-09, 0.99999994, -2.642525e-09, 0.035150174, 1.4461054e-08, -8.742276e-10, 0.6765671, 4.656613e-10, -0.21965799)
@@ -1502,11 +1502,11 @@ size = Vector3(0.7, 1, 1)
 material = SubResource("StandardMaterial3D_dss4m")
 
 [node name="hallway" type="CSGCombiner3D" parent="." unique_id=364481292]
+layers = 0
+cast_shadow = 0
 use_collision = true
 collision_layer = 2
 collision_mask = 0
-cast_shadow = 0
-layers = 0
 
 [node name="wall5" type="CSGBox3D" parent="hallway" unique_id=1581579681]
 transform = Transform3D(0.46, 0, 0, 0, 7.49, 0, 1.7763568e-15, 0, 11.09, 13.833213, 2.795661, 10.857089)
@@ -1600,11 +1600,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.778659, 1.5494895, 8.89608
 transform = Transform3D(-1.2676303e-08, 0, -0.16, 0, 0.16, 0, 0.29, 0, -6.993822e-09, 2.0045137, 1.5090563, -0.8141136)
 
 [node name="CSGCombiner3D" type="CSGCombiner3D" parent="AssistantStudio" unique_id=1798520672]
+layers = 0
+cast_shadow = 0
 use_collision = true
 collision_layer = 2
 collision_mask = 0
-cast_shadow = 0
-layers = 0
 
 [node name="wall6" type="CSGBox3D" parent="AssistantStudio/CSGCombiner3D" unique_id=1638121924]
 transform = Transform3D(-0.15908581, 0, 10.405681, 0, 7.49, 0, -0.43161523, 0, -3.835351, -1.0186186, 1.2605457, -3.676978)
@@ -1671,6 +1671,9 @@ transform = Transform3D(-0.07049975, 0, -0.03411837, 0, 0.045000006, 0, 0.025588
 [node name="SaveAssistantWorkButton" parent="AssistantStudio" unique_id=200100001 instance=ExtResource("200_savebtn")]
 transform = Transform3D(-5.732056e-16, 1.3113417e-08, 0.1, -0.1, -4.371139e-09, 4.2351642e-23, 4.371139e-09, -0.1, 1.3113417e-08, -3.5153875, -0.3427856, 3.1781168)
 
+[node name="CSGCombiner3D (baked)" type="MeshInstance3D" parent="AssistantStudio" unique_id=1712448673]
+mesh = ExtResource("lm_AssistantStudio_CSGCombiner3D")
+
 [node name="AssistantFinishedCanvas" parent="." unique_id=201100001 instance=ExtResource("201_fcanvas")]
 transform = Transform3D(0, -1, 4.371139e-08, 4.371139e-08, -4.371139e-08, -1, 1, 1.9106855e-15, 4.371139e-08, 13.361956, 2.6354063, 17.27919)
 
@@ -1692,11 +1695,11 @@ shape = SubResource("BoxShape3D_ce70q")
 
 [node name="studio" type="CSGCombiner3D" parent="." unique_id=2031648802]
 transform = Transform3D(0.46, 0, 0, 0, 7.49, 0, 0, 0, 22.64, -4.9423933, 3.544661, 4)
+layers = 0
+cast_shadow = 0
 use_collision = true
 collision_layer = 2
 collision_mask = 0
-cast_shadow = 0
-layers = 0
 
 [node name="floor" type="CSGBox3D" parent="studio" unique_id=1566094251]
 transform = Transform3D(22.413044, 0, 0, 0, 0.008010681, 0, 0, 0, 1.0114841, 10.82968, -0.5221257, 0.17284817)
@@ -1863,11 +1866,11 @@ transform = Transform3D(0.25155005, -3.96611e-08, 7.450581e-09, -7.450581e-09, -
 
 [node name="CSGCombiner3D" type="CSGCombiner3D" parent="hvac group" unique_id=1851367579]
 transform = Transform3D(1, 0, 0, 0, -1.3419395e-07, 1, 0, -3.07, -4.371139e-08, 1.4474611, 3.9866352, 8)
+layers = 0
+cast_shadow = 0
 use_collision = true
 collision_layer = 2
 collision_mask = 0
-cast_shadow = 0
-layers = 0
 
 [node name="hvac" type="CSGCylinder3D" parent="hvac group/CSGCombiner3D" unique_id=1260937816]
 material = SubResource("StandardMaterial3D_xo05s")
@@ -1887,6 +1890,10 @@ material = SubResource("StandardMaterial3D_xo05s")
 [node name="hvac4" type="CSGCylinder3D" parent="hvac group/CSGCombiner3D" unique_id=1810089695]
 transform = Transform3D(-3.016086e-08, -3.52, -3.6717566e-08, 0.2247557, -5.0118597e-08, -1.1960121e-08, 3.0160866e-08, -1.538641e-07, 0.84, 3.5431767, -0.86544275, -0.016208887)
 material = SubResource("StandardMaterial3D_xo05s")
+
+[node name="CSGCombiner3D (baked)" type="MeshInstance3D" parent="hvac group" unique_id=1960905480]
+transform = Transform3D(1, 0, 0, 0, -1.3419395e-07, 1, 0, -3.07, -4.371139e-08, 1.4474611, 3.9866352, 8)
+mesh = ExtResource("lm_hvac_group_CSGCombiner3D")
 
 [node name="light switch box" parent="." unique_id=577221183 instance=ExtResource("21_ts3gi")]
 transform = Transform3D(0.15, 0, 0, 0, 0.15, 0, 0, 0, 0.15, 3.7619934, 1.4918613, 2.850231)
@@ -2520,8 +2527,8 @@ surface_material_override/0 = SubResource("StandardMaterial3D_7b7y8")
 
 [node name="mirror" parent="." unique_id=1626491013 groups=["shop_prop"] instance=ExtResource("39_qaasp")]
 transform = Transform3D(-4.7902194e-08, -0.99488777, 0.10098683, -3.9073655e-08, 0.10098683, 0.99488777, -1, 4.3711392e-08, -4.3711385e-08, 2.8, 1.497, 5.232)
-mesh = SubResource("PlaneMesh_3r8ca")
-surface_material_override/0 = SubResource("StandardMaterial3D_hg3bl")
+mesh = SubResource("PlaneMesh_0480k")
+surface_material_override/0 = SubResource("StandardMaterial3D_47d22")
 show_debug_logs = false
 metadata/shop_item_id = "mirror"
 
@@ -2579,10 +2586,10 @@ transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 0, 0, 0)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.19449, 0, 19.21788)
 
 [node name="CSGCombiner3D" type="CSGCombiner3D" parent="greenhouse" unique_id=825022234]
+layers = 0
+cast_shadow = 0
 use_collision = true
 collision_layer = 2
-cast_shadow = 0
-layers = 0
 
 [node name="CSGBox3D" type="CSGBox3D" parent="greenhouse/CSGCombiner3D" unique_id=696301624]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3527112, 0.66528314, 3.7265244)
@@ -2735,6 +2742,9 @@ metadata/shop_item_id = "madpalm"
 [node name="SpotLight3D2" type="SpotLight3D" parent="greenhouse" unique_id=1116549202]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, -8, 3, -2)
 
+[node name="CSGCombiner3D (baked)" type="MeshInstance3D" parent="greenhouse" unique_id=1830713766]
+mesh = ExtResource("lm_greenhouse_CSGCombiner3D")
+
 [node name="Door" parent="." unique_id=1914412036 groups=["no_outline"] instance=ExtResource("83_kcpaj")]
 transform = Transform3D(-4.196293e-08, 0, -0.95, 0, 0.95, 0, 0.96, 0, -4.152582e-08, 3.8618395, 1.6471603, 0.54472053)
 
@@ -2859,10 +2869,10 @@ metadata/shop_item_id = "customstickerbutton"
 
 [node name="gallery" type="CSGCombiner3D" parent="." unique_id=1216220224]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.8466578, 8.41431)
+layers = 0
+cast_shadow = 0
 use_collision = true
 collision_layer = 2
-cast_shadow = 0
-layers = 0
 
 [node name="ceiling white" type="CSGBox3D" parent="gallery" unique_id=957513142]
 transform = Transform3D(1.9106855e-15, -4.371139e-08, 1, -1, -4.371139e-08, 0, 4.371139e-08, -1, -4.371139e-08, 20.792917, 3.8018093, 15.241215)
@@ -3079,54 +3089,54 @@ navigation_mesh = SubResource("NavigationMesh_fmmry")
 
 [node name="floor" type="CSGBox3D" parent="gallery/NavigationRegion3D" unique_id=1848299723]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.722805, -18.951353, 15.244794)
+layers = 0
+cast_shadow = 0
 use_collision = true
 collision_layer = 2
 collision_mask = 0
 size = Vector3(47.839737, 16.54373, 51.508144)
 material = SubResource("StandardMaterial3D_t2jyq")
-cast_shadow = 0
-layers = 0
 
 [node name="pedestal" type="CSGBox3D" parent="gallery/NavigationRegion3D" unique_id=1193496576]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21.801332, -10.18548, 4.035714)
+layers = 0
+cast_shadow = 0
 use_collision = true
 size = Vector3(1, 1.0113811, 1)
 material = ExtResource("115_optxr")
-cast_shadow = 0
-layers = 0
 
 [node name="pedestal2" type="CSGBox3D" parent="gallery/NavigationRegion3D" unique_id=592594387]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25.896612, -10.185218, 11.157142)
+layers = 0
+cast_shadow = 0
 use_collision = true
 size = Vector3(1, 1.0493164, 1)
 material = ExtResource("115_optxr")
-cast_shadow = 0
-layers = 0
 
 [node name="pedestal3" type="CSGBox3D" parent="gallery/NavigationRegion3D" unique_id=1008526256]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 32.91327, -10.183143, 6.7298803)
+layers = 0
+cast_shadow = 0
 use_collision = true
 size = Vector3(1, 1.045166, 1)
 material = ExtResource("115_optxr")
-cast_shadow = 0
-layers = 0
 
 [node name="CSGBox3D" type="CSGBox3D" parent="gallery/NavigationRegion3D" unique_id=1259779143]
 transform = Transform3D(1, 0, 0, 0, 0.99521035, 0.0977566, 0, -0.0977566, 0.99521035, -2.8139048, -5.964979, 8.001201)
+layers = 0
+cast_shadow = 0
 size = Vector3(0.5161133, 9.681091, 1)
 material = ExtResource("3_qfnet")
-cast_shadow = 0
-layers = 0
 
 [node name="wall south" type="CSGBox3D" parent="gallery/NavigationRegion3D" unique_id=1767063252]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 14.470593, -3.4046478, 24.220478)
+layers = 0
+cast_shadow = 0
 use_collision = true
 collision_layer = 2
 collision_mask = 0
 size = Vector3(0.98, 15.390234, 47.33407)
 material = ExtResource("5_71j4m")
-cast_shadow = 0
-layers = 0
 
 [node name="door" type="CSGBox3D" parent="gallery/NavigationRegion3D/wall south" unique_id=149694967]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -5.466076, 6.715019)
@@ -3148,43 +3158,43 @@ size = Vector3(1, 2, 19)
 
 [node name="wall g2 south" type="CSGBox3D" parent="gallery/NavigationRegion3D" unique_id=246616353]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.70813, -5.776762, 40.874992)
+layers = 0
+cast_shadow = 0
 use_collision = true
 collision_layer = 2
 collision_mask = 0
 size = Vector3(47.516235, 10, 1)
 material = SubResource("StandardMaterial3D_sjp3e")
-cast_shadow = 0
-layers = 0
 
 [node name="wall g2 south3" type="CSGBox3D" parent="gallery/NavigationRegion3D" unique_id=1077868120]
 transform = Transform3D(-4.371139e-08, 0, -1, -0.25881904, 0.9659258, 1.131334e-08, 0.9659258, 0.25881904, -4.222196e-08, 38.303307, -5.85446, 31.425406)
+layers = 0
+cast_shadow = 0
 use_collision = true
 collision_layer = 2
 collision_mask = 0
 size = Vector3(20, 15, 1)
 material = SubResource("StandardMaterial3D_sjp3e")
-cast_shadow = 0
-layers = 0
 
 [node name="wall g2 south4" type="CSGBox3D" parent="gallery/NavigationRegion3D" unique_id=4005231]
 transform = Transform3D(-4.371139e-08, 0, -1, -0.25881904, 0.9659258, 1.131334e-08, 0.9659258, 0.25881904, -4.222196e-08, -9.175727, -5.85446, 31.425406)
+layers = 0
+cast_shadow = 0
 use_collision = true
 collision_layer = 2
 collision_mask = 0
 size = Vector3(20, 15, 1)
 material = SubResource("StandardMaterial3D_sjp3e")
-cast_shadow = 0
-layers = 0
 
 [node name="wall west" type="CSGBox3D" parent="gallery/NavigationRegion3D" unique_id=1870240585]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.127504, -3.4046478, 7.4529696)
+layers = 0
+cast_shadow = 0
 use_collision = true
 collision_layer = 2
 collision_mask = 0
 size = Vector3(0.98, 15.390234, 34.60435)
 material = ExtResource("5_71j4m")
-cast_shadow = 0
-layers = 0
 
 [node name="CSGBox3D" type="CSGBox3D" parent="gallery/NavigationRegion3D/wall west" unique_id=1442935328]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.1251297, 4.9944763, 5.008484)
@@ -3194,13 +3204,13 @@ material = SubResource("StandardMaterial3D_3fb5j")
 
 [node name="wall east" type="CSGBox3D" parent="gallery/NavigationRegion3D" unique_id=450251449]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 38.187225, -3.4046478, 7.450198)
+layers = 0
+cast_shadow = 0
 use_collision = true
 collision_layer = 2
 collision_mask = 0
 size = Vector3(0.98, 15.390234, 34.65087)
 material = ExtResource("5_71j4m")
-cast_shadow = 0
-layers = 0
 
 [node name="cutout" type="CSGBox3D" parent="gallery/NavigationRegion3D/wall east" unique_id=1387910611]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0018844604, 2.5390024, -13.122839)
@@ -3209,13 +3219,13 @@ size = Vector3(1.2297363, 3.3120117, 1)
 
 [node name="wall north" type="CSGBox3D" parent="gallery/NavigationRegion3D" unique_id=1827195016]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 14.923136, -3.252695, -9.546974)
+layers = 0
+cast_shadow = 0
 use_collision = true
 collision_layer = 2
 collision_mask = 0
 size = Vector3(0.51490235, 15.69414, 47.415874)
 material = ExtResource("5_71j4m")
-cast_shadow = 0
-layers = 0
 
 [node name="cutout" type="CSGBox3D" parent="gallery/NavigationRegion3D/wall north" unique_id=120670611]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0.12453908, 3.5537214, 21.750483)
@@ -3242,6 +3252,54 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.66893e-06, -5.8803425, 20.
 operation = 2
 size = Vector3(1, 3.1375732, 1.4226265)
 material = ExtResource("3_qfnet")
+
+[node name="floor (baked)" type="MeshInstance3D" parent="gallery/NavigationRegion3D" unique_id=1758626262]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.722805, -18.951353, 15.244794)
+mesh = ExtResource("lm_gallery_NavigationRegion3D_floor")
+
+[node name="pedestal (baked)" type="MeshInstance3D" parent="gallery/NavigationRegion3D" unique_id=1338774406]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21.801332, -10.18548, 4.035714)
+mesh = ExtResource("lm_gallery_NavigationRegion3D_pedestal")
+
+[node name="pedestal2 (baked)" type="MeshInstance3D" parent="gallery/NavigationRegion3D" unique_id=890393550]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25.896612, -10.185218, 11.157142)
+mesh = ExtResource("lm_gallery_NavigationRegion3D_pedestal2")
+
+[node name="pedestal3 (baked)" type="MeshInstance3D" parent="gallery/NavigationRegion3D" unique_id=205024652]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 32.91327, -10.183143, 6.7298803)
+mesh = ExtResource("lm_gallery_NavigationRegion3D_pedestal3")
+
+[node name="CSGBox3D (baked)" type="MeshInstance3D" parent="gallery/NavigationRegion3D" unique_id=1571851341]
+transform = Transform3D(1, 0, 0, 0, 0.99521035, 0.0977566, 0, -0.0977566, 0.99521035, -2.8139048, -5.964979, 8.001201)
+mesh = ExtResource("lm_gallery_NavigationRegion3D_CSGBox3D")
+
+[node name="wall south (baked)" type="MeshInstance3D" parent="gallery/NavigationRegion3D" unique_id=1811870788]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 14.470593, -3.4046478, 24.220478)
+mesh = ExtResource("lm_gallery_NavigationRegion3D_wall_south")
+
+[node name="wall g2 south (baked)" type="MeshInstance3D" parent="gallery/NavigationRegion3D" unique_id=1746191632]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.70813, -5.776762, 40.874992)
+mesh = ExtResource("lm_gallery_NavigationRegion3D_wall_g2_south")
+
+[node name="wall g2 south3 (baked)" type="MeshInstance3D" parent="gallery/NavigationRegion3D" unique_id=1331972577]
+transform = Transform3D(-4.371139e-08, 0, -1, -0.25881904, 0.9659258, 1.131334e-08, 0.9659258, 0.25881904, -4.222196e-08, 38.303307, -5.85446, 31.425406)
+mesh = ExtResource("lm_gallery_NavigationRegion3D_wall_g2_south3")
+
+[node name="wall g2 south4 (baked)" type="MeshInstance3D" parent="gallery/NavigationRegion3D" unique_id=154890376]
+transform = Transform3D(-4.371139e-08, 0, -1, -0.25881904, 0.9659258, 1.131334e-08, 0.9659258, 0.25881904, -4.222196e-08, -9.175727, -5.85446, 31.425406)
+mesh = ExtResource("lm_gallery_NavigationRegion3D_wall_g2_south4")
+
+[node name="wall west (baked)" type="MeshInstance3D" parent="gallery/NavigationRegion3D" unique_id=1869201615]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.127504, -3.4046478, 7.4529696)
+mesh = ExtResource("lm_gallery_NavigationRegion3D_wall_west")
+
+[node name="wall east (baked)" type="MeshInstance3D" parent="gallery/NavigationRegion3D" unique_id=1332248934]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 38.187225, -3.4046478, 7.450198)
+mesh = ExtResource("lm_gallery_NavigationRegion3D_wall_east")
+
+[node name="wall north (baked)" type="MeshInstance3D" parent="gallery/NavigationRegion3D" unique_id=394504276]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 14.923136, -3.252695, -9.546974)
+mesh = ExtResource("lm_gallery_NavigationRegion3D_wall_north")
 
 [node name="Basketball" parent="gallery" unique_id=1380341004 groups=["shop_prop"] instance=ExtResource("121_gyxkx")]
 transform = Transform3D(-0.14556402, 0.89771247, 0.4158406, 0.8624473, -0.09080858, 0.49793425, 0.4847637, 0.43112192, -0.76101124, 13.42936, 11.086607, 6.122342)
@@ -3413,14 +3471,18 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.9378147, -9.185848, 24.7078
 
 [node name="CSGBox3D" type="CSGBox3D" parent="gallery/Hidden Door" unique_id=67182411 groups=["gallery_expansion_gate"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.15899658, 1.5500488, -0.4407959)
+layers = 0
+cast_shadow = 0
 use_collision = true
 collision_layer = 2
 collision_mask = 0
 size = Vector3(4.5306396, 6.1782227, 1.0217285)
 material = SubResource("StandardMaterial3D_2xejd")
 script = ExtResource("hidden_door_fog_script")
-cast_shadow = 0
-layers = 0
+
+[node name="CSGBox3D (baked)" type="MeshInstance3D" parent="gallery/Hidden Door" unique_id=994302513]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.15899658, 1.5500488, -0.4407959)
+mesh = ExtResource("lm_gallery_Hidden_Door_CSGBox3D")
 
 [node name="GallerySpawnPoint" type="Node3D" parent="." unique_id=837462901]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.722805, -9.6, 15.43)
@@ -3471,7 +3533,7 @@ transform = Transform3D(-0.2, 3.019916e-08, -1.3200473e-15, 0, -8.742278e-09, -0
 transform = Transform3D(-0.2, 0, 1.7484556e-08, -1.7484556e-08, -8.742278e-09, -0.2, 7.6427423e-16, -0.2, 8.742278e-09, 2.9587736, 1.2738194, 14.698681)
 
 [node name="InstagramDisplay" parent="." unique_id=100000001 instance=ExtResource("146_ctgs1")]
-transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -8.459934, -14.19949, 16.611813)
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -8.459934, -13.67771, 16.611813)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="InstagramDisplay" unique_id=569799289]
 transform = Transform3D(1, -4.371139e-08, 4.371139e-08, 4.371139e-08, -4.371139e-08, -1, 4.371139e-08, 1, -4.3711385e-08, 0, 1.4718581, 0)
@@ -3638,10 +3700,10 @@ interaction_text = "Drop Ladder"
 
 [node name="hall of fame" type="CSGCombiner3D" parent="." unique_id=1084655370]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.921214, -14.367619, -11.921288)
+layers = 0
+cast_shadow = 0
 use_collision = true
 collision_layer = 2
-cast_shadow = 0
-layers = 0
 
 [node name="West_OuterWall" type="CSGBox3D" parent="hall of fame" unique_id=733235009]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.353786, 1.732119, 37.21129)
@@ -4111,64 +4173,6 @@ mesh = ExtResource("lm_gallery")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.921214, -14.367619, -11.921288)
 mesh = ExtResource("lm_hall_of_fame")
 
-[node name="CSGCombiner3D (baked)" type="MeshInstance3D" parent="AssistantStudio" unique_id=1712448673]
-mesh = ExtResource("lm_AssistantStudio_CSGCombiner3D")
-
-[node name="CSGCombiner3D (baked)" type="MeshInstance3D" parent="hvac group" unique_id=1960905480]
-transform = Transform3D(1, 0, 0, 0, -1.3419395e-07, 1, 0, -3.07, -4.371139e-08, 1.4474611, 3.9866352, 8)
-mesh = ExtResource("lm_hvac_group_CSGCombiner3D")
-
-[node name="CSGCombiner3D (baked)" type="MeshInstance3D" parent="greenhouse" unique_id=1830713766]
-mesh = ExtResource("lm_greenhouse_CSGCombiner3D")
-
-[node name="floor (baked)" type="MeshInstance3D" parent="gallery/NavigationRegion3D" unique_id=1758626262]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.722805, -18.951353, 15.244794)
-mesh = ExtResource("lm_gallery_NavigationRegion3D_floor")
-
-[node name="pedestal (baked)" type="MeshInstance3D" parent="gallery/NavigationRegion3D" unique_id=1338774406]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21.801332, -10.18548, 4.035714)
-mesh = ExtResource("lm_gallery_NavigationRegion3D_pedestal")
-
-[node name="pedestal2 (baked)" type="MeshInstance3D" parent="gallery/NavigationRegion3D" unique_id=890393550]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25.896612, -10.185218, 11.157142)
-mesh = ExtResource("lm_gallery_NavigationRegion3D_pedestal2")
-
-[node name="pedestal3 (baked)" type="MeshInstance3D" parent="gallery/NavigationRegion3D" unique_id=205024652]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 32.91327, -10.183143, 6.7298803)
-mesh = ExtResource("lm_gallery_NavigationRegion3D_pedestal3")
-
-[node name="CSGBox3D (baked)" type="MeshInstance3D" parent="gallery/NavigationRegion3D" unique_id=1571851341]
-transform = Transform3D(1, 0, 0, 0, 0.99521035, 0.0977566, 0, -0.0977566, 0.99521035, -2.8139048, -5.964979, 8.001201)
-mesh = ExtResource("lm_gallery_NavigationRegion3D_CSGBox3D")
-
-[node name="wall south (baked)" type="MeshInstance3D" parent="gallery/NavigationRegion3D" unique_id=1811870788]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 14.470593, -3.4046478, 24.220478)
-mesh = ExtResource("lm_gallery_NavigationRegion3D_wall_south")
-
-[node name="wall g2 south (baked)" type="MeshInstance3D" parent="gallery/NavigationRegion3D" unique_id=1746191632]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.70813, -5.776762, 40.874992)
-mesh = ExtResource("lm_gallery_NavigationRegion3D_wall_g2_south")
-
-[node name="wall g2 south3 (baked)" type="MeshInstance3D" parent="gallery/NavigationRegion3D" unique_id=1331972577]
-transform = Transform3D(-4.371139e-08, 0, -1, -0.25881904, 0.9659258, 1.131334e-08, 0.9659258, 0.25881904, -4.222196e-08, 38.303307, -5.85446, 31.425406)
-mesh = ExtResource("lm_gallery_NavigationRegion3D_wall_g2_south3")
-
-[node name="wall g2 south4 (baked)" type="MeshInstance3D" parent="gallery/NavigationRegion3D" unique_id=154890376]
-transform = Transform3D(-4.371139e-08, 0, -1, -0.25881904, 0.9659258, 1.131334e-08, 0.9659258, 0.25881904, -4.222196e-08, -9.175727, -5.85446, 31.425406)
-mesh = ExtResource("lm_gallery_NavigationRegion3D_wall_g2_south4")
-
-[node name="wall west (baked)" type="MeshInstance3D" parent="gallery/NavigationRegion3D" unique_id=1869201615]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.127504, -3.4046478, 7.4529696)
-mesh = ExtResource("lm_gallery_NavigationRegion3D_wall_west")
-
-[node name="wall east (baked)" type="MeshInstance3D" parent="gallery/NavigationRegion3D" unique_id=1332248934]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 38.187225, -3.4046478, 7.450198)
-mesh = ExtResource("lm_gallery_NavigationRegion3D_wall_east")
-
-[node name="wall north (baked)" type="MeshInstance3D" parent="gallery/NavigationRegion3D" unique_id=394504276]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 14.923136, -3.252695, -9.546974)
-mesh = ExtResource("lm_gallery_NavigationRegion3D_wall_north")
-
 [node name="HallOfFameLights" type="Node3D" parent="." unique_id=222880721]
 script = ExtResource("baked_only_lights")
 
@@ -4542,14 +4546,9 @@ interior = true
 ambient_mode = 0
 
 [node name="LightmapGI" type="LightmapGI" parent="." unique_id=1618384254]
-light_data = ExtResource("lightmap_data")
 quality = 2
-bounce_indirect_energy = 1.0
 environment_mode = 0
-
-[node name="CSGBox3D (baked)" type="MeshInstance3D" parent="gallery/Hidden Door" unique_id=994302513]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.15899658, 1.5500488, -0.4407959)
-mesh = ExtResource("lm_gallery_Hidden_Door_CSGBox3D")
+light_data = ExtResource("lightmap_data")
 
 [editable path="Spotlight1"]
 [editable path="Spotlight2"]
