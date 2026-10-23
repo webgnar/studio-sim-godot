@@ -703,6 +703,9 @@ var birth_location: String = ""
 var birth_time: String = ""
 var game_checkboxes: Array[CheckBox] = []
 var joystick_sensitivity: float = 500.0
+var autoplay_checkbox: CheckBox = null
+var autoplay_idle_slider: HSlider = null
+var autoplay_idle_value_label: Label = null
 
 func _create_language_tab():
 	"""Populate the Language tab (scene container) with locale selection buttons"""
@@ -794,11 +797,22 @@ func _create_game_tab():
 	bluesky_line_edit.text = bluesky_handle
 	bluesky_line_edit.focus_mode = Control.FOCUS_ALL
 
-	# Extend focus chain: ai → instagram → bluesky
-	generative_ai_checkbox.focus_next = generative_ai_checkbox.get_path_to(instagram_line_edit)
-	generative_ai_checkbox.focus_neighbor_bottom = generative_ai_checkbox.get_path_to(instagram_line_edit)
-	instagram_line_edit.focus_previous = instagram_line_edit.get_path_to(generative_ai_checkbox)
-	instagram_line_edit.focus_neighbor_top = instagram_line_edit.get_path_to(generative_ai_checkbox)
+	# Idle autoplay controls, built in code right after the AI checkbox
+	_create_autoplay_controls()
+
+	# Extend focus chain: ai → autoplay → idle slider → instagram → bluesky
+	generative_ai_checkbox.focus_next = generative_ai_checkbox.get_path_to(autoplay_checkbox)
+	generative_ai_checkbox.focus_neighbor_bottom = generative_ai_checkbox.get_path_to(autoplay_checkbox)
+	autoplay_checkbox.focus_previous = autoplay_checkbox.get_path_to(generative_ai_checkbox)
+	autoplay_checkbox.focus_neighbor_top = autoplay_checkbox.get_path_to(generative_ai_checkbox)
+	autoplay_checkbox.focus_next = autoplay_checkbox.get_path_to(autoplay_idle_slider)
+	autoplay_checkbox.focus_neighbor_bottom = autoplay_checkbox.get_path_to(autoplay_idle_slider)
+	autoplay_idle_slider.focus_previous = autoplay_idle_slider.get_path_to(autoplay_checkbox)
+	autoplay_idle_slider.focus_neighbor_top = autoplay_idle_slider.get_path_to(autoplay_checkbox)
+	autoplay_idle_slider.focus_next = autoplay_idle_slider.get_path_to(instagram_line_edit)
+	autoplay_idle_slider.focus_neighbor_bottom = autoplay_idle_slider.get_path_to(instagram_line_edit)
+	instagram_line_edit.focus_previous = instagram_line_edit.get_path_to(autoplay_idle_slider)
+	instagram_line_edit.focus_neighbor_top = instagram_line_edit.get_path_to(autoplay_idle_slider)
 	instagram_line_edit.focus_next = instagram_line_edit.get_path_to(bluesky_line_edit)
 	instagram_line_edit.focus_neighbor_bottom = instagram_line_edit.get_path_to(bluesky_line_edit)
 	bluesky_line_edit.focus_previous = bluesky_line_edit.get_path_to(instagram_line_edit)
@@ -834,7 +848,62 @@ func _create_game_tab():
 	birth_date_line_edit.text_changed.connect(_on_birth_date_changed)
 	birth_location_line_edit.text_changed.connect(_on_birth_location_changed)
 	birth_time_line_edit.text_changed.connect(_on_birth_time_changed)
-	game_checkboxes = [save_glb_checkbox, save_png_checkbox, generative_ai_checkbox]
+	game_checkboxes = [save_glb_checkbox, save_png_checkbox, generative_ai_checkbox, autoplay_checkbox]
+
+func _create_autoplay_controls():
+	"""Idle Autoplay checkbox + idle timeout slider. Settings live in AutoplayManager."""
+	var settings_box: Node = generative_ai_checkbox.get_parent()
+	var insert_at: int = generative_ai_checkbox.get_index() + 1
+
+	autoplay_checkbox = CheckBox.new()
+	autoplay_checkbox.name = "AutoplayCheckbox"
+	autoplay_checkbox.text = "Idle Autoplay (bot plays when you're away)"
+	autoplay_checkbox.focus_mode = Control.FOCUS_ALL
+	autoplay_checkbox.button_pressed = AutoplayManager.enabled
+	settings_box.add_child(autoplay_checkbox)
+	settings_box.move_child(autoplay_checkbox, insert_at)
+
+	var idle_section = VBoxContainer.new()
+	idle_section.name = "AutoplayIdleSection"
+	idle_section.add_theme_constant_override("separation", 6)
+	var idle_header = HBoxContainer.new()
+	var idle_label = Label.new()
+	idle_label.text = "Start Autoplay After"
+	idle_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	autoplay_idle_value_label = Label.new()
+	autoplay_idle_value_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	idle_header.add_child(idle_label)
+	idle_header.add_child(autoplay_idle_value_label)
+	idle_section.add_child(idle_header)
+
+	autoplay_idle_slider = HSlider.new()
+	autoplay_idle_slider.min_value = 30.0
+	autoplay_idle_slider.max_value = 600.0
+	autoplay_idle_slider.step = 30.0
+	autoplay_idle_slider.focus_mode = Control.FOCUS_ALL
+	autoplay_idle_slider.value = AutoplayManager.idle_seconds
+	idle_section.add_child(autoplay_idle_slider)
+	settings_box.add_child(idle_section)
+	settings_box.move_child(idle_section, insert_at + 1)
+	_update_autoplay_idle_label(autoplay_idle_slider.value)
+
+	autoplay_checkbox.toggled.connect(_on_autoplay_toggled)
+	autoplay_idle_slider.value_changed.connect(_on_autoplay_idle_changed)
+
+func _update_autoplay_idle_label(seconds: float):
+	if seconds < 60.0:
+		autoplay_idle_value_label.text = "%ds" % int(seconds)
+	elif int(seconds) % 60 == 0:
+		autoplay_idle_value_label.text = "%d min" % int(seconds / 60.0)
+	else:
+		autoplay_idle_value_label.text = "%.1f min" % (seconds / 60.0)
+
+func _on_autoplay_toggled(pressed: bool):
+	AutoplayManager.set_enabled(pressed)
+
+func _on_autoplay_idle_changed(value: float):
+	_update_autoplay_idle_label(value)
+	AutoplayManager.set_idle_seconds(value)
 
 func _on_save_glb_toggled(pressed: bool):
 	save_glb_on_ship = pressed
