@@ -938,6 +938,14 @@ shadow_blur = 1.5
 [node name="BounceFill" parent="Fluorescent3" index="6"]
 light_energy = 0.15
 
+[node name="FaceFill" type="SpotLight3D" parent="." unique_id=1835502917]
+transform = Transform3D(1, 0, 0, 0, 0.914, 0.406, 0, -0.406, 0.914, 0, 1.8, 9.9)
+light_color = Color(1, 0.9, 0.8, 1)
+light_energy = 2.0
+light_specular = 0.2
+spot_range = 5.0
+spot_angle = 20.0
+
 [node name="SpotLight3D" type="SpotLight3D" parent="." unique_id=1707224694]
 transform = Transform3D(1, 0, 0, 0, 0.20997697, 0.9777064, 0, -0.9777064, 0.20997697, 0, 3.3764446, 7.834524)
 light_color = Color(1, 0.72, 0.45, 1)
