@@ -9,6 +9,7 @@ A screensaver-style bot that plays the studio for the player while they're away.
 ## Code
 
 - `scripts/autoplay/AutoplayManager.gd` (autoload): settings, idle detection, start/stop, on-screen label. Listens on the root window's `window_input` signal so scene nodes that handle input can't hide it.
+- `scripts/autoplay/AutoplayNavigation.gd`: bakes a navmesh of the whole level at runtime from its static collision, on a private navigation map (gallery visitors keep theirs). Baked once per scene, the first time the bot starts. The bot always walks; it never teleports. When it gets snagged it logs `AutoplayBot: snagged at ...` and re-plans.
 - `scripts/autoplay/AutoplayBot.gd`: the behaviors. Each one is a coroutine that checks `still_running(token)` after every await, so a stop cancels it right away. The bot never fakes InputEvents; it calls game code directly.
 - `PlayerController.gd`: `autoplay_move` replaces the move input while the bot is active, and `autoplay_look_at()` steers the view through the normal camera smoothing.
 
@@ -16,7 +17,8 @@ A screensaver-style bot that plays the studio for the player while they're away.
 
 | Behavior | Gate | What it does |
 | --- | --- | --- |
-| Paint the canvas | at least one sticker owned | Walks to the active studio canvas (fades and repositions if it's far, on another floor, or the walk gets blocked), places 12 to 30 random owned stickers with random rotation and size, then presses the red Detach button. Stops detaching after 3 per session so paintings don't pile up. Restores the player's sticker selection afterwards. |
+| Wander | always | Pathfinds on foot to 1 to 3 random reachable spots and looks around at each. |
+| Paint the canvas | at least one sticker owned, canvas reachable on foot | Pathfinds to the active studio canvas, places 12 to 30 random owned stickers with random rotation and size, then presses the red Detach button. Stops detaching after 3 per session so paintings don't pile up. Restores the player's sticker selection afterwards. |
 
 ## Adding a behavior
 

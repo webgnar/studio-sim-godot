@@ -5,17 +5,29 @@ extends Node
 ## player has unlocked. Behaviors check still_running(token) after every
 ## await, so any input stops them on the spot.
 ##
-## v1 behavior: paint the studio canvas like the assistant does (random owned
-## stickers, random spots, rotation and size), then detach it with the red
-## button and start a fresh one.
+## It gets around like a player: it pathfinds on foot (AutoplayNavigation)
+## and never teleports.
+##
+## Behaviors:
+## - Wander: walk to a random reachable spot and look around.
+## - Paint: walk to the studio canvas, paint it like the assistant does
+##   (random owned stickers, spots, rotation and size), then detach it with
+##   the red button and start a fresh one.
 
-const WALK_MAX_DISTANCE := 12.0     ## further than this (or another floor) = fade and reposition instead
-const WALK_MAX_HEIGHT_DIFF := 1.5
 const STAND_DISTANCE := 2.2         ## metres in front of the canvas
-const ARRIVE_DISTANCE := 0.35
-const STUCK_TIMEOUT := 1.5          ## seconds without progress before giving up on walking
+const WAYPOINT_REACHED := 0.4
+const ARRIVE_DISTANCE := 0.6        ## close enough to the final destination
+const STUCK_TIMEOUT := 2.0          ## seconds without progress before re-planning
 const STUCK_PROGRESS := 0.25        ## metres that count as progress
+const MAX_REPLANS := 3
 const BUTTON_REACH := 2.5           ## press the detach button from at most this far
+const EYE_HEIGHT := 1.6
+
+const PAINT_CHANCE := 0.6           ## per cycle, when painting is available
+const WANDER_STOPS_MIN := 1
+const WANDER_STOPS_MAX := 3
+const LOOK_AROUND_MIN := 1.5        ## seconds spent looking around at each wander stop
+const LOOK_AROUND_MAX := 4.0
 
 const STICKERS_MIN := 12
 const STICKERS_MAX := 30
@@ -30,7 +42,7 @@ const CANVAS_EDGE_MARGIN := 0.08    ## keep sticker centres this fraction away f
 const MAX_DETACHES_PER_SESSION := 3
 
 var player: Node3D = null
-var fade_rect: ColorRect = null    ## set by AutoplayManager; ours alone, so a stop can always clear it
+var nav: Node = null  ## AutoplayNavigation, set by AutoplayManager
 
 var _token: int = 0
 var _detaches_this_session: int = 0
@@ -50,8 +62,6 @@ func end() -> void:
 	if is_instance_valid(player):
 		player.autoplay_move = Vector2.ZERO
 	_restore_player_selection()
-	if fade_rect:
-		fade_rect.color.a = 0.0
 	player = null
 
 
@@ -62,13 +72,19 @@ func still_running(token: int) -> bool:
 # --- Main loop ---
 
 func _run(token: int) -> void:
+	if not await nav.ensure_baked(get_tree().current_scene):
+		return
+	if not still_running(token):
+		return
 	while still_running(token):
 		var did_something := false
-		if _can_paint():
+		if _can_paint() and randf() < PAINT_CHANCE:
 			did_something = await _paint_canvas(token)
+		if not did_something and still_running(token):
+			did_something = await _wander(token)
 		if not did_something:
-			# Nothing available to do right now; idle quietly and look again.
-			if not await _wait(token, 3.0):
+			# Nothing reachable to do right now; stand around and try again.
+			if not await _look_around(token, 3.0):
 				return
 
 
@@ -76,6 +92,39 @@ func _can_paint() -> bool:
 	return PaintingModeManager.painting_system_2d != null \
 		and is_instance_valid(PaintingModeManager.painting_system_2d) \
 		and not StickerLibrary.sticker_library.is_empty()
+
+
+# --- Behavior: wander ---
+
+func _wander(token: int) -> bool:
+	var moved := false
+	for i in randi_range(WANDER_STOPS_MIN, WANDER_STOPS_MAX):
+		var spot = nav.random_reachable_point(player.global_position)
+		if spot == null:
+			break
+		if not await _go_to(token, spot):
+			if not still_running(token):
+				return false
+			continue
+		moved = true
+		if not await _look_around(token, randf_range(LOOK_AROUND_MIN, LOOK_AROUND_MAX)):
+			return false
+	return moved
+
+
+func _look_around(token: int, seconds: float) -> bool:
+	"""Glance in a couple of random directions, like someone taking in the room."""
+	var t := 0.0
+	while t < seconds:
+		var yaw := randf_range(-PI, PI)
+		var look := player.global_position + Vector3(-sin(yaw), 0.0, -cos(yaw)) * 5.0
+		look.y += EYE_HEIGHT + randf_range(-1.0, 1.0)
+		player.autoplay_look_at(look)
+		var pause := randf_range(1.0, 2.0)
+		if not await _wait(token, pause):
+			return false
+		t += pause
+	return true
 
 
 # --- Behavior: paint and detach ---
@@ -87,7 +136,12 @@ func _paint_canvas(token: int) -> bool:
 		return false
 
 	var stand := _stand_point_for(plane)
-	if not await _go_to(token, stand, plane.global_position):
+	if not nav.can_reach(player.global_position, stand):
+		return false
+	if not await _go_to(token, stand):
+		return false
+	player.autoplay_look_at(plane.global_position)
+	if not await _wait_for_look(token):
 		return false
 
 	var count := randi_range(STICKERS_MIN, STICKERS_MAX)
@@ -137,7 +191,7 @@ func _press_detach_button(token: int) -> bool:
 	if player.global_position.distance_to(button_pos) > BUTTON_REACH + 1.0:
 		var approach := button_pos + (player.global_position - button_pos).normalized() * BUTTON_REACH
 		approach.y = player.global_position.y
-		if not await _go_to(token, approach, button_pos):
+		if not await _go_to(token, approach):
 			return false
 	player.autoplay_look_at(button_pos)
 	if not await _wait_for_look(token):
@@ -180,10 +234,8 @@ func _stand_point_for(plane: MeshInstance3D) -> Vector3:
 	var front := normal
 	if _blocked_within(plane.global_position, normal, STAND_DISTANCE):
 		front = -normal
-	var stand := plane.global_position + front * STAND_DISTANCE
-	stand.y = player.global_position.y if absf(player.global_position.y - plane.global_position.y) < 3.0 \
-		else plane.global_position.y - 1.0
-	return stand
+	# Snap to the walkable floor in front of the canvas
+	return nav.closest_point(plane.global_position + front * STAND_DISTANCE + Vector3.DOWN * 1.5)
 
 
 func _blocked_within(from: Vector3, dir: Vector3, dist: float) -> bool:
@@ -195,43 +247,56 @@ func _blocked_within(from: Vector3, dir: Vector3, dist: float) -> bool:
 
 # --- Movement ---
 
-func _go_to(token: int, destination: Vector3, look_target: Vector3) -> bool:
-	var offset := destination - player.global_position
-	var far := Vector2(offset.x, offset.z).length() > WALK_MAX_DISTANCE \
-		or absf(offset.y) > WALK_MAX_HEIGHT_DIFF
-	if far or not await _walk_to(token, destination):
+func _go_to(token: int, destination: Vector3) -> bool:
+	"""Pathfind on foot to `destination`. Re-plans when blocked (a moved prop,
+	a closed door); gives up after MAX_REPLANS."""
+	for attempt in MAX_REPLANS:
 		if not still_running(token):
 			return false
-		if not await _fade_reposition(token, destination):
+		var path: PackedVector3Array = nav.find_path(player.global_position, destination)
+		if path.is_empty():
 			return false
-	player.autoplay_look_at(look_target)
-	return await _wait_for_look(token)
+		var result := await _follow_path(token, path)
+		if result:
+			return _flat_distance(player.global_position, nav.closest_point(destination)) <= ARRIVE_DISTANCE + 0.3
+		if not still_running(token):
+			return false
+	return false
 
 
-func _walk_to(token: int, destination: Vector3) -> bool:
-	"""Straight-line walk. Returns false if something blocks the way."""
+func _follow_path(token: int, path: PackedVector3Array) -> bool:
+	"""Walk the path waypoint by waypoint. Returns false if stuck."""
+	var i := 0
 	var best_dist := INF
 	var since_progress := 0.0
 	while still_running(token):
-		var to := destination - player.global_position
+		# Skip waypoints we've already passed
+		while i < path.size() - 1 and _flat_distance(player.global_position, path[i]) <= WAYPOINT_REACHED:
+			i += 1
+			best_dist = INF
+		var target := path[i]
+		var to := target - player.global_position
 		to.y = 0.0
 		var dist := to.length()
-		if dist <= ARRIVE_DISTANCE:
+		var is_last := i == path.size() - 1
+		if is_last and dist <= ARRIVE_DISTANCE:
 			player.autoplay_move = Vector2.ZERO
 			return true
-		# Face the destination and walk forward, like a player would
-		player.autoplay_look_at(player.global_position + to + Vector3.UP * 1.5)
+
+		# Face where we're heading and walk forward, like a player would
+		player.autoplay_look_at(player.global_position + to.normalized() * 4.0 + Vector3.UP * EYE_HEIGHT)
 		var local: Vector3 = player.global_basis.inverse() * to.normalized()
-		player.autoplay_move = Vector2(local.x, local.z).normalized() * clampf(dist, 0.3, 1.0)
+		var speed := clampf(dist, 0.4, 1.0) if is_last else 1.0
+		player.autoplay_move = Vector2(local.x, local.z).normalized() * speed
 
 		await get_tree().physics_frame
-		var step := get_physics_process_delta_time()
 		if dist < best_dist - STUCK_PROGRESS:
 			best_dist = dist
 			since_progress = 0.0
 		else:
-			since_progress += step
+			since_progress += get_physics_process_delta_time()
 			if since_progress > STUCK_TIMEOUT:
+				print("AutoplayBot: snagged at %s heading to %s, re-planning" % [player.global_position, target])
 				player.autoplay_move = Vector2.ZERO
 				return false
 	if is_instance_valid(player):
@@ -239,28 +304,8 @@ func _walk_to(token: int, destination: Vector3) -> bool:
 	return false
 
 
-func _fade_reposition(token: int, destination: Vector3) -> bool:
-	if not await _fade_to(token, 1.0, 0.5):
-		return false
-	player.global_position = destination
-	player.velocity = Vector3.ZERO
-	if not await _wait(token, 0.2):
-		return false
-	return await _fade_to(token, 0.0, 0.5)
-
-
-func _fade_to(token: int, alpha: float, duration: float) -> bool:
-	if not fade_rect:
-		return still_running(token)
-	var start := fade_rect.color.a
-	var t := 0.0
-	while t < duration:
-		if not still_running(token):
-			return false
-		await get_tree().process_frame
-		t += get_process_delta_time()
-		fade_rect.color.a = lerpf(start, alpha, clampf(t / duration, 0.0, 1.0))
-	return still_running(token)
+func _flat_distance(a: Vector3, b: Vector3) -> float:
+	return Vector2(a.x - b.x, a.z - b.z).length()
 
 
 # --- Waiting helpers ---

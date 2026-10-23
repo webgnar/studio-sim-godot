@@ -27,7 +27,7 @@ var idle_seconds: float = DEFAULT_IDLE_SECONDS
 var _idle_time: float = 0.0
 var _active: bool = false
 var _label: Label
-var _fade_rect: ColorRect
+var _nav: Node
 var _bot: Node
 var _swallow_event: InputEvent = null
 
@@ -36,9 +36,12 @@ func _ready() -> void:
 	layer = 95
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_build_ui()
+	_nav = preload("res://scripts/autoplay/AutoplayNavigation.gd").new()
+	_nav.name = "AutoplayNavigation"
+	add_child(_nav)
 	_bot = preload("res://scripts/autoplay/AutoplayBot.gd").new()
 	_bot.name = "AutoplayBot"
-	_bot.fade_rect = _fade_rect
+	_bot.nav = _nav
 	add_child(_bot)
 	_load_settings()
 	# The root window's signal fires before the event reaches any node, so a
@@ -179,13 +182,6 @@ func _get_player() -> Node3D:
 # --- UI ---
 
 func _build_ui() -> void:
-	# The bot's own fade for repositioning; stopping the bot always clears it
-	_fade_rect = ColorRect.new()
-	_fade_rect.color = Color(0, 0, 0, 0)
-	_fade_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(_fade_rect)
-	_fade_rect.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-
 	_label = Label.new()
 	_label.theme = load("res://themes/ui_theme.tres")
 	_label.text = "AUTOPLAY  -  press any key to take over"
