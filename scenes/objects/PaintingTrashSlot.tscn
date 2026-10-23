@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene load_steps=9 format=3]
 
 [ext_resource type="Script" path="res://scripts/objects/PaintingTrashSlot.gd" id="1_slot"]
 [ext_resource type="Material" uid="uid://dfjjs1rkdw2bi" path="res://materials/metal.tres" id="2_metal"]
@@ -8,24 +8,27 @@ albedo_color = Color(0.04, 0.04, 0.045, 1)
 roughness = 1.0
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_catch"]
-size = Vector3(1.6, 0.65, 0.3)
+size = Vector3(5.6, 0.6, 0.7)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_burn"]
+size = Vector3(5.6, 0.6, 0.5)
 
 [sub_resource type="BoxMesh" id="BoxMesh_long"]
 material = ExtResource("2_metal")
-size = Vector3(1.6, 0.012, 0.05)
+size = Vector3(5.5, 0.012, 0.05)
 
 [sub_resource type="BoxMesh" id="BoxMesh_short"]
 material = ExtResource("2_metal")
-size = Vector3(0.05, 0.012, 0.2)
+size = Vector3(0.05, 0.012, 0.35)
 
 [node name="PaintingTrashSlot" type="CSGBox3D"]
 operation = 2
-size = Vector3(1.5, 0.62, 0.2)
+size = Vector3(5.4, 4.52, 0.35)
 material = SubResource("StandardMaterial3D_pit")
 script = ExtResource("1_slot")
 
 [node name="Catch" type="Area3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.065, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.44, 0)
 collision_layer = 0
 collision_mask = 4
 monitorable = false
@@ -33,18 +36,27 @@ monitorable = false
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Catch"]
 shape = SubResource("BoxShape3D_catch")
 
+[node name="BurnZone" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.7, 0)
+collision_layer = 0
+collision_mask = 4
+monitorable = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="BurnZone"]
+shape = SubResource("BoxShape3D_burn")
+
 [node name="TrimNorth" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.296, -0.125)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.246, -0.2)
 mesh = SubResource("BoxMesh_long")
 
 [node name="TrimSouth" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.296, 0.125)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.246, 0.2)
 mesh = SubResource("BoxMesh_long")
 
 [node name="TrimWest" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.775, 0.296, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.725, 2.246, 0)
 mesh = SubResource("BoxMesh_short")
 
 [node name="TrimEast" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.775, 0.296, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.725, 2.246, 0)
 mesh = SubResource("BoxMesh_short")

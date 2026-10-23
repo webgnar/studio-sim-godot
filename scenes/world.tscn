@@ -3089,7 +3089,7 @@ size = Vector3(47.839737, 16.54373, 51.508144)
 material = SubResource("StandardMaterial3D_t2jyq")
 
 [node name="PaintingTrashSlot" parent="gallery/NavigationRegion3D/floor" unique_id=1843920571 instance=ExtResource("painting_trash_slot")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21.9055, 7.98187, -23.434)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.8555, 6.03187, -23.434)
 
 [node name="pedestal" type="CSGBox3D" parent="gallery/NavigationRegion3D" unique_id=1193496576]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21.801332, -10.18548, 4.035714)
