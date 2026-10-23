@@ -1,7 +1,8 @@
-[gd_scene load_steps=9 format=3]
+[gd_scene load_steps=13 format=3]
 
 [ext_resource type="Script" path="res://scripts/objects/PaintingTrashSlot.gd" id="1_slot"]
 [ext_resource type="Material" uid="uid://dfjjs1rkdw2bi" path="res://materials/metal.tres" id="2_metal"]
+[ext_resource type="Shader" path="res://shaders/hazard_tape.gdshader" id="3_tape"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pit"]
 albedo_color = Color(0.04, 0.04, 0.045, 1)
@@ -20,6 +21,17 @@ size = Vector3(5.5, 0.012, 0.05)
 [sub_resource type="BoxMesh" id="BoxMesh_short"]
 material = ExtResource("2_metal")
 size = Vector3(0.05, 0.012, 0.35)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_tape"]
+shader = ExtResource("3_tape")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_tape_long"]
+material = SubResource("ShaderMaterial_tape")
+size = Vector2(5.74, 0.12)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_tape_short"]
+material = SubResource("ShaderMaterial_tape")
+size = Vector2(0.12, 0.45)
 
 [node name="PaintingTrashSlot" type="CSGBox3D"]
 operation = 2
@@ -60,3 +72,23 @@ mesh = SubResource("BoxMesh_short")
 [node name="TrimEast" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.725, 2.246, 0)
 mesh = SubResource("BoxMesh_short")
+
+[node name="TapeNorth" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.243, -0.285)
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_tape_long")
+
+[node name="TapeSouth" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.243, 0.285)
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_tape_long")
+
+[node name="TapeWest" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.81, 2.243, 0)
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_tape_short")
+
+[node name="TapeEast" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.81, 2.243, 0)
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_tape_short")
