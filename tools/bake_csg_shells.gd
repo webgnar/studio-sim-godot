@@ -17,6 +17,7 @@ const SHELLS := [
 	"gallery/NavigationRegion3D/wall g2 south", "gallery/NavigationRegion3D/wall g2 south3",
 	"gallery/NavigationRegion3D/wall g2 south4", "gallery/NavigationRegion3D/wall west",
 	"gallery/NavigationRegion3D/wall east", "gallery/NavigationRegion3D/wall north",
+	"gallery/Hidden Door/CSGBox3D",
 ]
 
 func _initialize() -> void:

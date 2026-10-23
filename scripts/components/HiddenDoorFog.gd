@@ -25,9 +25,16 @@ var is_locked: bool:
 
 var _mat: ShaderMaterial
 var _dissolved := false
+## What's drawn: the lightmap-baked mesh twin next to this CSG when there is
+## one (see docs/BAKED_LIGHTING.md), so the door matches the baked wall;
+## otherwise this CSG itself.
+var _visual: GeometryInstance3D
 var _sound: AudioStreamPlayer3D
 
 func _ready() -> void:
+	_visual = get_parent().get_node_or_null(NodePath(String(name) + " (baked)")) as GeometryInstance3D
+	if _visual == null:
+		_visual = self
 	_sound = AudioStreamPlayer3D.new()
 	_sound.stream = TRAVERSE_SOUND
 	_sound.max_distance = 15.0
@@ -63,7 +70,10 @@ func _apply_fog() -> void:
 		return  # already applied — e.g. first_ball_scored firing after a flag-based apply already ran
 	_mat = ShaderMaterial.new()
 	_mat.shader = FOG_SHADER
-	material = _mat
+	if _visual == self:
+		material = _mat
+	else:
+		_visual.material_override = _mat
 	if not _dissolved:
 		add_to_group("interactable")
 
@@ -89,7 +99,11 @@ func interact(_interactor) -> void:
 	# against its math), but explicitly hiding it once the fade finishes
 	# guarantees "gone" is really gone — no lingering fully-transparent quad
 	# still costing a draw call — rather than relying on alpha alone.
-	tween.tween_callback(func(): visible = false)
+	tween.tween_callback(_hide)
+
+func _hide() -> void:
+	visible = false
+	_visual.visible = false
 
 func _set_dissolve(value: float) -> void:
 	if _mat:
@@ -101,7 +115,7 @@ func _open_passage(dissolve_value: float) -> void:
 	use_collision = false
 	if _mat:
 		_mat.set_shader_parameter("dissolve", dissolve_value)
-	visible = false
+	_hide()
 	# Retroactive — covers saves where the door was already traversed before
 	# this achievement existed. unlock_achievement() is documented as
 	# idempotent, matching SteamManager's existing retroactive-unlock pattern

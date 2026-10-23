@@ -23,15 +23,23 @@ moon fill light and everything that moves stay real time.
   and windows go dark, like the real studio. Daylight indoors comes from the
   live fill `DirectionalLight3D`, which `DayNightCycle` fades between
   `fill_energy_day` and `fill_energy_night`.
-- **Reflection probes** (`ReflectionProbes`, one box per room) replace sky
-  reflections. Refit them if room walls move.
+- **Hall of fame lights** (`HallOfFameLights`) are bake Static and hidden at
+  runtime by `BakedOnlyLights.gd`: their light is all in the lightmap, and
+  hiding them saves the per-frame cost Godot still pays for Static lights.
+- **The hidden door** (`gallery/Hidden Door/CSGBox3D`) has a baked twin too,
+  so it matches the wall; `HiddenDoorFog.gd` puts the fog and dissolve on the
+  twin.
+- **One reflection probe** (`ReflectionProbes/studio`) replaces sky
+  reflections there. Probes cost frame time, so add more only where shiny
+  surfaces need them.
 
 ## Environment (`materials/world_environ.tres`)
 
 Ambient is a neutral Color (not the sky) and sky reflections are off: the
 sky shader paints the whole sphere with the blue cloud image, which tinted
-every surface blue. Tonemap is AgX; SSAO gives moving things contact shadows. Debanding is on in
-project settings so smooth light falloff on white walls doesn't band.
+every surface blue. Tonemap is AgX. SSAO is off (it cost ~2.4 ms at 4K for little gain over the
+bake). Debanding is on so light falloff on white walls doesn't band, and 3D
+renders at 75% with FSR 1 upscaling (`rendering/scaling_3d`).
 
 ## After editing walls or moving lights
 
