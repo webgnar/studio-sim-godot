@@ -24,7 +24,7 @@ func _on_body_entered(body):
 	elif body.is_in_group("respawnable"):
 		body.respawn()
 	elif body is CarryablePainting:
-		_spawn_fire_effect(body.global_position)
+		spawn_fire_effect(get_tree().root, body.global_position)
 		body.queue_free()
 		if SteamManager:
 			SteamManager.unlock_achievement("ACH_BURN_PAINTING")
@@ -95,9 +95,10 @@ func _respawn(player):
 	CameraManager.set_player_input(true)
 	_is_respawning = false
 
-var _flame_texture: Texture2D = preload("res://sprites/flame.png")
+const FLAME_TEXTURE: Texture2D = preload("res://sprites/flame.png")
 
-func _spawn_fire_effect(pos: Vector3) -> void:
+## Shared with PaintingTrashSlot.gd, so a trashed painting burns the same way everywhere.
+static func spawn_fire_effect(parent: Node, pos: Vector3) -> void:
 	var mat := ParticleProcessMaterial.new()
 	mat.direction = Vector3(0, 1, 0)
 	mat.spread = 80.0
@@ -113,7 +114,7 @@ func _spawn_fire_effect(pos: Vector3) -> void:
 	var draw_mat := StandardMaterial3D.new()
 	draw_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 	draw_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-	draw_mat.albedo_texture = _flame_texture
+	draw_mat.albedo_texture = FLAME_TEXTURE
 	draw_mat.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
 	draw_mat.disable_receive_shadows = true
 	draw_mat.billboard_mode = BaseMaterial3D.BILLBOARD_PARTICLES
@@ -133,7 +134,6 @@ func _spawn_fire_effect(pos: Vector3) -> void:
 	particles.explosiveness = 0.8
 	particles.process_material = mat
 	particles.draw_pass_1 = mesh
+	parent.add_child(particles)
 	particles.global_position = pos
-
-	get_tree().root.add_child(particles)
-	get_tree().create_timer(particles.lifetime + 1.0).timeout.connect(particles.queue_free)
+	parent.get_tree().create_timer(particles.lifetime + 1.0).timeout.connect(particles.queue_free)
