@@ -281,6 +281,10 @@ func _physics_process(delta: float) -> void:
 
 	# Skip movement if CameraManager has disabled input (e.g., cinematic camera zones)
 	if not CameraManager.player_input_enabled:
+		# Stop where we are: leftover walk velocity would otherwise slide the
+		# player along whatever they're touching (e.g. the arcade cabinet).
+		velocity.x = 0.0
+		velocity.z = 0.0
 		# Still apply gravity and move_and_slide to keep physics working
 		if not is_on_floor():
 			velocity.y -= gravity * delta
