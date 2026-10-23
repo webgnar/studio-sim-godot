@@ -212,6 +212,13 @@ func _setup_raycast() -> void:
 	_raycast.collide_with_areas = false
 	_raycast.collide_with_bodies = true
 
+	# Ignore the player's own capsule. Looking down steeply (or while the head
+	# rises after un-crouching) the ray would otherwise hit our own head, which
+	# blocks floor pickups and snaps the carry target onto the player, auto-dropping it.
+	var player_body := get_parent() as CollisionObject3D
+	if player_body:
+		_raycast.add_exception(player_body)
+
 	# Add as child of camera so it points where we're looking
 	_camera.add_child(_raycast)
 	_raycast.enabled = true
