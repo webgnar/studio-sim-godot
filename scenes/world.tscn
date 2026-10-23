@@ -4079,8 +4079,7 @@ transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 13.9
 spot_range = 8.270282
 
 [node name="DJBooth" parent="." unique_id=97919635 groups=["shop_prop"] instance=ExtResource("dj_booth_scene")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22, -15.53, 1.05)
-metadata/shop_item_id = "dj"
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22, -15.53, 2.353505)
 
 [node name="DanceParty" parent="." unique_id=1626250434 instance=ExtResource("dance_party_scene")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5, -15.53, 15.5)
