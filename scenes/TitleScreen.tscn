@@ -73,8 +73,20 @@ sky_material = SubResource("ShaderMaterial_sky")
 background_mode = 2
 background_energy_multiplier = 0.5
 sky = SubResource("Sky_rwgxs")
+ambient_light_source = 3
+ambient_light_color = Color(0.32, 0.29, 0.26, 1)
+ambient_light_sky_contribution = 0.0
+ambient_light_energy = 0.25
+reflected_light_source = 1
 tonemap_mode = 2
+tonemap_white = 6.0
+ssao_enabled = true
+ssao_radius = 1.5
+ssao_intensity = 3.0
 glow_enabled = true
+glow_bloom = 0.05
+adjustment_enabled = true
+adjustment_contrast = 1.12
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1nrh6"]
 albedo_texture = ExtResource("2_2ktle")
@@ -372,7 +384,11 @@ script = ExtResource("1_2ktle")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=405900579]
 transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 11.110161, 0)
+light_color = Color(1, 0.86, 0.68, 1)
+light_energy = 4.0
 shadow_enabled = true
+shadow_blur = 0.5
+directional_shadow_max_distance = 30.0
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1269380869]
 environment = SubResource("Environment_cr31u")
@@ -886,9 +902,41 @@ transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 4.6608667, 10.901708
 transform = Transform3D(0.1481093, 0.134401, 0, -0.134401, 0.1481093, 0, 0, 0, 0.19999997, -0.83698523, 4.2729445, 6.553215)
 
 [node name="SpotLight3D" parent="Spotlight" index="3"]
+shadow_enabled = true
+shadow_blur = 1.5
 spot_range = 6.371
 spot_attenuation = 0.16
 spot_angle = 59.56
+
+[node name="SpotLight3D" parent="Fluorescent" index="5"]
+light_energy = 3.0
+shadow_enabled = true
+spot_angle = 55.0
+spot_attenuation = 1.5
+shadow_blur = 1.5
+
+[node name="BounceFill" parent="Fluorescent" index="6"]
+light_energy = 0.15
+
+[node name="SpotLight3D" parent="Fluorescent2" index="5"]
+light_energy = 3.0
+shadow_enabled = true
+spot_angle = 55.0
+spot_attenuation = 1.5
+shadow_blur = 1.5
+
+[node name="BounceFill" parent="Fluorescent2" index="6"]
+light_energy = 0.15
+
+[node name="SpotLight3D" parent="Fluorescent3" index="5"]
+light_energy = 3.0
+shadow_enabled = true
+spot_angle = 55.0
+spot_attenuation = 1.5
+shadow_blur = 1.5
+
+[node name="BounceFill" parent="Fluorescent3" index="6"]
+light_energy = 0.15
 
 [node name="SpotLight3D" type="SpotLight3D" parent="." unique_id=1707224694]
 transform = Transform3D(1, 0, 0, 0, 0.20997697, 0.9777064, 0, -0.9777064, 0.20997697, 0, 3.3764446, 7.834524)
@@ -937,3 +985,6 @@ spot_angle = 51.11
 [editable path="PaintingProp10"]
 [editable path="PaintingProp11"]
 [editable path="Spotlight"]
+[editable path="Fluorescent"]
+[editable path="Fluorescent2"]
+[editable path="Fluorescent3"]
