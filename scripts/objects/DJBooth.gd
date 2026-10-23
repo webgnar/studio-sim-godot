@@ -4,13 +4,14 @@ class_name DJBooth
 ## starts / ends the gallery dance party (DanceParty.gd).
 ##
 ## The DJ wears a random NPC skin from ShopManager.VISITOR_ROSTER, re-rolled every time the game
-## boots. They loop `booth_animation`, or just stand in "idle" if the rig doesn't have it.
-## While the dance party is on they take turns through `party_animations`, switching every
-## party_switch_min..max seconds.
+## boots. Between parties they stand in `booth_animation` (the player's "idle"; the retargeted
+## Dance_Bartending clip read as a stiff forward lean at the booth).
+## While the dance party is on they loop `party_animations` (just Dance_Rapping); with more than
+## one they take turns, switching every party_switch_min..max seconds.
 
-@export var booth_animation: String = "Dance_Bartending"
+@export var booth_animation: String = "idle"
 @export var idle_animation: String = "idle"
-@export var party_animations: PackedStringArray = ["Dance_Rapping", "Dance_Bartending"]
+@export var party_animations: PackedStringArray = ["Dance_Rapping"]
 @export var party_switch_min: float = 12.0
 @export var party_switch_max: float = 20.0
 @export var dj_rig_path: NodePath = ^"DJ/humanrig"
