@@ -10,9 +10,11 @@ extends Node
 ##
 ## Behaviors:
 ## - Wander: walk to a random reachable spot and look around.
-## - Paint: walk to the studio canvas, paint it like the assistant does
-##   (random owned stickers, spots, rotation and size), then detach it with
-##   the red button and start a fresh one.
+## - Paint: walk to the studio canvas and paint it in plain view: the sticker
+##   ghost is dragged around the canvas, rotated and sized, then placed, the
+##   same way a player paints. WHAT it paints comes from AutoplayPainter (the
+##   tuning surface); this file only performs it. When done it detaches the
+##   painting with the red button and starts a fresh one.
 
 const STAND_DISTANCE := 2.2         ## metres in front of the canvas
 const WAYPOINT_REACHED := 0.4
@@ -29,13 +31,6 @@ const WANDER_STOPS_MAX := 3
 const LOOK_AROUND_MIN := 1.5        ## seconds spent looking around at each wander stop
 const LOOK_AROUND_MAX := 4.0
 
-const STICKERS_MIN := 12
-const STICKERS_MAX := 30
-const STICKER_PAUSE_MIN := 0.5      ## seconds between stickers, so it paints at a human pace
-const STICKER_PAUSE_MAX := 1.6
-const SCALE_MIN := 0.5
-const SCALE_MAX := 1.6
-const CANVAS_EDGE_MARGIN := 0.08    ## keep sticker centres this fraction away from the canvas edges
 
 ## Detached paintings pile up on the floor, so stop detaching after this many
 ## per autoplay session and just keep painting the current canvas.
@@ -47,6 +42,7 @@ var nav: Node = null  ## AutoplayNavigation, set by AutoplayManager
 var _token: int = 0
 var _detaches_this_session: int = 0
 var _saved_selection: Dictionary = {}
+var painter: AutoplayPainter = preload("res://scripts/autoplay/AutoplayPainter.gd").new()
 
 
 func begin(target_player: Node3D) -> void:
@@ -144,19 +140,15 @@ func _paint_canvas(token: int) -> bool:
 	if not await _wait_for_look(token):
 		return false
 
-	var count := randi_range(STICKERS_MIN, STICKERS_MAX)
-	for i in count:
+	for i in painter.stroke_count():
 		if not still_running(token):
 			return false
 		# The canvas may have been replaced (format toggle, detach) mid-loop
 		if PaintingModeManager.painting_system_2d != system:
 			return true
-		var target := _random_point_on(system)
-		player.autoplay_look_at(target)
-		if not await _wait_for_look(token):
+		if not await _perform_stroke(token, system, painter.next_stroke(system, i)):
 			return false
-		_place_sticker(system)
-		if not await _wait(token, randf_range(STICKER_PAUSE_MIN, STICKER_PAUSE_MAX)):
+		if not await _wait(token, painter.pause_after_time()):
 			return false
 
 	if _detaches_this_session < MAX_DETACHES_PER_SESSION:
@@ -165,17 +157,64 @@ func _paint_canvas(token: int) -> bool:
 	return true
 
 
-func _place_sticker(system: PaintingSystem2D) -> void:
-	"""Pick a random owned sticker, rotation and size, then 'click' exactly the
-	way PaintingModeManager does for the player: ray from the screen centre."""
-	var library := StickerLibrary.sticker_library
-	PaintingModeManager.sync_sticker_selection(randi() % library.size())
-	system.preview_rotation = randf_range(0.0, 360.0)
+func _perform_stroke(token: int, system: PaintingSystem2D, stroke: Dictionary) -> bool:
+	"""Show the chosen sticker as the ghost, drag it through the stroke's
+	waypoints while easing into its rotation and size, then place it."""
+	PaintingModeManager.sync_sticker_selection(stroke.sticker_index)
+	var start_rot := system.preview_rotation
+	var end_rot := start_rot + wrapf(stroke.rotation_deg - start_rot, -180.0, 180.0)
+	var start_scale := system.preview_scale_multiplier
+	var waypoints: Array = stroke.waypoints
+
+	var from_uv := _aim_uv(system)
+	var total := 0.0
+	for wp in waypoints:
+		total += painter.drag_time(from_uv, wp)
+		from_uv = wp
+	var elapsed := 0.0
+	from_uv = _aim_uv(system)
+
+	for i in waypoints.size():
+		var to_uv: Vector2 = waypoints[i]
+		var duration := painter.drag_time(from_uv, to_uv)
+		var t := 0.0
+		while t < duration:
+			if not still_running(token) or PaintingModeManager.painting_system_2d != system:
+				return still_running(token)
+			await get_tree().process_frame
+			var dt := get_process_delta_time()
+			t += dt
+			elapsed += dt
+			var k := smoothstep(0.0, 1.0, clampf(t / duration, 0.0, 1.0))
+			player.autoplay_look_at(_uv_to_world(system, from_uv.lerp(to_uv, k)))
+			var overall := clampf(elapsed / total, 0.0, 1.0) if total > 0.0 else 1.0
+			_set_ghost_pose(system, lerpf(start_rot, end_rot, overall), lerpf(start_scale, stroke.scale, overall))
+		from_uv = to_uv
+		var last := i == waypoints.size() - 1
+		if not await _wait(token, painter.settle_time() if last else painter.hover_time()):
+			return false
+
+	_set_ghost_pose(system, end_rot, stroke.scale)
+	if not await _wait_for_look(token, 0.5):
+		return false
+	_click_canvas()
+	return true
+
+
+func _set_ghost_pose(system: PaintingSystem2D, rotation_deg: float, scale_mult: float) -> void:
+	system.preview_rotation = fposmod(rotation_deg, 360.0)
+	system.preview_scale_multiplier = scale_mult
 	if system.preview_sprite:
 		system.preview_sprite.rotation_degrees = system.preview_rotation
-	system.preview_scale_multiplier = randf_range(SCALE_MIN, SCALE_MAX)
 	system._update_preview_scale()
+	# Keep the ghost fully visible while the bot works it
+	system.preview_idle_time = 0.0
+	system.preview_target_opacity = system.preview_base_opacity
 
+
+func _click_canvas() -> void:
+	"""'Click' exactly the way PaintingModeManager does for the player: ray
+	from the screen centre, routed to whichever canvas it hits."""
 	var hit := PaintingModeManager._perform_unified_raycast()
 	if hit and PaintingModeManager._is_canvas_plane(hit):
 		var target_2d := PaintingModeManager._resolve_2d_system(hit.collider)
@@ -219,12 +258,22 @@ func _find_node_of_type(node: Node) -> PaintingConvertButton:
 
 # --- Canvas geometry ---
 
-func _random_point_on(system: PaintingSystem2D) -> Vector3:
-	# PaintingSystem2D maps the plane's local X/Z to the canvas (see _world_to_viewport_coords)
-	var half_w := system.plane_width * (0.5 - CANVAS_EDGE_MARGIN)
-	var half_h := system.plane_height * (0.5 - CANVAS_EDGE_MARGIN)
-	var local := Vector3(randf_range(-half_w, half_w), 0.0, randf_range(-half_h, half_h))
+# PaintingSystem2D maps the plane's local X/Z to the canvas (see _world_to_viewport_coords),
+# so canvas UV (0..1 from the top-left of the image) <-> plane local is a straight scale.
+
+func _uv_to_world(system: PaintingSystem2D, uv: Vector2) -> Vector3:
+	var local := Vector3((uv.x - 0.5) * system.plane_width, 0.0, (uv.y - 0.5) * system.plane_height)
 	return system.painting_plane.to_global(local)
+
+
+func _aim_uv(system: PaintingSystem2D) -> Vector2:
+	"""Where the ghost is now: the canvas point under the screen centre, or the
+	canvas centre if the player isn't looking at it."""
+	var hit := PaintingModeManager._perform_unified_raycast()
+	if hit and PaintingModeManager._is_canvas_plane(hit):
+		var local: Vector3 = system.painting_plane.to_local(hit.position)
+		return Vector2(local.x / system.plane_width + 0.5, local.z / system.plane_height + 0.5)
+	return Vector2(0.5, 0.5)
 
 
 func _stand_point_for(plane: MeshInstance3D) -> Vector3:

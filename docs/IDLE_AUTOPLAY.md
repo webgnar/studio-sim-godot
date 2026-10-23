@@ -18,7 +18,11 @@ A screensaver-style bot that plays the studio for the player while they're away.
 | Behavior | Gate | What it does |
 | --- | --- | --- |
 | Wander | always | Pathfinds on foot to 1 to 3 random reachable spots and looks around at each. |
-| Paint the canvas | at least one sticker owned, canvas reachable on foot | Pathfinds to the active studio canvas, places 12 to 30 random owned stickers with random rotation and size, then presses the red Detach button. Stops detaching after 3 per session so paintings don't pile up. Restores the player's sticker selection afterwards. |
+| Paint the canvas | at least one sticker owned, canvas reachable on foot | Pathfinds to the active studio canvas and paints in plain view: the sticker ghost is dragged across the canvas through a few "considering" stops while it eases into its rotation and size, then placed with the same screen-centre click a player uses. Then presses the red Detach button. Stops detaching after 3 per session so paintings don't pile up. Restores the player's sticker selection afterwards. |
+
+## Tuning how it paints
+
+`scripts/autoplay/AutoplayPainter.gd` decides what gets painted: how many stickers, which sticker, the final spot (canvas UV), rotation, size, and the path the ghost takes on the way there, plus the timing (drag speed, hover, settle). `AutoplayBot` only performs what the painter plans, so smarter strategies (composition, colour balance, clustering, reacting to what's already on the canvas) go in the painter without touching movement code. `next_stroke()` gets the canvas, so a strategy can read `system.placed_layers`.
 
 ## Adding a behavior
 
