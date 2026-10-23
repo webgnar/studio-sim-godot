@@ -161,7 +161,7 @@ cast_shadow = 0
 mesh = SubResource("Mesh_ball")
 
 [node name="Rod" type="MeshInstance3D" parent="Rig" unique_id=360899900]
-transform = Transform3D(1, 0, 0, 0, 4.35, 0, 0, 0, 1, -1.6101668, 12.455, -2.5)
+transform = Transform3D(1, 0, 0, 0, 4.532, 0, 0, 0, 1, -1.5907569, 12.546, -2.5)
 cast_shadow = 0
 mesh = SubResource("Mesh_rod")
 
@@ -189,8 +189,13 @@ transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0.15)
 cast_shadow = 0
 mesh = SubResource("Mesh_can")
 
+[node name="RodDiscoLight1" type="MeshInstance3D" parent="Rig" unique_id=1708850023]
+transform = Transform3D(1, 0, 0, 0, 2.282, 0, 0, 0, 1, -10.5, 13.671, -9.5)
+cast_shadow = 0
+mesh = SubResource("Mesh_rod")
+
 [node name="DiscoLight2" type="SpotLight3D" parent="Rig" unique_id=1167025043]
-transform = Transform3D(-1, 0, 0, 0, 0.478336, 0.878177, 0, 0.878177, -0.478336, 1.5, 12.53, -11)
+transform = Transform3D(-1, 0, 0, 0, 0.478336, 0.878177, 0, 0.878177, -0.478336, 2.56, 12.53, -11)
 light_energy = 9.0
 light_specular = 0.3
 light_bake_mode = 0
@@ -206,8 +211,13 @@ transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0.15)
 cast_shadow = 0
 mesh = SubResource("Mesh_can")
 
+[node name="RodDiscoLight2" type="MeshInstance3D" parent="Rig" unique_id=401405776]
+transform = Transform3D(1, 0, 0, 0, 2.125, 0, 0, 0, 1, 2.56, 13.5925, -11)
+cast_shadow = 0
+mesh = SubResource("Mesh_rod")
+
 [node name="DiscoLight3" type="SpotLight3D" parent="Rig" unique_id=353244785]
-transform = Transform3D(-0.540758, -0.636704, 0.549718, 0, 0.653509, 0.756919, -0.841178, 0.40931, -0.35339, 15.5, 12.53, -9.5)
+transform = Transform3D(-0.540758, -0.636704, 0.549718, 0, 0.653509, 0.756919, -0.841178, 0.40931, -0.35339, 16.87, 12.53, -9.5)
 light_energy = 9.0
 light_specular = 0.3
 light_bake_mode = 0
@@ -222,6 +232,11 @@ phase = 2.74
 transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0.15)
 cast_shadow = 0
 mesh = SubResource("Mesh_can")
+
+[node name="RodDiscoLight3" type="MeshInstance3D" parent="Rig" unique_id=652089225]
+transform = Transform3D(1, 0, 0, 0, 2.125, 0, 0, 0, 1, 16.87, 13.5925, -9.5)
+cast_shadow = 0
+mesh = SubResource("Mesh_rod")
 
 [node name="DiscoLight4" type="SpotLight3D" parent="Rig" unique_id=1122586401]
 transform = Transform3D(0.675725, 0.5632, -0.475607, 0, 0.645193, 0.76402, 0.737154, -0.516267, 0.435973, -10.5, 12.53, 10.5)
@@ -240,6 +255,11 @@ transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0.15)
 cast_shadow = 0
 mesh = SubResource("Mesh_can")
 
+[node name="RodDiscoLight4" type="MeshInstance3D" parent="Rig" unique_id=960558868]
+transform = Transform3D(1, 0, 0, 0, 1.798, 0, 0, 0, 1, -10.5, 13.429, 10.5)
+cast_shadow = 0
+mesh = SubResource("Mesh_rod")
+
 [node name="DiscoLight5" type="SpotLight3D" parent="Rig" unique_id=1166748345]
 transform = Transform3D(1, 0, 0, 0, 0.54407, 0.83904, 0, -0.83904, 0.54407, 1.5, 12.53, 12)
 light_energy = 9.0
@@ -257,6 +277,11 @@ transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0.15)
 cast_shadow = 0
 mesh = SubResource("Mesh_can")
 
+[node name="RodDiscoLight5" type="MeshInstance3D" parent="Rig" unique_id=1070622846]
+transform = Transform3D(1, 0, 0, 0, 1.798, 0, 0, 0, 1, 1.5, 13.429, 12)
+cast_shadow = 0
+mesh = SubResource("Mesh_rod")
+
 [node name="DiscoLight6" type="SpotLight3D" parent="Rig" unique_id=227017211]
 transform = Transform3D(0.617822, -0.577634, 0.533513, 0, 0.678494, 0.734606, -0.786318, -0.453855, 0.419188, 15.5, 12.53, 10.5)
 light_energy = 9.0
@@ -273,6 +298,11 @@ phase = 6.85
 transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0.15)
 cast_shadow = 0
 mesh = SubResource("Mesh_can")
+
+[node name="RodDiscoLight6" type="MeshInstance3D" parent="Rig" unique_id=382622331]
+transform = Transform3D(1, 0, 0, 0, 1.798, 0, 0, 0, 1, 15.5, 13.429, 10.5)
+cast_shadow = 0
+mesh = SubResource("Mesh_rod")
 
 [node name="ProjectorEast" type="Node3D" parent="Rig" unique_id=1996359039]
 transform = Transform3D(0.145076, 0.307025, -0.940579, 0, 0.950636, 0.310308, 0.98942, -0.045018, 0.137915, 9.5, 11.53, -3.5)
@@ -293,6 +323,11 @@ material_override = SubResource("Mat_projection")
 cast_shadow = 0
 mesh = SubResource("Quad_ProjectorEast")
 
+[node name="RodProjectorEast" type="MeshInstance3D" parent="Rig" unique_id=1642842343]
+transform = Transform3D(1, 0, 0, 0, 3.125, 0, 0, 0, 1, 9.5, 13.0925, -3.5)
+cast_shadow = 0
+mesh = SubResource("Mesh_rod")
+
 [node name="ProjectorSouth" type="Node3D" parent="Rig" unique_id=2092203757]
 transform = Transform3D(-0.984124, 0.070772, -0.162759, 0, 0.917056, 0.398759, 0.17748, 0.392428, -0.902497, 5.5, 11.53, 5.5)
 script = ExtResource("3_projector")
@@ -311,6 +346,11 @@ transform = Transform3D(0.984124, 0, -0.17748, -0.070772, 0.917056, -0.392428, 0
 material_override = SubResource("Mat_projection")
 cast_shadow = 0
 mesh = SubResource("Quad_ProjectorSouth")
+
+[node name="RodProjectorSouth" type="MeshInstance3D" parent="Rig" unique_id=505813517]
+transform = Transform3D(1, 0, 0, 0, 2.798, 0, 0, 0, 1, 5.5, 12.929, 5.5)
+cast_shadow = 0
+mesh = SubResource("Mesh_rod")
 
 [node name="ProjectorNorth" type="Node3D" parent="Rig" unique_id=603408282]
 transform = Transform3D(1, 0, 0, 0, 0.925441, 0.378891, 0, -0.378891, 0.925441, -2.5, 11.53, -6.5)
@@ -331,8 +371,13 @@ material_override = SubResource("Mat_projection")
 cast_shadow = 0
 mesh = SubResource("Quad_ProjectorNorth")
 
+[node name="RodProjectorNorth" type="MeshInstance3D" parent="Rig" unique_id=1308968867]
+transform = Transform3D(1, 0, 0, 0, 3.282, 0, 0, 0, 1, -2.5, 13.171, -6.5)
+cast_shadow = 0
+mesh = SubResource("Mesh_rod")
+
 [node name="ProjectorFloor" type="Node3D" parent="Rig" unique_id=555532864]
-transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 1.5, 10.53, -1.5)
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 2.56, 10.53, -1.5)
 script = ExtResource("3_projector")
 
 [node name="Housing" type="MeshInstance3D" parent="Rig/ProjectorFloor" unique_id=672585484]
@@ -349,6 +394,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -10.5)
 material_override = SubResource("Mat_projection")
 cast_shadow = 0
 mesh = SubResource("Quad_ProjectorFloor")
+
+[node name="RodProjectorFloor" type="MeshInstance3D" parent="Rig" unique_id=1360289010]
+transform = Transform3D(1, 0, 0, 0, 4.125, 0, 0, 0, 1, 2.56, 12.5925, -1.5)
+cast_shadow = 0
+mesh = SubResource("Mesh_rod")
 
 [node name="SpecksEast" type="MeshInstance3D" parent="Rig" unique_id=175539242]
 transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 23.14, 8.53, 0.5)
