@@ -4,8 +4,8 @@ class_name LouGnarCabinet
 ##
 ## Look at it and press interact to play: the player is locked, the camera
 ## blends to the cabinet's PlayCamera and the game gets input + sound. Press
-## interact (E / gamepad X), go_back (Esc / B) or start to step away. Out of
-## play the screen shows the (silent) attract/title card.
+## E, go_back (gamepad B) or start to step away; gamepad X (interact) doesn't
+## leave. Out of play the screen shows the (silent) attract/title card.
 
 @export var game: LouGnarGame
 @export var screen: MeshInstance3D
@@ -44,8 +44,8 @@ func _input(event: InputEvent) -> void:
 		return
 	if event.is_echo():
 		return
-	if event.is_action_pressed("interact") or event.is_action_pressed("go_back") \
-			or event.is_action_pressed("start"):
+	var leave_key := event is InputEventKey and event.is_action_pressed("interact")
+	if leave_key or event.is_action_pressed("go_back") or event.is_action_pressed("start"):
 		get_viewport().set_input_as_handled()
 		_end_play()
 
@@ -107,7 +107,6 @@ func _show_hint(on: bool) -> void:
 		_hint_layer.layer = 50
 		add_child(_hint_layer)
 		var label := Label.new()
-		label.text = "%s Leave" % InputDeviceManager.get_formatted_prompt("interact")
 		label.add_theme_font_override("font", LouGnarAssets.FONT)
 		label.add_theme_font_size_override("font_size", 28)
 		label.add_theme_color_override("font_outline_color", Color.BLACK)
@@ -115,5 +114,14 @@ func _show_hint(on: bool) -> void:
 		label.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_LEFT)
 		label.position = Vector2(40, -70)
 		_hint_layer.add_child(label)
+		InputDeviceManager.device_changed.connect(func(_device: int) -> void: _update_hint_text())
 	if _hint_layer:
 		_hint_layer.visible = on
+		_update_hint_text()
+
+
+func _update_hint_text() -> void:
+	if _hint_layer == null or not _hint_layer.visible:
+		return
+	var action := "go_back" if InputDeviceManager.current_device == InputDeviceManager.DeviceType.GAMEPAD else "interact"
+	(_hint_layer.get_child(0) as Label).text = "%s Leave" % InputDeviceManager.get_formatted_prompt(action)
