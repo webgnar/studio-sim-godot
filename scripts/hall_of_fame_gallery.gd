@@ -26,6 +26,11 @@ class_name HallOfFameGallery
 ## `rail_margin` between them, wrapping to a higher row (up to `max_rows_per_rail`) when a rail
 ## fills, then moving to the next rail. Anything left over after every rail/row combo is full
 ## falls back to a flat grid so nothing is silently dropped.
+##
+## With `shuffle_on_load` on (default), the hanging order is shuffled every time the scene loads,
+## so the paintings swap spots between play sessions. Nothing is saved: the hall is rebuilt from
+## the manifest on every load, and the paintings are dynamic (not part of the lightmap bake), so
+## moving them needs no re-bake.
 
 const HALL_OF_FAME_DIR := "res://hall_of_fame/"
 const MANIFEST_PATH := HALL_OF_FAME_DIR + "manifest.json"
@@ -39,6 +44,13 @@ const _SQUARE_SCENE: PackedScene = preload("res://scenes/HallOfFameDisplayPainti
 const _LANDSCAPE_SCENE: PackedScene = preload("res://scenes/HallOfFameDisplayPainting5x3.tscn")
 const SQUARE_CANVAS_SIZE := Vector2(3, 3)
 const LANDSCAPE_CANVAS_SIZE := Vector2(5, 3)
+
+## Shuffle which spot each painting hangs in every time the scene loads.
+@export var shuffle_on_load: bool = true
+## How many shuffles to try before giving up and keeping the manifest order. Mixed square and
+## landscape widths mean some orders crowd a rail (spread fails) or overflow onto the fallback
+## grid; a shuffle is only used if it lays out at least as cleanly as the manifest order does.
+@export var shuffle_attempts: int = 20
 
 ## Group shared by every rail's Start/End marker pair.
 @export var rail_group: String = "hall_of_fame_rail"
@@ -101,11 +113,17 @@ func _ready() -> void:
 		var size := _measure_canvas_size(instance) * painting_scale
 		paintings.append({"instance": instance, "entry": entry, "width": size.x, "height": size.y})
 
-	var placements: Array = []
-	if spread_evenly and not rails.is_empty():
-		placements = _spread_across_rails(rails, paintings)
-	if placements.is_empty():
-		placements = _pack_rails(rails, paintings)
+	var placements := _layout(rails, paintings)
+	if shuffle_on_load and paintings.size() > 1:
+		var baseline := _layout_quality(rails, placements)
+		for _attempt in maxi(shuffle_attempts, 1):
+			var shuffled: Array[Dictionary] = paintings.duplicate()
+			shuffled.shuffle()
+			var shuffled_placements := _layout(rails, shuffled)
+			if _layout_quality(rails, shuffled_placements) >= baseline:
+				paintings = shuffled
+				placements = shuffled_placements
+				break
 
 	var grid_index := 0
 	var overflow_count := 0
@@ -157,6 +175,25 @@ func _load_manifest() -> Array:
 
 
 # --- RAILS ---
+
+func _layout(rails: Array[Dictionary], paintings: Array[Dictionary]) -> Array:
+	var placements: Array = []
+	if spread_evenly and not rails.is_empty():
+		placements = _spread_across_rails(rails, paintings)
+	if placements.is_empty():
+		placements = _pack_rails(rails, paintings)
+	return placements
+
+
+## 2 = spread evenly (when spread_evenly is on), 1 = everything on a rail, 0 = some on the grid.
+func _layout_quality(rails: Array[Dictionary], placements: Array) -> int:
+	for placement in placements:
+		if placement.is_empty():
+			return 0
+	if spread_evenly and not rails.is_empty() and placements.size() > 0 and placements[0].get("spread", false):
+		return 2
+	return 1
+
 
 func _collect_rails() -> Array[Dictionary]:
 	var rails: Array[Dictionary] = []
@@ -265,7 +302,7 @@ func _spread_across_rails(rails: Array[Dictionary], paintings: Array[Dictionary]
 		for i in share:
 			var w: float = paintings[i]["width"]
 			var pos: Vector3 = rail["start"] + rail["wall_dir"] * (d + w / 2.0)
-			placements[i] = {"position": pos, "wall_dir": rail["wall_dir"], "facing": rail["facing"]}
+			placements[i] = {"position": pos, "wall_dir": rail["wall_dir"], "facing": rail["facing"], "spread": true}
 			d += w + gap
 
 	return placements
