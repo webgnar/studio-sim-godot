@@ -194,6 +194,7 @@
 [ext_resource type="PackedScene" path="res://scenes/UI/MoneyRainLayer.tscn" id="money_rain_layer"]
 [ext_resource type="AudioStream" uid="uid://cldonhpncb00b" path="res://sounds/(First Trip) To The Moon.ogg" id="moon_ogg"]
 [ext_resource type="PackedScene" uid="uid://cjg7s2n8fnpwh" path="res://scenes/objects/worklamp.tscn" id="worklamp_scene"]
+[ext_resource type="PackedScene" path="res://scenes/objects/PaintingTrashSlot.tscn" id="painting_trash_slot"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_t1by1"]
 render_priority = 0
@@ -3051,18 +3052,8 @@ size = Vector3(18.950443, 0.45007324, 6.267456)
 material = SubResource("StandardMaterial3D_yhtv1")
 
 [node name="CSGBox3D6" type="CSGBox3D" parent="gallery" unique_id=1796157694]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.211597, -1.0484972, 11.517204)
-size = Vector3(18.95987, 0.37182617, 7.990631)
-material = SubResource("StandardMaterial3D_c7mri")
-
-[node name="CSGBox3D8" type="CSGBox3D" parent="gallery" unique_id=826577826]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, -15.191532, 0.94681835, 7.5172043)
-size = Vector3(13, 0.37182617, 4)
-material = SubResource("StandardMaterial3D_c7mri")
-
-[node name="CSGBox3D9" type="CSGBox3D" parent="gallery" unique_id=222119287]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, -15.191532, 0.94681835, 15.517204)
-size = Vector3(13, 0.37182617, 4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.165, -1.0484972, 11.517204)
+size = Vector3(6.87, 0.37182617, 7.990631)
 material = SubResource("StandardMaterial3D_c7mri")
 
 [node name="StaticBody3D" parent="gallery" unique_id=229945136 instance=ExtResource("66_4kmvx")]
@@ -3096,6 +3087,9 @@ collision_layer = 2
 collision_mask = 0
 size = Vector3(47.839737, 16.54373, 51.508144)
 material = SubResource("StandardMaterial3D_t2jyq")
+
+[node name="PaintingTrashSlot" parent="gallery/NavigationRegion3D/floor" unique_id=1843920571 instance=ExtResource("painting_trash_slot")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21.9055, 7.98187, -23.434)
 
 [node name="pedestal" type="CSGBox3D" parent="gallery/NavigationRegion3D" unique_id=1193496576]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21.801332, -10.18548, 4.035714)
@@ -3195,12 +3189,6 @@ collision_layer = 2
 collision_mask = 0
 size = Vector3(0.98, 15.390234, 34.60435)
 material = ExtResource("5_71j4m")
-
-[node name="CSGBox3D" type="CSGBox3D" parent="gallery/NavigationRegion3D/wall west" unique_id=1442935328]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.1251297, 4.9944763, 5.008484)
-operation = 2
-size = Vector3(1.3500977, 5.7736053, 3.4285278)
-material = SubResource("StandardMaterial3D_3fb5j")
 
 [node name="wall east" type="CSGBox3D" parent="gallery/NavigationRegion3D" unique_id=450251449]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 38.187225, -3.4046478, 7.450198)
