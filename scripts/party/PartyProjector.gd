@@ -5,12 +5,14 @@ class_name PartyProjector
 ## stretched from the lens to the screen automatically, so you can move either one freely.
 ##
 ## CONTENT: drop textures into `images` and it cycles through them (crossfading) every
-## `seconds_per_image`. With no images it cycles the built-in procedural geometric patterns
-## from shaders/party_projection.gdshader instead.
+## `seconds_per_image`. With no images it cycles `procedural_patterns` from
+## shaders/party_projection.gdshader instead. Patterns 5 (sticker kaleidoscope) and 6 (sticker
+## gobo) are built from a random sticker in the player's library (StickerLibrary, custom and
+## bought stickers included), picked fresh every time the pattern comes round.
 
 @export var images: Array[Texture2D] = []
 @export var seconds_per_image: float = 8.0
-@export var procedural_patterns: PackedInt32Array = [0, 1, 2, 3] ## used when `images` is empty
+@export var procedural_patterns: PackedInt32Array = [5, 6] ## used when `images` is empty
 @export var tint: Color = Color.WHITE
 @export var intensity: float = 1.4
 @export var circular_mask: bool = true ## round "lens" edge; turn off for full-frame images
@@ -21,6 +23,9 @@ class_name PartyProjector
 
 const _BEAM_SHADER := preload("res://shaders/party_beam.gdshader")
 const _FADE_TIME := 0.6
+const _STICKER_PATTERNS: Array[int] = [5, 6]
+## Shown instead of a sticker pattern if there are no stickers to use.
+const _STICKER_FALLBACK := {5: 1, 6: 3}
 
 var _screen: MeshInstance3D
 var _mat: ShaderMaterial
@@ -81,8 +86,25 @@ func _show(i: int) -> void:
 		_mat.set_shader_parameter("use_texture", true)
 		_mat.set_shader_parameter("projection_texture", images[i % images.size()])
 	elif not procedural_patterns.is_empty():
+		var pattern := procedural_patterns[i % procedural_patterns.size()]
+		if pattern in _STICKER_PATTERNS and not _use_random_sticker():
+			pattern = _STICKER_FALLBACK[pattern]
 		_mat.set_shader_parameter("use_texture", false)
-		_mat.set_shader_parameter("pattern", procedural_patterns[i % procedural_patterns.size()])
+		_mat.set_shader_parameter("pattern", pattern)
+
+
+## Points the shader at a random sticker. False if there are none to pick from.
+func _use_random_sticker() -> bool:
+	var library := get_node_or_null(^"/root/StickerLibrary")
+	if library == null or library.sticker_library.is_empty():
+		return false
+	var tex: Texture2D = library.sticker_library.pick_random().texture
+	if tex == null or tex.get_height() == 0:
+		return false
+	_mat.set_shader_parameter("sticker_texture", tex)
+	_mat.set_shader_parameter("sticker_aspect", float(tex.get_width()) / float(tex.get_height()))
+	_mat.set_shader_parameter("sticker_seed", randf() * 100.0)
+	return true
 
 
 func _build_beam() -> void:
