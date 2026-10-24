@@ -25,6 +25,11 @@ class_name AutoplayPainter
 ## About a third of paintings are "meticulous" instead: an even ground and then
 ## stickers set out in exact grids, rings or mirror symmetry, each one nudged
 ## into place before it goes down.
+## Mistakes: now and then a stroke goes wrong (the hand slips, the wrong
+## sticker gets grabbed, the bot glances away and the ghost drifts) or an
+## impulsive, unplanned sticker goes down. The bot notices, looks at it, and
+## then deals with it like a person would: undoes it, paints over it, repeats
+## it so it looks deliberate, or builds around it. Some get left alone.
 ## Plans are made in "viewer space" (x right, y down, 0..1 across the canvas as
 ## the player sees it, rotation 0 = upright) and converted to the canvas's own
 ## UV and rotation at the end, so they come out upright on any canvas.
@@ -66,6 +71,23 @@ const GROUND_COVERAGE := 0.55
 ## Smallest sticker a plan asks for (canvas widths). begin_painting() replaces
 ## it with what the canvas's minimum scale allows.
 const DEFAULT_MIN_SIZE := 0.13
+
+## Mistakes, per stroke the bot is paying attention to (not background tiles).
+## Meticulous paintings get fewer and fix them more carefully.
+const MISTAKE_CHANCE := 0.08
+const MISTAKE_CHANCE_METICULOUS := 0.04
+const IMPULSE_CHANCE := 0.06         ## per considered stroke: slap down something unplanned
+const IMPULSE_CHANCE_METICULOUS := 0.02
+const MISTAKES := {"slip": 3, "wrong_sticker": 2, "distracted": 2}
+## What to do about a mistake once it's noticed. undo and cover redo the
+## intended stroke afterwards; echo and build_around keep the mistake and make
+## it part of the painting.
+const FIXES := {"undo": 2, "cover": 3, "echo": 2, "build_around": 2, "leave": 1}
+const FIXES_METICULOUS := {"undo": 5, "cover": 2, "echo": 2, "build_around": 1}
+const STARE_MIN := 0.6               ## seconds looking at a mistake before fixing it
+const STARE_MAX := 1.8
+const LOOK_AWAY_MIN := 1.0           ## a distraction: seconds looking off the canvas
+const LOOK_AWAY_MAX := 2.5
 
 ## How often a painting is meticulous rather than layered.
 const METICULOUS_CHANCE := 0.35
@@ -124,6 +146,9 @@ var _min_size := DEFAULT_MIN_SIZE
 var _scheme: Dictionary = {}
 var _recent_families: Array[String] = []
 var last_style := ""   ## what the last plan was, for logs and previews
+var _meticulous_style := false
+var _ground := -1          ## the background sticker, for painting over mistakes
+var _ground_rot := 0.0
 static var _colors: Dictionary = {}   ## sticker id -> colour summary, see _color()
 
 
@@ -135,7 +160,7 @@ func begin_painting(system: PaintingSystem2D) -> void:
 	_aspect = _frame.height / _frame.width
 	_min_size = system.min_scale * system.sticker_scale * system.plane_width / _frame.width
 	# Don't bury a painting someone else started: just add to it
-	_plan = plan_painting(_aspect, not system.placed_layers.is_empty())
+	plan_painting(_aspect, not system.placed_layers.is_empty())
 
 
 func stroke_count() -> int:
@@ -146,8 +171,11 @@ func stroke_count() -> int:
 ## Returns {sticker_index, waypoints: Array[Vector2] (UV), rotation_deg, scale,
 ## settle, pause_after}.
 func next_stroke(system: PaintingSystem2D, i: int) -> Dictionary:
-	var s: Dictionary = _plan[i]
+	var s := issue(i)
+	if s.has("action"):
+		return {"undo": true, "stare_uv": _to_uv(s.stare_pos), "stare": s.stare, "pause_after": randf_range(PAUSE_AFTER_MIN, PAUSE_AFTER_MAX)}
 	var waypoints: Array[Vector2] = []
+	var look_away_at := -1
 	var stops := randi_range(CONSIDER_POINTS_MIN, CONSIDER_POINTS_MAX) if s.ponder else 0
 	for k in stops:
 		var spread := CONSIDER_SPREAD * float(stops - k) / float(stops)
@@ -159,13 +187,17 @@ func next_stroke(system: PaintingSystem2D, i: int) -> Dictionary:
 		for k in nudges:
 			var spread := NUDGE_SPREAD * float(nudges - k) / float(nudges)
 			waypoints.append(_to_uv(s.pos + Vector2(randf_range(-spread, spread), randf_range(-spread, spread))))
+	if s.has("look_away"):
+		# Got it lined up, glanced away, and it drifted
+		waypoints.append(_to_uv(s.intended_pos))
+		look_away_at = waypoints.size() - 1
 	waypoints.append(_to_uv(s.pos))
 	var settle := QUICK_SETTLE
 	if s.precise:
 		settle = randf_range(PRECISE_SETTLE_MIN, PRECISE_SETTLE_MAX)
 	elif s.ponder:
 		settle = randf_range(SETTLE_MIN, SETTLE_MAX)
-	return {
+	var stroke := {
 		"sticker_index": s.sticker,
 		"waypoints": waypoints,
 		"rotation_deg": _frame.rotation_offset + _frame.rotation_sign * s.rot,
@@ -173,6 +205,13 @@ func next_stroke(system: PaintingSystem2D, i: int) -> Dictionary:
 		"settle": settle,
 		"pause_after": randf_range(PAUSE_AFTER_MIN, PAUSE_AFTER_MAX) if s.ponder or s.precise else QUICK_PAUSE_AFTER,
 	}
+	if look_away_at >= 0:
+		stroke.look_away = s.look_away
+		stroke.look_away_at = look_away_at
+	if s.has("stare"):
+		stroke.stare = s.stare
+		stroke.stare_uv = _to_uv(s.stare_pos)
+	return stroke
 
 
 ## Seconds to drag the ghost between two canvas points.
@@ -197,9 +236,12 @@ func plan_painting(aspect: float, add_on: bool = false) -> Array[Dictionary]:
 	_aspect = aspect
 	_palette.clear()
 	_choose_scheme()
+	_ground = -1
 	var plan: Array[Dictionary] = []
+	_plan = plan
 	var family: String = _recent_families[-1]
-	if not add_on and randf() < METICULOUS_CHANCE:
+	_meticulous_style = not add_on and randf() < METICULOUS_CHANCE
+	if _meticulous_style:
 		last_style = "meticulous " + _weighted(METICULOUS)
 		_meticulous(plan, last_style.get_slice(" ", 1))
 		last_style += ", " + family
@@ -210,6 +252,8 @@ func plan_painting(aspect: float, add_on: bool = false) -> Array[Dictionary]:
 		var fill := _pick("fill", [], "key")
 		var fill_rot := _layer_rotation(false)
 		_tile(plan, fill, Rect2(0, 0, 1, 1), randf_range(0.7, 1.1), fill_rot)
+		_ground = fill
+		_ground_rot = fill_rot
 		if randf() < 0.3:
 			_tile(plan, _pick("texture", [], "second"), Rect2(0, 0, 1, 1), randf_range(0.6, 1.0), _layer_rotation())
 		horizon = _structure(plan, _weighted(STRUCTURES), fill)
@@ -331,7 +375,9 @@ func _meticulous(plan: Array[Dictionary], kind: String) -> void:
 	"""An even ground, then stickers set out in exact order: same sizes,
 	square rotations, equal spacing, placed one by one in reading order."""
 	# A calm ground: only the stickers made to be fills, laid square
-	_tile(plan, _pick("ground", [], "key"), Rect2(0, 0, 1, 1), randf_range(0.8, 1.1), [0.0, 90.0].pick_random(), 0.0, 0.0)
+	_ground = _pick("ground", [], "key")
+	_ground_rot = [0.0, 90.0].pick_random()
+	_tile(plan, _ground, Rect2(0, 0, 1, 1), randf_range(0.8, 1.1), _ground_rot, 0.0, 0.0)
 	match kind:
 		"catalog":
 			# A specimen chart: a different sticker in every cell, sorted by colour
@@ -387,6 +433,121 @@ func _meticulous(plan: Array[Dictionary], kind: String) -> void:
 				for i in count:
 					var t := float(i) / (count - 1)
 					_stamp(plan, sticker, Vector2(0.08 + 0.84 * t, y), 0.0, lerpf(_min_size, 0.9 / rows, t), false, true)
+
+
+# --- Mistakes and fixes ---
+
+## The i-th stroke as it actually goes down, in viewer space. This is where
+## mistakes happen: the stroke is rolled once, when it's first issued, and the
+## result is kept so after_stroke() can react to it. Fix strokes, impulses and
+## background tiles are never turned into mistakes. An {action: "undo"} stamp
+## means right-click the last sticker away.
+func issue(i: int) -> Dictionary:
+	var s: Dictionary = _plan[i]
+	if s.has("action") or s.has("issued"):
+		return s
+	s.issued = true
+	var chance := MISTAKE_CHANCE_METICULOUS if _meticulous_style else MISTAKE_CHANCE
+	if not (s.ponder or s.precise) or s.get("fix", false) or s.has("mistake") or randf() >= chance:
+		return s
+	var intended := s.duplicate()
+	intended.erase("issued")
+	var kind := _weighted(MISTAKES)
+	s.mistake = kind
+	s.intended = intended
+	match kind:
+		"slip":
+			s.pos += Vector2.from_angle(randf() * TAU) * randf_range(0.05, 0.12)
+			if randf() < 0.6:
+				s.rot += randf_range(12.0, 40.0) * (1 if randf() < 0.5 else -1)
+			if randf() < 0.4:
+				s.size *= [0.65, 1.5].pick_random()
+		"wrong_sticker":
+			# Cycled one sticker too far
+			var count := StickerLibrary.sticker_library.size()
+			s.sticker = posmod(s.sticker + (1 if randf() < 0.5 else -1), maxi(count, 1))
+		"distracted":
+			s.intended_pos = s.pos
+			s.pos += Vector2.from_angle(randf() * TAU) * randf_range(0.08, 0.2)
+			s.look_away = randf_range(LOOK_AWAY_MIN, LOOK_AWAY_MAX)
+	s.pos = s.pos.clamp(Vector2(-BLEED, -BLEED), Vector2(1.0 + BLEED, 1.0 + BLEED))
+	return s
+
+
+## Call after the i-th stroke is done. Reacts to a mistake by queueing its fix
+## right after it, and now and then queues an impulsive sticker.
+func after_stroke(i: int) -> void:
+	var s: Dictionary = _plan[i]
+	if s.has("mistake"):
+		_plan_fix(i, s)
+	elif (s.get("ponder", false) or s.get("precise", false)) and not s.get("fix", false):
+		if randf() < (IMPULSE_CHANCE_METICULOUS if _meticulous_style else IMPULSE_CHANCE):
+			var impulse := _impulse()
+			_plan.insert(i + 1, impulse)
+
+
+func _impulse() -> Dictionary:
+	"""Something unplanned, slapped down without much thought: any sticker,
+	any colour, a bold size."""
+	var library_size := StickerLibrary.sticker_library.size()
+	var stamp := {
+		"sticker": randi() % maxi(library_size, 1),
+		"pos": Vector2(randf_range(0.1, 0.9), randf_range(0.1, 0.9)),
+		"rot": randf_range(0.0, 360.0),
+		"size": maxf(randf_range(0.2, 0.5), _min_size),
+		"ponder": false, "precise": false, "issued": true,
+		"mistake": "impulse",
+	}
+	return stamp
+
+
+func _plan_fix(i: int, s: Dictionary) -> void:
+	var fix := _weighted(FIXES_METICULOUS if _meticulous_style else FIXES)
+	s.fix_kind = fix
+	var steps: Array[Dictionary] = []
+	match fix:
+		"undo":
+			steps.append({"action": "undo", "fix": true})
+		"cover":
+			# Paint over it with the background, sized to hide it
+			if _ground >= 0:
+				var cover_extent := _extent(_ground, 1.0, _ground_rot)
+				var size := clampf(s.size * 1.3 / minf(cover_extent.x, cover_extent.y), s.size, 1.2)
+				_stamp(steps, _ground, s.pos, _ground_rot + randf_range(-3.0, 3.0), size, false)
+			else:
+				steps.append({"action": "undo", "fix": true})
+		"echo":
+			# Do it again, on purpose, so it reads as a decision
+			var copies := randi_range(1, 3)
+			if randf() < 0.5 or copies == 1:
+				_stamp(steps, s.sticker, Vector2(1.0 - s.pos.x, s.pos.y), -s.rot, s.size, true)
+			var step := Vector2.from_angle(randf() * TAU) * maxf(s.size * 0.9, 0.12)
+			for k in copies - 1:
+				_stamp(steps, s.sticker, s.pos + step * (k + 1), s.rot, s.size, k == 0)
+		"build_around":
+			# Make it the centre of something: frame it with a few small pieces
+			var accent := _pick(["line", "motif", "motif"].pick_random(), [], "accent")
+			var n := randi_range(2, 4)
+			var radius := maxf(s.size * 0.6, 0.1)
+			var start := randf() * TAU
+			for k in n:
+				var a := start + TAU * k / n
+				_stamp(steps, accent, s.pos + Vector2(cos(a), sin(a) * _aspect_fix()) * radius, rad_to_deg(a) + 90.0, maxf(s.size * 0.6, 0.15), k == 0)
+	# undo and cover put the intended stroke back where it belonged
+	if fix in ["undo", "cover"] and s.has("intended"):
+		var redo: Dictionary = s.intended.duplicate()
+		redo.erase("look_away")
+		redo.erase("intended_pos")
+		steps.append(redo)
+	for step in steps:
+		step.fix = true
+		step.issued = true
+	if not steps.is_empty():
+		# Notice it first: look at the mistake for a moment
+		steps[0].stare = randf_range(STARE_MIN, STARE_MAX)
+		steps[0].stare_pos = s.pos
+	for k in steps.size():
+		_plan.insert(i + 1 + k, steps[k])
 
 
 # --- Layout helpers ---

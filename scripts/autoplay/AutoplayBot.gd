@@ -171,17 +171,28 @@ func _paint_canvas(token: int) -> bool:
 		return false
 
 	painter.begin_painting(system)
-	for i in painter.stroke_count():
+	# The plan grows as it goes: mistakes queue their fixes right after them
+	var i := 0
+	while i < painter.stroke_count():
 		if not still_running(token):
 			return false
 		# The canvas may have been replaced (format toggle, detach) mid-loop
 		if PaintingModeManager.painting_system_2d != system:
 			return true
 		var stroke := painter.next_stroke(system, i)
-		if not await _perform_stroke(token, system, stroke):
+		if stroke.has("stare_uv"):
+			# Noticed something off: look at it for a moment first
+			player.autoplay_look_at(_uv_to_world(system, stroke.stare_uv))
+			if not await _wait_for_look(token) or not await _wait(token, stroke.stare):
+				return false
+		if stroke.get("undo", false):
+			_undo_on_canvas()
+		elif not await _perform_stroke(token, system, stroke):
 			return false
+		painter.after_stroke(i)
 		if not await _wait(token, stroke.pause_after):
 			return false
+		i += 1
 
 	if _detaches_this_session < MAX_DETACHES_PER_SESSION:
 		if await _press_detach_button(token):
@@ -225,6 +236,10 @@ func _perform_stroke(token: int, system: PaintingSystem2D, stroke: Dictionary) -
 			var overall := clampf(elapsed / total, 0.0, 1.0) if total > 0.0 else 1.0
 			_set_ghost_pose(system, lerpf(start_rot, end_rot, overall), lerpf(start_scale, stroke.scale, overall))
 		from_uv = to_uv
+		if i == stroke.get("look_away_at", -1):
+			# Distracted: glance off the canvas, then look back to a drifted ghost
+			if not await _glance_away(token, system, stroke.look_away):
+				return false
 		var last := i == waypoints.size() - 1
 		if not await _wait(token, stroke.settle if last else painter.hover_time()):
 			return false
@@ -245,6 +260,23 @@ func _set_ghost_pose(system: PaintingSystem2D, rotation_deg: float, scale_mult: 
 	# Keep the ghost fully visible while the bot works it
 	system.preview_idle_time = 0.0
 	system.preview_target_opacity = system.preview_base_opacity
+
+
+func _glance_away(token: int, system: PaintingSystem2D, seconds: float) -> bool:
+	var plane := system.painting_plane
+	var side := plane.global_basis.z.normalized() * randf_range(1.5, 3.0) * (1 if randf() < 0.5 else -1)
+	player.autoplay_look_at(plane.global_position + side + Vector3.UP * randf_range(-0.5, 0.8))
+	return await _wait(token, seconds)
+
+
+func _undo_on_canvas() -> void:
+	"""Right-click, the way PaintingModeManager does for the player: takes the
+	last sticker off whichever canvas is under the screen centre."""
+	var hit := PaintingModeManager._perform_unified_raycast()
+	if hit and PaintingModeManager._is_canvas_plane(hit):
+		var target_2d := PaintingModeManager._resolve_2d_system(hit.collider)
+		if target_2d:
+			target_2d.handle_secondary_action()
 
 
 func _click_canvas() -> void:
