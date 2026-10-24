@@ -170,15 +170,17 @@ func _paint_canvas(token: int) -> bool:
 	if not await _wait_for_look(token):
 		return false
 
+	painter.begin_painting(system)
 	for i in painter.stroke_count():
 		if not still_running(token):
 			return false
 		# The canvas may have been replaced (format toggle, detach) mid-loop
 		if PaintingModeManager.painting_system_2d != system:
 			return true
-		if not await _perform_stroke(token, system, painter.next_stroke(system, i)):
+		var stroke := painter.next_stroke(system, i)
+		if not await _perform_stroke(token, system, stroke):
 			return false
-		if not await _wait(token, painter.pause_after_time()):
+		if not await _wait(token, stroke.pause_after):
 			return false
 
 	if _detaches_this_session < MAX_DETACHES_PER_SESSION:
@@ -224,7 +226,7 @@ func _perform_stroke(token: int, system: PaintingSystem2D, stroke: Dictionary) -
 			_set_ghost_pose(system, lerpf(start_rot, end_rot, overall), lerpf(start_scale, stroke.scale, overall))
 		from_uv = to_uv
 		var last := i == waypoints.size() - 1
-		if not await _wait(token, painter.settle_time() if last else painter.hover_time()):
+		if not await _wait(token, stroke.settle if last else painter.hover_time()):
 			return false
 
 	_set_ghost_pose(system, end_rot, stroke.scale)

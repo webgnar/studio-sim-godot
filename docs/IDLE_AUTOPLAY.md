@@ -23,7 +23,21 @@ A screensaver-style bot that plays the studio for the player while they're away.
 
 ## Tuning how it paints
 
-`scripts/autoplay/AutoplayPainter.gd` decides what gets painted: how many stickers, which sticker, the final spot (canvas UV), rotation, size, and the path the ghost takes on the way there, plus the timing (drag speed, hover, settle). `AutoplayBot` only performs what the painter plans, so smarter strategies (composition, colour balance, clustering, reacting to what's already on the canvas) go in the painter without touching movement code. `next_stroke()` gets the canvas, so a strategy can read `system.placed_layers`.
+`scripts/autoplay/AutoplayPainter.gd` decides what gets painted: which stickers, where they end up, rotation, size, the path the ghost takes on the way there, and the timing (drag speed, hover, settle). `AutoplayBot` only performs what the painter plans, so composition work goes in the painter without touching movement code.
+
+The current strategy is modelled on the Hall of Fame paintings (`res://hall_of_fame/`). Those cover the whole canvas, build up in layers, repeat a few stickers instead of using many, and keep rotations aligned. So `begin_painting()` plans the whole painting up front, back to front:
+
+1. **Background:** one dense sticker tiled big and overlapping over the whole canvas, sometimes with a sparse texture on top.
+2. **Structure:** a horizon (a second fill over the bottom, often with a row of bands on the line), a split, stripes, a border, 2x2 panels, or nothing.
+3. **Motif:** one sticker repeated in a row, grid, ring, stack, mirrored pairs or a scatter.
+4. **Focal:** one big subject on the centre or a thirds line, sitting on the horizon when there is one. Sometimes a few subjects stacked into a figure.
+5. **Accents:** a few small lines and arcs near the focal point.
+
+What each sticker is good for (fill, texture, band, line, frame, motif, subject) is the `ROLES` table at the top of the painter, keyed by sticker id. Custom and bought stickers aren't in the table, so they're guessed from their shape. `STRUCTURES` and `ARRANGEMENTS` weight how often each layout is picked. If the canvas already has stickers on it (someone else's painting), the background and structure are skipped so their work isn't buried.
+
+Plans are made in viewer space (x right, y down, 0..1, rotation 0 = upright as the player sees it), and the painter converts them with the canvas's transform, so they come out upright on any canvas.
+
+**Previewing plans without the game:** `plan_painting(aspect)` doesn't touch the scene, so a headless script can fill `StickerLibrary.sticker_library` from the PNGs in `res://sprites/painting layers/`, call it, dump the stamps to JSON, and render them with PIL (scale the longest side to `size` x canvas width, rotate by `-rot` in PIL, centre at `pos`). That's how the sample paintings for tuning were made.
 
 ## Adding a behavior
 
