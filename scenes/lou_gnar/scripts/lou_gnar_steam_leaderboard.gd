@@ -10,9 +10,10 @@ extends LouGnarLeaderboard
 ## Every run is also recorded on the device (LouGnarLocalLeaderboard). Uploads
 ## send the player's best device score, so runs that never reached Steam (offline,
 ## slow network) still land on the global board the next time an upload works.
-## If Steam is offline or a request doesn't answer within TIMEOUT seconds, that
-## request is served from the device board instead; Steam is tried again on the
-## next one, and a late answer from Steam still counts.
+## Only the Steam board is ever shown. If Steam is offline or a request doesn't
+## answer within TIMEOUT seconds, the last Steam board from this session is shown
+## again (or nothing, and is_offline() is true); Steam is tried again on the next
+## request, and a late answer from Steam still counts.
 
 # Valve enums (steam_api): ELeaderboardSortMethod / DisplayType / DataRequest.
 const SORT_DESCENDING := 2
@@ -33,6 +34,7 @@ var _showing_local: bool = false
 var _entries_pending: int = 0
 var _submits_pending: int = 0
 var _last_result: Array = []
+var _last_entries: Array = [] # last Steam board shown, re-shown while Steam can't be reached
 var _unresolved_names: Dictionary = {}
 var _emit_queued: bool = false
 
@@ -40,9 +42,6 @@ var _emit_queued: bool = false
 func _ready() -> void:
 	_fallback = LouGnarLocalLeaderboard.new()
 	add_child(_fallback)
-	_fallback.entries_loaded.connect(func(entries: Array) -> void:
-		_showing_local = true
-		entries_loaded.emit(entries))
 
 	_timer = Timer.new()
 	_timer.one_shot = true
@@ -64,7 +63,7 @@ func is_offline() -> bool:
 
 func request_entries() -> void:
 	if not _steam_usable():
-		_fallback.request_entries()
+		_emit_last_entries()
 		return
 	_entries_pending += 1
 	_timer.start()
@@ -164,7 +163,13 @@ func _emit_entries() -> void:
 			"score": int(row["score"]),
 			"is_player": steam_id == me,
 		})
+	_last_entries = entries
 	entries_loaded.emit(entries)
+
+
+func _emit_last_entries() -> void:
+	_showing_local = true
+	entries_loaded.emit(_last_entries)
 
 
 func _name_for(steam_id: int) -> String:
@@ -189,8 +194,8 @@ func _on_timeout() -> void:
 	_serve_locally()
 
 
-## Answer whatever is in flight from the device board. Nothing is switched off:
-## the next request tries Steam again.
+## Answer whatever is in flight without Steam. Nothing is switched off: the next
+## request tries Steam again.
 func _serve_locally() -> void:
 	_timer.stop()
 	if _handle == 0:
@@ -204,4 +209,4 @@ func _serve_locally() -> void:
 		_showing_local = true
 		score_submitted.emit(true) # already recorded on the device
 	if entries_missing:
-		_fallback.request_entries()
+		_emit_last_entries()

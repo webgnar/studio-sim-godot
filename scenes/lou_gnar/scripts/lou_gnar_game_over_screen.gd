@@ -3,7 +3,8 @@ extends CanvasLayer
 ## GAME OVER card: score, submit status, top-50 board and a START OVER prompt.
 ## The board shows 10 rows at a time: it holds still on the top 10, then after
 ## SCROLL_DELAY seconds rolls slowly up through the rest, pauses on the last rows
-## and jumps back to the top.
+## and jumps back to the top, on repeat. The left stick (or up/down) scrolls it by
+## hand; SCROLL_DELAY after letting go the roll carries on from there.
 
 const BOARD_ORIGIN := Vector2(450, 260)
 const BOARD_RIGHT := 320.0
@@ -13,6 +14,8 @@ const VISIBLE_ROWS := 10
 const SCROLL_DELAY := 3.0 # seconds the top 10 stay still before the list starts rolling
 const SCROLL_SPEED := 22.0 # px/s, a little under a row per second
 const END_HOLD := 3.0 # seconds on the last rows before jumping back to the top
+const MANUAL_SPEED := 280.0 # px/s at full stick, about 10 rows a second
+const STICK_DEADZONE := 0.2
 
 var _score_label: Label
 var _name_label: Label
@@ -21,6 +24,7 @@ var _start_box: Panel
 var _start_text: Label
 var _board: Control
 var _board_title: Label
+var _board_message: Label
 var _list: Control
 var _row_count: int = 0
 var _scroll: float = 0.0
@@ -71,7 +75,10 @@ func _ready() -> void:
 	root.add_child(_board)
 	_board_title = LouGnarUI.make_label("", 24, LouGnarUI.LIME)
 	_board.add_child(_board_title)
-	_set_board_title("TOP %d LEADERBOARD" % LouGnarLeaderboard.MAX_ENTRIES, LouGnarUI.LIME)
+	_board_title.text = "GLOBAL TOP %d" % LouGnarLeaderboard.MAX_ENTRIES
+	_board_message = LouGnarUI.make_label("", 22, Color.WHITE)
+	_board_message.position = Vector2(0, LIST_TOP)
+	_board.add_child(_board_message)
 
 	# 10-row window onto the full list; _list slides up inside it.
 	var window := Control.new()
@@ -90,8 +97,8 @@ func show_results(final_score: int, player_name: String) -> void:
 	LouGnarUI.set_text_centered(_score_label, "Score: %d" % final_score, Vector2(400, 200))
 	LouGnarUI.set_text_centered(_name_label, _fit_name(player_name), Vector2(200, 280))
 	set_status("SUBMITTING...")
-	_set_board_title("TOP %d LEADERBOARD" % LouGnarLeaderboard.MAX_ENTRIES, LouGnarUI.LIME)
 	_draw_board([])
+	_board_message.text = "LOADING..."
 	_reset_scroll()
 	_pulse = 0.0
 	_lit = false
@@ -103,28 +110,30 @@ func set_status(text: String) -> void:
 	LouGnarUI.set_text_centered(_status_label, text, Vector2(200, 350))
 
 
-## `offline`: the entries are this device's saved runs, not the Steam board.
+## `offline`: Steam couldn't be reached, so an empty list means "no connection"
+## rather than "no scores yet".
 func set_entries(entries: Array, offline: bool = false) -> void:
-	if offline:
-		_set_board_title("OFFLINE TOP %d" % LouGnarLeaderboard.MAX_ENTRIES, Color.ORANGE)
-	else:
-		_set_board_title("GLOBAL TOP %d" % LouGnarLeaderboard.MAX_ENTRIES, LouGnarUI.LIME)
 	_draw_board(entries)
+	if entries.is_empty():
+		_board_message.text = "CAN'T REACH STEAM" if offline else "NO SCORES YET"
+	else:
+		_board_message.text = ""
 
 
-func _set_board_title(text: String, color: Color) -> void:
-	_board_title.text = text
-	_board_title.add_theme_color_override("font_color", color)
-
-
-func update(dt: float) -> void:
+## `scroll_input`: -1..1 from the left stick / up-down keys, positive scrolls down.
+func update(dt: float, scroll_input: float = 0.0) -> void:
 	_pulse += dt
 	var lit := int(_pulse / 0.5) % 2 == 1
 	if lit != _lit:
 		_lit = lit
 		LouGnarUI.style_box(_start_box, lit)
 		_start_text.add_theme_color_override("font_color", Color.BLACK if lit else LouGnarUI.LIME)
-	_update_scroll(dt)
+	if absf(scroll_input) > STICK_DEADZONE:
+		_scroll = clampf(_scroll + scroll_input * MANUAL_SPEED * dt, 0.0, _max_scroll())
+		_scroll_wait = 0.0 # hold here for SCROLL_DELAY (or END_HOLD at the bottom) after letting go
+		_apply_scroll()
+	else:
+		_update_scroll(dt)
 
 
 ## Redraws keep the current scroll position: Steam re-sends the list as player
