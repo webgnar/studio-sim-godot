@@ -26,10 +26,11 @@ class_name AutoplayPainter
 ## stickers set out in exact grids, rings or mirror symmetry, each one nudged
 ## into place before it goes down.
 ## Abstractions: often the focal point starts as a quick burst of stickers
-## piled into a bunch. Later the bot comes back and carves a form out of that
-## texture by carefully painting the background back over everything outside
-## the form's edge. The form is usually the silhouette of one of the
-## painting's own stickers, traced from its transparency.
+## piled into a bunch. Later the bot comes back and draws a form out of that
+## texture, using the thinnest line stickers as small pen marks chained along
+## the form's edge, sometimes with light hatching outside it. The form is
+## usually the silhouette of one of the painting's own stickers, traced from
+## its transparency.
 ## Mistakes: now and then a stroke goes wrong (the hand slips, or the bot
 ## glances away and the ghost drifts) or an
 ## impulsive, unplanned sticker goes down. The bot notices, looks at it, and
@@ -99,10 +100,12 @@ const ABSTRACTION_CHANCE := 0.5      ## the focal point is an abstraction
 const SECOND_ABSTRACTION_CHANCE := 0.3   ## plus a smaller one balancing it
 const BURST_MIN := 18
 const BURST_MAX := 32
-const CARVE_COVERAGE := 0.75        ## a carving sticker must be this solid (holes would show the burst through)
-const CARVE_MAX_SIZE := 0.3
-const CARVE_MAX_RINGS := 2
-const CALM_BUSYNESS := 0.1           ## brightness spread a carving surface can have and still read as calm
+const LINE_OVERLAP := 0.8           ## line marks are spaced at this fraction of their length, so they join up
+const HATCH_SPACING := 0.6           ## gap between hatching rows, as a fraction of a mark's length
+const HATCH_MAX := 14                ## most hatching marks per form
+const HATCH_CHANCE := 0.5            ## chance a drawn form also gets hatching outside its line
+const REDRAW_CHANCE := 0.5           ## chance the hand goes back over part of the line
+const PEN_COVERAGE := 0.13           ## line stickers thinner than this (share of their box filled) can draw
 const CUTS_MIN := 6                  ## straight cuts a sticker silhouette is simplified to (fewer if it still looks like the sticker)
 const CUTS_MAX := 10
 ## How often the carved form is a sticker's silhouette rather than a plain shape.
@@ -572,19 +575,17 @@ func _burst(plan: Array[Dictionary], center: Vector2, radius: float) -> Dictiona
 
 
 func _carve(plan: Array[Dictionary], burst: Dictionary) -> void:
-	"""Come back to a burst and cut a form out of it: paint the background
-	back over everything outside the form's edge, one careful sticker at a
-	time, each laid with its straight side along the edge. The form is usually
-	the silhouette of a sticker already in the painting, simplified to a
-	handful of straight cuts like a paper cut-out, so the carved shapes echo
+	"""Come back to a burst and draw a form out of it. The existing stickers
+	are used as simple marks, as small as they go: thin line stickers
+	chained end to end trace the form's edge like a pen line, then hatching
+	(sometimes) shades the burst just outside the
+	line, pushing it back so the form inside reads. The form is usually the
+	silhouette of a sticker already in the painting, so the drawn shapes echo
 	the stickers themselves."""
 	var center: Vector2 = burst.center
-	# Carve with a calm, solid sticker in one of the scheme's colours: the
-	# block it leaves round the form is what makes the cut edge read
-	var cover := _pick("carve", [], ["key", "second"].pick_random())
-	var r: float = burst.radius * randf_range(0.95, 1.1)
+	var r: float = burst.radius * randf_range(0.9, 1.05)
 	var outline := PackedVector2Array()
-	var source := _carve_source(cover) if randf() < SILHOUETTE_CHANCE else -1
+	var source := _carve_source() if randf() < SILHOUETTE_CHANCE else -1
 	if source >= 0:
 		var rot := deg_to_rad(randf_range(-20.0, 20.0)) if randf() < 0.5 else 0.0
 		for pt in _facets(_silhouette(source), randi_range(CUTS_MIN, CUTS_MAX)):
@@ -593,27 +594,66 @@ func _carve(plan: Array[Dictionary], burst: Dictionary) -> void:
 			last_carve_source = StickerLibrary.sticker_library[source].id
 	else:
 		outline = _form_outline(_weighted(FORMS), r)
-	# Covers in rings: the first, careful ring makes the cut, the outer ones
-	# paint over the rest of the burst. Kept small next to the form, so a
-	# cover on one side can't reach across and bury the other.
-	var tex := _texture_size(cover)
-	var size := clampf(r * 0.5, _min_size, CARVE_MAX_SIZE)
-	var extent := tex / maxf(tex.x, tex.y) * size
-	var along := maxf(extent.x, extent.y)    # long side runs along the edge
-	var across := minf(extent.x, extent.y)
-	var spin := 90.0 if extent.y > extent.x else 0.0
-	var rings := clampi(ceili((burst.reach - r * 0.7) / (across * 0.9)), 1, CARVE_MAX_RINGS)
-	# Evenly spaced around the edge, however detailed the outline is
-	var edge_points := _resample(outline, along * 0.7)
-	var n := edge_points.size()
-	for ring in rings:
-		for k in n:
-			var p: Vector2 = edge_points[k]
-			var tangent := (edge_points[(k + 1) % n] - edge_points[(k - 1 + n) % n]).normalized()
-			var normal := Vector2(tangent.y, -tangent.x)   # outline runs clockwise on screen
-			var c := p + normal * across * (0.5 + 0.9 * ring)
-			_stamp(plan, cover, center + Vector2(c.x, c.y * _aspect_fix()), rad_to_deg(tangent.angle()) + spin, size, false, ring == 0)
+	var pen := _pick("pen", [], ["accent", "second"].pick_random())
+	var mark_size := _min_size * randf_range(1.0, 1.15)
+	var pen_spin := _long_axis_spin(pen)
+	# The line goes round once, then sometimes a second, looser pass over
+	# part of it, the way a hand goes back over a drawn edge.
+	var passes := 2 if randf() < REDRAW_CHANCE else 1
+	for pass_i in passes:
+		var points := _resample(outline, mark_size * LINE_OVERLAP)
+		var n := points.size()
+		var start := randi() % n
+		var count := n if pass_i == 0 else int(n * randf_range(0.3, 0.6))
+		var drift := mark_size * (0.04 if pass_i == 0 else 0.12)
+		# Curved marks all bow the same way so they chain into one line
+		var flip := 180.0 if randf() < 0.5 else 0.0
+		for step in count:
+			var k := (start + step) % n
+			var p: Vector2 = points[k] + Vector2(randfn(0.0, 1.0), randfn(0.0, 1.0)) * drift
+			var tangent := (points[(k + 1) % n] - points[(k - 1 + n) % n]).normalized()
+			_stamp(plan, pen, center + Vector2(p.x, p.y * _aspect_fix()), rad_to_deg(tangent.angle()) + pen_spin + flip + randfn(0.0, 4.0), mark_size, false, true)
 			plan[-1].phase = "carve"
+	if randf() >= HATCH_CHANCE:
+		return
+	# Light hatching just outside the line: a few rows of the same small
+	# marks at one angle, enough to push the burst back without burying it.
+	var hatch := pen if randf() < 0.6 else _pick("pen", [pen], ["key", "second"].pick_random())
+	var angle := randf_range(20.0, 70.0) * (1 if randf() < 0.5 else -1)
+	var dir := Vector2.from_angle(deg_to_rad(angle))
+	var across := dir.orthogonal()
+	var band := clampf(burst.reach - r, mark_size * 0.6, mark_size * 1.5)
+	var outer := r + band
+	var marks: Array[Vector2] = []
+	var gap := mark_size * HATCH_SPACING
+	var rows := ceili(outer * 2.0 / gap)
+	for i in rows:
+		for j in ceili(outer * 2.0 / mark_size):
+			var q := across * (-outer + (i + 0.5) * gap) + dir * (-outer + (j + 0.5) * mark_size)
+			q += Vector2(randfn(0.0, 1.0), randfn(0.0, 1.0)) * mark_size * 0.08
+			if q.length() > outer or Geometry2D.is_point_in_polygon(q, outline):
+				continue
+			if _distance_to_outline(q, outline) > band:
+				continue
+			marks.append(q)
+	marks.shuffle()
+	for q in marks.slice(0, HATCH_MAX):
+		_stamp(plan, hatch, center + Vector2(q.x, q.y * _aspect_fix()), angle + _long_axis_spin(hatch) + randf_range(-4.0, 4.0), mark_size, false, false)
+		plan[-1].phase = "carve"
+
+
+func _long_axis_spin(sticker: int) -> float:
+	"""Extra rotation that lays a sticker's long side along rotation 0."""
+	var tex := _texture_size(sticker)
+	return 90.0 if tex.y > tex.x else 0.0
+
+
+func _distance_to_outline(q: Vector2, outline: PackedVector2Array) -> float:
+	var best := INF
+	for k in outline.size():
+		var closest := Geometry2D.get_closest_point_to_segment(q, outline[k], outline[(k + 1) % outline.size()])
+		best = minf(best, q.distance_to(closest))
+	return best
 
 
 func _resample(outline: PackedVector2Array, spacing: float) -> PackedVector2Array:
@@ -695,16 +735,16 @@ func _simplify(line: PackedVector2Array, eps: float) -> PackedVector2Array:
 	return left
 
 
-func _carve_source(cover: int) -> int:
+func _carve_source() -> int:
 	"""A sticker whose silhouette makes a good form to carve: one already used
 	in this painting if possible, a solid single shape, not a line or frame."""
 	var candidates: Array[int] = []
 	for i in _palette:
-		if i != cover and not _silhouette(i).is_empty():
+		if not _silhouette(i).is_empty():
 			candidates.append(i)
 	if candidates.is_empty():
 		for i in StickerLibrary.sticker_library.size():
-			if i != cover and _has_role(i, "subject") and not _silhouette(i).is_empty():
+			if _has_role(i, "subject") and not _silhouette(i).is_empty():
 				candidates.append(i)
 	return candidates.pick_random() if not candidates.is_empty() else -1
 
@@ -1020,8 +1060,8 @@ func _has_role(sticker: int, role: String) -> bool:
 	var roles := _roles(StickerLibrary.sticker_library[sticker])
 	if role in roles:
 		return true
-	if role == "carve":
-		return not ("line" in roles or "frame" in roles) and _color(sticker).coverage >= CARVE_COVERAGE and _color(sticker).busy <= CALM_BUSYNESS
+	if role == "pen":
+		return "line" in roles and _color(sticker).coverage < PEN_COVERAGE
 	if role == "ground":
 		return "fill" in roles or (not ("line" in roles or "frame" in roles) and _color(sticker).coverage >= GROUND_COVERAGE)
 	# Any dense enough shape can tile into a colour field
