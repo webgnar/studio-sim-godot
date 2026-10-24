@@ -25,8 +25,12 @@ class_name AutoplayPainter
 ## About a third of paintings are "meticulous" instead: an even ground and then
 ## stickers set out in exact grids, rings or mirror symmetry, each one nudged
 ## into place before it goes down.
-## Mistakes: now and then a stroke goes wrong (the hand slips, the wrong
-## sticker gets grabbed, the bot glances away and the ghost drifts) or an
+## Abstractions: often the focal point starts as a quick burst of stickers
+## piled into a bunch. Later the bot comes back and carves a form out of that
+## texture (circle, square, triangle, diamond, arch) by carefully painting the
+## background back over everything outside the form's edge.
+## Mistakes: now and then a stroke goes wrong (the hand slips, or the bot
+## glances away and the ghost drifts) or an
 ## impulsive, unplanned sticker goes down. The bot notices, looks at it, and
 ## then deals with it like a person would: undoes it, paints over it, repeats
 ## it so it looks deliberate, or builds around it. Some get left alone.
@@ -78,7 +82,7 @@ const MISTAKE_CHANCE := 0.08
 const MISTAKE_CHANCE_METICULOUS := 0.04
 const IMPULSE_CHANCE := 0.06         ## per considered stroke: slap down something unplanned
 const IMPULSE_CHANCE_METICULOUS := 0.02
-const MISTAKES := {"slip": 3, "wrong_sticker": 2, "distracted": 2}
+const MISTAKES := {"slip": 3, "distracted": 2}
 ## What to do about a mistake once it's noticed. undo and cover redo the
 ## intended stroke afterwards; echo and build_around keep the mistake and make
 ## it part of the painting.
@@ -88,6 +92,33 @@ const STARE_MIN := 0.6               ## seconds looking at a mistake before fixi
 const STARE_MAX := 1.8
 const LOOK_AWAY_MIN := 1.0           ## a distraction: seconds looking off the canvas
 const LOOK_AWAY_MAX := 2.5
+
+## Abstractions: a burst of stickers carved into a form (layered paintings only).
+const ABSTRACTION_CHANCE := 0.5      ## the focal point is an abstraction
+const SECOND_ABSTRACTION_CHANCE := 0.3   ## plus a smaller one balancing it
+const BURST_MIN := 18
+const BURST_MAX := 32
+const CARVE_COVERAGE := 0.68        ## stickers at least this dense can carve a clean edge
+const BACKGROUND_CARVE_COVERAGE := 0.45  ## the background is preferred if it's at least this dense: it reads as cut away, not framed
+const CARVE_MAX_SIZE := 0.35
+const FORMS := {"circle": 3, "square": 2, "triangle": 2, "diamond": 2, "arch": 2}
+
+## The bot's "brain": a mood that wanders stroke by stroke, so its hand and
+## its decisions aren't mechanical. focus (0..1) steadies the hand, slows it
+## down and makes mistakes rarer; energy (0..1) makes it quicker and more
+## impulsive. Both drift a little every stroke and get pulled back toward
+## this painting's own baseline, so one painting can be calm and the next
+## restless, and the mood shifts within a painting too.
+const MOOD_DRIFT := 0.08             ## how far focus and energy can move per stroke
+const MOOD_PULL := 0.1               ## how strongly they return to the painting's baseline
+const HAND_WOBBLE := 0.025           ## position error at zero focus (canvas widths, gaussian)
+const HAND_WOBBLE_PRECISE := 0.35    ## meticulous strokes wobble this fraction as much
+const ROT_WOBBLE := 6.0              ## degrees at zero focus
+const SIZE_WOBBLE := 0.07            ## size error at zero focus (fraction)
+## Nobody paints a row strictly left to right: runs of the same sticker are
+## put down in a loosely shuffled order. Higher = more jumbled.
+const ORDER_JUMBLE := 2.5
+const ORDER_JUMBLE_METICULOUS := 0.8
 
 ## How often a painting is meticulous rather than layered.
 const METICULOUS_CHANCE := 0.35
@@ -147,8 +178,15 @@ var _scheme: Dictionary = {}
 var _recent_families: Array[String] = []
 var last_style := ""   ## what the last plan was, for logs and previews
 var _meticulous_style := false
+var focus := 0.6
+var energy := 0.5
+var _focus_base := 0.6
+var _energy_base := 0.5
 var _ground := -1          ## the background sticker, for painting over mistakes
 var _ground_rot := 0.0
+## Background areas laid so far, back to front: [{rect, sticker, rot}], so
+## carving and covering paint back with whatever is underneath.
+var _regions: Array[Dictionary] = []
 static var _colors: Dictionary = {}   ## sticker id -> colour summary, see _color()
 
 
@@ -202,8 +240,8 @@ func next_stroke(system: PaintingSystem2D, i: int) -> Dictionary:
 		"waypoints": waypoints,
 		"rotation_deg": _frame.rotation_offset + _frame.rotation_sign * s.rot,
 		"scale": clampf(s.size * _frame.width / (system.sticker_scale * system.plane_width), system.min_scale, system.max_scale),
-		"settle": settle,
-		"pause_after": randf_range(PAUSE_AFTER_MIN, PAUSE_AFTER_MAX) if s.ponder or s.precise else QUICK_PAUSE_AFTER,
+		"settle": settle * (0.6 + focus * 0.8) * (1.3 - energy * 0.6),
+		"pause_after": (randf_range(PAUSE_AFTER_MIN, PAUSE_AFTER_MAX) if s.ponder or s.precise else QUICK_PAUSE_AFTER) * (1.3 - energy * 0.6),
 	}
 	if look_away_at >= 0:
 		stroke.look_away = s.look_away
@@ -237,6 +275,11 @@ func plan_painting(aspect: float, add_on: bool = false) -> Array[Dictionary]:
 	_palette.clear()
 	_choose_scheme()
 	_ground = -1
+	_regions.clear()
+	_focus_base = randf_range(0.35, 0.85)
+	_energy_base = randf_range(0.25, 0.8)
+	focus = _focus_base
+	energy = _energy_base
 	var plan: Array[Dictionary] = []
 	_plan = plan
 	var family: String = _recent_families[-1]
@@ -245,6 +288,7 @@ func plan_painting(aspect: float, add_on: bool = false) -> Array[Dictionary]:
 		last_style = "meticulous " + _weighted(METICULOUS)
 		_meticulous(plan, last_style.get_slice(" ", 1))
 		last_style += ", " + family
+		_jumble_order(plan, ORDER_JUMBLE_METICULOUS)
 		return plan
 	last_style = "layered, " + family
 	var horizon := -1.0
@@ -254,12 +298,27 @@ func plan_painting(aspect: float, add_on: bool = false) -> Array[Dictionary]:
 		_tile(plan, fill, Rect2(0, 0, 1, 1), randf_range(0.7, 1.1), fill_rot)
 		_ground = fill
 		_ground_rot = fill_rot
+		_regions.append({"rect": Rect2(0, 0, 1, 1), "sticker": fill, "rot": fill_rot})
 		if randf() < 0.3:
 			_tile(plan, _pick("texture", [], "second"), Rect2(0, 0, 1, 1), randf_range(0.6, 1.0), _layer_rotation())
 		horizon = _structure(plan, _weighted(STRUCTURES), fill)
+	if add_on or randf() >= ABSTRACTION_CHANCE:
+		_motif(plan, _weighted(ARRANGEMENTS), horizon)
+		_accents(plan, _focal(plan, horizon))
+		_jumble_order(plan, ORDER_JUMBLE)
+		return plan
+	# Abstraction as the focal point: burst now, do other things, come back and carve
+	last_style += ", abstraction"
+	var spot := _focal_spot(horizon, 0.2)
+	var bursts: Array[Dictionary] = [_burst(plan, spot, randf_range(0.17, 0.25))]
+	if randf() < SECOND_ABSTRACTION_CHANCE:
+		var balance := Vector2(1.0 - spot.x, clampf(1.0 - spot.y + randf_range(-0.1, 0.1), 0.2, 0.8))
+		bursts.append(_burst(plan, balance, randf_range(0.09, 0.13)))
 	_motif(plan, _weighted(ARRANGEMENTS), horizon)
-	var focus := _focal(plan, horizon)
-	_accents(plan, focus)
+	for b in bursts:
+		_carve(plan, b)
+	_accents(plan, spot)
+	_jumble_order(plan, ORDER_JUMBLE)
 	return plan
 
 
@@ -269,13 +328,19 @@ func _structure(plan: Array[Dictionary], kind: String, base_fill: int) -> float:
 	match kind:
 		"horizon":
 			var h := randf_range(0.55, 0.72)
-			_tile(plan, _pick("fill", [base_fill], "second"), Rect2(0, h, 1, 1.0 - h), randf_range(0.5, 0.8), _layer_rotation(false))
+			var ground := _pick("fill", [base_fill], "second")
+			var ground_rot := _layer_rotation(false)
+			_tile(plan, ground, Rect2(0, h, 1, 1.0 - h), randf_range(0.5, 0.8), ground_rot)
+			_regions.append({"rect": Rect2(0, h, 1, 1.0 - h), "sticker": ground, "rot": ground_rot})
 			if randf() < 0.6:
 				_row(plan, _pick("band", [], "accent"), h, randf_range(0.3, 0.5), 0.0)
 			return h
 		"split":
 			var x := randf_range(0.4, 0.6)
-			_tile(plan, _pick("fill", [base_fill], "second"), Rect2(x, 0, 1.0 - x, 1), randf_range(0.5, 0.8), _layer_rotation(false))
+			var side := _pick("fill", [base_fill], "second")
+			var side_rot := _layer_rotation(false)
+			_tile(plan, side, Rect2(x, 0, 1.0 - x, 1), randf_range(0.5, 0.8), side_rot)
+			_regions.append({"rect": Rect2(x, 0, 1.0 - x, 1), "sticker": side, "rot": side_rot})
 		"stripes":
 			var band := _pick("band", [], "second")
 			var angle: float = [0.0, 90.0, randf_range(25.0, 60.0) * (1 if randf() < 0.5 else -1)].pick_random()
@@ -346,12 +411,20 @@ func _motif(plan: Array[Dictionary], kind: String, horizon: float) -> void:
 				_stamp(plan, sticker, Vector2(randf_range(0.1, 0.9), randf_range(0.1, 0.9)), randf_range(0.0, 360.0), size * randf_range(0.7, 1.2), i == 0)
 
 
+func _focal_spot(horizon: float, half_height: float) -> Vector2:
+	"""A strong spot for the focal point: the centre or a thirds line,
+	sitting on the horizon when there is one."""
+	var x: float = [1.0 / 3.0, 0.5, 0.5, 2.0 / 3.0].pick_random()
+	var y := horizon - half_height if horizon > 0 else randf_range(0.4, 0.6)
+	return Vector2(x, y)
+
+
 func _focal(plan: Array[Dictionary], horizon: float) -> Vector2:
 	"""One big subject on a strong spot. Returns where it went."""
-	var x: float = [1.0 / 3.0, 0.5, 0.5, 2.0 / 3.0].pick_random()
 	var size := randf_range(0.45, 0.7)
-	var y := horizon - size * 0.35 if horizon > 0 else randf_range(0.4, 0.6)
-	var p := Vector2(x, y)
+	var p := _focal_spot(horizon, size * 0.35)
+	var x := p.x
+	var y := p.y
 	if randf() < 0.3:
 		# A "figure": a few subjects stacked into one shape
 		var parts := randi_range(2, 3)
@@ -435,6 +508,135 @@ func _meticulous(plan: Array[Dictionary], kind: String) -> void:
 					_stamp(plan, sticker, Vector2(0.08 + 0.84 * t, y), 0.0, lerpf(_min_size, 0.9 / rows, t), false, true)
 
 
+# --- The brain: mood, hand and order ---
+
+func _drift_mood() -> void:
+	focus = clampf(focus + randf_range(-MOOD_DRIFT, MOOD_DRIFT) + (_focus_base - focus) * MOOD_PULL, 0.0, 1.0)
+	energy = clampf(energy + randf_range(-MOOD_DRIFT, MOOD_DRIFT) + (_energy_base - energy) * MOOD_PULL, 0.0, 1.0)
+
+
+func _wobble(s: Dictionary) -> void:
+	"""An imperfect hand: every placement lands a little off what was meant,
+	more so when focus is low. Careful strokes wobble less, never zero."""
+	var unsteady := (1.15 - focus) * (HAND_WOBBLE_PRECISE if s.get("precise", false) else 1.0)
+	s.pos += Vector2(randfn(0.0, 1.0), randfn(0.0, 1.0) * _aspect_fix()) * HAND_WOBBLE * unsteady
+	s.rot += randfn(0.0, 1.0) * ROT_WOBBLE * unsteady
+	s.size = maxf(s.size * (1.0 + randfn(0.0, 1.0) * SIZE_WOBBLE * unsteady), _min_size)
+
+
+func _jumble_order(plan: Array[Dictionary], amount: float) -> void:
+	"""Loosely shuffle runs of the same sticker (a row, a grid, a tiled
+	layer, a burst) so they go down roughly, not strictly, in order."""
+	var start := 0
+	while start < plan.size():
+		var end := start + 1
+		while end < plan.size() and plan[end].sticker == plan[start].sticker:
+			end += 1
+		if end - start >= 3:
+			var run := plan.slice(start, end)
+			var keyed := []
+			for k in run.size():
+				keyed.append([k + randfn(0.0, amount), run[k]])
+			keyed.sort_custom(func(a, b): return a[0] < b[0])
+			for k in keyed.size():
+				plan[start + k] = keyed[k][1]
+		start = end
+
+
+# --- Abstractions ---
+
+func _burst(plan: Array[Dictionary], center: Vector2, radius: float) -> Dictionary:
+	"""Pile a bunch of stickers into a rough patch, fast and loose, from two
+	or three stickers that suit the scheme. Returns what _carve() needs."""
+	var stickers: Array[int] = []
+	for k in randi_range(2, 3):
+		stickers.append(_pick(["texture", "motif", "subject", "line"].pick_random(), stickers, ["second", "accent", "key"][k]))
+	var largest := 0.0
+	for k in randi_range(BURST_MIN, BURST_MAX):
+		var size := randf_range(maxf(_min_size, radius * 0.6), radius * 1.3)
+		largest = maxf(largest, size)
+		var offset := Vector2.from_angle(randf() * TAU) * radius * sqrt(randf())
+		_stamp(plan, stickers.pick_random(), center + Vector2(offset.x, offset.y * _aspect_fix()), randf_range(0.0, 360.0), size, false)
+		plan[-1].phase = "burst"
+	return {"center": center, "radius": radius, "reach": radius + largest * 0.5}
+
+
+func _carve(plan: Array[Dictionary], burst: Dictionary) -> void:
+	"""Come back to a burst and cut a form out of it: paint the background
+	back over everything outside the form's edge, one careful sticker at a
+	time, each laid with its flat side along the edge."""
+	var center: Vector2 = burst.center
+	var region := _region_at(center)
+	if region.is_empty():
+		return
+	# Carving needs solid edges: use the background if it's dense, else the
+	# densest sticker that suits the colour scheme
+	var cover: int = region.sticker
+	if _color(cover).coverage < BACKGROUND_CARVE_COVERAGE:
+		cover = _pick("carve", [], "key")
+	var r: float = burst.radius * randf_range(0.75, 0.9)
+	var outline := _form_outline(_weighted(FORMS), r)
+	# Covers need to reach from the edge to past the burst's outer reach
+	var tex := _texture_size(cover)
+	var depth: float = (burst.reach - r * 0.7) * 1.15
+	var size := clampf(depth * maxf(tex.x, tex.y) / minf(tex.x, tex.y), _min_size, CARVE_MAX_SIZE)
+	var extent := tex / maxf(tex.x, tex.y) * size
+	var along := maxf(extent.x, extent.y)    # long side runs along the edge
+	var across := minf(extent.x, extent.y)
+	var spin := 90.0 if extent.y > extent.x else 0.0
+	for e in outline.size():
+		var a: Vector2 = outline[e]
+		var b: Vector2 = outline[(e + 1) % outline.size()]
+		var edge := b - a
+		var normal := Vector2(edge.y, -edge.x).normalized()   # outline runs clockwise on screen
+		var steps := maxi(1, ceili(edge.length() / (along * 0.4)))
+		for k in steps:
+			var p := a + edge * ((k + 0.5) / steps) + normal * across * 0.5
+			var rot := rad_to_deg(edge.angle()) + spin
+			_stamp(plan, cover, center + Vector2(p.x, p.y * _aspect_fix()), rot, size, false, true)
+			plan[-1].phase = "carve"
+	# A second, looser pass further out mops up whatever the first didn't reach
+	if burst.reach - r < across * 0.9:
+		return
+	for e in outline.size():
+		var a: Vector2 = outline[e]
+		var b: Vector2 = outline[(e + 1) % outline.size()]
+		var edge := b - a
+		var normal := Vector2(edge.y, -edge.x).normalized()
+		var mid := (a + b) * 0.5 + normal * across * 1.3
+		_stamp(plan, cover, center + Vector2(mid.x, mid.y * _aspect_fix()), rad_to_deg(edge.angle()) + spin, size, false)
+		plan[-1].phase = "carve"
+
+
+func _form_outline(form: String, r: float) -> PackedVector2Array:
+	"""A form's outline around (0, 0), clockwise on screen (y down)."""
+	var pts := PackedVector2Array()
+	match form:
+		"circle":
+			for k in 16:
+				pts.append(Vector2.from_angle(TAU * k / 16) * r)
+		"square":
+			pts = PackedVector2Array([Vector2(-r, -r), Vector2(r, -r), Vector2(r, r), Vector2(-r, r)])
+		"triangle":
+			pts = PackedVector2Array([Vector2(0, -r * 1.1), Vector2(r, r * 0.8), Vector2(-r, r * 0.8)])
+		"diamond":
+			pts = PackedVector2Array([Vector2(0, -r * 1.2), Vector2(r * 0.8, 0), Vector2(0, r * 1.2), Vector2(-r * 0.8, 0)])
+		"arch":
+			for k in 9:
+				pts.append(Vector2.from_angle(PI + PI * k / 8) * r)
+			pts.append(Vector2(r, r))
+			pts.append(Vector2(-r, r))
+	return pts
+
+
+func _region_at(pos: Vector2) -> Dictionary:
+	"""The background laid under a spot (the last area that covers it)."""
+	for k in range(_regions.size() - 1, -1, -1):
+		if _regions[k].rect.grow(0.001).has_point(pos):
+			return _regions[k]
+	return {}
+
+
 # --- Mistakes and fixes ---
 
 ## The i-th stroke as it actually goes down, in viewer space. This is where
@@ -447,7 +649,10 @@ func issue(i: int) -> Dictionary:
 	if s.has("action") or s.has("issued"):
 		return s
 	s.issued = true
+	_drift_mood()
+	_wobble(s)
 	var chance := MISTAKE_CHANCE_METICULOUS if _meticulous_style else MISTAKE_CHANCE
+	chance *= 1.6 - focus
 	if not (s.ponder or s.precise) or s.get("fix", false) or s.has("mistake") or randf() >= chance:
 		return s
 	var intended := s.duplicate()
@@ -462,10 +667,6 @@ func issue(i: int) -> Dictionary:
 				s.rot += randf_range(12.0, 40.0) * (1 if randf() < 0.5 else -1)
 			if randf() < 0.4:
 				s.size *= [0.65, 1.5].pick_random()
-		"wrong_sticker":
-			# Cycled one sticker too far
-			var count := StickerLibrary.sticker_library.size()
-			s.sticker = posmod(s.sticker + (1 if randf() < 0.5 else -1), maxi(count, 1))
 		"distracted":
 			s.intended_pos = s.pos
 			s.pos += Vector2.from_angle(randf() * TAU) * randf_range(0.08, 0.2)
@@ -481,7 +682,7 @@ func after_stroke(i: int) -> void:
 	if s.has("mistake"):
 		_plan_fix(i, s)
 	elif (s.get("ponder", false) or s.get("precise", false)) and not s.get("fix", false):
-		if randf() < (IMPULSE_CHANCE_METICULOUS if _meticulous_style else IMPULSE_CHANCE):
+		if randf() < (IMPULSE_CHANCE_METICULOUS if _meticulous_style else IMPULSE_CHANCE) * (0.4 + energy * 1.6):
 			var impulse := _impulse()
 			_plan.insert(i + 1, impulse)
 
@@ -667,6 +868,8 @@ func _has_role(sticker: int, role: String) -> bool:
 	var roles := _roles(StickerLibrary.sticker_library[sticker])
 	if role in roles:
 		return true
+	if role == "carve":
+		return not ("line" in roles or "frame" in roles) and _color(sticker).coverage >= CARVE_COVERAGE
 	if role == "ground":
 		return "fill" in roles or (not ("line" in roles or "frame" in roles) and _color(sticker).coverage >= GROUND_COVERAGE)
 	# Any dense enough shape can tile into a colour field
