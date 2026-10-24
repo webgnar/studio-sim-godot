@@ -27,8 +27,9 @@ class_name AutoplayPainter
 ## into place before it goes down.
 ## Abstractions: often the focal point starts as a quick burst of stickers
 ## piled into a bunch. Later the bot comes back and carves a form out of that
-## texture (circle, square, triangle, diamond, arch) by carefully painting the
-## background back over everything outside the form's edge.
+## texture by carefully painting the background back over everything outside
+## the form's edge. The form is usually the silhouette of one of the
+## painting's own stickers, traced from its transparency.
 ## Mistakes: now and then a stroke goes wrong (the hand slips, or the bot
 ## glances away and the ghost drifts) or an
 ## impulsive, unplanned sticker goes down. The bot notices, looks at it, and
@@ -98,9 +99,19 @@ const ABSTRACTION_CHANCE := 0.5      ## the focal point is an abstraction
 const SECOND_ABSTRACTION_CHANCE := 0.3   ## plus a smaller one balancing it
 const BURST_MIN := 18
 const BURST_MAX := 32
-const CARVE_COVERAGE := 0.68        ## stickers at least this dense can carve a clean edge
-const BACKGROUND_CARVE_COVERAGE := 0.45  ## the background is preferred if it's at least this dense: it reads as cut away, not framed
-const CARVE_MAX_SIZE := 0.35
+const CARVE_COVERAGE := 0.75        ## a carving sticker must be this solid (holes would show the burst through)
+const CARVE_MAX_SIZE := 0.3
+const CARVE_MAX_RINGS := 2
+const CALM_BUSYNESS := 0.1           ## brightness spread a carving surface can have and still read as calm
+const CUTS_MIN := 6                  ## straight cuts a sticker silhouette is simplified to (fewer if it still looks like the sticker)
+const CUTS_MAX := 10
+## How often the carved form is a sticker's silhouette rather than a plain shape.
+const SILHOUETTE_CHANCE := 0.8
+const SILHOUETTE_RES := 96.0         ## pixels the silhouette is traced at
+const SILHOUETTE_SIMPLIFY := 2.5     ## outline simplification, in those pixels
+const SILHOUETTE_SOLIDITY := 0.5     ## outline area / convex hull area, at least
+const SILHOUETTE_MAX_POINTS := 60
+const SILHOUETTE_COMPACTNESS := 0.25  ## 4*pi*area/perimeter^2: 1 for a circle, low for thin or spiky shapes
 const FORMS := {"circle": 3, "square": 2, "triangle": 2, "diamond": 2, "arch": 2}
 
 ## The bot's "brain": a mood that wanders stroke by stroke, so its hand and
@@ -184,10 +195,9 @@ var _focus_base := 0.6
 var _energy_base := 0.5
 var _ground := -1          ## the background sticker, for painting over mistakes
 var _ground_rot := 0.0
-## Background areas laid so far, back to front: [{rect, sticker, rot}], so
-## carving and covering paint back with whatever is underneath.
-var _regions: Array[Dictionary] = []
-static var _colors: Dictionary = {}   ## sticker id -> colour summary, see _color()
+var last_carve_source := ""   ## id of the sticker whose silhouette was last carved, for previews
+static var _colors: Dictionary = {}
+static var _silhouettes: Dictionary = {}   ## sticker id -> traced outline, see _silhouette()   ## sticker id -> colour summary, see _color()
 
 
 # --- Interface used by AutoplayBot ---
@@ -275,7 +285,7 @@ func plan_painting(aspect: float, add_on: bool = false) -> Array[Dictionary]:
 	_palette.clear()
 	_choose_scheme()
 	_ground = -1
-	_regions.clear()
+	last_carve_source = ""
 	_focus_base = randf_range(0.35, 0.85)
 	_energy_base = randf_range(0.25, 0.8)
 	focus = _focus_base
@@ -298,7 +308,6 @@ func plan_painting(aspect: float, add_on: bool = false) -> Array[Dictionary]:
 		_tile(plan, fill, Rect2(0, 0, 1, 1), randf_range(0.7, 1.1), fill_rot)
 		_ground = fill
 		_ground_rot = fill_rot
-		_regions.append({"rect": Rect2(0, 0, 1, 1), "sticker": fill, "rot": fill_rot})
 		if randf() < 0.3:
 			_tile(plan, _pick("texture", [], "second"), Rect2(0, 0, 1, 1), randf_range(0.6, 1.0), _layer_rotation())
 		horizon = _structure(plan, _weighted(STRUCTURES), fill)
@@ -310,10 +319,10 @@ func plan_painting(aspect: float, add_on: bool = false) -> Array[Dictionary]:
 	# Abstraction as the focal point: burst now, do other things, come back and carve
 	last_style += ", abstraction"
 	var spot := _focal_spot(horizon, 0.2)
-	var bursts: Array[Dictionary] = [_burst(plan, spot, randf_range(0.17, 0.25))]
+	var bursts: Array[Dictionary] = [_burst(plan, spot, randf_range(0.24, 0.32))]
 	if randf() < SECOND_ABSTRACTION_CHANCE:
 		var balance := Vector2(1.0 - spot.x, clampf(1.0 - spot.y + randf_range(-0.1, 0.1), 0.2, 0.8))
-		bursts.append(_burst(plan, balance, randf_range(0.09, 0.13)))
+		bursts.append(_burst(plan, balance, randf_range(0.14, 0.18)))
 	_motif(plan, _weighted(ARRANGEMENTS), horizon)
 	for b in bursts:
 		_carve(plan, b)
@@ -331,7 +340,6 @@ func _structure(plan: Array[Dictionary], kind: String, base_fill: int) -> float:
 			var ground := _pick("fill", [base_fill], "second")
 			var ground_rot := _layer_rotation(false)
 			_tile(plan, ground, Rect2(0, h, 1, 1.0 - h), randf_range(0.5, 0.8), ground_rot)
-			_regions.append({"rect": Rect2(0, h, 1, 1.0 - h), "sticker": ground, "rot": ground_rot})
 			if randf() < 0.6:
 				_row(plan, _pick("band", [], "accent"), h, randf_range(0.3, 0.5), 0.0)
 			return h
@@ -340,7 +348,6 @@ func _structure(plan: Array[Dictionary], kind: String, base_fill: int) -> float:
 			var side := _pick("fill", [base_fill], "second")
 			var side_rot := _layer_rotation(false)
 			_tile(plan, side, Rect2(x, 0, 1.0 - x, 1), randf_range(0.5, 0.8), side_rot)
-			_regions.append({"rect": Rect2(x, 0, 1.0 - x, 1), "sticker": side, "rot": side_rot})
 		"stripes":
 			var band := _pick("band", [], "second")
 			var angle: float = [0.0, 90.0, randf_range(25.0, 60.0) * (1 if randf() < 0.5 else -1)].pick_random()
@@ -552,8 +559,11 @@ func _burst(plan: Array[Dictionary], center: Vector2, radius: float) -> Dictiona
 	for k in randi_range(2, 3):
 		stickers.append(_pick(["texture", "motif", "subject", "line"].pick_random(), stickers, ["second", "accent", "key"][k]))
 	var largest := 0.0
-	for k in randi_range(BURST_MIN, BURST_MAX):
-		var size := randf_range(maxf(_min_size, radius * 0.6), radius * 1.3)
+	# Enough stickers to pack the patch, whatever its size
+	var count := int(randi_range(BURST_MIN, BURST_MAX) * clampf(radius / 0.2, 0.7, 1.6))
+	for k in count:
+		# Small pieces, so the patch is a texture rather than a few big shapes
+		var size := randf_range(_min_size, maxf(_min_size, radius * 0.6))
 		largest = maxf(largest, size)
 		var offset := Vector2.from_angle(randf() * TAU) * radius * sqrt(randf())
 		_stamp(plan, stickers.pick_random(), center + Vector2(offset.x, offset.y * _aspect_fix()), randf_range(0.0, 360.0), size, false)
@@ -564,48 +574,205 @@ func _burst(plan: Array[Dictionary], center: Vector2, radius: float) -> Dictiona
 func _carve(plan: Array[Dictionary], burst: Dictionary) -> void:
 	"""Come back to a burst and cut a form out of it: paint the background
 	back over everything outside the form's edge, one careful sticker at a
-	time, each laid with its flat side along the edge."""
+	time, each laid with its straight side along the edge. The form is usually
+	the silhouette of a sticker already in the painting, simplified to a
+	handful of straight cuts like a paper cut-out, so the carved shapes echo
+	the stickers themselves."""
 	var center: Vector2 = burst.center
-	var region := _region_at(center)
-	if region.is_empty():
-		return
-	# Carving needs solid edges: use the background if it's dense, else the
-	# densest sticker that suits the colour scheme
-	var cover: int = region.sticker
-	if _color(cover).coverage < BACKGROUND_CARVE_COVERAGE:
-		cover = _pick("carve", [], "key")
-	var r: float = burst.radius * randf_range(0.75, 0.9)
-	var outline := _form_outline(_weighted(FORMS), r)
-	# Covers need to reach from the edge to past the burst's outer reach
+	# Carve with a calm, solid sticker in one of the scheme's colours: the
+	# block it leaves round the form is what makes the cut edge read
+	var cover := _pick("carve", [], ["key", "second"].pick_random())
+	var r: float = burst.radius * randf_range(0.95, 1.1)
+	var outline := PackedVector2Array()
+	var source := _carve_source(cover) if randf() < SILHOUETTE_CHANCE else -1
+	if source >= 0:
+		var rot := deg_to_rad(randf_range(-20.0, 20.0)) if randf() < 0.5 else 0.0
+		for pt in _facets(_silhouette(source), randi_range(CUTS_MIN, CUTS_MAX)):
+			outline.append(pt.rotated(rot) * r)
+		if last_carve_source == "":
+			last_carve_source = StickerLibrary.sticker_library[source].id
+	else:
+		outline = _form_outline(_weighted(FORMS), r)
+	# Covers in rings: the first, careful ring makes the cut, the outer ones
+	# paint over the rest of the burst. Kept small next to the form, so a
+	# cover on one side can't reach across and bury the other.
 	var tex := _texture_size(cover)
-	var depth: float = (burst.reach - r * 0.7) * 1.15
-	var size := clampf(depth * maxf(tex.x, tex.y) / minf(tex.x, tex.y), _min_size, CARVE_MAX_SIZE)
+	var size := clampf(r * 0.5, _min_size, CARVE_MAX_SIZE)
 	var extent := tex / maxf(tex.x, tex.y) * size
 	var along := maxf(extent.x, extent.y)    # long side runs along the edge
 	var across := minf(extent.x, extent.y)
 	var spin := 90.0 if extent.y > extent.x else 0.0
-	for e in outline.size():
-		var a: Vector2 = outline[e]
-		var b: Vector2 = outline[(e + 1) % outline.size()]
-		var edge := b - a
-		var normal := Vector2(edge.y, -edge.x).normalized()   # outline runs clockwise on screen
-		var steps := maxi(1, ceili(edge.length() / (along * 0.4)))
-		for k in steps:
-			var p := a + edge * ((k + 0.5) / steps) + normal * across * 0.5
-			var rot := rad_to_deg(edge.angle()) + spin
-			_stamp(plan, cover, center + Vector2(p.x, p.y * _aspect_fix()), rot, size, false, true)
+	var rings := clampi(ceili((burst.reach - r * 0.7) / (across * 0.9)), 1, CARVE_MAX_RINGS)
+	# Evenly spaced around the edge, however detailed the outline is
+	var edge_points := _resample(outline, along * 0.7)
+	var n := edge_points.size()
+	for ring in rings:
+		for k in n:
+			var p: Vector2 = edge_points[k]
+			var tangent := (edge_points[(k + 1) % n] - edge_points[(k - 1 + n) % n]).normalized()
+			var normal := Vector2(tangent.y, -tangent.x)   # outline runs clockwise on screen
+			var c := p + normal * across * (0.5 + 0.9 * ring)
+			_stamp(plan, cover, center + Vector2(c.x, c.y * _aspect_fix()), rad_to_deg(tangent.angle()) + spin, size, false, ring == 0)
 			plan[-1].phase = "carve"
-	# A second, looser pass further out mops up whatever the first didn't reach
-	if burst.reach - r < across * 0.9:
-		return
-	for e in outline.size():
-		var a: Vector2 = outline[e]
-		var b: Vector2 = outline[(e + 1) % outline.size()]
-		var edge := b - a
-		var normal := Vector2(edge.y, -edge.x).normalized()
-		var mid := (a + b) * 0.5 + normal * across * 1.3
-		_stamp(plan, cover, center + Vector2(mid.x, mid.y * _aspect_fix()), rad_to_deg(edge.angle()) + spin, size, false)
-		plan[-1].phase = "carve"
+
+
+func _resample(outline: PackedVector2Array, spacing: float) -> PackedVector2Array:
+	"""Evenly spaced points around a closed outline."""
+	var perimeter := 0.0
+	for k in outline.size():
+		perimeter += outline[k].distance_to(outline[(k + 1) % outline.size()])
+	var count := maxi(3, ceili(perimeter / maxf(spacing, 0.001)))
+	var step := perimeter / count
+	var out := PackedVector2Array()
+	var k := 0
+	var walked := 0.0      # distance along the outline at the start of edge k
+	for j in count:
+		var target := j * step
+		while k < outline.size() - 1 and walked + outline[k].distance_to(outline[k + 1]) < target:
+			walked += outline[k].distance_to(outline[k + 1])
+			k += 1
+		var a := outline[k]
+		var b := outline[(k + 1) % outline.size()]
+		var len := a.distance_to(b)
+		out.append(a.lerp(b, clampf((target - walked) / len, 0.0, 1.0)) if len > 0.0 else a)
+	return out
+
+
+func _facets(outline: PackedVector2Array, cuts: int) -> PackedVector2Array:
+	"""Simplify an outline to about `cuts` straight edges, keeping its
+	character: the points that stray furthest from a simpler outline stay."""
+	if outline.size() <= cuts:
+		return outline
+	var area := _signed_area(outline)
+	var eps := 0.02
+	var best := outline
+	while eps < 1.0:
+		var simple := _simplify_closed(outline, eps)
+		# Too simple stops looking like the sticker (or folds over itself)
+		if simple.size() < 3 or _signed_area(simple) < area * 0.6 or Geometry2D.triangulate_polygon(simple).is_empty():
+			break
+		best = simple
+		if simple.size() <= cuts:
+			break
+		eps *= 1.3
+	return best
+
+
+func _simplify_closed(outline: PackedVector2Array, eps: float) -> PackedVector2Array:
+	# Split at the two points furthest apart and simplify each half
+	var far := 0
+	for k in outline.size():
+		if outline[k].distance_squared_to(outline[0]) > outline[far].distance_squared_to(outline[0]):
+			far = k
+	var first := outline.slice(0, far + 1)
+	var second := outline.slice(far)
+	second.append(outline[0])
+	var a := _simplify(first, eps)
+	var b := _simplify(second, eps)
+	a.resize(a.size() - 1)
+	b.resize(b.size() - 1)
+	a.append_array(b)
+	return a
+
+
+func _simplify(line: PackedVector2Array, eps: float) -> PackedVector2Array:
+	"""Ramer-Douglas-Peucker on an open polyline."""
+	if line.size() < 3:
+		return line
+	var worst := 0
+	var worst_d := 0.0
+	for k in range(1, line.size() - 1):
+		var d := absf((line[-1] - line[0]).normalized().cross(line[k] - line[0])) if line[-1] != line[0] else line[k].distance_to(line[0])
+		if d > worst_d:
+			worst_d = d
+			worst = k
+	if worst_d <= eps:
+		return PackedVector2Array([line[0], line[-1]])
+	var left := _simplify(line.slice(0, worst + 1), eps)
+	var right := _simplify(line.slice(worst), eps)
+	left.resize(left.size() - 1)
+	left.append_array(right)
+	return left
+
+
+func _carve_source(cover: int) -> int:
+	"""A sticker whose silhouette makes a good form to carve: one already used
+	in this painting if possible, a solid single shape, not a line or frame."""
+	var candidates: Array[int] = []
+	for i in _palette:
+		if i != cover and not _silhouette(i).is_empty():
+			candidates.append(i)
+	if candidates.is_empty():
+		for i in StickerLibrary.sticker_library.size():
+			if i != cover and _has_role(i, "subject") and not _silhouette(i).is_empty():
+				candidates.append(i)
+	return candidates.pick_random() if not candidates.is_empty() else -1
+
+
+func _silhouette(sticker: int) -> PackedVector2Array:
+	"""A sticker's outline traced from its transparency, centred, scaled so its
+	longest side spans -1..1, clockwise on screen. Empty when the sticker
+	isn't one solid shape (scattered pieces, thin lines, outlines), since those
+	don't make a readable form. Traced once per sticker."""
+	var library := StickerLibrary.sticker_library
+	if sticker < 0 or sticker >= library.size() or not library[sticker].texture:
+		return PackedVector2Array()
+	var id := library[sticker].id
+	if _silhouettes.has(id):
+		return _silhouettes[id]
+	var result := PackedVector2Array()
+	var roles := _roles(library[sticker])
+	var img := library[sticker].texture.get_image()
+	if img and not ("line" in roles or "frame" in roles):
+		if img.is_compressed():
+			img.decompress()
+		var scale := SILHOUETTE_RES / float(maxi(img.get_width(), img.get_height()))
+		img.resize(maxi(1, int(img.get_width() * scale)), maxi(1, int(img.get_height() * scale)), Image.INTERPOLATE_BILINEAR)
+		var bits := BitMap.new()
+		bits.create_from_image_alpha(img, 0.5)
+		var polygons := bits.opaque_to_polygons(Rect2i(Vector2i.ZERO, img.get_size()), SILHOUETTE_SIMPLIFY)
+		var best := PackedVector2Array()
+		var best_area := 0.0
+		var total_area := 0.0
+		for poly in polygons:
+			var area := absf(_signed_area(poly))
+			total_area += area
+			if area > best_area:
+				best_area = area
+				best = poly
+		# One dominant piece that fills a fair part of its box
+		if best.size() >= 6 and best_area >= total_area * 0.6:
+			var box := Rect2(best[0], Vector2.ZERO)
+			for pt in best:
+				box = box.expand(pt)
+			# Mazes and tangles don't read as a form: skip outlines that are mostly
+			# notches (area well short of their convex hull) or very busy
+			var hull_area := absf(_signed_area(Geometry2D.convex_hull(best)))
+			var long_side := maxf(box.size.x, box.size.y)
+			var short_side := maxf(minf(box.size.x, box.size.y), 1.0)
+			if best_area >= box.get_area() * 0.3 and best_area >= hull_area * SILHOUETTE_SOLIDITY and best.size() <= SILHOUETTE_MAX_POINTS and long_side / short_side <= 2.2:
+				var half := maxf(box.size.x, box.size.y) / 2.0
+				for pt in best:
+					result.append((pt - box.get_center()) / half)
+				if _signed_area(result) < 0.0:
+					result.reverse()
+				# Thin, leggy shapes get buried by carving from both sides
+				var perimeter := 0.0
+				for k in result.size():
+					perimeter += result[k].distance_to(result[(k + 1) % result.size()])
+				if 4.0 * PI * absf(_signed_area(result)) / (perimeter * perimeter) < SILHOUETTE_COMPACTNESS:
+					result = PackedVector2Array()
+	_silhouettes[id] = result
+	return result
+
+
+func _signed_area(poly: PackedVector2Array) -> float:
+	var sum := 0.0
+	for k in poly.size():
+		var a := poly[k]
+		var b := poly[(k + 1) % poly.size()]
+		sum += a.x * b.y - b.x * a.y
+	return sum * 0.5
 
 
 func _form_outline(form: String, r: float) -> PackedVector2Array:
@@ -629,21 +796,6 @@ func _form_outline(form: String, r: float) -> PackedVector2Array:
 	return pts
 
 
-func _region_at(pos: Vector2) -> Dictionary:
-	"""The background laid under a spot (the last area that covers it)."""
-	for k in range(_regions.size() - 1, -1, -1):
-		if _regions[k].rect.grow(0.001).has_point(pos):
-			return _regions[k]
-	return {}
-
-
-# --- Mistakes and fixes ---
-
-## The i-th stroke as it actually goes down, in viewer space. This is where
-## mistakes happen: the stroke is rolled once, when it's first issued, and the
-## result is kept so after_stroke() can react to it. Fix strokes, impulses and
-## background tiles are never turned into mistakes. An {action: "undo"} stamp
-## means right-click the last sticker away.
 func issue(i: int) -> Dictionary:
 	var s: Dictionary = _plan[i]
 	if s.has("action") or s.has("issued"):
@@ -869,7 +1021,7 @@ func _has_role(sticker: int, role: String) -> bool:
 	if role in roles:
 		return true
 	if role == "carve":
-		return not ("line" in roles or "frame" in roles) and _color(sticker).coverage >= CARVE_COVERAGE
+		return not ("line" in roles or "frame" in roles) and _color(sticker).coverage >= CARVE_COVERAGE and _color(sticker).busy <= CALM_BUSYNESS
 	if role == "ground":
 		return "fill" in roles or (not ("line" in roles or "frame" in roles) and _color(sticker).coverage >= GROUND_COVERAGE)
 	# Any dense enough shape can tile into a colour field
@@ -936,36 +1088,40 @@ func _color(sticker: int) -> Dictionary:
 	"""A sticker's colour summary, worked out once from its pixels:
 	{hue (0..1, or -1 if it has no clear colour), colorful (share of
 	saturated pixels), light (average luminance), coverage (share of the image
-	that isn't transparent)}. Works for custom and bought stickers too."""
+	that isn't transparent), busy (spread of brightness: high for stripes and
+	patterns, low for flat colour)}. Works for custom and bought stickers too."""
 	var library := StickerLibrary.sticker_library
 	if sticker < 0 or sticker >= library.size() or not library[sticker].texture:
-		return {"hue": -1.0, "colorful": 0.0, "light": 0.5, "coverage": 0.5}
+		return {"hue": -1.0, "colorful": 0.0, "light": 0.5, "coverage": 0.5, "busy": 0.2}
 	var id := library[sticker].id
 	if _colors.has(id):
 		return _colors[id]
 	var img := library[sticker].texture.get_image()
-	var summary := {"hue": -1.0, "colorful": 0.0, "light": 0.5, "coverage": 0.5}
+	var summary := {"hue": -1.0, "colorful": 0.0, "light": 0.5, "coverage": 0.5, "busy": 0.2}
 	if img:
 		if img.is_compressed():
 			img.decompress()
-		img.resize(32, 32, Image.INTERPOLATE_BILINEAR)
+		img.resize(64, 64, Image.INTERPOLATE_BILINEAR)
 		var solid := 0
 		var saturated := 0
 		var light := 0.0
+		var light_sq := 0.0
 		var hue_vec := Vector2.ZERO
-		for y in 32:
-			for x in 32:
+		for y in 64:
+			for x in 64:
 				var px := img.get_pixel(x, y)
 				if px.a < 0.5:
 					continue
 				solid += 1
 				light += px.get_luminance()
+				light_sq += px.get_luminance() * px.get_luminance()
 				if px.s > 0.3 and px.v > 0.25:
 					saturated += 1
 					hue_vec += Vector2.from_angle(px.h * TAU)
 		if solid > 0:
-			summary.coverage = solid / 1024.0
+			summary.coverage = solid / 4096.0
 			summary.light = light / solid
+			summary.busy = sqrt(maxf(light_sq / solid - summary.light * summary.light, 0.0))
 			summary.colorful = float(saturated) / solid
 			if saturated > 0 and hue_vec.length() / saturated > 0.3:
 				summary.hue = fposmod(hue_vec.angle() / TAU, 1.0)
