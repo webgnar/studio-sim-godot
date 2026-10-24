@@ -31,6 +31,11 @@ class_name AutoplayPainter
 ## the form's edge, sometimes with light hatching outside it. The form is
 ## usually the silhouette of one of the painting's own stickers, traced from
 ## its transparency.
+## No bare canvas: each painting either covers the canvas early (a solid
+## ground, gaps patched) or skips the ground and fills only the spots still
+## bare at the end, walking from spot to spot like a pen. A coverage grid built
+## from every sticker's real shape finds the bare spots, and a last look at
+## what actually went down touches up any slivers.
 ## Mistakes: now and then a stroke goes wrong (the hand slips, or the bot
 ## glances away and the ghost drifts) or an
 ## impulsive, unplanned sticker goes down. The bot notices, looks at it, and
@@ -77,6 +82,30 @@ const GROUND_COVERAGE := 0.55
 ## Smallest sticker a plan asks for (canvas widths). begin_painting() replaces
 ## it with what the canvas's minimum scale allows.
 const DEFAULT_MIN_SIZE := 0.13
+
+## No bare canvas: each painting either covers everything early (the ground,
+## checked and patched with big shapes) or skips the ground and, at the end,
+## fills only the bare spots with small marks walked from spot to spot like a
+## pen line. Coverage is worked out from every planned sticker's shape on a grid.
+const LATE_FILL_CHANCE := 0.35       ## skip the ground and fill the bare spots at the end
+const CONTRAST_FILL_CHANCE := 0.4    ## a late fill uses a completely different colour scheme
+const BASE_SOLIDITY := 0.6           ## early grounds are at least this solid (see _solidity)
+const SOLID_INTERIOR := 0.78         ## late fill inks: solid shapes, so they close gaps instead of making lace
+const LATE_STRUCTURES := {"horizon": 4, "split": 2, "stripes": 2, "panels": 2}   ## big shapes first when there's no ground
+const COVER_MARGIN := 0.035          ## planned stickers count this much smaller (canvas widths), for the hand's wobble
+const COVER_GRID := 48               ## coverage grid cells across the canvas
+const MASK_RES := 32                 ## sticker shapes are sampled at this many pixels across
+const PATCH_MAX := 60                ## most big patches an early cover gets
+const FINAL_LOOKS := 3               ## times the bot steps back to check the finished painting
+const FINAL_LOOK_MAX := 40           ## most touch-up marks per look
+const FILL_MAX := 260                ## most marks a late fill lays
+const CELL_SAMPLES: Array[Vector2] = [Vector2(0.5, 0.5), Vector2(0.02, 0.02), Vector2(0.98, 0.02), Vector2(0.02, 0.98), Vector2(0.98, 0.98)]   ## centre and corners, so neighbouring cells meet with no gap
+const CELL_FULL := 31                ## all five sample bits set
+const FILL_RETRIES := 3              ## goes back to a stubborn spot this many times before giving up
+const FILL_TRIES := 12                ## placements a fill mark tries before going down
+const FILL_OVERLAP_COST := 0.6       ## how much covering finished painting counts against a placement
+const FILL_REACH := 2.0              ## a fill mark's size, as a multiple of the gap's half-width
+const FILL_LARGEST := 0.6            ## biggest late fill mark (canvas widths)
 
 ## Mistakes, per stroke the bot is paying attention to (not background tiles).
 ## Meticulous paintings get fewer and fix them more carefully.
@@ -198,6 +227,12 @@ var _focus_base := 0.6
 var _energy_base := 0.5
 var _ground := -1          ## the background sticker, for painting over mistakes
 var _ground_rot := 0.0
+var _masks := {}           ## sticker index -> alpha mask (MASK_RES square), for coverage
+var late_fill := false     ## this painting fills its bare spots at the end, for previews
+var _fill_inks: Array[int] = []   ## what the late fill used, for touching up
+var _looks := 0            ## final looks taken at the finished painting
+var _add_on := false
+var _cover_margin := COVER_MARGIN   ## 0 when looking at what actually went down
 var last_carve_source := ""   ## id of the sticker whose silhouette was last carved, for previews
 static var _colors: Dictionary = {}
 static var _silhouettes: Dictionary = {}   ## sticker id -> traced outline, see _silhouette()   ## sticker id -> colour summary, see _color()
@@ -289,6 +324,10 @@ func plan_painting(aspect: float, add_on: bool = false) -> Array[Dictionary]:
 	_choose_scheme()
 	_ground = -1
 	last_carve_source = ""
+	late_fill = not add_on and randf() < LATE_FILL_CHANCE
+	_add_on = add_on
+	_looks = 0
+	_fill_inks.clear()
 	_focus_base = randf_range(0.35, 0.85)
 	_energy_base = randf_range(0.25, 0.8)
 	focus = _focus_base
@@ -302,13 +341,19 @@ func plan_painting(aspect: float, add_on: bool = false) -> Array[Dictionary]:
 		_meticulous(plan, last_style.get_slice(" ", 1))
 		last_style += ", " + family
 		_jumble_order(plan, ORDER_JUMBLE_METICULOUS)
+		_finish_cover(plan)
 		return plan
 	last_style = "layered, " + family
 	var horizon := -1.0
-	if not add_on:
-		var fill := _pick("fill", [], "key")
+	if late_fill:
+		# No ground: build straight onto the bare canvas, fill what's left at the end
+		last_style += ", fills late"
+		horizon = _structure(plan, _weighted(LATE_STRUCTURES), -1)
+	elif not add_on:
+		var fill := _pick("fill_base", [], "key")
 		var fill_rot := _layer_rotation(false)
 		_tile(plan, fill, Rect2(0, 0, 1, 1), randf_range(0.7, 1.1), fill_rot)
+		_patch_bare(plan, fill, fill_rot)
 		_ground = fill
 		_ground_rot = fill_rot
 		if randf() < 0.3:
@@ -318,6 +363,8 @@ func plan_painting(aspect: float, add_on: bool = false) -> Array[Dictionary]:
 		_motif(plan, _weighted(ARRANGEMENTS), horizon)
 		_accents(plan, _focal(plan, horizon))
 		_jumble_order(plan, ORDER_JUMBLE)
+		if not add_on:
+			_finish_cover(plan)
 		return plan
 	# Abstraction as the focal point: burst now, do other things, come back and carve
 	last_style += ", abstraction"
@@ -331,16 +378,20 @@ func plan_painting(aspect: float, add_on: bool = false) -> Array[Dictionary]:
 		_carve(plan, b)
 	_accents(plan, spot)
 	_jumble_order(plan, ORDER_JUMBLE)
+	_finish_cover(plan)
 	return plan
 
 
 func _structure(plan: Array[Dictionary], kind: String, base_fill: int) -> float:
 	"""Lays down the painting's big shapes. Returns the horizon height
 	(0..1 down) when there is one, so later layers can sit on it, else -1."""
+	# With no ground under them, the big shapes have to be solid or the
+	# canvas shows through their lace
+	var big := "fill_base" if late_fill else "fill"
 	match kind:
 		"horizon":
 			var h := randf_range(0.55, 0.72)
-			var ground := _pick("fill", [base_fill], "second")
+			var ground := _pick(big, [base_fill], "second")
 			var ground_rot := _layer_rotation(false)
 			_tile(plan, ground, Rect2(0, h, 1, 1.0 - h), randf_range(0.5, 0.8), ground_rot)
 			if randf() < 0.6:
@@ -348,7 +399,7 @@ func _structure(plan: Array[Dictionary], kind: String, base_fill: int) -> float:
 			return h
 		"split":
 			var x := randf_range(0.4, 0.6)
-			var side := _pick("fill", [base_fill], "second")
+			var side := _pick(big, [base_fill], "second")
 			var side_rot := _layer_rotation(false)
 			_tile(plan, side, Rect2(x, 0, 1.0 - x, 1), randf_range(0.5, 0.8), side_rot)
 		"stripes":
@@ -369,8 +420,8 @@ func _structure(plan: Array[Dictionary], kind: String, base_fill: int) -> float:
 			_column(plan, band, inset, size, -90.0)
 			_column(plan, band, 1.0 - inset, size, 90.0)
 		"panels":
-			var a := _pick("fill", [base_fill], "key")
-			var b := _pick("fill", [base_fill, a], "second")
+			var a := _pick(big, [base_fill], "key")
+			var b := _pick(big, [base_fill, a], "second")
 			for q in 4:
 				var cell := Rect2((q % 2) * 0.5 + 0.03, (q / 2) * 0.5 + 0.03, 0.44, 0.44)
 				_tile(plan, a if (q == 0 or q == 3) else b, cell, 0.35, 0.0, 0.02)
@@ -458,9 +509,10 @@ func _meticulous(plan: Array[Dictionary], kind: String) -> void:
 	"""An even ground, then stickers set out in exact order: same sizes,
 	square rotations, equal spacing, placed one by one in reading order."""
 	# A calm ground: only the stickers made to be fills, laid square
-	_ground = _pick("ground", [], "key")
+	_ground = _pick("ground_base", [], "key")
 	_ground_rot = [0.0, 90.0].pick_random()
 	_tile(plan, _ground, Rect2(0, 0, 1, 1), randf_range(0.8, 1.1), _ground_rot, 0.0, 0.0)
+	_patch_bare(plan, _ground, _ground_rot)
 	match kind:
 		"catalog":
 			# A specimen chart: a different sticker in every cell, sorted by colour
@@ -873,6 +925,9 @@ func after_stroke(i: int) -> void:
 	var s: Dictionary = _plan[i]
 	if s.has("mistake"):
 		_plan_fix(i, s)
+	if i == _plan.size() - 1:
+		_final_look()
+		return
 	elif (s.get("ponder", false) or s.get("precise", false)) and not s.get("fix", false):
 		if randf() < (IMPULSE_CHANCE_METICULOUS if _meticulous_style else IMPULSE_CHANCE) * (0.4 + energy * 1.6):
 			var impulse := _impulse()
@@ -941,6 +996,269 @@ func _plan_fix(i: int, s: Dictionary) -> void:
 		steps[0].stare_pos = s.pos
 	for k in steps.size():
 		_plan.insert(i + 1 + k, steps[k])
+
+
+# --- No bare canvas ---
+
+func _patch_bare(plan: Array[Dictionary], sticker: int, rot: float) -> void:
+	"""Early cover: after the ground goes down, look for any canvas still
+	showing between tiles and close it with big copies of the same sticker."""
+	# A ground with holes can't close its own holes: patch with a solid one
+	var ink := sticker if _solidity(sticker) >= SOLID_INTERIOR else _pick("solid", [], "key")
+	_fill_spots(plan, _coverage(plan), [ink], 0.25, 0.8, PATCH_MAX, rot, "patch", true)
+
+
+func _finish_cover(plan: Array[Dictionary]) -> void:
+	"""Late fill: step back, find the canvas still bare, and fill only those
+	spots, walking from each spot to the nearest one still bare like a pen
+	line. The ink is from the painting's own colours or, now and then, a
+	completely different scheme. Paintings that covered early usually find
+	little or nothing to do here; it's the safety net either way."""
+	var grid := _coverage(plan)
+	if _bare_cells(grid).is_empty():
+		return
+	var slot := "key" if randf() < 0.5 else "second"
+	if late_fill and randf() < CONTRAST_FILL_CHANCE:
+		var key: float = _scheme.key
+		_scheme.contrast = fposmod((key if key >= 0.0 else randf()) + randf_range(0.35, 0.65), 1.0)
+		slot = "contrast"
+	var inks: Array[int] = [_pick("solid", [], slot)]
+	if randf() < 0.4:
+		inks.append(_pick("solid", inks, slot))
+	_fill_inks = inks
+	_fill_spots(plan, grid, inks, _min_size, FILL_LARGEST, FILL_MAX)
+
+
+func _final_look() -> void:
+	"""The plan's done, so step back and look at what actually went down: the
+	hand never lands exactly where it meant to, and mistakes got moved or
+	undone, so slivers of canvas can show that the plan didn't expect. Touch
+	those up the same way, and look again (a few times at most)."""
+	if _add_on or _looks >= FINAL_LOOKS:
+		return
+	_looks += 1
+	var placed: Array[Dictionary] = []
+	for s in _plan:
+		if s.has("action"):
+			if not placed.is_empty():
+				placed.pop_back()
+		else:
+			placed.append(s)
+	_cover_margin = 0.0
+	var grid := _coverage(placed)
+	if not _bare_cells(grid).is_empty():
+		if _fill_inks.is_empty():
+			_fill_inks = [_pick("solid", [], "key")]
+		_fill_spots(_plan, grid, _fill_inks, _min_size, FILL_LARGEST, FINAL_LOOK_MAX)
+	_cover_margin = COVER_MARGIN
+
+
+func _fill_spots(plan: Array[Dictionary], grid: PackedByteArray, inks: Array[int], smallest: float, largest: float, limit: int, rot: float = NAN, phase: String = "fill", biggest_first: bool = false) -> void:
+	"""Cover the bare cells in `grid`. The pen goes to the nearest bare spot,
+	slides deeper into that gap, and puts down a mark sized to the gap, so
+	marks sit in the bare canvas and cover as little of the painting around
+	it as they can. Big gaps get big marks, slivers get the smallest.
+	`rot` NAN turns each mark along the pen's path. `biggest_first` goes to
+	the biggest gap instead of the nearest (patching a ground)."""
+	var pen := Vector2(randf(), randf())
+	var tried := {}
+	var room := _clearance(grid)
+	var cell_w := 1.0 / COVER_GRID
+	for k in limit:
+		var target := Vector2(-1, -1)
+		var best := INF
+		if k % 4 == 0:
+			room = _clearance(grid)
+		for c in _bare_cells(grid):
+			if tried.get(c, 0) >= FILL_RETRIES:
+				continue
+			var d := -room[_cell_index(c)] if biggest_first else _cell_center(c).distance_squared_to(pen)
+			if d < best:
+				best = d
+				target = c
+		if target.x < 0.0:
+			return
+		tried[target] = tried.get(target, 0) + 1
+		# Slide into the middle of the gap, but not far from where the pen is
+		var spot := target
+		for step in 8:
+			var next := spot
+			for d in [Vector2(1, 0), Vector2(-1, 0), Vector2(0, 1), Vector2(0, -1), Vector2(1, 1), Vector2(-1, -1), Vector2(1, -1), Vector2(-1, 1)]:
+				var n: Vector2 = spot + d
+				if _in_grid(n) and room[_cell_index(n)] > room[_cell_index(next)]:
+					next = n
+			if next == spot:
+				break
+			spot = next
+		var size := clampf(room[_cell_index(spot)] * cell_w * FILL_REACH, smallest, largest)
+		var p := _cell_center(spot)
+		var ink: int = inks[0] if inks.size() == 1 or randf() < 0.7 else inks[1]
+		var heading := rad_to_deg((p - pen).angle()) if p.distance_to(pen) > 0.001 else randf() * 360.0
+		# Try the mark a few ways (nudged, turned, a touch bigger or smaller)
+		# and keep the one that fills the most bare canvas for the least
+		# painting it covers up
+		var best_stamp := {}
+		var best_score := 0.0
+		for t in FILL_TRIES:
+			var turn := rot + randf_range(-6.0, 6.0) if not is_nan(rot) else heading + _long_axis_spin(ink) + randfn(0.0, 25.0)
+			# Half the tries are sized to the gap, half anywhere from smallest to
+			# largest: over lacy layers (bare canvas showing through holes) a
+			# bigger mark that covers some painting is the better choice
+			var tsize := size * randf_range(0.85, 1.25) if t % 2 == 0 else exp(randf_range(log(smallest), log(largest)))
+			var cand := {"sticker": ink, "pos": p + Vector2(randfn(0.0, 1.0), randfn(0.0, 1.0)) * tsize * 0.15, "rot": turn, "size": maxf(tsize, _min_size)}
+			var counts := _cover(grid, cand, false)
+			var score := counts.x - FILL_OVERLAP_COST * counts.y
+			if counts.x > 0 and (best_stamp.is_empty() or score > best_score):
+				best_stamp = cand
+				best_score = score
+		if best_stamp.is_empty():
+			continue
+		_stamp(plan, ink, best_stamp.pos, best_stamp.rot, best_stamp.size, false)
+		plan[-1].phase = phase
+		_cover(grid, plan[-1])
+		pen = p
+
+
+func _clearance(grid: PackedByteArray) -> PackedFloat32Array:
+	"""For every cell, how far (in cells) it is to the nearest covered cell.
+	Off the canvas counts as bare, so gaps at the edge aren't cramped."""
+	var rows := _cover_rows()
+	var room := PackedFloat32Array()
+	room.resize(grid.size())
+	for i in grid.size():
+		room[i] = 0.0 if grid[i] == CELL_FULL else 1e6
+	# Two-pass chamfer distance
+	for r in rows:
+		for c in COVER_GRID:
+			var i := r * COVER_GRID + c
+			if c > 0: room[i] = minf(room[i], room[i - 1] + 1.0)
+			if r > 0:
+				room[i] = minf(room[i], room[i - COVER_GRID] + 1.0)
+				if c > 0: room[i] = minf(room[i], room[i - COVER_GRID - 1] + 1.414)
+				if c < COVER_GRID - 1: room[i] = minf(room[i], room[i - COVER_GRID + 1] + 1.414)
+	for r in range(rows - 1, -1, -1):
+		for c in range(COVER_GRID - 1, -1, -1):
+			var i := r * COVER_GRID + c
+			if c < COVER_GRID - 1: room[i] = minf(room[i], room[i + 1] + 1.0)
+			if r < rows - 1:
+				room[i] = minf(room[i], room[i + COVER_GRID] + 1.0)
+				if c < COVER_GRID - 1: room[i] = minf(room[i], room[i + COVER_GRID + 1] + 1.414)
+				if c > 0: room[i] = minf(room[i], room[i + COVER_GRID - 1] + 1.414)
+	for i in room.size():
+		room[i] = minf(room[i], float(COVER_GRID))   # nothing covered at all
+	return room
+
+
+func _in_grid(cell: Vector2) -> bool:
+	return cell.x >= 0 and cell.y >= 0 and cell.x < COVER_GRID and cell.y < _cover_rows()
+
+
+func _cell_index(cell: Vector2) -> int:
+	return int(cell.y) * COVER_GRID + int(cell.x)
+
+
+func _cover_rows() -> int:
+	return maxi(1, roundi(COVER_GRID * _aspect))
+
+
+func _cell_center(cell: Vector2) -> Vector2:
+	"""Viewer-space centre of a coverage cell (column, row)."""
+	return Vector2((cell.x + 0.5) / COVER_GRID, (cell.y + 0.5) / _cover_rows())
+
+
+func _coverage(plan: Array[Dictionary]) -> PackedByteArray:
+	"""Which grid cells of the canvas the plan covers. Each cell keeps one bit
+	per sample point (CELL_SAMPLES), and only counts as covered once every
+	point is, so thin slivers of canvas between stickers aren't missed."""
+	var grid := PackedByteArray()
+	grid.resize(COVER_GRID * _cover_rows())
+	for s in plan:
+		if not s.has("action"):
+			_cover(grid, s)
+	return grid
+
+
+func _bare_cells(grid: PackedByteArray) -> Array[Vector2]:
+	var cells: Array[Vector2] = []
+	for i in grid.size():
+		if grid[i] != CELL_FULL:
+			cells.append(Vector2(i % COVER_GRID, i / COVER_GRID))
+	return cells
+
+
+func _cover(grid: PackedByteArray, s: Dictionary, apply: bool = true) -> Vector2i:
+	"""Mark the cells a stamp's opaque pixels land on. Returns how many bare
+	sample points it covers and how many already-covered ones it lands on;
+	with `apply` false it only counts, to try a placement out."""
+	var gained := 0
+	var overlapped := 0
+	var rows := _cover_rows()
+	var cell_w := 1.0 / COVER_GRID
+	var cell_h := _aspect / rows
+	var tex := _texture_size(s.sticker)
+	# While planning, count each sticker a little smaller than it is, since
+	# the hand will land it a little off: the plan then overlaps enough
+	var shown: float = maxf(s.size - _cover_margin, s.size * 0.75)
+	var texel: float = shown / maxf(tex.x, tex.y)   # canvas widths per texture pixel
+	var center := Vector2(s.pos.x, s.pos.y * _aspect)
+	var reach: float = s.size * 0.71
+	var mask := _mask(s.sticker)
+	var turn := -deg_to_rad(s.rot)
+	for r in range(maxi(0, floori((center.y - reach) / cell_h)), mini(rows, ceili((center.y + reach) / cell_h))):
+		for c in range(maxi(0, floori((center.x - reach) / cell_w)), mini(COVER_GRID, ceili((center.x + reach) / cell_w))):
+			var i := r * COVER_GRID + c
+			if apply and grid[i] == CELL_FULL:
+				continue
+			for k in CELL_SAMPLES.size():
+				var local := (Vector2((c + CELL_SAMPLES[k].x) * cell_w, (r + CELL_SAMPLES[k].y) * cell_h) - center).rotated(turn) / texel / tex + Vector2(0.5, 0.5)
+				if local.x < 0.0 or local.y < 0.0 or local.x >= 1.0 or local.y >= 1.0:
+					continue
+				if mask[int(local.y * MASK_RES) * MASK_RES + int(local.x * MASK_RES)] == 1:
+					if grid[i] & (1 << k) == 0:
+						gained += 1
+						if apply:
+							grid[i] |= 1 << k
+					else:
+						overlapped += 1
+	return Vector2i(gained, overlapped)
+
+
+func _solidity(sticker: int) -> float:
+	"""Share of a sticker's opaque pixels that are inside its shape rather
+	than on an edge: high for solid blobs, low for lace, lines and specks."""
+	var mask := _mask(sticker)
+	var opaque := 0
+	var inside := 0
+	for y in MASK_RES:
+		for x in MASK_RES:
+			if mask[y * MASK_RES + x] == 0:
+				continue
+			opaque += 1
+			if x > 0 and y > 0 and x < MASK_RES - 1 and y < MASK_RES - 1 \
+					and mask[y * MASK_RES + x - 1] == 1 and mask[y * MASK_RES + x + 1] == 1 \
+					and mask[(y - 1) * MASK_RES + x] == 1 and mask[(y + 1) * MASK_RES + x] == 1:
+				inside += 1
+	return float(inside) / maxf(opaque, 1.0)
+
+
+func _mask(sticker: int) -> PackedByteArray:
+	if _masks.has(sticker):
+		return _masks[sticker]
+	var mask := PackedByteArray()
+	mask.resize(MASK_RES * MASK_RES)
+	var library := StickerLibrary.sticker_library
+	var img: Image = library[sticker].texture.get_image() if sticker >= 0 and sticker < library.size() and library[sticker].texture else null
+	if img:
+		if img.is_compressed():
+			img.decompress()
+		img.resize(MASK_RES, MASK_RES, Image.INTERPOLATE_BILINEAR)
+		for y in MASK_RES:
+			for x in MASK_RES:
+				mask[y * MASK_RES + x] = 1 if img.get_pixel(x, y).a >= 0.5 else 0
+	else:
+		mask.fill(1)
+	_masks[sticker] = mask
+	return mask
 
 
 # --- Layout helpers ---
@@ -1060,6 +1378,11 @@ func _has_role(sticker: int, role: String) -> bool:
 	var roles := _roles(StickerLibrary.sticker_library[sticker])
 	if role in roles:
 		return true
+	if role.ends_with("_base"):
+		# A ground that covers: no lace, which would leave canvas showing everywhere
+		return _has_role(sticker, role.trim_suffix("_base")) and _solidity(sticker) >= BASE_SOLIDITY
+	if role == "solid":
+		return _solidity(sticker) >= SOLID_INTERIOR
 	if role == "pen":
 		return "line" in roles and _color(sticker).coverage < PEN_COVERAGE
 	if role == "ground":
