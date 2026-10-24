@@ -25,7 +25,7 @@ var _map: RID
 var _region: RID
 var _baked_for: Node = null   ## the scene the current bake belongs to
 var _baking: bool = false
-var _skip: Array[Node] = []   ## RigidBodies the bake ignores (unlocked doors)
+var _skip: Array[Node] = []   ## RigidBodies the bake ignores (unlocked doors, held props)
 
 
 func _ready() -> void:
@@ -72,6 +72,10 @@ func ensure_baked(scene: Node, force: bool = false) -> bool:
 	for door in scene.find_children("*", "DoorInteraction", true, false):
 		if not door.is_locked and door.door_body:
 			_skip.append(door.door_body)
+	# Whatever the player is holding moves with them; baking it in would block their own spot
+	for carry in scene.find_children("*", "CarryableComponent", true, false):
+		if carry.is_carried and carry.parent_rigid_body:
+			_skip.append(carry.parent_rigid_body)
 	_add_props(scene, source)
 	var started := Time.get_ticks_msec()
 	NavigationServer3D.bake_from_source_geometry_data_async(nav_mesh, source, func() -> void:

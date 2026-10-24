@@ -15,6 +15,9 @@ extends Node
 ##   same way a player paints. WHAT it paints comes from AutoplayPainter (the
 ##   tuning surface); this file only performs it. When done it detaches the
 ##   painting with the red button and starts a fresh one.
+## - Clear the canvas: detached paintings land in front of the fresh canvas,
+##   so the bot carries each one off and tosses it onto a pile in a studio
+##   corner, then paints.
 
 const STAND_DISTANCE := 2.2         ## metres in front of the canvas
 const WAYPOINT_REACHED := 0.4
@@ -31,9 +34,21 @@ const WANDER_STOPS_MAX := 3
 const LOOK_AROUND_MIN := 1.5        ## seconds spent looking around at each wander stop
 const LOOK_AROUND_MAX := 4.0
 
+const CLEAR_RADIUS := 3.5           ## loose paintings this close to the canvas get cleared away
+const MAX_CLEARS_PER_PASS := 3
+const PICKUP_DISTANCE := 1.8        ## grab a painting from this far: it floats 1.5 m in front once held
+const MAX_PICKUP_TRIES := 2         ## per painting per session, before leaving it where it is
+const TOSS_POWER := 20.0            ## the player's throw is 50; this lobs it a couple of metres
+const TOSS_HEIGHT := 0.5            ## aim this high into the corner, so it's slightly downwards
+const CORNER_PROBE := 2.5           ## wall rays this long decide what counts as a corner
+const CORNER_SEARCH := 15           ## metres around the canvas searched for a corner, on a 1 m grid
+const CORNER_MIN_FROM_CANVAS := 5.0
+const CORNER_MIN_FROM_DOOR := 3.0
+const CORNER_PILE_RADIUS := 3.0     ## paintings this close to the dump corner are already dumped
+const TOSS_FROM := 3.0              ## stand this far out from the corner: paintings are 3-5 m wide
 
-## Detached paintings pile up on the floor, so stop detaching after this many
-## per autoplay session and just keep painting the current canvas.
+## Detached paintings pile up in the dump corner, so stop detaching after this
+## many per autoplay session and just keep painting the current canvas.
 const MAX_DETACHES_PER_SESSION := 3
 
 var player: Node3D = null
@@ -42,6 +57,9 @@ var nav: Node = null  ## AutoplayNavigation, set by AutoplayManager
 var _token: int = 0
 var _detaches_this_session: int = 0
 var _saved_selection: Dictionary = {}
+var _carrying: CarryableComponent = null  ## a painting the bot picked up and hasn't tossed yet
+var _dump: Dictionary = {}                ## the cached dump corner: {scene, stand, target}
+var _pickup_tries: Dictionary = {}        ## painting -> failed pickups this session
 var painter: AutoplayPainter = preload("res://scripts/autoplay/AutoplayPainter.gd").new()
 
 
@@ -49,6 +67,7 @@ func begin(target_player: Node3D) -> void:
 	player = target_player
 	_token += 1
 	_detaches_this_session = 0
+	_pickup_tries.clear()
 	_save_player_selection()
 	_run(_token)
 
@@ -57,6 +76,10 @@ func end() -> void:
 	_token += 1  # invalidates every pending coroutine step
 	if is_instance_valid(player):
 		player.autoplay_move = Vector2.ZERO
+	# Don't leave the player holding a painting they never picked up
+	if is_instance_valid(_carrying) and _carrying.is_carried:
+		_carrying.player_ref.drop_carried_object()
+	_carrying = null
 	_restore_player_selection()
 	player = null
 
@@ -79,6 +102,8 @@ func _run(token: int) -> void:
 			did_something = await _paint_canvas(token)
 		if not did_something and still_running(token):
 			did_something = await _wander(token)
+		if not still_running(token):
+			return
 		if not did_something:
 			# Nothing reachable to do right now; stand around and try again.
 			if not await _look_around(token, 3.0):
@@ -135,6 +160,8 @@ func _paint_canvas(token: int) -> bool:
 	var stand := _stand_point_for(plane)
 	if not nav.can_reach(player.global_position, stand):
 		return false
+	if not await _clear_canvas_area(token, plane):
+		return false
 	if not _canvas_visible_from(stand, plane):
 		return false
 	if not await _go_to(token, stand):
@@ -157,6 +184,9 @@ func _paint_canvas(token: int) -> bool:
 	if _detaches_this_session < MAX_DETACHES_PER_SESSION:
 		if await _press_detach_button(token):
 			_detaches_this_session += 1
+			var fresh: PaintingSystem2D = PaintingModeManager.painting_system_2d
+			if fresh and is_instance_valid(fresh) and fresh.painting_plane:
+				await _clear_canvas_area(token, fresh.painting_plane)
 	return true
 
 
@@ -182,9 +212,9 @@ func _perform_stroke(token: int, system: PaintingSystem2D, stroke: Dictionary) -
 		var duration := painter.drag_time(from_uv, to_uv)
 		var t := 0.0
 		while t < duration:
+			await get_tree().process_frame
 			if not still_running(token) or PaintingModeManager.painting_system_2d != system:
 				return still_running(token)
-			await get_tree().process_frame
 			var dt := get_process_delta_time()
 			t += dt
 			elapsed += dt
@@ -257,6 +287,183 @@ func _find_node_of_type(node: Node) -> PaintingConvertButton:
 		if found:
 			return found
 	return null
+
+
+# --- Behavior: clear the canvas ---
+
+func _clear_canvas_area(token: int, plane: MeshInstance3D) -> bool:
+	"""Carry loose paintings away from the front of the canvas, nearest first.
+	Returns false only if the bot was stopped."""
+	var cleared := 0
+	for painting in _paintings_near(plane):
+		if cleared >= MAX_CLEARS_PER_PASS:
+			break
+		if await _carry_to_dump(token, painting):
+			cleared += 1
+		if not still_running(token):
+			return false
+	if cleared > 0:
+		# The bake still has the paintings where they were
+		await nav.ensure_baked(get_tree().current_scene, true)
+	return still_running(token)
+
+
+func _paintings_near(plane: MeshInstance3D) -> Array:
+	"""Loose paintings in front of the canvas: not hung on a nail, not held,
+	not already on the pile."""
+	var found := []
+	var dump = _dump_corner(plane)
+	for painting in get_tree().current_scene.find_children("*", "RigidBody3D", true, false):
+		if not painting is CarryablePainting:
+			continue
+		var carry := _carry_component(painting)
+		if not carry or carry.is_carried or carry.get("is_resting_on_nail"):
+			continue
+		if painting.global_position.distance_to(plane.global_position) > CLEAR_RADIUS:
+			continue
+		if dump and _flat_distance(painting.global_position, dump.target) < CORNER_PILE_RADIUS:
+			continue
+		if _pickup_tries.get(painting, 0) >= MAX_PICKUP_TRIES:
+			continue  # wedged somewhere it can't be pulled out of
+		found.append(painting)
+	found.sort_custom(func(a, b): return a.global_position.distance_to(player.global_position) < b.global_position.distance_to(player.global_position))
+	return found
+
+
+func _carry_component(painting: Node) -> CarryableComponent:
+	for child in painting.get_children():
+		if child is CarryableComponent:
+			return child
+	return null
+
+
+func _carry_to_dump(token: int, painting: RigidBody3D) -> bool:
+	"""Walk up to a painting, pick it up, carry it to the dump corner and toss
+	it onto the pile, the way a player tidies up."""
+	var dump = _dump_corner(PaintingModeManager.painting_system_2d.painting_plane)
+	var carry := _carry_component(painting)
+	if not dump or not carry:
+		return false
+	# Stand back on the room side: held paintings float 1.5 m in front, and from
+	# any closer the bot would be pulling it into the wall behind it
+	var away := player.global_position - painting.global_position
+	away.y = 0.0
+	var near: Vector3 = nav.closest_point(painting.global_position + away.normalized() * PICKUP_DISTANCE)
+	if not await _go_to(token, near):
+		return false
+	if _flat_distance(player.global_position, painting.global_position) > PICKUP_DISTANCE + 1.0:
+		return false
+	player.autoplay_look_at(Vector3(painting.global_position.x, player.global_position.y + EYE_HEIGHT - 0.3, painting.global_position.z))
+	if not await _wait_for_look(token):
+		return false
+	var interaction = player.get("_interaction_component")
+	if interaction.is_carrying:
+		return false
+	carry.pickup(interaction)
+	_carrying = carry
+	# The carry gives up if the painting can't follow within its 0.5 s settle window
+	if not await _wait(token, 0.8):
+		return false
+	if not carry.is_carried:
+		_carrying = null
+		_pickup_tries[painting] = _pickup_tries.get(painting, 0) + 1
+		return false  # it snagged on something and slipped out of the bot's hands
+	var arrived := await _go_to(token, dump.stand)
+	if not still_running(token):
+		return false
+	if not carry.is_carried:
+		_carrying = null
+		_pickup_tries[painting] = _pickup_tries.get(painting, 0) + 1
+		return false
+	if not arrived:
+		interaction.drop_carried_object()  # couldn't get there: set it down here
+		_carrying = null
+		return false
+	player.autoplay_look_at(dump.target)
+	if not await _wait_for_look(token):
+		return false
+	interaction.throw_carried_object(TOSS_POWER)
+	_carrying = null
+	return await _wait(token, 1.0)
+
+
+func _dump_corner(plane: MeshInstance3D) -> Variant:
+	"""One corner of the studio per scene where cleared paintings get tossed:
+	reachable on foot, a few metres from the canvas, away from doors, with
+	walls on two perpendicular sides and open floor on the others (so it's a
+	corner, not a corridor or doorway). Searched on a grid rather than at
+	random so it's the same corner every time, and cached so they all land on
+	one pile."""
+	var scene := get_tree().current_scene
+	if _dump.get("scene") == scene:
+		return _dump
+	var doors := scene.find_children("*", "DoorInteraction", true, false)
+	var origin := _stand_point_for(plane)
+	var best := {}
+	var best_score := INF
+	for x in range(-CORNER_SEARCH, CORNER_SEARCH + 1):
+		for z in range(-CORNER_SEARCH, CORNER_SEARCH + 1):
+			var spot: Vector3 = nav.closest_point(origin + Vector3(x, 0.0, z))
+			if absf(spot.y - origin.y) > 0.5:
+				continue  # another floor
+			if _flat_distance(spot, plane.global_position) < CORNER_MIN_FROM_CANVAS:
+				continue
+			if doors.any(func(d): return _flat_distance(spot, d.global_position) < CORNER_MIN_FROM_DOOR):
+				continue
+			var corner = _corner_at(spot)
+			if not corner:
+				continue
+			# Tightest corner wins; nearer the canvas breaks ties (shorter trips)
+			var score: float = corner.score + 0.05 * _flat_distance(spot, plane.global_position)
+			if score < best_score and nav.can_reach(origin, corner.stand):
+				best_score = score
+				best = corner
+	if best.is_empty():
+		return null
+	best.scene = scene
+	_dump = best
+	return _dump
+
+
+func _corner_at(spot: Vector3) -> Variant:
+	"""If walls close in `spot` on two perpendicular sides and the other two
+	are open, return where to stand and where to toss."""
+	var eye := spot + Vector3.UP * 1.0
+	var hits: Array[float] = []
+	for i in 8:
+		var dir := Vector3.FORWARD.rotated(Vector3.UP, i * PI / 4.0)
+		hits.append(_wall_distance(eye, dir))
+	for i in range(0, 8, 2):
+		var a := i
+		var b := (i + 2) % 8
+		if hits[a] < CORNER_PROBE and hits[b] < CORNER_PROBE \
+				and hits[(a + 4) % 8] >= CORNER_PROBE and hits[(b + 4) % 8] >= CORNER_PROBE \
+				and hits[(a + 1) % 8] < CORNER_PROBE * 1.5:
+			var dir_a := Vector3.FORWARD.rotated(Vector3.UP, a * PI / 4.0)
+			var dir_b := Vector3.FORWARD.rotated(Vector3.UP, b * PI / 4.0)
+			var apex := spot + dir_a * hits[a] + dir_b * hits[b]
+			var out := -(dir_a + dir_b).normalized()
+			var stand: Vector3 = nav.closest_point(apex + out * TOSS_FROM)
+			var target := apex + Vector3.UP * TOSS_HEIGHT
+			return {"stand": stand, "target": target, "score": hits[a] + hits[b]}
+	return null
+
+
+func _wall_distance(from: Vector3, dir: Vector3) -> float:
+	"""Distance to the nearest wall along `dir`, looking past props."""
+	var query := PhysicsRayQueryParameters3D.create(from, from + dir * CORNER_PROBE * 1.5)
+	query.exclude = [player.get_rid()]
+	var space := player.get_world_3d().direct_space_state
+	for i in 4:
+		var hit := space.intersect_ray(query)
+		if hit.is_empty():
+			return INF
+		if not hit.collider is PhysicsBody3D or hit.collider is StaticBody3D:
+			return from.distance_to(hit.position)
+		var skip := query.exclude
+		skip.append(hit.rid)
+		query.exclude = skip
+	return INF
 
 
 # --- Canvas geometry ---
@@ -366,6 +573,8 @@ func _follow_path(token: int, path: PackedVector3Array) -> bool:
 		player.autoplay_move = Vector2(local.x, local.z).normalized() * speed
 
 		await get_tree().physics_frame
+		if not still_running(token):
+			break
 		if dist < best_dist - STUCK_PROGRESS:
 			best_dist = dist
 			since_progress = 0.0

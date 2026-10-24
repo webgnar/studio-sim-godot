@@ -17,8 +17,9 @@ A screensaver-style bot that plays the studio for the player while they're away.
 
 | Behavior | Gate | What it does |
 | --- | --- | --- |
+| Clear the canvas | loose paintings within 3.5 m of the canvas | Before painting and after each detach, walks up to each loose painting (up to 3 per pass), picks it up, carries it to one dump corner of the studio and tosses it onto the pile. The corner is found once per scene on a 1 m grid (walls on two perpendicular sides, at least 5 m from the canvas and 3 m from doors), so it's the same corner every launch. If autoplay stops mid-carry, the painting is set down. A painting that slips out twice is left alone for the session. |
 | Wander | always | Pathfinds on foot to 1 to 3 random reachable spots and looks around at each. |
-| Paint the canvas | at least one sticker owned, canvas reachable on foot | Pathfinds to the active studio canvas and paints in plain view: the sticker ghost is dragged across the canvas through a few "considering" stops while it eases into its rotation and size, then placed with the same screen-centre click a player uses. Then presses the red Detach button. Stops detaching after 3 per session so paintings don't pile up. Restores the player's sticker selection afterwards. |
+| Paint the canvas | at least one sticker owned, canvas reachable on foot | Pathfinds to the active studio canvas and paints in plain view: the sticker ghost is dragged across the canvas through a few "considering" stops while it eases into its rotation and size, then placed with the same screen-centre click a player uses. Then presses the red Detach button. Stops detaching after 3 per session. Restores the player's sticker selection afterwards. |
 
 ## Tuning how it paints
 
