@@ -33,6 +33,10 @@ The current strategy is modelled on the Hall of Fame paintings (`res://hall_of_f
 4. **Focal:** one big subject on the centre or a thirds line, sitting on the horizon when there is one. Sometimes a few subjects stacked into a figure.
 5. **Accents:** a few small lines and arcs near the focal point.
 
+**Colour:** each painting gets a scheme: a key colour family (yellow, orange, red, pink, purple, blue, teal, green or black/white/grey), skipping the last three used so consecutive paintings change colour, plus a second and an accent colour (same family, neighbours, the complement, or greys). Every sticker's colour is measured once from its pixels (main hue, how colourful, how dense), custom stickers included, and picks are weighted by how well a sticker fits the slot it's filling. The background takes the key colour, so the overall colour field changes from painting to painting.
+
+**Meticulous paintings:** `METICULOUS_CHANCE` (about a third) of paintings are planned in exact order instead of in layers: a calm square-laid ground, then a colour-sorted specimen chart, a checkerboard of two stickers, concentric rings, four-fold mirror symmetry, or rows growing steadily in size. Each of those stickers is nudged into place with a few tiny corrections and a longer settle before it goes down.
+
 What each sticker is good for (fill, texture, band, line, frame, motif, subject) is the `ROLES` table at the top of the painter, keyed by sticker id. Custom and bought stickers aren't in the table, so they're guessed from their shape. `STRUCTURES` and `ARRANGEMENTS` weight how often each layout is picked. If the canvas already has stickers on it (someone else's painting), the background and structure are skipped so their work isn't buried.
 
 Plans are made in viewer space (x right, y down, 0..1, rotation 0 = upright as the player sees it), and the painter converts them with the canvas's transform, so they come out upright on any canvas.
