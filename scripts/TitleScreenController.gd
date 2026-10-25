@@ -281,7 +281,7 @@ func _transition_to_game(scene_path: String, wipe_data: bool) -> void:
 		_wipe_save_data()
 
 	# Start loading the next scene in the background while animations play
-	ResourceLoader.load_threaded_request(scene_path)
+	LoadingScreen.begin_preload(scene_path)
 
 	# Disconnect chaining signal so stopping doesn't start "pan"
 	if camera_anim.animation_finished.is_connected(_on_camera_animation_finished):
@@ -302,9 +302,8 @@ func _transition_to_game(scene_path: String, wipe_data: bool) -> void:
 	UIManager.current_state = -1 as UIManager.GameState
 	UIManager.change_state(UIManager.GameState.GAMEPLAY)
 
-	# Grab the preloaded scene and transition
-	var scene = ResourceLoader.load_threaded_get(scene_path) as PackedScene
-	SceneTransition.fade_to_packed_scene(scene)
+	# Sticker loading screen finishes the load, warms up the world, then reveals it
+	LoadingScreen.load_scene(scene_path)
 
 func _on_quit_pressed():
 	"""Quit the game"""
