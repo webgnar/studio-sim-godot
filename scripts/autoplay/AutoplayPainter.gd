@@ -198,7 +198,10 @@ const FORM_REFINE := 30              ## most marks calming the specks around the
 const FORM_REFINE_CHANCE := 0.0      ## a round also covers specks that clash with their mass (off: chops the masses up with this library)
 const ACCENT_CHANCE := 0.8           ## share of found forms that get a personality
 const ACCENTS := {"beads": 3, "crown": 2, "fringe": 3, "jewel": 2, "stitch": 2}   ## kinds of personality and how often each is picked
-const ACCENT_MAX := 6                ## most accent marks per form
+const ACCENT_MAX := 24               ## most accent marks per form
+const ACCENT_SIZE := Vector2(1.3, 1.5)   ## accent sticker size, as a multiple of the smallest sticker size (louder when higher)
+const STUDIO_VARIETY := 0.6          ## share of studio picks that ignore the learned colour scheme (still the right kind of sticker)
+const STUDIO_REUSE := 0.5            ## how likely a studio pick reuses a sticker already in the painting (1 = no preference, below 1 = prefers new ones)
 const FORM_LINE_CHANCE := 0.5        ## part of the form's edge is also drawn with pen marks
 const METICULOUS := {"catalog": 1, "checker": 2, "rings": 2, "mandala": 3, "gradient": 2}
 
@@ -272,6 +275,7 @@ var _forms: Array[PackedVector2Array] = []   ## studio forms, canvas-width units
 var _keep_out := PackedByteArray()  ## coverage grid with only the forms bare: nothing goes there
 var _found: Array[Dictionary] = []  ## the forms found this painting (see _find_form), for accents
 var _any_sticker := false          ## every pick is any sticker at all (studio paintings)
+var _variety := false              ## studio painting: picks loosen the colour scheme (STUDIO_VARIETY, STUDIO_REUSE)
 var _zoom := 1.0                    ## how close the current squint-and-define round looks (1 = first round)
 var _form_ink := -1               ## what the forms are filled with, for touching them up
 var last_carve_source := ""   ## id of the sticker whose silhouette was last carved, for previews
@@ -374,6 +378,7 @@ func plan_painting(aspect: float, add_on: bool = false) -> Array[Dictionary]:
 	_form_ink = -1
 	_zoom = 1.0
 	_any_sticker = false
+	_variety = false
 	_found.clear()
 	_focus_base = randf_range(0.35, 0.85)
 	_energy_base = randf_range(0.25, 0.8)
@@ -397,6 +402,7 @@ func plan_painting(aspect: float, add_on: bool = false) -> Array[Dictionary]:
 	if not add_on and randf() < STUDIO_CHANCE:
 		last_style = "studio, " + family
 		late_fill = true
+		_variety = true
 		_any_sticker = randf() < STUDIO_ANY_STICKER
 		if _any_sticker:
 			last_style += ", any sticker"
@@ -1078,15 +1084,16 @@ func _accent_forms(plan: Array[Dictionary]) -> void:
 		var outline: PackedVector2Array = found.outline
 		var light: float = found.light
 		var kind := _weighted(ACCENTS)
-		var size := _min_size * randf_range(1.0, 1.1)
+		var size := _min_size * randf_range(ACCENT_SIZE.x, ACCENT_SIZE.y)
 		var pen := ["fringe", "stitch"].has(kind)
 		var ink := _pick("pen", used, "accent") if pen else _pick_by("motif", func(i): return absf(_color(i).light - light) >= FORM_CONTRAST, used, "accent")
 		used.append(ink)
-		var count := randi_range(2, ACCENT_MAX)
+		var count := randi_range(maxi(2, ACCENT_MAX / 3), ACCENT_MAX)
 		var points := _resample(outline, size * (0.9 if kind == "beads" else 1.3))
 		var n := points.size()
 		if n < 3:
 			continue
+		count = mini(count, n / (2 if kind == "stitch" else 1))   # never round the edge twice
 		var start := randi() % n
 		if kind == "crown":
 			for k in n:
@@ -1297,10 +1304,11 @@ func _pick_by(role: String, test: Callable, avoid: Array = [], slot: String = "a
 			candidates.append(i)
 	if candidates.is_empty():
 		return _pick(role, avoid, slot)
+	var free := _variety and randf() < STUDIO_VARIETY
 	var weights: Array[float] = []
 	var total := 0.0
 	for i in candidates:
-		var w := _color_weight(i, slot) * (2.0 if i in _palette else 1.0)
+		var w := _pick_weight(i, slot, free)
 		weights.append(w)
 		total += w
 	var r := randf() * total
@@ -2084,10 +2092,11 @@ func _pick(role: String, avoid: Array = [], slot: String = "any") -> int:
 				candidates.append(i)
 	if candidates.is_empty():
 		return 0
+	var free := _variety and randf() < STUDIO_VARIETY
 	var weights: Array[float] = []
 	var total := 0.0
 	for i in candidates:
-		var w := _color_weight(i, slot) * (2.0 if i in _palette else 1.0)
+		var w := _pick_weight(i, slot, free)
 		weights.append(w)
 		total += w
 	var r := randf() * total
@@ -2163,6 +2172,17 @@ func _choose_scheme() -> void:
 			_scheme = {"key": key, "second": -1.0, "accent": fposmod(key + 0.5, 1.0), "neutral": 0.6}
 		_:
 			_scheme = {"key": key, "second": -1.0, "accent": key, "neutral": 0.8}
+
+
+func _pick_weight(sticker: int, slot: String, free: bool) -> float:
+	"""How likely a candidate is picked: the colour scheme's weight, doubled
+	for stickers already in the painting. In a studio painting a free pick
+	(STUDIO_VARIETY) drops the scheme and every sticker counts alike, and
+	stickers already used count STUDIO_REUSE instead of double, so the
+	painting draws on much more of the library."""
+	if not _variety:
+		return _color_weight(sticker, slot) * (2.0 if sticker in _palette else 1.0)
+	return (1.0 if free else _color_weight(sticker, slot)) * (STUDIO_REUSE if sticker in _palette else 1.0)
 
 
 func _color_weight(sticker: int, slot: String) -> float:
