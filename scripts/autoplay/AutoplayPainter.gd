@@ -196,6 +196,9 @@ const FORM_TINIEST := 0.006          ## smallest form any round will take (share
 const FORM_PASSES := 8               ## most squint-and-define rounds per painting
 const FORM_REFINE := 30              ## most marks calming the specks around the forms per round
 const FORM_REFINE_CHANCE := 0.0      ## a round also covers specks that clash with their mass (off: chops the masses up with this library)
+const ACCENT_CHANCE := 0.8           ## share of found forms that get a personality
+const ACCENTS := {"beads": 3, "crown": 2, "fringe": 3, "jewel": 2, "stitch": 2}   ## kinds of personality and how often each is picked
+const ACCENT_MAX := 6                ## most accent marks per form
 const FORM_LINE_CHANCE := 0.5        ## part of the form's edge is also drawn with pen marks
 const METICULOUS := {"catalog": 1, "checker": 2, "rings": 2, "mandala": 3, "gradient": 2}
 
@@ -267,6 +270,7 @@ var _add_on := false
 var _cover_margin := COVER_MARGIN   ## 0 when looking at what actually went down
 var _forms: Array[PackedVector2Array] = []   ## studio forms, canvas-width units
 var _keep_out := PackedByteArray()  ## coverage grid with only the forms bare: nothing goes there
+var _found: Array[Dictionary] = []  ## the forms found this painting (see _find_form), for accents
 var _any_sticker := false          ## every pick is any sticker at all (studio paintings)
 var _zoom := 1.0                    ## how close the current squint-and-define round looks (1 = first round)
 var _form_ink := -1               ## what the forms are filled with, for touching them up
@@ -370,6 +374,7 @@ func plan_painting(aspect: float, add_on: bool = false) -> Array[Dictionary]:
 	_form_ink = -1
 	_zoom = 1.0
 	_any_sticker = false
+	_found.clear()
 	_focus_base = randf_range(0.35, 0.85)
 	_energy_base = randf_range(0.25, 0.8)
 	focus = _focus_base
@@ -755,6 +760,7 @@ func _studio(plan: Array[Dictionary]) -> void:
 		if found.is_empty():
 			continue
 		_forms.append(found.outline)
+		_found.append(found)
 		_keep_out = _form_grid()
 		if _form_ink < 0:
 			_form_ink = found.ink
@@ -764,6 +770,9 @@ func _studio(plan: Array[Dictionary]) -> void:
 		if randf() < FORM_REFINE_CHANCE:
 			_refine(plan)
 	_zoom = 1.0
+	# 8. Personalities: each defined form gets a few subtle decorative
+	# accents of its own
+	_accent_forms(plan)
 	if not _forms.is_empty():
 		last_style += ", found %d form%s" % [_forms.size(), "" if _forms.size() == 1 else "s"]
 	# A trial: something big goes over the middle of it all, gets a long
@@ -1049,6 +1058,76 @@ func _bring_out(plan: Array[Dictionary], found: Dictionary) -> void:
 				break
 	if randf() < FORM_LINE_CHANCE:
 		_draw_edge(plan, _pick("pen", [], "any"), found.outline, randf_range(0.35, 0.8))
+
+
+func _accent_forms(plan: Array[Dictionary]) -> void:
+	"""Give the found forms personalities: each one (ACCENT_CHANCE) picks a
+	kind of accent and a small sticker of its own and gets a few subtle
+	marks of it, so no two forms are decorated alike.
+	beads: a short run of small pieces just inside part of the edge.
+	crown: a few pieces along its top edge, standing outward.
+	fringe: short pen marks across a stretch of the edge, like hair or tassels.
+	jewel: one small contrasting piece somewhere inside, off centre.
+	stitch: pen dashes crossing the edge at even steps."""
+	var keep := _keep_out
+	_keep_out = PackedByteArray()   # accents belong to the forms
+	var used: Array = []
+	for found in _found:
+		if randf() >= ACCENT_CHANCE:
+			continue
+		var outline: PackedVector2Array = found.outline
+		var light: float = found.light
+		var kind := _weighted(ACCENTS)
+		var size := _min_size * randf_range(1.0, 1.1)
+		var pen := ["fringe", "stitch"].has(kind)
+		var ink := _pick("pen", used, "accent") if pen else _pick_by("motif", func(i): return absf(_color(i).light - light) >= FORM_CONTRAST, used, "accent")
+		used.append(ink)
+		var count := randi_range(2, ACCENT_MAX)
+		var points := _resample(outline, size * (0.9 if kind == "beads" else 1.3))
+		var n := points.size()
+		if n < 3:
+			continue
+		var start := randi() % n
+		if kind == "crown":
+			for k in n:
+				if points[k].y < points[start].y:
+					start = k
+			start = (start - count / 2 + n) % n
+		var inward := func(k: int) -> Vector2:
+			var t := (points[(k + 1) % n] - points[(k - 1 + n) % n]).normalized()
+			var o := t.orthogonal()
+			return o if Geometry2D.is_point_in_polygon(points[k] + o * 0.01, outline) else -o
+		match kind:
+			"jewel":
+				var box := _bounds(outline)
+				for t in 30:
+					var q := box.position + box.size * Vector2(randf_range(0.2, 0.8), randf_range(0.2, 0.8))
+					if Geometry2D.is_point_in_polygon(q, outline) and q.distance_to(box.get_center()) > box.size.length() * 0.08:
+						_stamp(plan, ink, Vector2(q.x, q.y * _aspect_fix()), _upright_rotation(), size, false, true)
+						plan[-1].phase = "accent"
+						break
+			_:
+				for c in count:
+					var k := (start + c * (2 if kind == "stitch" else 1)) % n
+					var dir: Vector2 = inward.call(k)
+					var q: Vector2 = points[k]
+					var rot := rad_to_deg(dir.angle())
+					match kind:
+						"beads":
+							q += dir * size * 0.6
+							rot = _upright_rotation()
+						"crown":
+							q -= dir * size * 0.4
+							rot = rad_to_deg((-dir).angle()) + _long_axis_spin(ink)
+						"fringe", "stitch":
+							rot = rad_to_deg(dir.angle()) + _long_axis_spin(ink)
+							if kind == "fringe":
+								q -= dir * size * 0.35
+					if q.y < 0.0 or q.y > _aspect:
+						continue
+					_stamp(plan, ink, Vector2(q.x, q.y * _aspect_fix()), rot + randfn(0.0, 6.0), size, false, true)
+					plan[-1].phase = "accent"
+	_keep_out = keep
 
 
 func _continue_side(plan: Array[Dictionary], found: Dictionary, band: float) -> void:
