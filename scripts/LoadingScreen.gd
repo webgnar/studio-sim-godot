@@ -46,7 +46,6 @@ var is_loading: bool = false
 
 var _root: Control
 var _sticker_layer: Node2D
-var _progress_bar: ColorRect
 var _label: Label
 var _sound_players: Array[AudioStreamPlayer] = []
 var _next_sound_player: int = 0
@@ -60,7 +59,6 @@ var _chunk_queue: Array = []    ## Loaded chunks waiting for their sticker
 var _folder_spots: Dictionary = {}
 var _chunk_timer: float = 0.0
 var _idle_timer: float = 0.0
-var _progress: float = 0.0
 var _dots_timer: float = 0.0
 
 func _ready() -> void:
@@ -80,12 +78,6 @@ func _ready() -> void:
 
 	_sticker_layer = Node2D.new()
 	_root.add_child(_sticker_layer)
-
-	# Thin progress strip along the bottom edge
-	_progress_bar = ColorRect.new()
-	_progress_bar.color = Color(1, 1, 1, 0.85)
-	_progress_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_root.add_child(_progress_bar)
 
 	_label = Label.new()
 	_label.text = "LOADING..."
@@ -147,22 +139,15 @@ func load_scene(scene_path: String) -> void:
 	fade_in.tween_property(_root, "modulate:a", 1.0, FADE_IN_TIME)
 	await fade_in.finished
 
-	# 1. Background-thread load (0% - 70%)
+	# 1. Background-thread load
 	begin_preload(scene_path)
-	var progress := []
-	while true:
-		var status = ResourceLoader.load_threaded_get_status(scene_path, progress)
-		if status == ResourceLoader.THREAD_LOAD_IN_PROGRESS:
-			_set_progress(0.7 * float(progress[0]))
-			await get_tree().process_frame
-			continue
-		break
+	while ResourceLoader.load_threaded_get_status(scene_path) == ResourceLoader.THREAD_LOAD_IN_PROGRESS:
+		await get_tree().process_frame
 	var scene = ResourceLoader.load_threaded_get(scene_path) as PackedScene
 	if scene == null:
 		push_error("LoadingScreen: Failed to load scene: %s" % scene_path)
 		_finish(input_was_enabled)
 		return
-	_set_progress(0.7)
 	_collect_loaded_chunks(true)
 
 	# Let the animation breathe a bit even if the load was instant
@@ -179,15 +164,12 @@ func load_scene(scene_path: String) -> void:
 	await get_tree().process_frame
 	# In case the new scene's setup turned input back on, keep it off until revealed
 	CameraManager.set_player_input(false)
-	_set_progress(0.8)
 
 	# 3. Draw everything around the player once so materials compile now, not mid-play
 	await _warm_up_shaders()
-	_set_progress(0.9)
 
 	# 4. Hold until the world runs smoothly (first-frame scripts, streaming, etc.)
 	await _wait_for_smooth_frames()
-	_set_progress(1.0)
 
 	# Every loaded chunk gets its sticker before the reveal
 	while not _chunk_queue.is_empty() or Time.get_ticks_msec() - started_at < MIN_DISPLAY_TIME * 1000.0:
@@ -249,7 +231,6 @@ func _wait_for_smooth_frames() -> void:
 		var frame_ms = (now - last) / 1000.0
 		last = now
 		smooth_count = smooth_count + 1 if frame_ms < SMOOTH_FRAME_MS else 0
-		_set_progress(0.9 + 0.1 * float(smooth_count) / SMOOTH_FRAMES_NEEDED)
 
 # --- Data chunks ---
 
@@ -328,8 +309,6 @@ func _start_animation() -> void:
 	for child in _sticker_layer.get_children():
 		child.queue_free()
 	_root.modulate.a = 0.0
-	_progress = 0.0
-	_set_progress(0.0)
 	_folder_spots.clear()
 	_chunk_timer = 0.0
 	_idle_timer = 0.0
@@ -370,13 +349,6 @@ func _process(delta: float) -> void:
 
 	_dots_timer += delta
 	_label.visible_characters = 7 + int(_dots_timer * 3.0) % 4
-
-	var screen = _root.size
-	_progress_bar.position = Vector2(0, screen.y - 6)
-	_progress_bar.size = Vector2(screen.x * _progress, 6)
-
-func _set_progress(value: float) -> void:
-	_progress = maxf(_progress, clampf(value, 0.0, 1.0))
 
 func _text_rect() -> Rect2:
 	"""Screen area the LOADING text covers, including the dots"""
