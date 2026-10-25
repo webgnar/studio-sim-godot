@@ -182,13 +182,15 @@ const FORM_LARGEST := 0.2            ## and at most this
 const FORM_SIZE := 0.08              ## the size it most likes to find
 const FORM_BORDER := 0.25            ## most of a form's cells that may lie on the canvas edge
 const FORM_COMPACT := Vector2(0.08, 0.7)   ## 4*pi*area/perimeter^2 range: not a sliver, not a plain blob
-const FORM_RING := Vector2(2.0, 4.0) ## cells of contrast worked in around a found form
-const FORM_FIELDS := 70              ## most marks bringing a form out
+const FORM_RING := Vector2(2.0, 4.0) ## cells round a found form that later rounds leave alone
+const FORM_STRIP := Vector2(0.13, 0.2)   ## length of the strips banding a found form
 const FORM_CONTRAST := 0.3           ## those marks differ from the form by at least this much lightness
 const FORM_INTRUDE := 2              ## sample points a later shape may land inside the form
 const FORM_SAFETY := 0.015           ## shapes count this much bigger when checked against the form, for the hand's wobble
 const FORM_TRIES := 16               ## steps a shape slides away from the form before giving up
-const FORM_ECHO_CHANCE := 0.4        ## a small piece of the form's colour rhymes elsewhere
+const FORM_PASSES := 3               ## most squint-and-define rounds per painting
+const FORM_REFINE := 30              ## most marks calming the specks around the forms per round
+const FORM_REFINE_CHANCE := 0.0      ## a round also covers specks that clash with their mass (off: chops the masses up with this library)
 const FORM_LINE_CHANCE := 0.5        ## part of the form's edge is also drawn with pen marks
 const METICULOUS := {"catalog": 1, "checker": 2, "rings": 2, "mandala": 3, "gradient": 2}
 
@@ -697,27 +699,13 @@ func _studio(plan: Array[Dictionary]) -> void:
 	_stamp(plan, strip, Vector2(edge_x, randf_range(0.2, 0.8)), 90.0 + randf_range(-3.0, 3.0), randf_range(0.5, 0.7), true)
 	_stamp(plan, panel, Vector2(core.x + side * 0.25, core.y - 0.25), randf_range(-15.0, 15.0), randf_range(0.4, 0.55), true)
 	var trial_at := plan.size()
-	# 4. Step back and look: did a form come out of all that? If so, bring
-	# it out; if not, the painting stays an abstraction
-	var found := _find_form(plan)
-	var center := core
-	if not found.is_empty():
-		last_style += ", found a form"
-		_forms.append(found.outline)
-		_keep_out = _form_grid()
-		_form_ink = found.ink
-		var box := _bounds(found.outline)
-		center = Vector2(box.get_center().x, box.get_center().y * _aspect_fix())
-		_bring_out(plan, found)
-	# 5. Rhymes: the panel again, smaller, in the opposite corner, and a
-	# texture balancing it; now and then a bit of the form's colour elsewhere
-	var opposite := Vector2(clampf(1.0 - center.x + side * 0.15, 0.1, 0.9), randf_range(0.75, 0.85))
-	_stamp_around(plan, panel, opposite, randf_range(0.0, 360.0), randf_range(0.25, 0.35), true)
-	_stamp_around(plan, _pick("texture", [panel], "accent"), Vector2(1.0 - opposite.x, randf_range(0.15, 0.25)), randf_range(0.0, 360.0), randf_range(0.25, 0.35), true)
-	if _form_ink >= 0 and randf() < FORM_ECHO_CHANCE:
-		_stamp_around(plan, _form_ink, Vector2(clampf(1.0 - center.x, 0.1, 0.9), randf_range(0.2, 0.8)), randf_range(0.0, 360.0), randf_range(0.14, 0.2), true)
-	# 6. Windows: a loose grid of frames over the lower part, each holding
-	# one contrasting piece; any that would cut into the form are left out
+	# 4. Rhymes: the panel again, smaller, in the opposite corner, and a
+	# texture balancing it
+	var opposite := Vector2(clampf(1.0 - core.x + side * 0.15, 0.1, 0.9), randf_range(0.75, 0.85))
+	_stamp(plan, panel, opposite, randf_range(0.0, 360.0), randf_range(0.25, 0.35), true)
+	_stamp(plan, _pick("texture", [panel], "accent"), Vector2(1.0 - opposite.x, randf_range(0.15, 0.25)), randf_range(0.0, 360.0), randf_range(0.25, 0.35), true)
+	# 5. Windows: a loose grid of frames over the lower part, each holding
+	# one contrasting piece
 	var frame := _pick_frame()
 	var top := randf_range(0.35, 0.5)
 	var x0 := randf_range(0.04, 0.4)
@@ -732,20 +720,36 @@ func _studio(plan: Array[Dictionary]) -> void:
 			var w := Vector2(x0 + (c + 0.5) * cell.x, top + (r + 0.5) * cell.y) + Vector2(randfn(0.0, 1.0), randfn(0.0, 1.0)) * 0.006
 			var size := maxf(cell.x, cell.y * _aspect)
 			var rot := 90.0 if (tex.y > tex.x) != (cell.y * _aspect > cell.x) else 0.0
-			if _intrudes({"sticker": frame, "pos": w, "rot": rot, "size": size}):
-				continue
 			_stamp(plan, frame, w, rot + randf_range(-2.0, 2.0), size * randf_range(0.97, 1.03), false, true)
 			var piece := _pick(["subject", "motif", "texture"].pick_random(), used.slice(maxi(0, used.size() - 2)), ["key", "second", "accent"].pick_random())
 			used.append(piece)
-			_stamp_around(plan, piece, w, _upright_rotation(), minf(cell.x, cell.y * _aspect) * randf_range(0.55, 0.75), true)
-	# 7. Calm sky: pale wisps across the top
+			_stamp(plan, piece, w, _upright_rotation(), minf(cell.x, cell.y * _aspect) * randf_range(0.55, 0.75), true)
+	# 6. Calm sky: pale wisps across the top
 	var wisp := _pick_by("pale", func(i): return _solidity(i) >= 0.7, [veil], "any")
 	var n := randi_range(2, 3)
 	for k in n:
-		_stamp_around(plan, wisp if k % 2 == 0 else veil, Vector2((k + 0.5) / n + randf_range(-0.04, 0.04), randf_range(0.06, 0.12)), randf_range(-20.0, 20.0) + (180.0 if k % 2 else 0.0), randf_range(0.3, 0.45), false)
-	# 8. Settle: one calm field low at the edge
-	_stamp_around(plan, _pick("pale", [], "any"), Vector2(edge_x, randf_range(0.75, 0.88)), randf_range(0.0, 360.0), randf_range(0.3, 0.4), true)
+		_stamp(plan, wisp if k % 2 == 0 else veil, Vector2((k + 0.5) / n + randf_range(-0.04, 0.04), randf_range(0.06, 0.12)), randf_range(-20.0, 20.0) + (180.0 if k % 2 else 0.0), randf_range(0.3, 0.45), false)
+	_stamp(plan, _pick("pale", [], "any"), Vector2(edge_x, randf_range(0.75, 0.88)), randf_range(0.0, 360.0), randf_range(0.3, 0.4), true)
 	_jumble_order(plan, ORDER_JUMBLE)
+	# 7. Squint and refine, over and over: step back, find a form that came
+	# out by itself, define it, calm what's around it, then look again and
+	# tend to another part of the picture, until nothing new comes out
+	var center := core
+	for pass_i in FORM_PASSES:
+		var found := _find_form(plan)
+		if found.is_empty():
+			break
+		_forms.append(found.outline)
+		_keep_out = _form_grid()
+		if _form_ink < 0:
+			_form_ink = found.ink
+			var box := _bounds(found.outline)
+			center = Vector2(box.get_center().x, box.get_center().y * _aspect_fix())
+		_bring_out(plan, found)
+		if randf() < FORM_REFINE_CHANCE:
+			_refine(plan)
+	if not _forms.is_empty():
+		last_style += ", found %d form%s" % [_forms.size(), "" if _forms.size() == 1 else "s"]
 	# A trial: something big goes over the middle of it all, gets a long
 	# look, and comes back off (it would have killed the painting)
 	if randf() < STUDIO_TRIAL_CHANCE:
@@ -765,33 +769,15 @@ func _find_form(plan: Array[Dictionary]) -> Dictionary:
 	care what the shape looks like. Returns {outline (canvas-width units),
 	ink (the sticker most of it is), light}, or {} if nothing came out."""
 	var rows := _cover_rows()
-	var top := _top_stamps(plan)
-	var value := PackedInt32Array()
-	value.resize(top.size())
-	for i in top.size():
-		if top[i] < 0:
-			value[i] = -1
-		else:
-			var light: float = _color(plan[top[i]].sticker).light
-			value[i] = 0 if light < FORM_VALUES[0] else (1 if light < FORM_VALUES[1] else 2)
-	# Squint: each spot takes the value most of its neighbourhood has, so
-	# specks and ragged edges melt into masses
-	for pass_i in FORM_SQUINT:
-		var blurred := value.duplicate()
+	var look := _squint(plan)
+	var top: PackedInt32Array = look.top
+	var value: PackedInt32Array = look.value
+	# Parts already defined (and the ring around them) are done: look elsewhere
+	var near := _near_forms()
+	if not near.is_empty():
 		for i in value.size():
-			var c := i % COVER_GRID
-			var r := i / COVER_GRID
-			var votes := [0, 0, 0]
-			for dr in range(-1, 2):
-				for dc in range(-1, 2):
-					var nc := c + dc
-					var nr := r + dr
-					if nc >= 0 and nr >= 0 and nc < COVER_GRID and nr < rows and value[nr * COVER_GRID + nc] >= 0:
-						votes[value[nr * COVER_GRID + nc]] += 1
-			var most := votes.find(votes.max())
-			if votes[most] >= 5:
-				blurred[i] = most
-		value = blurred
+			if near[i] <= FORM_RING.y + 1.0:
+				value[i] = -1
 	var seen := PackedByteArray()
 	seen.resize(top.size())
 	var best := {}
@@ -839,6 +825,12 @@ func _find_form(plan: Array[Dictionary]) -> Dictionary:
 			continue
 		# Mid-sized, with a few stray ideas: no preference for any kind of shape
 		var score := -absf(log(share / FORM_SIZE)) + randf() * 0.6
+		if not near.is_empty():
+			# The further from what's already been worked on, the better
+			var far := 0.0
+			for i in cells:
+				far += near[i]
+			score += minf(far / cells.size() / COVER_GRID, 0.3) * 2.0
 		if score > best_score:
 			var ink: int = inks.keys()[0]
 			for s in inks:
@@ -868,6 +860,96 @@ func _find_form(plan: Array[Dictionary]) -> Dictionary:
 		outline[p] *= scale
 	best.outline = outline
 	return best
+
+
+func _squint(plan: Array[Dictionary]) -> Dictionary:
+	"""What the painting looks like from a step back: for each coverage cell,
+	the stamp on top (top), its value 0 dark / 1 middle / 2 light (raw), and
+	that value after squinting, where each spot takes the value most of its
+	neighbourhood has (value). -1 is bare canvas."""
+	var rows := _cover_rows()
+	var top := _top_stamps(plan)
+	var value := PackedInt32Array()
+	value.resize(top.size())
+	for i in top.size():
+		if top[i] < 0:
+			value[i] = -1
+		else:
+			var light: float = _color(plan[top[i]].sticker).light
+			value[i] = 0 if light < FORM_VALUES[0] else (1 if light < FORM_VALUES[1] else 2)
+	var raw := value.duplicate()
+	# Squint: each spot takes the value most of its neighbourhood has, so
+	# specks and ragged edges melt into masses
+	for pass_i in FORM_SQUINT:
+		var blurred := value.duplicate()
+		for i in value.size():
+			var c := i % COVER_GRID
+			var r := i / COVER_GRID
+			var votes := [0, 0, 0]
+			for dr in range(-1, 2):
+				for dc in range(-1, 2):
+					var nc := c + dc
+					var nr := r + dr
+					if nc >= 0 and nr >= 0 and nc < COVER_GRID and nr < rows and value[nr * COVER_GRID + nc] >= 0:
+						votes[value[nr * COVER_GRID + nc]] += 1
+			var most := votes.find(votes.max())
+			if votes[most] >= 5:
+				blurred[i] = most
+		value = blurred
+	return {"top": top, "raw": raw, "value": value}
+
+
+func _near_forms() -> PackedFloat32Array:
+	"""How far each coverage cell is from the found forms, in cells (0 inside
+	one). Empty if nothing has been found yet."""
+	if _keep_out.is_empty():
+		return PackedFloat32Array()
+	var inside := PackedByteArray()
+	inside.resize(_keep_out.size())
+	for i in inside.size():
+		inside[i] = CELL_FULL if _keep_out[i] != CELL_FULL else 0
+	return _clearance(inside)
+
+
+func _refine(plan: Array[Dictionary]) -> void:
+	"""Calm what's around the forms: wherever a speck's value disagrees with
+	the mass it sits in (what the squint melted away), cover it with that
+	mass's own sticker, so the busy bits settle into the larger shapes.
+	Never touches a form."""
+	var look := _squint(plan)
+	var near := _near_forms()
+	var top: PackedInt32Array = look.top
+	var raw: PackedInt32Array = look.raw
+	var value: PackedInt32Array = look.value
+	for v in 3:
+		# The mass's ink: the sticker most often on top where this value is
+		var counts := {}
+		var turns := {}
+		var grid := PackedByteArray()
+		grid.resize(top.size())
+		var specks := 0
+		for i in top.size():
+			if value[i] == v and raw[i] == v:
+				var s: int = plan[top[i]].sticker
+				counts[s] = counts.get(s, 0) + 1
+				turns[s] = plan[top[i]].rot
+			var speck := value[i] == v and raw[i] != v and (near.is_empty() or near[i] > FORM_RING.y + 1.0)
+			grid[i] = 0 if speck else CELL_FULL
+			if speck:
+				specks += 1
+		if specks == 0 or counts.is_empty():
+			continue
+		# The calmest sticker that's a real part of the mass
+		var total := 0
+		for s in counts:
+			total += counts[s]
+		var ink: int = counts.keys()[0]
+		for s in counts:
+			if counts[s] >= total * 0.15 and (counts[ink] < total * 0.15 or _color(s).busy < _color(ink).busy):
+				ink = s
+		# Fewer, bigger pieces turned the way the mass already runs, so they
+		# join it instead of chopping it up
+		_fill_spots(plan, grid, [ink], 0.2, 0.5, FORM_REFINE / 3, turns[ink], "refine", true, 1)
 
 
 func _top_stamps(plan: Array[Dictionary]) -> PackedInt32Array:
@@ -916,18 +998,25 @@ func _bring_out(plan: Array[Dictionary], found: Dictionary) -> void:
 		if not differs.call(ink):
 			return
 		inks.append(ink)
-	# The ring: cells outside the form, close to it
-	var inside := PackedByteArray()
-	inside.resize(_keep_out.size())
-	for i in inside.size():
-		inside[i] = CELL_FULL if _keep_out[i] != CELL_FULL else 0
-	var room := _clearance(inside)
-	var ring := randf_range(FORM_RING.x, FORM_RING.y)
-	var grid := PackedByteArray()
-	grid.resize(inside.size())
-	for i in grid.size():
-		grid[i] = 0 if inside[i] == 0 and room[i] <= ring else CELL_FULL
-	_fill_spots(plan, grid, inks, _min_size, 0.35, FORM_FIELDS, NAN, "carve", true, 1)
+	# The ring: strips laid end to end along the edge, just outside it and
+	# turned with it, so they read as one band of contrast round the form
+	# rather than a scatter of marks
+	var size := randf_range(FORM_STRIP.x, FORM_STRIP.y)
+	var tex := _texture_size(inks[0])
+	var thick := size * minf(tex.x, tex.y) / maxf(tex.x, tex.y)
+	var shapes := Geometry2D.offset_polygon(found.outline, thick * 0.6, Geometry2D.JOIN_ROUND)
+	if shapes.is_empty():
+		return
+	var points := _resample(shapes[0], size * LINE_OVERLAP)
+	var n := points.size()
+	for k in n:
+		var p := points[k]
+		var tangent := (points[(k + 1) % n] - points[(k - 1 + n) % n]).normalized()
+		var mark := {"sticker": inks[0] if inks.size() == 1 or randf() < 0.75 else inks[1], "pos": Vector2(p.x, p.y * _aspect_fix()), "rot": rad_to_deg(tangent.angle()) + _long_axis_spin(inks[0]) + randfn(0.0, 5.0), "size": size}
+		if p.y < -0.02 or p.y > _aspect + 0.02 or _intrudes(mark, 1):
+			continue
+		_stamp(plan, mark.sticker, mark.pos, mark.rot, size, false, true)
+		plan[-1].phase = "carve"
 	if randf() < FORM_LINE_CHANCE:
 		_draw_edge(plan, _pick("pen", [], "any"), found.outline, randf_range(0.35, 0.8))
 
@@ -974,28 +1063,6 @@ func _intrudes(s: Dictionary, allowed: int = FORM_INTRUDE) -> bool:
 	var inside := _cover(_keep_out, s, false).x
 	_cover_margin = margin
 	return inside > allowed
-
-
-func _stamp_around(plan: Array[Dictionary], sticker: int, pos: Vector2, rot: float, size: float, ponder: bool) -> bool:
-	"""Put a shape down near `pos` without crossing into the form: if it
-	would, slide it away from the form and make it a little smaller until
-	it stops at the edge. Gives up (false) if it can't."""
-	var away := Vector2.ZERO
-	var nearest := INF
-	for f in _forms:
-		var box := _bounds(f)
-		var c := Vector2(box.get_center().x, box.get_center().y * _aspect_fix())
-		if c.distance_to(pos) < nearest:
-			nearest = c.distance_to(pos)
-			away = Vector2(pos.x - c.x, 0.0).normalized()
-	if away == Vector2.ZERO:
-		away = Vector2.RIGHT if randf() < 0.5 else Vector2.LEFT
-	for t in FORM_TRIES:
-		var cand := {"sticker": sticker, "pos": pos + away * 0.025 * t, "rot": rot, "size": maxf(size * pow(0.94, t), _min_size)}
-		if not _intrudes(cand):
-			_stamp(plan, sticker, cand.pos, rot, cand.size, ponder, nearest < 0.35)
-			return true
-	return false
 
 
 func _draw_edge(plan: Array[Dictionary], pen: int, form: PackedVector2Array, share: float) -> void:
