@@ -166,14 +166,29 @@ const ORDER_JUMBLE_METICULOUS := 0.8
 ## How often a painting is meticulous rather than layered.
 const METICULOUS_CHANCE := 0.35
 ## "Studio" paintings follow how zack painted when we watched him (2026-10-25):
-## big crossing shapes, buried by bands and veils, a trial undone, a loose
-## grid of window frames turning the collage into scenes, a dark band worked
-## into a figure, and a calm sky. (No pencil yet: only once the bot can use a
-## bought pencil.)
+## big shapes first, buried by bands and veils, a trial undone, a loose grid
+## of window frames turning the collage into scenes, and a calm sky, all
+## around a figure carved out of negative space: the figure is the gap the
+## other shapes leave, never a sticker on top. (No pencil yet: only once the
+## bot can use a bought pencil.)
 const STUDIO_CHANCE := 0.4
 const PALE_LIGHT := 0.7              ## average luminance for a "pale" veil sticker
-const STUDIO_FIELDS := 110           ## most marks closing a studio painting's canvas under the rest
-const STUDIO_TRIAL_CHANCE := 0.6     ## tries something big over the centre, looks, takes it back
+const STUDIO_FIELDS := 160           ## most strips building a studio painting's ground around the figure
+const STUDIO_TRIAL_CHANCE := 0.6     ## tries something big over the figure, looks, takes it back
+const STUDIO_POSES := {"standing": 3, "arms_up": 2, "leaning": 2, "bust": 2}
+const STUDIO_SECOND_FIGURE := 0.25   ## a smaller figure further off
+const STUDIO_LIGHT_FIGURE := 0.6     ## the figure is pale (else a contrasting colour)
+const FIGURE_FIELDS := 120           ## most marks laying the figure's colour
+const EDGE_FIELDS := 70              ## most small strips cutting the figure's colour back to its edge
+const FIGURE_SPILL := 0.035          ## the figure's colour reaches this far past its edge (canvas widths), so the shapes around meet it
+const FIGURE_CONTRAST := 0.3         ## shapes around the figure differ from it by at least this much lightness
+const FIGURE_INTRUDE := 2            ## sample points a shape may land inside the figure
+const FIGURE_SAFETY := 0.015         ## shapes count this much bigger when checked against the figure, for the hand's wobble
+const FIGURE_TRIES := 16             ## steps a shape slides away from the figure before giving up
+const FIGURE_ECHO_CHANCE := 0.4      ## a small piece of the figure's colour rhymes elsewhere
+const FIGURE_LINE_CHANCE := 0.6      ## the figure's edge is also drawn with pen marks
+const LOST_EDGE_CHANCE := 0.5        ## one shape is let across part of the figure
+const FIGURE_CALM := 0.1             ## the figure's ink is fairly flat (see busy in _color), so it reads as one shape
 const METICULOUS := {"catalog": 1, "checker": 2, "rings": 2, "mandala": 3, "gradient": 2}
 
 ## Colour families a painting's key colour is drawn from (hue 0..1, -1 = black/white/grey).
@@ -242,6 +257,9 @@ var _fill_inks: Array[int] = []   ## what the late fill used, for touching up
 var _looks := 0            ## final looks taken at the finished painting
 var _add_on := false
 var _cover_margin := COVER_MARGIN   ## 0 when looking at what actually went down
+var _figures: Array[PackedVector2Array] = []   ## studio figures, canvas-width units
+var _keep_out := PackedByteArray()  ## coverage grid with only the figures bare: nothing goes there
+var _figure_ink := -1               ## what the figures are filled with, for touching them up
 var last_carve_source := ""   ## id of the sticker whose silhouette was last carved, for previews
 static var _colors: Dictionary = {}
 static var _silhouettes: Dictionary = {}   ## sticker id -> traced outline, see _silhouette()   ## sticker id -> colour summary, see _color()
@@ -337,6 +355,9 @@ func plan_painting(aspect: float, add_on: bool = false) -> Array[Dictionary]:
 	_add_on = add_on
 	_looks = 0
 	_fill_inks.clear()
+	_figures.clear()
+	_keep_out = PackedByteArray()
+	_figure_ink = -1
 	_focus_base = randf_range(0.35, 0.85)
 	_energy_base = randf_range(0.25, 0.8)
 	focus = _focus_base
@@ -639,136 +660,319 @@ func _jumble_order(plan: Array[Dictionary], amount: float) -> void:
 # --- Studio (learned from watching zack paint) ---
 
 func _studio(plan: Array[Dictionary]) -> void:
-	"""Paint the way zack did: big and few first, bury it, rhyme it, frame it
-	into scenes, find a figure, calm the sky, then settle the edges."""
-	var left := randf() < 0.5   # which side the edge strip and the figure go
+	"""Paint the way zack did, toward a figure carved out of negative space.
+	The figure is never a sticker put on top: it's the gap the other shapes
+	leave. Its colour goes down first, a little past its edge, then big
+	shapes are built right up to that edge from every side without crossing
+	it, so the figure reads only where they stop. Then the painting around it
+	gets buried, rhymed, framed into scenes and calmed."""
+	_figures.clear()
+	var left := randf() < 0.5   # which side the figure stands on
 	var side := 1.0 if left else -1.0
-	var edge_x := 0.1 if left else 0.9
-	var figure_x := randf_range(0.3, 0.38) if left else randf_range(0.62, 0.7)
-	# 1. Skeleton: an edge strip, a big oval-ish subject, a bar across it
-	var strip := _pick("band", [], "second")
-	_stamp(plan, strip, Vector2(edge_x, 0.5), 90.0 + randf_range(-3.0, 3.0), randf_range(1.1, 1.3), true)
-	var core := Vector2(randf_range(0.42, 0.58), randf_range(0.4, 0.5))
-	var subject := _pick("subject", [], "key")
-	_stamp(plan, subject, core, _upright_rotation(), randf_range(0.5, 0.65), true)
-	_stamp(plan, _pick("band", [strip], "accent"), core + Vector2(randf_range(-0.05, 0.1), randf_range(0.1, 0.16)), randf_range(-6.0, 6.0), randf_range(0.5, 0.7), true)
-	# 2. Big line stickers as structure, crossing the zones
+	var pose := _weighted(STUDIO_POSES)
+	var figure_x := randf_range(0.3, 0.42) if left else randf_range(0.58, 0.7)
+	_figures.append(_figure(pose, figure_x, randf() < 0.5))
+	last_style += ", figure: " + pose
+	if pose != "bust" and randf() < STUDIO_SECOND_FIGURE:
+		# A second, smaller figure further off: two figures start a story
+		var other := _figure(["standing", "leaning"].pick_random(), 1.0 - figure_x + side * randf_range(0.0, 0.12), left, randf_range(0.28, 0.4))
+		var mine := _bounds(_figures[0]).grow(0.03)
+		if not mine.intersects(_bounds(other)):
+			_figures.append(other)
+			last_style += " + far figure"
+	var body := _bounds(_figures[0])
+	var core := Vector2(body.get_center().x, body.get_center().y * _aspect_fix())
+	# 1. The figure's colour: one calm ink, a little past the figure's edge,
+	# pale or a completely different colour from what will surround it
+	# (a compact shape: long strips would scribble far past the edge)
+	var compact := func(i): var t := _texture_size(i); return maxf(t.x, t.y) / minf(t.x, t.y) < 2.0 and _color(i).busy < FIGURE_CALM
+	var figure_ink: int
+	if randf() < STUDIO_LIGHT_FIGURE:
+		figure_ink = _pick_by("solid", func(i): return _color(i).light >= 0.6 and compact.call(i), [], "any")
+	else:
+		var key: float = _scheme.key
+		_scheme.contrast = fposmod((key if key >= 0.0 else randf()) + randf_range(0.35, 0.65), 1.0)
+		figure_ink = _pick_by("solid", compact, [], "contrast")
+	var figure_light: float = _color(figure_ink).light
+	var spill := _figure_grid(FIGURE_SPILL)
+	_fill_spots(plan, spill, [figure_ink], _min_size, 0.22, FIGURE_FIELDS, NAN, "figure", true)
+	_figure_ink = figure_ink
+	var figure_count := plan.size()
+	# From here on, nothing goes inside the figure
+	_keep_out = _figure_grid(0.0)
+	var differs := func(i): return i != figure_ink and absf(_color(i).light - figure_light) >= FIGURE_CONTRAST
+	# 2. Big and few first: bands standing either side of the figure, a big
+	# shape on its open side, line stickers as structure, each pushed back
+	# from the figure until it stops at the edge
+	var strip := _pick_by("band", differs, [figure_ink], "second")
+	for flank in [-1.0, 1.0]:
+		_stamp_around(plan, strip, Vector2(core.x + flank * randf_range(0.12, 0.2), 0.5), 90.0 + randf_range(-3.0, 3.0), randf_range(1.1, 1.3), true)
+	var open := Vector2(clampf(core.x + side * randf_range(0.28, 0.36), 0.2, 0.8), randf_range(0.35, 0.55))
+	var subject := _pick_by("subject", differs, [figure_ink], "key")
+	_stamp_around(plan, subject, open, _upright_rotation(), randf_range(0.5, 0.65), true)
+	var panel := _pick_by(["texture", "band"].pick_random(), differs, [strip, figure_ink], "second")
+	_stamp_around(plan, panel, Vector2(open.x + randf_range(-0.08, 0.08), open.y + randf_range(0.15, 0.3)), randf_range(-15.0, 15.0) + (90.0 if randf() < 0.5 else 0.0), randf_range(0.55, 0.75), true)
 	for k in randi_range(1, 3):
 		var line := _pick("line", [], ["accent", "second"].pick_random())
-		_stamp(plan, line, core + Vector2(randf_range(-0.25, 0.25), randf_range(-0.25, 0.15)), randf_range(0.0, 360.0), randf_range(0.45, 0.8), true)
-	# 3. Bury it: a big striped/textured panel over one side of the subject,
-	# then big pale veils over most of the canvas, so the first layer
-	# survives only as fragments (this is also what closes the canvas)
-	var panel := _pick(["texture", "band"].pick_random(), [strip], "second")
-	_stamp(plan, panel, Vector2(core.x + side * 0.2, core.y - 0.05), randf_range(-15.0, 15.0) + (90.0 if randf() < 0.5 else 0.0), randf_range(0.65, 0.85), true)
-	var veil := _pick_by("pale", func(i): return _solidity(i) >= 0.6, [], "any")
-	var veils: Array[Vector2] = [core + Vector2(randf_range(-0.05, 0.05), randf_range(0.05, 0.15)), Vector2(1.0 - edge_x, randf_range(0.3, 0.7)), Vector2(randf_range(0.3, 0.7), randf_range(0.8, 0.95))]
-	for v in veils.slice(0, randi_range(2, 3)):
-		_stamp(plan, veil, v, randf_range(0.0, 360.0), randf_range(0.8, 1.1), true)
-	# Close the canvas now, under everything that comes next, so the fill
-	# is buried by the painting instead of burying it
-	var under: Array[int] = [veil]
-	if _solidity(veil) < SOLID_INTERIOR:
-		under.append(_pick_by("solid", func(i): return _color(i).light >= 0.55, [], "any"))
-	_fill_spots(plan, _coverage(plan), under, 0.2, 0.9, STUDIO_FIELDS, NAN, "under", true)
-	# Pieces of the first layer come back through the veil
-	_stamp(plan, strip, Vector2(edge_x, randf_range(0.2, 0.8)), 90.0 + randf_range(-3.0, 3.0), randf_range(0.5, 0.7), true)
-	_stamp(plan, panel, Vector2(core.x + side * 0.25, core.y - 0.25), randf_range(-15.0, 15.0), randf_range(0.4, 0.55), true)
+		_stamp_around(plan, line, open + Vector2(randf_range(-0.2, 0.2), randf_range(-0.25, 0.2)), randf_range(0.0, 360.0), randf_range(0.45, 0.8), true)
+	# 3. Build the rest of the ground right up to the figure: everything
+	# outside it gets covered, the figure's own spill included, with big
+	# shapes first and smaller ones working into the corners of the edge
+	# Solid strips, all standing one way, so the ground closes with big
+	# pieces in one rhythm instead of a random lace of small ones (thin
+	# strips can also get right up to the figure's edge)
+	var strips := func(i): var t := _texture_size(i); return differs.call(i) and maxf(t.x, t.y) / minf(t.x, t.y) >= 1.8
+	# (only ones that really differ from the figure: better one strip
+	# repeated than a second one that blurs the edge)
+	var inks: Array[int] = [_pick_by("solid", strips, [figure_ink], "second")]
+	for k in randi_range(1, 2):
+		var more := _pick_by("solid", strips, inks + [figure_ink], ["key", "accent"][k - 1])
+		if strips.call(more) and not more in inks:
+			inks.append(more)
+	var grid := _coverage(plan.slice(figure_count))
+	var grown := _figure_grid(FIGURE_SPILL)
+	for i in grid.size():
+		grid[i] |= CELL_FULL ^ grown[i]
+	var grain := 90.0 if randf() < 0.7 else 0.0
+	_fill_spots(plan, grid, inks, _min_size, 0.75, STUDIO_FIELDS, grain, "carve", true)
+	# Then work right into the edge: small strips at any angle, cutting the
+	# figure's colour back to its outline (round the head, under the arms)
+	grid = _coverage(plan.slice(figure_count))
+	for i in grid.size():
+		grid[i] |= CELL_FULL ^ _keep_out[i]
+	_fill_spots(plan, grid, inks, _min_size, 0.3, EDGE_FIELDS, NAN, "carve", false, 1)
+	_fill_inks = inks   # touch-ups later use the same strips
+	# A lost edge: one shape is let across part of the figure, the way zack
+	# buries his own focal points, so the figure is suggested, not cut out
+	if randf() < LOST_EDGE_CHANCE:
+		var cross := Vector2(core.x + randf_range(-0.03, 0.03), minf((body.end.y - body.size.y * randf_range(0.1, 0.3)) * _aspect_fix(), 0.9))
+		_stamp(plan, _pick_by("solid", strips, [figure_ink], "accent"), cross, randf_range(-12.0, 12.0), minf(body.size.x * randf_range(1.2, 1.6), 0.45), false)
+	# Bury some of it: a veil or two over the ground (never the figure), and
+	# pieces of the first shapes coming back through
+	var veil := _pick_by("pale", func(i): return _solidity(i) >= 0.6 and differs.call(i), [figure_ink], "any")
+	for k in randi_range(1, 2):
+		_stamp_around(plan, veil, Vector2(clampf(open.x + randf_range(-0.2, 0.2), 0.1, 0.9), randf_range(0.2, 0.8)), randf_range(0.0, 360.0), randf_range(0.5, 0.75), true)
+	_stamp_around(plan, strip, Vector2(core.x - side * randf_range(0.15, 0.3), randf_range(0.2, 0.8)), 90.0 + randf_range(-3.0, 3.0), randf_range(0.5, 0.7), true)
+	_stamp_around(plan, panel, Vector2(open.x, randf_range(0.15, 0.3)), randf_range(-15.0, 15.0), randf_range(0.4, 0.55), true)
 	var trial_at := plan.size()
-	# 4. Rhymes: the panel's texture again, smaller, in the opposite corner,
-	# and a busy texture balancing it diagonally
-	var opposite := Vector2(1.0 - core.x + side * 0.15, randf_range(0.75, 0.85))
-	_stamp(plan, panel, opposite, randf_range(0.0, 360.0), randf_range(0.25, 0.35), true)
-	_stamp(plan, _pick("texture", [panel], "accent"), Vector2(1.0 - opposite.x, randf_range(0.15, 0.25)) * Vector2(1, 1), randf_range(0.0, 360.0), randf_range(0.25, 0.35), true)
-	# 5. A bold full-height band right through where the focal point was
-	var tower := _pick("band", [strip, panel], "accent")
-	_stamp(plan, tower, Vector2(figure_x, 0.5), 90.0 + randf_range(-2.0, 2.0), randf_range(1.1, 1.25), true)
-	# 6. Windows: a loose grid of frames over the lower part, beside the
-	# tower, each filled with one contrasting piece
+	# 4. Rhymes: the panel again, smaller, in the opposite corner, and now and
+	# then a small piece of the figure's colour echoing it somewhere else
+	var corner := Vector2(clampf(core.x - side * 0.3, 0.1, 0.9), randf_range(0.78, 0.88))
+	_stamp_around(plan, panel, corner, randf_range(0.0, 360.0), randf_range(0.25, 0.35), true)
+	_stamp_around(plan, _pick("texture", [panel, figure_ink], "accent"), Vector2(open.x, randf_range(0.12, 0.25)), randf_range(0.0, 360.0), randf_range(0.25, 0.35), true)
+	if randf() < FIGURE_ECHO_CHANCE:
+		_stamp_around(plan, figure_ink, Vector2(clampf(open.x + side * 0.15, 0.1, 0.9), randf_range(0.15, 0.85)), randf_range(0.0, 360.0), randf_range(0.14, 0.2), true)
+	# 5. Windows: a loose grid of frames on the open side, each holding one
+	# contrasting piece; any that would cut into the figure are left out
 	var frame := _pick_frame()
-	var top := randf_range(0.3, 0.4)
-	var x0 := figure_x + side * 0.08 if left else 0.04
-	var x1 := 0.96 if left else figure_x - 0.08
-	var cols := randi_range(2, 3)
-	var rows := randi_range(2, 3)
-	var cell := Vector2((x1 - x0) / cols, (1.0 - top) / rows)
-	var windows: Array[Vector2] = []
-	for r in rows:
-		for c in cols:
-			var w := Vector2(x0 + (c + 0.5) * cell.x, top + (r + 0.5) * cell.y)
-			w += Vector2(randfn(0.0, 1.0), randfn(0.0, 1.0)) * 0.008
-			windows.append(w)
-	# A frame sticker may hold one window or two side by side (sticker 34)
-	var tex := _texture_size(frame)
-	var span := 2 if tex.x / tex.y > 1.5 else 1
-	var tall := tex.y > tex.x
-	for r in rows:
-		var c := 0
-		while c < cols:
-			var k := mini(span, cols - c)
-			var w := Vector2(x0 + (c + k * 0.5) * cell.x, top + (r + 0.5) * cell.y)
-			var width := k * cell.x
-			var height := cell.y * _aspect
-			var size := maxf(width, height) if k == span else maxf(cell.x, height)
-			var rot := (90.0 if tall != (height > width) else 0.0) if k == span else (90.0 if span == 2 else 0.0)
-			_stamp(plan, frame, w + Vector2(randfn(0.0, 1.0), randfn(0.0, 1.0)) * 0.006, rot + randf_range(-2.0, 2.0), size * randf_range(0.97, 1.03), false, true)
-			c += k
-	var used: Array = [frame]
-	for w in windows:
-		var piece := _pick(["subject", "motif", "texture"].pick_random(), used.slice(maxi(0, used.size() - 2)), ["key", "second", "accent"].pick_random())
-		used.append(piece)
-		_stamp(plan, piece, w, _upright_rotation(), minf(cell.x, cell.y * _aspect) * randf_range(0.55, 0.75), true)
-	# A dark lintel along the top row of windows
-	var lintel := _pick_by("band", func(i): return _color(i).light < 0.35, [], "any")
-	_stamp(plan, lintel, Vector2((x0 + x1) / 2.0, top), randf_range(-2.0, 2.0), (x1 - x0) * 1.05, true)
-	# 7. The figure: the tower's lower half goes dark, a body-shaped sticker
-	# inside it, a warm glow at its shoulder, and branches reaching toward
-	# the windows, drawn with small marks
-	var dark := _pick_by("ground", func(i): return _color(i).light < 0.3, [], "any")
-	_stamp(plan, dark, Vector2(figure_x, 0.72), 90.0 + randf_range(-3.0, 3.0), randf_range(0.6, 0.7), true)
-	var body := _pick_by("subject", func(i): var t := _texture_size(i); return t.y > t.x * 1.2, [], "any")
-	_stamp(plan, body, Vector2(figure_x, randf_range(0.55, 0.65)), randf_range(-5.0, 5.0), randf_range(0.35, 0.45), true)
-	var glow := _pick_by("subject", func(i): var c := _color(i); return c.hue >= 0.0 and (c.hue < 0.12 or c.hue > 0.95) and c.colorful > 0.3, [], "any")
-	_stamp(plan, glow, Vector2(figure_x - side * 0.1, randf_range(0.35, 0.42)), randf_range(0.0, 360.0), randf_range(0.2, 0.3), true)
-	var pen := _pick("pen", [], "any")
-	for b in randi_range(2, 3):
-		var start := Vector2(figure_x, randf_range(0.36, 0.45))
-		var heading := Vector2(side, randf_range(-0.6, 0.2)).normalized()
-		_mark_line(plan, pen, start, heading, randf_range(0.18, 0.3), randf_range(-0.8, 0.8))
-	# 8. Calm sky: pale wisps across the top, then a few loose scaffold lines
-	var wisp := _pick("pale", [veil], "any")
-	var n := randi_range(3, 4)
+	var top := randf_range(0.4, 0.52)
+	var x0 := (body.end.x + 0.03) if left else 0.04
+	var x1 := 0.96 if left else (body.position.x - 0.03)
+	if x1 - x0 > 0.25:
+		var cols := clampi(int((x1 - x0) / 0.2), 1, 3)
+		var rows := randi_range(2, 3)
+		var cell := Vector2((x1 - x0) / cols, (1.0 - top) / rows)
+		var tex := _texture_size(frame)
+		var used: Array = [frame]
+		for r in rows:
+			for c in cols:
+				var w := Vector2(x0 + (c + 0.5) * cell.x, top + (r + 0.5) * cell.y) + Vector2(randfn(0.0, 1.0), randfn(0.0, 1.0)) * 0.006
+				var size := maxf(cell.x, cell.y * _aspect)
+				var rot := 90.0 if (tex.y > tex.x) != (cell.y * _aspect > cell.x) else 0.0
+				if _intrudes({"sticker": frame, "pos": w, "rot": rot, "size": size}):
+					continue
+				_stamp(plan, frame, w, rot + randf_range(-2.0, 2.0), size * randf_range(0.97, 1.03), false, true)
+				var piece := _pick(["subject", "motif", "texture"].pick_random(), used.slice(maxi(0, used.size() - 2)), ["key", "second", "accent"].pick_random())
+				used.append(piece)
+				_stamp_around(plan, piece, w, _upright_rotation(), minf(cell.x, cell.y * _aspect) * randf_range(0.55, 0.75), true)
+	# 6. Draw the figure's edge: small pen marks along part of it, just
+	# outside, the way the carved forms are drawn
+	var pen := _pick("pen", [figure_ink], "any")
+	if randf() < FIGURE_LINE_CHANCE:
+		_draw_edge(plan, pen, _figures[0], randf_range(0.35, 0.8))
+	# 7. Calm sky: pale wisps across the top, around the figure
+	var wisp := _pick_by("pale", func(i): return _solidity(i) >= 0.7 and differs.call(i), [veil, figure_ink], "any")
+	var n := randi_range(2, 3)
 	for k in n:
-		_stamp(plan, wisp if k % 2 == 0 else veil, Vector2((k + 0.5) / n + randf_range(-0.04, 0.04), randf_range(0.08, 0.14)), randf_range(-20.0, 20.0) + (180.0 if k % 2 else 0.0), randf_range(0.42, 0.55), false)
-	for k in randi_range(1, 3):
-		_mark_line(plan, pen, Vector2(randf_range(0.45, 0.9) if left else randf_range(0.1, 0.55), randf_range(0.05, 0.12)), Vector2.DOWN.rotated(randf_range(-0.2, 0.2)) if k % 2 == 0 else Vector2.RIGHT.rotated(randf_range(-0.1, 0.1)), randf_range(0.12, 0.22), 0.0)
-	# 9. Settle: calm one edge field, veil the figure's middle a little
-	_stamp(plan, _pick("pale", [], "any"), Vector2(edge_x, randf_range(0.7, 0.85)), randf_range(0.0, 360.0), randf_range(0.3, 0.4), true)
-	_stamp(plan, veil, Vector2(figure_x + side * 0.05, 0.5), randf_range(0.0, 360.0), randf_range(0.25, 0.35), true)
+		_stamp_around(plan, wisp if k % 2 == 0 else veil, Vector2((k + 0.5) / n + randf_range(-0.04, 0.04), randf_range(0.06, 0.12)), randf_range(-20.0, 20.0) + (180.0 if k % 2 else 0.0), randf_range(0.3, 0.45), false)
+	# 8. Settle: one calm field low on the open side
+	_stamp_around(plan, _pick_by("pale", differs, [figure_ink], "any"), Vector2(clampf(open.x + side * 0.1, 0.1, 0.9), randf_range(0.75, 0.88)), randf_range(0.0, 360.0), randf_range(0.3, 0.4), true)
+	# Close whatever's still bare with the same strips, before the late fill
+	# could bring in something new
+	grid = _coverage(plan)
+	for i in grid.size():
+		grid[i] |= CELL_FULL ^ grown[i]
+	_fill_spots(plan, grid, inks, _min_size, 0.5, FINAL_LOOK_MAX, grain, "carve")
 	_jumble_order(plan, ORDER_JUMBLE)
-	# A trial: something big goes over the buried centre, gets a long look,
-	# and comes back off (it would have killed the painting)
+	# A trial: something big goes over the figure, gets a long look, and
+	# comes back off (it would have killed the painting)
 	if randf() < STUDIO_TRIAL_CHANCE:
-		var trial := _pick("texture", [], "any")
-		var at := core + Vector2(randf_range(-0.05, 0.05), randf_range(-0.05, 0.05))
-		plan.insert(trial_at, {"sticker": trial, "pos": at, "rot": randf_range(0.0, 360.0), "size": randf_range(0.7, 0.9), "ponder": true, "precise": false, "phase": "trial", "fix": true})
+		var trial := _pick("texture", [figure_ink], "any")
+		var at := core + Vector2(randf_range(-0.04, 0.04), randf_range(-0.04, 0.04))
+		plan.insert(trial_at, {"sticker": trial, "pos": at, "rot": randf_range(0.0, 360.0), "size": randf_range(0.6, 0.8), "ponder": true, "precise": false, "phase": "trial", "fix": true})
 		plan.insert(trial_at + 1, {"action": "undo", "fix": true, "stare": randf_range(STARE_MIN, STARE_MAX) * 1.5, "stare_pos": at})
 
 
-func _mark_line(plan: Array[Dictionary], pen: int, start: Vector2, heading: Vector2, length: float, bend: float) -> void:
-	"""A drawn line from small pen marks chained end to end, bending a
-	little as it goes (like the carved outlines, but open)."""
+func _figure(pose: String, x: float, mirror: bool, height: float = -1.0) -> PackedVector2Array:
+	"""A simple human outline, in canvas-width units (y down, x 0..1, y
+	0.._aspect). Built from a head, neck, torso and limbs merged into one
+	shape. Standing poses stand on (or run off) the bottom edge; a bust is
+	big and cropped by it. `height` is a fraction of the canvas height."""
+	var parts: Array[PackedVector2Array] = []
+	var limb := func(points: Array, r: float):
+		for poly in Geometry2D.offset_polyline(PackedVector2Array(points), r, Geometry2D.JOIN_ROUND, Geometry2D.END_ROUND):
+			parts.append(poly)
+	var torso: PackedVector2Array
+	var top := -0.5   # unit-space top of the figure, so it can be placed
+	var bottom := 0.5
+	if pose == "bust":
+		torso = PackedVector2Array([Vector2(-0.46, 0.22), Vector2(-0.2, 0.08), Vector2(0.2, 0.08), Vector2(0.46, 0.22), Vector2(0.52, 0.75), Vector2(-0.52, 0.75)])
+		limb.call([Vector2(0.0, -0.05), Vector2(0.0, 0.1)], 0.075)
+		parts.append(_circle(Vector2(0.0, -0.2), 0.17 * randf_range(0.9, 1.1)))
+		top = -0.37
+		bottom = 0.75
+	else:
+		torso = PackedVector2Array([Vector2(-0.13, -0.31), Vector2(0.13, -0.31), Vector2(0.095, -0.02), Vector2(0.11, 0.05), Vector2(-0.11, 0.05), Vector2(-0.095, -0.02)])
+		limb.call([Vector2(0.0, -0.37), Vector2(0.0, -0.29)], 0.032)
+		parts.append(_circle(Vector2(0.0, -0.415), 0.085 * randf_range(0.9, 1.1)))
+		var arm := 0.034
+		match pose:
+			"arms_up":
+				# Reaching up, like branches
+				for s in [-1.0, 1.0]:
+					var lift := randf_range(0.0, 0.08)
+					limb.call([Vector2(s * 0.13, -0.29), Vector2(s * 0.24, -0.4 - lift), Vector2(s * randf_range(0.27, 0.34), -0.56 - lift)], arm)
+				top = -0.6
+			"leaning":
+				limb.call([Vector2(0.14, -0.29), Vector2(0.25, -0.13), Vector2(0.1, -0.03)], arm)   # hand on hip
+				limb.call([Vector2(-0.14, -0.29), Vector2(-0.21, -0.08), Vector2(-0.26, 0.1)], arm)
+			_:
+				for s in [-1.0, 1.0]:
+					limb.call([Vector2(s * 0.14, -0.29), Vector2(s * randf_range(0.2, 0.24), -0.08), Vector2(s * randf_range(0.25, 0.3), 0.1)], arm)
+		if pose == "leaning":
+			limb.call([Vector2(-0.04, 0.03), Vector2(-0.03, 0.27), Vector2(-0.03, 0.5)], 0.045)
+			limb.call([Vector2(0.06, 0.03), Vector2(0.14, 0.27), Vector2(0.21, 0.5)], 0.045)
+		else:
+			for s in [-1.0, 1.0]:
+				limb.call([Vector2(s * 0.06, 0.03), Vector2(s * 0.1, 0.27), Vector2(s * randf_range(0.12, 0.16), 0.5)], 0.045)
+	# (each part overlaps one merged before it: torso, neck, head, limbs)
+	var shape := Geometry2D.offset_polygon(torso, 0.02, Geometry2D.JOIN_ROUND)[0]
+	for part in parts:
+		var merged := Geometry2D.merge_polygons(shape, part)
+		var best := 0.0
+		for poly in merged:
+			var area := absf(_signed_area(poly))
+			if area > best:
+				best = area
+				shape = poly
+	# Place it: slimmer or stouter, maybe mirrored and tilted a little
+	var stretch := randf_range(0.85, 1.15) * (-1.0 if mirror else 1.0)
+	var tilt := deg_to_rad(randf_range(-6.0, 6.0) if pose == "leaning" else randf_range(-2.5, 2.5))
+	var scale: float
+	var center: Vector2
+	if pose == "bust":
+		scale = (height if height > 0.0 else randf_range(0.75, 0.95)) * _aspect
+		center = Vector2(x, randf_range(0.1, 0.16) * _aspect - top * scale)
+	else:
+		scale = (height if height > 0.0 else randf_range(0.62, 0.8)) * _aspect / (bottom - top)
+		var feet := randf_range(0.93, 1.05) if height <= 0.0 else randf_range(0.6, 0.78)
+		center = Vector2(x, feet * _aspect - bottom * scale)
+	var out := PackedVector2Array()
+	for p in shape:
+		out.append(center + Vector2(p.x * stretch, p.y).rotated(tilt) * scale)
+	return out
+
+
+func _circle(c: Vector2, r: float) -> PackedVector2Array:
+	var out := PackedVector2Array()
+	for k in 20:
+		out.append(c + Vector2.from_angle(TAU * k / 20.0) * r)
+	return out
+
+
+func _bounds(poly: PackedVector2Array) -> Rect2:
+	"""Bounding box of an outline, in canvas-width units."""
+	var box := Rect2(poly[0], Vector2.ZERO)
+	for p in poly:
+		box = box.expand(p)
+	return box
+
+
+func _figure_grid(grow: float) -> PackedByteArray:
+	"""A coverage grid with every sample point outside the figures (grown by
+	`grow` canvas widths) already covered, so only the figures are bare."""
+	var shapes: Array[PackedVector2Array] = []
+	for f in _figures:
+		shapes.append_array(Geometry2D.offset_polygon(f, grow, Geometry2D.JOIN_ROUND) if grow > 0.0 else [f])
+	var grid := PackedByteArray()
+	grid.resize(COVER_GRID * _cover_rows())
+	var rows := _cover_rows()
+	var cell_w := 1.0 / COVER_GRID
+	var cell_h := _aspect / rows
+	for r in rows:
+		for c in COVER_GRID:
+			var bits := CELL_FULL
+			for k in CELL_SAMPLES.size():
+				var q := Vector2((c + CELL_SAMPLES[k].x) * cell_w, (r + CELL_SAMPLES[k].y) * cell_h)
+				for poly in shapes:
+					if Geometry2D.is_point_in_polygon(q, poly):
+						bits &= ~(1 << k)
+						break
+			grid[r * COVER_GRID + c] = bits
+	return grid
+
+
+func _intrudes(s: Dictionary, allowed: int = FIGURE_INTRUDE) -> bool:
+	"""Whether a stamp would land inside the figure. Counted a little bigger
+	than it is, for the hand's wobble."""
+	if _keep_out.is_empty():
+		return false
+	var margin := _cover_margin
+	_cover_margin = -FIGURE_SAFETY
+	var inside := _cover(_keep_out, s, false).x
+	_cover_margin = margin
+	return inside > allowed
+
+
+func _stamp_around(plan: Array[Dictionary], sticker: int, pos: Vector2, rot: float, size: float, ponder: bool) -> bool:
+	"""Put a shape down near `pos` without crossing into the figure: if it
+	would, slide it away from the figure and make it a little smaller until
+	it stops at the edge. Gives up (false) if it can't."""
+	var away := Vector2.ZERO
+	var nearest := INF
+	for f in _figures:
+		var box := _bounds(f)
+		var c := Vector2(box.get_center().x, box.get_center().y * _aspect_fix())
+		if c.distance_to(pos) < nearest:
+			nearest = c.distance_to(pos)
+			away = Vector2(pos.x - c.x, 0.0).normalized()
+	if away == Vector2.ZERO:
+		away = Vector2.RIGHT if randf() < 0.5 else Vector2.LEFT
+	for t in FIGURE_TRIES:
+		var cand := {"sticker": sticker, "pos": pos + away * 0.025 * t, "rot": rot, "size": maxf(size * pow(0.94, t), _min_size)}
+		if not _intrudes(cand):
+			_stamp(plan, sticker, cand.pos, rot, cand.size, ponder, nearest < 0.35)
+			return true
+	return false
+
+
+func _draw_edge(plan: Array[Dictionary], pen: int, figure: PackedVector2Array, share: float) -> void:
+	"""Small pen marks chained along part of the figure's edge, sitting just
+	outside it, so the edge is drawn as well as carved."""
 	var size := _min_size * randf_range(1.0, 1.15)
-	var step := size * LINE_OVERLAP
-	var p := start
-	var dir := heading.normalized()
+	var outline: PackedVector2Array = Geometry2D.offset_polygon(figure, size * 0.18, Geometry2D.JOIN_ROUND)[0]
+	var points := _resample(outline, size * LINE_OVERLAP)
+	var n := points.size()
+	var start := randi() % n
 	var flip := 180.0 if randf() < 0.5 else 0.0
-	for k in maxi(1, ceili(length / step)):
-		var mid := p + dir * step * 0.5
-		_stamp(plan, pen, Vector2(mid.x, mid.y * 1.0), rad_to_deg(dir.angle()) + _long_axis_spin(pen) + flip + randfn(0.0, 4.0), size, false, true)
-		plan[-1].phase = "line"
-		p += dir * step
-		dir = dir.rotated(bend * step / maxf(length, 0.01))
+	for step in int(n * share):
+		var k := (start + step) % n
+		var tangent := (points[(k + 1) % n] - points[(k - 1 + n) % n]).normalized()
+		var p := points[k] + Vector2(randfn(0.0, 1.0), randfn(0.0, 1.0)) * size * 0.03
+		if p.y < 0.0 or p.y > _aspect:
+			continue
+		_stamp(plan, pen, Vector2(p.x, p.y * _aspect_fix()), rad_to_deg(tangent.angle()) + _long_axis_spin(pen) + flip + randfn(0.0, 4.0), size, false, true)
+		plan[-1].phase = "carve"
 
 
 func _pick_frame() -> int:
@@ -1156,11 +1360,17 @@ func _impulse() -> Dictionary:
 		"ponder": false, "precise": false, "issued": true,
 		"mistake": "impulse",
 	}
+	for t in 8:
+		if not _intrudes(stamp):
+			break
+		stamp.pos = Vector2(randf_range(0.1, 0.9), randf_range(0.1, 0.9))
 	return stamp
 
 
 func _plan_fix(i: int, s: Dictionary) -> void:
 	var fix := _weighted(FIXES_METICULOUS if _meticulous_style else FIXES)
+	if _intrudes(s):
+		fix = "undo"   # it cut into the figure: always taken back
 	s.fix_kind = fix
 	var steps: Array[Dictionary] = []
 	match fix:
@@ -1197,6 +1407,7 @@ func _plan_fix(i: int, s: Dictionary) -> void:
 		redo.erase("look_away")
 		redo.erase("intended_pos")
 		steps.append(redo)
+	steps = steps.filter(func(st): return st.has("action") or not _intrudes(st))
 	for step in steps:
 		step.fix = true
 		step.issued = true
@@ -1227,6 +1438,10 @@ func _finish_cover(plan: Array[Dictionary]) -> void:
 	var grid := _coverage(plan)
 	if _bare_cells(grid).is_empty():
 		return
+	if not _fill_inks.is_empty():
+		# The painting already chose what closes it (a studio ground)
+		_fill_spots(plan, grid, _fill_inks, _min_size, FILL_LARGEST, FILL_MAX)
+		return
 	var slot := "key" if randf() < 0.5 else "second"
 	if late_fill and randf() < CONTRAST_FILL_CHANCE:
 		var key: float = _scheme.key
@@ -1256,20 +1471,30 @@ func _final_look() -> void:
 			placed.append(s)
 	_cover_margin = 0.0
 	var grid := _coverage(placed)
+	if _figure_ink >= 0:
+		# Canvas showing inside a figure gets the figure's own colour
+		var inside := grid.duplicate()
+		for i in inside.size():
+			inside[i] |= _keep_out[i]
+		_fill_spots(_plan, inside, [_figure_ink], _min_size, 0.2, FINAL_LOOK_MAX, NAN, "fill", false, 1 << 20)
+		grid = _coverage(placed)
+		for i in grid.size():
+			grid[i] |= CELL_FULL ^ _keep_out[i]
 	if not _bare_cells(grid).is_empty():
 		if _fill_inks.is_empty():
 			_fill_inks = [_pick("solid", [], "key")]
-		_fill_spots(_plan, grid, _fill_inks, _min_size, FILL_LARGEST, FINAL_LOOK_MAX)
+		_fill_spots(_plan, grid, _fill_inks, _min_size, FILL_LARGEST, FINAL_LOOK_MAX, NAN, "fill", false, FIGURE_INTRUDE * 3)
 	_cover_margin = COVER_MARGIN
 
 
-func _fill_spots(plan: Array[Dictionary], grid: PackedByteArray, inks: Array[int], smallest: float, largest: float, limit: int, rot: float = NAN, phase: String = "fill", biggest_first: bool = false) -> void:
+func _fill_spots(plan: Array[Dictionary], grid: PackedByteArray, inks: Array[int], smallest: float, largest: float, limit: int, rot: float = NAN, phase: String = "fill", biggest_first: bool = false, intrude: int = FIGURE_INTRUDE) -> void:
 	"""Cover the bare cells in `grid`. The pen goes to the nearest bare spot,
 	slides deeper into that gap, and puts down a mark sized to the gap, so
 	marks sit in the bare canvas and cover as little of the painting around
 	it as they can. Big gaps get big marks, slivers get the smallest.
 	`rot` NAN turns each mark along the pen's path. `biggest_first` goes to
-	the biggest gap instead of the nearest (patching a ground)."""
+	the biggest gap instead of the nearest (patching a ground). Marks never
+	land inside a studio figure (more than `intrude` sample points)."""
 	var pen := Vector2(randf(), randf())
 	var tried := {}
 	var room := _clearance(grid)
@@ -1302,7 +1527,7 @@ func _fill_spots(plan: Array[Dictionary], grid: PackedByteArray, inks: Array[int
 			spot = next
 		var size := clampf(room[_cell_index(spot)] * cell_w * FILL_REACH, smallest, largest)
 		var p := _cell_center(spot)
-		var ink: int = inks[0] if inks.size() == 1 or randf() < 0.7 else inks[1]
+		var ink: int = inks.pick_random() if inks.size() > 2 else inks[0] if inks.size() == 1 or randf() < 0.7 else inks[1]
 		var heading := rad_to_deg((p - pen).angle()) if p.distance_to(pen) > 0.001 else randf() * 360.0
 		# Try the mark a few ways (nudged, turned, a touch bigger or smaller)
 		# and keep the one that fills the most bare canvas for the least
@@ -1318,12 +1543,13 @@ func _fill_spots(plan: Array[Dictionary], grid: PackedByteArray, inks: Array[int
 			var cand := {"sticker": ink, "pos": p + Vector2(randfn(0.0, 1.0), randfn(0.0, 1.0)) * tsize * 0.15, "rot": turn, "size": maxf(tsize, _min_size)}
 			var counts := _cover(grid, cand, false)
 			var score := counts.x - FILL_OVERLAP_COST * counts.y
-			if counts.x > 0 and (best_stamp.is_empty() or score > best_score):
+			if counts.x > 0 and (best_stamp.is_empty() or score > best_score) and not _intrudes(cand, intrude):
 				best_stamp = cand
 				best_score = score
 		if best_stamp.is_empty():
 			continue
-		_stamp(plan, ink, best_stamp.pos, best_stamp.rot, best_stamp.size, false)
+		# Careful near a figure's edge
+		_stamp(plan, ink, best_stamp.pos, best_stamp.rot, best_stamp.size, false, not _keep_out.is_empty() and _intrudes(best_stamp, 0))
 		plan[-1].phase = phase
 		_cover(grid, plan[-1])
 		pen = p
