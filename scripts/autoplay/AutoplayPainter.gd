@@ -201,6 +201,12 @@ const ACCENTS := {"beads": 3, "crown": 2, "fringe": 3, "jewel": 2, "stitch": 2} 
 const ACCENT_MAX := 24               ## most accent marks per form
 const ACCENT_SIZE := Vector2(1.3, 1.5)   ## accent sticker size, as a multiple of the smallest sticker size (louder when higher)
 const STUDIO_VARIETY := 1.0          ## share of studio picks that ignore the learned colour scheme (still the right kind of sticker); 1 = always
+const STUDIO_ROLE_FREE := 0.5        ## share of studio picks that ignore the kind of sticker the job asks for and draw from the whole library (still meeting the job's light/dark or shape test)
+const STUDIO_FRESH := 0.25           ## how likely a studio pick takes a sticker used in the last STUDIO_FRESH_PAINTINGS paintings (1 = no preference, lower = fresher)
+const STUDIO_FRESH_PAINTINGS := 3    ## how many past paintings count for STUDIO_FRESH
+const STUDIO_VEIL_LIGHT := 0.55      ## studio veils and sky wisps: lightest sticker value allowed, any colour (lower = more stickers qualify, darker veils)
+const STUDIO_UNDER_DARK := 0.65      ## studio dark under-fill: stickers darker than this qualify (higher = more stickers qualify, lighter masses)
+const STUDIO_UNDER_SOLID := 0.7      ## studio dark under-fill: how solid a sticker must be (lower = more stickers qualify, lacier)
 const STUDIO_REUSE := 0.5            ## how likely a studio pick reuses a sticker already in the painting (1 = no preference, below 1 = prefers new ones)
 const FORM_LINE_CHANCE := 0.5        ## part of the form's edge is also drawn with pen marks
 const METICULOUS := {"catalog": 1, "checker": 2, "rings": 2, "mandala": 3, "gradient": 2}
@@ -275,6 +281,7 @@ var _forms: Array[PackedVector2Array] = []   ## studio forms, canvas-width units
 var _keep_out := PackedByteArray()  ## coverage grid with only the forms bare: nothing goes there
 var _found: Array[Dictionary] = []  ## the forms found this painting (see _find_form), for accents
 var _any_sticker := false          ## every pick is any sticker at all (studio paintings)
+var _recent_stickers: Array = []   ## stickers picked in each of the last few paintings (STUDIO_FRESH)
 var _variety := false              ## studio painting: picks loosen the colour scheme (STUDIO_VARIETY, STUDIO_REUSE)
 var _zoom := 1.0                    ## how close the current squint-and-define round looks (1 = first round)
 var _form_ink := -1               ## what the forms are filled with, for touching them up
@@ -365,6 +372,10 @@ func hover_time() -> float:
 ## directly to preview plans.
 func plan_painting(aspect: float, add_on: bool = false) -> Array[Dictionary]:
 	_aspect = aspect
+	if not _palette.is_empty():
+		_recent_stickers.append(_palette.duplicate())
+		if _recent_stickers.size() > STUDIO_FRESH_PAINTINGS:
+			_recent_stickers.pop_front()
 	_palette.clear()
 	_choose_scheme()
 	_ground = -1
@@ -709,14 +720,14 @@ func _studio(plan: Array[Dictionary]) -> void:
 	# then big pale veils, so the first layer survives only as fragments
 	var panel := _pick(["texture", "band"].pick_random(), [strip], "second")
 	_stamp(plan, panel, Vector2(core.x + side * 0.2, core.y - 0.05), randf_range(-15.0, 15.0) + (90.0 if randf() < 0.5 else 0.0), randf_range(0.65, 0.85), true)
-	var veil := _pick_by("pale", func(i): return _solidity(i) >= 0.6, [], "any")
+	var veil := _pick_by("veil", func(i): return _solidity(i) >= 0.6, [], "any")
 	var veils: Array[Vector2] = [core + Vector2(randf_range(-0.05, 0.05), randf_range(0.05, 0.15)), Vector2(1.0 - edge_x, randf_range(0.3, 0.7)), Vector2(randf_range(0.3, 0.7), randf_range(0.8, 0.95))]
 	for v in veils.slice(0, randi_range(1, 2)):
 		_stamp(plan, veil, v, randf_range(0.0, 360.0), randf_range(0.6, 0.85), true)
 	# Close the canvas now, under everything that comes next, in a dark or
 	# middle value, so the painting has real masses of light and dark for
 	# forms to come out of (not one pale wash)
-	var under: Array[int] = [_pick_by("solid", func(i): var t := _texture_size(i); return _color(i).light < 0.5 and maxf(t.x, t.y) / minf(t.x, t.y) < 1.6, [], "second")]
+	var under: Array[int] = [_pick_by("dense", func(i): var t := _texture_size(i); return _color(i).light < STUDIO_UNDER_DARK and maxf(t.x, t.y) / minf(t.x, t.y) < 3.0, [], "second")]
 	_fill_spots(plan, _coverage(plan), under, 0.2, 0.9, STUDIO_FIELDS, NAN, "under", true)
 	# Pieces of the first layer come back through the veil
 	_stamp(plan, strip, Vector2(edge_x, randf_range(0.2, 0.8)), 90.0 + randf_range(-3.0, 3.0), randf_range(0.5, 0.7), true)
@@ -748,11 +759,11 @@ func _studio(plan: Array[Dictionary]) -> void:
 			used.append(piece)
 			_stamp(plan, piece, w, _upright_rotation(), minf(cell.x, cell.y * _aspect) * randf_range(0.55, 0.75), true)
 	# 6. Calm sky: pale wisps across the top
-	var wisp := _pick_by("pale", func(i): return _solidity(i) >= 0.7, [veil], "any")
+	var wisp := _pick_by("veil", func(i): return _solidity(i) >= 0.7, [veil], "any")
 	var n := randi_range(2, 3)
 	for k in n:
 		_stamp(plan, wisp if k % 2 == 0 else veil, Vector2((k + 0.5) / n + randf_range(-0.04, 0.04), randf_range(0.06, 0.12)), randf_range(-20.0, 20.0) + (180.0 if k % 2 else 0.0), randf_range(0.3, 0.45), false)
-	_stamp(plan, _pick("pale", [], "any"), Vector2(edge_x, randf_range(0.75, 0.88)), randf_range(0.0, 360.0), randf_range(0.3, 0.4), true)
+	_stamp(plan, _pick("veil", [veil, wisp], "any"), Vector2(edge_x, randf_range(0.75, 0.88)), randf_range(0.0, 360.0), randf_range(0.3, 0.4), true)
 	_jumble_order(plan, ORDER_JUMBLE)
 	# 7. Squint and refine, over and over: step back, find a form that came
 	# out by itself, define it, calm what's around it, then look again and
@@ -1299,8 +1310,9 @@ func _pick_by(role: String, test: Callable, avoid: Array = [], slot: String = "a
 	"""Like _pick, but only stickers passing `test` (falls back to any of the role)."""
 	var library := StickerLibrary.sticker_library
 	var candidates: Array[int] = []
+	var any_role := _variety and randf() < STUDIO_ROLE_FREE
 	for i in library.size():
-		if not i in avoid and _has_role(i, role) and test.call(i):
+		if not i in avoid and ((any_role and _taste_role(role)) or _has_role(i, role)) and test.call(i):
 			candidates.append(i)
 	if candidates.is_empty():
 		return _pick(role, avoid, slot)
@@ -2083,8 +2095,9 @@ var _palette: Array[int] = []
 func _pick(role: String, avoid: Array = [], slot: String = "any") -> int:
 	var library := StickerLibrary.sticker_library
 	var candidates: Array[int] = []
+	var any_role := _variety and randf() < STUDIO_ROLE_FREE
 	for i in library.size():
-		if not i in avoid and _has_role(i, role):
+		if not i in avoid and ((any_role and _taste_role(role)) or _has_role(i, role)):
 			candidates.append(i)
 	if candidates.is_empty():
 		for i in library.size():
@@ -2111,6 +2124,15 @@ func _pick(role: String, avoid: Array = [], slot: String = "any") -> int:
 	return _any(pick)
 
 
+func _taste_role(role: String) -> bool:
+	"""A kind picked by hand in ROLES (band, subject, line, texture, motif,
+	frame...), as opposed to one worked out from what the sticker can
+	physically do (pale, solid, pen, ground, fill, *_base). STUDIO_ROLE_FREE
+	only loosens the hand-picked kinds, so a veil still veils and a fill still
+	covers."""
+	return not (role in ["pale", "veil", "solid", "dense", "pen", "ground", "fill"] or role.ends_with("_base"))
+
+
 func _has_role(sticker: int, role: String) -> bool:
 	var roles := _roles(StickerLibrary.sticker_library[sticker])
 	if role in roles:
@@ -2121,8 +2143,13 @@ func _has_role(sticker: int, role: String) -> bool:
 	if role == "pale":
 		# Light, fairly dense stickers that veil what's under them
 		return not ("line" in roles or "frame" in roles) and _color(sticker).light >= PALE_LIGHT and _color(sticker).coverage >= 0.35 and _color(sticker).colorful < 0.35
+	if role == "veil":
+		# Studio veils: pale-ish and dense enough to veil, any colour (STUDIO_VEIL_LIGHT)
+		return not ("line" in roles or "frame" in roles) and _color(sticker).light >= STUDIO_VEIL_LIGHT and _color(sticker).coverage >= 0.35
 	if role == "solid":
 		return _solidity(sticker) >= SOLID_INTERIOR
+	if role == "dense":
+		return _solidity(sticker) >= STUDIO_UNDER_SOLID
 	if role == "pen":
 		return "line" in roles and _color(sticker).coverage < PEN_COVERAGE
 	if role == "ground":
@@ -2178,11 +2205,16 @@ func _pick_weight(sticker: int, slot: String, free: bool) -> float:
 	"""How likely a candidate is picked: the colour scheme's weight, doubled
 	for stickers already in the painting. In a studio painting a free pick
 	(STUDIO_VARIETY) drops the scheme and every sticker counts alike, and
-	stickers already used count STUDIO_REUSE instead of double, so the
-	painting draws on much more of the library."""
+	stickers already used count STUDIO_REUSE instead of double, and ones
+	from the last few paintings STUDIO_FRESH, so the paintings draw on
+	much more of the library."""
 	if not _variety:
 		return _color_weight(sticker, slot) * (2.0 if sticker in _palette else 1.0)
-	return (1.0 if free else _color_weight(sticker, slot)) * (STUDIO_REUSE if sticker in _palette else 1.0)
+	var w := (1.0 if free else _color_weight(sticker, slot)) * (STUDIO_REUSE if sticker in _palette else 1.0)
+	for past in _recent_stickers:
+		if sticker in past:
+			return w * STUDIO_FRESH
+	return w
 
 
 func _color_weight(sticker: int, slot: String) -> float:
