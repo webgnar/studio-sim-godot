@@ -200,7 +200,7 @@ const ACCENT_CHANCE := 0.8           ## share of found forms that get a personal
 const ACCENTS := {"beads": 3, "crown": 2, "fringe": 3, "jewel": 2, "stitch": 2}   ## kinds of personality and how often each is picked
 const ACCENT_MAX := 24               ## most accent marks per form
 const ACCENT_SIZE := Vector2(1.3, 1.5)   ## accent sticker size, as a multiple of the smallest sticker size (louder when higher)
-const STUDIO_VARIETY := 0.6          ## share of studio picks that ignore the learned colour scheme (still the right kind of sticker)
+const STUDIO_VARIETY := 1.0          ## share of studio picks that ignore the learned colour scheme (still the right kind of sticker); 1 = always
 const STUDIO_REUSE := 0.5            ## how likely a studio pick reuses a sticker already in the painting (1 = no preference, below 1 = prefers new ones)
 const FORM_LINE_CHANCE := 0.5        ## part of the form's edge is also drawn with pen marks
 const METICULOUS := {"catalog": 1, "checker": 2, "rings": 2, "mandala": 3, "gradient": 2}
