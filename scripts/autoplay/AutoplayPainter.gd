@@ -191,7 +191,9 @@ const FORM_CONTRAST := 0.3           ## those marks differ from the form by at l
 const FORM_INTRUDE := 2              ## sample points a later shape may land inside the form
 const FORM_SAFETY := 0.015           ## shapes count this much bigger when checked against the form, for the hand's wobble
 const FORM_TRIES := 16               ## steps a shape slides away from the form before giving up
-const FORM_PASSES := 3               ## most squint-and-define rounds per painting
+const FORM_ZOOM := 0.7               ## each round looks for forms this much smaller than the last
+const FORM_TINIEST := 0.006          ## smallest form any round will take (share of the canvas)
+const FORM_PASSES := 8               ## most squint-and-define rounds per painting
 const FORM_REFINE := 30              ## most marks calming the specks around the forms per round
 const FORM_REFINE_CHANCE := 0.0      ## a round also covers specks that clash with their mass (off: chops the masses up with this library)
 const FORM_LINE_CHANCE := 0.5        ## part of the form's edge is also drawn with pen marks
@@ -265,6 +267,7 @@ var _add_on := false
 var _cover_margin := COVER_MARGIN   ## 0 when looking at what actually went down
 var _forms: Array[PackedVector2Array] = []   ## studio forms, canvas-width units
 var _keep_out := PackedByteArray()  ## coverage grid with only the forms bare: nothing goes there
+var _zoom := 1.0                    ## how close the current squint-and-define round looks (1 = first round)
 var _form_ink := -1               ## what the forms are filled with, for touching them up
 var last_carve_source := ""   ## id of the sticker whose silhouette was last carved, for previews
 static var _colors: Dictionary = {}
@@ -364,6 +367,7 @@ func plan_painting(aspect: float, add_on: bool = false) -> Array[Dictionary]:
 	_forms.clear()
 	_keep_out = PackedByteArray()
 	_form_ink = -1
+	_zoom = 1.0
 	_focus_base = randf_range(0.35, 0.85)
 	_energy_base = randf_range(0.25, 0.8)
 	focus = _focus_base
@@ -736,12 +740,15 @@ func _studio(plan: Array[Dictionary]) -> void:
 	_jumble_order(plan, ORDER_JUMBLE)
 	# 7. Squint and refine, over and over: step back, find a form that came
 	# out by itself, define it, calm what's around it, then look again and
-	# tend to another part of the picture, until nothing new comes out
+	# tend to another part of the picture. Each round looks closer than the
+	# last (smaller forms, finer squint), working into what's left between
+	# the forms already defined
 	var center := core
 	for pass_i in FORM_PASSES:
+		_zoom = pow(FORM_ZOOM, pass_i)
 		var found := _find_form(plan)
 		if found.is_empty():
-			break
+			continue
 		_forms.append(found.outline)
 		_keep_out = _form_grid()
 		if _form_ink < 0:
@@ -751,6 +758,7 @@ func _studio(plan: Array[Dictionary]) -> void:
 		_bring_out(plan, found)
 		if randf() < FORM_REFINE_CHANCE:
 			_refine(plan)
+	_zoom = 1.0
 	if not _forms.is_empty():
 		last_style += ", found %d form%s" % [_forms.size(), "" if _forms.size() == 1 else "s"]
 	# A trial: something big goes over the middle of it all, gets a long
@@ -779,7 +787,7 @@ func _find_form(plan: Array[Dictionary]) -> Dictionary:
 	var near := _near_forms()
 	if not near.is_empty():
 		for i in value.size():
-			if near[i] <= FORM_RING.y + 1.0:
+			if near[i] <= maxf((FORM_RING.y + 1.0) * _zoom, 1.5):
 				value[i] = -1
 	var seen := PackedByteArray()
 	seen.resize(top.size())
@@ -814,7 +822,7 @@ func _find_form(plan: Array[Dictionary]) -> Dictionary:
 					seen[j] = 1
 					cells.append(j)
 		var share := float(cells.size()) / top.size()
-		if share < FORM_SMALLEST or share > FORM_LARGEST or float(border) / cells.size() > FORM_BORDER:
+		if share < maxf(FORM_SMALLEST * _zoom, FORM_TINIEST) or share > FORM_LARGEST * _zoom or float(border) / cells.size() > FORM_BORDER:
 			continue
 		var compact := 4.0 * PI * cells.size() / float(edges * edges)
 		if compact < FORM_COMPACT.x or compact > FORM_COMPACT.y:
@@ -827,7 +835,7 @@ func _find_form(plan: Array[Dictionary]) -> Dictionary:
 		if stamps.size() < 2:
 			continue
 		# Mid-sized, with a few stray ideas: no preference for any kind of shape
-		var score := -absf(log(share / FORM_SIZE)) + randf() * 0.6
+		var score := -absf(log(share / (FORM_SIZE * _zoom))) + randf() * 0.6
 		if not near.is_empty():
 			# The further from what's already been worked on, the better
 			var far := 0.0
@@ -883,7 +891,7 @@ func _squint(plan: Array[Dictionary]) -> Dictionary:
 	var raw := value.duplicate()
 	# Squint: each spot takes the value most of its neighbourhood has, so
 	# specks and ragged edges melt into masses
-	for pass_i in FORM_SQUINT:
+	for pass_i in maxi(1, roundi(FORM_SQUINT * _zoom + 0.4)):
 		var blurred := value.duplicate()
 		for i in value.size():
 			var c := i % COVER_GRID
@@ -1004,7 +1012,7 @@ func _bring_out(plan: Array[Dictionary], found: Dictionary) -> void:
 	# The ring: strips laid end to end along the edge, just outside it and
 	# turned with it, so they read as one band of contrast round the form
 	# rather than a scatter of marks
-	var size := randf_range(FORM_STRIP.x, FORM_STRIP.y)
+	var size := maxf(randf_range(FORM_STRIP.x, FORM_STRIP.y) * sqrt(_zoom), _min_size)
 	var tex := _texture_size(inks[0])
 	var thick := size * minf(tex.x, tex.y) / maxf(tex.x, tex.y)
 	var shapes := Geometry2D.offset_polygon(found.outline, thick * 0.6, Geometry2D.JOIN_ROUND)
@@ -1062,9 +1070,9 @@ func _continue_side(plan: Array[Dictionary], found: Dictionary, band: float) -> 
 	for i in top.size():
 		if top[i] < 0:
 			continue
-		if interior and form[i] and to_edge[i] <= FORM_SIDE:
+		if interior and form[i] and to_edge[i] <= maxf(FORM_SIDE * _zoom, 1.5):
 			side.append(i)
-		elif not interior and not form[i] and to_form[i] > band + 0.5 and to_form[i] <= band + 0.5 + FORM_SIDE and (_keep_out.is_empty() or _keep_out[i] == CELL_FULL):
+		elif not interior and not form[i] and to_form[i] > band + 0.5 and to_form[i] <= band + 0.5 + maxf(FORM_SIDE * _zoom, 1.5) and (_keep_out.is_empty() or _keep_out[i] == CELL_FULL):
 			side.append(i)
 	if side.is_empty():
 		return
