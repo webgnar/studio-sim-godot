@@ -18,7 +18,6 @@ const STICKER_INTERVAL_MAX: float = 0.22
 const MAX_STICKERS: int = 160            ## Oldest stickers get peeled off past this
 const STICKER_SIZE_MIN: float = 120.0    ## Longest side in px at 1080p
 const STICKER_SIZE_MAX: float = 300.0
-const OUTLINE_PX: float = 4.0            ## On-screen die-cut outline width
 const SMOOTH_FRAME_MS: float = 25.0      ## A frame under this counts as settled
 const SMOOTH_FRAMES_NEEDED: int = 20
 const SETTLE_TIMEOUT: float = 5.0  ## Never hold the screen longer than this waiting
@@ -30,22 +29,8 @@ const STICKER_SOUNDS := [
 	"res://sounds/picotron/sticker5.ogg",
 ]
 
-# Die-cut outline: like shaders/sticker_outline.gdshader, but ignores faint pixels
-const OUTLINE_SHADER := """
-shader_type canvas_item;
-uniform float outline_width = 2.5;
-float solid(sampler2D tex, vec2 uv) { return step(0.1, texture(tex, uv).a); }
-void fragment() {
-	vec2 px = outline_width / vec2(textureSize(TEXTURE, 0));
-	float n = 0.0;
-	for (int x = -1; x <= 1; x++) {
-		for (int y = -1; y <= 1; y++) {
-			n = max(n, solid(TEXTURE, UV + vec2(float(x), float(y)) * px));
-		}
-	}
-	COLOR = vec4(1.0, 1.0, 1.0, n * (1.0 - solid(TEXTURE, UV)));
-}
-"""
+# Some sticker PNGs have a faint near-transparent border that reads as a thin
+# box on black, so drop pixels under 10% alpha
 const ART_SHADER := """
 shader_type canvas_item;
 void fragment() { COLOR.a *= step(0.1, COLOR.a); }
@@ -59,7 +44,6 @@ var _progress_bar: ColorRect
 var _label: Label
 var _sound_players: Array[AudioStreamPlayer] = []
 var _next_sound_player: int = 0
-var _outline_shader: Shader
 var _art_material: ShaderMaterial
 var _sounds: Array[AudioStream] = []
 var _textures: Array[Texture2D] = []
@@ -114,10 +98,6 @@ func _ready() -> void:
 		add_child(player)
 		_sound_players.append(player)
 
-	# Some sticker PNGs have a faint near-transparent border that reads as a thin
-	# box on black, so both shaders ignore pixels under 10% alpha
-	_outline_shader = Shader.new()
-	_outline_shader.code = OUTLINE_SHADER
 	var art_shader = Shader.new()
 	art_shader.code = ART_SHADER
 	_art_material = ShaderMaterial.new()
@@ -311,20 +291,10 @@ func _place_random_sticker() -> void:
 	sticker.position = Vector2(randf_range(0.0, screen.x), randf_range(0.0, screen.y))
 	sticker.rotation = deg_to_rad(randf_range(-30.0, 30.0))
 
-	# White die-cut outline behind the art, like a real sticker
-	var outline = Sprite2D.new()
-	outline.texture = texture
-	var outline_mat = ShaderMaterial.new()
-	outline_mat.shader = _outline_shader
-	outline_mat.set_shader_parameter("outline_width", OUTLINE_PX * ui_scale / final_scale)
-	outline.material = outline_mat
-	sticker.add_child(outline)
-
 	var art = Sprite2D.new()
 	art.texture = texture
 	art.material = _art_material
 	art.flip_h = randf() < 0.5
-	outline.flip_h = art.flip_h
 	sticker.add_child(art)
 
 	_sticker_layer.add_child(sticker)
