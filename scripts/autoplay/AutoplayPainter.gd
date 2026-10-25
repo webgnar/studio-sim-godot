@@ -125,7 +125,7 @@ const LOOK_AWAY_MIN := 1.0           ## a distraction: seconds looking off the c
 const LOOK_AWAY_MAX := 2.5
 
 ## Abstractions: a burst of stickers carved into a form (layered paintings only).
-const ABSTRACTION_CHANCE := 0.5      ## the focal point is an abstraction
+const ABSTRACTION_CHANCE := 0.75     ## the focal point is an abstraction (zack likes the drawn-with-marks forms)
 const SECOND_ABSTRACTION_CHANCE := 0.3   ## plus a smaller one balancing it
 const BURST_MIN := 18
 const BURST_MAX := 32
@@ -165,7 +165,7 @@ const ORDER_JUMBLE_METICULOUS := 0.8
 
 ## How often a painting is meticulous rather than layered.
 const METICULOUS_CHANCE := 0.35
-const METICULOUS := {"catalog": 3, "checker": 2, "rings": 2, "mandala": 3, "gradient": 2}
+const METICULOUS := {"catalog": 1, "checker": 2, "rings": 2, "mandala": 3, "gradient": 2}
 
 ## Colour families a painting's key colour is drawn from (hue 0..1, -1 = black/white/grey).
 ## The last few used are skipped, so consecutive paintings change colour.
