@@ -165,6 +165,15 @@ const ORDER_JUMBLE_METICULOUS := 0.8
 
 ## How often a painting is meticulous rather than layered.
 const METICULOUS_CHANCE := 0.35
+## "Studio" paintings follow how zack painted when we watched him (2026-10-25):
+## big crossing shapes, buried by bands and veils, a trial undone, a loose
+## grid of window frames turning the collage into scenes, a dark band worked
+## into a figure, and a calm sky. (No pencil yet: only once the bot can use a
+## bought pencil.)
+const STUDIO_CHANCE := 0.4
+const PALE_LIGHT := 0.7              ## average luminance for a "pale" veil sticker
+const STUDIO_FIELDS := 110           ## most marks closing a studio painting's canvas under the rest
+const STUDIO_TRIAL_CHANCE := 0.6     ## tries something big over the centre, looks, takes it back
 const METICULOUS := {"catalog": 1, "checker": 2, "rings": 2, "mandala": 3, "gradient": 2}
 
 ## Colour families a painting's key colour is drawn from (hue 0..1, -1 = black/white/grey).
@@ -345,6 +354,12 @@ func plan_painting(aspect: float, add_on: bool = false) -> Array[Dictionary]:
 			# A catalog is a stage, never the final statement: build over it
 			last_style += ", built over"
 			_build_over(plan)
+		_finish_cover(plan)
+		return plan
+	if not add_on and randf() < STUDIO_CHANCE:
+		last_style = "studio, " + family
+		late_fill = true
+		_studio(plan)
 		_finish_cover(plan)
 		return plan
 	last_style = "layered, " + family
@@ -619,6 +634,185 @@ func _jumble_order(plan: Array[Dictionary], amount: float) -> void:
 			for k in keyed.size():
 				plan[start + k] = keyed[k][1]
 		start = end
+
+
+# --- Studio (learned from watching zack paint) ---
+
+func _studio(plan: Array[Dictionary]) -> void:
+	"""Paint the way zack did: big and few first, bury it, rhyme it, frame it
+	into scenes, find a figure, calm the sky, then settle the edges."""
+	var left := randf() < 0.5   # which side the edge strip and the figure go
+	var side := 1.0 if left else -1.0
+	var edge_x := 0.1 if left else 0.9
+	var figure_x := randf_range(0.3, 0.38) if left else randf_range(0.62, 0.7)
+	# 1. Skeleton: an edge strip, a big oval-ish subject, a bar across it
+	var strip := _pick("band", [], "second")
+	_stamp(plan, strip, Vector2(edge_x, 0.5), 90.0 + randf_range(-3.0, 3.0), randf_range(1.1, 1.3), true)
+	var core := Vector2(randf_range(0.42, 0.58), randf_range(0.4, 0.5))
+	var subject := _pick("subject", [], "key")
+	_stamp(plan, subject, core, _upright_rotation(), randf_range(0.5, 0.65), true)
+	_stamp(plan, _pick("band", [strip], "accent"), core + Vector2(randf_range(-0.05, 0.1), randf_range(0.1, 0.16)), randf_range(-6.0, 6.0), randf_range(0.5, 0.7), true)
+	# 2. Big line stickers as structure, crossing the zones
+	for k in randi_range(1, 3):
+		var line := _pick("line", [], ["accent", "second"].pick_random())
+		_stamp(plan, line, core + Vector2(randf_range(-0.25, 0.25), randf_range(-0.25, 0.15)), randf_range(0.0, 360.0), randf_range(0.45, 0.8), true)
+	# 3. Bury it: a big striped/textured panel over one side of the subject,
+	# then big pale veils over most of the canvas, so the first layer
+	# survives only as fragments (this is also what closes the canvas)
+	var panel := _pick(["texture", "band"].pick_random(), [strip], "second")
+	_stamp(plan, panel, Vector2(core.x + side * 0.2, core.y - 0.05), randf_range(-15.0, 15.0) + (90.0 if randf() < 0.5 else 0.0), randf_range(0.65, 0.85), true)
+	var veil := _pick_by("pale", func(i): return _solidity(i) >= 0.6, [], "any")
+	var veils: Array[Vector2] = [core + Vector2(randf_range(-0.05, 0.05), randf_range(0.05, 0.15)), Vector2(1.0 - edge_x, randf_range(0.3, 0.7)), Vector2(randf_range(0.3, 0.7), randf_range(0.8, 0.95))]
+	for v in veils.slice(0, randi_range(2, 3)):
+		_stamp(plan, veil, v, randf_range(0.0, 360.0), randf_range(0.8, 1.1), true)
+	# Close the canvas now, under everything that comes next, so the fill
+	# is buried by the painting instead of burying it
+	var under: Array[int] = [veil]
+	if _solidity(veil) < SOLID_INTERIOR:
+		under.append(_pick_by("solid", func(i): return _color(i).light >= 0.55, [], "any"))
+	_fill_spots(plan, _coverage(plan), under, 0.2, 0.9, STUDIO_FIELDS, NAN, "under", true)
+	# Pieces of the first layer come back through the veil
+	_stamp(plan, strip, Vector2(edge_x, randf_range(0.2, 0.8)), 90.0 + randf_range(-3.0, 3.0), randf_range(0.5, 0.7), true)
+	_stamp(plan, panel, Vector2(core.x + side * 0.25, core.y - 0.25), randf_range(-15.0, 15.0), randf_range(0.4, 0.55), true)
+	var trial_at := plan.size()
+	# 4. Rhymes: the panel's texture again, smaller, in the opposite corner,
+	# and a busy texture balancing it diagonally
+	var opposite := Vector2(1.0 - core.x + side * 0.15, randf_range(0.75, 0.85))
+	_stamp(plan, panel, opposite, randf_range(0.0, 360.0), randf_range(0.25, 0.35), true)
+	_stamp(plan, _pick("texture", [panel], "accent"), Vector2(1.0 - opposite.x, randf_range(0.15, 0.25)) * Vector2(1, 1), randf_range(0.0, 360.0), randf_range(0.25, 0.35), true)
+	# 5. A bold full-height band right through where the focal point was
+	var tower := _pick("band", [strip, panel], "accent")
+	_stamp(plan, tower, Vector2(figure_x, 0.5), 90.0 + randf_range(-2.0, 2.0), randf_range(1.1, 1.25), true)
+	# 6. Windows: a loose grid of frames over the lower part, beside the
+	# tower, each filled with one contrasting piece
+	var frame := _pick_frame()
+	var top := randf_range(0.3, 0.4)
+	var x0 := figure_x + side * 0.08 if left else 0.04
+	var x1 := 0.96 if left else figure_x - 0.08
+	var cols := randi_range(2, 3)
+	var rows := randi_range(2, 3)
+	var cell := Vector2((x1 - x0) / cols, (1.0 - top) / rows)
+	var windows: Array[Vector2] = []
+	for r in rows:
+		for c in cols:
+			var w := Vector2(x0 + (c + 0.5) * cell.x, top + (r + 0.5) * cell.y)
+			w += Vector2(randfn(0.0, 1.0), randfn(0.0, 1.0)) * 0.008
+			windows.append(w)
+	# A frame sticker may hold one window or two side by side (sticker 34)
+	var tex := _texture_size(frame)
+	var span := 2 if tex.x / tex.y > 1.5 else 1
+	var tall := tex.y > tex.x
+	for r in rows:
+		var c := 0
+		while c < cols:
+			var k := mini(span, cols - c)
+			var w := Vector2(x0 + (c + k * 0.5) * cell.x, top + (r + 0.5) * cell.y)
+			var width := k * cell.x
+			var height := cell.y * _aspect
+			var size := maxf(width, height) if k == span else maxf(cell.x, height)
+			var rot := (90.0 if tall != (height > width) else 0.0) if k == span else (90.0 if span == 2 else 0.0)
+			_stamp(plan, frame, w + Vector2(randfn(0.0, 1.0), randfn(0.0, 1.0)) * 0.006, rot + randf_range(-2.0, 2.0), size * randf_range(0.97, 1.03), false, true)
+			c += k
+	var used: Array = [frame]
+	for w in windows:
+		var piece := _pick(["subject", "motif", "texture"].pick_random(), used.slice(maxi(0, used.size() - 2)), ["key", "second", "accent"].pick_random())
+		used.append(piece)
+		_stamp(plan, piece, w, _upright_rotation(), minf(cell.x, cell.y * _aspect) * randf_range(0.55, 0.75), true)
+	# A dark lintel along the top row of windows
+	var lintel := _pick_by("band", func(i): return _color(i).light < 0.35, [], "any")
+	_stamp(plan, lintel, Vector2((x0 + x1) / 2.0, top), randf_range(-2.0, 2.0), (x1 - x0) * 1.05, true)
+	# 7. The figure: the tower's lower half goes dark, a body-shaped sticker
+	# inside it, a warm glow at its shoulder, and branches reaching toward
+	# the windows, drawn with small marks
+	var dark := _pick_by("ground", func(i): return _color(i).light < 0.3, [], "any")
+	_stamp(plan, dark, Vector2(figure_x, 0.72), 90.0 + randf_range(-3.0, 3.0), randf_range(0.6, 0.7), true)
+	var body := _pick_by("subject", func(i): var t := _texture_size(i); return t.y > t.x * 1.2, [], "any")
+	_stamp(plan, body, Vector2(figure_x, randf_range(0.55, 0.65)), randf_range(-5.0, 5.0), randf_range(0.35, 0.45), true)
+	var glow := _pick_by("subject", func(i): var c := _color(i); return c.hue >= 0.0 and (c.hue < 0.12 or c.hue > 0.95) and c.colorful > 0.3, [], "any")
+	_stamp(plan, glow, Vector2(figure_x - side * 0.1, randf_range(0.35, 0.42)), randf_range(0.0, 360.0), randf_range(0.2, 0.3), true)
+	var pen := _pick("pen", [], "any")
+	for b in randi_range(2, 3):
+		var start := Vector2(figure_x, randf_range(0.36, 0.45))
+		var heading := Vector2(side, randf_range(-0.6, 0.2)).normalized()
+		_mark_line(plan, pen, start, heading, randf_range(0.18, 0.3), randf_range(-0.8, 0.8))
+	# 8. Calm sky: pale wisps across the top, then a few loose scaffold lines
+	var wisp := _pick("pale", [veil], "any")
+	var n := randi_range(3, 4)
+	for k in n:
+		_stamp(plan, wisp if k % 2 == 0 else veil, Vector2((k + 0.5) / n + randf_range(-0.04, 0.04), randf_range(0.08, 0.14)), randf_range(-20.0, 20.0) + (180.0 if k % 2 else 0.0), randf_range(0.42, 0.55), false)
+	for k in randi_range(1, 3):
+		_mark_line(plan, pen, Vector2(randf_range(0.45, 0.9) if left else randf_range(0.1, 0.55), randf_range(0.05, 0.12)), Vector2.DOWN.rotated(randf_range(-0.2, 0.2)) if k % 2 == 0 else Vector2.RIGHT.rotated(randf_range(-0.1, 0.1)), randf_range(0.12, 0.22), 0.0)
+	# 9. Settle: calm one edge field, veil the figure's middle a little
+	_stamp(plan, _pick("pale", [], "any"), Vector2(edge_x, randf_range(0.7, 0.85)), randf_range(0.0, 360.0), randf_range(0.3, 0.4), true)
+	_stamp(plan, veil, Vector2(figure_x + side * 0.05, 0.5), randf_range(0.0, 360.0), randf_range(0.25, 0.35), true)
+	_jumble_order(plan, ORDER_JUMBLE)
+	# A trial: something big goes over the buried centre, gets a long look,
+	# and comes back off (it would have killed the painting)
+	if randf() < STUDIO_TRIAL_CHANCE:
+		var trial := _pick("texture", [], "any")
+		var at := core + Vector2(randf_range(-0.05, 0.05), randf_range(-0.05, 0.05))
+		plan.insert(trial_at, {"sticker": trial, "pos": at, "rot": randf_range(0.0, 360.0), "size": randf_range(0.7, 0.9), "ponder": true, "precise": false, "phase": "trial", "fix": true})
+		plan.insert(trial_at + 1, {"action": "undo", "fix": true, "stare": randf_range(STARE_MIN, STARE_MAX) * 1.5, "stare_pos": at})
+
+
+func _mark_line(plan: Array[Dictionary], pen: int, start: Vector2, heading: Vector2, length: float, bend: float) -> void:
+	"""A drawn line from small pen marks chained end to end, bending a
+	little as it goes (like the carved outlines, but open)."""
+	var size := _min_size * randf_range(1.0, 1.15)
+	var step := size * LINE_OVERLAP
+	var p := start
+	var dir := heading.normalized()
+	var flip := 180.0 if randf() < 0.5 else 0.0
+	for k in maxi(1, ceili(length / step)):
+		var mid := p + dir * step * 0.5
+		_stamp(plan, pen, Vector2(mid.x, mid.y * 1.0), rad_to_deg(dir.angle()) + _long_axis_spin(pen) + flip + randfn(0.0, 4.0), size, false, true)
+		plan[-1].phase = "line"
+		p += dir * step
+		dir = dir.rotated(bend * step / maxf(length, 0.01))
+
+
+func _pick_frame() -> int:
+	"""An outline sticker for window frames: the square ones, not brackets."""
+	var library := StickerLibrary.sticker_library
+	var squares: Array[int] = []
+	for i in library.size():
+		if _has_role(i, "frame") and _color(i).coverage < 0.4:
+			var t := _texture_size(i)
+			if maxf(t.x, t.y) / minf(t.x, t.y) < 2.2:
+				squares.append(i)
+	if squares.is_empty():
+		return _pick("frame", [], "any")
+	var pick: int = squares.pick_random()
+	if not pick in _palette:
+		_palette.append(pick)
+	return pick
+
+
+func _pick_by(role: String, test: Callable, avoid: Array = [], slot: String = "any") -> int:
+	"""Like _pick, but only stickers passing `test` (falls back to any of the role)."""
+	var library := StickerLibrary.sticker_library
+	var candidates: Array[int] = []
+	for i in library.size():
+		if not i in avoid and _has_role(i, role) and test.call(i):
+			candidates.append(i)
+	if candidates.is_empty():
+		return _pick(role, avoid, slot)
+	var weights: Array[float] = []
+	var total := 0.0
+	for i in candidates:
+		var w := _color_weight(i, slot) * (2.0 if i in _palette else 1.0)
+		weights.append(w)
+		total += w
+	var r := randf() * total
+	var pick := candidates[-1]
+	for k in candidates.size():
+		r -= weights[k]
+		if r <= 0.0:
+			pick = candidates[k]
+			break
+	if not pick in _palette:
+		_palette.append(pick)
+	return pick
 
 
 # --- Abstractions ---
@@ -1397,6 +1591,9 @@ func _has_role(sticker: int, role: String) -> bool:
 	if role.ends_with("_base"):
 		# A ground that covers: no lace, which would leave canvas showing everywhere
 		return _has_role(sticker, role.trim_suffix("_base")) and _solidity(sticker) >= BASE_SOLIDITY
+	if role == "pale":
+		# Light, fairly dense stickers that veil what's under them
+		return not ("line" in roles or "frame" in roles) and _color(sticker).light >= PALE_LIGHT and _color(sticker).coverage >= 0.35 and _color(sticker).colorful < 0.35
 	if role == "solid":
 		return _solidity(sticker) >= SOLID_INTERIOR
 	if role == "pen":
