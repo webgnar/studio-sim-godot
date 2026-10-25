@@ -184,6 +184,9 @@ const FORM_BORDER := 0.25            ## most of a form's cells that may lie on t
 const FORM_COMPACT := Vector2(0.08, 0.7)   ## 4*pi*area/perimeter^2 range: not a sliver, not a plain blob
 const FORM_RING := Vector2(2.0, 4.0) ## cells round a found form that later rounds leave alone
 const FORM_STRIP := Vector2(0.13, 0.2)   ## length of the strips banding a found form
+const FORM_LINE_TRIES := 4           ## a band mark that would cut into a form is nudged out this many times before leaving a gap
+const FORM_SIDE := 3.0               ## cells along one side of a form's edge line that are made continuous
+const FORM_SIDE_MARKS := 14          ## most marks doing that
 const FORM_CONTRAST := 0.3           ## those marks differ from the form by at least this much lightness
 const FORM_INTRUDE := 2              ## sample points a later shape may land inside the form
 const FORM_SAFETY := 0.015           ## shapes count this much bigger when checked against the form, for the hand's wobble
@@ -1007,18 +1010,101 @@ func _bring_out(plan: Array[Dictionary], found: Dictionary) -> void:
 	var shapes := Geometry2D.offset_polygon(found.outline, thick * 0.6, Geometry2D.JOIN_ROUND)
 	if shapes.is_empty():
 		return
+	# Before the line goes down, look along one side of it (inside the form
+	# or just outside the line) and make that side continuous
+	_continue_side(plan, found, thick * COVER_GRID)
 	var points := _resample(shapes[0], size * LINE_OVERLAP)
 	var n := points.size()
 	for k in n:
 		var p := points[k]
-		var tangent := (points[(k + 1) % n] - points[(k - 1 + n) % n]).normalized()
-		var mark := {"sticker": inks[0] if inks.size() == 1 or randf() < 0.75 else inks[1], "pos": Vector2(p.x, p.y * _aspect_fix()), "rot": rad_to_deg(tangent.angle()) + _long_axis_spin(inks[0]) + randfn(0.0, 5.0), "size": size}
-		if p.y < -0.02 or p.y > _aspect + 0.02 or _intrudes(mark, 1):
+		if p.y < -0.02 or p.y > _aspect + 0.02:
 			continue
-		_stamp(plan, mark.sticker, mark.pos, mark.rot, size, false, true)
-		plan[-1].phase = "carve"
+		var tangent := (points[(k + 1) % n] - points[(k - 1 + n) % n]).normalized()
+		var outward := tangent.orthogonal()
+		if Geometry2D.is_point_in_polygon(p + outward * thick, found.outline):
+			outward = -outward
+		var sticker: int = inks[0] if inks.size() == 1 or randf() < 0.75 else inks[1]
+		var rot := rad_to_deg(tangent.angle()) + _long_axis_spin(inks[0]) + randfn(0.0, 5.0)
+		# Keep the line unbroken: where a mark would cut into a form, nudge
+		# it outward and shorten it a little rather than leave a gap
+		for t in FORM_LINE_TRIES:
+			var q := p + outward * thick * 0.4 * t
+			var mark := {"sticker": sticker, "pos": Vector2(q.x, q.y * _aspect_fix()), "rot": rot, "size": size * pow(0.9, t)}
+			if not _intrudes(mark, 1):
+				_stamp(plan, sticker, mark.pos, rot, mark.size, false, true)
+				plan[-1].phase = "carve"
+				break
 	if randf() < FORM_LINE_CHANCE:
 		_draw_edge(plan, _pick("pen", [], "any"), found.outline, randf_range(0.35, 0.8))
+
+
+func _continue_side(plan: Array[Dictionary], found: Dictionary, band: float) -> void:
+	"""Look at one side of a form's edge line, inside the form or just
+	outside the line, and make it as continuous as possible: along that side,
+	spots whose value breaks from the side's own value are covered with the
+	side's main sticker, turned the way it already runs, so the line ends up
+	bordering one unbroken field instead of a broken one."""
+	var look := _squint(plan)
+	var top: PackedInt32Array = look.top
+	var raw: PackedInt32Array = look.raw
+	var form := PackedByteArray()
+	form.resize(top.size())
+	for i in found.cells:
+		form[i] = CELL_FULL
+	var outside := PackedByteArray()
+	outside.resize(top.size())
+	for i in top.size():
+		outside[i] = 0 if form[i] else CELL_FULL
+	var to_form := _clearance(form)        # distance out from the form
+	var to_edge := _clearance(outside)     # distance in from its edge
+	var interior := randf() < 0.5
+	var side: Array[int] = []
+	for i in top.size():
+		if top[i] < 0:
+			continue
+		if interior and form[i] and to_edge[i] <= FORM_SIDE:
+			side.append(i)
+		elif not interior and not form[i] and to_form[i] > band + 0.5 and to_form[i] <= band + 0.5 + FORM_SIDE and (_keep_out.is_empty() or _keep_out[i] == CELL_FULL):
+			side.append(i)
+	if side.is_empty():
+		return
+	# The side's own value, and the sticker that carries it most
+	var votes := [0, 0, 0]
+	for i in side:
+		votes[raw[i]] += 1
+	var v: int = votes.find(votes.max())
+	var counts := {}
+	var turns := {}
+	var sizes := {}
+	for i in side:
+		if raw[i] == v:
+			var st: int = plan[top[i]].sticker
+			counts[st] = counts.get(st, 0) + 1
+			turns[st] = plan[top[i]].rot
+			sizes[st] = sizes.get(st, 0.0) + plan[top[i]].size
+	var ink: int = counts.keys()[0]
+	for st in counts:
+		if counts[st] > counts[ink]:
+			ink = st
+	var grid := PackedByteArray()
+	grid.resize(top.size())
+	grid.fill(CELL_FULL)
+	var breaks := 0
+	for i in side:
+		if raw[i] != v:
+			grid[i] = 0
+			breaks += 1
+	if breaks == 0:
+		return
+	# Inside the form the keep-out doesn't apply: this is the form itself
+	var keep := _keep_out
+	if interior:
+		_keep_out = PackedByteArray()
+	# Pieces the size that sticker already is there: small ones would chop
+	# the side into a mosaic, the opposite of continuous
+	var usual: float = sizes[ink] / counts[ink]
+	_fill_spots(plan, grid, [ink], maxf(usual * 0.7, _min_size), maxf(usual, _min_size), FORM_SIDE_MARKS, turns[ink], "continue", true)
+	_keep_out = keep
 
 
 func _bounds(poly: PackedVector2Array) -> Rect2:
