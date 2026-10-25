@@ -341,6 +341,10 @@ func plan_painting(aspect: float, add_on: bool = false) -> Array[Dictionary]:
 		_meticulous(plan, last_style.get_slice(" ", 1))
 		last_style += ", " + family
 		_jumble_order(plan, ORDER_JUMBLE_METICULOUS)
+		if last_style.begins_with("meticulous catalog"):
+			# A catalog is a stage, never the final statement: build over it
+			last_style += ", built over"
+			_build_over(plan)
 		_finish_cover(plan)
 		return plan
 	last_style = "layered, " + family
@@ -380,6 +384,18 @@ func plan_painting(aspect: float, add_on: bool = false) -> Array[Dictionary]:
 	_jumble_order(plan, ORDER_JUMBLE)
 	_finish_cover(plan)
 	return plan
+
+
+func _build_over(plan: Array[Dictionary]) -> void:
+	"""Take a finished meticulous layer somewhere: a burst drawn into a form
+	with marks, or a big subject, over the top of it, plus accents."""
+	var spot := _focal_spot(-1.0, 0.2)
+	if randf() < 0.7:
+		var b := _burst(plan, spot, randf_range(0.24, 0.32))
+		_carve(plan, b)
+	else:
+		spot = _focal(plan, -1.0)
+	_accents(plan, spot)
 
 
 func _structure(plan: Array[Dictionary], kind: String, base_fill: int) -> float:
