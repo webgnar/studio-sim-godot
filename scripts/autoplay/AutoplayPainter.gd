@@ -190,7 +190,7 @@ const FORM_SIDE_MARKS := 14          ## most marks doing that
 const FORM_CONTRAST := 0.3           ## those marks differ from the form by at least this much lightness
 const FORM_INTRUDE := 2              ## sample points a later shape may land inside the form
 const FORM_SAFETY := 0.015           ## shapes count this much bigger when checked against the form, for the hand's wobble
-const FORM_TRIES := 16               ## steps a shape slides away from the form before giving up
+const STUDIO_ANY_STICKER := 0.5      ## share of studio paintings where every pick is any sticker at all, ignoring role and colour
 const FORM_ZOOM := 0.7               ## each round looks for forms this much smaller than the last
 const FORM_TINIEST := 0.006          ## smallest form any round will take (share of the canvas)
 const FORM_PASSES := 8               ## most squint-and-define rounds per painting
@@ -267,6 +267,7 @@ var _add_on := false
 var _cover_margin := COVER_MARGIN   ## 0 when looking at what actually went down
 var _forms: Array[PackedVector2Array] = []   ## studio forms, canvas-width units
 var _keep_out := PackedByteArray()  ## coverage grid with only the forms bare: nothing goes there
+var _any_sticker := false          ## every pick is any sticker at all (studio paintings)
 var _zoom := 1.0                    ## how close the current squint-and-define round looks (1 = first round)
 var _form_ink := -1               ## what the forms are filled with, for touching them up
 var last_carve_source := ""   ## id of the sticker whose silhouette was last carved, for previews
@@ -368,6 +369,7 @@ func plan_painting(aspect: float, add_on: bool = false) -> Array[Dictionary]:
 	_keep_out = PackedByteArray()
 	_form_ink = -1
 	_zoom = 1.0
+	_any_sticker = false
 	_focus_base = randf_range(0.35, 0.85)
 	_energy_base = randf_range(0.25, 0.8)
 	focus = _focus_base
@@ -390,6 +392,9 @@ func plan_painting(aspect: float, add_on: bool = false) -> Array[Dictionary]:
 	if not add_on and randf() < STUDIO_CHANCE:
 		last_style = "studio, " + family
 		late_fill = true
+		_any_sticker = randf() < STUDIO_ANY_STICKER
+		if _any_sticker:
+			last_style += ", any sticker"
 		_studio(plan)
 		_finish_cover(plan)
 		return plan
@@ -1178,6 +1183,15 @@ func _draw_edge(plan: Array[Dictionary], pen: int, form: PackedVector2Array, sha
 		plan[-1].phase = "carve"
 
 
+func _any(pick: int) -> int:
+	"""In an any-sticker painting (STUDIO_ANY_STICKER) a pick ignores what
+	it asked for (role, colour, shape): any sticker from the whole library
+	goes in its place, for a much wider range of colour and tone."""
+	if not _any_sticker:
+		return pick
+	return randi() % maxi(StickerLibrary.sticker_library.size(), 1)
+
+
 func _pick_frame() -> int:
 	"""An outline sticker for window frames: the square ones, not brackets."""
 	var library := StickerLibrary.sticker_library
@@ -1192,7 +1206,7 @@ func _pick_frame() -> int:
 	var pick: int = squares.pick_random()
 	if not pick in _palette:
 		_palette.append(pick)
-	return pick
+	return _any(pick)
 
 
 func _pick_by(role: String, test: Callable, avoid: Array = [], slot: String = "any") -> int:
@@ -1219,7 +1233,7 @@ func _pick_by(role: String, test: Callable, avoid: Array = [], slot: String = "a
 			break
 	if not pick in _palette:
 		_palette.append(pick)
-	return pick
+	return _any(pick)
 
 
 # --- Abstractions ---
@@ -2006,7 +2020,7 @@ func _pick(role: String, avoid: Array = [], slot: String = "any") -> int:
 			break
 	if not pick in _palette:
 		_palette.append(pick)
-	return pick
+	return _any(pick)
 
 
 func _has_role(sticker: int, role: String) -> bool:
