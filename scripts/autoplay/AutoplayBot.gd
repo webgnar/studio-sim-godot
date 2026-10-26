@@ -15,6 +15,11 @@ extends Node
 ##   same way a player paints. WHAT it paints comes from AutoplayPainter (the
 ##   tuning surface); this file only performs it. When done it detaches the
 ##   painting with the red button and starts a fresh one.
+## - Boombox: keeps music on. If nothing has played for MUSIC_OFF_LIMIT it
+##   walks over and turns it on; it listens to a station for STATION_LISTEN
+##   and to a stored track once, then walks over and switches to the next
+##   thing on the boombox (stations and tracks alternate there). It breaks off
+##   painting to do this and goes back to the canvas after.
 ## - Clear the canvas: detached paintings land in front of the fresh canvas,
 ##   so the bot carries each one off and tosses it onto a pile in a studio
 ##   corner, then paints.
@@ -33,6 +38,11 @@ const STEP_BACK_EVERY_MAX := 90.0
 const STEP_BACK_DISTANCE := 2.0     ## metres the bot backs away from where it paints
 const STEP_BACK_LOOK_MIN := 3.0     ## seconds spent looking at the whole painting from there
 const STEP_BACK_LOOK_MAX := 7.0
+
+const MUSIC_OFF_LIMIT := 300.0      ## seconds of no music before the bot goes and turns the boombox on
+const STATION_LISTEN := 300.0       ## seconds it listens to a radio station before changing it
+const BOOMBOX_REACH := 1.6          ## press the boombox from about this far
+const BOOMBOX_RETRY := 60.0         ## seconds before trying again when the boombox couldn't be reached
 
 const PAINT_CHANCE := 0.6           ## per cycle, when painting is available
 const WANDER_STOPS_MIN := 1
@@ -66,6 +76,13 @@ var _saved_selection: Dictionary = {}
 var _carrying: CarryableComponent = null  ## a painting the bot picked up and hasn't tossed yet
 var _dump: Dictionary = {}                ## the cached dump corner: {scene, stand, target}
 var _pickup_tries: Dictionary = {}        ## painting -> failed pickups this session
+var _music_off_since := 0.0               ## when the boombox was last seen going quiet
+var _entry_label := ""                    ## what the boombox is playing, as last seen
+var _entry_since := 0.0                   ## when that started
+var _track_pos := -1.0                    ## last seen position in a stored track
+var _track_looped := false                ## the stored track has played through once
+var _boombox_retry_at := 0.0
+var _boombox: BoomboxInteraction = null   ## found once per scene
 var painter: AutoplayPainter = preload("res://scripts/autoplay/AutoplayPainter.gd").new()
 
 
@@ -75,6 +92,7 @@ func begin(target_player: Node3D) -> void:
 	_detaches_this_session = 0
 	_pickup_tries.clear()
 	_save_player_selection()
+	_reset_music_watch()
 	_run(_token)
 
 
@@ -104,7 +122,9 @@ func _run(token: int) -> void:
 		return
 	while still_running(token):
 		var did_something := false
-		if _can_paint() and randf() < PAINT_CHANCE:
+		if _boombox_due():
+			did_something = await _tend_boombox(token)
+		if not did_something and _can_paint() and randf() < PAINT_CHANCE:
 			did_something = await _paint_canvas(token)
 		if not did_something and still_running(token):
 			did_something = await _wander(token)
@@ -130,6 +150,8 @@ func _wander(token: int) -> bool:
 		var spot = nav.random_reachable_point(player.global_position)
 		if spot == null:
 			break
+		if _boombox_due():
+			return moved
 		if not await _go_to(token, spot):
 			if not still_running(token):
 				return false
@@ -191,6 +213,15 @@ func _paint_canvas(token: int) -> bool:
 			if not await _step_back(token, system, stand):
 				return false
 			next_step_back = _now() + randf_range(STEP_BACK_EVERY_MIN, STEP_BACK_EVERY_MAX)
+		if _boombox_due():
+			# Music needs seeing to: go do it, then back to the canvas
+			if not await _tend_boombox(token) and not still_running(token):
+				return false
+			if not await _go_to(token, stand):
+				return false
+			player.autoplay_look_at(plane.global_position)
+			if not await _wait_for_look(token):
+				return false
 		var stroke := painter.next_stroke(system, i)
 		if stroke.has("stare_uv"):
 			# Noticed something off: look at it for a moment first
@@ -359,6 +390,118 @@ func _find_node_of_type(node: Node) -> PaintingConvertButton:
 		return node
 	for child in node.get_children():
 		var found := _find_node_of_type(child)
+		if found:
+			return found
+	return null
+
+
+# --- Behavior: boombox ---
+
+func _process(_delta: float) -> void:
+	if is_instance_valid(player):
+		_watch_music()
+
+
+func _reset_music_watch() -> void:
+	_music_off_since = _now()
+	_entry_label = ""
+	_entry_since = _now()
+	_track_pos = -1.0
+	_track_looped = false
+	_boombox_retry_at = 0.0
+
+
+func _watch_music() -> void:
+	"""Keep track of what the boombox is doing: how long it's been quiet, how
+	long the current entry has played, and whether a stored track has come
+	round to its start again."""
+	var box := _find_boombox()
+	if not box:
+		return
+	if not box.is_music_on():
+		_entry_label = ""
+		_track_pos = -1.0
+		_track_looped = false
+		return
+	_music_off_since = _now()
+	var label := box.get_current_label()
+	if label != _entry_label:
+		_entry_label = label
+		_entry_since = _now()
+		_track_pos = -1.0
+		_track_looped = false
+	var pos := box.track_position()
+	if pos >= 0.0:
+		if _track_pos >= 0.0 and pos < _track_pos - 1.0:
+			_track_looped = true
+		_track_pos = pos
+
+
+func _boombox_due() -> bool:
+	"""Whether the music needs seeing to now (see MUSIC_OFF_LIMIT,
+	STATION_LISTEN), if there's a boombox in the world."""
+	if _now() < _boombox_retry_at:
+		return false
+	var box := _find_boombox()
+	if not box:
+		return false
+	if not box.is_music_on():
+		return _now() - _music_off_since >= MUSIC_OFF_LIMIT
+	if box.is_station():
+		return _now() - _entry_since >= STATION_LISTEN
+	return _track_looped
+
+
+func _tend_boombox(token: int) -> bool:
+	"""Walk over to the boombox and press it like a player: once to turn it
+	on, or off and on again to move to the next station or track."""
+	var box := _find_boombox()
+	if not box:
+		return false
+	var body := box.get_parent() as Node3D
+	var at: Vector3 = body.global_position
+	var away := player.global_position - at
+	away.y = 0.0
+	var spot: Vector3 = nav.closest_point(at + (away.normalized() if away.length() > 0.01 else Vector3.FORWARD) * BOOMBOX_REACH)
+	if _flat_distance(player.global_position, at) > BOOMBOX_REACH + 0.8:
+		if not nav.can_reach(player.global_position, spot) or not await _go_to(token, spot):
+			if still_running(token):
+				_boombox_retry_at = _now() + BOOMBOX_RETRY
+			return false
+	player.autoplay_look_at(at)
+	if not await _wait_for_look(token) or not await _wait(token, 0.4):
+		return false
+	var interaction = player.get("_interaction_component")
+	var change := box.is_music_on()
+	box.interact(interaction)
+	if change:
+		# Off, then on again: the boombox moves on to the next entry
+		if not await _wait(token, randf_range(0.6, 1.2)):
+			return false
+		box.interact(interaction)
+	_music_off_since = _now()
+	# Listen for a moment before going back to whatever it was doing
+	return await _wait(token, randf_range(1.5, 3.0))
+
+
+func _find_boombox() -> BoomboxInteraction:
+	"""The boombox, if it's been bought and is out in the world."""
+	var scene := get_tree().current_scene
+	if not scene:
+		return null
+	if not is_instance_valid(_boombox) or not _boombox.is_inside_tree():
+		_boombox = _find_boombox_in(scene)
+	var box := _boombox
+	if box and box.get_parent() is Node3D and (box.get_parent() as Node3D).is_visible_in_tree() and not box.is_carried:
+		return box
+	return null
+
+
+func _find_boombox_in(node: Node) -> BoomboxInteraction:
+	if node is BoomboxInteraction:
+		return node
+	for child in node.get_children():
+		var found := _find_boombox_in(child)
 		if found:
 			return found
 	return null
