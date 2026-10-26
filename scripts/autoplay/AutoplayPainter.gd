@@ -192,13 +192,17 @@ const FORM_INTRUDE := 2              ## sample points a later shape may land ins
 const FORM_SAFETY := 0.015           ## shapes count this much bigger when checked against the form, for the hand's wobble
 const STUDIO_ANY_STICKER := 0.5      ## share of studio paintings where every pick is any sticker at all, ignoring role and colour
 const FORM_ZOOM := 0.7               ## each round looks for forms this much smaller than the last
+const FORM_ZOOM_FLOOR := 0.12        ## forms never get looked for smaller than this much of the first form's size
 const FORM_TINIEST := 0.006          ## smallest form any round will take (share of the canvas)
-const FORM_PASSES := 8               ## most squint-and-define rounds per painting
+const FORM_SEED_TRIES := 2           ## when a round finds no form: times it adds new stickers and looks again
+const FORM_SEED_COUNT := Vector2i(2, 4)   ## how many stickers it adds each time
+const FORM_SEED_SIZE := Vector2(0.25, 0.5)   ## their size (share of canvas width): medium to big
+const FORM_PASSES := 16              ## most squint-and-define rounds per painting
 const FORM_REFINE := 30              ## most marks calming the specks around the forms per round
 const FORM_REFINE_CHANCE := 0.0      ## a round also covers specks that clash with their mass (off: chops the masses up with this library)
 const ACCENT_CHANCE := 0.8           ## share of found forms that get a personality
 const ACCENTS := {"beads": 3, "crown": 2, "fringe": 3, "jewel": 2, "stitch": 2}   ## kinds of personality and how often each is picked
-const ACCENT_MAX := 24               ## most accent marks per form
+const ACCENT_MAX := 48               ## most accent marks per form
 const ACCENT_SIZE := Vector2(1.3, 1.5)   ## accent sticker size, as a multiple of the smallest sticker size (louder when higher)
 const STUDIO_VARIETY := 1.0          ## share of studio picks that ignore the learned colour scheme (still the right kind of sticker); 1 = always
 const STUDIO_ROLE_FREE := 0.5        ## share of studio picks that ignore the kind of sticker the job asks for and draw from the whole library (still meeting the job's light/dark or shape test)
@@ -208,7 +212,7 @@ const STUDIO_VEIL_LIGHT := 0.55      ## studio veils and sky wisps: lightest sti
 const STUDIO_UNDER_DARK := 0.65      ## studio dark under-fill: stickers darker than this qualify (higher = more stickers qualify, lighter masses)
 const STUDIO_UNDER_SOLID := 0.7      ## studio dark under-fill: how solid a sticker must be (lower = more stickers qualify, lacier)
 const STUDIO_REUSE := 0.5            ## how likely a studio pick reuses a sticker already in the painting (1 = no preference, below 1 = prefers new ones)
-const FORM_LINE_CHANCE := 0.5        ## part of the form's edge is also drawn with pen marks
+const FORM_LINE_CHANCE := 1.0        ## part of the form's edge is also drawn with pen marks
 const METICULOUS := {"catalog": 1, "checker": 2, "rings": 2, "mandala": 3, "gradient": 2}
 
 ## Colour families a painting's key colour is drawn from (hue 0..1, -1 = black/white/grey).
@@ -772,8 +776,16 @@ func _studio(plan: Array[Dictionary]) -> void:
 	# the forms already defined
 	var center := core
 	for pass_i in FORM_PASSES:
-		_zoom = pow(FORM_ZOOM, pass_i)
+		# Look closer only once a form has been defined: a round that came up
+		# empty adds material (_seed_forms) at the same scale instead
+		_zoom = maxf(pow(FORM_ZOOM, _found.size()), FORM_ZOOM_FLOOR)
 		var found := _find_form(plan)
+		for t in FORM_SEED_TRIES:
+			if not found.is_empty():
+				break
+			# Nothing came out: add new material and look again
+			_seed_forms(plan)
+			found = _find_form(plan)
 		if found.is_empty():
 			continue
 		_forms.append(found.outline)
@@ -1075,6 +1087,22 @@ func _bring_out(plan: Array[Dictionary], found: Dictionary) -> void:
 				break
 	if randf() < FORM_LINE_CHANCE:
 		_draw_edge(plan, _pick("pen", [], "any"), found.outline, randf_range(0.35, 0.8))
+
+
+func _seed_forms(plan: Array[Dictionary]) -> void:
+	"""A round found no form, so put down a few medium or big stickers
+	(FORM_SEED_COUNT, FORM_SEED_SIZE) somewhere away from the forms already
+	defined, without aiming at any shape, so new overlaps give the next look
+	something to find."""
+	for k in randi_range(FORM_SEED_COUNT.x, FORM_SEED_COUNT.y):
+		var sticker := _pick(["subject", "texture", "band", "motif"].pick_random(), [], "any")
+		var size := randf_range(FORM_SEED_SIZE.x, FORM_SEED_SIZE.y)
+		for t in 20:
+			_stamp(plan, sticker, Vector2(randf_range(0.1, 0.9), randf_range(0.1, 0.9)), randf_range(0.0, 360.0), size, true)
+			if not _intrudes(plan[-1]):
+				plan[-1].phase = "seed"
+				break
+			plan.pop_back()
 
 
 func _accent_forms(plan: Array[Dictionary]) -> void:

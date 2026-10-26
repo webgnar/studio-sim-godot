@@ -28,6 +28,12 @@ const MAX_REPLANS := 3
 const BUTTON_REACH := 2.5           ## press the detach button from at most this far
 const EYE_HEIGHT := 1.6
 
+const STEP_BACK_EVERY_MIN := 45.0   ## seconds of painting between steps back from the canvas
+const STEP_BACK_EVERY_MAX := 90.0
+const STEP_BACK_DISTANCE := 2.0     ## metres the bot backs away from where it paints
+const STEP_BACK_LOOK_MIN := 3.0     ## seconds spent looking at the whole painting from there
+const STEP_BACK_LOOK_MAX := 7.0
+
 const PAINT_CHANCE := 0.6           ## per cycle, when painting is available
 const WANDER_STOPS_MIN := 1
 const WANDER_STOPS_MAX := 3
@@ -173,12 +179,18 @@ func _paint_canvas(token: int) -> bool:
 	painter.begin_painting(system)
 	# The plan grows as it goes: mistakes queue their fixes right after them
 	var i := 0
+	var next_step_back := _now() + randf_range(STEP_BACK_EVERY_MIN, STEP_BACK_EVERY_MAX)
 	while i < painter.stroke_count():
 		if not still_running(token):
 			return false
 		# The canvas may have been replaced (format toggle, detach) mid-loop
 		if PaintingModeManager.painting_system_2d != system:
 			return true
+		if _now() >= next_step_back:
+			# Like a painter: walk back, take in the whole picture, come back
+			if not await _step_back(token, system, stand):
+				return false
+			next_step_back = _now() + randf_range(STEP_BACK_EVERY_MIN, STEP_BACK_EVERY_MAX)
 		var stroke := painter.next_stroke(system, i)
 		if stroke.has("stare_uv"):
 			# Noticed something off: look at it for a moment first
@@ -194,6 +206,9 @@ func _paint_canvas(token: int) -> bool:
 			return false
 		i += 1
 
+	# One last long look at the finished painting
+	if not await _step_back(token, system, stand):
+		return false
 	if _detaches_this_session < MAX_DETACHES_PER_SESSION:
 		if await _press_detach_button(token):
 			_detaches_this_session += 1
@@ -201,6 +216,32 @@ func _paint_canvas(token: int) -> bool:
 			if fresh and is_instance_valid(fresh) and fresh.painting_plane:
 				await _clear_canvas_area(token, fresh.painting_plane)
 	return true
+
+
+func _now() -> float:
+	return Time.get_ticks_msec() / 1000.0
+
+
+func _step_back(token: int, system: PaintingSystem2D, stand: Vector3) -> bool:
+	"""Back away from the canvas, look at the whole painting for a while
+	(STEP_BACK_LOOK_MIN..MAX seconds), then walk back to where it paints."""
+	var plane := system.painting_plane
+	var away := stand - plane.global_position
+	away.y = 0.0
+	if away.length() > 0.01:
+		var back: Vector3 = nav.closest_point(stand + away.normalized() * STEP_BACK_DISTANCE)
+		if back.distance_to(stand) > 0.5 and nav.can_reach(stand, back):
+			if not await _go_to(token, back):
+				return false
+	player.autoplay_look_at(plane.global_position)
+	if not await _wait_for_look(token):
+		return false
+	if not await _wait(token, randf_range(STEP_BACK_LOOK_MIN, STEP_BACK_LOOK_MAX)):
+		return false
+	if not await _go_to(token, stand):
+		return false
+	player.autoplay_look_at(plane.global_position)
+	return await _wait_for_look(token)
 
 
 func _perform_stroke(token: int, system: PaintingSystem2D, stroke: Dictionary) -> bool:
