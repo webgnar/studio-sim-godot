@@ -194,6 +194,8 @@ const STUDIO_ANY_STICKER := 0.5      ## share of studio paintings where every pi
 const FORM_ZOOM := 0.7               ## each round looks for forms this much smaller than the last
 const FORM_ZOOM_FLOOR := 0.12        ## forms never get looked for smaller than this much of the first form's size
 const FORM_TINIEST := 0.006          ## smallest form any round will take (share of the canvas)
+const FORM_BUILD_ON_AFTER := 3       ## once this many forms are defined, new forms may be found across and around them
+const FORM_BUILD_ON_SHARE := 0.6     ## most of a new form that may lie inside earlier forms (the rest must be new ground)
 const FORM_SEED_TRIES := 2           ## when a round finds no form: times it adds new stickers and looks again
 const FORM_SEED_COUNT := Vector2i(2, 4)   ## how many stickers it adds each time
 const FORM_SEED_SIZE := Vector2(0.25, 0.5)   ## their size (share of canvas width): medium to big
@@ -826,9 +828,12 @@ func _find_form(plan: Array[Dictionary]) -> Dictionary:
 	var look := _squint(plan)
 	var top: PackedInt32Array = look.top
 	var value: PackedInt32Array = look.value
-	# Parts already defined (and the ring around them) are done: look elsewhere
+	# Parts already defined (and the ring around them) are done: look elsewhere.
+	# After the first few forms, those forms become material: a new form may
+	# take them in, as long as enough of it is new ground (FORM_BUILD_ON_*)
 	var near := _near_forms()
-	if not near.is_empty():
+	var build_on := _found.size() >= FORM_BUILD_ON_AFTER
+	if not near.is_empty() and not build_on:
 		for i in value.size():
 			if near[i] <= maxf((FORM_RING.y + 1.0) * _zoom, 1.5):
 				value[i] = -1
@@ -877,6 +882,13 @@ func _find_form(plan: Array[Dictionary]) -> Dictionary:
 			inks[plan[top[i]].sticker] = inks.get(plan[top[i]].sticker, 0) + 1
 		if stamps.size() < 2:
 			continue
+		if build_on and not near.is_empty():
+			var inside := 0
+			for i in cells:
+				if near[i] <= 0.0:
+					inside += 1
+			if float(inside) / cells.size() > FORM_BUILD_ON_SHARE:
+				continue
 		# Mid-sized, with a few stray ideas: no preference for any kind of shape
 		var score := -absf(log(share / (FORM_SIZE * _zoom))) + randf() * 0.6
 		if not near.is_empty():
