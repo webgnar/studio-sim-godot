@@ -25,6 +25,8 @@ const SCREEN_SIZE := Vector2i(800, 600)
 const MAX_DELTA := 0.05
 const START_OVER_DELAY := 0.75 # ignore input briefly so death-mashing doesn't skip the board
 const JUMP_ACTION := &"lou_gnar_jump"
+const SCROLL_UP_ACTION := &"lou_gnar_scroll_up"
+const SCROLL_DOWN_ACTION := &"lou_gnar_scroll_down"
 const BACKGROUND := Color("#2a2a2a")
 
 @export var input_enabled: bool = true
@@ -98,7 +100,8 @@ func _process(delta: float) -> void:
 				_player.request_jump()
 			_update_playing(dt)
 		Phase.GAME_OVER:
-			_game_over.update(dt)
+			var scroll := Input.get_axis(SCROLL_UP_ACTION, SCROLL_DOWN_ACTION) if input_enabled else 0.0
+			_game_over.update(dt, scroll)
 			if jump and _phase_time >= START_OVER_DELAY:
 				_show_title()
 				returned_to_title.emit()
@@ -317,8 +320,10 @@ func _apply_audio_state() -> void:
 		_audio.enabled = audio_enabled and _running
 
 
-## Registers the game's single input action if the project hasn't defined it.
+## Registers the game's input actions if the project hasn't defined them.
 static func _ensure_input_action() -> void:
+	_ensure_scroll_action(SCROLL_UP_ACTION, -1.0, [KEY_UP, KEY_W], JOY_BUTTON_DPAD_UP)
+	_ensure_scroll_action(SCROLL_DOWN_ACTION, 1.0, [KEY_DOWN, KEY_S], JOY_BUTTON_DPAD_DOWN)
 	if InputMap.has_action(JUMP_ACTION):
 		return
 	InputMap.add_action(JUMP_ACTION)
@@ -332,3 +337,21 @@ static func _ensure_input_action() -> void:
 	var pad := InputEventJoypadButton.new()
 	pad.button_index = JOY_BUTTON_A
 	InputMap.action_add_event(JUMP_ACTION, pad)
+
+
+## Leaderboard scroll: left stick up/down, d-pad, arrow keys and W/S.
+static func _ensure_scroll_action(action: StringName, direction: float, keys: Array, dpad: JoyButton) -> void:
+	if InputMap.has_action(action):
+		return
+	InputMap.add_action(action, 0.2)
+	for keycode: Key in keys:
+		var key := InputEventKey.new()
+		key.physical_keycode = keycode
+		InputMap.action_add_event(action, key)
+	var stick := InputEventJoypadMotion.new()
+	stick.axis = JOY_AXIS_LEFT_Y
+	stick.axis_value = direction
+	InputMap.action_add_event(action, stick)
+	var pad := InputEventJoypadButton.new()
+	pad.button_index = dpad
+	InputMap.action_add_event(action, pad)
