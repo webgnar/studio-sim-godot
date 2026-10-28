@@ -385,6 +385,24 @@ func set_volume(volume: float) -> void:
 		_stream_slot_b.volume_db = db
 
 
+func is_music_on() -> bool:
+	"""Playing or tuning in (the autoplay bot reads this)."""
+	return _current_state != BoomboxState.OFF
+
+
+func is_station() -> bool:
+	"""The current entry is a radio station rather than a stored track."""
+	return _is_radio_entry
+
+
+func track_position() -> float:
+	"""Seconds into the stored track that's playing, or -1 for a station or
+	when off. It jumps back to 0 when the track loops."""
+	if _current_state == BoomboxState.OFF or _is_radio_entry or not _local_player:
+		return -1.0
+	return _local_player.get_playback_position()
+
+
 func get_current_label() -> String:
 	if _current_index < 0 or _current_index >= _playlist.size():
 		return ""

@@ -109,6 +109,9 @@ var _skate_board_original_transform: Transform3D
 var _skate_board_collision: CollisionShape3D = null
 
 # Current speed property - returns appropriate speed based on movement state
+# Idle autoplay: AutoplayManager steers the player through these while it's active
+var autoplay_move: Vector2 = Vector2.ZERO  ## Same space as the move_* input vector (x = right, y = back)
+
 var current_speed: float:
 	get:
 		if _is_crouching:
@@ -336,6 +339,8 @@ func _physics_process(delta: float) -> void:
 	if not _is_climbing:
 		# Get the input direction vector from the input actions.
 		var input_dir := SteamInput.get_vector("move_left", "move_right", "move_forward", "move_back")
+		if AutoplayManager.is_active():
+			input_dir = autoplay_move
 
 		# Convert the 2D input vector to a 3D direction vector.
 		var direction := (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
@@ -507,6 +512,29 @@ func _unhandled_input(event: InputEvent) -> void:
 					UIManager.change_state(UIManager.GameState.GAMEPLAY)
 				get_viewport().set_input_as_handled()  # Stop event propagation
 				return  # Don't process other interactions while recapturing
+
+## Idle autoplay: turn the view toward a world point. Uses the normal camera
+## smoothing, so the bot's look glides like a player's mouse would.
+func autoplay_look_at(world_point: Vector3) -> void:
+	if not _camera:
+		return
+	var to_point := world_point - _camera.global_position
+	var flat_len := Vector2(to_point.x, to_point.z).length()
+	if flat_len < 0.001 and absf(to_point.y) < 0.001:
+		return
+	var yaw := atan2(-to_point.x, -to_point.z)
+	_target_rot.y += wrapf(yaw - _target_rot.y, -PI, PI)  # shortest turn, no full spins
+	_target_rot.x = clamp(atan2(to_point.y, flat_len), deg_to_rad(-80), deg_to_rad(80))
+
+## Idle autoplay: true once the smoothed view has caught up with the last look target.
+func autoplay_look_settled(tolerance_rad: float = 0.02) -> bool:
+	return _current_rot.distance_to(_target_rot) < tolerance_rad
+
+func is_skating() -> bool:
+	return _is_skating
+
+func is_climbing() -> bool:
+	return _is_climbing
 
 func _exit_tree() -> void:
 	# Make sure to release the mouse when the player object is removed.
