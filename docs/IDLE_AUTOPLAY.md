@@ -78,3 +78,8 @@ The difference is that the assistant never finishes. When a round is done it loo
 - `ASSISTANT_PLAN_LIMIT`: planning looks through every sticker, so past this many it forgets the ones that aren't on top anywhere. The canvas keeps them all.
 
 A canvas restored from a save is handed to the painter as stamps, so the assistant builds on it; the forms it had found aren't saved, so they're fair game for the next round.
+
+**Switching style with the Psy Wheel:** interacting with the Psy Wheel in the assistant's studio (once it's bought) steps through `AutomationManager.ASSISTANT_STYLES` and reverses the wheel's spin each time (`AssistantStyleWheel.gd`, added to the wheel by `StickerWallManager`, with its own collision since the prop has none). The style is saved with the game and takes effect on the next sticker; the new style picks up from whatever is on the wall.
+- **Studio** (default): the endless studio rounds above.
+- **Hall of Fame**: the bot's style before the studio style, the version zack saved on branch `autoplay-painter-v1` (layered, meticulous and burst-carved paintings; `plan_painting` with the studio style left out). It paints one whole painting, then keeps adding motifs, focal points and accents over it.
+- **Random**: the assistant's original style, a random sticker at a random spot, turn and size.

@@ -295,6 +295,7 @@ var last_carve_source := ""   ## id of the sticker whose silhouette was last car
 var _guard := false               ## new shapes skip anything that would cut into the kept forms (assistant rounds)
 var _cycle := 0                   ## assistant: rounds of making shapes and defining forms so far
 var _next := 0                    ## assistant: next stroke to hand out
+var _assistant_style := "studio"  ## assistant: "studio" or "hall_of_fame" (see begin_assistant)
 static var _colors: Dictionary = {}
 static var _silhouettes: Dictionary = {}   ## sticker id -> traced outline, see _silhouette()   ## sticker id -> colour summary, see _color()
 
@@ -383,7 +384,12 @@ func hover_time() -> float:
 
 ## Start (or pick up) the assistant's painting. `aspect` is canvas height /
 ## width; `placed` is what's already on its canvas, as viewer-space stamps.
-func begin_assistant(aspect: float, placed: Array[Dictionary] = []) -> void:
+## `style` "studio" paints the studio rounds above; "hall_of_fame" paints the
+## way the bot did before the studio style (layered, meticulous and drawn
+## abstractions, saved on branch autoplay-painter-v1), then keeps adding
+## motifs and focal points over it.
+func begin_assistant(aspect: float, placed: Array[Dictionary] = [], style: String = "studio") -> void:
+	_assistant_style = style
 	_aspect = aspect
 	_min_size = ASSISTANT_MIN_SIZE
 	_fresh_painting(false)
@@ -434,6 +440,13 @@ func _assistant_round() -> void:
 	_plan = _on_canvas()
 	_forget_hidden()
 	_next = _plan.size()
+	if _assistant_style == "hall_of_fame":
+		# A whole painting on a bare canvas, then add-ons over it
+		var placed := _plan
+		var more := plan_painting(_aspect, not placed.is_empty(), false)
+		placed.append_array(more)
+		_plan = placed
+		return
 	var kept: Array[PackedVector2Array] = []
 	for f in _forms:
 		if randf() < ASSISTANT_KEEP_FORMS:
@@ -488,9 +501,9 @@ func _forget_hidden() -> void:
 ## 0 = upright), size (longest side, as a fraction of canvas width), ponder,
 ## precise}.
 ## `add_on` skips the background and structure, for canvases that already
-## have something on them. Doesn't touch the scene, so tools can call it
-## directly to preview plans.
-func plan_painting(aspect: float, add_on: bool = false) -> Array[Dictionary]:
+## have something on them. `allow_studio` false never picks the studio style.
+## Doesn't touch the scene, so tools can call it directly to preview plans.
+func plan_painting(aspect: float, add_on: bool = false, allow_studio: bool = true) -> Array[Dictionary]:
 	_aspect = aspect
 	_cycle = 0
 	_fresh_painting(add_on)
@@ -509,7 +522,7 @@ func plan_painting(aspect: float, add_on: bool = false) -> Array[Dictionary]:
 			_build_over(plan)
 		_finish_cover(plan)
 		return plan
-	if not add_on and randf() < STUDIO_CHANCE:
+	if allow_studio and not add_on and randf() < STUDIO_CHANCE:
 		last_style = "studio, " + family
 		late_fill = true
 		_variety = true

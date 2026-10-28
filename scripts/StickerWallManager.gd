@@ -9,6 +9,12 @@ class_name StickerWallManager
 ## the player decides when it's done by transferring the work.
 ## Use wall_id to differentiate multiple instances — each saves independently.
 
+## The Psy Wheel in the assistant's studio switches its painting style
+## (AutomationManager.ASSISTANT_STYLES), even mid-painting: the new style
+## picks up from whatever is on the wall.
+
+const MARGIN = 40.0  # px from canvas edge (random style)
+
 ## Unique ID for this wall's save file. Change per-instance for multiple walls.
 @export var wall_id: String = "wall_a"
 ## How often a new sticker appears (seconds).
@@ -25,6 +31,7 @@ var _sprites: Array = []   # one per placement (null if its sticker is missing)
 var _timer: Timer
 var _painter := AutoplayPainter.new()
 var _painter_ready := false
+var _painter_style := ""   # the style the painter was started in
 var _warmed := 0           # stickers the painter has looked at (see AutoplayPainter.warm_up)
 var _planning := -1        # worker thread task planning the next round
 
@@ -38,6 +45,11 @@ func _ready():
 	wall_plane.set_surface_override_material(0, mat)
 
 	add_to_group("sticker_wall_managers")
+
+	# The Psy Wheel next to the wall switches the painting style
+	var wheel := get_node_or_null("../Psywheel")
+	if wheel:
+		wheel.add_child.call_deferred(AssistantStyleWheel.new())
 
 	# Restore saved stickers from lightweight file (fast, avoids world state parse)
 	var saved = _load_stickers_from_file()
@@ -72,6 +84,13 @@ func _on_timer_timeout() -> void:
 	if library.is_empty():
 		return
 
+	var style := _style()
+	if style == "random":
+		_place_random(library)
+		_painter_ready = false   # back in a bot style, it picks up from what's on the wall
+		return
+	if _painter_ready and style != _painter_style:
+		_painter_ready = false
 	if _warmed < library.size() or _planning >= 0:
 		return   # still looking at the stickers, or thinking about the next round
 	if not _painter_ready:
@@ -97,12 +116,29 @@ func _on_timer_timeout() -> void:
 	sub_viewport.render_target_update_mode = SubViewport.UPDATE_ONCE
 
 
+func _style() -> String:
+	return AutomationManager.assistant_style if has_node("/root/AutomationManager") else "studio"
+
+
+func _place_random(library: Array) -> void:
+	var data = {
+		"idx": randi() % library.size(),
+		"x": randf_range(MARGIN, canvas_size.x - MARGIN),
+		"y": randf_range(MARGIN, canvas_size.y - MARGIN),
+		"rotation": randf_range(-PI, PI),
+		"scale": randf_range(0.15, 0.45),
+	}
+	_sprites.append(_spawn_sticker_sprite(data))
+	_placements.append(data)
+	sub_viewport.render_target_update_mode = SubViewport.UPDATE_ONCE
+
+
 func _process(_delta: float) -> void:
 	if _planning >= 0 and WorkerThreadPool.is_task_completed(_planning):
 		WorkerThreadPool.wait_for_task_completion(_planning)
 		_planning = -1
 	# One sticker a frame, so looking at them all never stalls a frame
-	if not _timer.is_stopped() and has_node("/root/StickerLibrary") and _warmed < StickerLibrary.sticker_library.size():
+	if _style() != "random" and not _timer.is_stopped() and has_node("/root/StickerLibrary") and _warmed < StickerLibrary.sticker_library.size():
 		_painter.warm_up(_warmed)
 		_warmed += 1
 
@@ -120,7 +156,8 @@ func _begin_painting() -> void:
 		var stamp := _data_to_stamp(data)
 		if not stamp.is_empty():
 			placed.append(stamp)
-	_painter.begin_assistant(canvas_size.y / canvas_size.x, placed)
+	_painter_style = _style()
+	_painter.begin_assistant(canvas_size.y / canvas_size.x, placed, _painter_style)
 	_painter_ready = true
 
 

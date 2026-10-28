@@ -7,6 +7,7 @@ extends Node
 var studio_assistant_active: bool = false
 var assistant_timer: float = 0.0
 var assistant_payout_accumulated: int = 0  # grows each cycle based on visitor count
+var assistant_style: String = "studio"  # how the assistant paints its wall, see ASSISTANT_STYLES
 
 # Studio Assistant constants
 const ASSISTANT_COST: int = 2000
@@ -14,6 +15,10 @@ const ASSISTANT_INTERVAL: float = 300.0  # 5 minutes in seconds
 const ASSISTANT_PAYOUT: int = 100  # $100 base per painting
 const VISITOR_BONUS_PER_CYCLE: int = 5   # $ added to accumulated bonus per visitor per cycle
 const ASSISTANT_MAX_BONUS: int = 150     # cap: ASSISTANT_PAYOUT * 10 * 0.15
+## Painting styles, in the order the Psy Wheel steps through them:
+## studio = the autoplay bot's studio rounds, hall_of_fame = the bot's style
+## before that (branch autoplay-painter-v1), random = random stickers anywhere
+const ASSISTANT_STYLES: Array[String] = ["studio", "hall_of_fame", "random"]
 
 # Audio
 @export var payout_sound: AudioStream  # Sound played when assistant completes painting
@@ -23,6 +28,7 @@ var audio_player: AudioStreamPlayer = null
 signal assistant_purchased
 signal assistant_payout(amount: int)
 signal assistant_progress(time_remaining: float, progress_percent: float)
+signal assistant_style_changed(style: String)
 
 func _ready():
 	print("AutomationManager: Initialized")
@@ -120,6 +126,13 @@ func get_assistant_status() -> Dictionary:
 		"progress_percent": (assistant_timer / ASSISTANT_INTERVAL) * 100.0 if studio_assistant_active else 0.0
 	}
 
+func next_assistant_style() -> String:
+	"""Step to the next painting style. The assistant switches on its next sticker."""
+	var i := ASSISTANT_STYLES.find(assistant_style)
+	assistant_style = ASSISTANT_STYLES[(i + 1) % ASSISTANT_STYLES.size()]
+	assistant_style_changed.emit(assistant_style)
+	return assistant_style
+
 func is_assistant_active() -> bool:
 	"""Check if studio assistant is active"""
 	return studio_assistant_active
@@ -133,7 +146,8 @@ func get_save_data() -> Dictionary:
 	return {
 		"studio_assistant_active": studio_assistant_active,
 		"assistant_timer": assistant_timer,
-		"assistant_payout_accumulated": assistant_payout_accumulated
+		"assistant_payout_accumulated": assistant_payout_accumulated,
+		"assistant_style": assistant_style
 	}
 
 func load_save_data(data: Dictionary):
@@ -141,6 +155,9 @@ func load_save_data(data: Dictionary):
 	studio_assistant_active = data.get("studio_assistant_active", false)
 	assistant_timer = data.get("assistant_timer", 0.0)
 	assistant_payout_accumulated = data.get("assistant_payout_accumulated", 0)
+	assistant_style = data.get("assistant_style", "studio")
+	if not assistant_style in ASSISTANT_STYLES:
+		assistant_style = "studio"
 
 	if studio_assistant_active:
 		print("AutomationManager: Studio Assistant restored (%.1fs until next payout)" % (ASSISTANT_INTERVAL - assistant_timer))
@@ -151,4 +168,5 @@ func clear_state():
 	studio_assistant_active = false
 	assistant_timer = 0.0
 	assistant_payout_accumulated = 0
+	assistant_style = "studio"
 	print("AutomationManager: State cleared")
