@@ -434,7 +434,99 @@ const CLOSERS := {
 }
 
 
-static func generate(critic_type: String, title: String, artist: String, statement: String) -> String:
+## Callback lines when a critic has reviewed this player before (see CriticMemory).
+## RETURNING is used for the first few repeat visits and names the last painting;
+## REGULAR is used once the critic has reviewed {count} or more of them.
+const REGULARS_AFTER := 3
+
+const RETURNING := {
+	"bum": [
+		"You again. Last time it was '{prev_title}.' I'm still thinking about that one, and I don't think about much.",
+		"Oh, it's the '{prev_title}' kid. Yeah, I remember. I remember everything, that's my problem.",
+		"I told you about '{prev_title}' and you came back anyway. Glutton for punishment. I like that.",
+		"Hey, I know your work. '{prev_title}.' Let's see if you learned anything since then.",
+		"Back for more? After '{prev_title}' I figured you'd quit. Most people quit.",
+		"I still got '{prev_title}' rattling around in my head. Now you bring me this.",
+	],
+	"general": [
+		"I have your file. Your last operation was '{prev_title}.' Let's see if you've advanced.",
+		"We meet again. '{prev_title}' was your previous engagement. I've been expecting a follow-up.",
+		"Your record precedes you. After '{prev_title},' I expect results.",
+		"I debriefed '{prev_title}' myself. This is your next campaign. Show me progress.",
+		"Return to base, I see. '{prev_title}' left questions unanswered. Let's get answers.",
+		"The last report from your unit was '{prev_title}.' I've been reviewing it in the evenings.",
+	],
+	"govtpig": [
+		"Our records indicate a prior submission from this artist: '{prev_title}.' The file has been reopened.",
+		"This is a repeat applicant. Previous filing: '{prev_title}.' Please note the reference number.",
+		"The department remembers '{prev_title}.' The paperwork on that one is still being processed.",
+		"A follow-up submission. We have cross-referenced it against '{prev_title}' per procedure.",
+		"Welcome back. Your previous case, '{prev_title},' remains on file indefinitely.",
+		"Ah. The '{prev_title}' artist. The committee has been informed of your return.",
+	],
+	"guy": [
+		"Wait, I know you! You did '{prev_title}.' I told my buddy about that one.",
+		"Oh nice, it's the '{prev_title}' person. I was hoping I'd see more of your stuff.",
+		"Okay so I still think about '{prev_title}' sometimes. Is that weird? Anyway, new one.",
+		"Hey, last time it was '{prev_title}' and I kind of didn't know what to say. Let's try again.",
+		"No way, the '{prev_title}' artist. I literally screenshotted that one.",
+		"Okay I recognize the style. '{prev_title},' right? Yeah. Let's see this one.",
+	],
+	"woman": [
+		"Well look who came back. I remember '{prev_title}.' Mmhmm, I remember.",
+		"Baby, I'm still thinking about '{prev_title}.' Now you bring me another one?",
+		"You the one did '{prev_title}.' Don't tell me, I know. I don't forget a painting.",
+		"After '{prev_title},' I told my sister to keep an eye on you. Let's see if I was right.",
+		"Chile, '{prev_title}' was something. Let me see where you went from there.",
+		"I been waiting on you since '{prev_title}.' Come on, show me.",
+	],
+}
+
+const REGULAR := {
+	"bum": [
+		"That's {count} of yours I've looked at now. I'm starting to feel like your only fan. Or your only enemy.",
+		"{count} paintings. You know me better than my own family does at this point. Which isn't saying much.",
+		"Here we go again. Me, you, and another canvas. This is the most stable relationship I've had in years.",
+		"I've seen {count} of these now. I know your tricks. Don't think I don't.",
+		"You keep coming back to the bench. I keep telling you the truth. That's our deal.",
+		"{count} paintings in and I still can't decide if you're the real thing. Maybe this one settles it.",
+	],
+	"general": [
+		"We've had {count} engagements, you and I. I've studied your tactics. I know your habits.",
+		"{count} campaigns reviewed. You are now a known quantity. Surprise me.",
+		"I've followed your career across {count} operations. My assessment has evolved accordingly.",
+		"After {count} briefings, I don't need the preamble. Let's get straight to the field.",
+		"Your service record now runs {count} pieces long. Promotions have been earned on less.",
+		"Soldier, I've reviewed {count} of your works. Don't think I've forgotten a single one.",
+	],
+	"govtpig": [
+		"Your file now contains {count} submissions. It requires its own cabinet.",
+		"You have {count} prior submissions on file. The department has assigned you a dedicated case officer. It's me.",
+		"After {count} reviews, our office has developed what we can only call a working relationship.",
+		"{count} filings on record. You are now classified as a recurring line item.",
+		"Your cumulative submissions ({count}) have triggered an automatic long-term review.",
+		"We have processed {count} of your works. Our opinion of you is documented. Extensively.",
+	],
+	"guy": [
+		"Okay I've seen like {count} of yours now. I'm basically a fan at this point.",
+		"Dude, {count} paintings. I've been following your whole thing. I feel like I know you.",
+		"I've seen {count} of yours now and I'm finally starting to get what you're doing. Maybe.",
+		"My wife asked why I keep coming back. I said, {count} paintings, that's why.",
+		"Okay {count} paintings in. I have opinions now. Real ones.",
+		"I've watched you do {count} of these. It's like a show I'm binging.",
+	],
+	"woman": [
+		"I've seen {count} of yours now, baby. I know you. I know what you're about.",
+		"{count} paintings. You know I've been watching you grow. Don't think I haven't.",
+		"I've seen {count} of yours already. My church group asks about you now. That's how deep we are.",
+		"After {count} of these, you can't fool me. I know when you're holding back.",
+		"{count} paintings, and every one of them tells me a little more about you.",
+		"I've been with you since the first one. That's {count} now. Let's see what you got.",
+	],
+}
+
+
+static func generate(critic_type: String, title: String, artist: String, statement: String, times_reviewed: int = 0, prev_title: String = "") -> String:
 	if not OPENERS.has(critic_type):
 		critic_type = "guy"
 
@@ -467,10 +559,16 @@ static func generate(critic_type: String, title: String, artist: String, stateme
 		"adj2": adj2,
 		"term": term,
 		"term2": term2,
+		"count": str(times_reviewed),
+		"prev_title": prev_title if prev_title.strip_edges() != "" else "Untitled",
 	}
 
 	var parts: PackedStringArray = []
 	parts.append(_fill(_pick(OPENERS, critic_type), vars))
+	if times_reviewed >= REGULARS_AFTER:
+		parts.append(_fill(_pick(REGULAR, critic_type), vars))
+	elif times_reviewed > 0:
+		parts.append(_fill(_pick(RETURNING, critic_type), vars))
 	parts.append(_fill(_pick(TITLE_REACTIONS, critic_type), vars))
 	parts.append(_fill(_pick(VISUAL_COMMENTS, critic_type), vars))
 

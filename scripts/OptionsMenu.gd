@@ -695,7 +695,7 @@ var language_buttons: Array[Button] = []
 
 var save_glb_on_ship: bool = true
 var save_png_on_ship: bool = true
-var generative_ai_enabled: bool = false
+var generative_ai_enabled: bool = true
 var instagram_handle: String = ""
 var bluesky_handle: String = ""
 var birth_date: String = ""

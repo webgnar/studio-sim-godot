@@ -133,14 +133,19 @@ func _on_upload_completed(_gallery_id: String, image_url: String = "") -> void:
 	var critic_type: String = _current_critic.get("type", "guy")
 
 	var critique_text: String
+	var note := ""
 	if _is_generative_ai_enabled():
-		critique_text = await _generate_ai_critique(critic_type, image_url)
+		var split: Array = CriticMemory.split_note(await _generate_ai_critique(critic_type, image_url))
+		critique_text = split[0]
+		note = split[1]
 	else:
 		critique_text = _generate_template_critique(critic_type)
 
 	_state = State.DISPLAYING
 	_show_critic()
 	_set_text(critique_text)
+	# Remember before saving the critique, which writes the save file
+	CriticMemory.remember(critic_type, _cached_painting_name, critique_text, note)
 	if _cached_painting_id != "":
 		WorldStateManager.save_critique_for_painting(_cached_painting_id, critique_text)
 
@@ -154,6 +159,8 @@ func _generate_template_critique(critic_type: String) -> String:
 		_cached_painting_name,
 		_cached_artist_name,
 		_cached_artist_statement,
+		CriticMemory.times_reviewed(critic_type),
+		CriticMemory.last_title(critic_type),
 	)
 
 func _generate_ai_critique(critic_type: String, image_url: String = "") -> String:
@@ -164,6 +171,7 @@ func _generate_ai_critique(critic_type: String, image_url: String = "") -> Strin
 		"artistStatement": _cached_artist_statement,
 		"locale": LocaleManager.current_locale,
 		"criticType": critic_type,
+		"memory": CriticMemory.to_request(critic_type),
 	})
 	var headers := ["Content-Type: application/json"]
 	var error := _http_request.request(AI_CRITIQUE_URL, headers, HTTPClient.METHOD_POST, body)
@@ -184,20 +192,21 @@ func _generate_ai_critique(critic_type: String, image_url: String = "") -> Strin
 	return text
 
 func _is_generative_ai_enabled() -> bool:
+	# On by default: only an explicit false in settings turns it off
 	if not FileAccess.file_exists("user://settings.json"):
-		return false
+		return true
 	var file := FileAccess.open("user://settings.json", FileAccess.READ)
 	if not file:
-		return false
+		return true
 	var json_string := file.get_as_text()
 	file.close()
 	var json := JSON.new()
 	if json.parse(json_string) != OK:
-		return false
+		return true
 	var settings = json.data
 	if typeof(settings) != TYPE_DICTIONARY:
-		return false
-	return bool(settings.get("generative_ai_enabled", false))
+		return true
+	return bool(settings.get("generative_ai_enabled", true))
 
 func _on_upload_failed(error_message: String) -> void:
 	push_error("CritiqueDisplay: Upload failed: " + error_message)
