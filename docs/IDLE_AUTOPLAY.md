@@ -67,3 +67,14 @@ Plans are made in viewer space (x right, y down, 0..1, rotation 0 = upright as t
 Add a `_can_<x>()` gate (check `ShopManager.is_purchased(...)`, `AutomationManager.is_assistant_active()`, etc.) and a `_<x>(token)` coroutine to `AutoplayBot.gd`, then pick it in `_run()`.
 
 Ideas: transfer and convert the assistant's work once the assistant is hired, hang finished paintings in the gallery, play a record on the boombox, use the nail gun.
+
+## The studio assistant paints the same way
+
+The studio assistant's canvas (`StickerWallManager`, 1280x768, so 5:3) uses this painter too, through `begin_assistant()` and `assistant_stroke()`. Every round is a studio painting with every pick any sticker (the all-any-sticker version zack liked best): the skeleton, burying it, the dark under-fill, rhymes, windows and sky, then up to `FORM_PASSES` squint-and-define rounds, each looking closer, then accents on the forms. One sticker goes down every `sticker_interval` seconds (6 s), placed directly with no ghost. Mistakes, fixes, undos and impulses happen like they do for the bot.
+
+The difference is that the assistant never finishes. When a round is done it looks at what's actually on its canvas and starts another round over it, its skeleton landing somewhere else (`ASSISTANT_CORE_SPREAD`). Each found form has a `ASSISTANT_KEEP_FORMS` chance of being left alone by the next round's shapes; the rest can be buried so only fragments of them survive. This repeats until the player presses Transfer, which moves the work to the gallery canvas and starts a fresh painting.
+
+- `ASSISTANT_MIN_SIZE`: smallest sticker on the assistant's canvas (canvas widths), the same as the studio canvas for now. Lower gives finer pen marks.
+- `ASSISTANT_PLAN_LIMIT`: planning looks through every sticker, so past this many it forgets the ones that aren't on top anywhere. The canvas keeps them all.
+
+A canvas restored from a save is handed to the painter as stamps, so the assistant builds on it; the forms it had found aren't saved, so they're fair game for the next round.
