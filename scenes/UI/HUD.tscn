@@ -13,8 +13,8 @@
 [ext_resource type="Texture2D" uid="uid://dy3jj0agck2u3" path="res://sprites/ui/inputs/leftclick.png" id="12_kxwrb"]
 [ext_resource type="Texture2D" uid="uid://crrtxp3of7e31" path="res://sprites/ui/inputs/2.png" id="12_yx76t"]
 [ext_resource type="Texture2D" uid="uid://dchw45qhtlwj" path="res://sprites/ui/inputs/rightclick.png" id="14_o1axb"]
-[ext_resource type="Texture2D" uid="uid://cs1qm2kogtvqw" path="res://sprites/ui/inputs/r.png" id="key_r"]
-[ext_resource type="Texture2D" uid="uid://h6crti8rhorm" path="res://sprites/ui/inputs/t.png" id="key_t"]
+[ext_resource type="Texture2D" path="res://sprites/ui/inputs/q.png" id="key_q"]
+[ext_resource type="Texture2D" path="res://sprites/ui/inputs/e.png" id="key_e"]
 [ext_resource type="Texture2D" uid="uid://ccjamwl2mqd05" path="res://sprites/ui/inputs/x.png" id="key_x"]
 [ext_resource type="Texture2D" uid="uid://v258g8nnodtn" path="res://sprites/ui/inputs/z.png" id="key_z"]
 [ext_resource type="Texture2D" uid="uid://bnb0x8h7n08xg" path="res://sprites/ui/leftright.png" id="gp_leftright"]
@@ -107,7 +107,7 @@ alignment = 2
 [node name="RotateIcon1_KB" type="TextureRect" parent="PaintingHint/RotateLine" unique_id=238344760]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
-texture = ExtResource("key_r")
+texture = ExtResource("key_q")
 stretch_mode = 5
 
 [node name="RotateIcon1_GP" type="TextureRect" parent="PaintingHint/RotateLine" unique_id=1440040251]
@@ -131,7 +131,7 @@ horizontal_alignment = 1
 [node name="RotateIcon2_KB" type="TextureRect" parent="PaintingHint/RotateLine" unique_id=913346168]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
-texture = ExtResource("key_t")
+texture = ExtResource("key_e")
 stretch_mode = 5
 
 [node name="RotateIcon2_GP" type="TextureRect" parent="PaintingHint/RotateLine" unique_id=1579764940]

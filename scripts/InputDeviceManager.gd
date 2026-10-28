@@ -111,14 +111,14 @@ func _initialize_glyph_map() -> void:
 
 		# Rotation controls (used for both 2D painting and 3D carryable rotation)
 		"rotate_clockwise": {
-			"keyboard": "T",
-			"keyboard_icon": kb_icon_path + "t.png",
+			"keyboard": "E",
+			"keyboard_icon": kb_icon_path + "e.png",
 			"gamepad": "D-Pad Right",
 			"gamepad_icon": icon_path + "leftright.png"
 		},
 		"rotate_counter": {
-			"keyboard": "R",
-			"keyboard_icon": kb_icon_path + "r.png",
+			"keyboard": "Q",
+			"keyboard_icon": kb_icon_path + "q.png",
 			"gamepad": "D-Pad Left",
 			"gamepad_icon": icon_path + "leftright.png"
 		},

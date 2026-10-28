@@ -16,7 +16,7 @@ signal e_key_interacted(player_interaction_component: PlayerInteractionComponent
 @export var drop_distance: float = 1.2 ## Auto-drop if object gets this far from carry position
 @export var lock_rotation_when_carried: bool = true ## Prevents object from tumbling while held
 @export var gravity_while_carrying: float = 0.2 ## Gravity multiplier while carrying (0 = none, 1 = full, affects heavy objects)
-@export var enable_rotation_while_carried: bool = false ## Allow rotating object with T/R/Z/X keys while carrying
+@export var enable_rotation_while_carried: bool = false ## Allow rotating object with Q/E/Z/X keys while carrying
 @export var rotation_speed_deg_per_sec: float = 90.0 ## Rotation speed in degrees per second (matches 2D painting system)
 @export var use_interact_key_for_pickup: bool = false ## If true, use E/Interact key instead of click/primary action for pickup
 
@@ -127,7 +127,7 @@ func _physics_process(_delta: float) -> void:
 		if distance >= drop_distance:
 			drop()
 
-	# Handle rotation controls if enabled (R/T for Y-axis, Z/X for X-axis)
+	# Handle rotation controls if enabled (Q/E for Y-axis, Z/X for X-axis)
 	if enable_rotation_while_carried:
 		var y_axis_rotation: float = 0.0
 		var x_axis_rotation: float = 0.0
