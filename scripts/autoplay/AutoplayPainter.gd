@@ -209,6 +209,12 @@ const STUDIO_UNDER_DARK := 0.65      ## studio dark under-fill: stickers darker 
 const STUDIO_UNDER_SOLID := 0.7      ## studio dark under-fill: how solid a sticker must be (lower = more stickers qualify, lacier)
 const STUDIO_REUSE := 0.5            ## how likely a studio pick reuses a sticker already in the painting (1 = no preference, below 1 = prefers new ones)
 const FORM_LINE_CHANCE := 0.5        ## part of the form's edge is also drawn with pen marks
+## The studio assistant (see "The studio assistant" below) paints studio
+## paintings like these, all any-sticker, and never stops on its own.
+const ASSISTANT_MIN_SIZE := DEFAULT_MIN_SIZE   ## smallest sticker on the assistant's canvas (canvas widths): lower = finer pen marks
+const ASSISTANT_CORE_SPREAD := Vector2(0.3, 0.25)   ## later rounds: how far from the middle each new skeleton may land (across, down)
+const ASSISTANT_KEEP_FORMS := 0.5     ## share of found forms the next round's new shapes leave alone (0 = everything can be buried, 1 = forms are kept for good)
+const ASSISTANT_PLAN_LIMIT := 1500    ## stickers remembered for planning; past that, ones hidden under others are forgotten (the canvas keeps them)
 const METICULOUS := {"catalog": 1, "checker": 2, "rings": 2, "mandala": 3, "gradient": 2}
 
 ## Colour families a painting's key colour is drawn from (hue 0..1, -1 = black/white/grey).
@@ -286,6 +292,10 @@ var _variety := false              ## studio painting: picks loosen the colour s
 var _zoom := 1.0                    ## how close the current squint-and-define round looks (1 = first round)
 var _form_ink := -1               ## what the forms are filled with, for touching them up
 var last_carve_source := ""   ## id of the sticker whose silhouette was last carved, for previews
+var _guard := false               ## new shapes skip anything that would cut into the kept forms (assistant rounds)
+var _cycle := 0                   ## assistant: rounds of making shapes and defining forms so far
+var _next := 0                    ## assistant: next stroke to hand out
+var _assistant_style := "studio"  ## assistant: "studio" or "hall_of_fame" (see begin_assistant)
 static var _colors: Dictionary = {}
 static var _silhouettes: Dictionary = {}   ## sticker id -> traced outline, see _silhouette()   ## sticker id -> colour summary, see _color()
 
@@ -361,6 +371,129 @@ func hover_time() -> float:
 	return randf_range(HOVER_MIN, HOVER_MAX)
 
 
+# --- The studio assistant ---
+# The assistant (StickerWallManager) paints like the bot's studio paintings,
+# every pick any sticker, but it never calls a painting done: when a round of
+# making shapes and defining the forms that come out of them is finished, it
+# steps back and starts another round over the top, somewhere else on the
+# canvas, and keeps going until the player transfers the work. Some of the
+# forms it found (ASSISTANT_KEEP_FORMS) are left alone by the next round's
+# shapes; the rest can be buried, so only fragments of them survive. It
+# places stickers directly, without a ghost, so strokes are just stamps in
+# viewer space.
+
+## Start (or pick up) the assistant's painting. `aspect` is canvas height /
+## width; `placed` is what's already on its canvas, as viewer-space stamps.
+## `style` "studio" paints the studio rounds above; "hall_of_fame" paints the
+## way the bot did before the studio style (layered, meticulous and drawn
+## abstractions, saved on branch autoplay-painter-v1), then keeps adding
+## motifs and focal points over it.
+func begin_assistant(aspect: float, placed: Array[Dictionary] = [], style: String = "studio") -> void:
+	_assistant_style = style
+	_aspect = aspect
+	_min_size = ASSISTANT_MIN_SIZE
+	_fresh_painting(false)
+	_plan = placed.duplicate()
+	for st in _plan:
+		st.issued = true
+	_next = _plan.size()
+	# A canvas picked up from a save starts its next round off centre
+	_cycle = 0 if placed.is_empty() else 1
+
+
+## Whether the current round is used up and the next one needs planning.
+## Planning a round takes about a second, so the assistant runs plan_round()
+## on a worker thread (warm_up() every sticker on the main thread first, so
+## the thread never reads a texture).
+func needs_round() -> bool:
+	return _next >= _plan.size()
+
+
+func plan_round() -> void:
+	_assistant_round()
+
+
+## Work out everything the painter reads from a sticker's pixels (shape,
+## colour, silhouette), so planning never has to touch its texture.
+func warm_up(sticker: int) -> void:
+	_mask(sticker)
+	_color(sticker)
+	_silhouette(sticker)
+
+
+## The assistant's next stroke: a stamp {sticker, pos, rot, size} in viewer
+## space, or {action: "undo"} to take the last sticker back off. Plans the
+## next round right here if it hasn't been, so it never ends.
+func assistant_stroke() -> Dictionary:
+	if needs_round():
+		_assistant_round()
+	var i := _next
+	_next += 1
+	var s := issue(i)
+	after_stroke(i)
+	return s
+
+
+func _assistant_round() -> void:
+	"""Step back from what's on the canvas and paint another round over it:
+	shapes first, then squint, define what came out, accent it."""
+	_plan = _on_canvas()
+	_forget_hidden()
+	_next = _plan.size()
+	if _assistant_style == "hall_of_fame":
+		# A whole painting on a bare canvas, then add-ons over it
+		var placed := _plan
+		var more := plan_painting(_aspect, not placed.is_empty(), false)
+		placed.append_array(more)
+		_plan = placed
+		return
+	var kept: Array[PackedVector2Array] = []
+	for f in _forms:
+		if randf() < ASSISTANT_KEEP_FORMS:
+			kept.append(f)
+	var plan := _plan
+	_fresh_painting(_cycle > 0)
+	_plan = plan
+	_cycle += 1
+	_forms = kept
+	_keep_out = _form_grid() if not kept.is_empty() else PackedByteArray()
+	late_fill = true
+	_variety = true
+	_any_sticker = true
+	last_style = "assistant round %d" % _cycle
+	_studio(_plan)
+	if _cycle == 1:
+		_finish_cover(_plan)
+
+
+func _on_canvas() -> Array[Dictionary]:
+	"""The stamps actually on the canvas: every undo takes the one before it back off."""
+	var placed: Array[Dictionary] = []
+	for s in _plan.slice(0, _next):
+		if s.has("action"):
+			if not placed.is_empty():
+				placed.pop_back()
+		else:
+			placed.append(s)
+	return placed
+
+
+func _forget_hidden() -> void:
+	"""Planning looks through every stamp, so a long-running canvas would get
+	slower and slower. Past ASSISTANT_PLAN_LIMIT, forget the stamps that
+	aren't on top anywhere (they're under the rest; the canvas keeps them)."""
+	if _plan.size() <= ASSISTANT_PLAN_LIMIT:
+		return
+	var showing := {}
+	for k in _top_stamps(_plan):
+		showing[k] = true
+	var kept: Array[Dictionary] = []
+	for k in _plan.size():
+		if showing.has(k) or k >= _plan.size() - ASSISTANT_PLAN_LIMIT / 4:
+			kept.append(_plan[k])
+	_plan = kept
+
+
 # --- Planning (viewer space) ---
 
 ## The whole painting as a list of stamps, back to front. Each stamp is
@@ -368,33 +501,12 @@ func hover_time() -> float:
 ## 0 = upright), size (longest side, as a fraction of canvas width), ponder,
 ## precise}.
 ## `add_on` skips the background and structure, for canvases that already
-## have something on them. Doesn't touch the scene, so tools can call it
-## directly to preview plans.
-func plan_painting(aspect: float, add_on: bool = false) -> Array[Dictionary]:
+## have something on them. `allow_studio` false never picks the studio style.
+## Doesn't touch the scene, so tools can call it directly to preview plans.
+func plan_painting(aspect: float, add_on: bool = false, allow_studio: bool = true) -> Array[Dictionary]:
 	_aspect = aspect
-	if not _palette.is_empty():
-		_recent_stickers.append(_palette.duplicate())
-		if _recent_stickers.size() > STUDIO_FRESH_PAINTINGS:
-			_recent_stickers.pop_front()
-	_palette.clear()
-	_choose_scheme()
-	_ground = -1
-	last_carve_source = ""
-	late_fill = not add_on and randf() < LATE_FILL_CHANCE
-	_add_on = add_on
-	_looks = 0
-	_fill_inks.clear()
-	_forms.clear()
-	_keep_out = PackedByteArray()
-	_form_ink = -1
-	_zoom = 1.0
-	_any_sticker = false
-	_variety = false
-	_found.clear()
-	_focus_base = randf_range(0.35, 0.85)
-	_energy_base = randf_range(0.25, 0.8)
-	focus = _focus_base
-	energy = _energy_base
+	_cycle = 0
+	_fresh_painting(add_on)
 	var plan: Array[Dictionary] = []
 	_plan = plan
 	var family: String = _recent_families[-1]
@@ -410,7 +522,7 @@ func plan_painting(aspect: float, add_on: bool = false) -> Array[Dictionary]:
 			_build_over(plan)
 		_finish_cover(plan)
 		return plan
-	if not add_on and randf() < STUDIO_CHANCE:
+	if allow_studio and not add_on and randf() < STUDIO_CHANCE:
 		last_style = "studio, " + family
 		late_fill = true
 		_variety = true
@@ -457,6 +569,34 @@ func plan_painting(aspect: float, add_on: bool = false) -> Array[Dictionary]:
 	_jumble_order(plan, ORDER_JUMBLE)
 	_finish_cover(plan)
 	return plan
+
+
+func _fresh_painting(add_on: bool) -> void:
+	"""Forget the last painting and get ready for a new one: colours, mood,
+	forms and fills."""
+	if not _palette.is_empty():
+		_recent_stickers.append(_palette.duplicate())
+		if _recent_stickers.size() > STUDIO_FRESH_PAINTINGS:
+			_recent_stickers.pop_front()
+	_palette.clear()
+	_choose_scheme()
+	_ground = -1
+	last_carve_source = ""
+	late_fill = not add_on and randf() < LATE_FILL_CHANCE
+	_add_on = add_on
+	_looks = 0
+	_fill_inks.clear()
+	_forms.clear()
+	_keep_out = PackedByteArray()
+	_form_ink = -1
+	_zoom = 1.0
+	_any_sticker = false
+	_variety = false
+	_found.clear()
+	_focus_base = randf_range(0.35, 0.85)
+	_energy_base = randf_range(0.25, 0.8)
+	focus = _focus_base
+	energy = _energy_base
 
 
 func _build_over(plan: Array[Dictionary]) -> void:
@@ -675,10 +815,11 @@ func _wobble(s: Dictionary) -> void:
 	s.size = maxf(s.size * (1.0 + randfn(0.0, 1.0) * SIZE_WOBBLE * unsteady), _min_size)
 
 
-func _jumble_order(plan: Array[Dictionary], amount: float) -> void:
+func _jumble_order(plan: Array[Dictionary], amount: float, from: int = 0) -> void:
 	"""Loosely shuffle runs of the same sticker (a row, a grid, a tiled
-	layer, a burst) so they go down roughly, not strictly, in order."""
-	var start := 0
+	layer, a burst) so they go down roughly, not strictly, in order.
+	Strokes before `from` are already down and stay put."""
+	var start := from
 	while start < plan.size():
 		var end := start + 1
 		while end < plan.size() and plan[end].sticker == plan[start].sticker:
@@ -700,8 +841,11 @@ func _studio(plan: Array[Dictionary]) -> void:
 	"""Paint the way zack did, without a goal: big and few first, bury it,
 	then step back and see whether a form came out of it by itself, and only
 	then bring that form out. Then rhyme, frame into scenes and calm the rest
-	around it. The bot never decides what the form will be (see _find_form)."""
-	_forms.clear()
+	around it. The bot never decides what the form will be (see _find_form).
+	`from` is where this painting starts in `plan` (the assistant paints
+	round after round into one plan)."""
+	var from := plan.size()
+	_guard = not _keep_out.is_empty()
 	var left := randf() < 0.5   # which side the edge strip goes
 	var side := 1.0 if left else -1.0
 	var edge_x := 0.1 if left else 0.9
@@ -709,6 +853,9 @@ func _studio(plan: Array[Dictionary]) -> void:
 	var strip := _pick("band", [], "second")
 	_stamp(plan, strip, Vector2(edge_x, 0.5), 90.0 + randf_range(-3.0, 3.0), randf_range(1.1, 1.3), true)
 	var core := Vector2(randf_range(0.42, 0.58), randf_range(0.4, 0.5))
+	if _cycle > 1:
+		# The assistant's later rounds start somewhere else on the canvas
+		core += Vector2(randf_range(-1.0, 1.0) * ASSISTANT_CORE_SPREAD.x, randf_range(-1.0, 1.0) * ASSISTANT_CORE_SPREAD.y)
 	var subject := _pick("subject", [], "key")
 	_stamp(plan, subject, core, _upright_rotation(), randf_range(0.5, 0.65), true)
 	_stamp(plan, _pick("band", [strip], "accent"), core + Vector2(randf_range(-0.05, 0.1), randf_range(0.1, 0.16)), randf_range(-6.0, 6.0), randf_range(0.5, 0.7), true)
@@ -728,7 +875,10 @@ func _studio(plan: Array[Dictionary]) -> void:
 	# middle value, so the painting has real masses of light and dark for
 	# forms to come out of (not one pale wash)
 	var under: Array[int] = [_pick_by("dense", func(i): var t := _texture_size(i); return _color(i).light < STUDIO_UNDER_DARK and maxf(t.x, t.y) / minf(t.x, t.y) < 3.0, [], "second")]
+	var guard := _guard
+	_guard = false   # the fill checks the forms itself
 	_fill_spots(plan, _coverage(plan), under, 0.2, 0.9, STUDIO_FIELDS, NAN, "under", true)
+	_guard = guard
 	# Pieces of the first layer come back through the veil
 	_stamp(plan, strip, Vector2(edge_x, randf_range(0.2, 0.8)), 90.0 + randf_range(-3.0, 3.0), randf_range(0.5, 0.7), true)
 	_stamp(plan, panel, Vector2(core.x + side * 0.25, core.y - 0.25), randf_range(-15.0, 15.0), randf_range(0.4, 0.55), true)
@@ -764,7 +914,8 @@ func _studio(plan: Array[Dictionary]) -> void:
 	for k in n:
 		_stamp(plan, wisp if k % 2 == 0 else veil, Vector2((k + 0.5) / n + randf_range(-0.04, 0.04), randf_range(0.06, 0.12)), randf_range(-20.0, 20.0) + (180.0 if k % 2 else 0.0), randf_range(0.3, 0.45), false)
 	_stamp(plan, _pick("veil", [veil, wisp], "any"), Vector2(edge_x, randf_range(0.75, 0.88)), randf_range(0.0, 360.0), randf_range(0.3, 0.4), true)
-	_jumble_order(plan, ORDER_JUMBLE)
+	_jumble_order(plan, ORDER_JUMBLE, from)
+	_guard = false
 	# 7. Squint and refine, over and over: step back, find a form that came
 	# out by itself, define it, calm what's around it, then look again and
 	# tend to another part of the picture. Each round looks closer than the
@@ -2051,14 +2202,17 @@ func _column(plan: Array[Dictionary], sticker: int, x: float, size: float, rot: 
 
 
 func _stamp(plan: Array[Dictionary], sticker: int, pos: Vector2, rot: float, size: float, ponder: bool, precise: bool = false) -> void:
-	plan.append({
+	var s := {
 		"sticker": sticker,
 		"pos": pos.clamp(Vector2(-BLEED, -BLEED), Vector2(1.0 + BLEED, 1.0 + BLEED)),
 		"rot": rot,
 		"size": maxf(size, _min_size),
 		"ponder": ponder,
 		"precise": precise,
-	})
+	}
+	if _guard and _intrudes(s):
+		return
+	plan.append(s)
 
 
 func _extent(sticker: int, size: float, rot: float) -> Vector2:
