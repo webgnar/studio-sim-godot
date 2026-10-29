@@ -8,6 +8,9 @@ extends CanvasLayer
 ## each other. Once the scene is in the tree it stays up through a
 ## shader warm-up sweep and until frame times settle, so the player never sees
 ## the world's first-second hitches.
+## Files load much faster than the warm-up takes, so stickers are paced to
+## spread evenly over how long the last load took (saved in user://), rather
+## than all going down the moment their file arrives.
 ## Usage: LoadingScreen.begin_preload(path) as early as possible (optional),
 ##        then await LoadingScreen.load_scene(path)
 
@@ -16,17 +19,24 @@ signal finished
 const MIN_DISPLAY_TIME: float = 1.5      ## Seconds, so a fast load still reads as a loading screen
 const FADE_IN_TIME: float = 0.35
 const FADE_OUT_TIME: float = 0.5
-const CHUNK_INTERVAL: float = 0.05       ## Pace for placing loaded chunks when only a few are waiting
-const IDLE_STICKER_AFTER: float = 0.5    ## Nothing loading (warm-up, settle): place a random sticker this often
+const DEFAULT_EXPECTED_TIME: float = 10.0 ## Seconds the screen is expected to stay up, until a load has been timed
+const MIN_STICKER_RATE: float = 5.0      ## Stickers per second, so the screen never looks stuck
+const MAX_STICKERS_PER_FRAME: int = 3    ## No bursts, even after a long frame
+const FLUSH_TIME: float = 0.6            ## Once everything is ready, leftover chunk stickers go down over this long
+const FLUSH_TIMEOUT: float = 1.5
+const STATS_PATH = "user://loading_screen.cfg"
 const MAX_STICKERS: int = 400            ## Oldest stickers get peeled off past this
 const MAX_CHUNKS: int = 3000             ## Cap on how many dependencies get tracked
 const STICKER_SIZE_MIN: float = 90.0     ## Longest side in px at 1080p, for the smallest files
 const STICKER_SIZE_MAX: float = 340.0    ## ...and for the biggest
 const CLUSTER_SPREAD: float = 200.0      ## How far a folder's stickers scatter from its spot
 const TEXT_CLEARANCE: float = 40.0       ## Stickers keep this far from the LOADING text
-const SMOOTH_FRAME_MS: float = 25.0      ## A frame under this counts as settled
-const SMOOTH_FRAMES_NEEDED: int = 20
-const SETTLE_TIMEOUT: float = 5.0  ## Never hold the screen longer than this waiting
+const SMOOTH_FRAME_MS: float = 50.0      ## A frame under this isn't a hitch
+const SMOOTH_FRAMES_NEEDED: int = 15
+const SETTLE_TIMEOUT: float = 4.0  ## Never hold the screen longer than this waiting
+const SWEEP_FOV: float = 60.0            ## Narrow views, so each warm-up frame compiles only a few shaders
+const SWEEP_YAW_STEPS: int = 10
+const SWEEP_PITCHES := [0.0, -45.0, 45.0]
 const STICKER_SOUNDS := [
 	"res://sounds/picotron/sticker1.ogg",
 	"res://sounds/picotron/sticker2.ogg",
@@ -57,8 +67,10 @@ var _watch: Array = []          ## Chunks not loaded yet: {path, size, folder}
 var _watch_cursor: int = 0
 var _chunk_queue: Array = []    ## Loaded chunks waiting for their sticker
 var _folder_spots: Dictionary = {}
-var _chunk_timer: float = 0.0
-var _idle_timer: float = 0.0
+var _shown_at: int = 0
+var _expected_time: float = DEFAULT_EXPECTED_TIME
+var _sticker_allowance: float = 0.0
+var _flushing: bool = false
 var _dots_timer: float = 0.0
 
 func _ready() -> void:
@@ -135,6 +147,8 @@ func load_scene(scene_path: String) -> void:
 	CameraManager.set_player_input(false)
 
 	_start_animation()
+	var phase_at = Time.get_ticks_msec()
+	var timings := []
 	var fade_in = create_tween()
 	fade_in.tween_property(_root, "modulate:a", 1.0, FADE_IN_TIME)
 	await fade_in.finished
@@ -149,33 +163,77 @@ func load_scene(scene_path: String) -> void:
 		_finish(input_was_enabled)
 		return
 	_collect_loaded_chunks(true)
+	phase_at = _log_phase(timings, "load", phase_at)
 
-	# Let the animation breathe a bit even if the load was instant
-	while Time.get_ticks_msec() - started_at < MIN_DISPLAY_TIME * 1000.0 * 0.6:
-		await get_tree().process_frame
-
-	# 2. Instantiate and enter the scene (main thread; the screen stays covered)
-	var error = get_tree().change_scene_to_packed(scene)
+	# 2. Build the scene's nodes on a worker thread (allowed for nodes outside
+	# the tree), so the stickers keep moving; then enter it on the main thread
+	var instance = await _instantiate_in_background(scene)
+	phase_at = _log_phase(timings, "instantiate", phase_at)
+	if instance == null:
+		push_error("LoadingScreen: Failed to instantiate scene: %s" % scene_path)
+		_finish(input_was_enabled)
+		return
+	var error = get_tree().change_scene_to_node(instance)
 	if error != OK:
 		push_error("LoadingScreen: Failed to change scene (Error code: %d)" % error)
+		instance.free()
 		_finish(input_was_enabled)
 		return
 	await get_tree().process_frame
 	await get_tree().process_frame
 	# In case the new scene's setup turned input back on, keep it off until revealed
 	CameraManager.set_player_input(false)
+	phase_at = _log_phase(timings, "enter tree", phase_at)
 
 	# 3. Draw everything around the player once so materials compile now, not mid-play
 	await _warm_up_shaders()
+	phase_at = _log_phase(timings, "shader warm-up", phase_at)
 
 	# 4. Hold until the world runs smoothly (first-frame scripts, streaming, etc.)
 	await _wait_for_smooth_frames()
+	phase_at = _log_phase(timings, "settle", phase_at)
 
-	# Every loaded chunk gets its sticker before the reveal
-	while not _chunk_queue.is_empty() or Time.get_ticks_msec() - started_at < MIN_DISPLAY_TIME * 1000.0:
+	# Leftover chunk stickers go down quickly, then reveal
+	_flushing = true
+	var flush_deadline = Time.get_ticks_msec() + FLUSH_TIMEOUT * 1000.0
+	while (not _chunk_queue.is_empty() and Time.get_ticks_msec() < flush_deadline) \
+			or Time.get_ticks_msec() - started_at < MIN_DISPLAY_TIME * 1000.0:
 		await get_tree().process_frame
+	_log_phase(timings, "flush", phase_at)
+
+	var shown_for = (Time.get_ticks_msec() - _shown_at) / 1000.0
+	_save_expected_time(shown_for)
+	var summary = "[LoadingScreen] %.1fs total: %s" % [shown_for, ", ".join(timings)]
+	print(summary)
+	if DebugLogger and not OS.has_feature("editor"):
+		DebugLogger.write_log(summary)
 
 	_finish(input_was_enabled)
+
+func _log_phase(timings: Array, phase: String, since: int) -> int:
+	var now = Time.get_ticks_msec()
+	timings.append("%s %.1fs" % [phase, (now - since) / 1000.0])
+	return now
+
+func _instantiate_in_background(scene: PackedScene) -> Node:
+	var result := []
+	var task = WorkerThreadPool.add_task(func(): result.append(scene.instantiate()), true, "LoadingScreen instantiate")
+	while not WorkerThreadPool.is_task_completed(task):
+		await get_tree().process_frame
+	WorkerThreadPool.wait_for_task_completion(task)
+	return result[0] if not result.is_empty() else null
+
+func _load_expected_time() -> float:
+	var stats = ConfigFile.new()
+	if stats.load(STATS_PATH) != OK:
+		return DEFAULT_EXPECTED_TIME
+	return clampf(float(stats.get_value("timing", "last_load_seconds", DEFAULT_EXPECTED_TIME)), 2.0, 60.0)
+
+func _save_expected_time(seconds: float) -> void:
+	var stats = ConfigFile.new()
+	stats.load(STATS_PATH)
+	stats.set_value("timing", "last_load_seconds", seconds)
+	stats.save(STATS_PATH)
 
 func _finish(input_was_enabled: bool) -> void:
 	CameraManager.set_player_input(input_was_enabled)
@@ -190,7 +248,7 @@ func _finish(input_was_enabled: bool) -> void:
 # --- Warm-up ---
 
 func _warm_up_shaders() -> void:
-	"""Spin a wide camera around the player's view for a few frames.
+	"""Turn a camera all the way around the player over a few dozen frames.
 	Godot compiles a material's shader the first time it is drawn, which is
 	what makes the first look around the studio stutter."""
 	var viewport = get_viewport()
@@ -200,7 +258,7 @@ func _warm_up_shaders() -> void:
 		return
 
 	var sweep_cam = Camera3D.new()
-	sweep_cam.fov = 110.0
+	sweep_cam.fov = SWEEP_FOV
 	sweep_cam.near = player_cam.near
 	sweep_cam.far = player_cam.far
 	sweep_cam.cull_mask = player_cam.cull_mask
@@ -211,9 +269,9 @@ func _warm_up_shaders() -> void:
 	sweep_cam.make_current()
 
 	var base_yaw = player_cam.global_rotation.y
-	for pitch in [0.0, -50.0, 50.0]:
-		for step in range(6):
-			sweep_cam.global_rotation = Vector3(deg_to_rad(pitch), base_yaw + step * TAU / 6.0, 0.0)
+	for pitch in SWEEP_PITCHES:
+		for step in range(SWEEP_YAW_STEPS):
+			sweep_cam.global_rotation = Vector3(deg_to_rad(pitch), base_yaw + step * TAU / SWEEP_YAW_STEPS, 0.0)
 			await RenderingServer.frame_post_draw
 
 	if is_instance_valid(player_cam):
@@ -310,8 +368,10 @@ func _start_animation() -> void:
 		child.queue_free()
 	_root.modulate.a = 0.0
 	_folder_spots.clear()
-	_chunk_timer = 0.0
-	_idle_timer = 0.0
+	_shown_at = Time.get_ticks_msec()
+	_expected_time = _load_expected_time()
+	_sticker_allowance = 0.0
+	_flushing = false
 	visible = true
 	set_process(true)
 
@@ -328,24 +388,25 @@ func _process(delta: float) -> void:
 	if not visible:
 		return  # Tracking chunks before the screen shows; they're placed once it does
 
-	# One sticker per loaded chunk. A big backlog (chunks that finished while the
-	# title camera was still moving) goes down in a quick decaying burst.
-	_chunk_timer -= delta
-	var backlog = _chunk_queue.size()
-	var to_place = 0
-	if backlog >= 15:
-		to_place = ceili(backlog / 15.0)
-	elif backlog > 0 and _chunk_timer <= 0.0:
-		to_place = 1
-		_chunk_timer = CHUNK_INTERVAL
-	for i in range(to_place):
-		_place_chunk_sticker(_chunk_queue.pop_front())
-
-	# Warm-up and settling don't load files; keep the screen alive meanwhile
-	_idle_timer = 0.0 if to_place > 0 else _idle_timer + delta
-	if _idle_timer >= IDLE_STICKER_AFTER:
-		_idle_timer = 0.0
-		_place_random_sticker()
+	# One sticker per chunk, paced so the chunks still to come spread over the
+	# time this load is expected to take. Files arrive in a rush, but the
+	# warm-up after them is long, so this keeps stickers going the whole time.
+	var remaining = _chunk_queue.size() + _watch.size()
+	var time_left: float
+	if _flushing:
+		time_left = FLUSH_TIME
+	else:
+		var elapsed = (Time.get_ticks_msec() - _shown_at) / 1000.0
+		time_left = maxf(_expected_time - elapsed, 2.0)
+	var rate = maxf(MIN_STICKER_RATE, remaining / time_left)
+	# Clamp delta so a frozen frame doesn't turn into a burst
+	_sticker_allowance = minf(_sticker_allowance + rate * minf(delta, 0.1), MAX_STICKERS_PER_FRAME)
+	while _sticker_allowance >= 1.0:
+		_sticker_allowance -= 1.0
+		if not _chunk_queue.is_empty():
+			_place_chunk_sticker(_chunk_queue.pop_front())
+		else:
+			_place_random_sticker()  # Nothing loaded right now; keep the screen alive
 
 	_dots_timer += delta
 	_label.visible_characters = 7 + int(_dots_timer * 3.0) % 4
