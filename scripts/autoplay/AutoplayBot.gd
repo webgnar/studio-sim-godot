@@ -49,6 +49,10 @@ const WANDER_STOPS_MIN := 1
 const WANDER_STOPS_MAX := 3
 const LOOK_AROUND_MIN := 1.5        ## seconds spent looking around at each wander stop
 const LOOK_AROUND_MAX := 4.0
+const GLANCE_HOLD_MIN := 2.0        ## seconds the bot rests its eyes on each thing it glances at
+const GLANCE_HOLD_MAX := 4.5
+const GLANCE_TURN_MAX := 60.0       ## most degrees a casual glance turns from where it's facing
+const GLANCE_BIG_TURN_CHANCE := 0.2 ## sometimes it turns to look behind or well to the side instead
 
 const CLEAR_RADIUS := 3.5           ## loose paintings this close to the canvas get cleared away
 const MAX_CLEARS_PER_PASS := 3
@@ -100,6 +104,7 @@ func end() -> void:
 	_token += 1  # invalidates every pending coroutine step
 	if is_instance_valid(player):
 		player.autoplay_move = Vector2.ZERO
+		player.autoplay_stop_looking()
 	# Don't leave the player holding a painting they never picked up
 	if is_instance_valid(_carrying) and _carrying.is_carried:
 		_carrying.player_ref.drop_carried_object()
@@ -163,14 +168,20 @@ func _wander(token: int) -> bool:
 
 
 func _look_around(token: int, seconds: float) -> bool:
-	"""Glance in a couple of random directions, like someone taking in the room."""
+	"""Take in the room like a person: a few unhurried glances, mostly near
+	where it's already facing and close to eye level, resting on each for a
+	couple of seconds. The head eases into every turn (PlayerController)."""
 	var t := 0.0
 	while t < seconds:
-		var yaw := randf_range(-PI, PI)
+		var facing := player.global_rotation.y
+		var turn := deg_to_rad(randf_range(20.0, GLANCE_TURN_MAX))
+		if randf() < GLANCE_BIG_TURN_CHANCE:
+			turn = deg_to_rad(randf_range(90.0, 150.0))
+		var yaw := facing + turn * (1.0 if randf() < 0.5 else -1.0)
 		var look := player.global_position + Vector3(-sin(yaw), 0.0, -cos(yaw)) * 5.0
-		look.y += EYE_HEIGHT + randf_range(-1.0, 1.0)
+		look.y += EYE_HEIGHT + randf_range(-0.9, 0.5)
 		player.autoplay_look_at(look)
-		var pause := randf_range(1.0, 2.0)
+		var pause := randf_range(GLANCE_HOLD_MIN, GLANCE_HOLD_MAX)
 		if not await _wait(token, pause):
 			return false
 		t += pause
@@ -304,7 +315,7 @@ func _perform_stroke(token: int, system: PaintingSystem2D, stroke: Dictionary) -
 			t += dt
 			elapsed += dt
 			var k := smoothstep(0.0, 1.0, clampf(t / duration, 0.0, 1.0))
-			player.autoplay_look_at(_uv_to_world(system, from_uv.lerp(to_uv, k)))
+			player.autoplay_aim_at(_uv_to_world(system, from_uv.lerp(to_uv, k)))
 			var overall := clampf(elapsed / total, 0.0, 1.0) if total > 0.0 else 1.0
 			_set_ghost_pose(system, lerpf(start_rot, end_rot, overall), lerpf(start_scale, stroke.scale, overall))
 		from_uv = to_uv
@@ -818,7 +829,7 @@ func _wait(token: int, seconds: float) -> bool:
 	return still_running(token)
 
 
-func _wait_for_look(token: int, timeout: float = 2.0) -> bool:
+func _wait_for_look(token: int, timeout: float = 4.0) -> bool:
 	var t := 0.0
 	while still_running(token) and not player.autoplay_look_settled() and t < timeout:
 		await get_tree().process_frame
