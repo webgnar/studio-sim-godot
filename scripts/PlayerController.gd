@@ -61,6 +61,14 @@ var _camera: Camera3D
 var _target_rot: Vector2 = Vector2.ZERO  # Target rotation (pitch, yaw)
 var _current_rot: Vector2 = Vector2.ZERO  # Current smoothed rotation
 
+# Idle autoplay turns its head like a person: eased in and out, never faster
+# than a calm turn (see autoplay_look_at)
+const AUTOPLAY_TURN_TIME := 0.45   ## seconds a typical head turn takes to settle (higher = lazier)
+const AUTOPLAY_TURN_SPEED := 1.6   ## fastest the bot ever turns its head, radians per second (~90 deg/s)
+var _autoplay_goal: Vector2 = Vector2.ZERO
+var _autoplay_turn_vel: Vector2 = Vector2.ZERO
+var _autoplay_turning: bool = false
+
 # Animation controller reference
 var _player_animation: PlayerAnimation
 
@@ -389,6 +397,9 @@ func _physics_process(delta: float) -> void:
 			# Clamp the target pitch to prevent flipping
 			_target_rot.x = clamp(_target_rot.x, deg_to_rad(-80), deg_to_rad(80))
 
+	if _autoplay_turning:
+		_ease_autoplay_turn(delta)
+
 	# --- CAMERA SMOOTHING ---
 	# Interpolate current rotation toward target rotation using exponential decay
 	# This creates smooth, frame-rate independent camera movement
@@ -513,8 +524,9 @@ func _unhandled_input(event: InputEvent) -> void:
 				get_viewport().set_input_as_handled()  # Stop event propagation
 				return  # Don't process other interactions while recapturing
 
-## Idle autoplay: turn the view toward a world point. Uses the normal camera
-## smoothing, so the bot's look glides like a player's mouse would.
+## Idle autoplay: turn the view toward a world point. The head eases into
+## the turn and out of it (AUTOPLAY_TURN_TIME, AUTOPLAY_TURN_SPEED) instead
+## of snapping, so it reads like a person looking, not a bird.
 func autoplay_look_at(world_point: Vector3) -> void:
 	if not _camera:
 		return
@@ -522,13 +534,44 @@ func autoplay_look_at(world_point: Vector3) -> void:
 	var flat_len := Vector2(to_point.x, to_point.z).length()
 	if flat_len < 0.001 and absf(to_point.y) < 0.001:
 		return
+	if not _autoplay_turning:
+		_autoplay_turn_vel = Vector2.ZERO
 	var yaw := atan2(-to_point.x, -to_point.z)
-	_target_rot.y += wrapf(yaw - _target_rot.y, -PI, PI)  # shortest turn, no full spins
-	_target_rot.x = clamp(atan2(to_point.y, flat_len), deg_to_rad(-80), deg_to_rad(80))
+	_autoplay_goal.y = _target_rot.y + wrapf(yaw - _target_rot.y, -PI, PI)  # shortest turn, no full spins
+	_autoplay_goal.x = clamp(atan2(to_point.y, flat_len), deg_to_rad(-80), deg_to_rad(80))
+	_autoplay_turning = true
 
-## Idle autoplay: true once the smoothed view has caught up with the last look target.
+## Idle autoplay: aim straight at a world point with the normal (quick)
+## camera smoothing, for steering the sticker ghost while painting, where a
+## lazy head would leave the ghost trailing behind.
+func autoplay_aim_at(world_point: Vector3) -> void:
+	autoplay_look_at(world_point)
+	if _autoplay_turning:
+		_target_rot = _autoplay_goal
+	autoplay_stop_looking()
+
+## Idle autoplay: true once the view has caught up with the last look target.
 func autoplay_look_settled(tolerance_rad: float = 0.02) -> bool:
-	return _current_rot.distance_to(_target_rot) < tolerance_rad
+	var goal := _autoplay_goal if _autoplay_turning else _target_rot
+	return _current_rot.distance_to(goal) < tolerance_rad
+
+## Idle autoplay: stop steering the view (control goes back to the player).
+func autoplay_stop_looking() -> void:
+	_autoplay_turning = false
+	_autoplay_turn_vel = Vector2.ZERO
+
+func _ease_autoplay_turn(delta: float) -> void:
+	"""Move the view target toward the autoplay goal on a critically damped
+	spring: it speeds up gently, never passes AUTOPLAY_TURN_SPEED, and slows
+	down into the new direction without overshooting."""
+	var omega := 2.0 / AUTOPLAY_TURN_TIME
+	var x := omega * delta
+	var decay := 1.0 / (1.0 + x + 0.48 * x * x + 0.235 * x * x * x)
+	var change := _target_rot - _autoplay_goal
+	var temp := (_autoplay_turn_vel + change * omega) * delta
+	_autoplay_turn_vel = ((_autoplay_turn_vel - temp * omega) * decay).limit_length(AUTOPLAY_TURN_SPEED)
+	var next := _autoplay_goal + (change + temp) * decay
+	_target_rot = _target_rot + (next - _target_rot).limit_length(AUTOPLAY_TURN_SPEED * delta)
 
 func is_skating() -> bool:
 	return _is_skating
