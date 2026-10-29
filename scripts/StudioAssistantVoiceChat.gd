@@ -242,17 +242,18 @@ func _show_status_message(message: String, then: Callable = Callable()) -> void:
 	, CONNECT_ONE_SHOT)
 
 func _is_generative_ai_enabled() -> bool:
+	# On by default: only an explicit false in settings turns it off
 	if not FileAccess.file_exists("user://settings.json"):
-		return false
+		return true
 	var file := FileAccess.open("user://settings.json", FileAccess.READ)
 	if not file:
-		return false
+		return true
 	var json_string := file.get_as_text()
 	file.close()
 	var json := JSON.new()
 	if json.parse(json_string) != OK:
-		return false
+		return true
 	var settings = json.data
 	if typeof(settings) != TYPE_DICTIONARY:
-		return false
-	return bool(settings.get("generative_ai_enabled", false))
+		return true
+	return bool(settings.get("generative_ai_enabled", true))

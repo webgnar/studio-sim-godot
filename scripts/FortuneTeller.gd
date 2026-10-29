@@ -232,4 +232,4 @@ func _load_settings() -> Dictionary:
 	return json.data
 
 func _is_generative_ai_enabled() -> bool:
-	return bool(_load_settings().get("generative_ai_enabled", false))
+	return bool(_load_settings().get("generative_ai_enabled", true))
