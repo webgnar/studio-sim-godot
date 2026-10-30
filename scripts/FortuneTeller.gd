@@ -7,6 +7,9 @@ const ASTROLOGY_API_KEY = "jupTtic3qGOULETb2w7E"
 @export var skin_material: StandardMaterial3D
 
 const NO_DATA_LINE = "The stars cannot find you without knowing when you were born. Visit the Options menu and enter your date of birth."
+const DAILY_LIMIT_LINE = "Sorry, that's all the information I can channel for one day. Come back tomorrow and the stars will have more to say."
+## Remembers the day of the last reading so the fortune teller gives one per day.
+const FORTUNE_STATE_PATH := "user://fortune.json"
 
 var _anim_player: AnimationPlayer
 var _cached_reading: String = ""
@@ -51,22 +54,21 @@ func interact(_player: Node) -> void:
 		_is_busy = false
 		return
 
+	# Just heard it and walked away mid-reading: repeat it rather than refuse.
 	if _cached_reading != "" and _cooldown_timer > 0.0:
 		_start_dialogue(_cached_reading)
 		_is_busy = false
 		return
 
+	if _last_reading_date() == _today():
+		_start_dialogue(DAILY_LIMIT_LINE)
+		_is_busy = false
+		return
+
 	var birth_time: String = settings.get("birth_time", "")
 	var birth_location: String = settings.get("birth_location", "")
-
-	if birth_time.strip_edges() != "":
-		_fetch_from_backend(bd, birth_time, birth_location)
-	else:
-		var reading := FortuneTellerGenerator.generate(bd)
-		_cached_reading = reading
-		_cooldown_timer = COOLDOWN
-		_start_dialogue(reading)
-		_is_busy = false
+	# The server builds the birth chart even without a time (it uses local noon).
+	_fetch_from_backend(bd, birth_time, birth_location)
 
 
 func _fetch_from_backend(birth_date: String, birth_time: String, birth_location: String) -> void:
@@ -105,18 +107,42 @@ func _fetch_from_backend(birth_date: String, birth_time: String, birth_location:
 		_fallback_local(birth_date)
 		return
 
-	_cached_reading = horoscope
-	_cooldown_timer = COOLDOWN
-	_start_dialogue(horoscope)
-	_is_busy = false
+	_deliver_reading(horoscope)
 
 
 func _fallback_local(birth_date: String) -> void:
-	var reading := FortuneTellerGenerator.generate(birth_date)
+	_deliver_reading(FortuneTellerGenerator.generate(birth_date))
+
+
+func _deliver_reading(reading: String) -> void:
 	_cached_reading = reading
 	_cooldown_timer = COOLDOWN
+	_save_reading_date(_today())
 	_start_dialogue(reading)
 	_is_busy = false
+
+
+func _today() -> String:
+	return Time.get_date_string_from_system()
+
+
+func _last_reading_date() -> String:
+	if not FileAccess.file_exists(FORTUNE_STATE_PATH):
+		return ""
+	var file := FileAccess.open(FORTUNE_STATE_PATH, FileAccess.READ)
+	if not file:
+		return ""
+	var json := JSON.new()
+	var ok := json.parse(file.get_as_text()) == OK and typeof(json.data) == TYPE_DICTIONARY
+	file.close()
+	return str(json.data.get("last_reading_date", "")) if ok else ""
+
+
+func _save_reading_date(date: String) -> void:
+	var file := FileAccess.open(FORTUNE_STATE_PATH, FileAccess.WRITE)
+	if file:
+		file.store_string(JSON.stringify({"last_reading_date": date}))
+		file.close()
 
 
 func _start_dialogue(text: String) -> void:
