@@ -21,6 +21,10 @@ const STATUS_MESSAGE_DURATION := 2.0
 const MAX_RECORDING_SECONDS := 30.0
 ## How often the floating "..." indicator's dot count advances while thinking.
 const THINKING_DOT_INTERVAL := 0.4
+## Recent turns sent with each message so the assistant remembers the chat.
+## Forgotten after a quiet spell, like a conversation that has moved on.
+const MAX_HISTORY_TURNS := 6
+const HISTORY_FORGET_SECONDS := 300.0
 
 ## Exposed so PlayerInteractionComponent can show a prompt label.
 var interaction_text: String = IDLE_TEXT
@@ -31,6 +35,8 @@ var _pending_audio_queue: Array[PackedByteArray] = []
 var _http_request: HTTPRequest
 var _voice_player: AudioStreamPlayer3D
 var _status_message_gen: int = 0
+var _chat_history: Array[Dictionary] = []
+var _last_chat_time: float = -INF
 
 ## Floating billboarded label above the NPC's head, visible across the room,
 ## so the player doesn't need to be looking directly at the crosshair prompt
@@ -126,8 +132,12 @@ func _on_transcript_failed(error: String) -> void:
 	_show_status_message("Couldn't hear you - try again.", _process_next_in_queue)
 
 func _fetch_reply(message: String) -> void:
+	var now := Time.get_ticks_msec() / 1000.0
+	if now - _last_chat_time > HISTORY_FORGET_SECONDS:
+		_chat_history.clear()
 	var body := JSON.stringify({
 		"message": message,
+		"history": _chat_history,
 		"locale": LocaleManager.current_locale,
 		"assistantHired": has_node("/root/AutomationManager") and AutomationManager.is_assistant_active(),
 		"hasPsywheel": has_node("/root/WorldStateManager") and WorldStateManager.get_purchased_items().has("psywheel"),
@@ -150,7 +160,15 @@ func _fetch_reply(message: String) -> void:
 	if reply.is_empty():
 		_show_status_message("...", _process_next_in_queue)
 		return
+	_remember_turns(message, reply)
 	_show_reply(reply)
+
+func _remember_turns(message: String, reply: String) -> void:
+	_chat_history.append({"role": "player", "text": message})
+	_chat_history.append({"role": "assistant", "text": reply})
+	while _chat_history.size() > MAX_HISTORY_TURNS:
+		_chat_history.pop_front()
+	_last_chat_time = Time.get_ticks_msec() / 1000.0
 
 func _count_missions_completed() -> int:
 	if not has_node("/root/MissionManager"):

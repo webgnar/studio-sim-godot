@@ -195,6 +195,11 @@ const AI_VISITOR_DIALOGUE_URL = "https://studio-sim-gallery.vercel.app/api/visit
 const AI_ATTRACTION_DIALOGUE_URL = "https://studio-sim-gallery.vercel.app/api/attraction-dialogue"
 var _http_request: HTTPRequest
 
+## What visitors have said about each painting or installation this session,
+## shared across visitors so new ones don't repeat the old ones.
+const MAX_RECENT_LINES := 4
+static var _recent_lines: Dictionary = {} # painting name or attraction title -> Array of lines
+
 
 func _ready() -> void:
 	add_to_group("gallery_visitors")
@@ -234,7 +239,8 @@ func _ready() -> void:
 		start_dancing.call_deferred()
 
 	_http_request = HTTPRequest.new()
-	_http_request.timeout = 8.0
+	# Room for the server to fetch and look at the painting image.
+	_http_request.timeout = 12.0
 	add_child(_http_request)
 
 
@@ -297,12 +303,14 @@ func _fetch_dialogue() -> void:
 	var painting_name := ""
 	var artist_name := ""
 	var painting_critique := ""
+	var gallery_id := ""
 
 	if has_node("/root/WorldStateManager"):
 		for data in WorldStateManager.get_all_paintings():
 			if data.get("node") == _last_attraction:
 				painting_name = data.get("name", "")
 				painting_critique = data.get("critique", "")
+				gallery_id = data.get("gallery_id", "")
 				break
 
 	if has_node("/root/SteamManager"):
@@ -329,7 +337,7 @@ func _fetch_dialogue() -> void:
 	var line: String
 	if _is_generative_ai_enabled():
 		_show_loading_dialogue()
-		line = await _generate_ai_painting_line(painting_name, artist_name, painting_critique)
+		line = await _generate_ai_painting_line(painting_name, artist_name, painting_critique, gallery_id)
 	else:
 		line = VisitorDialogueGenerator.generate_painting_line(_personality, painting_name, artist_name)
 	_cached_dialogue = line
@@ -364,7 +372,7 @@ func _fetch_attraction_dialogue(item_id: String) -> void:
 	_is_interacting = false
 
 
-func _generate_ai_painting_line(painting_name: String, artist_name: String, painting_critique: String) -> String:
+func _generate_ai_painting_line(painting_name: String, artist_name: String, painting_critique: String, gallery_id: String) -> String:
 	var body := JSON.stringify({
 		"paintingName": painting_name,
 		"artistStatement": "",
@@ -373,6 +381,8 @@ func _generate_ai_painting_line(painting_name: String, artist_name: String, pain
 		"locale": LocaleManager.current_locale,
 		"paintingCritique": painting_critique,
 		"imageUrl": "",
+		"galleryId": gallery_id,
+		"recentLines": _recent_lines.get("painting:" + painting_name, []),
 	})
 	var headers := ["Content-Type: application/json", "x-api-key: " + GalleryUploader.API_KEY]
 	var error := _http_request.request(AI_VISITOR_DIALOGUE_URL, headers, HTTPClient.METHOD_POST, body)
@@ -383,6 +393,7 @@ func _generate_ai_painting_line(painting_name: String, artist_name: String, pain
 	var dialogue := _parse_ai_dialogue_response(result)
 	if dialogue == "":
 		return VisitorDialogueGenerator.generate_painting_line(_personality, painting_name, artist_name)
+	_remember_line("painting:" + painting_name, dialogue)
 	return dialogue
 
 
@@ -393,6 +404,7 @@ func _generate_ai_attraction_line(item_title: String, item_description: String, 
 		"deviceId": device_id,
 		"visitorPersonality": _personality,
 		"locale": LocaleManager.current_locale,
+		"recentLines": _recent_lines.get("attraction:" + item_title, []),
 	})
 	var headers := ["Content-Type: application/json", "x-api-key: " + GalleryUploader.API_KEY]
 	var error := _http_request.request(AI_ATTRACTION_DIALOGUE_URL, headers, HTTPClient.METHOD_POST, body)
@@ -403,7 +415,16 @@ func _generate_ai_attraction_line(item_title: String, item_description: String, 
 	var dialogue := _parse_ai_dialogue_response(result)
 	if dialogue == "":
 		return VisitorDialogueGenerator.generate_attraction_line(_personality, item_title)
+	_remember_line("attraction:" + item_title, dialogue)
 	return dialogue
+
+
+static func _remember_line(key: String, line: String) -> void:
+	var lines: Array = _recent_lines.get(key, [])
+	lines.append(line)
+	while lines.size() > MAX_RECENT_LINES:
+		lines.pop_front()
+	_recent_lines[key] = lines
 
 
 func _parse_ai_dialogue_response(result: Array) -> String:
