@@ -40,6 +40,23 @@ const VISITOR_ROSTER: Array = [
 
 var _spawned_visitor_count: int = 0
 
+# ----------------------------------------------------------------------------
+# Disabled items
+# ----------------------------------------------------------------------------
+# Set to true to bring the pencil back. While false the pencil is hidden from the
+# shop, can't be bought, and stays hidden in the world even for players who already
+# own it. Their ownership is NOT removed from the save, so flipping this back to
+# true restores the pencil for everyone who bought it.
+const PENCIL_ENABLED := false
+
+
+func is_disabled(item_id: String) -> bool:
+	"""True if this item is switched off for now (hidden in the shop and the world)."""
+	match item_id:
+		"pencil":
+			return not PENCIL_ENABLED
+	return false
+
 
 func _ready() -> void:
 	_build_catalog()
@@ -56,7 +73,7 @@ func get_catalog() -> Array:
 
 func get_purchaseable_catalog() -> Array:
 	"""Returns only items that can be purchased (excludes always_present world objects)."""
-	return _catalog.filter(func(item): return not item.get("always_present", false))
+	return _catalog.filter(func(item): return not item.get("always_present", false) and not is_disabled(item["id"]))
 
 
 func is_purchased(item_id: String) -> bool:
@@ -92,6 +109,9 @@ func purchase(item_id: String) -> bool:
 		return false
 
 	if not is_repeatable and is_locked(item_id):
+		return false
+
+	if is_disabled(item_id):
 		return false
 
 	if not EconomyManager.can_afford(item["price"]):
@@ -149,6 +169,9 @@ func reveal_purchased_items() -> void:
 	for item_id in WorldStateManager.get_purchased_items():
 		var item = _get_item(item_id)
 		if item.get("no_prop", false):
+			continue
+		# Owned but switched off (e.g. the pencil): keep it hidden, keep the ownership
+		if is_disabled(item_id):
 			continue
 		_reveal_item_props(item_id)
 

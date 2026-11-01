@@ -509,6 +509,8 @@ func _get_player_interaction() -> PlayerInteractionComponent:
 func is_pencil_equipped() -> bool:
 	"""Check if the player currently has the pencil equipped (E-key weapon slot, not carried)."""
 	var player_interaction = _get_player_interaction()
+	if not ShopManager.PENCIL_ENABLED:
+		return false  # Pencil is switched off (see ShopManager.PENCIL_ENABLED): never draw
 	return player_interaction != null and player_interaction.is_weapon_equipped and player_interaction.equipped_weapon is PencilWeaponComponent
 
 func _begin_pencil_drawing():
