@@ -83,3 +83,18 @@ A canvas restored from a save is handed to the painter as stamps, so the assista
 - **Studio** (default): the endless studio rounds above.
 - **Hall of Fame**: the bot's style before the studio style, the version zack saved on branch `autoplay-painter-v1` (layered, meticulous and burst-carved paintings; `plan_painting` with the studio style left out). It paints one whole painting, then keeps adding motifs, focal points and accents over it.
 - **Random**: the assistant's original style, a random sticker at a random spot, turn and size.
+- **Aerial Map**: a top-down game overworld map (see below), which keeps growing round after round.
+
+## Aerial map style
+
+zack's fourth style (2026-11-03), modelled on top-down game overworld maps. Settings are the `MAP_*` constants at the top of `AutoplayPainter.gd`. A map is laid back to front:
+
+1. **Land**: the canvas split into patches (`MAP_FIELDS`), each tiled with one of 1-3 land stickers (`MAP_LAND_INKS`), every tile in a patch turned the same way. Land prefers flat-coloured stickers (`MAP_FLAT`) and green ones `MAP_GREEN_LAND` of the time.
+2. **Water**: lakes, a sea along one side, or an island (`MAP_KINDS`, `MAP_WATER`), from noise (`MAP_NOISE`), plus meandering rivers that widen as they go (`MAP_RIVERS`, `MAP_RIVER_WIDTH`, `MAP_RIVER_BEND`). The water sticker is dark or blue (`MAP_DARK_WATER`) and differs from the land by `MAP_WATER_CONTRAST` in lightness.
+3. **Forests**: clumps of one compact sticker packed close (`MAP_FORESTS`, `MAP_FOREST_SIZE`, `MAP_TREE_SIZE`, `MAP_FOREST_PACK`).
+4. **Roads**: every town joined to its nearest neighbour, some extra loops (`MAP_ROAD_LOOPS`) and roads off the edge (`MAP_ROAD_EXITS`), winding (`MAP_ROAD_WIGGLE`). Drawn with thin line stickers or, `MAP_DIRT_ROADS` of the time, dirt tracks of a solid sticker. Stamps go down every `MAP_ROAD_SPACING` of a stamp's size, like stamping often while moving the mouse slowly, so a road is one continuous trail.
+5. **Towns**: small varied stickers on the town's own little grid, a bigger landmark first (`MAP_TOWNS`, `MAP_TOWN_HOUSES`, `MAP_HOUSE_SIZE`, `MAP_LANDMARK`), settled near water (`MAP_TOWN_BY_WATER`).
+
+Bare canvas left over is touched up with the land sticker on land and the water sticker in the water. Mistakes and impulses happen at `MAP_MISTAKES` of the usual rate, and an impulse is building-sized.
+
+The bot paints a map `MAP_CHANCE` of the time. On the assistant's wall (smallest sticker `MAP_MIN_SIZE`) the map grows each round: new towns joined by roads (`MAP_GROW_TOWNS`), buildings on the edges of old towns (`MAP_GROW_HOUSES`), new forests (`MAP_GROW_FORESTS`), and now and then a flood, a new lake or river over the map (`MAP_FLOOD_CHANCE`). Every `MAP_NEW_MAP_ROUNDS` rounds a whole new map is laid over the old one.
