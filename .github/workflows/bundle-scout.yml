@@ -1,0 +1,62 @@
+name: Bundle Scout
+
+# Run from the Actions tab (Run workflow). Steam's store is blocked from some
+# machines, so the scan runs here. A full scan can take 2-3 hours because
+# Steam rate-limits the follower counts.
+on:
+  workflow_dispatch:
+    inputs:
+      profile:
+        description: "Profile JSON, relative to tools/bundle_scout"
+        default: "profiles/studio_sim.json"
+      extra_args:
+        description: "Extra find_games.py options, e.g. --max-upcoming 50 --no-website"
+        default: ""
+
+concurrency:
+  group: bundle-scout
+  cancel-in-progress: true
+
+jobs:
+  scout:
+    runs-on: ubuntu-latest
+    timeout-minutes: 330
+    defaults:
+      run:
+        working-directory: tools/bundle_scout
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Find games
+        env:
+          PROFILE: ${{ inputs.profile }}
+          EXTRA: ${{ inputs.extra_args }}
+        run: timeout 300m python3 -u find_games.py --profile "$PROFILE" --out results $EXTRA
+      - name: Build report and outreach pages
+        if: always()
+        run: |
+          python3 make_report.py results.json report.html
+          python3 make_outreach.py results.json outreach.html --write-queue queue.txt
+      - name: Download thumbnails for the outreach queue
+        if: always()
+        run: |
+          pip install -q pillow
+          python3 fetch_thumbs.py queue.txt thumbs
+      - name: Print results
+        if: always()
+        run: |
+          echo "=====CSV-BEGIN====="
+          cat results.csv
+          echo "=====CSV-END====="
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bundle-scout
+          path: |
+            tools/bundle_scout/results.*
+            tools/bundle_scout/report.html
+            tools/bundle_scout/outreach.html
+            tools/bundle_scout/queue.txt
+            tools/bundle_scout/thumbs/

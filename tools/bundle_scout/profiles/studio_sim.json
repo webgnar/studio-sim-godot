@@ -1,0 +1,29 @@
+{
+  "name": "Studio Sim",
+  "our_appid": 4278180,
+  "search_tags": ["Simulation"],
+  "extra_searches": [
+    {"tags": ["Simulation", "First-Person"], "label": "first-person sim"},
+    {"tags": ["Cozy", "Simulation"], "label": "cozy sim"},
+    {"tags": ["Relaxing", "Sandbox"], "label": "relaxing sandbox"},
+    {"tags": ["Surreal", "Simulation"], "label": "weird sim"},
+    {"tags": ["Drawing"], "label": "drawing"}
+  ],
+  "similar_games": [582550, 1290000, 1135690],
+  "fit_weights": {
+    "Drawing": 8, "First-Person": 5, "Cozy": 5, "Relaxing": 5, "Simulation": 4,
+    "Sandbox": 4, "Life Sim": 4, "Surreal": 4, "Psychedelic": 3, "Abstract": 3,
+    "Experimental": 3, "Funny": 3, "Conspiracy": 3, "Colorful": 2, "Wholesome": 2,
+    "Immersive Sim": 2, "Management": 2, "Aliens": 1, "Indie": 1
+  },
+  "report_title": "Studio Sim Bundle Scout",
+  "report_blurb": "Upcoming and recent Steam sims ranked by how well they fit Studio Sim (first-person, cozy, creative, a little weird), with every public way to reach the developer.",
+  "outreach": {
+    "title": "Studio Sim Outreach",
+    "game": "Studio Sim",
+    "intro": "I'm zack, dev of Studio Sim, a first-person art studio game where you make paintings out of stickers, ship them down to your gallery and grow a weird little art world. It's out now on Steam:",
+    "contact": "just reply or add me on Discord (web_gnar)",
+    "signature": "Zack\nStudio Sim\nDiscord: web_gnar",
+    "liked_example": "e.g. love how chill the building looks in the trailer"
+  }
+}
