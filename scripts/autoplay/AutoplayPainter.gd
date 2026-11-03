@@ -250,6 +250,7 @@ const MAP_ROAD_LOOPS := 0.3          ## chance of each extra road beyond the one
 const MAP_ROAD_EXITS := Vector2i(1, 2)   ## roads leaving the map at its edges
 const MAP_ROAD_WIGGLE := 0.12        ## how much roads wind, as a fraction of their length
 const MAP_ROAD_MARK := 0.06          ## length of one road mark (canvas widths)
+const MAP_ROAD_SPACING := 0.15       ## gap between road stamps, as a fraction of a stamp's size: low = stamped often while the hand moves slowly, so the road comes out as one continuous trail (zack, 2026-11-03)
 const MAP_DIRT_ROADS := 0.5          ## chance a map's roads are dirt tracks (small solid stickers, lighter or darker than the land) rather than thin lines
 const MAP_DIRT_SIZE := 0.045         ## one piece of dirt track (canvas widths)
 const MAP_MIN_SIZE := 0.04           ## smallest sticker on the assistant's map (canvas widths); the bot uses its canvas's smallest
@@ -2014,7 +2015,7 @@ func _map_road(plan: Array[Dictionary], a: Vector2, b: Vector2) -> void:
 		path = finer
 		wiggle *= 0.5
 	var size := maxf(MAP_DIRT_SIZE if _map_dirt else MAP_ROAD_MARK, _min_size)
-	var spacing := size * (0.55 if _map_dirt else LINE_OVERLAP)
+	var spacing := size * MAP_ROAD_SPACING
 	var walked := 0.0
 	var next := size * 0.6   # start a little out of the town
 	var total := 0.0
