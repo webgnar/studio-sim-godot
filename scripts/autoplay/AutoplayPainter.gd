@@ -258,7 +258,7 @@ const MAP_GROW_TOWNS := Vector2i(1, 2)    ## assistant: new towns each later rou
 const MAP_GROW_HOUSES := Vector2i(1, 3)   ## assistant: buildings added to each old town each later round
 const MAP_GROW_FORESTS := Vector2i(1, 2)  ## assistant: new forest clumps each later round
 const MAP_FLOOD_CHANCE := 0.25       ## assistant: chance a later round floods part of the map with a new lake or river
-const MAP_NEW_MAP_ROUNDS := 8        ## assistant: after this many rounds a whole new map is laid over the old one
+const MAP_NEW_MAP_ROUNDS := 0        ## assistant: after this many rounds a whole new map is laid over the old one (0 = never: one map keeps growing forever, zack 2026-11-03)
 const METICULOUS := {"catalog": 1, "checker": 2, "rings": 2, "mandala": 3, "gradient": 2}
 
 ## Colour families a painting's key colour is drawn from (hue 0..1, -1 = black/white/grey).
@@ -1598,9 +1598,9 @@ func _map_touch_up(plan: Array[Dictionary], grid: PackedByteArray, limit: int) -
 
 func _map_round() -> void:
 	"""The assistant's next round on its map: the first round (and every
-	MAP_NEW_MAP_ROUNDS) lays a whole new map, the rest make it grow."""
+	MAP_NEW_MAP_ROUNDS, if set) lays a whole new map, the rest make it grow."""
 	var plan := _plan
-	if _map_rounds == 0 or _map_rounds >= MAP_NEW_MAP_ROUNDS:
+	if _map_rounds == 0 or (MAP_NEW_MAP_ROUNDS > 0 and _map_rounds >= MAP_NEW_MAP_ROUNDS):
 		_fresh_painting(false)
 		_plan = plan
 		_aerial_map(plan)
