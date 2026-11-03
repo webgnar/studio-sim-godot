@@ -1,0 +1,32 @@
+{
+  "name": "Quest For Stoken",
+  "our_appid": 5436050,
+  "search_tags": ["Platformer"],
+  "extra_searches": [
+    {"tags": ["2D Platformer", "Retro"], "label": "retro 2D platformer"},
+    {"tags": ["Skateboarding"], "label": "skateboarding"},
+    {"tags": ["Platformer", "Hand-drawn"], "label": "hand-drawn platformer"},
+    {"tags": ["Platformer", "Funny"], "label": "funny platformer"},
+    {"tags": ["Platformer", "Surreal"], "label": "surreal platformer"}
+  ],
+  "similar_games": [],
+  "fit_weights": {
+    "Skateboarding": 10, "Skating": 8, "BMX": 6, "Extreme Sports": 5, "Parkour": 3,
+    "Hand-drawn": 5, "Cartoony": 3, "Cartoon": 3, "Stylized": 2, "Colorful": 2,
+    "Funny": 4, "Comedy": 4, "Memes": 3, "Satire": 3, "Dark Humor": 2,
+    "Surreal": 4, "Psychedelic": 4, "Experimental": 2, "Abstract": 2, "Weird": 3,
+    "2D Platformer": 6, "Precision Platformer": 2, "Run and Gun": 2, "Shooter": 1,
+    "Boss Rush": 1, "Arcade": 2, "Retro": 6, "Pixel Graphics": 3, "Physics": 2,
+    "Indie": 1, "Sports": 2
+  },
+  "report_title": "Bundle Scout",
+  "report_blurb": "Upcoming and recent Steam platformers ranked by how well they fit Quest For Stoken (retro 2D platforming, skate, hand-drawn, funny, surreal), with every public way to reach the developer.",
+  "outreach": {
+    "title": "Stoken Outreach",
+    "game": "Quest For Stoken",
+    "intro": "I'm zack, dev of Quest For Stoken, a hand-drawn retro skateboarding platformer im putting on Steam in March 2027:",
+    "contact": "just reply or add me on Discord (web_gnar)",
+    "signature": "Zack\nQuest For Stoken\nDiscord: web_gnar",
+    "liked_example": "e.g. love the hand-drawn bosses in the trailer"
+  }
+}

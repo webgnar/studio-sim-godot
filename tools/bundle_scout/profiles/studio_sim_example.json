@@ -1,0 +1,25 @@
+{
+  "name": "MY STUDIO SIM",
+  "our_appid": null,
+  "search_tags": ["Management"],
+  "extra_searches": [
+    {"tags": ["Tycoon"], "label": "tycoon"},
+    {"tags": ["Management", "Business"], "label": "business management"},
+    {"tags": ["Management", "Pixel Graphics"], "label": "pixel management"},
+    {"tags": ["Simulation", "Economy"], "label": "economy sim"}
+  ],
+  "similar_games": [239820, 362620],
+  "fit_weights": {
+    "Tycoon": 8, "Management": 6, "Business": 6, "Economy": 4, "Time Management": 3,
+    "Resource Management": 3, "Building": 2, "Sandbox": 2, "Pixel Graphics": 2, "Funny": 2
+  },
+  "report_title": "Studio Sim Bundle Scout",
+  "outreach": {
+    "title": "Studio Sim Outreach",
+    "game": "MY STUDIO SIM",
+    "intro": "I'm zack, dev of MY STUDIO SIM, a ONE-LINE PITCH on Steam:",
+    "contact": "just reply or add me on Discord (web_gnar)",
+    "signature": "Zack\nMY STUDIO SIM\nDiscord: web_gnar",
+    "liked_example": "e.g. love how deep the hiring system looks"
+  }
+}
