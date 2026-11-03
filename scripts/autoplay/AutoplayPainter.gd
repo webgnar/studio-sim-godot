@@ -215,6 +215,49 @@ const ASSISTANT_MIN_SIZE := DEFAULT_MIN_SIZE   ## smallest sticker on the assist
 const ASSISTANT_CORE_SPREAD := Vector2(0.3, 0.25)   ## later rounds: how far from the middle each new skeleton may land (across, down)
 const ASSISTANT_KEEP_FORMS := 0.5     ## share of found forms the next round's new shapes leave alone (0 = everything can be buried, 1 = forms are kept for good)
 const ASSISTANT_PLAN_LIMIT := 1500    ## stickers remembered for planning; past that, ones hidden under others are forgotten (the canvas keeps them)
+## Aerial map (zack, 2026-11-03): a top-down game overworld, like the maps
+## in his reference screenshots. Land laid as a patchwork of fields, lakes or
+## sea and winding rivers cut through it, clumps of forest, towns of small
+## stickers packed like buildings, and roads joining the towns. On the
+## assistant's wall the map keeps growing round after round: new towns and
+## roads, forests spreading, now and then a flood.
+const MAP_CHANCE := 0.25             ## share of the bot's paintings that are aerial maps (0 = never)
+const MAP_KINDS := {"inland": 3, "coast": 2, "island": 1}   ## what the water is and how often: inland lakes, a sea along one side, an island in the sea
+const MAP_WATER := {"inland": 0.1, "coast": 0.3, "island": 0.42}   ## share of the canvas under lakes or sea, by kind (rivers come on top)
+const MAP_NOISE := 2.5               ## lumps of land and water across the canvas (higher = more, smaller lakes and bays)
+const MAP_RIVERS := Vector2i(1, 2)   ## rivers per map (least, most)
+const MAP_RIVER_WIDTH := Vector2(0.035, 0.07)   ## river width at its source and at its mouth (canvas widths)
+const MAP_RIVER_BEND := 0.35         ## how much rivers meander (0 = straight)
+const MAP_DARK_WATER := 0.35         ## chance the water is dark (black/navy) rather than blue
+const MAP_FIELDS := Vector2i(4, 8)   ## patches the land is split into
+const MAP_LAND_INKS := Vector2i(1, 3)   ## different stickers the land patches use
+const MAP_GREEN_LAND := 0.7          ## chance the land prefers green stickers (else any colour, picked per map)
+const MAP_FLAT := 0.08               ## land and water prefer flat-coloured stickers: busyness (spread of brightness) a sticker can have before it's picked much less (higher = busier land and water allowed)
+const MAP_WATER_CONTRAST := 0.2      ## the water differs from the land by at least this much lightness
+const MAP_MISTAKES := 0.3            ## mistakes and impulsive stickers on a map, as a share of the usual rate (0 = none)
+const MAP_FIELD_SIZE := Vector2(0.08, 0.35)   ## smallest and biggest land tile (canvas widths)
+const MAP_FORESTS := Vector2i(2, 5)  ## forest clumps per map
+const MAP_FOREST_SIZE := Vector2(0.07, 0.16)   ## forest radius (canvas widths)
+const MAP_TREE_SIZE := Vector2(0.04, 0.06)    ## one tree (canvas widths)
+const MAP_FOREST_PACK := 0.7         ## tree spacing, as a fraction of a tree's size (lower = denser)
+const MAP_TOWNS := Vector2i(3, 6)    ## towns per map
+const MAP_TOWN_HOUSES := Vector2i(4, 10)   ## buildings per town
+const MAP_HOUSE_SIZE := Vector2(0.06, 0.085)   ## one building (canvas widths)
+const MAP_LANDMARK := 1.6            ## a town's first building is this much bigger (castle, church)
+const MAP_TOWN_SPACING := 0.2        ## towns keep at least this far apart (canvas widths)
+const MAP_TOWN_BY_WATER := 0.6       ## how strongly towns settle by the water (0 = anywhere on land)
+const MAP_ROAD_LOOPS := 0.3          ## chance of each extra road beyond the ones that join every town
+const MAP_ROAD_EXITS := Vector2i(1, 2)   ## roads leaving the map at its edges
+const MAP_ROAD_WIGGLE := 0.12        ## how much roads wind, as a fraction of their length
+const MAP_ROAD_MARK := 0.06          ## length of one road mark (canvas widths)
+const MAP_DIRT_ROADS := 0.5          ## chance a map's roads are dirt tracks (small solid stickers, lighter or darker than the land) rather than thin lines
+const MAP_DIRT_SIZE := 0.045         ## one piece of dirt track (canvas widths)
+const MAP_MIN_SIZE := 0.04           ## smallest sticker on the assistant's map (canvas widths); the bot uses its canvas's smallest
+const MAP_GROW_TOWNS := Vector2i(1, 2)    ## assistant: new towns each later round
+const MAP_GROW_HOUSES := Vector2i(1, 3)   ## assistant: buildings added to each old town each later round
+const MAP_GROW_FORESTS := Vector2i(1, 2)  ## assistant: new forest clumps each later round
+const MAP_FLOOD_CHANCE := 0.25       ## assistant: chance a later round floods part of the map with a new lake or river
+const MAP_NEW_MAP_ROUNDS := 8        ## assistant: after this many rounds a whole new map is laid over the old one
 const METICULOUS := {"catalog": 1, "checker": 2, "rings": 2, "mandala": 3, "gradient": 2}
 
 ## Colour families a painting's key colour is drawn from (hue 0..1, -1 = black/white/grey).
@@ -295,7 +338,16 @@ var last_carve_source := ""   ## id of the sticker whose silhouette was last car
 var _guard := false               ## new shapes skip anything that would cut into the kept forms (assistant rounds)
 var _cycle := 0                   ## assistant: rounds of making shapes and defining forms so far
 var _next := 0                    ## assistant: next stroke to hand out
-var _assistant_style := "studio"  ## assistant: "studio" or "hall_of_fame" (see begin_assistant)
+var _assistant_style := "studio"  ## assistant: "studio", "hall_of_fame" or "aerial_map" (see begin_assistant)
+var _map_water := PackedByteArray()   ## aerial map: 1 = lake, sea or river, per coverage cell
+var _map_towns: Array[Vector2] = []   ## aerial map: town centres (canvas-width units)
+var _map_land: Array[int] = []        ## aerial map: the land stickers
+var _map_sea := -1                    ## aerial map: the water sticker
+var _map_trees: Array[int] = []       ## aerial map: the tree stickers
+var _map_pen := -1                    ## aerial map: the road sticker
+var _map_dirt := false                ## aerial map: roads are dirt tracks (MAP_DIRT_ROADS)
+var _map_style := false               ## this painting is an aerial map (see MAP_MISTAKES)
+var _map_rounds := 0                  ## assistant: rounds painted on the current map (0 = no map yet)
 static var _colors: Dictionary = {}
 static var _silhouettes: Dictionary = {}   ## sticker id -> traced outline, see _silhouette()   ## sticker id -> colour summary, see _color()
 
@@ -387,11 +439,13 @@ func hover_time() -> float:
 ## `style` "studio" paints the studio rounds above; "hall_of_fame" paints the
 ## way the bot did before the studio style (layered, meticulous and drawn
 ## abstractions, saved on branch autoplay-painter-v1), then keeps adding
-## motifs and focal points over it.
+## motifs and focal points over it. "aerial_map" lays a map and then keeps
+## growing it (see "Aerial map").
 func begin_assistant(aspect: float, placed: Array[Dictionary] = [], style: String = "studio") -> void:
 	_assistant_style = style
 	_aspect = aspect
-	_min_size = ASSISTANT_MIN_SIZE
+	_min_size = MAP_MIN_SIZE if style == "aerial_map" else ASSISTANT_MIN_SIZE
+	_map_rounds = 0
 	_fresh_painting(false)
 	_plan = placed.duplicate()
 	for st in _plan:
@@ -440,6 +494,9 @@ func _assistant_round() -> void:
 	_plan = _on_canvas()
 	_forget_hidden()
 	_next = _plan.size()
+	if _assistant_style == "aerial_map":
+		_map_round()
+		return
 	if _assistant_style == "hall_of_fame":
 		# A whole painting on a bare canvas, then add-ons over it
 		var placed := _plan
@@ -510,6 +567,10 @@ func plan_painting(aspect: float, add_on: bool = false, allow_studio: bool = tru
 	var plan: Array[Dictionary] = []
 	_plan = plan
 	var family: String = _recent_families[-1]
+	_meticulous_style = false
+	if allow_studio and not add_on and randf() < MAP_CHANCE:
+		_aerial_map(plan)
+		return plan
 	_meticulous_style = not add_on and randf() < METICULOUS_CHANCE
 	if _meticulous_style:
 		last_style = "meticulous " + _weighted(METICULOUS)
@@ -592,6 +653,7 @@ func _fresh_painting(add_on: bool) -> void:
 	_zoom = 1.0
 	_any_sticker = false
 	_variety = false
+	_map_style = false
 	_found.clear()
 	_focus_base = randf_range(0.35, 0.85)
 	_energy_base = randf_range(0.25, 0.8)
@@ -1486,6 +1548,492 @@ func _pick_by(role: String, test: Callable, avoid: Array = [], slot: String = "a
 	return _any(pick)
 
 
+# --- Aerial map ---
+# A top-down game overworld (MAP_*): the land first, as a patchwork of
+# fields, then the water over it (lakes or sea, and rivers winding through),
+# clumps of forest, the roads joining the towns, and the towns themselves,
+# small stickers packed like buildings. Map geometry is worked out in
+# canvas-width units (x 0..1, y 0.._aspect) on the coverage grid, then
+# stamped in viewer space.
+
+func _aerial_map(plan: Array[Dictionary]) -> void:
+	var kind := _weighted(MAP_KINDS)
+	last_style = "aerial map, " + kind
+	late_fill = false
+	_map_style = true
+	_map_rounds = 1
+	_map_towns.clear()
+	_map_choose_inks()
+	_map_water = _map_terrain(kind)
+	for k in randi_range(MAP_RIVERS.x, MAP_RIVERS.y):
+		_map_river(_map_water)
+	_map_fields(plan)
+	_map_lay_water(plan, _map_water)
+	for k in randi_range(MAP_FORESTS.x, MAP_FORESTS.y):
+		_map_forest(plan)
+	var towns := _map_place_towns(randi_range(MAP_TOWNS.x, MAP_TOWNS.y))
+	_map_roads(plan, towns, randi_range(MAP_ROAD_EXITS.x, MAP_ROAD_EXITS.y))
+	for t in towns:
+		_map_town(plan, t, randi_range(MAP_TOWN_HOUSES.x, MAP_TOWN_HOUSES.y), true)
+	_map_towns.append_array(towns)
+	_fill_inks = _map_land.duplicate()
+	_map_touch_up(plan, _coverage(plan), FILL_MAX)
+
+
+func _map_touch_up(plan: Array[Dictionary], grid: PackedByteArray, limit: int) -> void:
+	"""Slivers of canvas left showing get the land's colour on land and the
+	water's in the water."""
+	for wet in [0, 1]:
+		var part := grid.duplicate()
+		for i in part.size():
+			if _map_water[i] != wet:
+				part[i] = CELL_FULL
+		if not _bare_cells(part).is_empty():
+			var inks: Array[int] = _map_land
+			if wet == 1:
+				inks = [_map_sea]
+			_fill_spots(plan, part, inks, _min_size, FILL_LARGEST, limit)
+
+
+func _map_round() -> void:
+	"""The assistant's next round on its map: the first round (and every
+	MAP_NEW_MAP_ROUNDS) lays a whole new map, the rest make it grow."""
+	var plan := _plan
+	if _map_rounds == 0 or _map_rounds >= MAP_NEW_MAP_ROUNDS:
+		_fresh_painting(false)
+		_plan = plan
+		_aerial_map(plan)
+		return
+	_map_rounds += 1
+	last_style = "aerial map, round %d" % _map_rounds
+	if randf() < MAP_FLOOD_CHANCE:
+		# A new lake or river floods part of the map, roads and all
+		var flood := PackedByteArray()
+		flood.resize(_map_water.size())
+		if randf() < 0.5:
+			_map_river(flood)
+		else:
+			_map_lake(flood)
+		for t in _map_towns:
+			_map_clear_around(flood, t, MAP_HOUSE_SIZE.y * 1.5)
+		var grid := PackedByteArray()
+		grid.resize(flood.size())
+		for i in flood.size():
+			grid[i] = 0 if flood[i] == 1 and _map_water[i] == 0 else CELL_FULL
+			_map_water[i] |= flood[i]
+		_fill_spots(plan, grid, [_map_sea], _min_size, 0.3, FILL_MAX, NAN, "map water", true)
+		last_style += ", flood"
+	for k in randi_range(MAP_GROW_FORESTS.x, MAP_GROW_FORESTS.y):
+		_map_forest(plan)
+	var towns := _map_place_towns(randi_range(MAP_GROW_TOWNS.x, MAP_GROW_TOWNS.y))
+	_map_roads(plan, towns, 0)
+	for t in _map_towns:
+		_map_town(plan, t, randi_range(MAP_GROW_HOUSES.x, MAP_GROW_HOUSES.y), false)
+	for t in towns:
+		_map_town(plan, t, randi_range(MAP_TOWN_HOUSES.x, MAP_TOWN_HOUSES.y), true)
+	_map_towns.append_array(towns)
+
+
+func _map_choose_inks() -> void:
+	"""The map's stickers: solid ones for the land (green when MAP_GREEN_LAND
+	says so) and a solid one for the water that stands apart from the land,
+	compact ones for trees, a thin line for roads."""
+	var library := StickerLibrary.sticker_library
+	var land_hue: float = 0.3 if randf() < MAP_GREEN_LAND else FAMILIES.values().pick_random()
+	_map_land.clear()
+	for k in randi_range(MAP_LAND_INKS.x, MAP_LAND_INKS.y):
+		var pick := _map_pick(func(i): return _has_role(i, "ground") and _solidity(i) >= BASE_SOLIDITY,
+			func(i): return _map_hue_weight(i, land_hue) * _map_flat(i), _map_land)
+		if pick >= 0:
+			_map_land.append(pick)
+	if _map_land.is_empty():
+		_map_land.append(_pick("solid", [], "any"))
+	var land_light := 0.0
+	for i in _map_land:
+		land_light += _color(i).light / _map_land.size()
+	var dark := randf() < MAP_DARK_WATER
+	_map_sea = _map_pick(func(i): return _solidity(i) >= BASE_SOLIDITY and absf(_color(i).light - land_light) >= MAP_WATER_CONTRAST,
+		func(i): return ((0.05 + pow(1.0 - _color(i).light, 3.0) * 3.0) if dark else _map_hue_weight(i, 0.6)) * _map_flat(i), _map_land)
+	if _map_sea < 0:
+		_map_sea = _pick("solid", _map_land, "any")
+	_map_trees.clear()
+	for k in randi_range(1, 2):
+		var tree := _map_pick(func(i): var t := _texture_size(i); return not ("line" in _roles(library[i]) or "frame" in _roles(library[i])) and maxf(t.x, t.y) / minf(t.x, t.y) < 1.8 and _color(i).coverage >= 0.3,
+			func(i): return _map_hue_weight(i, 0.3) + (1.0 if i in _map_land else 0.0), _map_trees + [_map_sea])
+		if tree >= 0:
+			_map_trees.append(tree)
+	if _map_trees.is_empty():
+		_map_trees.append(_pick("motif", [], "any"))
+	_map_dirt = randf() < MAP_DIRT_ROADS
+	if _map_dirt:
+		_map_pen = _map_pick(func(i): return _solidity(i) >= BASE_SOLIDITY and absf(_color(i).light - land_light) >= MAP_WATER_CONTRAST and i != _map_sea,
+			func(i): return _map_flat(i), _map_land)
+	if not _map_dirt or _map_pen < 0:
+		_map_dirt = false
+		_map_pen = _pick("pen", [], "any")
+
+
+func _map_pick(test: Callable, weight: Callable, avoid: Array) -> int:
+	"""A sticker passing `test`, weighted by `weight`, not one of `avoid`
+	(-1 if none passes)."""
+	var total := 0.0
+	var candidates: Array[int] = []
+	var weights: Array[float] = []
+	for i in StickerLibrary.sticker_library.size():
+		if i in avoid or not test.call(i):
+			continue
+		var w: float = weight.call(i)
+		candidates.append(i)
+		weights.append(w)
+		total += w
+	if candidates.is_empty():
+		return -1
+	var r := randf() * total
+	for k in candidates.size():
+		r -= weights[k]
+		if r <= 0.0:
+			return candidates[k]
+	return candidates[-1]
+
+
+func _map_flat(sticker: int) -> float:
+	"""1 for a flat-coloured sticker, falling away for busy ones (MAP_FLAT)."""
+	return 0.03 + exp(-pow(_color(sticker).busy / MAP_FLAT, 2.0))
+
+
+func _map_hue_weight(sticker: int, hue: float) -> float:
+	"""How well a sticker's colour fits `hue` (-1: grey, black or white)."""
+	var c := _color(sticker)
+	if hue < 0.0:
+		return 1.0 if c.hue < 0.0 or c.colorful < 0.25 else 0.1
+	if c.hue < 0.0:
+		return 0.05
+	var d := absf(wrapf(c.hue - hue, -0.5, 0.5))
+	return 0.05 + exp(-pow(d / 0.1, 2.0)) * 3.0 * c.colorful
+
+
+func _map_terrain(kind: String) -> PackedByteArray:
+	"""Where the lakes or sea are: rolling noise, tipped toward one side for
+	a coast or toward the edges for an island, cut at the height that puts
+	MAP_WATER of the canvas under water."""
+	var rows := _cover_rows()
+	var noise := FastNoiseLite.new()
+	noise.seed = randi()
+	noise.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
+	noise.fractal_octaves = 3
+	noise.frequency = MAP_NOISE / COVER_GRID
+	var sea := Vector2.from_angle(randi_range(0, 3) * PI / 2.0 + randf_range(-0.4, 0.4))
+	var heights := PackedFloat32Array()
+	heights.resize(COVER_GRID * rows)
+	for r in rows:
+		for c in COVER_GRID:
+			var q := (_cell_center(Vector2(c, r)) - Vector2(0.5, 0.5)) * 2.0   # -1..1 across and down
+			var h := noise.get_noise_2d(c, r)
+			match kind:
+				"coast":
+					h -= 0.6 * q.dot(sea)
+				"island":
+					h -= 0.7 * q.length_squared()
+			heights[r * COVER_GRID + c] = h
+	var sorted := heights.duplicate()
+	sorted.sort()
+	var level := sorted[clampi(int(MAP_WATER[kind] * sorted.size()), 0, sorted.size() - 1)]
+	var water := PackedByteArray()
+	water.resize(heights.size())
+	for i in heights.size():
+		water[i] = 1 if heights[i] < level else 0
+	return water
+
+
+func _map_river(water: PackedByteArray) -> void:
+	"""A river from one edge of the canvas across to another (or into a lake
+	or the sea), meandering, widening as it goes."""
+	var rows := _cover_rows()
+	var size := Vector2(COVER_GRID, rows)
+	var side := randi() % 4
+	var along := randf_range(0.15, 0.85)
+	var edges: Array[Vector2] = [Vector2(along, 0.0), Vector2(1.0, along), Vector2(along, 1.0), Vector2(0.0, along)]
+	var p: Vector2 = edges[side] * size
+	var target: Vector2 = edges[(side + [1, 2, 2, 3].pick_random()) % 4] * size
+	target = Vector2(randf_range(0.1, 0.9), randf_range(0.1, 0.9)) * size if target.distance_to(p) < size.x * 0.4 else target
+	var before := water.duplicate()
+	var heading := (target - p).angle()
+	var bend := 0.0
+	var reach := p.distance_to(target)
+	var cells_wide := Vector2(MAP_RIVER_WIDTH.x, MAP_RIVER_WIDTH.y) * COVER_GRID
+	for step in int(reach * 4.0):
+		bend = bend * 0.92 + randfn(0.0, MAP_RIVER_BEND)
+		heading = lerp_angle(heading, (target - p).angle(), 0.06) + bend * 0.12
+		p += Vector2.from_angle(heading) * 0.5
+		if p.x < -2.0 or p.y < -2.0 or p.x > size.x + 2.0 or p.y > size.y + 2.0:
+			return
+		var width := lerpf(cells_wide.x, cells_wide.y, clampf(step * 0.5 / reach, 0.0, 1.0))
+		_map_mark(water, p, width * 0.5)
+		var cell := p.floor()
+		if step > 12 and _in_grid(cell) and before[_cell_index(cell)] == 1:
+			return   # ran into a lake or the sea
+
+
+func _map_lake(water: PackedByteArray) -> void:
+	"""A lumpy lake somewhere on the land (assistant floods)."""
+	var center := Vector2(randf_range(0.15, 0.85) * COVER_GRID, randf_range(0.15, 0.85) * _cover_rows())
+	var radius := randf_range(0.06, 0.12) * COVER_GRID
+	var phase := randf() * TAU
+	for k in 24:
+		var a := TAU * k / 24.0
+		var r := radius * (0.6 + 0.4 * sin(a * 3.0 + phase))
+		_map_mark(water, center + Vector2.from_angle(a) * r * randf(), radius * 0.45)
+
+
+func _map_mark(water: PackedByteArray, p: Vector2, radius: float) -> void:
+	"""Mark the cells within `radius` cells of `p` as water."""
+	var r := maxf(radius, 0.6)
+	for y in range(floori(p.y - r), ceili(p.y + r) + 1):
+		for x in range(floori(p.x - r), ceili(p.x + r) + 1):
+			var cell := Vector2(x, y)
+			if _in_grid(cell) and (cell + Vector2(0.5, 0.5)).distance_to(p) <= r:
+				water[_cell_index(cell)] = 1
+
+
+func _map_clear_around(water: PackedByteArray, center: Vector2, radius: float) -> void:
+	"""Keep a town out of a flood."""
+	for i in water.size():
+		var cell := Vector2(i % COVER_GRID, i / COVER_GRID)
+		if _map_point(cell).distance_to(center) < radius:
+			water[i] = 0
+
+
+func _map_point(cell: Vector2) -> Vector2:
+	"""A coverage cell's centre in canvas-width units."""
+	var v := _cell_center(cell)
+	return Vector2(v.x, v.y * _aspect)
+
+
+func _map_view(p: Vector2) -> Vector2:
+	"""Canvas-width units to viewer space."""
+	return Vector2(p.x, p.y * _aspect_fix())
+
+
+func _map_is_water(p: Vector2) -> bool:
+	var cell := Vector2(floorf(p.x * COVER_GRID), floorf(p.y * _aspect_fix() * _cover_rows()))
+	return _in_grid(cell) and _map_water[_cell_index(cell)] == 1
+
+
+func _map_fields(plan: Array[Dictionary]) -> void:
+	"""The land: patches around a few scattered centres (their borders
+	roughened with noise), each tiled with one of the land stickers, every
+	tile in a patch turned the same way like a ploughed field."""
+	var rows := _cover_rows()
+	var seeds: Array[Vector2] = []
+	var inks: Array[int] = []
+	for k in randi_range(MAP_FIELDS.x, MAP_FIELDS.y):
+		seeds.append(Vector2(randf(), randf() * _aspect))
+		inks.append(_map_land[k % _map_land.size()] if k < _map_land.size() else _map_land.pick_random())
+	var noise := FastNoiseLite.new()
+	noise.seed = randi()
+	noise.frequency = 3.0 / COVER_GRID
+	var owner := PackedInt32Array()
+	owner.resize(COVER_GRID * rows)
+	for i in owner.size():
+		var cell := Vector2(i % COVER_GRID, i / COVER_GRID)
+		var p := _map_point(cell) + Vector2(noise.get_noise_2d(cell.x, cell.y), noise.get_noise_2d(cell.x + 97.0, cell.y)) * 0.12
+		var best := INF
+		for k in seeds.size():
+			var d := p.distance_squared_to(seeds[k])
+			if d < best:
+				best = d
+				owner[i] = k
+	for k in seeds.size():
+		var grid := PackedByteArray()
+		grid.resize(owner.size())
+		var any := false
+		for i in owner.size():
+			var mine := owner[i] == k and _map_water[i] == 0
+			grid[i] = 0 if mine else CELL_FULL
+			any = any or mine
+		if any:
+			_fill_spots(plan, grid, [inks[k]], maxf(MAP_FIELD_SIZE.x, _min_size), MAP_FIELD_SIZE.y, FILL_MAX, _layer_rotation(false), "map land", true)
+
+
+func _map_lay_water(plan: Array[Dictionary], water: PackedByteArray) -> void:
+	"""The lakes, sea and rivers, over the land: big pieces in open water,
+	small ones along the rivers, turned along the way the pen goes."""
+	var grid := PackedByteArray()
+	grid.resize(water.size())
+	for i in water.size():
+		grid[i] = 0 if water[i] == 1 else CELL_FULL
+	_fill_spots(plan, grid, [_map_sea], _min_size, 0.3, FILL_MAX * 4, NAN, "map water", true)
+
+
+func _map_forest(plan: Array[Dictionary]) -> void:
+	"""A clump of trees: one tree sticker packed close, inside a lumpy
+	outline, on dry land away from the towns."""
+	var center := Vector2(-1, -1)
+	for t in 30:
+		var p := Vector2(randf_range(0.05, 0.95), randf_range(0.05, 0.95) * _aspect)
+		if _map_is_water(p) or _map_towns.any(func(town): return town.distance_to(p) < MAP_TOWN_SPACING * 0.5):
+			continue
+		center = p
+		break
+	if center.x < 0.0:
+		return
+	var tree: int = _map_trees.pick_random()
+	var size := maxf(randf_range(MAP_TREE_SIZE.x, MAP_TREE_SIZE.y), _min_size)
+	var step := size * MAP_FOREST_PACK
+	var radius := randf_range(MAP_FOREST_SIZE.x, MAP_FOREST_SIZE.y)
+	var phase := Vector2(randf() * TAU, randf() * TAU)
+	var spots: Array[Vector2] = []
+	var row := 0
+	var y := -radius
+	while y <= radius:
+		var x := -radius + (step * 0.5 if row % 2 == 1 else 0.0)
+		while x <= radius:
+			var q := center + Vector2(x, y) + Vector2(randfn(0.0, 1.0), randfn(0.0, 1.0)) * step * 0.15
+			var a := (q - center).angle()
+			var edge := radius * (1.0 + 0.25 * sin(a * 3.0 + phase.x) + 0.12 * sin(a * 5.0 + phase.y))
+			if q.distance_to(center) <= edge and not _map_is_water(q) and q.x > -0.02 and q.x < 1.02 and q.y > -0.02 and q.y < _aspect + 0.02:
+				spots.append(q)
+			x += step
+		y += step * 0.87
+		row += 1
+	spots.shuffle()
+	for q in spots:
+		_stamp(plan, tree, _map_view(q), randf_range(-12.0, 12.0), size * randf_range(0.85, 1.15), false)
+		plan[-1].phase = "map forest"
+
+
+func _map_place_towns(count: int) -> Array[Vector2]:
+	"""Spots for new towns: on land, apart from each other and the towns
+	already there, drawn to the water (MAP_TOWN_BY_WATER)."""
+	var grid := PackedByteArray()
+	grid.resize(_map_water.size())
+	for i in _map_water.size():
+		grid[i] = CELL_FULL if _map_water[i] == 1 else 0
+	var to_water := _clearance(grid)
+	var towns: Array[Vector2] = []
+	for n in count:
+		var best := Vector2(-1, -1)
+		var best_score := -INF
+		for t in 60:
+			var p := Vector2(randf_range(0.08, 0.92), randf_range(0.1, 0.9) * _aspect)
+			if _map_is_water(p):
+				continue
+			var near := INF
+			for other in _map_towns + towns:
+				near = minf(near, other.distance_to(p))
+			if near < MAP_TOWN_SPACING:
+				continue
+			var cell := Vector2(floorf(p.x * COVER_GRID), floorf(p.y * _aspect_fix() * _cover_rows()))
+			var d := to_water[_cell_index(cell)] if _in_grid(cell) else 99.0
+			var score := randf() - MAP_TOWN_BY_WATER * absf(d - 2.5) * 0.3
+			if score > best_score:
+				best_score = score
+				best = p
+		if best.x >= 0.0:
+			towns.append(best)
+	return towns
+
+
+func _map_town(plan: Array[Dictionary], center: Vector2, houses: int, new_town: bool) -> void:
+	"""Buildings: varied small stickers set out on the town's own little
+	grid, spiralling out from its middle onto dry land, all turned the same
+	way. A new town starts with a bigger landmark."""
+	var library := StickerLibrary.sticker_library
+	var angle := 0.0 if randf() < 0.6 else randf_range(-30.0, 30.0)
+	var size := maxf(randf_range(MAP_HOUSE_SIZE.x, MAP_HOUSE_SIZE.y), _min_size)
+	var spacing := size * 1.1
+	var spots: Array[Vector2] = []
+	for j in range(-4, 5):
+		for i in range(-4, 5):
+			spots.append(Vector2(i, j) + Vector2(randfn(0.0, 0.25), randfn(0.0, 0.25)))
+	spots.sort_custom(func(a, b): return a.length() < b.length())
+	var taken := 0
+	for s in spots:
+		if taken >= houses:
+			break
+		var q := center + (s * spacing).rotated(deg_to_rad(angle))
+		if _map_is_water(q) or q.x < 0.0 or q.x > 1.0 or q.y < 0.0 or q.y > _aspect:
+			continue
+		if not new_town and taken == 0 and s.length() < 1.5:
+			continue   # an old town grows at its edges
+		var landmark := new_town and taken == 0
+		var house := _map_pick(func(i): var t := _texture_size(i); return not ("line" in _roles(library[i]) or "frame" in _roles(library[i])) and maxf(t.x, t.y) / minf(t.x, t.y) < 2.2 and not i in _map_land and i != _map_sea,
+			func(i): return 1.0, [])
+		_stamp(plan, house, _map_view(q), angle + randf_range(-3.0, 3.0), size * (MAP_LANDMARK if landmark else randf_range(0.85, 1.1)), landmark, true)
+		plan[-1].phase = "map town"
+		taken += 1
+
+
+func _map_roads(plan: Array[Dictionary], towns: Array[Vector2], exits: int) -> void:
+	"""Roads: every new town joined to the nearest town already linked (the
+	towns already on the map count as linked), sometimes an extra loop, and
+	a few roads running off the edge of the map."""
+	var linked: Array[Vector2] = _map_towns.duplicate()
+	var waiting := towns.duplicate()
+	if linked.is_empty() and not waiting.is_empty():
+		linked.append(waiting.pop_front())
+	while not waiting.is_empty():
+		var best := [INF, 0, Vector2.ZERO]
+		for k in waiting.size():
+			for l in linked:
+				var d: float = waiting[k].distance_to(l)
+				if d < best[0]:
+					best = [d, k, l]
+		var town: Vector2 = waiting.pop_at(best[1])
+		_map_road(plan, best[2], town)
+		if randf() < MAP_ROAD_LOOPS and linked.size() > 1:
+			var others := linked.filter(func(l): return l != best[2])
+			others.sort_custom(func(a, b): return a.distance_to(town) < b.distance_to(town))
+			_map_road(plan, others[0], town)
+		linked.append(town)
+	for k in exits:
+		if linked.is_empty():
+			break
+		var from: Vector2 = linked.pick_random()
+		var ends: Array[Vector2] = [Vector2(from.x, -0.02), Vector2(from.x, _aspect + 0.02), Vector2(-0.02, from.y), Vector2(1.02, from.y)]
+		ends.sort_custom(func(a, b): return a.distance_to(from) < b.distance_to(from))
+		var to: Vector2 = ends[randi() % 2]
+		# Slant it a little rather than heading straight for the edge
+		to += Vector2(randf_range(-0.15, 0.15), 0.0) if absf(to.y - from.y) > absf(to.x - from.x) else Vector2(0.0, randf_range(-0.15, 0.15))
+		_map_road(plan, from, to)
+
+
+func _map_road(plan: Array[Dictionary], a: Vector2, b: Vector2) -> void:
+	"""One road from `a` to `b`, winding (MAP_ROAD_WIGGLE), drawn with short
+	marks of the road sticker chained end to end."""
+	var path := PackedVector2Array([a, b])
+	var wiggle := a.distance_to(b) * MAP_ROAD_WIGGLE
+	for level in 3:
+		var finer := PackedVector2Array()
+		for k in path.size() - 1:
+			var mid := (path[k] + path[k + 1]) * 0.5
+			var normal := (path[k + 1] - path[k]).orthogonal().normalized()
+			finer.append(path[k])
+			finer.append(mid + normal * randfn(0.0, wiggle))
+		finer.append(path[-1])
+		path = finer
+		wiggle *= 0.5
+	var size := maxf(MAP_DIRT_SIZE if _map_dirt else MAP_ROAD_MARK, _min_size)
+	var spacing := size * (0.55 if _map_dirt else LINE_OVERLAP)
+	var walked := 0.0
+	var next := size * 0.6   # start a little out of the town
+	var total := 0.0
+	for k in path.size() - 1:
+		total += path[k].distance_to(path[k + 1])
+	for k in path.size() - 1:
+		var seg := path[k].distance_to(path[k + 1])
+		while next <= walked + seg and next <= total - size * 0.6:
+			var p := path[k].lerp(path[k + 1], (next - walked) / maxf(seg, 0.0001))
+			var tangent := path[k + 1] - path[k]
+			var turn := rad_to_deg(tangent.angle()) + _long_axis_spin(_map_pen) + randfn(0.0, 4.0)
+			if _map_dirt:
+				turn = randf() * 360.0   # a track is worn, not drawn
+			_stamp(plan, _map_pen, _map_view(p), turn, size * (randf_range(0.85, 1.15) if _map_dirt else 1.0), false)
+			plan[-1].phase = "map road"
+			next += spacing
+		walked += seg
+
+
 # --- Abstractions ---
 
 func _burst(plan: Array[Dictionary], center: Vector2, radius: float) -> Dictionary:
@@ -1777,7 +2325,7 @@ func issue(i: int) -> Dictionary:
 	_drift_mood()
 	_wobble(s)
 	var chance := MISTAKE_CHANCE_METICULOUS if _meticulous_style else MISTAKE_CHANCE
-	chance *= 1.6 - focus
+	chance *= (1.6 - focus) * (MAP_MISTAKES if _map_style else 1.0)
 	if not (s.ponder or s.precise) or s.get("fix", false) or s.has("mistake") or randf() >= chance:
 		return s
 	var intended := s.duplicate()
@@ -1810,7 +2358,7 @@ func after_stroke(i: int) -> void:
 		_final_look()
 		return
 	elif (s.get("ponder", false) or s.get("precise", false)) and not s.get("fix", false):
-		if randf() < (IMPULSE_CHANCE_METICULOUS if _meticulous_style else IMPULSE_CHANCE) * (0.4 + energy * 1.6):
+		if randf() < (IMPULSE_CHANCE_METICULOUS if _meticulous_style else IMPULSE_CHANCE) * (0.4 + energy * 1.6) * (MAP_MISTAKES if _map_style else 1.0):
 			var impulse := _impulse()
 			_plan.insert(i + 1, impulse)
 
@@ -1827,6 +2375,8 @@ func _impulse() -> Dictionary:
 		"ponder": false, "precise": false, "issued": true,
 		"mistake": "impulse",
 	}
+	if _map_style:
+		stamp.size = maxf(randf_range(MAP_HOUSE_SIZE.x, MAP_HOUSE_SIZE.y) * 1.5, _min_size)   # a stray building, not a slab across the map
 	for t in 8:
 		if not _intrudes(stamp):
 			break
@@ -1943,7 +2493,9 @@ func _final_look() -> void:
 		grid = _coverage(placed)
 		for i in grid.size():
 			grid[i] |= CELL_FULL ^ _keep_out[i]
-	if not _bare_cells(grid).is_empty():
+	if _map_style and _map_water.size() == grid.size():
+		_map_touch_up(_plan, grid, FINAL_LOOK_MAX)
+	elif not _bare_cells(grid).is_empty():
 		if _fill_inks.is_empty():
 			_fill_inks = [_pick("solid", [], "key")]
 		_fill_spots(_plan, grid, _fill_inks, _min_size, FILL_LARGEST, FINAL_LOOK_MAX, NAN, "fill", false, FORM_INTRUDE * 3)
