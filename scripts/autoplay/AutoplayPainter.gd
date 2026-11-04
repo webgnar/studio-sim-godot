@@ -260,6 +260,12 @@ const MAP_GROW_FORESTS := Vector2i(1, 2)  ## assistant: new forest clumps each l
 const MAP_FLOOD_CHANCE := 0.25       ## assistant: chance a later round floods part of the map with a new lake or river
 const MAP_FLOOD_FOREST := 0.25       ## assistant: once forest covers this share of the land, the next round floods the thickest forest to keep it from overgrowing the map (1 = never)
 const MAP_FLOOD_LAKES := 4           ## assistant: most lakes one forest flood makes, stopping once the forest is back under MAP_FLOOD_FOREST
+const MAP_CITY_AFTER := 10           ## assistant: after this many rounds the oldest town starts growing into a city (0 = never)
+const MAP_CITY_BLOCK := 0.13         ## one city block plus its street (canvas widths)
+const MAP_CITY_HOUSES := 2           ## buildings along each side of a block (2 = four per block)
+const MAP_CITY_STREET := 0.02        ## width of a city street (canvas widths)
+const MAP_CITY_STREET_SPACING := 0.4   ## gap between street stamps, as a fraction of a stamp's length
+const MAP_CITY_RINGS := 6            ## most rings of blocks the city grows to, one ring a round
 const MAP_FLOOD_TOWN_SAFE := 0.07     ## assistant: floods stay this far from a town's middle (canvas widths)
 const MAP_FLOOD_SIZE := Vector2(0.06, 0.12)   ## assistant: radius of a flood lake (canvas widths)
 const MAP_FLOOD_NEW_INK := 1.0       ## assistant: chance each flood switches to a different water sticker from the floods before it (zack, 2026-11-04)
@@ -354,6 +360,12 @@ var _map_pen := -1                    ## aerial map: the road sticker
 var _map_dirt := false                ## aerial map: roads are dirt tracks (MAP_DIRT_ROADS)
 var _map_woods := PackedByteArray()   ## aerial map: 1 = forest, per coverage cell (see MAP_FLOOD_FOREST)
 var _map_flood_inks: Array[int] = []  ## assistant: water stickers used so far, so each flood takes a new one
+var _map_city := Vector2(-1, -1)      ## assistant: the city's middle (canvas-width units), once a town becomes one
+var _map_city_rings := 0             ## assistant: rings of blocks the city has
+var _map_city_angle := 0.0
+var _map_city_ground := -1           ## assistant: the city's pavement sticker
+var _map_city_pen := -1              ## assistant: the city's street sticker
+var _map_streets := {}               ## assistant: city streets already laid
 var _map_style := false               ## this painting is an aerial map (see MAP_MISTAKES)
 var _map_rounds := 0                  ## assistant: rounds painted on the current map (0 = no map yet)
 static var _colors: Dictionary = {}
@@ -1571,6 +1583,9 @@ func _aerial_map(plan: Array[Dictionary]) -> void:
 	_map_style = true
 	_map_rounds = 1
 	_map_towns.clear()
+	_map_city = Vector2(-1, -1)
+	_map_city_rings = 0
+	_map_streets.clear()
 	_map_choose_inks()
 	_map_flood_inks = [_map_sea]
 	_map_water = _map_terrain(kind)
@@ -1636,7 +1651,12 @@ func _map_round() -> void:
 		_map_forest(plan)
 	var towns := _map_place_towns(randi_range(MAP_GROW_TOWNS.x, MAP_GROW_TOWNS.y))
 	_map_roads(plan, towns, 0)
+	if MAP_CITY_AFTER > 0 and _map_rounds > MAP_CITY_AFTER and _map_city_rings < MAP_CITY_RINGS and not _map_towns.is_empty():
+		_map_grow_city(plan)
+		last_style += ", city ring %d" % _map_city_rings
 	for t in _map_towns:
+		if _map_city.x >= 0.0 and t == _map_towns[0]:
+			continue   # that one's the city now
 		_map_town(plan, t, randi_range(MAP_GROW_HOUSES.x, MAP_GROW_HOUSES.y), false)
 	for t in towns:
 		_map_town(plan, t, randi_range(MAP_TOWN_HOUSES.x, MAP_TOWN_HOUSES.y), true)
@@ -1656,6 +1676,8 @@ func _map_flood(plan: Array[Dictionary], overgrown: bool) -> void:
 		_map_lake(flood, Vector2(randf_range(0.15, 0.85) * COVER_GRID, randf_range(0.15, 0.85) * _cover_rows()))
 	for t in _map_towns:
 		_map_clear_around(flood, t, MAP_FLOOD_TOWN_SAFE)
+	if _map_city.x >= 0.0:
+		_map_clear_around(flood, _map_city, _map_city_reach())
 	var grid := PackedByteArray()
 	grid.resize(flood.size())
 	for i in flood.size():
@@ -1703,6 +1725,8 @@ func _map_thickest_forest() -> Vector2:
 	safe.resize(_map_water.size())
 	for t in _map_towns:
 		_map_mark(safe, Vector2(t.x * COVER_GRID, t.y * _aspect_fix() * rows), MAP_FLOOD_TOWN_SAFE * COVER_GRID)
+	if _map_city.x >= 0.0:
+		_map_mark(safe, Vector2(_map_city.x * COVER_GRID, _map_city.y * _aspect_fix() * rows), _map_city_reach() * COVER_GRID)
 	var reach := int(MAP_FLOOD_SIZE.y * COVER_GRID * 0.6)
 	var best := Vector2(COVER_GRID / 2, rows / 2)
 	var most := -1
@@ -1955,7 +1979,7 @@ func _map_forest(plan: Array[Dictionary]) -> void:
 	var center := Vector2(-1, -1)
 	for t in 30:
 		var p := Vector2(randf_range(0.05, 0.95), randf_range(0.05, 0.95) * _aspect)
-		if _map_is_water(p) or _map_towns.any(func(town): return town.distance_to(p) < MAP_TOWN_SPACING * 0.5):
+		if _map_is_water(p) or _map_in_city(p) or _map_towns.any(func(town): return town.distance_to(p) < MAP_TOWN_SPACING * 0.5):
 			continue
 		center = p
 		break
@@ -1975,7 +1999,7 @@ func _map_forest(plan: Array[Dictionary]) -> void:
 			var q := center + Vector2(x, y) + Vector2(randfn(0.0, 1.0), randfn(0.0, 1.0)) * step * 0.15
 			var a := (q - center).angle()
 			var edge := radius * (1.0 + 0.25 * sin(a * 3.0 + phase.x) + 0.12 * sin(a * 5.0 + phase.y))
-			if q.distance_to(center) <= edge and not _map_is_water(q) and q.x > -0.02 and q.x < 1.02 and q.y > -0.02 and q.y < _aspect + 0.02:
+			if q.distance_to(center) <= edge and not _map_is_water(q) and not _map_in_city(q) and q.x > -0.02 and q.x < 1.02 and q.y > -0.02 and q.y < _aspect + 0.02:
 				spots.append(q)
 			x += step
 		y += step * 0.87
@@ -2047,6 +2071,98 @@ func _map_town(plan: Array[Dictionary], center: Vector2, houses: int, new_town: 
 		_stamp(plan, house, _map_view(q), angle + randf_range(-3.0, 3.0), size * (MAP_LANDMARK if landmark else randf_range(0.85, 1.1)), landmark, true)
 		plan[-1].phase = "map town"
 		taken += 1
+
+
+func _map_grow_city(plan: Array[Dictionary]) -> void:
+	"""The oldest town grows into a city, one ring of blocks a round: each
+	block paved, ringed by streets, and packed with buildings in a grid.
+	The city takes its ground back from floods and forest."""
+	var library := StickerLibrary.sticker_library
+	if _map_city.x < 0.0:
+		_map_city = _map_towns[0]
+		_map_city_angle = 0.0 if randf() < 0.7 else randf_range(-20.0, 20.0)
+		# Pavement: a dense, squarish, flat sticker; streets: a solid one that
+		# stands out from it, worn into a band like a dirt track
+		_map_city_ground = _map_pick(func(i): var t := _texture_size(i); return _color(i).coverage >= 0.45 and maxf(t.x, t.y) / minf(t.x, t.y) < 1.6 and not i in _map_land,
+			func(i): return _map_flat(i) * pow(_color(i).coverage, 2.0) * pow(_color(i).light, 3.0), [_map_sea])
+		if _map_city_ground < 0:
+			_map_city_ground = _pick("solid", [], "any")
+		var paved: float = _color(_map_city_ground).light
+		_map_city_pen = _map_pick(func(i): return _solidity(i) >= BASE_SOLIDITY and absf(_color(i).light - paved) >= 0.3,
+			func(i): return _map_flat(i) * absf(_color(i).light - paved), [_map_city_ground])
+		if _map_city_pen < 0:
+			_map_city_pen = _pick("solid", [_map_city_ground], "any")
+	var k := _map_city_rings
+	_map_city_rings += 1
+	var pitch := MAP_CITY_BLOCK
+	var turn := deg_to_rad(_map_city_angle)
+	var blocks: Array[Vector2] = []
+	for j in range(-k, k + 1):
+		for i in range(-k, k + 1):
+			if maxi(absi(i), absi(j)) != k:
+				continue
+			var c := _map_city + (Vector2(i, j) * pitch).rotated(turn)
+			if c.x > -pitch * 0.4 and c.x < 1.0 + pitch * 0.4 and c.y > -pitch * 0.4 and c.y < _aspect + pitch * 0.4:
+				blocks.append(c)
+	blocks.shuffle()
+	var tex := _texture_size(_map_city_ground)
+	var pave := minf(pitch * 1.05 * maxf(tex.x, tex.y) / minf(tex.x, tex.y), pitch * 2.0)
+	for c in blocks:
+		# Pave it: the city takes its ground back from the water and the trees
+		_stamp(plan, _map_city_ground, _map_view(c), _map_city_angle + randf_range(-2.0, 2.0), pave, false)
+		plan[-1].phase = "map city"
+		for i in _map_water.size():
+			if _map_point(Vector2(i % COVER_GRID, i / COVER_GRID)).distance_to(c) < pitch * 0.55:
+				_map_water[i] = 0
+				_map_woods[i] = 0
+	for c in blocks:
+		# Streets round the block
+		var h := pitch * 0.5
+		var corners: Array[Vector2] = []
+		for v in [Vector2(-h, -h), Vector2(h, -h), Vector2(h, h), Vector2(-h, h)]:
+			corners.append(c + v.rotated(turn))
+		for e in 4:
+			# Neighbouring blocks share a street: lay it once
+			var key := [corners[e].snapped(Vector2(0.001, 0.001)), corners[(e + 1) % 4].snapped(Vector2(0.001, 0.001))]
+			key.sort()
+			if _map_streets.has(str(key)):
+				continue
+			_map_streets[str(key)] = true
+			_map_street(plan, corners[e], corners[(e + 1) % 4])
+	for c in blocks:
+		# Buildings, set out on the block's own grid
+		var n := MAP_CITY_HOUSES
+		var cell := pitch * 0.72 / n
+		for b in n * n:
+			var off := (Vector2(b % n, b / n) - Vector2(n - 1, n - 1) * 0.5) * cell
+			var house := _map_pick(func(i): var t := _texture_size(i); return not ("line" in _roles(library[i]) or "frame" in _roles(library[i])) and maxf(t.x, t.y) / minf(t.x, t.y) < 2.2 and i != _map_city_ground,
+				func(i): return 1.0, [])
+			_stamp(plan, house, _map_view(c + off.rotated(turn)), _map_city_angle + randf_range(-2.0, 2.0), maxf(cell * randf_range(0.85, 1.0), _min_size), false, true)
+			plan[-1].phase = "map city"
+
+
+func _map_street(plan: Array[Dictionary], a: Vector2, b: Vector2) -> void:
+	"""A straight city street from `a` to `b`: the street sticker laid
+	lengthwise along it, stamped close together so it reads as one band."""
+	var tex := _texture_size(_map_city_pen)
+	var size := maxf(MAP_CITY_STREET * maxf(tex.x, tex.y) / minf(tex.x, tex.y), _min_size)   # its short side is the street's width
+	var count := maxi(1, ceili(a.distance_to(b) / (size * MAP_CITY_STREET_SPACING)))
+	var turn := rad_to_deg((b - a).angle()) + _long_axis_spin(_map_city_pen)
+	for k in count + 1:
+		_stamp(plan, _map_city_pen, _map_view(a.lerp(b, float(k) / count)), turn + randfn(0.0, 2.0), size, false)
+		plan[-1].phase = "map city"
+
+
+func _map_city_reach() -> float:
+	"""How far the city reaches from its middle (canvas widths)."""
+	return (_map_city_rings + 0.5) * MAP_CITY_BLOCK * 1.42
+
+
+func _map_in_city(p: Vector2) -> bool:
+	if _map_city.x < 0.0:
+		return false
+	var q := (p - _map_city).rotated(-deg_to_rad(_map_city_angle)) / MAP_CITY_BLOCK
+	return maxf(absf(q.x), absf(q.y)) < _map_city_rings - 0.5
 
 
 func _map_roads(plan: Array[Dictionary], towns: Array[Vector2], exits: int) -> void:
