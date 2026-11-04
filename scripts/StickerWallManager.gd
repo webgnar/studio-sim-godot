@@ -25,7 +25,7 @@ const MARGIN = 40.0  # px from canvas edge (random style)
 ## don't change the pace) (zack 2026-11-04).
 @export var visitor_speedup: float = 0.5
 ## The fastest the assistant will go, however many visitors (seconds).
-@export var fastest_interval: float = 1.0
+@export var fastest_interval: float = 0.25
 ## Canvas resolution. Match this to your SubViewport size.
 @export var canvas_size: Vector2 = Vector2(512, 512)
 
