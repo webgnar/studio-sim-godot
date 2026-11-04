@@ -72,9 +72,9 @@ def main():
         return
     key_number = next((i for i in range(1, len(keys) + 1) if i not in used), None)
     if key_number is None:
-        print("Out of Steam keys. Add more to the STEAM_KEYS secret.")
+        print("Out of Steam keys, so nothing was sent. Add more to the STEAM_KEYS secret to keep going.")
         if args.send:
-            sys.exit(1)
+            return
         key = "XXXXX-XXXXX-XXXXX"
         key_number = 0
     else:
