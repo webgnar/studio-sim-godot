@@ -230,7 +230,8 @@ const MAP_RIVER_WIDTH := Vector2(0.035, 0.07)   ## river width at its source and
 const MAP_RIVER_BEND := 0.35         ## how much rivers meander (0 = straight)
 const MAP_DARK_WATER := 0.35         ## chance the water is dark (black/navy) rather than blue
 const MAP_FIELDS := Vector2i(4, 8)   ## patches the land is split into
-const MAP_LAND_INKS := Vector2i(1, 3)   ## different stickers the land patches use
+const MAP_LAND_INKS := Vector2i(2, 4)   ## different stickers the land patches use (each patch mixes two of them)
+const MAP_PICK_SET := Vector2i(2, 3)   ## every map role (water, trees, roads, pavement, streets, copper) is a mix of this many stickers, never just one (zack 2026-11-04)
 const MAP_GREEN_LAND := 0.7          ## chance the land prefers green stickers (else any colour, picked per map)
 const MAP_FLAT := 0.08               ## land and water prefer flat-coloured stickers: busyness (spread of brightness) a sticker can have before it's picked much less (higher = busier land and water allowed)
 const MAP_WATER_CONTRAST := 0.2      ## the water differs from the land by at least this much lightness
@@ -363,19 +364,19 @@ var _assistant_style := "studio"  ## assistant: "studio", "hall_of_fame" or "aer
 var _map_water := PackedByteArray()   ## aerial map: 1 = lake, sea or river, per coverage cell
 var _map_towns: Array[Vector2] = []   ## aerial map: town centres (canvas-width units)
 var _map_land: Array[int] = []        ## aerial map: the land stickers
-var _map_sea := -1                    ## aerial map: the water sticker
+var _map_seas: Array[int] = []        ## aerial map: the water stickers
 var _map_trees: Array[int] = []       ## aerial map: the tree stickers
-var _map_pen := -1                    ## aerial map: the road sticker
+var _map_pens: Array[int] = []        ## aerial map: the road stickers
 var _map_dirt := false                ## aerial map: roads are dirt tracks (MAP_DIRT_ROADS)
 var _map_woods := PackedByteArray()   ## aerial map: 1 = forest, per coverage cell (see MAP_FLOOD_FOREST)
 var _map_flood_inks: Array[int] = []  ## assistant: water stickers used so far, so each flood takes a new one
 var _map_city := Vector2(-1, -1)      ## assistant: the city's middle (canvas-width units), once a town becomes one
 var _map_city_rings := 0             ## assistant: rings of blocks the city has
 var _map_city_angle := 0.0
-var _map_city_ground := -1           ## assistant: the city's pavement sticker
-var _map_city_pen := -1              ## assistant: the city's street sticker
+var _map_city_grounds: Array[int] = []   ## assistant: the city's pavement stickers
+var _map_city_pens: Array[int] = []  ## assistant: the city's street stickers
 var _map_streets := {}               ## assistant: city streets already laid
-var _map_copper := -1                 ## assistant: the circuit board's trace sticker
+var _map_coppers: Array[int] = []     ## assistant: the circuit board's trace stickers
 var _map_chips: Array[Vector2] = []   ## assistant: chip centres on the board (canvas-width units)
 var _map_style := false               ## this painting is an aerial map (see MAP_MISTAKES)
 var _map_rounds := 0                  ## assistant: rounds painted on the current map (0 = no map yet)
@@ -1597,10 +1598,12 @@ func _aerial_map(plan: Array[Dictionary]) -> void:
 	_map_city = Vector2(-1, -1)
 	_map_city_rings = 0
 	_map_streets.clear()
-	_map_copper = -1
+	_map_coppers.clear()
+	_map_city_grounds.clear()
+	_map_city_pens.clear()
 	_map_chips.clear()
 	_map_choose_inks()
-	_map_flood_inks = [_map_sea]
+	_map_flood_inks = _map_seas.duplicate()
 	_map_water = _map_terrain(kind)
 	_map_woods = PackedByteArray()
 	_map_woods.resize(_map_water.size())
@@ -1630,7 +1633,7 @@ func _map_touch_up(plan: Array[Dictionary], grid: PackedByteArray, limit: int) -
 		if not _bare_cells(part).is_empty():
 			var inks: Array[int] = _map_land
 			if wet == 1:
-				inks = [_map_sea]
+				inks = _map_seas
 			_fill_spots(plan, part, inks, _min_size, FILL_LARGEST, limit)
 
 
@@ -1701,25 +1704,24 @@ func _map_flood(plan: Array[Dictionary], overgrown: bool) -> void:
 		_map_water[i] |= flood[i]
 		if flood[i] == 1:
 			_map_woods[i] = 0
-	_fill_spots(plan, grid, [_map_sea], _min_size, 0.3, FILL_MAX, NAN, "map water", true)
+	_fill_spots(plan, grid, _map_seas, _min_size, 0.3, FILL_MAX, NAN, "map water", true)
 
 
 func _map_new_flood_ink() -> void:
-	"""Each flood switches to a water sticker the floods before it haven't
-	used (MAP_FLOOD_NEW_INK); once they've all been used, any but the last."""
+	"""Each flood switches to a new mix of water stickers the floods before
+	it haven't used (MAP_FLOOD_NEW_INK); once they've run out, any but the
+	last mix."""
 	if randf() >= MAP_FLOOD_NEW_INK:
 		return
-	var land_light := 0.0
-	for i in _map_land:
-		land_light += _color(i).light / _map_land.size()
+	var land_light := _map_light(_map_land)
 	var test := func(i): return _solidity(i) >= BASE_SOLIDITY and absf(_color(i).light - land_light) >= MAP_WATER_CONTRAST
-	var ink := _map_pick(test, func(i): return _map_flat(i), _map_land + _map_flood_inks)
-	if ink < 0:
-		_map_flood_inks = [_map_sea]
-		ink = _map_pick(test, func(i): return _map_flat(i), _map_land + _map_flood_inks)
-	if ink >= 0:
-		_map_sea = ink
-		_map_flood_inks.append(ink)
+	var inks := _map_pick_set(test, func(i): return _map_flat(i), _map_land + _map_flood_inks)
+	if inks.size() < MAP_PICK_SET.x:
+		_map_flood_inks = _map_seas.duplicate()
+		inks = _map_pick_set(test, func(i): return _map_flat(i), _map_land + _map_flood_inks)
+	if inks.size() >= MAP_PICK_SET.x:
+		_map_seas = inks
+		_map_flood_inks.append_array(inks)
 
 
 func _map_forest_share() -> float:
@@ -1773,29 +1775,49 @@ func _map_choose_inks() -> void:
 			_map_land.append(pick)
 	if _map_land.is_empty():
 		_map_land.append(_pick("solid", [], "any"))
-	var land_light := 0.0
-	for i in _map_land:
-		land_light += _color(i).light / _map_land.size()
+	if _map_land.size() < 2:
+		_map_land.append(_pick("solid", _map_land, "any"))
+	var land_light := _map_light(_map_land)
 	var dark := randf() < MAP_DARK_WATER
-	_map_sea = _map_pick(func(i): return _solidity(i) >= BASE_SOLIDITY and absf(_color(i).light - land_light) >= MAP_WATER_CONTRAST,
-		func(i): return ((0.05 + pow(1.0 - _color(i).light, 3.0) * 3.0) if dark else _map_hue_weight(i, 0.6)) * _map_flat(i), _map_land)
-	if _map_sea < 0:
-		_map_sea = _pick("solid", _map_land, "any")
-	_map_trees.clear()
-	for k in randi_range(1, 2):
-		var tree := _map_pick(func(i): var t := _texture_size(i); return not ("line" in _roles(library[i]) or "frame" in _roles(library[i])) and maxf(t.x, t.y) / minf(t.x, t.y) < 1.8 and _color(i).coverage >= 0.3,
-			func(i): return _map_hue_weight(i, 0.3) + (1.0 if i in _map_land else 0.0), _map_trees + [_map_sea])
-		if tree >= 0:
-			_map_trees.append(tree)
-	if _map_trees.is_empty():
-		_map_trees.append(_pick("motif", [], "any"))
+	_map_seas = _map_pick_set(func(i): return _solidity(i) >= BASE_SOLIDITY and absf(_color(i).light - land_light) >= MAP_WATER_CONTRAST,
+		func(i): return ((0.05 + pow(1.0 - _color(i).light, 3.0) * 3.0) if dark else _map_hue_weight(i, 0.6)) * _map_flat(i), _map_land, "solid")
+	_map_trees = _map_pick_set(func(i): var t := _texture_size(i); return not ("line" in _roles(library[i]) or "frame" in _roles(library[i])) and maxf(t.x, t.y) / minf(t.x, t.y) < 1.8 and _color(i).coverage >= 0.3,
+		func(i): return _map_hue_weight(i, 0.3) + (1.0 if i in _map_land else 0.0), _map_seas, "motif")
 	_map_dirt = randf() < MAP_DIRT_ROADS
+	_map_pens.clear()
 	if _map_dirt:
-		_map_pen = _map_pick(func(i): return _solidity(i) >= BASE_SOLIDITY and absf(_color(i).light - land_light) >= MAP_WATER_CONTRAST and i != _map_sea,
-			func(i): return _map_flat(i), _map_land)
-	if not _map_dirt or _map_pen < 0:
+		_map_pens = _map_pick_set(func(i): return _solidity(i) >= BASE_SOLIDITY and absf(_color(i).light - land_light) >= MAP_WATER_CONTRAST,
+			func(i): return _map_flat(i), _map_land + _map_seas)
+	if _map_pens.size() < MAP_PICK_SET.x:
 		_map_dirt = false
-		_map_pen = _pick("pen", [], "any")
+		_map_pens = _map_pick_set(func(i): return _has_role(i, "pen"), func(i): return 1.0, [], "pen")
+
+
+func _map_pick_set(test: Callable, weight: Callable, avoid: Array, fallback := "") -> Array[int]:
+	"""MAP_PICK_SET different stickers for one role, drawn like _map_pick
+	without repeats, so the role is always a mix and never one sticker.
+	Short of passing ones, it tops up from `fallback` role picks (if given)."""
+	var picks: Array[int] = []
+	for k in randi_range(MAP_PICK_SET.x, MAP_PICK_SET.y):
+		var pick := _map_pick(test, weight, avoid + picks)
+		if pick < 0:
+			break
+		picks.append(pick)
+	var tries := 0
+	while fallback != "" and picks.size() < MAP_PICK_SET.x and tries < 20:
+		var pick := _pick(fallback, avoid + picks, "any")
+		if not pick in picks:
+			picks.append(pick)
+		tries += 1
+	return picks
+
+
+func _map_light(inks: Array[int]) -> float:
+	"""The stickers' average lightness."""
+	var light := 0.0
+	for i in inks:
+		light += _color(i).light / maxf(inks.size(), 1.0)
+	return light
 
 
 func _map_pick(test: Callable, weight: Callable, avoid: Array) -> int:
@@ -1949,10 +1971,15 @@ func _map_fields(plan: Array[Dictionary]) -> void:
 	tile in a patch turned the same way like a ploughed field."""
 	var rows := _cover_rows()
 	var seeds: Array[Vector2] = []
-	var inks: Array[int] = []
+	var inks: Array = []
 	for k in randi_range(MAP_FIELDS.x, MAP_FIELDS.y):
 		seeds.append(Vector2(randf(), randf() * _aspect))
-		inks.append(_map_land[k % _map_land.size()] if k < _map_land.size() else _map_land.pick_random())
+		var main: int = _map_land[k % _map_land.size()] if k < _map_land.size() else _map_land.pick_random()
+		var mix: Array[int] = [main]
+		var others := _map_land.filter(func(i): return i != main)
+		if not others.is_empty():
+			mix.append(others.pick_random())
+		inks.append(mix)
 	var noise := FastNoiseLite.new()
 	noise.seed = randi()
 	noise.frequency = 3.0 / COVER_GRID
@@ -1976,7 +2003,7 @@ func _map_fields(plan: Array[Dictionary]) -> void:
 			grid[i] = 0 if mine else CELL_FULL
 			any = any or mine
 		if any:
-			_fill_spots(plan, grid, [inks[k]], maxf(MAP_FIELD_SIZE.x, _min_size), MAP_FIELD_SIZE.y, FILL_MAX, _layer_rotation(false), "map land", true)
+			_fill_spots(plan, grid, inks[k], maxf(MAP_FIELD_SIZE.x, _min_size), MAP_FIELD_SIZE.y, FILL_MAX, _layer_rotation(false), "map land", true)
 
 
 func _map_lay_water(plan: Array[Dictionary], water: PackedByteArray) -> void:
@@ -1986,11 +2013,11 @@ func _map_lay_water(plan: Array[Dictionary], water: PackedByteArray) -> void:
 	grid.resize(water.size())
 	for i in water.size():
 		grid[i] = 0 if water[i] == 1 else CELL_FULL
-	_fill_spots(plan, grid, [_map_sea], _min_size, 0.3, FILL_MAX * 4, NAN, "map water", true)
+	_fill_spots(plan, grid, _map_seas, _min_size, 0.3, FILL_MAX * 4, NAN, "map water", true)
 
 
 func _map_forest(plan: Array[Dictionary]) -> void:
-	"""A clump of trees: one tree sticker packed close, inside a lumpy
+	"""A clump of trees: two or more tree stickers mixed, packed close, inside a lumpy
 	outline, on dry land away from the towns."""
 	var center := Vector2(-1, -1)
 	for t in 30:
@@ -2001,7 +2028,6 @@ func _map_forest(plan: Array[Dictionary]) -> void:
 		break
 	if center.x < 0.0:
 		return
-	var tree: int = _map_trees.pick_random()
 	var size := maxf(randf_range(MAP_TREE_SIZE.x, MAP_TREE_SIZE.y), _min_size)
 	var step := size * MAP_FOREST_PACK
 	var radius := randf_range(MAP_FOREST_SIZE.x, MAP_FOREST_SIZE.y)
@@ -2022,7 +2048,7 @@ func _map_forest(plan: Array[Dictionary]) -> void:
 		row += 1
 	spots.shuffle()
 	for q in spots:
-		_stamp(plan, tree, _map_view(q), randf_range(-12.0, 12.0), size * randf_range(0.85, 1.15), false)
+		_stamp(plan, _map_trees.pick_random(), _map_view(q), randf_range(-12.0, 12.0), size * randf_range(0.85, 1.15), false)
 		plan[-1].phase = "map forest"
 		_map_mark(_map_woods, Vector2(q.x * COVER_GRID, q.y * _aspect_fix() * _cover_rows()), size * COVER_GRID * 0.5)
 
@@ -2082,7 +2108,7 @@ func _map_town(plan: Array[Dictionary], center: Vector2, houses: int, new_town: 
 		if not new_town and taken == 0 and s.length() < 1.5:
 			continue   # an old town grows at its edges
 		var landmark := new_town and taken == 0
-		var house := _map_pick(func(i): var t := _texture_size(i); return not ("line" in _roles(library[i]) or "frame" in _roles(library[i])) and maxf(t.x, t.y) / minf(t.x, t.y) < 2.2 and not i in _map_land and i != _map_sea,
+		var house := _map_pick(func(i): var t := _texture_size(i); return not ("line" in _roles(library[i]) or "frame" in _roles(library[i])) and maxf(t.x, t.y) / minf(t.x, t.y) < 2.2 and not i in _map_land and not i in _map_seas,
 			func(i): return 1.0, [])
 		_stamp(plan, house, _map_view(q), angle + randf_range(-3.0, 3.0), size * (MAP_LANDMARK if landmark else randf_range(0.85, 1.1)), landmark, true)
 		plan[-1].phase = "map town"
@@ -2099,15 +2125,11 @@ func _map_grow_city(plan: Array[Dictionary]) -> void:
 		_map_city_angle = 0.0 if randf() < 0.7 else randf_range(-20.0, 20.0)
 		# Pavement: a dense, squarish, flat sticker; streets: a solid one that
 		# stands out from it, worn into a band like a dirt track
-		_map_city_ground = _map_pick(func(i): var t := _texture_size(i); return _color(i).coverage >= 0.45 and maxf(t.x, t.y) / minf(t.x, t.y) < 1.6 and not i in _map_land,
-			func(i): return _map_flat(i) * pow(_color(i).coverage, 2.0) * pow(_color(i).light, 3.0), [_map_sea])
-		if _map_city_ground < 0:
-			_map_city_ground = _pick("solid", [], "any")
-		var paved: float = _color(_map_city_ground).light
-		_map_city_pen = _map_pick(func(i): return _solidity(i) >= BASE_SOLIDITY and absf(_color(i).light - paved) >= 0.3,
-			func(i): return _map_flat(i) * absf(_color(i).light - paved), [_map_city_ground])
-		if _map_city_pen < 0:
-			_map_city_pen = _pick("solid", [_map_city_ground], "any")
+		_map_city_grounds = _map_pick_set(func(i): var t := _texture_size(i); return _color(i).coverage >= 0.45 and maxf(t.x, t.y) / minf(t.x, t.y) < 1.6 and not i in _map_land,
+			func(i): return _map_flat(i) * pow(_color(i).coverage, 2.0) * pow(_color(i).light, 3.0), _map_seas, "solid")
+		var paved := _map_light(_map_city_grounds)
+		_map_city_pens = _map_pick_set(func(i): return _solidity(i) >= BASE_SOLIDITY and absf(_color(i).light - paved) >= 0.3,
+			func(i): return _map_flat(i) * absf(_color(i).light - paved), _map_city_grounds, "solid")
 	var k := _map_city_rings
 	_map_city_rings += 1
 	var pitch := MAP_CITY_BLOCK
@@ -2121,11 +2143,12 @@ func _map_grow_city(plan: Array[Dictionary]) -> void:
 			if c.x > -pitch * 0.4 and c.x < 1.0 + pitch * 0.4 and c.y > -pitch * 0.4 and c.y < _aspect + pitch * 0.4:
 				blocks.append(c)
 	blocks.shuffle()
-	var tex := _texture_size(_map_city_ground)
-	var pave := minf(pitch * 1.05 * maxf(tex.x, tex.y) / minf(tex.x, tex.y), pitch * 2.0)
 	for c in blocks:
 		# Pave it: the city takes its ground back from the water and the trees
-		_stamp(plan, _map_city_ground, _map_view(c), _map_city_angle + randf_range(-2.0, 2.0), pave, false)
+		var ground: int = _map_city_grounds.pick_random()
+		var tex := _texture_size(ground)
+		var pave := minf(pitch * 1.05 * maxf(tex.x, tex.y) / minf(tex.x, tex.y), pitch * 2.0)
+		_stamp(plan, ground, _map_view(c), _map_city_angle + randf_range(-2.0, 2.0), pave, false)
 		plan[-1].phase = "map city"
 		for i in _map_water.size():
 			if _map_point(Vector2(i % COVER_GRID, i / COVER_GRID)).distance_to(c) < pitch * 0.55:
@@ -2144,30 +2167,35 @@ func _map_grow_city(plan: Array[Dictionary]) -> void:
 			if _map_streets.has(str(key)):
 				continue
 			_map_streets[str(key)] = true
-			_map_street(plan, corners[e], corners[(e + 1) % 4])
+			_map_street(plan, corners[e], corners[(e + 1) % 4], _map_city_pens)
 	for c in blocks:
 		# Buildings, set out on the block's own grid
 		var n := MAP_CITY_HOUSES
 		var cell := pitch * 0.72 / n
 		for b in n * n:
 			var off := (Vector2(b % n, b / n) - Vector2(n - 1, n - 1) * 0.5) * cell
-			var house := _map_pick(func(i): var t := _texture_size(i); return not ("line" in _roles(library[i]) or "frame" in _roles(library[i])) and maxf(t.x, t.y) / minf(t.x, t.y) < 2.2 and i != _map_city_ground,
+			var house := _map_pick(func(i): var t := _texture_size(i); return not ("line" in _roles(library[i]) or "frame" in _roles(library[i])) and maxf(t.x, t.y) / minf(t.x, t.y) < 2.2 and not i in _map_city_grounds,
 				func(i): return 1.0, [])
 			_stamp(plan, house, _map_view(c + off.rotated(turn)), _map_city_angle + randf_range(-2.0, 2.0), maxf(cell * randf_range(0.85, 1.0), _min_size), false, true)
 			plan[-1].phase = "map city"
 
 
-func _map_street(plan: Array[Dictionary], a: Vector2, b: Vector2, ink: int = _map_city_pen, width: float = MAP_CITY_STREET, phase: String = "map city") -> void:
+func _map_street(plan: Array[Dictionary], a: Vector2, b: Vector2, inks: Array[int], width: float = MAP_CITY_STREET, phase: String = "map city") -> void:
 	"""A straight band from `a` to `b` (a city street, a circuit trace): the
-	sticker laid lengthwise along it, stamped close together so it reads as
-	one band `width` wide."""
-	var tex := _texture_size(ink)
-	var size := maxf(width * maxf(tex.x, tex.y) / minf(tex.x, tex.y), _min_size)   # its short side is the band's width
-	var count := maxi(1, ceili(a.distance_to(b) / (size * MAP_CITY_STREET_SPACING)))
-	var turn := rad_to_deg((b - a).angle()) + _long_axis_spin(ink)
-	for k in count + 1:
-		_stamp(plan, ink, _map_view(a.lerp(b, float(k) / count)), turn + randfn(0.0, 2.0), size, false)
+	stickers, mixed stamp by stamp, laid lengthwise along it and stamped
+	close together so it reads as one band `width` wide."""
+	var length := a.distance_to(b)
+	var dir := (b - a).normalized()
+	var along := 0.0
+	while true:
+		var ink: int = inks.pick_random()
+		var tex := _texture_size(ink)
+		var size := maxf(width * maxf(tex.x, tex.y) / minf(tex.x, tex.y), _min_size)   # its short side is the band's width
+		_stamp(plan, ink, _map_view(a + dir * minf(along, length)), rad_to_deg((b - a).angle()) + _long_axis_spin(ink) + randfn(0.0, 2.0), size, false)
 		plan[-1].phase = phase
+		if along >= length:
+			break
+		along += size * MAP_CITY_STREET_SPACING
 
 
 func _map_grow_board(plan: Array[Dictionary]) -> void:
@@ -2177,13 +2205,11 @@ func _map_grow_board(plan: Array[Dictionary]) -> void:
 	routed square to the board with 45 degree corners, chip to chip or off
 	the edge."""
 	var library := StickerLibrary.sticker_library
-	if _map_copper < 0:
-		# Copper: a long, thin, solid sticker (thin enough that a trace
-		# stays narrow at the smallest sticker size), as copper-brown as there is
-		_map_copper = _map_pick(func(i): var t := _texture_size(i); return _solidity(i) >= 0.5 and maxf(t.x, t.y) / minf(t.x, t.y) >= 2.0,
-			func(i): var t := _texture_size(i); return pow(_map_hue_weight(i, 0.06), 2.0) * pow(minf(maxf(t.x, t.y) / minf(t.x, t.y), 6.0), 3.0), [])
-		if _map_copper < 0:
-			_map_copper = _pick("band", [], "any")
+	if _map_coppers.is_empty():
+		# Copper: long, thin, solid stickers (thin enough that a trace
+		# stays narrow at the smallest sticker size), as copper-brown as there are
+		_map_coppers = _map_pick_set(func(i): var t := _texture_size(i); return _solidity(i) >= 0.5 and maxf(t.x, t.y) / minf(t.x, t.y) >= 2.0,
+			func(i): var t := _texture_size(i); return pow(_map_hue_weight(i, 0.06), 2.0) * pow(minf(maxf(t.x, t.y) / minf(t.x, t.y), 6.0), 3.0), [], "band")
 	var squarish := func(i): var t := _texture_size(i); return not ("line" in _roles(library[i]) or "frame" in _roles(library[i])) and maxf(t.x, t.y) / minf(t.x, t.y) < 1.5 and _color(i).coverage >= 0.4
 	# Components: a patch of small parts in tight rows, a few kinds of part
 	var kinds: Array[int] = []
@@ -2203,8 +2229,8 @@ func _map_grow_board(plan: Array[Dictionary]) -> void:
 	for k in randi_range(MAP_BOARD_CHIPS.x, MAP_BOARD_CHIPS.y):
 		var size := randf_range(MAP_CHIP_SIZE.x, MAP_CHIP_SIZE.y)
 		var c := Vector2(randf_range(size * 0.6, 1.0 - size * 0.6), randf_range(size * 0.6, _aspect - size * 0.6))
-		var body := _map_pick(squarish, func(i): return _map_hue_weight(i, 0.3) * _map_flat(i) + 0.05, [_map_copper])
-		var die := _map_pick(squarish, func(i): return _map_flat(i), [body, _map_copper])
+		var body := _map_pick(squarish, func(i): return _map_hue_weight(i, 0.3) * _map_flat(i) + 0.05, _map_coppers)
+		var die := _map_pick(squarish, func(i): return _map_flat(i), _map_coppers + [body])
 		if body < 0:
 			continue
 		_stamp(plan, body, _map_view(c), 0.0 if randf() < 0.5 else 90.0, size, true, true)
@@ -2225,7 +2251,7 @@ func _map_grow_board(plan: Array[Dictionary]) -> void:
 		for l in lines:
 			var shifted := _map_offset_path(path, (l - (lines - 1) * 0.5) * MAP_TRACE_GAP)
 			for e in shifted.size() - 1:
-				_map_street(plan, shifted[e], shifted[e + 1], _map_copper, MAP_TRACE_WIDTH, "map board")
+				_map_street(plan, shifted[e], shifted[e + 1], _map_coppers, MAP_TRACE_WIDTH, "map board")
 
 
 func _map_edge_point() -> Vector2:
@@ -2357,10 +2383,11 @@ func _map_road(plan: Array[Dictionary], a: Vector2, b: Vector2) -> void:
 		while next <= walked + seg and next <= total - size * 0.6:
 			var p := path[k].lerp(path[k + 1], (next - walked) / maxf(seg, 0.0001))
 			var tangent := path[k + 1] - path[k]
-			var turn := rad_to_deg(tangent.angle()) + _long_axis_spin(_map_pen) + randfn(0.0, 4.0)
+			var pen: int = _map_pens.pick_random()
+			var turn := rad_to_deg(tangent.angle()) + _long_axis_spin(pen) + randfn(0.0, 4.0)
 			if _map_dirt:
 				turn = randf() * 360.0   # a track is worn, not drawn
-			_stamp(plan, _map_pen, _map_view(p), turn, size * (randf_range(0.85, 1.15) if _map_dirt else 1.0), false)
+			_stamp(plan, pen, _map_view(p), turn, size * (randf_range(0.85, 1.15) if _map_dirt else 1.0), false)
 			plan[-1].phase = "map road"
 			next += spacing
 		walked += seg
