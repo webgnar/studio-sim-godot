@@ -1,0 +1,46 @@
+# Copy to .github/workflows/send-daily.yml in your PRIVATE outreach repo,
+# next to send_daily.py, email_template.html and queue.json.
+name: Send one creator email
+
+on:
+  workflow_dispatch:
+    inputs:
+      send:
+        description: "Really send (unticked = dry run that only prints the next email)"
+        type: boolean
+        default: false
+  # Off until you're ready. Uncomment to send one email a day at 16:00 UTC.
+  # schedule:
+  #   - cron: "0 16 * * *"
+
+concurrency:
+  group: send-daily
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Send the next approved email
+        env:
+          GMAIL_ADDRESS: ${{ secrets.GMAIL_ADDRESS }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+          STEAM_KEYS: ${{ secrets.STEAM_KEYS }}
+          BCC: ${{ secrets.BCC }}
+          SEND: ${{ github.event_name == 'schedule' || inputs.send }}
+        run: |
+          if [ "$SEND" = "true" ]; then python3 send_daily.py --send; else python3 send_daily.py; fi
+      - name: Save the send log
+        if: success()
+        run: |
+          git config user.name "outreach-bot"
+          git config user.email "outreach-bot@users.noreply.github.com"
+          git add sent_log.json 2>/dev/null || true
+          git diff --cached --quiet || (git commit -m "Log sent creator email" && git push)
