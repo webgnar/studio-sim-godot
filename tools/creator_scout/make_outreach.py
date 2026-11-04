@@ -165,7 +165,7 @@ summary { cursor: pointer; font-weight: 600; }
   <div id="storeWarn" class="warn" hidden>Progress is only being saved in this browser right now, because the page couldn't reach its shared storage.</div>
   <section>
     <h2>Today's channels</h2>
-    <p class="lead">Check the channel, open its About page to reveal the email (YouTube asks you to sign in), paste it here and approve. Approved creators get the Steam key email from the daily send job. This page never sends anything and never holds keys.</p>
+    <p class="lead">Open the channel's About page, click View email address (YouTube asks you to sign in), paste it here and approve. Approved creators get the Steam key email from the daily send job. This page never sends anything and never holds keys.</p>
     <div id="today"></div>
   </section>
   <details id="qBox">
@@ -216,7 +216,7 @@ function picks() {
 
 function previewHtml(c) {
   const d = draft(c);
-  return `Hey <b>${esc(d.creator || "there")}</b>,\n\n<b>${esc(d.line)}</b> I made a little painting game and thought it might be your kind of thing, so here's a free Steam key. No strings attached: play it if it looks fun, and no need to make a video if it's not for you.\n\n[banner, game blurb, links, Steam key, screenshots]`;
+  return `Hey <b>${esc(d.creator || "there")}</b>,\n\nI came across your youtube channel, and thought i would reach out. I made a little painting game and thought it might be your kind of thing, so here's a free Steam key. No strings attached: play it if it looks fun, and no need to make a video if it's not for you.\n\n[banner, game blurb, links, Steam key, screenshots]`;
 }
 
 function cardHtml(c) {
@@ -244,9 +244,6 @@ function cardHtml(c) {
         <span class="hint">${emailHint}</span></div>
       <div class="field"><label for="cr-${esc(c.id)}">Call them</label>
         <input type="text" id="cr-${esc(c.id)}" data-f="creator" value="${esc(d.creator)}"></div>
-      <div class="field"><label for="ln-${esc(c.id)}">Opening line about their channel</label>
-        <textarea id="ln-${esc(c.id)}" data-f="line">${esc(d.line)}</textarea>
-        <span class="hint">Keep it true. If you watched a bit, say what you liked.</span></div>
       <div class="field"><span class="lbl">Email opens with</span><div class="preview" data-prev>${previewHtml(c)}</div></div>
       <div class="actions">
         <span style="flex:1"></span>
