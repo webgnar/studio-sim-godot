@@ -104,7 +104,7 @@ def main():
         print(plain_text(masked))
         return
 
-    pw = os.environ.get("GMAIL_APP_PASSWORD")
+    pw = os.environ.get("GMAIL_APP_PASSWORD", "").replace(" ", "")
     if not pw or "GMAIL_ADDRESS" not in os.environ:
         sys.exit("GMAIL_ADDRESS and GMAIL_APP_PASSWORD must be set to send.")
     with smtplib.SMTP_SSL("smtp.gmail.com", 465, timeout=60) as s:
