@@ -23,6 +23,9 @@ func _ready() -> void:
 		"test_merge_respects_distance", "test_ordering", "test_moves_format",
 		"test_dot", "test_low_quality_skip", "test_low_quality_flag_and_keep",
 		"test_random_stress",
+		"test_vectorize_square_with_hole", "test_vectorize_two_colours",
+		"test_vectorize_texture_stays_one_colour", "test_hatch_square",
+		"test_paint_strokes_stay_inside", "test_transform",
 	]
 	for t in tests:
 		_current = t
@@ -335,3 +338,105 @@ func test_random_stress() -> void:
 			inside = false
 	check(inside, "every move stays on the canvas")
 	check(ms < 5000, "planning 3000 polylines took %d ms" % ms)
+
+
+# --- StickerVectorizer ---------------------------------------------------------
+
+func _img(w: int, h: int) -> Image:
+	var img := Image.create(w, h, false, Image.FORMAT_RGBA8)
+	img.fill(Color(0, 0, 0, 0))
+	return img
+
+
+func test_vectorize_square_with_hole() -> void:
+	var img := _img(60, 60)
+	img.fill_rect(Rect2i(10, 10, 40, 40), Color(0.8, 0.1, 0.1))
+	img.fill_rect(Rect2i(25, 25, 10, 10), Color(0, 0, 0, 0))
+	var v := StickerVectorizer.new()
+	v.detail = 60
+	v.smooth_outline = 0
+	var r := v.vectorize(img)
+	check(r.layers.size() == 1, "one colour (got %d)" % r.layers.size())
+	if r.layers.is_empty():
+		return
+	var polys: Array = r.layers[0].polygons
+	check(polys.size() == 2, "outer ring + hole ring (got %d)" % polys.size())
+	var total := 0.0
+	var outer := 0
+	for p in polys:
+		var a := StickerVectorizer._area(p)
+		total += a
+		if a > 0.0:
+			outer += 1
+	check(outer == 1, "exactly one outer ring")
+	near(total, 1600.0 - 100.0, 1.0, "area = square - hole")
+	check(r.layers[0].color.r > 0.7 and r.layers[0].color.g < 0.2, "colour kept %s" % r.layers[0].color)
+
+
+func test_vectorize_two_colours() -> void:
+	var img := _img(80, 40)
+	img.fill_rect(Rect2i(0, 0, 40, 40), Color(0.1, 0.2, 0.8))
+	img.fill_rect(Rect2i(40, 0, 40, 40), Color(0.95, 0.85, 0.2))
+	var v := StickerVectorizer.new()
+	v.detail = 80
+	v.smooth_outline = 0
+	var r := v.vectorize(img)
+	check(r.layers.size() == 2, "two colours (got %d)" % r.layers.size())
+	if r.layers.size() == 2:
+		check(r.layers[0].color.get_luminance() > r.layers[1].color.get_luminance(), "light layer first")
+		near(r.layers[0].coverage, 0.5, 0.02, "half each")
+
+
+func test_vectorize_texture_stays_one_colour() -> void:
+	var img := _img(100, 100)
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 3
+	for y in 100:
+		for x in 100:
+			var n := rng.randf_range(-0.04, 0.04)
+			img.set_pixel(x, y, Color(0.85 + n, 0.82 + n, 0.45 + n))
+	var v := StickerVectorizer.new()
+	v.detail = 100
+	var r := v.vectorize(img)
+	check(r.layers.size() == 1, "brush texture merges to one colour (got %d)" % r.layers.size())
+
+
+func test_hatch_square() -> void:
+	var sq := PackedVector2Array([Vector2(0, 0), Vector2(10, 0), Vector2(10, 10), Vector2(0, 10)])
+	var lines := StickerVectorizer.hatch([sq], 1.0, 0.0)
+	check(lines.size() == 10, "10 rows (got %d)" % lines.size())
+	var total := 0.0
+	for l in lines:
+		total += PathPlanner.polyline_length(l)
+	near(total, 100.0, 1e-3, "rows span the square")
+	# A hole removes its share
+	var hole := PackedVector2Array([Vector2(3, 3), Vector2(3, 7), Vector2(7, 7), Vector2(7, 3)])
+	total = 0.0
+	for l in StickerVectorizer.hatch([sq, hole], 1.0, 0.0):
+		total += PathPlanner.polyline_length(l)
+	near(total, 100.0 - 16.0, 1e-3, "even-odd hole")
+	total = 0.0
+	for l in StickerVectorizer.hatch([sq], 1.0, 45.0):
+		total += PathPlanner.polyline_length(l)
+	near(total, 100.0, 8.0, "45° hatch covers about the same area")
+
+
+func test_paint_strokes_stay_inside() -> void:
+	var sq := PackedVector2Array([Vector2(0, 0), Vector2(100, 0), Vector2(100, 40), Vector2(0, 40)])
+	var tool := 5.0
+	var inside := true
+	for l in StickerVectorizer.paint_strokes([sq], tool):
+		for p in l:
+			if p.x < tool * 0.5 - 0.01 or p.y < tool * 0.5 - 0.01 or p.x > 100 - tool * 0.5 + 0.01 or p.y > 40 - tool * 0.5 + 0.01:
+				inside = false
+	check(inside, "stroke centres stay half a tool width inside the edge")
+	# A band thinner than the tool still gets paint
+	var thin := PackedVector2Array([Vector2(0, 0), Vector2(100, 0), Vector2(100, 3), Vector2(0, 3)])
+	var strokes := StickerVectorizer.paint_strokes([thin], tool)
+	check(not strokes.is_empty(), "thin band still painted")
+
+
+func test_transform() -> void:
+	var lines := StickerVectorizer.transform_polylines([PackedVector2Array([Vector2(0, 0), Vector2(200, 100)])], Vector2(200, 100), Vector2(500, 500), 90.0, 0.5)
+	near_v(lines[0][0], Vector2(525, 450), 1e-3, "corner maps through centre, scale, rotation")
+	near_v(lines[0][1], Vector2(475, 550), 1e-3, "opposite corner")
