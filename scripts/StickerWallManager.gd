@@ -14,6 +14,7 @@ class_name StickerWallManager
 ## picks up from whatever is on the wall.
 
 const MARGIN = 40.0  # px from canvas edge (random style)
+const FLATTEN_KEEP := 3  # newest stickers left as sprites when the wall is flattened, so an undo still works
 
 ## Unique ID for this wall's save file. Change per-instance for multiple walls.
 @export var wall_id: String = "wall_a"
@@ -49,6 +50,7 @@ var _planning := -1        # worker thread task planning the next round
 var _flat: Sprite2D        # everything flattened so far, drawn under the live sprites
 var _live := 0             # stickers on the wall as their own sprites (not yet flattened)
 var _flattening := false
+var _clears := 0           # times the wall was cleared (a flatten that spans one is dropped)
 
 
 func _ready():
@@ -158,8 +160,24 @@ func _flatten() -> void:
 	drop the sprites it holds. The placements stay, so the painter still
 	knows what's there and the save still has every sticker."""
 	_flattening = true
+	# The newest few stay sprites: the assistant takes a mistake back with
+	# the very next stroke, so the last sticker must still be removable
+	var keep: Array[Sprite2D] = []
+	for k in range(_sprites.size() - 1, -1, -1):
+		if keep.size() >= FLATTEN_KEEP:
+			break
+		if _sprites[k]:
+			keep.append(_sprites[k])
+			_sprites[k].visible = false
+	var clears := _clears
 	sub_viewport.render_target_update_mode = SubViewport.UPDATE_ONCE
 	await RenderingServer.frame_post_draw
+	if clears != _clears:   # transferred meanwhile: the picture is gone
+		_flattening = false
+		return
+	for sprite in keep:
+		if is_instance_valid(sprite):
+			sprite.visible = true
 	var image := sub_viewport.get_texture().get_image()
 	if image and not image.is_empty():
 		if not is_instance_valid(_flat):
@@ -173,10 +191,10 @@ func _flatten() -> void:
 		_flat.scale = canvas_size / Vector2(image.get_size())
 		_flat.texture = ImageTexture.create_from_image(image)
 		for k in _sprites.size():
-			if _sprites[k]:
+			if _sprites[k] and not _sprites[k] in keep:
 				_sprites[k].queue_free()
 				_sprites[k] = null
-		_live = 0
+		_live = keep.size()
 		sub_viewport.render_target_update_mode = SubViewport.UPDATE_ONCE
 	_flattening = false
 
@@ -304,6 +322,7 @@ func clear_stickers() -> void:
 	_sprites.clear()
 	_live = 0
 	_flat = null   # freed with the other children
+	_clears += 1
 	for child in sticker_canvas.get_children():
 		child.queue_free()
 	_save_stickers_only()
