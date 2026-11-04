@@ -258,6 +258,11 @@ const MAP_GROW_TOWNS := Vector2i(1, 2)    ## assistant: new towns each later rou
 const MAP_GROW_HOUSES := Vector2i(1, 3)   ## assistant: buildings added to each old town each later round
 const MAP_GROW_FORESTS := Vector2i(1, 2)  ## assistant: new forest clumps each later round
 const MAP_FLOOD_CHANCE := 0.25       ## assistant: chance a later round floods part of the map with a new lake or river
+const MAP_FLOOD_FOREST := 0.25       ## assistant: once forest covers this share of the land, the next round floods the thickest forest to keep it from overgrowing the map (1 = never)
+const MAP_FLOOD_LAKES := 4           ## assistant: most lakes one forest flood makes, stopping once the forest is back under MAP_FLOOD_FOREST
+const MAP_FLOOD_TOWN_SAFE := 0.07     ## assistant: floods stay this far from a town's middle (canvas widths)
+const MAP_FLOOD_SIZE := Vector2(0.06, 0.12)   ## assistant: radius of a flood lake (canvas widths)
+const MAP_FLOOD_NEW_INK := 1.0       ## assistant: chance each flood switches to a different water sticker from the floods before it (zack, 2026-11-04)
 const MAP_NEW_MAP_ROUNDS := 0        ## assistant: after this many rounds a whole new map is laid over the old one (0 = never: one map keeps growing forever, zack 2026-11-03)
 const METICULOUS := {"catalog": 1, "checker": 2, "rings": 2, "mandala": 3, "gradient": 2}
 
@@ -347,6 +352,8 @@ var _map_sea := -1                    ## aerial map: the water sticker
 var _map_trees: Array[int] = []       ## aerial map: the tree stickers
 var _map_pen := -1                    ## aerial map: the road sticker
 var _map_dirt := false                ## aerial map: roads are dirt tracks (MAP_DIRT_ROADS)
+var _map_woods := PackedByteArray()   ## aerial map: 1 = forest, per coverage cell (see MAP_FLOOD_FOREST)
+var _map_flood_inks: Array[int] = []  ## assistant: water stickers used so far, so each flood takes a new one
 var _map_style := false               ## this painting is an aerial map (see MAP_MISTAKES)
 var _map_rounds := 0                  ## assistant: rounds painted on the current map (0 = no map yet)
 static var _colors: Dictionary = {}
@@ -1565,7 +1572,10 @@ func _aerial_map(plan: Array[Dictionary]) -> void:
 	_map_rounds = 1
 	_map_towns.clear()
 	_map_choose_inks()
+	_map_flood_inks = [_map_sea]
 	_map_water = _map_terrain(kind)
+	_map_woods = PackedByteArray()
+	_map_woods.resize(_map_water.size())
 	for k in randi_range(MAP_RIVERS.x, MAP_RIVERS.y):
 		_map_river(_map_water)
 	_map_fields(plan)
@@ -1607,24 +1617,22 @@ func _map_round() -> void:
 		return
 	_map_rounds += 1
 	last_style = "aerial map, round %d" % _map_rounds
-	if randf() < MAP_FLOOD_CHANCE:
-		# A new lake or river floods part of the map, roads and all
-		var flood := PackedByteArray()
-		flood.resize(_map_water.size())
-		if randf() < 0.5:
-			_map_river(flood)
-		else:
-			_map_lake(flood)
-		for t in _map_towns:
-			_map_clear_around(flood, t, MAP_HOUSE_SIZE.y * 1.5)
-		var grid := PackedByteArray()
-		grid.resize(flood.size())
-		for i in flood.size():
-			grid[i] = 0 if flood[i] == 1 and _map_water[i] == 0 else CELL_FULL
-			_map_water[i] |= flood[i]
-		_fill_spots(plan, grid, [_map_sea], _min_size, 0.3, FILL_MAX, NAN, "map water", true)
+	var overgrown := _map_forest_share() >= MAP_FLOOD_FOREST
+	if overgrown:
+		# The forest has taken over: flood the thickest of it (a new water
+		# sticker), lake after lake until it's back under control, and no
+		# new forest this round
+		_map_new_flood_ink()
+		var lakes := 0
+		while lakes < MAP_FLOOD_LAKES and _map_forest_share() >= MAP_FLOOD_FOREST:
+			_map_flood(plan, true)
+			lakes += 1
+		last_style += ", flood over the forest (%d lake%s)" % [lakes, "" if lakes == 1 else "s"]
+	elif randf() < MAP_FLOOD_CHANCE:
+		_map_new_flood_ink()
+		_map_flood(plan, false)
 		last_style += ", flood"
-	for k in randi_range(MAP_GROW_FORESTS.x, MAP_GROW_FORESTS.y):
+	for k in (0 if overgrown else randi_range(MAP_GROW_FORESTS.x, MAP_GROW_FORESTS.y)):
 		_map_forest(plan)
 	var towns := _map_place_towns(randi_range(MAP_GROW_TOWNS.x, MAP_GROW_TOWNS.y))
 	_map_roads(plan, towns, 0)
@@ -1633,6 +1641,82 @@ func _map_round() -> void:
 	for t in towns:
 		_map_town(plan, t, randi_range(MAP_TOWN_HOUSES.x, MAP_TOWN_HOUSES.y), true)
 	_map_towns.append_array(towns)
+
+
+func _map_flood(plan: Array[Dictionary], overgrown: bool) -> void:
+	"""A new lake or river floods part of the map, roads and all. When the
+	forest has overgrown the map it's a lake over the thickest of it."""
+	var flood := PackedByteArray()
+	flood.resize(_map_water.size())
+	if overgrown:
+		_map_lake(flood, _map_thickest_forest())
+	elif randf() < 0.5:
+		_map_river(flood)
+	else:
+		_map_lake(flood, Vector2(randf_range(0.15, 0.85) * COVER_GRID, randf_range(0.15, 0.85) * _cover_rows()))
+	for t in _map_towns:
+		_map_clear_around(flood, t, MAP_FLOOD_TOWN_SAFE)
+	var grid := PackedByteArray()
+	grid.resize(flood.size())
+	for i in flood.size():
+		grid[i] = 0 if flood[i] == 1 and _map_water[i] == 0 else CELL_FULL
+		_map_water[i] |= flood[i]
+		if flood[i] == 1:
+			_map_woods[i] = 0
+	_fill_spots(plan, grid, [_map_sea], _min_size, 0.3, FILL_MAX, NAN, "map water", true)
+
+
+func _map_new_flood_ink() -> void:
+	"""Each flood switches to a water sticker the floods before it haven't
+	used (MAP_FLOOD_NEW_INK); once they've all been used, any but the last."""
+	if randf() >= MAP_FLOOD_NEW_INK:
+		return
+	var land_light := 0.0
+	for i in _map_land:
+		land_light += _color(i).light / _map_land.size()
+	var test := func(i): return _solidity(i) >= BASE_SOLIDITY and absf(_color(i).light - land_light) >= MAP_WATER_CONTRAST
+	var ink := _map_pick(test, func(i): return _map_flat(i), _map_land + _map_flood_inks)
+	if ink < 0:
+		_map_flood_inks = [_map_sea]
+		ink = _map_pick(test, func(i): return _map_flat(i), _map_land + _map_flood_inks)
+	if ink >= 0:
+		_map_sea = ink
+		_map_flood_inks.append(ink)
+
+
+func _map_forest_share() -> float:
+	"""Share of the dry land under forest."""
+	var land := 0
+	var woods := 0
+	for i in _map_water.size():
+		if _map_water[i] == 0:
+			land += 1
+			woods += _map_woods[i]
+	return float(woods) / maxf(land, 1.0)
+
+
+func _map_thickest_forest() -> Vector2:
+	"""The cell (column, row) with the most dry forest around it that a
+	flood can reach (not a town)."""
+	var rows := _cover_rows()
+	var safe := PackedByteArray()
+	safe.resize(_map_water.size())
+	for t in _map_towns:
+		_map_mark(safe, Vector2(t.x * COVER_GRID, t.y * _aspect_fix() * rows), MAP_FLOOD_TOWN_SAFE * COVER_GRID)
+	var reach := int(MAP_FLOOD_SIZE.y * COVER_GRID * 0.6)
+	var best := Vector2(COVER_GRID / 2, rows / 2)
+	var most := -1
+	for r in range(0, rows, 2):
+		for c in range(0, COVER_GRID, 2):
+			var n := 0
+			for y in range(maxi(0, r - reach), mini(rows, r + reach + 1)):
+				for x in range(maxi(0, c - reach), mini(COVER_GRID, c + reach + 1)):
+					var i := y * COVER_GRID + x
+					n += _map_woods[i] * (1 - _map_water[i]) * (1 - safe[i])
+			if n > most:
+				most = n
+				best = Vector2(c + 0.5, r + 0.5)
+	return best
 
 
 func _map_choose_inks() -> void:
@@ -1775,10 +1859,9 @@ func _map_river(water: PackedByteArray) -> void:
 			return   # ran into a lake or the sea
 
 
-func _map_lake(water: PackedByteArray) -> void:
-	"""A lumpy lake somewhere on the land (assistant floods)."""
-	var center := Vector2(randf_range(0.15, 0.85) * COVER_GRID, randf_range(0.15, 0.85) * _cover_rows())
-	var radius := randf_range(0.06, 0.12) * COVER_GRID
+func _map_lake(water: PackedByteArray, center: Vector2) -> void:
+	"""A lumpy lake around `center` (a cell: column, row), for floods."""
+	var radius := randf_range(MAP_FLOOD_SIZE.x, MAP_FLOOD_SIZE.y) * COVER_GRID
 	var phase := randf() * TAU
 	for k in 24:
 		var a := TAU * k / 24.0
@@ -1901,6 +1984,7 @@ func _map_forest(plan: Array[Dictionary]) -> void:
 	for q in spots:
 		_stamp(plan, tree, _map_view(q), randf_range(-12.0, 12.0), size * randf_range(0.85, 1.15), false)
 		plan[-1].phase = "map forest"
+		_map_mark(_map_woods, Vector2(q.x * COVER_GRID, q.y * _aspect_fix() * _cover_rows()), size * COVER_GRID * 0.5)
 
 
 func _map_place_towns(count: int) -> Array[Vector2]:
