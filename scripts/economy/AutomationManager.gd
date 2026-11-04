@@ -18,7 +18,7 @@ const ASSISTANT_MAX_BONUS: int = 150     # cap: ASSISTANT_PAYOUT * 10 * 0.15
 ## Painting styles, in the order the Psy Wheel steps through them:
 ## studio = the autoplay bot's studio rounds, hall_of_fame = the bot's style
 ## before that (branch autoplay-painter-v1), random = random stickers anywhere
-const ASSISTANT_STYLES: Array[String] = ["studio", "hall_of_fame", "random"]
+const ASSISTANT_STYLES: Array[String] = ["studio", "hall_of_fame", "random", "aerial_map"]
 
 # Audio
 @export var payout_sound: AudioStream  # Sound played when assistant completes painting

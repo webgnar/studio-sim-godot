@@ -6,7 +6,7 @@ class_name AssistantStyleWheel
 ## wheel's spin. StickerWallManager adds this to its sibling Psywheel, which
 ## has no collision of its own, so this gives it one (only while it's out).
 
-const STYLE_NAMES := {"studio": "Studio", "hall_of_fame": "Hall of Fame", "random": "Random"}
+const STYLE_NAMES := {"studio": "Studio", "hall_of_fame": "Hall of Fame", "random": "Random", "aerial_map": "Aerial Map"}
 
 var _shape: CollisionShape3D
 
