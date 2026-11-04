@@ -24,6 +24,11 @@ const MARGIN = 40.0  # px from canvas edge (random style)
 ## this). At 0.5: 1 visitor 4 s, 2 visitors 3 s, 4 visitors 2 s (0 = visitors
 ## don't change the pace) (zack 2026-11-04).
 @export var visitor_speedup: float = 0.5
+## Once this many stickers are on the wall as separate sprites, they're
+## flattened into one image under the new ones, so redrawing the wall costs
+## the same however long the assistant paints or however fast it goes
+## (zack 2026-11-04). 0 = never flatten.
+@export var flatten_after: int = 300
 ## The fastest the assistant will go, however many visitors (seconds).
 @export var fastest_interval: float = 0.25
 ## Canvas resolution. Match this to your SubViewport size.
@@ -41,6 +46,9 @@ var _painter_ready := false
 var _painter_style := ""   # the style the painter was started in
 var _warmed := 0           # stickers the painter has looked at (see AutoplayPainter.warm_up)
 var _planning := -1        # worker thread task planning the next round
+var _flat: Sprite2D        # everything flattened so far, drawn under the live sprites
+var _live := 0             # stickers on the wall as their own sprites (not yet flattened)
+var _flattening := false
 
 
 func _ready():
@@ -63,6 +71,8 @@ func _ready():
 	for data in saved:
 		_sprites.append(_spawn_sticker_sprite(data))
 	_placements = saved.duplicate(true)
+	_live = _sprites.size()
+	_maybe_flatten.call_deferred()
 
 	# Start the interval timer — only if Studio Assistant is already active
 	_timer = Timer.new()
@@ -93,6 +103,8 @@ func _current_interval() -> float:
 
 func _on_timer_timeout() -> void:
 	_timer.wait_time = _current_interval()   # a visitor bought since the last sticker counts at once
+	if _flattening:
+		return
 	if not has_node("/root/StickerLibrary"):
 		return
 
@@ -121,15 +133,52 @@ func _on_timer_timeout() -> void:
 		if not _placements.is_empty():
 			_placements.pop_back()
 			var sprite: Sprite2D = _sprites.pop_back()
-			if sprite:
+			if sprite:   # (a flattened sticker stays: it's part of the image now)
 				sprite.queue_free()
+				_live -= 1
 	else:
 		var data := _stamp_to_data(stroke)
 		_sprites.append(_spawn_sticker_sprite(data))
 		_placements.append(data)
+		_live += 1
 
 	# Force viewport update so the new sticker renders
 	sub_viewport.render_target_update_mode = SubViewport.UPDATE_ONCE
+	_maybe_flatten()
+
+
+func _maybe_flatten() -> void:
+	"""Flatten the wall into one image once there are flatten_after live sprites."""
+	if flatten_after > 0 and _live >= flatten_after and not _flattening and is_inside_tree():
+		_flatten()
+
+
+func _flatten() -> void:
+	"""Render the wall, keep the picture as one image under everything, and
+	drop the sprites it holds. The placements stay, so the painter still
+	knows what's there and the save still has every sticker."""
+	_flattening = true
+	sub_viewport.render_target_update_mode = SubViewport.UPDATE_ONCE
+	await RenderingServer.frame_post_draw
+	var image := sub_viewport.get_texture().get_image()
+	if image and not image.is_empty():
+		if not is_instance_valid(_flat):
+			_flat = Sprite2D.new()
+			_flat.centered = false
+			var blend := CanvasItemMaterial.new()
+			blend.blend_mode = CanvasItemMaterial.BLEND_MODE_PREMULT_ALPHA   # the viewport holds premultiplied colour
+			_flat.material = blend
+			sticker_canvas.add_child(_flat)
+		sticker_canvas.move_child(_flat, 0)
+		_flat.scale = canvas_size / Vector2(image.get_size())
+		_flat.texture = ImageTexture.create_from_image(image)
+		for k in _sprites.size():
+			if _sprites[k]:
+				_sprites[k].queue_free()
+				_sprites[k] = null
+		_live = 0
+		sub_viewport.render_target_update_mode = SubViewport.UPDATE_ONCE
+	_flattening = false
 
 
 func _style() -> String:
@@ -146,7 +195,9 @@ func _place_random(library: Array) -> void:
 	}
 	_sprites.append(_spawn_sticker_sprite(data))
 	_placements.append(data)
+	_live += 1
 	sub_viewport.render_target_update_mode = SubViewport.UPDATE_ONCE
+	_maybe_flatten()
 
 
 func _process(_delta: float) -> void:
@@ -251,6 +302,8 @@ func clear_stickers() -> void:
 	"""Remove all stickers from the wall and persist the empty state."""
 	_placements.clear()
 	_sprites.clear()
+	_live = 0
+	_flat = null   # freed with the other children
 	for child in sticker_canvas.get_children():
 		child.queue_free()
 	_save_stickers_only()
