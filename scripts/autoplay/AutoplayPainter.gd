@@ -266,6 +266,15 @@ const MAP_CITY_HOUSES := 2           ## buildings along each side of a block (2 
 const MAP_CITY_STREET := 0.02        ## width of a city street (canvas widths)
 const MAP_CITY_STREET_SPACING := 0.4   ## gap between street stamps, as a fraction of a stamp's length
 const MAP_CITY_RINGS := 6            ## most rings of blocks the city grows to, one ring a round
+const MAP_BOARD := true              ## assistant: once the city is fully grown, the map builds out into a circuit board, a little more each round (zack, 2026-11-04)
+const MAP_BOARD_CHIPS := Vector2i(1, 2)    ## chips added each round
+const MAP_CHIP_SIZE := Vector2(0.1, 0.2)   ## a chip's size (canvas widths)
+const MAP_BOARD_PARTS := Vector2i(16, 36)  ## small components packed onto the board each round, in one patch
+const MAP_PART_SIZE := 0.045         ## one small component (canvas widths; never under the smallest sticker)
+const MAP_BOARD_TRACES := Vector2i(1, 1)   ## bundles of copper traces routed each round
+const MAP_TRACE_LINES := Vector2i(3, 6)    ## traces side by side in a bundle
+const MAP_TRACE_WIDTH := 0.012       ## one trace's width (canvas widths)
+const MAP_TRACE_GAP := 0.03          ## distance between traces in a bundle, centre to centre
 const MAP_FLOOD_TOWN_SAFE := 0.07     ## assistant: floods stay this far from a town's middle (canvas widths)
 const MAP_FLOOD_SIZE := Vector2(0.06, 0.12)   ## assistant: radius of a flood lake (canvas widths)
 const MAP_FLOOD_NEW_INK := 1.0       ## assistant: chance each flood switches to a different water sticker from the floods before it (zack, 2026-11-04)
@@ -366,6 +375,8 @@ var _map_city_angle := 0.0
 var _map_city_ground := -1           ## assistant: the city's pavement sticker
 var _map_city_pen := -1              ## assistant: the city's street sticker
 var _map_streets := {}               ## assistant: city streets already laid
+var _map_copper := -1                 ## assistant: the circuit board's trace sticker
+var _map_chips: Array[Vector2] = []   ## assistant: chip centres on the board (canvas-width units)
 var _map_style := false               ## this painting is an aerial map (see MAP_MISTAKES)
 var _map_rounds := 0                  ## assistant: rounds painted on the current map (0 = no map yet)
 static var _colors: Dictionary = {}
@@ -1586,6 +1597,8 @@ func _aerial_map(plan: Array[Dictionary]) -> void:
 	_map_city = Vector2(-1, -1)
 	_map_city_rings = 0
 	_map_streets.clear()
+	_map_copper = -1
+	_map_chips.clear()
 	_map_choose_inks()
 	_map_flood_inks = [_map_sea]
 	_map_water = _map_terrain(kind)
@@ -1654,6 +1667,9 @@ func _map_round() -> void:
 	if MAP_CITY_AFTER > 0 and _map_rounds > MAP_CITY_AFTER and _map_city_rings < MAP_CITY_RINGS and not _map_towns.is_empty():
 		_map_grow_city(plan)
 		last_style += ", city ring %d" % _map_city_rings
+	elif MAP_BOARD and _map_city_rings >= MAP_CITY_RINGS:
+		_map_grow_board(plan)
+		last_style += ", circuit board"
 	for t in _map_towns:
 		if _map_city.x >= 0.0 and t == _map_towns[0]:
 			continue   # that one's the city now
@@ -2141,16 +2157,131 @@ func _map_grow_city(plan: Array[Dictionary]) -> void:
 			plan[-1].phase = "map city"
 
 
-func _map_street(plan: Array[Dictionary], a: Vector2, b: Vector2) -> void:
-	"""A straight city street from `a` to `b`: the street sticker laid
-	lengthwise along it, stamped close together so it reads as one band."""
-	var tex := _texture_size(_map_city_pen)
-	var size := maxf(MAP_CITY_STREET * maxf(tex.x, tex.y) / minf(tex.x, tex.y), _min_size)   # its short side is the street's width
+func _map_street(plan: Array[Dictionary], a: Vector2, b: Vector2, ink: int = _map_city_pen, width: float = MAP_CITY_STREET, phase: String = "map city") -> void:
+	"""A straight band from `a` to `b` (a city street, a circuit trace): the
+	sticker laid lengthwise along it, stamped close together so it reads as
+	one band `width` wide."""
+	var tex := _texture_size(ink)
+	var size := maxf(width * maxf(tex.x, tex.y) / minf(tex.x, tex.y), _min_size)   # its short side is the band's width
 	var count := maxi(1, ceili(a.distance_to(b) / (size * MAP_CITY_STREET_SPACING)))
-	var turn := rad_to_deg((b - a).angle()) + _long_axis_spin(_map_city_pen)
+	var turn := rad_to_deg((b - a).angle()) + _long_axis_spin(ink)
 	for k in count + 1:
-		_stamp(plan, _map_city_pen, _map_view(a.lerp(b, float(k) / count)), turn + randfn(0.0, 2.0), size, false)
-		plan[-1].phase = "map city"
+		_stamp(plan, ink, _map_view(a.lerp(b, float(k) / count)), turn + randfn(0.0, 2.0), size, false)
+		plan[-1].phase = phase
+
+
+func _map_grow_board(plan: Array[Dictionary]) -> void:
+	"""After the city, the map turns into a circuit board, a little more each
+	round: a patch of small components packed in rows, a chip or two (a
+	square body with a smaller die on it), and bundles of copper traces
+	routed square to the board with 45 degree corners, chip to chip or off
+	the edge."""
+	var library := StickerLibrary.sticker_library
+	if _map_copper < 0:
+		# Copper: a long, thin, solid sticker (thin enough that a trace
+		# stays narrow at the smallest sticker size), as copper-brown as there is
+		_map_copper = _map_pick(func(i): var t := _texture_size(i); return _solidity(i) >= 0.5 and maxf(t.x, t.y) / minf(t.x, t.y) >= 2.0,
+			func(i): var t := _texture_size(i); return pow(_map_hue_weight(i, 0.06), 2.0) * pow(minf(maxf(t.x, t.y) / minf(t.x, t.y), 6.0), 3.0), [])
+		if _map_copper < 0:
+			_map_copper = _pick("band", [], "any")
+	var squarish := func(i): var t := _texture_size(i); return not ("line" in _roles(library[i]) or "frame" in _roles(library[i])) and maxf(t.x, t.y) / minf(t.x, t.y) < 1.5 and _color(i).coverage >= 0.4
+	# Components: a patch of small parts in tight rows, a few kinds of part
+	var kinds: Array[int] = []
+	for k in randi_range(2, 4):
+		kinds.append(_map_pick(squarish, func(i): return 1.0, kinds))
+	kinds = kinds.filter(func(i): return i >= 0)
+	var part := maxf(MAP_PART_SIZE, _min_size)
+	var count := randi_range(MAP_BOARD_PARTS.x, MAP_BOARD_PARTS.y)
+	var cols := maxi(2, int(sqrt(count * 1.5)))
+	var corner := Vector2(randf_range(0.0, 1.0 - part * cols), randf_range(0.0, maxf(_aspect - part * count / cols, 0.0)))
+	for k in count:
+		var q := corner + Vector2(k % cols + 0.5, k / cols + 0.5) * part * 1.05 + Vector2(randfn(0.0, 1.0), randfn(0.0, 1.0)) * part * 0.04
+		_stamp(plan, kinds.pick_random() if not kinds.is_empty() else 0, _map_view(q), [0.0, 90.0, 180.0, 270.0].pick_random(), part * randf_range(0.8, 1.0), false, true)
+		plan[-1].phase = "map board"
+	# Chips
+	var new_chips: Array[Vector2] = []
+	for k in randi_range(MAP_BOARD_CHIPS.x, MAP_BOARD_CHIPS.y):
+		var size := randf_range(MAP_CHIP_SIZE.x, MAP_CHIP_SIZE.y)
+		var c := Vector2(randf_range(size * 0.6, 1.0 - size * 0.6), randf_range(size * 0.6, _aspect - size * 0.6))
+		var body := _map_pick(squarish, func(i): return _map_hue_weight(i, 0.3) * _map_flat(i) + 0.05, [_map_copper])
+		var die := _map_pick(squarish, func(i): return _map_flat(i), [body, _map_copper])
+		if body < 0:
+			continue
+		_stamp(plan, body, _map_view(c), 0.0 if randf() < 0.5 else 90.0, size, true, true)
+		plan[-1].phase = "map board"
+		if die >= 0:
+			_stamp(plan, die, _map_view(c), 0.0, maxf(size * 0.45, _min_size), false, true)
+			plan[-1].phase = "map board"
+		new_chips.append(c)
+	_map_chips.append_array(new_chips)
+	# Traces
+	for k in randi_range(MAP_BOARD_TRACES.x, MAP_BOARD_TRACES.y):
+		var a: Vector2 = _map_chips.pick_random() if not _map_chips.is_empty() and randf() < 0.7 else _map_edge_point()
+		var b: Vector2 = _map_chips.pick_random() if _map_chips.size() > 1 and randf() < 0.5 else _map_edge_point()
+		if a.distance_to(b) < 0.15:
+			b = _map_edge_point()
+		var path := _map_trace_path(a, b)
+		var lines := randi_range(MAP_TRACE_LINES.x, MAP_TRACE_LINES.y)
+		for l in lines:
+			var shifted := _map_offset_path(path, (l - (lines - 1) * 0.5) * MAP_TRACE_GAP)
+			for e in shifted.size() - 1:
+				_map_street(plan, shifted[e], shifted[e + 1], _map_copper, MAP_TRACE_WIDTH, "map board")
+
+
+func _map_edge_point() -> Vector2:
+	"""A point just off one edge of the canvas."""
+	match randi() % 4:
+		0: return Vector2(randf_range(0.1, 0.9), -0.03)
+		1: return Vector2(randf_range(0.1, 0.9), _aspect + 0.03)
+		2: return Vector2(-0.03, randf_range(0.1, 0.9) * _aspect)
+	return Vector2(1.03, randf_range(0.1, 0.9) * _aspect)
+
+
+func _map_trace_path(a: Vector2, b: Vector2) -> PackedVector2Array:
+	"""A circuit trace from `a` to `b`: legs square to the board, alternating
+	across and down with a jog or two, every corner cut at 45 degrees."""
+	var corners := PackedVector2Array([a])
+	var p := a
+	var across := randf() < 0.5
+	var legs := randi_range(2, 4)
+	for leg in legs:
+		var last := leg == legs - 1
+		var q := p
+		if across:
+			q.x = b.x if last or leg == legs - 2 else lerpf(p.x, b.x, randf_range(0.3, 0.8))
+		else:
+			q.y = b.y if last or leg == legs - 2 else lerpf(p.y, b.y, randf_range(0.3, 0.8))
+		if q.distance_to(p) > 0.001:
+			corners.append(q)
+		p = q
+		across = not across
+	if p.distance_to(b) > 0.001:
+		corners.append(b)
+	# Cut each corner at 45 degrees
+	var path := PackedVector2Array([corners[0]])
+	for k in range(1, corners.size() - 1):
+		var into := corners[k] - corners[k - 1]
+		var out := corners[k + 1] - corners[k]
+		var cut := minf(minf(into.length(), out.length()) * 0.4, 0.06)
+		path.append(corners[k] - into.normalized() * cut)
+		path.append(corners[k] + out.normalized() * cut)
+	path.append(corners[-1])
+	return path
+
+
+func _map_offset_path(path: PackedVector2Array, by: float) -> PackedVector2Array:
+	"""`path` moved sideways by `by`, corners mitred, so bundled traces stay
+	parallel round the bends."""
+	if absf(by) < 0.0001:
+		return path
+	var out := PackedVector2Array()
+	for k in path.size():
+		var n_in := (path[k] - path[maxi(k - 1, 0)]).orthogonal().normalized() if k > 0 else Vector2.ZERO
+		var n_out := (path[mini(k + 1, path.size() - 1)] - path[k]).orthogonal().normalized() if k < path.size() - 1 else Vector2.ZERO
+		var n := (n_in + n_out).normalized() if n_in != Vector2.ZERO and n_out != Vector2.ZERO else n_in + n_out
+		var miter := maxf(n.dot(n_out if n_out != Vector2.ZERO else n_in), 0.5)
+		out.append(path[k] + n * by / miter)
+	return out
 
 
 func _map_city_reach() -> float:
