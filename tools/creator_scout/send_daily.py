@@ -53,6 +53,7 @@ def main():
     ap.add_argument("--send", action="store_true", help="really send (default is a dry run)")
     ap.add_argument("--queue", default="queue.json")
     ap.add_argument("--log", default="sent_log.json")
+    ap.add_argument("--test-to", help="send the next email to this address instead, with a fake key, and log nothing")
     ap.add_argument("--template", default=os.path.join(HERE, "email_template.html"))
     args = ap.parse_args()
 
@@ -80,6 +81,11 @@ def main():
     else:
         key = keys[key_number - 1]
 
+    if args.test_to == "me":
+        args.test_to = os.environ.get("GMAIL_ADDRESS", "")
+    if args.test_to:
+        key, key_number = "TEST0-ONLY0-NOKEY", 0
+        nxt = {**nxt, "email": args.test_to, "subject": "[TEST] " + SUBJECT}
     tpl = open(args.template, encoding="utf-8").read()
     body = (tpl.replace("{{CREATOR}}", html.escape(nxt.get("creator") or "there"))
                .replace("{{PERSONAL_LINE}}", html.escape(nxt.get("personal_line") or "I came across your channel."))
@@ -90,7 +96,7 @@ def main():
     sender = os.environ.get("GMAIL_ADDRESS", "you@example.com")
     msg["From"] = formataddr((os.environ.get("FROM_NAME", "Zack (Studio Sim)"), sender))
     msg["To"] = nxt["email"]
-    if os.environ.get("BCC"):
+    if os.environ.get("BCC") and not args.test_to:
         msg["Bcc"] = os.environ["BCC"]
     msg["Subject"] = nxt.get("subject") or SUBJECT
     msg["Message-ID"] = make_msgid(domain=sender.split("@")[-1])
@@ -110,6 +116,9 @@ def main():
     with smtplib.SMTP_SSL("smtp.gmail.com", 465, timeout=60) as s:
         s.login(sender, pw)
         s.send_message(msg)
+    if args.test_to:
+        print(f"Test email sent to {args.test_to}. Nothing logged, no key used.")
+        return
     log.append({"channel_id": nxt["channel_id"], "creator": nxt.get("creator", ""), "email": nxt["email"],
                 "date": datetime.date.today().isoformat(), "key_number": key_number})
     json.dump(log, open(args.log, "w", encoding="utf-8"), indent=1, ensure_ascii=False)
