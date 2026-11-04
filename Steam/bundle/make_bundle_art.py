@@ -1,7 +1,8 @@
 """Steam bundle art: your game on one half, a partner game on the other, in every Steamworks bundle size.
 
   python3 make_bundle_art.py --out OUT_DIR --ours DEFAULT_IMG[:box] \
-      [--ours-for SIZE=IMG[:box] ...] --partner SLUG=IMG:box [--partner ...]
+      [--ours-for SIZE=IMG[:box] ...] --partner SLUG=IMG:box [--partner ...] \
+      [--partner-for SLUG.SIZE=IMG:box ...]
 
 box = x0,y0,x1,y1 in that image's own pixels: the area that must stay fully in frame (a partner's title
 lettering; for your own art, the logo/characters you can't lose). Leave it off to just cover-crop.
@@ -59,6 +60,7 @@ ap.add_argument("--out", required=True)
 ap.add_argument("--ours", required=True, help="IMG[:box] used for any size without --ours-for")
 ap.add_argument("--ours-for", action="append", default=[], help="SIZE=IMG[:box]")
 ap.add_argument("--partner", action="append", default=[], help="SLUG=IMG:box")
+ap.add_argument("--partner-for", action="append", default=[], help="SLUG.SIZE=IMG:box (per-size partner art)")
 a = ap.parse_args()
 
 ours = {n: parse(a.ours) for n in SIZES}
@@ -82,14 +84,21 @@ for name, (W, H) in SIZES.items():
                      fill=(150, 150, 160), anchor="mm", align="center")
     tmpl.save(f"{a.out}/{name}.png")
 
+per = {}
+for spec in a.partner_for:
+    key, rest = spec.split("=", 1)
+    slug, n = key.split(".", 1)
+    if n not in SIZES: raise SystemExit(f"unknown size {n}")
+    per[(slug, n)] = parse(rest, need_box=True)
 for spec in a.partner:
     slug, rest = spec.split("=", 1)
-    path, box = parse(rest, need_box=True)
-    src = Image.open(path).convert("RGB")
+    default = parse(rest, need_box=True)
     os.makedirs(f"{a.out}/{slug}", exist_ok=True)
     for name, (W, H) in SIZES.items():
         _, (pw, ph), po = split(name, W, H)
+        path, box = per.get((slug, name), default)
+        src = Image.open(path).convert("RGB")
         im = Image.new("RGB", (W, H)); im.paste(halves[name], (0, 0))
-        im.paste(panel(src, box, pw, ph, 0.94), po)
+        im.paste(src if src.size == (pw, ph) else panel(src, box, pw, ph, 0.94), po)
         im.save(f"{a.out}/{slug}/{name}.png")
     print(slug, "->", f"{a.out}/{slug}/")
