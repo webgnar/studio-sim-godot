@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Press kit for Studio Sim: The Painting Game, a first-person art game about making abstract paintings out of stickers. Out now on Steam.">
+<meta property="og:title" content="Studio Sim: The Painting Game - Press Kit">
+<meta property="og:image" content="https://webgnar.github.io/studio-sim-godot/img/capsule.jpg">
+<title>Studio Sim Press Kit</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bungee&family=Work+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: capsule art as the hero, then a factsheet beside the description, then features, screenshots and assets. One deliberate light look, like a white studio wall. */
+:root {
+  color-scheme: light;
+  --wall: #ffffff; --ink: #141414; --muted: #5a5a5a; --line: #e4e4e4;
+  --sky: #2f7cf6; --hot: #e2186f; --sun: #ffd23f;
+  --display: "Bungee", "Arial Black", Impact, sans-serif;
+  --body: "Work Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+body { margin: 0; background: var(--wall); color: var(--ink); font-family: var(--body); font-size: 16px; line-height: 1.55;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 0 64px; }
+.wrap { max-width: 1040px; margin: 0 auto; display: grid; gap: 48px; }
+.hero { padding-block: 28px 0; display: grid; gap: 18px; }
+.hero img { width: 100%; max-width: 100%; aspect-ratio: 616 / 353; object-fit: cover; border-radius: 4px; display: block; box-shadow: 10px 10px 0 var(--sun); }
+.kicker { font-family: var(--mono); font-size: .8rem; letter-spacing: .12em; text-transform: uppercase; color: var(--hot); }
+h1 { font-family: var(--display); font-weight: 400; font-size: clamp(1.9rem, 5vw, 3rem); line-height: 1.02; margin: 0; text-wrap: balance; }
+.tag { font-size: 1.15rem; max-width: 58ch; margin: 0; }
+.cta { display: flex; flex-wrap: wrap; gap: 10px; }
+.cta a { font-weight: 600; text-decoration: none; padding: 10px 16px; border: 2px solid var(--ink); border-radius: 4px; color: var(--ink); background: var(--wall); }
+.cta a.main { background: var(--sky); border-color: var(--sky); color: #ffffff; }
+.cta a:hover { box-shadow: 4px 4px 0 var(--hot); }
+a:focus-visible { outline: 3px solid var(--hot); outline-offset: 2px; }
+h2 { font-family: var(--display); font-weight: 400; font-size: 1.35rem; margin: 0 0 16px; }
+h2::after { content: ""; display: block; width: 56px; height: 6px; background: var(--hot); margin-top: 8px; }
+.two { display: grid; grid-template-columns: minmax(0, 320px) minmax(0, 1fr); gap: 40px; align-items: start; }
+.facts { display: grid; gap: 0; border-top: 2px solid var(--ink); }
+.facts div { display: grid; gap: 2px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.facts dt { font-family: var(--mono); font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.facts dd { margin: 0; font-weight: 500; }
+.facts a { color: var(--sky); }
+.prose { display: grid; gap: 14px; max-width: 62ch; min-width: 0; }
+.prose p { margin: 0; }
+.features { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin: 0; padding: 0; list-style: none; }
+.features li { padding: 14px 16px; border: 2px solid var(--ink); border-radius: 4px; display: grid; gap: 4px; }
+.features b { font-size: 1rem; }
+.features span { color: var(--muted); font-size: .92rem; }
+.shots { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.shots a { display: block; border-radius: 4px; overflow: hidden; aspect-ratio: 16 / 9; max-width: 100%; background: var(--line); }
+.shots img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .25s; }
+.shots a:hover img { transform: scale(1.03); }
+.note { color: var(--muted); font-size: .9rem; margin: 10px 0 0; }
+.assets { display: flex; flex-wrap: wrap; gap: 10px; }
+.assets a { font-family: var(--mono); font-size: .85rem; text-decoration: none; color: var(--ink); padding: 8px 12px; border: 1px solid var(--line); border-radius: 4px; }
+.assets a:hover { border-color: var(--sky); color: var(--sky); }
+footer { border-top: 2px solid var(--ink); padding-top: 16px; font-size: .9rem; color: var(--muted); }
+@media (max-width: 760px) { .two { grid-template-columns: 1fr; gap: 28px; } .shots { grid-template-columns: 1fr; } }
+@media (prefers-reduced-motion: reduce) { .shots img { transition: none; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <img src="img/capsule.jpg" alt="Studio Sim key art: the STUDIO SIM logo over a room covered in sticker paintings">
+    <div class="kicker">Press kit · Out now on Steam</div>
+    <h1>Studio Sim: The Painting Game</h1>
+    <p class="tag">A strange first-person art game made by a painter. Build abstract paintings out of stickers, ship them down the freight elevator, and climb a weird little art world.</p>
+    <div class="cta">
+      <a class="main" href="https://store.steampowered.com/app/4278180/" target="_blank" rel="noopener">Steam page and trailer</a>
+      <a href="#screens">Screenshots</a>
+    </div>
+  </header>
+
+  <section class="two">
+    <dl class="facts">
+      <div><dt>Developer</dt><dd>web-gnar (zack)</dd></div>
+      <div><dt>Release date</dt><dd>March 19, 2026</dd></div>
+      <div><dt>Platforms</dt><dd>Windows, macOS, Linux (Steam)</dd></div>
+      <div><dt>Price</dt><dd>$2.99 USD</dd></div>
+      <div><dt>Players</dt><dd>Single-player, full controller support</dd></div>
+      <div><dt>Languages</dt><dd>English, Japanese, Korean, Simplified Chinese, Portuguese (Brazil), Russian, Spanish (Latin America)</dd></div>
+      <div><dt>Steam</dt><dd><a href="https://store.steampowered.com/app/4278180/" target="_blank" rel="noopener">store.steampowered.com/app/4278180</a></dd></div>
+      <div><dt>Contact</dt><dd>Discord: web_gnar, or reply to the email that brought you here</dd></div>
+    </dl>
+    <div class="prose">
+      <h2>About the game</h2>
+      <p>Studio Sim is a strange art game created by a painter. You work in a big, empty white studio, making paintings by layering and positioning stickers: wonky prefab patterns and shapes that you rotate, scale and stack until something abstract takes shape.</p>
+      <p>When a painting is done, you ship it down the freight elevator. Finished work hangs in your gallery, visitors come to react to it, and each painting you ship raises your standing in the art world.</p>
+      <p>It's a slow, hands-on, slightly absurd game about the feeling of making things, and about the odd social world that grows up around art.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Features</h2>
+    <ul class="features">
+      <li><b>Paint with stickers</b><span>Layer, rotate and scale wonky patterns and shapes into abstract paintings.</span></li>
+      <li><b>Freight elevator shipping</b><span>Send finished canvases down to your gallery and grow your reputation.</span></li>
+      <li><b>Visitors with opinions</b><span>People wander your gallery and react to what you made.</span></li>
+      <li><b>A real studio</b><span>Modeled on an actual painter's studio, with a moving sun and day-night light.</span></li>
+      <li><b>Steam extras</b><span>Achievements, leaderboards and Steam Cloud saves.</span></li>
+    </ul>
+  </section>
+
+  <section id="screens">
+    <h2>Screenshots</h2>
+    <div class="shots">
+      <a href="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4278180/f74dfb0444b11012718b761f9976d20db752fc9e/ss_f74dfb0444b11012718b761f9976d20db752fc9e.1920x1080.jpg" target="_blank" rel="noopener"><img src="img/ss2.jpg" alt="A finished sticker painting on the studio wall between two brick pillars" loading="lazy"></a>
+      <a href="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4278180/4ee81fd97a28571a2519805249bc9262fbaf31b6/ss_4ee81fd97a28571a2519805249bc9262fbaf31b6.1920x1080.jpg" target="_blank" rel="noopener"><img src="img/ss1.jpg" alt="The studio buried in layered black, yellow and red sticker marks" loading="lazy"></a>
+      <a href="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4278180/31784da43f16b129924e9a96f562171e3a07d2ca/ss_31784da43f16b129924e9a96f562171e3a07d2ca.1920x1080.jpg" target="_blank" rel="noopener"><img src="img/ss5.jpg" alt="A visitor studying a large painting in the gallery" loading="lazy"></a>
+      <a href="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4278180/461d48047ad00d9b711c67eb24a6cc9dd43a70ae/ss_461d48047ad00d9b711c67eb24a6cc9dd43a70ae.1920x1080.jpg" target="_blank" rel="noopener"><img src="img/ss4.jpg" alt="The freight elevator with a painting inside, ready to ship" loading="lazy"></a>
+      <a href="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4278180/8781d5cfaf433399d9369418d9cb3fcbd70f2527/ss_8781d5cfaf433399d9369418d9cb3fcbd70f2527.1920x1080.jpg" target="_blank" rel="noopener"><img src="img/ss3.jpg" alt="A visitor sitting cross-legged on a rug by the studio window" loading="lazy"></a>
+      <a href="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4278180/ec63df79c34cde1ea351a9c41a0174bd739d1504/ss_ec63df79c34cde1ea351a9c41a0174bd739d1504.1920x1080.jpg" target="_blank" rel="noopener"><img src="img/ss6.jpg" alt="The studio interior under the skylight, paintings along the walls" loading="lazy"></a>
+    </div>
+    <p class="note">Click any screenshot to open the full 1920×1080 image.</p>
+  </section>
+
+  <section>
+    <h2>Logo and key art</h2>
+    <div class="assets">
+      <a href="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/4278180/929ce2d847d15b009c4e32c65f40413117142424/capsule_616x353.jpg" target="_blank" rel="noopener">Key art, 616×353</a>
+      <a href="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4278180/8fe90a2310575484494065685a4884ffaedb376d/header.jpg" target="_blank" rel="noopener">Steam header, 460×215</a>
+      <a href="https://store.steampowered.com/app/4278180/" target="_blank" rel="noopener">Gameplay trailer (Steam page)</a>
+    </div>
+  </section>
+
+  <footer>Studio Sim © 2026 web-gnar. You're welcome to use these images in coverage of the game.</footer>
+</div>
+</body>
+</html>
