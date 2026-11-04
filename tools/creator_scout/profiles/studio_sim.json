@@ -1,0 +1,56 @@
+{
+  "name": "Studio Sim",
+  "our_appid": 4278180,
+  "min_subs": 20,
+  "max_subs": 500,
+  "active_days": 60,
+  "english_only": true,
+  "min_english": 0.25,
+  "min_fit": 4,
+  "similar_games": [
+    "Sticky Business", "Passpartout 2", "Passpartout The Starving Artist", "Chicory A Colorful Tale",
+    "Behind the Frame", "Unpacking", "PowerWash Simulator 2", "Tiny Glade", "Townscaper",
+    "A Little to the Left", "Cozy Game Restoration", "Strange Horticulture", "Wobbledogs", "Hypnospace Outlaw",
+    "Viewfinder", "Kind Words", "Dorfromantik", "Wilmot's Warehouse", "Paint by Number", "Lovely Planet",
+    "Mon Bazou", "House Flipper 2", "Museum of Mechanics", "Art Gallery Simulator", "Dreams of Another"
+  ],
+  "small_similar_games": [
+    "We Have a Gnome Problem", "Have you seen my knife", "The Returns Desk", "Sort Sort Yokai", "Hokko Spaces",
+    "There is Cake in the Break Room", "Verdreamia", "The Coast is Clear", "Tidy Tech", "Jarkeeper",
+    "Not Another Garbage Simulator", "The Art Keeper", "Usagi Shima", "Potato Please", "Rip It! Card Collector",
+    "Pixel Chaos: Tidy Up the Museum", "HiroBot: Clean & Restore", "Patsy's Retirement", "Retro Chaos: Together Tidy Up",
+    "Bao Bao's Cozy Cleaning Services", "Manual Teller Machine", "A Game About Cutting Grass", "Cozy Karaoke Tycoon",
+    "Meow Time cozy cat room", "Tidy Up the Bookstore", "Windowsill Isle", "Replay Value: Second Hand Games",
+    "Day Off Simulator", "Nanoquarium", "A Game About Picking Fruits"
+  ],
+  "topic_queries": [
+    "cozy indie game first impressions", "indie game hidden gems", "new indie games on steam", "relaxing simulator game",
+    "art game gameplay", "painting game gameplay", "weird indie game", "surreal indie game", "strange indie games",
+    "steam next fest demos", "cozy games let's play", "underrated indie games", "games for artists", "sticker game",
+    "chill games to relax", "first person simulator game", "abstract art game", "cozy game review",
+    "obscure steam games", "short indie games", "indie game let's play", "art studio game", "museum game gameplay",
+    "cozy sim gameplay no talking", "trying weird steam games"
+  ],
+  "channel_queries": [
+    "cozy indie games", "indie game channel", "cozy gaming", "indie games let's play", "hidden gem indie games",
+    "weird games", "art games", "chill gaming", "cozy sim games", "indie game reviews"
+  ],
+  "played_similar_points": 4,
+  "keyword_weights": {
+    "cozy": 3, "indie": 3, "simulator": 3, "relaxing": 2, "chill": 2, "art": 3, "artist": 2, "paint": 4,
+    "sticker": 4, "drawing": 2, "creative": 2, "weird": 3, "surreal": 3, "strange": 2, "hidden gem": 3,
+    "first impressions": 2, "first look": 2, "demo": 2, "next fest": 3, "steam": 1, "wholesome": 2, "abstract": 3,
+    "gallery": 2, "museum": 2, "godot": 2, "underrated": 2, "obscure": 2
+  },
+  "penalty_keywords": {
+    "fortnite": 5, "roblox": 5, "call of duty": 5, "valorant": 5, "fifa": 5, "gta": 4, "minecraft": 3,
+    "warzone": 5, "apex": 3, "free fire": 5, "#shorts": 1
+  },
+  "exclude_channels": [],
+  "outreach": {
+    "title": "Studio Sim Creator Outreach",
+    "game": "Studio Sim",
+    "subject": "(STEAM KEY) 🎨 Play Studio Sim: the painting game where you make abstract art out of stickers",
+    "personal_example": "e.g. I just watched your Tidy Tech video and loved how you talked about the little details."
+  }
+}
