@@ -17,8 +17,15 @@ const MARGIN = 40.0  # px from canvas edge (random style)
 
 ## Unique ID for this wall's save file. Change per-instance for multiple walls.
 @export var wall_id: String = "wall_a"
-## How often a new sticker appears (seconds).
+## How often a new sticker appears (seconds), with no gallery visitors.
 @export var sticker_interval: float = 6.0
+## Each gallery visitor the player has bought speeds the assistant up by
+## this share of its base pace: interval = sticker_interval / (1 + visitors x
+## this). At 0.5: 1 visitor 4 s, 2 visitors 3 s, 4 visitors 2 s (0 = visitors
+## don't change the pace) (zack 2026-11-04).
+@export var visitor_speedup: float = 0.5
+## The fastest the assistant will go, however many visitors (seconds).
+@export var fastest_interval: float = 1.0
 ## Canvas resolution. Match this to your SubViewport size.
 @export var canvas_size: Vector2 = Vector2(512, 512)
 
@@ -59,7 +66,7 @@ func _ready():
 
 	# Start the interval timer — only if Studio Assistant is already active
 	_timer = Timer.new()
-	_timer.wait_time = sticker_interval
+	_timer.wait_time = _current_interval()
 	_timer.autostart = false
 	_timer.one_shot = false
 	_timer.timeout.connect(_on_timer_timeout)
@@ -76,7 +83,16 @@ func _on_assistant_purchased() -> void:
 	_timer.start()
 
 
+func _current_interval() -> float:
+	"""Seconds between stickers: faster the more gallery visitors there are."""
+	var visitors := 0
+	if has_node("/root/WorldStateManager"):
+		visitors = WorldStateManager.get_gallery_visitor_count()
+	return maxf(sticker_interval / (1.0 + visitors * visitor_speedup), fastest_interval)
+
+
 func _on_timer_timeout() -> void:
+	_timer.wait_time = _current_interval()   # a visitor bought since the last sticker counts at once
 	if not has_node("/root/StickerLibrary"):
 		return
 
