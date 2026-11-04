@@ -102,6 +102,16 @@ def main():
     msg["Message-ID"] = make_msgid(domain=sender.split("@")[-1])
     msg.set_content(plain_text(body))
     msg.add_alternative(body, subtype="html")
+    kit = os.path.join(HERE, "presskit")
+    if os.path.isdir(kit):
+        for name in sorted(os.listdir(kit)):
+            path = os.path.join(kit, name)
+            if name.startswith(".") or not os.path.isfile(path):
+                continue
+            kind = ("image", "jpeg") if name.lower().endswith((".jpg", ".jpeg")) else ("image", "png") if name.lower().endswith(".png") else ("text", "plain")
+            with open(path, "rb") as f:
+                msg.add_attachment(f.read(), maintype=kind[0], subtype=kind[1], filename=name)
+        print("Attached press kit:", ", ".join(n for n in sorted(os.listdir(kit)) if not n.startswith(".")))
 
     print(f"Next: {nxt.get('creator')} <{nxt['email']}> with key #{key_number}")
     print("Personal line:", nxt.get("personal_line"))
