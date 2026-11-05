@@ -27,6 +27,7 @@ func _ready() -> void:
 		"test_vectorize_texture_stays_one_colour", "test_hatch_square",
 		"test_paint_strokes_stay_inside", "test_transform",
 		"test_smoothing_keeps_big_corners", "test_mingled_shades_merge",
+		"test_low_contrast_stripes_stay",
 	]
 	for t in tests:
 		_current = t
@@ -475,3 +476,17 @@ func test_mingled_shades_merge() -> void:
 	v.detail = 200
 	var r := v.vectorize(img)
 	check(r.layers.size() == 3, "speckled shades merge, separate stripes don't (got %d colours)" % r.layers.size())
+
+
+func test_low_contrast_stripes_stay() -> void:
+	# Sticker 6's tips: grey-lavender and salmon-brown diagonal stripes, close
+	# in colour and touching all along, must stay two colours.
+	var img := _img(200, 200)
+	for y in 200:
+		for x in 200:
+			var band := int((x + y) / 4.0) % 2
+			img.set_pixel(x, y, Color8(0x9b, 0x9f, 0xa2) if band == 0 else Color8(0xb6, 0x7a, 0x6c))
+	var v := StickerVectorizer.new()
+	v.detail = 200
+	var r := v.vectorize(img)
+	check(r.layers.size() == 2, "low-contrast stripes kept apart (got %d colours)" % r.layers.size())

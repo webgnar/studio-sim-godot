@@ -39,9 +39,12 @@ turned into flat colour regions:
    a dark or light rim
 2. k-means up to `max_colors` (24), then merge colours closer than
    `merge_tolerance` (0.07), so brush texture stays one paint colour
-3. majority-filter speckle (`smooth_passes`), and fold patches smaller than
+3. merge close shades that are mingled (brush texture, blended edges:
+   `mingle_tolerance`, `mingle_contact`), except colours laid down as straight
+   stripes (`stripe_share`, `stripe_elongation`), which always stay
+4. majority-filter speckle (`smooth_passes`), and fold patches smaller than
    `min_region` into the neighbour they touch most (no gaps)
-4. trace each colour along pixel edges (outer rings positive area, holes
+5. trace each colour along pixel edges (outer rings positive area, holes
    negative), simplify (`simplify` px) and round off (`smooth_outline`)
 
 `paint_strokes(polygons, tool_width)` turns a placed layer into strokes: each

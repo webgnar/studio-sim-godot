@@ -38,6 +38,14 @@ var mingle_tolerance: float = 0.2
 ## How mingled two shades must be: shared border pixels per pixel of the
 ## smaller one. A solid patch scores near 0, speckle or a 1-2 px rim near 1.
 var mingle_contact: float = 0.5
+## Shades laid down as stripes or straight lines are never merged by the
+## mingle step, however close: a colour counts as striped when at least
+## stripe_share of its pixels sit in patches that are long and straight
+## (length / width >= stripe_elongation) and solid (not a thin ring).
+var stripe_share: float = 0.4
+var stripe_elongation: float = 3.0
+## Patches smaller than this many traced pixels don't count as stripes.
+var stripe_min_px: int = 40
 ## Colours covering less than this share of the sticker are folded into their
 ## nearest neighbour.
 var min_color_share: float = 0.004
@@ -543,6 +551,7 @@ func _merge_colours(rgb: PackedFloat32Array, opaque: PackedByteArray, centres: P
 func _merge_mingled(labels: PackedInt32Array, w: int, h: int, centres: PackedFloat32Array) -> void:
 	var k := centres.size() / 3
 	var tol2 := mingle_tolerance * mingle_tolerance
+	var striped := _striped_labels(labels, w, h, k)
 	while true:
 		var counts := PackedInt32Array()
 		counts.resize(k)
@@ -573,6 +582,8 @@ func _merge_mingled(labels: PackedInt32Array, w: int, h: int, centres: PackedFlo
 			for b in range(a + 1, k):
 				if counts[b] == 0 or contact[a * k + b] == 0:
 					continue
+				if striped[a] or striped[b]:
+					continue
 				var ca := [centres[a * 3], centres[a * 3 + 1], centres[a * 3 + 2]]
 				var cb := [centres[b * 3], centres[b * 3 + 1], centres[b * 3 + 2]]
 				if _col_dist2(ca, cb) > tol2:
@@ -594,6 +605,77 @@ func _merge_mingled(labels: PackedInt32Array, w: int, h: int, centres: PackedFlo
 		for i in labels.size():
 			if labels[i] == drop:
 				labels[i] = keep
+
+
+## For each colour, whether it's laid down as stripes / straight lines: share
+## of its pixels in long, straight, solid patches (see stripe_share).
+func _striped_labels(labels: PackedInt32Array, w: int, h: int, k: int) -> PackedByteArray:
+	var total := PackedFloat32Array()
+	total.resize(k)
+	var in_stripes := PackedFloat32Array()
+	in_stripes.resize(k)
+	var seen := PackedByteArray()
+	seen.resize(w * h)
+	var stack := PackedInt32Array()
+	for start in w * h:
+		var lab := labels[start]
+		if lab < 0 or seen[start]:
+			continue
+		seen[start] = 1
+		stack.append(start)
+		var n := 0
+		var sx := 0.0
+		var sy := 0.0
+		var sxx := 0.0
+		var syy := 0.0
+		var sxy := 0.0
+		while not stack.is_empty():
+			var i := stack[stack.size() - 1]
+			stack.resize(stack.size() - 1)
+			var x := i % w
+			var y := i / w
+			n += 1
+			sx += x
+			sy += y
+			sxx += x * x
+			syy += y * y
+			sxy += x * y
+			if x + 1 < w and not seen[i + 1] and labels[i + 1] == lab:
+				seen[i + 1] = 1
+				stack.append(i + 1)
+			if x > 0 and not seen[i - 1] and labels[i - 1] == lab:
+				seen[i - 1] = 1
+				stack.append(i - 1)
+			if y + 1 < h and not seen[i + w] and labels[i + w] == lab:
+				seen[i + w] = 1
+				stack.append(i + w)
+			if y > 0 and not seen[i - w] and labels[i - w] == lab:
+				seen[i - w] = 1
+				stack.append(i - w)
+		total[lab] += n
+		if n < stripe_min_px:
+			continue
+		var mx := sx / n
+		var my := sy / n
+		var cxx := sxx / n - mx * mx + 1.0 / 12.0
+		var cyy := syy / n - my * my + 1.0 / 12.0
+		var cxy := sxy / n - mx * my
+		var tr := cxx + cyy
+		var det := cxx * cyy - cxy * cxy
+		var disc := sqrt(maxf(tr * tr * 0.25 - det, 0.0))
+		var l1 := tr * 0.5 + disc
+		var l2 := maxf(tr * 0.5 - disc, 1e-6)
+		var elongation := sqrt(l1 / l2)
+		# A solid rectangle fills 12 * sqrt(l1 * l2) pixels; rings and
+		# scattered rims fill much less
+		var fill := n / (12.0 * sqrt(l1 * l2))
+		if elongation >= stripe_elongation and fill >= 0.6:
+			in_stripes[lab] += n
+	var out := PackedByteArray()
+	out.resize(k)
+	for c in k:
+		out[c] = 1 if total[c] > 0.0 and in_stripes[c] / total[c] >= stripe_share else 0
+	return out
 
 
 static func _col_dist2(a: Array, b: Array) -> float:
