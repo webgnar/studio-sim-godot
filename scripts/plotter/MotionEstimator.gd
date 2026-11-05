@@ -35,17 +35,42 @@ func segment_time(length: float, v_in: float, v_max: float, v_out: float) -> flo
 ## at `start`. Returns {total, draw, travel, pen, pen_changes}.
 func estimate(moves: Array, start: Vector2) -> Dictionary:
 	var out := {"total": 0.0, "draw": 0.0, "travel": 0.0, "pen": 0.0, "pen_changes": 0}
+	var times := durations(moves, start)
+	var down := false
+	for i in moves.size():
+		var tool_down: bool = moves[i].tool_down
+		if tool_down != down:
+			out.pen += pen_time
+			out.pen_changes += 1
+			down = tool_down
+		var t := times[i] - (pen_time if (i == 0 and tool_down) or (i > 0 and tool_down != moves[i - 1].tool_down) else 0.0)
+		if tool_down:
+			out.draw += t
+		else:
+			out.travel += t
+	if down:
+		out.pen += pen_time
+		out.pen_changes += 1
+	out.total = out.draw + out.travel + out.pen
+	return out
+
+
+## Seconds each move takes, including the pen lift or drop before it when the
+## tool changes state (the final lift after the last move is not included).
+func durations(moves: Array, start: Vector2) -> PackedFloat64Array:
+	var n := moves.size()
+	var times := PackedFloat64Array()
+	times.resize(n)
 	var pos := start
 	var down := false
-	var n := moves.size()
 	var v_in := 0.0
 	for i in n:
 		var m: Dictionary = moves[i]
 		var p := Vector2(m.x, m.y)
 		var tool_down: bool = m.tool_down
+		var extra := 0.0
 		if tool_down != down:
-			out.pen += pen_time
-			out.pen_changes += 1
+			extra = pen_time
 			down = tool_down
 			v_in = 0.0
 		var d := p - pos
@@ -56,15 +81,7 @@ func estimate(moves: Array, start: Vector2) -> Dictionary:
 			var nd := Vector2(moves[i + 1].x, moves[i + 1].y) - p
 			if length > 1e-6 and nd.length() > 1e-6:
 				v_out = minf(feed, moves[i + 1].feed) * maxf(d.normalized().dot(nd.normalized()), 0.0)
-		var t := segment_time(length, v_in if tool_down else 0.0, feed, v_out)
-		if tool_down:
-			out.draw += t
-		else:
-			out.travel += t
+		times[i] = extra + segment_time(length, v_in if tool_down else 0.0, feed, v_out)
 		v_in = v_out
 		pos = p
-	if down:
-		out.pen += pen_time
-		out.pen_changes += 1
-	out.total = out.draw + out.travel + out.pen
-	return out
+	return times

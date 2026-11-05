@@ -29,6 +29,7 @@ func _ready() -> void:
 		"test_smoothing_keeps_big_corners", "test_mingled_shades_merge",
 		"test_low_contrast_stripes_stay",
 		"test_motion_segment_time", "test_motion_estimate",
+		"test_player_timing", "test_player_ink",
 	]
 	for t in tests:
 		_current = t
@@ -547,3 +548,55 @@ func test_motion_estimate() -> void:
 	# A 90-degree corner stops the pen: slower than the straight line
 	moves[2] = {"x": 1500.0, "y": 500.0, "tool_down": true, "feed": 100.0}
 	check(m.estimate(moves, Vector2.ZERO).draw > 10.2 + 0.1, "corner costs time")
+
+
+# --- PlotPlayer -------------------------------------------------------------------
+
+func _player_job() -> Array:
+	return [
+		{"stamp": 0, "color": Color.RED, "lines": [PackedVector2Array([Vector2(100, 0), Vector2(200, 0)])]},
+		{"stamp": 1, "color": Color.BLUE, "lines": [PackedVector2Array([Vector2(200, 100), Vector2(300, 100)]),
+			PackedVector2Array([Vector2(300, 200), Vector2(200, 200)])]},
+	]
+
+
+func test_player_timing() -> void:
+	var pl := PlotPlayer.new()
+	pl.colour_change_s = 60.0
+	pl.setup(_player_job(), Vector2.ZERO)
+	# Same moves through MotionEstimator, plus one colour change
+	var m := MotionEstimator.new()
+	var moves := [
+		{"x": 100.0, "y": 0.0, "tool_down": false, "feed": 150.0},
+		{"x": 200.0, "y": 0.0, "tool_down": true, "feed": 100.0},
+	]
+	var e1 := m.estimate(moves, Vector2.ZERO)
+	var moves2 := [
+		{"x": 200.0, "y": 100.0, "tool_down": false, "feed": 150.0},
+		{"x": 300.0, "y": 100.0, "tool_down": true, "feed": 100.0},
+		{"x": 300.0, "y": 200.0, "tool_down": false, "feed": 150.0},
+		{"x": 200.0, "y": 200.0, "tool_down": true, "feed": 100.0},
+	]
+	var e2 := m.estimate(moves2, Vector2(200, 0))
+	near(pl.total_time, e1.total + e2.total + 60.0, 1e-6, "player total = estimator + colour change")
+
+
+func test_player_ink() -> void:
+	var pl := PlotPlayer.new()
+	pl.setup(_player_job(), Vector2.ZERO)
+	var ink := 0.0
+	var colours := {}
+	var steps := 0
+	while not pl.done():
+		steps += 1
+		for c in pl.advance_to(pl.time + 0.37):
+			colours[c.color] = true
+			ink += PathPlanner.polyline_length(c.points)
+		check(pl.position.x >= -1e-3 and pl.position.x <= 300.001, "gondola stays on the job")
+		if steps > 10000:
+			break
+	near(ink, 300.0, 1e-3, "all ink laid, once")
+	check(colours.size() == 2, "both colours")
+	check(pl.colour_changes == 1, "one colour change (got %d)" % pl.colour_changes)
+	check(pl.pen_changes == 6, "3 strokes: 3 drops + 3 lifts (got %d)" % pl.pen_changes)
+	check(not pl.pen_down, "pen up at the end")

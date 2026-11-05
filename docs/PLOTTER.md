@@ -86,3 +86,23 @@ Tuning contact sheet (original | traced | painted):
 4. `tools/plotter/render_job.py` draws the strokes at the marker's width;
    `tools/plotter/render_stamps.py job.json out.png` composites the sticker
    PNGs for comparison.
+
+## Simulator: watch a job paint
+
+`tools/plotter/run_simulator.sh /path/to/godot out_dir/plotted.json [godot args] [-- --speed=N --paused]`
+
+Opens `scenes/plotter/PlotterSim.tscn` in a bare throwaway project (no game
+autoloads). Shows the beam, motors, both cords and the gondola over the
+canvas; paint goes down stroke by stroke in machine time.
+
+- `PlotPlayer` (pure) turns a plotted job into timed moves (MotionEstimator,
+  pen lifts/drops, `colour_change_s` per colour change) and hands out the ink
+  laid since the last frame.
+- `StrokeRenderer` is a SubViewport that's never cleared, so each frame only
+  draws new ink at the marker's width.
+- Panel: machine time and percent done, sticker n of N, paint layer, colour
+  changes, pen lifts + drops, ink laid. Speed 1× (real time) to 100000×.
+- Keys: space play/pause, up/down speed ×2, R restart, S save the canvas.
+- Timelapse: add `--write-movie out.avi --fixed-fps 30` before `--`, and
+  `--quit-when-done` after it.
+- On a Mac the Godot binary is `/Applications/Godot.app/Contents/MacOS/Godot`.
