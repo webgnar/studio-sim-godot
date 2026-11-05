@@ -6,7 +6,8 @@
 # style: what the bot's painting style must start with ("studio", "layered",
 # "meticulous", "aerial"); empty = whatever the bot picks.
 # Writes out_dir/job.json (the stamps, in order), plotted.json (every stroke)
-# and painting.png. Runs in a bare throwaway project: no game autoloads, so
+# painting.png and painting.svg (the painting as one vector file).
+# Runs in a bare throwaway project: no game autoloads, so
 # nothing touches the save or the marketplace.
 set -euo pipefail
 GODOT="$1"; OUT="$2"; SEED="${3:-1}"; STYLE="${4:-}"; MARKER="${5:-2}"
@@ -32,5 +33,5 @@ P
 "$GODOT" --headless --editor --quit-after 100 --path "$TMP" >/dev/null 2>&1 || true
 STICKER_REPO="$REPO" JOB_OUT="$OUT/job.json" JOB_SEED="$SEED" JOB_STYLE="$STYLE" \
 	"$GODOT" --headless --path "$TMP" 2>&1 | grep -v "^Godot Engine\|^$" || true
-STICKER_REPO="$REPO" "$GODOT" --headless --path "$TMP" -s res://tools/plotter/plot_job.gd -- "$OUT/job.json" "$OUT/plotted.json" "$MARKER"
+STICKER_REPO="$REPO" "$GODOT" --headless --path "$TMP" -s res://tools/plotter/plot_job.gd -- "$OUT/job.json" "$OUT/plotted.json" "$MARKER" 60 "$OUT/painting.svg"
 python3 "$REPO/tools/plotter/render_job.py" "$OUT/plotted.json" "$OUT/painting.png" 2

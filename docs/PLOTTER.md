@@ -78,6 +78,11 @@ Tuning contact sheet (original | traced | painted):
    colour with PathPlanner and times it with `MotionEstimator`
    (trapezoidal speed, corner slow-down, pen lift/drop time). Writes
    `plotted.json` (every stroke, in order) and prints the job's numbers.
-3. `tools/plotter/render_job.py` draws the strokes at the marker's width;
+3. With a 5th arg, `plot_job.gd` also writes the painting as one SVG
+   (`SvgExporter`): filled colour shapes in canvas mm, one group per
+   sticker, back to front, clipped to the canvas; plus `<name>_toolpaths.svg`
+   with the machine's strokes as a hidden layer. Hatching is joined into
+   zig-zags wherever the step between rows stays inside the shape.
+4. `tools/plotter/render_job.py` draws the strokes at the marker's width;
    `tools/plotter/render_stamps.py job.json out.png` composites the sticker
    PNGs for comparison.

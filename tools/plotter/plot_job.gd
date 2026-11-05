@@ -5,7 +5,10 @@ extends SceneTree
 ## colour with PathPlanner and times it with MotionEstimator. Writes what the
 ## machine draws (for tools/plotter/render_job.py) and the job's numbers.
 ##
-## Args (after --): job.json out.json marker_mm [colour_change_s]
+## Args (after --): job.json out.json marker_mm [colour_change_s] [painting.svg]
+## The SVG holds the painting as filled colour shapes, back to front, with
+## a second file (<name>_toolpaths.svg) adding the tool paths as a hidden
+## layer (see SvgExporter).
 
 const STICKER_DIR := "sprites/painting layers/"
 
@@ -27,6 +30,8 @@ func _initialize() -> void:
 	var cache := {}
 	var pos := planner.home_position()
 	var out_layers := []
+	var svg_shapes := []
+	var svg_paths := []
 	var stats := {"stamps": job.stamps.size(), "colour_layers": 0, "colour_changes": 0,
 		"draw_s": 0.0, "travel_s": 0.0, "pen_s": 0.0, "pen_changes": 0,
 		"draw_mm": 0.0, "travel_mm": 0.0, "strokes": 0, "off_canvas_paths": 0, "vectorize_ms": 0}
@@ -47,6 +52,7 @@ func _initialize() -> void:
 		var mm: float = st.size / maxf(r.size.x, r.size.y)
 		for L in r.layers:
 			var placed := StickerVectorizer.transform_polylines(L.polygons, r.size, Vector2(st.x, st.y), st.rot, mm)
+			svg_shapes.append({"stamp": n - 1, "sticker": id, "color": L.color, "polygons": placed})
 			var strokes := StickerVectorizer.paint_strokes(placed, marker)
 			if strokes.is_empty():
 				continue
@@ -71,6 +77,7 @@ func _initialize() -> void:
 			stats.strokes += planner.report.output_paths
 			stats.off_canvas_paths += planner.report.outside_paths
 			out_layers.append({"stamp": n - 1, "color": colour, "lines": _lines(moves)})
+			svg_paths.append({"color": colour, "lines": _down_runs(moves)})
 			pos = Vector2(moves[-1].x, moves[-1].y)
 		if n % 25 == 0:
 			print("  %d / %d stamps, %d s" % [n, job.stamps.size(), (Time.get_ticks_msec() - t0) / 1000])
@@ -83,6 +90,15 @@ func _initialize() -> void:
 	var f := FileAccess.open(args[1], FileAccess.WRITE)
 	f.store_string(JSON.stringify({"canvas_mm": job.canvas_mm, "marker_mm": marker, "stats": stats, "layers": out_layers}))
 	f.close()
+	if args.size() > 4:
+		var title := "Studio Sim bot painting: %s (seed %d)" % [job.style, job.seed]
+		var svg := FileAccess.open(args[4], FileAccess.WRITE)
+		svg.store_string(SvgExporter.painting_svg(canvas, svg_shapes, title))
+		svg.close()
+		# The machine's strokes on top of the shapes, toolpaths layer hidden
+		svg = FileAccess.open(args[4].get_basename() + "_toolpaths.svg", FileAccess.WRITE)
+		svg.store_string(SvgExporter.painting_svg(canvas, svg_shapes, title + ", tool paths", svg_paths, marker))
+		svg.close()
 	print(JSON.stringify(stats, "  "))
 	quit()
 
@@ -104,3 +120,22 @@ func _lines(moves: Array) -> Array:
 	if not cur.is_empty():
 		lines.append(cur)
 	return lines
+
+
+## The tool-down runs of a move list as polylines.
+func _down_runs(moves: Array) -> Array:
+	var runs := []
+	var cur := PackedVector2Array()
+	var prev := Vector2.ZERO
+	for m in moves:
+		if m.tool_down:
+			if cur.is_empty():
+				cur.append(prev)
+			cur.append(Vector2(m.x, m.y))
+		elif not cur.is_empty():
+			runs.append(cur)
+			cur = PackedVector2Array()
+		prev = Vector2(m.x, m.y)
+	if not cur.is_empty():
+		runs.append(cur)
+	return runs

@@ -241,53 +241,146 @@ func vectorize(img: Image) -> Dictionary:
 
 # --- Hatching (used at plot time, in mm) ----------------------------------------
 
-## Fills polygons (even-odd, so hole rings cut holes) with parallel lines.
-## spacing and the result are in the polygons' units; angle in degrees.
-static func hatch(polygons: Array, spacing: float, angle_deg: float) -> Array[PackedVector2Array]:
+## Even-odd hatching of `polygons` with lines `spacing` apart at
+## `angle_deg`. Rows are joined into zig-zags wherever the step from the end
+## of one row to the start of the next stays inside the shape, so the tool
+## stays down across a whole area instead of lifting for every row
+## (zigzag = false gives one stroke per row piece).
+static func hatch(polygons: Array, spacing: float, angle_deg: float, zigzag: bool = true) -> Array[PackedVector2Array]:
 	var out: Array[PackedVector2Array] = []
 	if polygons.is_empty() or spacing <= 0.0:
 		return out
 	var rot := -deg_to_rad(angle_deg)
 	# Rotate everything so hatch lines are horizontal
-	var rings: Array[PackedVector2Array] = []
+	var edges := PackedVector4Array()   # (ax, ay, bx, by), rotated
 	var lo := INF
 	var hi := -INF
 	for poly in polygons:
+		var m: int = poly.size()
 		var r := PackedVector2Array()
 		for p in poly:
 			var q: Vector2 = p.rotated(rot)
 			r.append(q)
 			lo = minf(lo, q.y)
 			hi = maxf(hi, q.y)
-		rings.append(r)
-	var flip := false
+		for i in m:
+			var a := r[i]
+			var b := r[(i + 1) % m]
+			edges.append(Vector4(a.x, a.y, b.x, b.y))
+	if lo == INF:
+		return out
+	var rows_y := PackedFloat32Array()
 	var y := lo + spacing * 0.5
 	while y < hi:
+		rows_y.append(y)
+		y += spacing
+	var n_rows := rows_y.size()
+	if n_rows == 0:
+		return out
+	# Edges by the row bands they touch: band k spans rows k .. k+1
+	var band_edges: Array[PackedInt32Array] = []
+	band_edges.resize(n_rows)
+	for e in edges.size():
+		var ed := edges[e]
+		var y0 := minf(ed.y, ed.w)
+		var y1 := maxf(ed.y, ed.w)
+		var k0 := clampi(floori((y0 - lo - spacing * 0.5) / spacing), 0, n_rows - 1)
+		var k1 := clampi(floori((y1 - lo - spacing * 0.5) / spacing), 0, n_rows - 1)
+		for k in range(k0, k1 + 1):
+			band_edges[k].append(e)
+	# Row pieces: rows[k] = PackedFloat32Array of x pairs
+	var rows: Array[PackedFloat32Array] = []
+	for k in n_rows:
+		var ry := rows_y[k]
 		var xs := PackedFloat32Array()
-		for r in rings:
-			var m := r.size()
-			for i in m:
-				var a := r[i]
-				var b := r[(i + 1) % m]
-				if (a.y <= y) != (b.y <= y):
-					xs.append(a.x + (y - a.y) / (b.y - a.y) * (b.x - a.x))
+		for e in band_edges[k]:
+			var ed := edges[e]
+			if (ed.y <= ry) != (ed.w <= ry):
+				xs.append(ed.x + (ry - ed.y) / (ed.w - ed.y) * (ed.z - ed.x))
 		xs.sort()
-		# Alternate direction row to row, so consecutive strokes start near
-		# where the last one ended
-		var segs: Array[PackedVector2Array] = []
+		var pieces := PackedFloat32Array()
 		var j := 0
 		while j + 1 < xs.size():
 			if xs[j + 1] - xs[j] > 1e-6:
-				segs.append(PackedVector2Array([Vector2(xs[j], y).rotated(-rot), Vector2(xs[j + 1], y).rotated(-rot)]))
+				pieces.append(xs[j])
+				pieces.append(xs[j + 1])
 			j += 2
-		if flip:
-			segs.reverse()
-			for k in segs.size():
-				segs[k].reverse()
-		out.append_array(segs)
-		flip = not flip
-		y += spacing
+		rows.append(pieces)
+	# Chain the pieces row to row
+	var chains: Array[PackedVector2Array] = []
+	var open: Array[Dictionary] = []   # {chain, end_x, rightward}
+	for k in n_rows:
+		var ry := rows_y[k]
+		var pieces: PackedFloat32Array = rows[k]
+		var used := {}
+		var next_open: Array[Dictionary] = []
+		if zigzag and k > 0:
+			for o in open:
+				# The next piece runs the other way: it starts at its end
+				# nearest the chain's end
+				var best := -1
+				var best_d := spacing * 10.0
+				for pi in range(0, pieces.size(), 2):
+					if used.has(pi):
+						continue
+					var sx: float = pieces[pi + 1] if o.rightward else pieces[pi]
+					var dd := absf(sx - o.end_x)
+					if dd < best_d and _connector_inside(edges, band_edges[k - 1], Vector2(o.end_x, rows_y[k - 1]), Vector2(sx, ry), -1.0 if o.rightward else 1.0, spacing):
+						best = pi
+						best_d = dd
+				if best < 0:
+					continue
+				used[best] = true
+				var chain: PackedVector2Array = chains[o.chain]
+				var a := pieces[best]
+				var b := pieces[best + 1]
+				if o.rightward:
+					chain.append(Vector2(b, ry))
+					chain.append(Vector2(a, ry))
+				else:
+					chain.append(Vector2(a, ry))
+					chain.append(Vector2(b, ry))
+				chains[o.chain] = chain
+				next_open.append({"chain": o.chain, "end_x": a if o.rightward else b, "rightward": not o.rightward})
+		var right_first := k % 2 == 0
+		for pi in range(0, pieces.size(), 2):
+			if used.has(pi):
+				continue
+			var a := pieces[pi]
+			var b := pieces[pi + 1]
+			if right_first:
+				chains.append(PackedVector2Array([Vector2(a, ry), Vector2(b, ry)]))
+			else:
+				chains.append(PackedVector2Array([Vector2(b, ry), Vector2(a, ry)]))
+			next_open.append({"chain": chains.size() - 1, "end_x": b if right_first else a, "rightward": right_first})
+		open = next_open
+	for c in chains:
+		var u := PackedVector2Array()
+		for p in c:
+			u.append(p.rotated(-rot))
+		out.append(u)
 	return out
+
+
+## Whether the straight step from `a` (on one hatch row) to `b` (on the next)
+## stays inside the shape: it crosses no edge, and its middle is inside.
+## `inward` (+1 / -1) is the side along the rows the shape lies on, so a step
+## running right along a vertical edge still counts as inside.
+static func _connector_inside(edges: PackedVector4Array, band: PackedInt32Array, a: Vector2, b: Vector2, inward: float, spacing: float) -> bool:
+	var a2 := a.lerp(b, 0.02)
+	var b2 := a.lerp(b, 0.98)
+	var mid := (a + b) * 0.5 + Vector2(inward * spacing * 1e-3, 0.0)
+	var crossings := 0
+	for e in band:
+		var ed := edges[e]
+		var p := Vector2(ed.x, ed.y)
+		var q := Vector2(ed.z, ed.w)
+		if Geometry2D.segment_intersects_segment(a2, b2, p, q) != null:
+			return false
+		if (p.y <= mid.y) != (q.y <= mid.y):
+			if p.x + (mid.y - p.y) / (q.y - p.y) * (q.x - p.x) < mid.x:
+				crossings += 1
+	return crossings % 2 == 1
 
 
 ## The strokes that paint one colour layer with a round tool `tool_width`

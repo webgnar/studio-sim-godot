@@ -406,7 +406,7 @@ func test_vectorize_texture_stays_one_colour() -> void:
 
 func test_hatch_square() -> void:
 	var sq := PackedVector2Array([Vector2(0, 0), Vector2(10, 0), Vector2(10, 10), Vector2(0, 10)])
-	var lines := StickerVectorizer.hatch([sq], 1.0, 0.0)
+	var lines := StickerVectorizer.hatch([sq], 1.0, 0.0, false)
 	check(lines.size() == 10, "10 rows (got %d)" % lines.size())
 	var total := 0.0
 	for l in lines:
@@ -415,13 +415,34 @@ func test_hatch_square() -> void:
 	# A hole removes its share
 	var hole := PackedVector2Array([Vector2(3, 3), Vector2(3, 7), Vector2(7, 7), Vector2(7, 3)])
 	total = 0.0
-	for l in StickerVectorizer.hatch([sq, hole], 1.0, 0.0):
+	for l in StickerVectorizer.hatch([sq, hole], 1.0, 0.0, false):
 		total += PathPlanner.polyline_length(l)
 	near(total, 100.0 - 16.0, 1e-3, "even-odd hole")
 	total = 0.0
-	for l in StickerVectorizer.hatch([sq], 1.0, 45.0):
+	for l in StickerVectorizer.hatch([sq], 1.0, 45.0, false):
 		total += PathPlanner.polyline_length(l)
 	near(total, 100.0, 8.0, "45° hatch covers about the same area")
+	# Zig-zag: a square is one stroke; rows plus the 9 steps between them
+	var zz := StickerVectorizer.hatch([sq], 1.0, 0.0)
+	check(zz.size() == 1, "square hatches as one zig-zag (got %d)" % zz.size())
+	near(PathPlanner.polyline_length(zz[0]), 100.0 + 9.0, 1e-3, "zig-zag length")
+	# A U shape: the zig-zag must not jump across the gap between the arms
+	var u := PackedVector2Array([Vector2(0, 0), Vector2(3, 0), Vector2(3, 7), Vector2(7, 7), Vector2(7, 0), Vector2(10, 0), Vector2(10, 10), Vector2(0, 10)])
+	var crossed := false
+	for l in StickerVectorizer.hatch([u], 1.0, 0.0):
+		for i in range(1, l.size()):
+			var mid := (l[i - 1] + l[i]) * 0.5
+			if mid.x > 3.01 and mid.x < 6.99 and mid.y < 6.99:
+				crossed = true
+	check(not crossed, "zig-zag stays out of the U's gap")
+	# With a hole: every step between rows stays out of the hole
+	var inside_hole := false
+	for l in StickerVectorizer.hatch([sq, hole], 1.0, 0.0):
+		for i in range(1, l.size()):
+			var mid := (l[i - 1] + l[i]) * 0.5
+			if mid.x > 3.01 and mid.x < 6.99 and mid.y > 3.01 and mid.y < 6.99:
+				inside_hole = true
+	check(not inside_hole, "zig-zag stays out of the hole")
 
 
 func test_paint_strokes_stay_inside() -> void:
