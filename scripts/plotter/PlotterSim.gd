@@ -34,6 +34,7 @@ var _play_button: Button
 var _swatch: ColorRect
 var _loaded := false
 var _sticker_of_layer: Array = []
+var _round_of_layer: Array = []
 var _snapshot := ""   ## save the painted canvas here on exit
 
 
@@ -78,6 +79,7 @@ func _load(path: String) -> void:
 			lines.append(pts)
 		layers.append({"stamp": int(L.stamp), "color": Color.html(L.color), "lines": lines})
 		_sticker_of_layer.append(str(L.get("sticker", "?")))
+		_round_of_layer.append(int(L.get("round", 0)))
 	job.layers = []   # the player has its own copy; free the JSON
 	player.setup(layers, Vector2(canvas.x * 0.5, 0.0))
 	renderer = StrokeRenderer.new(canvas, 2.0, float(job.get("marker_mm", 2.0)))
@@ -276,6 +278,7 @@ func _update_stats() -> void:
 		"",
 		"Machine time  %s / %s  (%.1f%%)" % [_dur(t), _dur(total), 100.0 * t / maxf(total, 1e-9)],
 		"At this speed, done in %s" % _dur(left) if playing else "Paused",
+		("Round  %d / %d" % [_round_of_layer[li] if li >= 0 else 0, int(job.get("rounds", 1))]) if int(job.get("rounds", 1)) > 1 else "",
 		"Sticker  %d / %d  (sticker %s)" % [stamp + 1, int(job.get("stamp_count", 0)), _sticker_of_layer[li] if li >= 0 else "-"],
 		"Paint layer  %d / %d" % [li + 1, player.layer_count],
 		"Colour changes  %s" % _num(player.colour_changes),

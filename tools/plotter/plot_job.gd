@@ -76,7 +76,7 @@ func _initialize() -> void:
 			stats.travel_mm += planner.report.travel_length
 			stats.strokes += planner.report.output_paths
 			stats.off_canvas_paths += planner.report.outside_paths
-			out_layers.append({"stamp": n - 1, "sticker": id, "color": colour, "lines": _lines(moves)})
+			out_layers.append({"stamp": n - 1, "sticker": id, "round": int(st.get("round", 0)), "color": colour, "lines": _lines(moves)})
 			svg_paths.append({"color": colour, "lines": _down_runs(moves)})
 			pos = Vector2(moves[-1].x, moves[-1].y)
 		if n % 25 == 0:
@@ -88,7 +88,7 @@ func _initialize() -> void:
 	stats.marker_mm = marker
 	stats.style = job.style
 	var f := FileAccess.open(args[1], FileAccess.WRITE)
-	f.store_string(JSON.stringify({"canvas_mm": job.canvas_mm, "marker_mm": marker, "style": job.style, "stamp_count": job.stamps.size(), "stats": stats, "layers": out_layers}))
+	f.store_string(JSON.stringify({"canvas_mm": job.canvas_mm, "marker_mm": marker, "style": job.style, "stamp_count": job.stamps.size(), "rounds": int(job.get("rounds", 1)), "stats": stats, "layers": out_layers}))
 	f.close()
 	if args.size() > 4:
 		var title := "Studio Sim bot painting: %s (seed %d)" % [job.style, job.seed]
