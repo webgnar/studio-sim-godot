@@ -26,6 +26,7 @@ func _ready() -> void:
 		"test_vectorize_square_with_hole", "test_vectorize_two_colours",
 		"test_vectorize_texture_stays_one_colour", "test_hatch_square",
 		"test_paint_strokes_stay_inside", "test_transform",
+		"test_smoothing_keeps_big_corners",
 	]
 	for t in tests:
 		_current = t
@@ -440,3 +441,20 @@ func test_transform() -> void:
 	var lines := StickerVectorizer.transform_polylines([PackedVector2Array([Vector2(0, 0), Vector2(200, 100)])], Vector2(200, 100), Vector2(500, 500), 90.0, 0.5)
 	near_v(lines[0][0], Vector2(525, 450), 1e-3, "corner maps through centre, scale, rotation")
 	near_v(lines[0][1], Vector2(475, 550), 1e-3, "opposite corner")
+
+
+func test_smoothing_keeps_big_corners() -> void:
+	# A big L-shaped sticker: smoothing must not slice its corners off
+	var img := _img(300, 200)
+	img.fill_rect(Rect2i(0, 0, 300, 200), Color(0.9, 0.85, 0.4))
+	img.fill_rect(Rect2i(150, 100, 150, 100), Color(0, 0, 0, 0))
+	var v := StickerVectorizer.new()
+	v.detail = 300
+	var r := v.vectorize(img)
+	var ring: PackedVector2Array = r.layers[0].polygons[0]
+	for corner in [Vector2(0, 0), Vector2(300, 0), Vector2(0, 200), Vector2(150, 100)]:
+		var best := INF
+		for p in ring:
+			best = minf(best, p.distance_to(corner))
+		check(best < 3.0, "corner %s kept (nearest point %.1f px away)" % [corner, best])
+	near(StickerVectorizer._area(ring), 300.0 * 200.0 - 150.0 * 100.0, 60.0, "area kept")

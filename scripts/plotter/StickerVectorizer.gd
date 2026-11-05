@@ -523,8 +523,10 @@ static func _col_dist2(a: Array, b: Array) -> float:
 	return 0.3 * dr * dr + 0.59 * dg * dg + 0.11 * db * db
 
 
-## Chaikin corner cutting on a closed ring.
-static func _chaikin(poly: PackedVector2Array, passes: int) -> PackedVector2Array:
+## Chaikin corner cutting on a closed ring. Each cut reaches at most
+## `max_cut` pixels from the corner, so long straight edges keep their
+## corners (an unlimited 25% cut sliced the corners off big shapes).
+static func _chaikin(poly: PackedVector2Array, passes: int, max_cut: float = 2.0) -> PackedVector2Array:
 	var cur := poly
 	for _p in passes:
 		var m := cur.size()
@@ -534,8 +536,9 @@ static func _chaikin(poly: PackedVector2Array, passes: int) -> PackedVector2Arra
 		for i in m:
 			var a := cur[i]
 			var b := cur[(i + 1) % m]
-			nxt.append(a.lerp(b, 0.25))
-			nxt.append(a.lerp(b, 0.75))
+			var t := minf(0.25, max_cut / maxf(a.distance_to(b), 1e-6))
+			nxt.append(a.lerp(b, t))
+			nxt.append(a.lerp(b, 1.0 - t))
 		cur = nxt
 	return cur
 
