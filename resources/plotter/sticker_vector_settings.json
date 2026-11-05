@@ -1,0 +1,39 @@
+{
+	"_about": "Per-sticker StickerVectorizer settings. 'presets' are named bundles of settings; 'stickers' maps a sticker id (the PNG name in sprites/painting layers/) to a preset name or to its own settings. Anything not listed uses the defaults in scripts/plotter/StickerVectorizer.gd.",
+	"presets": {
+		"soft": {
+			"_why": "Painterly / photographic stickers with no hard edges: squint (blur the colours) to find the big colour masses, boost saturation so dull greens and reds separate from greys and tans, and don't merge shades.",
+			"squint_mix": 1.0,
+			"squint_scale": 0.05,
+			"saturation_boost": 2.0,
+			"mingle_tolerance": 0.0,
+			"merge_tolerance": 0.05
+		},
+		"rich": {
+			"_why": "Busy line work with many colours: keep close shades apart (purple edging next to magenta, etc).",
+			"merge_tolerance": 0.045,
+			"mingle_tolerance": 0.0,
+			"saturation_boost": 1.5
+		}
+	},
+	"stickers": {
+		"18": "rich",
+		"21": "soft",
+		"23": "soft",
+		"26": {
+			"_why": "very fine stripes: trace at full resolution",
+			"detail": 1080
+		},
+		"27": "rich",
+		"31": {
+			"_why": "bright red under navy: boost saturation so the red separates, keep shades apart",
+			"saturation_boost": 1.6,
+			"mingle_tolerance": 0.0
+		},
+		"39": "soft",
+		"47": {
+			"_why": "very fine stripes: trace at full resolution",
+			"detail": 1080
+		}
+	}
+}
