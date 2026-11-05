@@ -38,6 +38,21 @@ var mingle_tolerance: float = 0.2
 ## How mingled two shades must be: shared border pixels per pixel of the
 ## smaller one. A solid patch scores near 0, speckle or a 1-2 px rim near 1.
 var mingle_contact: float = 0.5
+## Shades of clearly different hue (both at least hue_guard_saturation
+## saturated, hues more than hue_guard_degrees apart) are never merged by the
+## mingle step, so a green or red patch can't sink into a grey or tan.
+var hue_guard_degrees: float = 35.0
+var hue_guard_saturation: float = 0.15
+## Squint: how much each pixel's colour is pulled toward a blurred copy of
+## the sticker (0 = off, 1 = fully blurred colours, edges stay sharp), and
+## how small the blurred copy is (share of `detail`). Brings out the big
+## colour masses of soft, painterly or photographic stickers.
+var squint_mix: float = 0.0
+## Colours are chosen in a copy with saturation multiplied by this, so
+## low-saturation greens / reds don't get lumped in with greys and tans.
+## 1 = off.
+var saturation_boost: float = 1.0
+var squint_scale: float = 0.08
 ## Shades laid down as stripes or straight lines are never merged by the
 ## mingle step, however close: a colour counts as striped when at least
 ## stripe_share of its pixels sit in patches that are long and straight
@@ -68,6 +83,44 @@ var seed: int = 1
 var debug_labels: bool = false
 
 
+const SETTINGS_PATH := "res://resources/plotter/sticker_vector_settings.json"
+
+
+## Applies a settings dictionary ({setting: value}); keys starting with "_"
+## are notes and ignored.
+func apply_settings(settings: Dictionary) -> void:
+	for key in settings:
+		if str(key).begins_with("_"):
+			continue
+		var cur = get(key)
+		if cur == null:
+			push_warning("StickerVectorizer: unknown setting %s" % key)
+		elif cur is int:
+			set(key, int(settings[key]))
+		elif cur is bool:
+			set(key, bool(settings[key]))
+		else:
+			set(key, float(settings[key]))
+
+
+## The settings a sticker gets from the per-sticker settings file (its preset
+## or its own dictionary); empty for stickers not listed.
+static func settings_for(sticker_id: String, data: Dictionary) -> Dictionary:
+	var entry = data.get("stickers", {}).get(sticker_id)
+	if entry is String:
+		return data.get("presets", {}).get(entry, {})
+	if entry is Dictionary:
+		return entry
+	return {}
+
+
+static func load_settings_file(path: String = SETTINGS_PATH) -> Dictionary:
+	if not FileAccess.file_exists(path):
+		return {}
+	var parsed = JSON.parse_string(FileAccess.get_file_as_string(path))
+	return parsed if parsed is Dictionary else {}
+
+
 ## Returns {
 ##   size: Vector2 (original pixel size),
 ##   layers: Array of {color: Color, coverage: float, polygons: Array[PackedVector2Array]},
@@ -88,6 +141,14 @@ func vectorize(img: Image) -> Dictionary:
 	src.premultiply_alpha()
 	src.resize(w, h, Image.INTERPOLATE_LANCZOS)
 	var to_orig := Vector2(orig.x / w, orig.y / h)
+	# Squint: a blurred copy shows the big colour masses without the texture
+	var soft: Image = null
+	if squint_mix > 0.0:
+		soft = src.duplicate() as Image
+		var sw := maxi(2, roundi(w * squint_scale))
+		var sh := maxi(2, roundi(h * squint_scale))
+		soft.resize(sw, sh, Image.INTERPOLATE_LANCZOS)
+		soft.resize(w, h, Image.INTERPOLATE_BILINEAR)
 
 	# Pixels: RGB + opaque flag
 	var n := w * h
@@ -99,6 +160,10 @@ func vectorize(img: Image) -> Dictionary:
 	for y in h:
 		for x in w:
 			var c := src.get_pixel(x, y)
+			if soft:
+				var b := soft.get_pixel(x, y)
+				# Mix colour only; keep the sharp alpha so edges stay put
+				c = Color(lerpf(c.r, b.r * c.a / maxf(b.a, 0.001), squint_mix), lerpf(c.g, b.g * c.a / maxf(b.a, 0.001), squint_mix), lerpf(c.b, b.b * c.a / maxf(b.a, 0.001), squint_mix), c.a)
 			var i := y * w + x
 			var inv := 1.0 / c.a if c.a > 0.001 else 0.0
 			rgb[i * 3] = clampf(c.r * inv, 0.0, 1.0)
@@ -111,6 +176,16 @@ func vectorize(img: Image) -> Dictionary:
 	if opaque_count == 0:
 		return result
 
+	# Colours are picked in a saturation-boosted copy, so dull greens and reds
+	# separate from greys and tans; the paint colours reported are the true
+	# averages of each colour's pixels
+	var rgb_true := rgb
+	if not is_equal_approx(saturation_boost, 1.0):
+		rgb_true = rgb.duplicate()
+		for i in n:
+			var lum := 0.3 * rgb[i * 3] + 0.59 * rgb[i * 3 + 1] + 0.11 * rgb[i * 3 + 2]
+			for ch in 3:
+				rgb[i * 3 + ch] = clampf(lum + (rgb[i * 3 + ch] - lum) * saturation_boost, 0.0, 1.0)
 	var centres := _kmeans(rgb, opaque, mini(max_colors, opaque_count))
 	centres = _merge_colours(rgb, opaque, centres)
 	var k := centres.size() / 3
@@ -128,11 +203,14 @@ func vectorize(img: Image) -> Dictionary:
 	var layers: Array = []
 	for c in k:
 		var count := 0
+		var mean := Vector3.ZERO
 		for i in n:
 			if labels[i] == c:
 				count += 1
+				mean += Vector3(rgb_true[i * 3], rgb_true[i * 3 + 1], rgb_true[i * 3 + 2])
 		if count == 0:
 			continue
+		mean /= count
 		var polys: Array[PackedVector2Array] = []
 		for ring in trace_rings(labels, w, h, c):
 			# Isolated specks with no neighbour to join (and tiny holes)
@@ -147,7 +225,7 @@ func vectorize(img: Image) -> Dictionary:
 			polys.append(scaled)
 		if polys.is_empty():
 			continue
-		var col := Color(centres[c * 3], centres[c * 3 + 1], centres[c * 3 + 2])
+		var col := Color(mean.x, mean.y, mean.z)
 		layers.append({"color": col, "coverage": float(count) / opaque_count, "polygons": polys})
 	layers.sort_custom(func(a, b): return a.color.get_luminance() > b.color.get_luminance())
 	result.layers = layers
@@ -528,6 +606,8 @@ func _merge_colours(rgb: PackedFloat32Array, opaque: PackedByteArray, centres: P
 				if tiny >= 0 and a != tiny and b != tiny:
 					continue
 				var d := _col_dist2(cols[a], cols[b])
+				if tiny < 0 and _different_hues(cols[a], cols[b]):
+					d = INF
 				if d < best_d:
 					best_d = d
 					best_a = a
@@ -586,7 +666,7 @@ func _merge_mingled(labels: PackedInt32Array, w: int, h: int, centres: PackedFlo
 					continue
 				var ca := [centres[a * 3], centres[a * 3 + 1], centres[a * 3 + 2]]
 				var cb := [centres[b * 3], centres[b * 3 + 1], centres[b * 3 + 2]]
-				if _col_dist2(ca, cb) > tol2:
+				if _col_dist2(ca, cb) > tol2 or _different_hues(ca, cb):
 					continue
 				var ratio := float(contact[a * k + b]) / mini(counts[a], counts[b])
 				if ratio > best:
@@ -676,6 +756,15 @@ func _striped_labels(labels: PackedInt32Array, w: int, h: int, k: int) -> Packed
 	for c in k:
 		out[c] = 1 if total[c] > 0.0 and in_stripes[c] / total[c] >= stripe_share else 0
 	return out
+
+
+func _different_hues(a: Array, b: Array) -> bool:
+	var ca := Color(a[0], a[1], a[2])
+	var cb := Color(b[0], b[1], b[2])
+	if ca.s < hue_guard_saturation or cb.s < hue_guard_saturation:
+		return false
+	var dh := absf(ca.h - cb.h) * 360.0
+	return minf(dh, 360.0 - dh) > hue_guard_degrees
 
 
 static func _col_dist2(a: Array, b: Array) -> float:

@@ -47,6 +47,14 @@ turned into flat colour regions:
 5. trace each colour along pixel edges (outer rings positive area, holes
    negative), simplify (`simplify` px) and round off (`smooth_outline`)
 
+Hue guard: shades of clearly different hue (`hue_guard_degrees`,
+`hue_guard_saturation`) never merge, so greens and reds can't sink into a grey.
+
+Per-sticker settings live in `resources/plotter/sticker_vector_settings.json`:
+named presets (`soft` squints at painterly/photographic stickers with
+`squint_mix` and `saturation_boost`; `rich` keeps close shades apart in busy
+line work) and a sticker id → preset (or its own settings) map.
+
 `paint_strokes(polygons, tool_width)` turns a placed layer into strokes: each
 region is shrunk by half the tool width, outlined and hatched, and parts too
 thin for the tool are painted along their own long axis.

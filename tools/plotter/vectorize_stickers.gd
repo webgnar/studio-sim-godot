@@ -8,6 +8,7 @@ extends SceneTree
 ## Args (after --): out.json ids marker_mm [setting=value ...]
 ##   ids: comma list of sticker numbers, e.g. 1,2,3
 ##   settings: any StickerVectorizer var, e.g. detail=600 merge_tolerance=0.07
+##   (applied on top of resources/plotter/sticker_vector_settings.json)
 
 const STICKER_DIR := "sprites/painting layers/"
 const WIDTH_MM := 500.0  ## stickers are previewed this wide (longest side)
@@ -16,14 +17,19 @@ const WIDTH_MM := 500.0  ## stickers are previewed this wide (longest side)
 func _initialize() -> void:
 	var args := OS.get_cmdline_user_args()
 	var repo := OS.get_environment("STICKER_REPO")
-	var v := StickerVectorizer.new()
+	var overrides := {}
 	for a in args.slice(3):
 		var kv: PackedStringArray = a.split("=")
-		var cur = v.get(kv[0])
-		v.set(kv[0], float(kv[1]) if cur is float else int(kv[1]))
+		overrides[kv[0]] = float(kv[1])
+	var data := StickerVectorizer.load_settings_file(repo.path_join("resources/plotter/sticker_vector_settings.json"))
 	var marker := float(args[2])
 	var out := {}
 	for id in args[1].split(","):
+		# Defaults, then the sticker's entry in the settings file, then the
+		# command line
+		var v := StickerVectorizer.new()
+		v.apply_settings(StickerVectorizer.settings_for(id, data))
+		v.apply_settings(overrides)
 		var img := Image.load_from_file(repo.path_join(STICKER_DIR + id + ".png"))
 		var t := Time.get_ticks_msec()
 		var r := v.vectorize(img)
