@@ -10,7 +10,9 @@ extends RefCounted
 ##      knob, and also blurs away paper/brush texture
 ##   2. pick up to `max_colors` paint colours with k-means, then merge ones
 ##      closer than `merge_tolerance` (brush texture stays one colour)
-##   3. give every pixel its nearest colour, then smooth the colour map with
+##   3. give every pixel its nearest colour, merge shades that are close and
+##      mingled (texture, blended edges: mingle_tolerance / mingle_contact),
+##      then smooth the colour map with
 ##      `smooth_passes` majority filters so speckle doesn't become regions
 ##   4. trace each colour's regions along pixel edges (outer outlines and
 ##      holes as separate rings), drop regions smaller than `min_region`,
@@ -28,6 +30,14 @@ var max_colors: int = 24
 ## Clusters closer than this (0..1, weighted RGB distance) are merged into one
 ## paint colour, so a single-colour sticker with brush texture stays one colour.
 var merge_tolerance: float = 0.07
+## Shades closer than this (same scale as merge_tolerance) are also merged
+## when they're mingled: speckled through each other (brush texture) or one
+## forming a thin rim along the other (blended edges). Separate solid areas of
+## similar colours (stripes) stay apart.
+var mingle_tolerance: float = 0.2
+## How mingled two shades must be: shared border pixels per pixel of the
+## smaller one. A solid patch scores near 0, speckle or a 1-2 px rim near 1.
+var mingle_contact: float = 0.5
 ## Colours covering less than this share of the sticker are folded into their
 ## nearest neighbour.
 var min_color_share: float = 0.004
@@ -102,6 +112,7 @@ func vectorize(img: Image) -> Dictionary:
 	labels.resize(n)
 	for i in n:
 		labels[i] = _nearest(rgb, i, centres, k) if opaque[i] else -1
+	_merge_mingled(labels, w, h, centres)
 	for _p in smooth_passes:
 		labels = _majority(labels, w, h, k)
 	var min_area := min_region * opaque_count
@@ -524,6 +535,65 @@ func _merge_colours(rgb: PackedFloat32Array, opaque: PackedByteArray, centres: P
 	for c in cols:
 		out.append_array([c[0], c[1], c[2]])
 	return out
+
+
+## Merges shades that are close in colour and mingled on the canvas (see
+## mingle_tolerance / mingle_contact). Relabels in place and moves the
+## surviving centre to the weighted mean.
+func _merge_mingled(labels: PackedInt32Array, w: int, h: int, centres: PackedFloat32Array) -> void:
+	var k := centres.size() / 3
+	var tol2 := mingle_tolerance * mingle_tolerance
+	while true:
+		var counts := PackedInt32Array()
+		counts.resize(k)
+		var contact := PackedInt32Array()
+		contact.resize(k * k)
+		for y in h:
+			for x in w:
+				var a := labels[y * w + x]
+				if a < 0:
+					continue
+				counts[a] += 1
+				if x + 1 < w:
+					var b := labels[y * w + x + 1]
+					if b >= 0 and b != a:
+						contact[a * k + b] += 1
+						contact[b * k + a] += 1
+				if y + 1 < h:
+					var b2 := labels[(y + 1) * w + x]
+					if b2 >= 0 and b2 != a:
+						contact[a * k + b2] += 1
+						contact[b2 * k + a] += 1
+		var best_a := -1
+		var best_b := -1
+		var best := mingle_contact
+		for a in k:
+			if counts[a] == 0:
+				continue
+			for b in range(a + 1, k):
+				if counts[b] == 0 or contact[a * k + b] == 0:
+					continue
+				var ca := [centres[a * 3], centres[a * 3 + 1], centres[a * 3 + 2]]
+				var cb := [centres[b * 3], centres[b * 3 + 1], centres[b * 3 + 2]]
+				if _col_dist2(ca, cb) > tol2:
+					continue
+				var ratio := float(contact[a * k + b]) / mini(counts[a], counts[b])
+				if ratio > best:
+					best = ratio
+					best_a = a
+					best_b = b
+		if best_a < 0:
+			return
+		# The bigger shade survives, pulled towards the merged mean
+		var keep := best_a if counts[best_a] >= counts[best_b] else best_b
+		var drop := best_b if keep == best_a else best_a
+		var wk := float(counts[keep])
+		var wd := float(counts[drop])
+		for ch in 3:
+			centres[keep * 3 + ch] = (centres[keep * 3 + ch] * wk + centres[drop * 3 + ch] * wd) / (wk + wd)
+		for i in labels.size():
+			if labels[i] == drop:
+				labels[i] = keep
 
 
 static func _col_dist2(a: Array, b: Array) -> float:

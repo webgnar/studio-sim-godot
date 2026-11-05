@@ -26,7 +26,7 @@ func _ready() -> void:
 		"test_vectorize_square_with_hole", "test_vectorize_two_colours",
 		"test_vectorize_texture_stays_one_colour", "test_hatch_square",
 		"test_paint_strokes_stay_inside", "test_transform",
-		"test_smoothing_keeps_big_corners",
+		"test_smoothing_keeps_big_corners", "test_mingled_shades_merge",
 	]
 	for t in tests:
 		_current = t
@@ -458,3 +458,20 @@ func test_smoothing_keeps_big_corners() -> void:
 			best = minf(best, p.distance_to(corner))
 		check(best < 3.0, "corner %s kept (nearest point %.1f px away)" % [corner, best])
 	near(StickerVectorizer._area(ring), 300.0 * 200.0 - 150.0 * 100.0, 60.0, "area kept")
+
+
+func test_mingled_shades_merge() -> void:
+	# Left: two lavender shades speckled together (texture) -> one colour.
+	# Right: two equally close greens as separate solid stripes -> stay two.
+	var img := _img(200, 100)
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 5
+	for y in 100:
+		for x in 100:
+			img.set_pixel(x, y, Color8(0xd0, 0xba, 0xd4) if rng.randf() < 0.5 else Color8(0x9a, 0x9a, 0xbc))
+	img.fill_rect(Rect2i(110, 0, 30, 100), Color8(0xa1, 0xb4, 0x50))
+	img.fill_rect(Rect2i(160, 0, 30, 100), Color8(0x90, 0x9e, 0x3b))
+	var v := StickerVectorizer.new()
+	v.detail = 200
+	var r := v.vectorize(img)
+	check(r.layers.size() == 3, "speckled shades merge, separate stripes don't (got %d colours)" % r.layers.size())
