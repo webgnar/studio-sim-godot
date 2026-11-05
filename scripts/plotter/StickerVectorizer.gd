@@ -39,12 +39,15 @@ var simplify: float = 0.8
 var smooth_outline: int = 1
 ## Regions smaller than this share of the sticker's area are absorbed into
 ## the neighbouring colour they touch most (so no gaps are left).
-var min_region: float = 0.002
+var min_region: float = 0.0003
 ## Alpha above this counts as sticker.
 var alpha_threshold: float = 0.5
 ## k-means iterations and seed (fixed, so results repeat).
 var kmeans_iterations: int = 12
 var seed: int = 1
+## Also return the final colour map (labels, label_size, label_colors), for
+## tuning views.
+var debug_labels: bool = false
 
 
 ## Returns {
@@ -129,6 +132,13 @@ func vectorize(img: Image) -> Dictionary:
 		layers.append({"color": col, "coverage": float(count) / opaque_count, "polygons": polys})
 	layers.sort_custom(func(a, b): return a.color.get_luminance() > b.color.get_luminance())
 	result.layers = layers
+	if debug_labels:
+		result["labels"] = labels
+		result["label_size"] = Vector2i(w, h)
+		var cols := []
+		for c in k:
+			cols.append(Color(centres[c * 3], centres[c * 3 + 1], centres[c * 3 + 2]))
+		result["label_colors"] = cols
 	return result
 
 
