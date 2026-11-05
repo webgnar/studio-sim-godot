@@ -19,6 +19,11 @@
 	"stickers": {
 		"18": "rich",
 		"21": "soft",
-		"23": "soft"
+		"23": "soft",
+		"26": {
+			"_why": "very fine stripes: trace at full resolution",
+			"detail": 1080
+		},
+		"27": "rich"
 	}
 }
