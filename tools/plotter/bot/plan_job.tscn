@@ -1,0 +1,6 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://tools/plotter/bot/plan_job.gd" id="1"]
+
+[node name="PlanJob" type="Node"]
+script = ExtResource("1")

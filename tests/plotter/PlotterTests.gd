@@ -28,6 +28,7 @@ func _ready() -> void:
 		"test_paint_strokes_stay_inside", "test_transform",
 		"test_smoothing_keeps_big_corners", "test_mingled_shades_merge",
 		"test_low_contrast_stripes_stay",
+		"test_motion_segment_time", "test_motion_estimate",
 	]
 	for t in tests:
 		_current = t
@@ -490,3 +491,38 @@ func test_low_contrast_stripes_stay() -> void:
 	v.detail = 200
 	var r := v.vectorize(img)
 	check(r.layers.size() == 2, "low-contrast stripes kept apart (got %d colours)" % r.layers.size())
+
+
+# --- MotionEstimator ------------------------------------------------------------
+
+func test_motion_segment_time() -> void:
+	var m := MotionEstimator.new()
+	m.accel = 500.0
+	# 100 mm/s from rest needs 10 mm and 0.2 s each way: 1000 mm takes
+	# 0.2 + 0.2 + 980/100 = 10.2 s
+	near(m.segment_time(1000.0, 0.0, 100.0, 0.0), 10.2, 1e-4, "long move")
+	# 10 mm from rest to rest never reaches 100: peak sqrt(500*10) = 70.7, t = 2*70.7/500
+	near(m.segment_time(10.0, 0.0, 100.0, 0.0), 2.0 * sqrt(5000.0) / 500.0, 1e-4, "short move")
+	# Already at speed, staying at speed: plain distance / speed
+	near(m.segment_time(50.0, 100.0, 100.0, 100.0), 0.5, 1e-6, "cruise")
+	check(m.segment_time(0.0, 0.0, 100.0, 0.0) == 0.0, "zero length")
+
+
+func test_motion_estimate() -> void:
+	var m := MotionEstimator.new()
+	m.accel = 500.0
+	m.pen_time = 0.3
+	# Travel 1000 mm, draw a straight 2-segment line (no corner slow-down), lift
+	var moves := [
+		{"x": 1000.0, "y": 0.0, "tool_down": false, "feed": 100.0},
+		{"x": 1500.0, "y": 0.0, "tool_down": true, "feed": 100.0},
+		{"x": 2000.0, "y": 0.0, "tool_down": true, "feed": 100.0},
+	]
+	var e := m.estimate(moves, Vector2.ZERO)
+	near(e.travel, 10.2, 1e-4, "travel time")
+	near(e.draw, 10.2, 1e-4, "draw time (straight joint keeps speed)")
+	check(e.pen_changes == 2, "one drop and one lift, got %d" % e.pen_changes)
+	near(e.total, 10.2 + 10.2 + 0.6, 1e-4, "total")
+	# A 90-degree corner stops the pen: slower than the straight line
+	moves[2] = {"x": 1500.0, "y": 500.0, "tool_down": true, "feed": 100.0}
+	check(m.estimate(moves, Vector2.ZERO).draw > 10.2 + 0.1, "corner costs time")
