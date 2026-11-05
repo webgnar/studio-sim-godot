@@ -24,6 +24,16 @@
 			"_why": "very fine stripes: trace at full resolution",
 			"detail": 1080
 		},
-		"27": "rich"
+		"27": "rich",
+		"31": {
+			"_why": "bright red under navy: boost saturation so the red separates, keep shades apart",
+			"saturation_boost": 1.6,
+			"mingle_tolerance": 0.0
+		},
+		"39": "soft",
+		"47": {
+			"_why": "very fine stripes: trace at full resolution",
+			"detail": 1080
+		}
 	}
 }
