@@ -136,6 +136,10 @@ func update_painting_metadata(painting: Node, painting_name: String, statement: 
 	else:
 		push_warning("WorldStateManager: update_painting_metadata called for unregistered painting - node properties updated, registry skipped")
 
+func shipped_count() -> int:
+	"""How many paintings this player has shipped to the gallery"""
+	return _shipped_paintings.size()
+
 func ship_painting(painting: Node) -> void:
 	"""Mark a painting as shipped to the gallery (node stays alive in gallery room)"""
 	if painting not in _registered_paintings:
@@ -402,6 +406,7 @@ func save_world_state() -> bool:
 			"gallery_id": metadata.get("gallery_id", ""),
 			"is_landscape": painting.scene_file_path.contains("5x3"),
 			"is_commissioned": painting.is_commissioned if "is_commissioned" in painting else false,
+			"process": painting.process_stats if "process_stats" in painting else {},
 			"position": {
 				"x": painting.global_position.x,
 				"y": painting.global_position.y,
@@ -787,6 +792,8 @@ func _load_painting(world_root: Node3D, painting_data: Dictionary, nail_id_map: 
 	painting.painting_name = painting_data.get("name", "")
 	painting.artist_statement = painting_data.get("artist_statement", "")
 	painting.is_commissioned = painting_data.get("is_commissioned", false)
+	var saved_process = painting_data.get("process", {})
+	painting.process_stats = saved_process if typeof(saved_process) == TYPE_DICTIONARY else {}
 
 	# Store status to apply after registration
 	var saved_status = painting_data.get("status", "WIP")

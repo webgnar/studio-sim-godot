@@ -20,6 +20,7 @@ var _cached_painting_id: String = ""
 var _cached_painting_name: String = ""
 var _cached_artist_statement: String = ""
 var _cached_artist_name: String = ""
+var _cached_process: Dictionary = {}
 
 const AI_CRITIQUE_URL = "https://studio-sim-gallery.vercel.app/api/critique"
 var _http_request: HTTPRequest
@@ -120,6 +121,7 @@ func _on_export_started(painting: CarryablePainting) -> void:
 	_cached_painting_name = painting.painting_name
 	_cached_artist_statement = painting.artist_statement
 	_cached_artist_name = SteamManager.persona_name
+	_cached_process = painting.process_stats.duplicate() if "process_stats" in painting else {}
 	_state = State.WAITING_FOR_UPLOAD
 	_set_text(tr("Uploading painting..."))
 
@@ -172,6 +174,8 @@ func _generate_ai_critique(critic_type: String, image_url: String = "") -> Strin
 		"locale": LocaleManager.current_locale,
 		"criticType": critic_type,
 		"memory": CriticMemory.to_request(critic_type),
+		"process": _cached_process,
+		"paintingsShipped": WorldStateManager.shipped_count(),
 	})
 	var headers := ["Content-Type: application/json"]
 	var error := _http_request.request(AI_CRITIQUE_URL, headers, HTTPClient.METHOD_POST, body)

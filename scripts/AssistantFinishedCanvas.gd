@@ -97,6 +97,7 @@ func save_to_disk() -> void:
 func reset_canvas() -> void:
 	"""Called after converting to CarryablePainting — clears everything for next session."""
 	painting_system.clear_canvas()
+	painting_system.process_log = PaintingProcess.new_log()
 	_background_image = null
 	background_sprite.texture = null
 	if FileAccess.file_exists(SAVE_PATH):
