@@ -25,6 +25,31 @@ var _cached_process: Dictionary = {}
 const AI_CRITIQUE_URL = "https://studio-sim-gallery.vercel.app/api/critique"
 var _http_request: HTTPRequest
 
+# --- Talking back to the critic ---
+# After an AI review the player can answer once, by voice (press interact to
+# record, again to send) or, if no speech comes through, by picking Agree /
+# Argue / Shrug (each press cycles, it sends after a short pause). The critic
+# answers in character and the exchange goes into that critic's memory.
+const CRITIQUE_REPLY_URL = "https://studio-sim-gallery.vercel.app/api/critique-reply"
+const TALK_MAX_RECORD_SECONDS := 20.0
+const CHOICE_CONFIRM_SECONDS := 3.0
+const TALK_CHOICES: Array[Dictionary] = [
+	{"key": "agree", "label": "Agree", "memory": "(agreed with your review)"},
+	{"key": "argue", "label": "Argue", "memory": "(argued that you got it wrong)"},
+	{"key": "shrug", "label": "Shrug", "memory": "(shrugged it off)"},
+]
+enum Talk { NONE, READY, RECORDING, THINKING, CHOOSING, DONE }
+var _talk: Talk = Talk.NONE
+const CritiqueTalkBack := preload("res://scripts/CritiqueTalkBack.gd")
+var _talk_body: CritiqueTalkBack
+var _talk_request: HTTPRequest
+var _reply_player: AudioStreamPlayer3D
+var _talk_gen: int = 0 # invalidates timers and callbacks from an earlier review
+var _choice_index: int = 0
+var _critique_text: String = ""
+var _critic_type: String = ""
+var _reply_speech_gen: int = -1
+
 const CRITICS: Array[Dictionary] = [
 	{"avatar": "res://sprites/art critics/bum.png", "type": "bum"},
 	{"avatar": "res://sprites/art critics/general.png", "type": "general"},
@@ -78,6 +103,8 @@ func _ready() -> void:
 	_voice_player.bus = "SFX"
 	add_child(_voice_player)
 
+	_setup_talk_back()
+
 	# Pipes are always the background — ColorRect no longer needed
 	_color_rect.visible = false
 
@@ -122,6 +149,7 @@ func _on_export_started(painting: CarryablePainting) -> void:
 	_cached_artist_statement = painting.artist_statement
 	_cached_artist_name = SteamManager.persona_name
 	_cached_process = painting.process_stats.duplicate() if "process_stats" in painting else {}
+	_set_talk(Talk.NONE)
 	_state = State.WAITING_FOR_UPLOAD
 	_set_text(tr("Uploading painting..."))
 
@@ -154,6 +182,9 @@ func _on_upload_completed(_gallery_id: String, image_url: String = "") -> void:
 	if _is_generative_ai_enabled():
 		var voice_description: String = CRITIC_VOICE_DESCRIPTIONS.get(critic_type, "")
 		PioneerAPI.speak_streaming(critique_text, voice_description, _voice_player)
+		_critique_text = critique_text
+		_critic_type = critic_type
+		_set_talk(Talk.READY)
 
 func _generate_template_critique(critic_type: String) -> String:
 	return CritiqueGenerator.generate(
@@ -239,3 +270,210 @@ func _set_text(text: String) -> void:
 		_waiting_at_bottom = false
 	if _state != State.DISPLAYING:
 		avatar_sprite.visible = false
+
+
+# ============================================================================
+# Talking back to the critic
+# ============================================================================
+
+func _setup_talk_back() -> void:
+	_talk_request = HTTPRequest.new()
+	_talk_request.timeout = 30.0
+	add_child(_talk_request)
+
+	_reply_player = AudioStreamPlayer3D.new()
+	_reply_player.name = "CriticReplyPlayer"
+	_reply_player.max_distance = 6.0
+	_reply_player.unit_size = 1.5
+	_reply_player.bus = "SFX"
+	add_child(_reply_player)
+
+	# Invisible body over the screen (it encloses the wall collider the world
+	# scene puts behind the TV, so the interaction ray reaches it first).
+	_talk_body = CritiqueTalkBack.new()
+	_talk_body.name = "TalkBackBody"
+	_talk_body.collision_layer = 8
+	_talk_body.collision_mask = 0
+	_talk_body.display = self
+	_talk_body.add_to_group("no_outline")
+	var shape := CollisionShape3D.new()
+	var box := BoxShape3D.new()
+	box.size = Vector3(1.7, 1.06, 0.26)
+	shape.shape = box
+	shape.position = Vector3(0.0, 0.0, -0.02)
+	_talk_body.add_child(shape)
+	add_child(_talk_body)
+	_set_talk(Talk.NONE)
+
+
+func _set_talk(state: Talk) -> void:
+	_talk = state
+	if state == Talk.NONE or state == Talk.READY:
+		_talk_gen += 1 # a new review: drop anything still pending from the last one
+	if not _talk_body:
+		return
+	_talk_body.set_available(state != Talk.NONE and state != Talk.DONE)
+	match state:
+		Talk.READY:
+			_talk_body.interaction_text = tr("Talk back to the critic")
+		Talk.RECORDING:
+			_talk_body.interaction_text = tr("Listening... (press to send)")
+		Talk.THINKING:
+			_talk_body.interaction_text = tr("The critic is thinking...")
+		Talk.CHOOSING:
+			_talk_body.interaction_text = _choice_prompt()
+		_:
+			_talk_body.interaction_text = ""
+
+
+func on_talk_back_pressed() -> void:
+	match _talk:
+		Talk.READY:
+			_start_talk_recording()
+		Talk.RECORDING:
+			_stop_talk_recording()
+		Talk.CHOOSING:
+			_choice_index = (_choice_index + 1) % TALK_CHOICES.size()
+			_set_talk(Talk.CHOOSING)
+			_arm_choice_timer()
+
+
+func _start_talk_recording() -> void:
+	_set_talk(Talk.RECORDING)
+	MicRecorder.start_recording()
+	var gen := _talk_gen
+	get_tree().create_timer(TALK_MAX_RECORD_SECONDS).timeout.connect(func() -> void:
+		if gen == _talk_gen and _talk == Talk.RECORDING:
+			_stop_talk_recording()
+	, CONNECT_ONE_SHOT)
+
+
+func _stop_talk_recording() -> void:
+	var bytes: PackedByteArray = MicRecorder.stop_recording()
+	if bytes.is_empty():
+		_start_choosing()
+		return
+	_set_talk(Talk.THINKING)
+	var gen := _talk_gen
+	PioneerAPI.transcript_ready.connect(func(text: String) -> void:
+		if gen != _talk_gen or _talk != Talk.THINKING:
+			return
+		if text.strip_edges().is_empty():
+			_start_choosing()
+		else:
+			_send_talk_back(text.strip_edges(), "")
+	, CONNECT_ONE_SHOT)
+	PioneerAPI.transcript_failed.connect(func(_error: String) -> void:
+		if gen == _talk_gen and _talk == Talk.THINKING:
+			_start_choosing()
+	, CONNECT_ONE_SHOT)
+	PioneerAPI.transcribe(bytes)
+
+
+## No speech came through (no mic, silence, or transcription failed): offer the
+## three canned answers instead.
+func _start_choosing() -> void:
+	_choice_index = 0
+	_set_talk(Talk.CHOOSING)
+	_arm_choice_timer()
+
+
+func _choice_prompt() -> String:
+	var parts: Array[String] = []
+	for i in TALK_CHOICES.size():
+		var label: String = tr(TALK_CHOICES[i]["label"])
+		parts.append("[%s]" % label if i == _choice_index else label)
+	return "%s  %s" % [" / ".join(parts), tr("(press to change)")]
+
+
+func _arm_choice_timer() -> void:
+	var index := _choice_index
+	var gen := _talk_gen
+	get_tree().create_timer(CHOICE_CONFIRM_SECONDS).timeout.connect(func() -> void:
+		if gen == _talk_gen and _talk == Talk.CHOOSING and _choice_index == index:
+			var choice: Dictionary = TALK_CHOICES[index]
+			_send_talk_back("", choice["key"])
+	, CONNECT_ONE_SHOT)
+
+
+func _send_talk_back(player_said: String, choice_key: String) -> void:
+	_set_talk(Talk.THINKING)
+	var gen := _talk_gen
+	var critic_type := _critic_type
+	var shown_said := player_said
+	var memory_said := player_said
+	if player_said == "":
+		for c in TALK_CHOICES:
+			if c["key"] == choice_key:
+				shown_said = "*%s*" % tr(c["label"])
+				memory_said = c["memory"]
+	var body := JSON.stringify({
+		"criticType": critic_type,
+		"critique": _critique_text,
+		"title": _cached_painting_name,
+		"note": CriticMemory.get_note(critic_type),
+		"locale": LocaleManager.current_locale,
+		"playerSaid": player_said,
+		"choice": choice_key,
+	})
+	var error := _talk_request.request(CRITIQUE_REPLY_URL, ["Content-Type: application/json"], HTTPClient.METHOD_POST, body)
+	if error != OK:
+		_set_talk(Talk.DONE)
+		return
+	var result: Array = await _talk_request.request_completed
+	if gen != _talk_gen:
+		return # a new painting came in meanwhile
+	var reply := ""
+	var note := ""
+	if result[0] == HTTPRequest.RESULT_SUCCESS and result[1] >= 200 and result[1] < 300:
+		var data = JSON.parse_string((result[3] as PackedByteArray).get_string_from_utf8())
+		if typeof(data) == TYPE_DICTIONARY:
+			reply = str(data.get("reply", "")).strip_edges()
+			note = str(data.get("note", "")).strip_edges()
+	_set_talk(Talk.DONE)
+	if reply == "":
+		return
+
+	# Show the exchange under the review and jump to it
+	if critique_label:
+		critique_label.text = "%s\n\n%s: %s\n\n%s" % [_critique_text, tr("You"), shown_said, reply]
+		await get_tree().process_frame
+		_scroll_offset = maxf(0.0, critique_label.get_v_scroll_bar().max_value - critique_label.size.y)
+		critique_label.get_v_scroll_bar().value = _scroll_offset
+		_scroll_pause_timer = SCROLL_PAUSE * 2.0 # hold the answer on screen a while
+		_waiting_at_bottom = true
+
+	CriticMemory.remember_exchange(critic_type, memory_said, reply, note)
+	WorldStateManager.save_world_state()
+	_speak_reply(reply, critic_type, gen)
+
+
+## Speaks the critic's answer once the review itself has finished playing.
+func _speak_reply(reply: String, critic_type: String, gen: int) -> void:
+	var waited := 0.0
+	while PioneerAPI._stream_state != "idle" and waited < 90.0:
+		await get_tree().create_timer(0.25).timeout
+		waited += 0.25
+	if gen != _talk_gen:
+		return
+	_reply_speech_gen = gen
+	if not PioneerAPI.speech_ready.is_connected(_on_reply_speech_ready):
+		PioneerAPI.speech_ready.connect(_on_reply_speech_ready, CONNECT_ONE_SHOT)
+	if not PioneerAPI.speech_failed.is_connected(_on_reply_speech_failed):
+		PioneerAPI.speech_failed.connect(_on_reply_speech_failed, CONNECT_ONE_SHOT)
+	PioneerAPI.speak(reply, CRITIC_VOICE_DESCRIPTIONS.get(critic_type, ""))
+
+
+func _on_reply_speech_ready(stream: AudioStream) -> void:
+	if PioneerAPI.speech_failed.is_connected(_on_reply_speech_failed):
+		PioneerAPI.speech_failed.disconnect(_on_reply_speech_failed)
+	if _reply_speech_gen == _talk_gen:
+		_reply_player.stream = stream
+		_reply_player.play()
+
+
+func _on_reply_speech_failed(error: String) -> void:
+	if PioneerAPI.speech_ready.is_connected(_on_reply_speech_ready):
+		PioneerAPI.speech_ready.disconnect(_on_reply_speech_ready)
+	push_warning("CritiqueDisplay: critic reply speech failed: %s" % error)
+

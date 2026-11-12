@@ -10,6 +10,7 @@ class_name CriticMemory
 const SAVE_KEY := "critic_memory"
 const MAX_REVIEWS := 3 # past reviews kept per critic
 const MAX_CRITIQUE_CHARS := 700 # each remembered critique is trimmed to this
+const MAX_EXCHANGE_CHARS := 300 # player's talk-back and the critic's answer are trimmed to this
 const NOTE_MARKER := "NOTE TO SELF:" # must match the gallery server's critique route
 
 
@@ -40,6 +41,30 @@ static func to_request(critic_type: String) -> Dictionary:
 		"note": str(mem.get("note", "")),
 		"pastReviews": mem.get("reviews", []),
 	}
+
+
+## Records the player talking back to the critic's most recent review, and the
+## critic's answer. Sent with later reviews so the critic remembers the exchange.
+## Pass note = "" to keep the previous note. Does not write to disk.
+static func remember_exchange(critic_type: String, player_said: String, critic_reply: String, note: String = "") -> void:
+	var all: Dictionary = WorldStateManager.get_data(SAVE_KEY, {}).duplicate(true)
+	var mem: Dictionary = get_memory(critic_type).duplicate(true)
+	var reviews: Array = mem.get("reviews", [])
+	if reviews.is_empty():
+		return
+	var last: Dictionary = reviews[-1]
+	last["playerSaid"] = player_said.left(MAX_EXCHANGE_CHARS)
+	last["youReplied"] = critic_reply.left(MAX_EXCHANGE_CHARS)
+	reviews[-1] = last
+	mem["reviews"] = reviews
+	if note != "":
+		mem["note"] = note
+	all[critic_type] = mem
+	WorldStateManager.set_data(SAVE_KEY, all)
+
+
+static func get_note(critic_type: String) -> String:
+	return str(get_memory(critic_type).get("note", ""))
 
 
 ## Splits an AI response into [critique, note]. The note is "" if the critic didn't write one.
