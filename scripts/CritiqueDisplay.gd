@@ -476,4 +476,3 @@ func _on_reply_speech_failed(error: String) -> void:
 	if PioneerAPI.speech_ready.is_connected(_on_reply_speech_ready):
 		PioneerAPI.speech_ready.disconnect(_on_reply_speech_ready)
 	push_warning("CritiqueDisplay: critic reply speech failed: %s" % error)
-
