@@ -73,6 +73,10 @@ var preview_base_opacity: float = 0.5  # Set by PaintingRoot2D
 # Commission tracking: true if this canvas passed a commission validation
 var was_commission_validated: bool = false
 
+# How this canvas was painted (sticker counts, undos, time spent), for the art critic.
+# See PaintingProcess. Saved with the canvas.
+var process_log: Dictionary = PaintingProcess.new_log()
+
 # --- Pencil freehand drawing ---
 # Drawing goes directly into the background image (same one _bake_to_background()
 # produces). Starting a pencil session bakes any currently-placed stickers first,
@@ -464,6 +468,7 @@ func spawn_sticker(world_position: Vector3):
 	placed.rotation_deg = preview_rotation  # Track the rotation that was set in preview
 	placed.scale_multiplier = preview_scale_multiplier  # Track the scale multiplier
 	placed_layers.append(placed)
+	PaintingProcess.record_place(process_log, definition.id, preview_scale_multiplier, preview_rotation, AutoplayManager.is_active())
 	sticker_placed.emit()
 
 	if DebugLogger and not OS.has_feature("editor"):
@@ -632,6 +637,7 @@ func delete_selected_layer():
 
 	# Remove from array
 	placed_layers.erase(selected_layer)
+	PaintingProcess.record_delete(process_log)
 
 	selected_layer = null
 
@@ -644,6 +650,7 @@ func undo_last_sticker():
 	if last_layer.node:
 		last_layer.node.queue_free()
 	placed_layers.pop_back()
+	PaintingProcess.record_undo(process_log)
 
 	if selected_layer == last_layer:
 		selected_layer = null
@@ -669,6 +676,7 @@ func clear_canvas_full():
 	clear_canvas()
 	if _background_sprite:
 		_background_sprite.texture = null
+	process_log = PaintingProcess.new_log()
 
 
 func serialize_canvas() -> Dictionary:
@@ -692,6 +700,7 @@ func serialize_canvas() -> Dictionary:
 	data["has_background"] = _background_sprite != null and _background_sprite.texture != null
 	data["preview_rotation"] = preview_rotation
 	data["preview_scale_multiplier"] = preview_scale_multiplier
+	data["process"] = process_log
 	return data
 
 
@@ -710,6 +719,7 @@ func restore_canvas(data: Dictionary, background_image: Image = null) -> void:
 		_background_sprite.texture = ImageTexture.create_from_image(background_image)
 		_background_sprite.scale = Vector2.ONE
 
+	process_log = PaintingProcess.from_save(data.get("process", {}))
 	preview_rotation = data.get("preview_rotation", -90.0)
 	preview_scale_multiplier = data.get("preview_scale_multiplier", 1.0)
 	if preview_sprite:
