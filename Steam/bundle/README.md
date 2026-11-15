@@ -21,3 +21,4 @@ python3 bundle/make_bundle_art.py --out bundle \
 Partners so far:
 - `picking_fruits/`: A Game About Picking Fruits (app 5243280). Boxes: hero 110,380,660,690; main 246,260,1020,685; small 148,62,335,168.
 - `cake_break_room/`: There is Cake in the Break Room (app 5114500). Boxes: hero 230,245,515,720; main 475,160,740,610; small 12,8,452,108 (small half is squeezed horizontally so the one-line title stays big).
+- `zen_house/`: Zen House: Zed Zero Simulator (app 5292280). Boxes: hero 20,100,705,700 (title + house); main 40,25,1200,650 (title + house); small 20,60,430,125 (small half squeezed horizontally, bundle header and vertical slightly stretched vertically to fit the wide title).
