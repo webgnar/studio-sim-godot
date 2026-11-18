@@ -7,11 +7,17 @@
     {"tags": ["Cozy", "Simulation"], "label": "cozy sim"},
     {"tags": ["Relaxing", "Sandbox"], "label": "relaxing sandbox"},
     {"tags": ["Surreal", "Simulation"], "label": "weird sim"},
-    {"tags": ["Drawing"], "label": "drawing"}
+    {"tags": ["Drawing"], "label": "drawing"},
+    {"term": "low poly", "label": "low poly"},
+    {"tags": ["Simulation"], "term": "low poly", "label": "low poly sim"},
+    {"tags": ["Retro", "Simulation"], "label": "retro sim"}
   ],
   "similar_games": [582550, 1290000, 1135690],
+  "max_dev_followers": 100,
+  "max_game_followers": 500,
+  "fit_keywords": {"low poly": 10, "retro": 4},
   "fit_weights": {
-    "Drawing": 8, "First-Person": 5, "Cozy": 5, "Relaxing": 5, "Simulation": 4,
+    "Drawing": 8, "Retro": 6, "First-Person": 5, "Cozy": 5, "Relaxing": 5, "Simulation": 4,
     "Sandbox": 4, "Life Sim": 4, "Surreal": 4, "Psychedelic": 3, "Abstract": 3,
     "Experimental": 3, "Funny": 3, "Conspiracy": 3, "Colorful": 2, "Wholesome": 2,
     "Immersive Sim": 2, "Management": 2, "Aliens": 1, "Indie": 1
