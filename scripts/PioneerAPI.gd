@@ -8,7 +8,6 @@ extends Node
 const API_BASE := "https://studio-sim-gallery.vercel.app/api/voice"
 const API_HOST := "studio-sim-gallery.vercel.app"
 const STREAM_PATH := "/api/voice/tts-stream"
-const API_KEY := "jupTtic3qGOULETb2w7E"
 const REQUEST_TIMEOUT := 30.0
 
 ## Pioneer's streaming endpoint sends headerless 16-bit signed PCM, mono, at
@@ -104,7 +103,7 @@ func _process(_delta: float) -> void:
 		"connecting":
 			match status:
 				HTTPClient.STATUS_CONNECTED:
-					var headers := ["Content-Type: application/json", "X-API-Key: " + API_KEY]
+					var headers := ["Content-Type: application/json", "X-API-Key: " + ApiKey.get_key()]
 					var err := _stream_http.request(HTTPClient.METHOD_POST, STREAM_PATH, headers, _stream_body)
 					if err != OK:
 						_fail_stream("request failed: %s" % err)
@@ -240,7 +239,7 @@ func speak(text: String, voice_description: String = "") -> void:
 			return
 		speech_ready.emit(stream)
 	)
-	var headers := ["X-API-Key: " + API_KEY, "Content-Type: application/json"]
+	var headers := ["X-API-Key: " + ApiKey.get_key(), "Content-Type: application/json"]
 	var error := http.request(API_BASE + "/tts", headers, HTTPClient.METHOD_POST, JSON.stringify(payload))
 	if error != OK:
 		http.queue_free()
@@ -273,7 +272,7 @@ func transcribe(wav_bytes: PackedByteArray) -> void:
 			return
 		transcript_ready.emit(str(json.data.get("text", "")).strip_edges())
 	)
-	var headers := ["X-API-Key: " + API_KEY, "Content-Type: multipart/form-data; boundary=%s" % boundary]
+	var headers := ["X-API-Key: " + ApiKey.get_key(), "Content-Type: multipart/form-data; boundary=%s" % boundary]
 	var error := http.request_raw(API_BASE + "/stt", headers, HTTPClient.METHOD_POST, body)
 	if error != OK:
 		http.queue_free()

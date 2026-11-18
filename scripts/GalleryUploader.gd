@@ -8,7 +8,6 @@ signal upload_completed(gallery_id: String, image_url: String)
 signal upload_failed(error_message: String)
 
 const API_BASE_URL = "https://studio-sim-gallery.vercel.app/api"
-const API_KEY = "jupTtic3qGOULETb2w7E"
 const REQUEST_TIMEOUT = 60.0
 
 var is_uploading: bool = false
@@ -83,7 +82,7 @@ func upload_painting(png_path: String, glb_path: String, painting_name: String =
 
 	# Step 1: Get presigned URLs
 	var headers = [
-		"X-API-Key: " + API_KEY,
+		"X-API-Key: " + ApiKey.get_key(),
 	]
 	var error = _presign_request.request(API_BASE_URL + "/upload", headers, HTTPClient.METHOD_POST)
 	if error != OK:
@@ -162,7 +161,7 @@ func _check_uploads_complete() -> void:
 	# Step 3: Confirm upload (GLB is optional — PNG is sufficient for critique + social)
 	print("GalleryUploader: PNG uploaded (GLB: %s), confirming..." % ("ok" if _model_uploaded else "skipped"))
 	var headers = [
-		"X-API-Key: " + API_KEY,
+		"X-API-Key: " + ApiKey.get_key(),
 		"Content-Type: application/json",
 	]
 	var confirm_data = {"id": _current_id}

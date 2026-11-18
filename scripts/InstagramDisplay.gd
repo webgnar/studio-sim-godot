@@ -14,7 +14,6 @@ extends Node3D
 @onready var _status_label: Label = $SubViewport/StatusLabel
 
 const INSTAGRAM_FEED_URL = "https://studio-sim-gallery.vercel.app/api/instagram-feed"
-const API_KEY = "jupTtic3qGOULETb2w7E"
 const MAX_POSTS = 10
 const SLIDE_DURATION = 6.0
 const FETCH_INTERVAL = 300.0
@@ -80,7 +79,7 @@ func _fetch_feed() -> void:
 	_feed_request.cancel_request()
 	var headers = [
 		"Content-Type: application/json",
-		"X-API-Key: " + API_KEY,
+		"X-API-Key: " + ApiKey.get_key(),
 	]
 	var err := _feed_request.request(INSTAGRAM_FEED_URL, headers, HTTPClient.METHOD_GET)
 	if err != OK:

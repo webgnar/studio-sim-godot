@@ -149,7 +149,7 @@ func _fetch_reply(message: String) -> void:
 		"paintingsShipped": _count_paintings_shipped(),
 		"galleryVisitorCount": WorldStateManager.get_gallery_visitor_count() if has_node("/root/WorldStateManager") else 0,
 	})
-	var headers := ["Content-Type: application/json", "x-api-key: " + GalleryUploader.API_KEY]
+	var headers := ["Content-Type: application/json", "x-api-key: " + ApiKey.get_key()]
 	var error := _http_request.request(ASSISTANT_CHAT_URL, headers, HTTPClient.METHOD_POST, body)
 	if error != OK:
 		_show_status_message("Couldn't reach the studio backend.", _process_next_in_queue)

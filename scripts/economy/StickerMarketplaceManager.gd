@@ -12,7 +12,6 @@ signal purchase_failed(error: String)
 signal credits_received(amount: int)
 
 const API_BASE = "https://studio-sim-gallery.vercel.app/api"
-const API_KEY = "jupTtic3qGOULETb2w7E"
 const BOUGHT_STICKERS_FOLDER = "user://custom_stickers/bought_stickers/"
 const REQUEST_TIMEOUT = 30.0
 const CREDITS_POLL_INTERVAL = 300.0  # Re-check for sales every 5 minutes during a session
@@ -94,13 +93,13 @@ func fetch_marketplace() -> void:
 	if is_fetching:
 		return
 	is_fetching = true
-	var headers = ["X-API-Key: " + API_KEY]
+	var headers = ["X-API-Key: " + ApiKey.get_key()]
 	_marketplace_request.request(API_BASE + "/stickers/marketplace", headers, HTTPClient.METHOD_GET)
 
 
 func fetch_pending_credits() -> void:
 	var player_id = WorldStateManager.get_player_id()
-	var headers = ["X-API-Key: " + API_KEY]
+	var headers = ["X-API-Key: " + ApiKey.get_key()]
 	_credits_request.request(API_BASE + "/stickers/credits?player_id=" + player_id, headers, HTTPClient.METHOD_GET)
 
 
@@ -115,7 +114,7 @@ func list_sticker(sticker_filename: String, price: int, png_bytes: PackedByteArr
 
 	# Step 1: get presigned upload URL
 	var headers = [
-		"X-API-Key: " + API_KEY,
+		"X-API-Key: " + ApiKey.get_key(),
 		"Content-Type: application/json",
 	]
 	var body = JSON.stringify({
@@ -147,7 +146,7 @@ func buy_sticker(listing_id: String, price: int, png_url: String, sticker_name: 
 	EconomyManager.spend_money(price, "sticker_marketplace")
 
 	var headers = [
-		"X-API-Key: " + API_KEY,
+		"X-API-Key: " + ApiKey.get_key(),
 		"Content-Type: application/json",
 	]
 	var body = JSON.stringify({
@@ -210,7 +209,7 @@ func _on_upload_completed(result: int, response_code: int, _headers: PackedStrin
 	listing_step.emit("Saving listing to database...")
 	print("[Marketplace] PNG uploaded, confirming listing %s..." % _pending_listing_id)
 	var headers = [
-		"X-API-Key: " + API_KEY,
+		"X-API-Key: " + ApiKey.get_key(),
 		"Content-Type: application/json",
 	]
 	var body = JSON.stringify({"listing_id": _pending_listing_id})

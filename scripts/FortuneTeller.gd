@@ -2,7 +2,6 @@ class_name FortuneTeller extends CharacterBody3D
 
 const COOLDOWN = 120.0
 const API_URL = "https://studio-sim-gallery.vercel.app/api/astrology"
-const ASTROLOGY_API_KEY = "jupTtic3qGOULETb2w7E"
 
 @export var skin_material: StandardMaterial3D
 
@@ -82,7 +81,7 @@ func _fetch_from_backend(birth_date: String, birth_time: String, birth_location:
 		"birthLocation": birth_location,
 		"useAI": use_ai,
 	})
-	var headers := ["Content-Type: application/json", "x-api-key: " + ASTROLOGY_API_KEY]
+	var headers := ["Content-Type: application/json", "x-api-key: " + ApiKey.get_key()]
 	var error := _http_request.request(API_URL, headers, HTTPClient.METHOD_POST, body)
 	if error != OK:
 		_fallback_local(birth_date)
