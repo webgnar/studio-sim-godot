@@ -36,7 +36,7 @@ Quest For Stoken) and change:
 | `fit_keywords` | Points for a phrase in the store description, for styles Steam has no tag for, e.g. `{"low poly": 10}` (also matches "low-poly" and "lowpoly"). Found phrases show in the fit tags. |
 | `exclude_appids` | Games to always leave out. |
 | `max_dev_followers` | Leave out games whose developer's Steam creator page (store.steampowered.com/developer/... or /curator/...) has more followers than this, so outreach goes to small devs. Studio Sim uses 100. Leave it out for no limit. Games whose developer has no creator page are kept. |
-| `max_game_followers` | Leave out games that themselves have more Steam followers than this. Catches popular games from developers with no creator page. Studio Sim uses 100. Leave it out for no limit. |
+| `max_game_followers` | Leave out games that themselves have more Steam followers than this. Catches popular games from developers with no creator page. Studio Sim uses 500. Leave it out for no limit. |
 | `report_title`, `report_blurb` | Text at the top of report.html. |
 | `outreach` | The pitch: `title`, `game`, `intro` (one sentence, your store link is added after it), `contact`, `signature`, `liked_example`. Or give a full `body` and `subject` yourself. |
 

@@ -14,7 +14,7 @@
   ],
   "similar_games": [582550, 1290000, 1135690],
   "max_dev_followers": 100,
-  "max_game_followers": 100,
+  "max_game_followers": 500,
   "fit_keywords": {"low poly": 10, "retro": 4},
   "fit_weights": {
     "Drawing": 8, "Retro": 6, "First-Person": 5, "Cozy": 5, "Relaxing": 5, "Simulation": 4,
