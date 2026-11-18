@@ -10,6 +10,7 @@
     {"tags": ["Drawing"], "label": "drawing"}
   ],
   "similar_games": [582550, 1290000, 1135690],
+  "max_dev_followers": 100,
   "fit_weights": {
     "Drawing": 8, "First-Person": 5, "Cozy": 5, "Relaxing": 5, "Simulation": 4,
     "Sandbox": 4, "Life Sim": 4, "Surreal": 4, "Psychedelic": 3, "Abstract": 3,

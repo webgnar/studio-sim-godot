@@ -134,7 +134,8 @@ SOCIAL = {
 
 
 def store_page(appid):
-    """Social links devs add to their store page, plus the store's user tags."""
+    """Social links devs add to their store page, the store's user tags, and
+    the developer's Steam creator page(s)."""
     page = get(f"https://store.steampowered.com/app/{appid}/?cc=us&l=english") or ""
     tags = [html.unescape(t).strip() for t in re.findall(r'class="app_tag"[^>]*>\s*([^<]+?)\s*<', page)]
     urls = [urllib.parse.unquote(u) for u in re.findall(r"linkfilter/\?u=([^\"'&]+)", page)]
@@ -146,7 +147,58 @@ def store_page(appid):
             if m and "steampowered" not in u and "valvesoftware" not in u:
                 found.setdefault(key, "https://" + m.group(0).split("://")[-1])
                 break
-    return found, [t for t in tags if t != "+"]
+    return found, [t for t in tags if t != "+"], dev_pages(page)
+
+
+def dev_pages(store_html):
+    """Steam creator pages of the developer(s) in a store page's Developer row.
+    When the store links a developer to a plain search instead of its creator
+    page, look the name up in Steam's search suggestions (exact name match)."""
+    block = re.search(r'id="developers_list"(.*?)</div>', store_html, re.S)
+    block = block.group(1) if block else ""
+    urls = re.findall(r'href="(https://store\.steampowered\.com/(?:developer|publisher|curator)/[^"?]+)', block)
+    for name in re.findall(r'search/\?developer=([^&"]+)', block):
+        u = find_creator(urllib.parse.unquote_plus(html.unescape(name)))
+        if u:
+            urls.append(u)
+    return list(dict.fromkeys(urls))
+
+
+_name_cache = {}
+
+
+def find_creator(name):
+    """Creator page URL for a developer name, or None. Only an exact (case-insensitive) name match counts."""
+    key = re.sub(r"\W+", "", name).lower()
+    if key not in _name_cache:
+        q = urllib.parse.urlencode({"term": name, "f": "games", "cc": "US", "realm": 1, "l": "english",
+                                    "use_store_query": 1, "search_creators_and_tags": 1})
+        page = get("https://store.steampowered.com/search/suggest?" + q) or ""
+        _name_cache[key] = None
+        for href, title in re.findall(r'class="match match_creator[^"]*"[^>]*href="([^"?]+)[^"]*">.*?'
+                                      r'class="match_name\s*">([^<]*)<', page, re.S):
+            if re.sub(r"\W+", "", html.unescape(title)).lower() == key:
+                _name_cache[key] = href
+                break
+    return _name_cache[key]
+
+
+_creator_cache = {}
+
+
+def creator_followers(url):
+    """Follower count on a Steam creator page (store.steampowered.com/developer/... or /curator/...)."""
+    if url not in _creator_cache:
+        page = get(url + "?cc=us&l=english") or ""
+        m = re.search(r'class="num_followers"[^>]*>\s*([\d,.\s]+?)\s*<', page)
+        _creator_cache[url] = int(re.sub(r"\D", "", m.group(1))) if m and re.sub(r"\D", "", m.group(1)) else None
+    return _creator_cache[url]
+
+
+def dev_followers(urls):
+    """Most followers among a game's developer creator pages, or None if it has none."""
+    counts = [n for n in map(creator_followers, urls) if n is not None]
+    return max(counts) if counts else None
 
 
 def website_emails(url):
@@ -167,10 +219,11 @@ def parse_date(text):
     return None
 
 
-COLS = ["new", "fit_score", "fit_tags", "name", "release", "released", "has_demo", "followers", "wishlist_rank",
+COLS = ["new", "fit_score", "fit_tags", "name", "release", "released", "has_demo", "followers", "dev_followers",
+        "wishlist_rank",
         "reviews", "developer", "publisher", "self_published", "indie", "support_email", "website_emails", "website",
         "x", "bluesky", "discord", "youtube", "tiktok", "instagram", "itch", "presskit", "support_url", "store_url",
-        "source", "tags", "short_description", "header_image", "appid"]
+        "dev_page", "source", "tags", "short_description", "header_image", "appid"]
 
 
 def write_outputs(rows, out, today, meta):
@@ -209,7 +262,7 @@ def learn_weights(appids, max_weight=8):
     for appid in appids:
         d = app_details(appid)
         seen_names.append(d.get("name") if d else str(appid))
-        _, tags = store_page(appid)
+        _, tags, _ = store_page(appid)
         for i, t in enumerate(tags[:20]):
             score[t] = score.get(t, 0) + (20 - i) / 20
     if not score:
@@ -238,6 +291,9 @@ def main():
     ap.add_argument("--max-recent", type=int, default=150)
     ap.add_argument("--max-extra", type=int, default=50, help="results per extra search")
     ap.add_argument("--min-followers", type=int, default=0)
+    ap.add_argument("--max-dev-followers", type=int,
+                    help="skip games whose developer's Steam creator page has more followers than this "
+                         "(default: the profile's max_dev_followers; -1 = no limit)")
     ap.add_argument("--min-fit", type=int, default=0, help="drop games whose fit score is below this")
     ap.add_argument("--no-website", action="store_true", help="skip fetching dev websites for emails (faster)")
     ap.add_argument("--seen", help="file of appids from earlier runs; new games are flagged and the file is updated")
@@ -245,6 +301,11 @@ def main():
     args = ap.parse_args()
     prof = load_profile(args)
     today = dt.date.today()
+    max_dev = args.max_dev_followers if args.max_dev_followers is not None else prof.get("max_dev_followers")
+    if max_dev is not None and max_dev < 0:
+        max_dev = None
+    if max_dev is not None:
+        print(f"Skipping games whose developer page has over {max_dev:,} followers", file=sys.stderr)
 
     ids = tag_ids()
     def resolve(names):
@@ -307,19 +368,27 @@ def main():
         except FileNotFoundError:
             pass
 
-    meta = {"profile": {k: prof.get(k) for k in ("name", "our_appid", "report_title", "report_blurb", "outreach")},
+    meta = {"profile": {k: prof.get(k) for k in ("name", "our_appid", "report_title", "report_blurb", "outreach",
+                                                     "max_dev_followers")},
             "weights": weights}
-    rows = []
+    rows, big_devs = [], 0
     total = len(cands)
     for i, c in enumerate(cands.values(), 1):
         print(f"[{i}/{total}] {c['name']}", file=sys.stderr)
         d = app_details(c["appid"])
         if not d or d.get("type") != "game":
             continue
-        links, tags = store_page(c["appid"])
+        links, tags, devs_pages = store_page(c["appid"])
         fit = sum(weights.get(t, 0) for t in tags)
         if fit < args.min_fit:
             continue
+        dev_fol = dev_followers(devs_pages)
+        if max_dev is not None and dev_fol is not None and dev_fol > max_dev:
+            print(f"  skipped: developer page has {dev_fol:,} followers", file=sys.stderr)
+            big_devs += 1
+            continue
+        c["dev_followers"] = "" if dev_fol is None else dev_fol
+        c["dev_page"] = devs_pages[0] if devs_pages else ""
         devs, pubs = d.get("developers") or [], d.get("publishers") or []
         genres = [g["description"] for g in d.get("genres", [])]
         support = d.get("support_info") or {}
@@ -359,6 +428,8 @@ def main():
     if args.seen:
         with open(args.seen, "w") as f:
             f.write("\n".join(str(a) for a in sorted(seen | {r["appid"] for r in rows})) + "\n")
+    if max_dev is not None:
+        print(f"Skipped {big_devs} game(s) whose developer page has over {max_dev:,} followers", file=sys.stderr)
     print(f"Wrote {len(rows)} games to {args.out}.csv and {args.out}.json", file=sys.stderr)
 
 

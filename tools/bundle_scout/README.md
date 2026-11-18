@@ -34,6 +34,7 @@ Quest For Stoken) and change:
 | `similar_games` | Appids of existing games like yours. Their store tags are learned into the fit score automatically (top tags count most; generic ones like Indie are capped at 1). |
 | `fit_weights` | Hand-set points per Steam tag. These win over learned ones. |
 | `exclude_appids` | Games to always leave out. |
+| `max_dev_followers` | Leave out games whose developer's Steam creator page (store.steampowered.com/developer/... or /curator/...) has more followers than this, so outreach goes to small devs. Studio Sim uses 100. Leave it out for no limit. Games whose developer has no creator page are kept. |
 | `report_title`, `report_blurb` | Text at the top of report.html. |
 | `outreach` | The pitch: `title`, `game`, `intro` (one sentence, your store link is added after it), `contact`, `signature`, `liked_example`. Or give a full `body` and `subject` yourself. |
 
@@ -58,8 +59,14 @@ python3 find_games.py --name "My Game" --tags "Management" --similar 239820,3626
 
 Useful options: `--max-upcoming 50 --max-soon 30 --max-recent 50` for a quick
 scan, `--no-website` to skip dev websites, `--min-fit 5` to drop weak fits,
-`--seen seen.txt` to flag games that are new since the last run.
-`python3 find_games.py --help` lists them all.
+`--seen seen.txt` to flag games that are new since the last run,
+`--max-dev-followers 500` to change the developer-page limit for one run
+(`-1` turns it off). `python3 find_games.py --help` lists them all.
+
+Results made before the developer-page limit existed can be checked without
+a new scan: `python3 dev_followers.py results.json` adds the counts, then
+`make_outreach.py` leaves the big developers out (it also takes
+`--max-dev-followers`).
 
 A full scan of ~650 games takes 2 to 3 hours, mostly because Steam
 rate-limits follower counts. Partial results are saved every 25 games.
