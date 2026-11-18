@@ -384,7 +384,7 @@ func _generate_ai_painting_line(painting_name: String, artist_name: String, pain
 		"galleryId": gallery_id,
 		"recentLines": _recent_lines.get("painting:" + painting_name, []),
 	})
-	var headers := ["Content-Type: application/json", "x-api-key: " + GalleryUploader.API_KEY]
+	var headers := ["Content-Type: application/json", "x-api-key: " + ApiKey.get_key()]
 	var error := _http_request.request(AI_VISITOR_DIALOGUE_URL, headers, HTTPClient.METHOD_POST, body)
 	if error != OK:
 		return VisitorDialogueGenerator.generate_painting_line(_personality, painting_name, artist_name)
@@ -406,7 +406,7 @@ func _generate_ai_attraction_line(item_title: String, item_description: String, 
 		"locale": LocaleManager.current_locale,
 		"recentLines": _recent_lines.get("attraction:" + item_title, []),
 	})
-	var headers := ["Content-Type: application/json", "x-api-key: " + GalleryUploader.API_KEY]
+	var headers := ["Content-Type: application/json", "x-api-key: " + ApiKey.get_key()]
 	var error := _http_request.request(AI_ATTRACTION_DIALOGUE_URL, headers, HTTPClient.METHOD_POST, body)
 	if error != OK:
 		return VisitorDialogueGenerator.generate_attraction_line(_personality, item_title)

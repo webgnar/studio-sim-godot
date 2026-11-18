@@ -727,7 +727,7 @@ func _fetch_social_stats(painting_id: String, gallery_id: String) -> void:
 		return  # A request is already in flight; the result will be checked against selected painting
 	_stats_fetching_id = painting_id
 	var url = GalleryUploader.API_BASE_URL + "/stats/" + gallery_id
-	var headers = ["X-API-Key: " + GalleryUploader.API_KEY]
+	var headers = ["X-API-Key: " + ApiKey.get_key()]
 	print("[InventoryTab] Fetching stats from: ", url)
 	var error = _stats_http.request(url, headers, HTTPClient.METHOD_GET)
 	if error != OK:

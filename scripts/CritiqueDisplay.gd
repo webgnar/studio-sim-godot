@@ -208,7 +208,7 @@ func _generate_ai_critique(critic_type: String, image_url: String = "") -> Strin
 		"process": _cached_process,
 		"paintingsShipped": WorldStateManager.shipped_count(),
 	})
-	var headers := ["Content-Type: application/json"]
+	var headers := ["Content-Type: application/json", "x-api-key: " + ApiKey.get_key()]
 	var error := _http_request.request(AI_CRITIQUE_URL, headers, HTTPClient.METHOD_POST, body)
 	if error != OK:
 		return _generate_template_critique(critic_type)
@@ -416,7 +416,7 @@ func _send_talk_back(player_said: String, choice_key: String) -> void:
 		"playerSaid": player_said,
 		"choice": choice_key,
 	})
-	var error := _talk_request.request(CRITIQUE_REPLY_URL, ["Content-Type: application/json"], HTTPClient.METHOD_POST, body)
+	var error := _talk_request.request(CRITIQUE_REPLY_URL, ["Content-Type: application/json", "x-api-key: " + ApiKey.get_key()], HTTPClient.METHOD_POST, body)
 	if error != OK:
 		_set_talk(Talk.DONE)
 		return

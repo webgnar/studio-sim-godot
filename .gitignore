@@ -17,3 +17,6 @@
 
 # Baked lightmap must import as a layered texture (see docs/BAKED_LIGHTING.md)
 !scenes/world.exr.import
+
+# Gallery server key: never commit it. See scripts/ApiKey.gd.
+data/api_key.json
