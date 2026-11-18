@@ -21,6 +21,9 @@ ap.add_argument("--top", type=int, default=250, help="without a queue file: how 
 ap.add_argument("--max-dev-followers", type=int,
                 help="leave out games whose developer page has more followers than this "
                      "(default: the profile's max_dev_followers; -1 = no limit)")
+ap.add_argument("--max-game-followers", type=int,
+                help="leave out games with more Steam followers than this "
+                     "(default: the profile's max_game_followers; -1 = no limit)")
 ap.add_argument("--write-queue", help="also save the chosen order here (feed it to fetch_thumbs.py)")
 args = ap.parse_args()
 
@@ -33,6 +36,13 @@ if max_dev is not None and max_dev >= 0:
     dropped = [r for r in data["rows"] if big(r)]
     data["rows"] = [r for r in data["rows"] if not big(r)]
     print(f"Left out {len(dropped)} game(s) whose developer page has over {max_dev:,} followers")
+max_game = args.max_game_followers
+if max_game is None:
+    max_game = (data.get("profile") or {}).get("max_game_followers")
+if max_game is not None and max_game >= 0:
+    n = len(data["rows"])
+    data["rows"] = [r for r in data["rows"] if not (isinstance(r.get("followers"), int) and r["followers"] > max_game)]
+    print(f"Left out {n - len(data['rows'])} game(s) with over {max_game:,} followers")
 rows = {r["appid"]: r for r in data["rows"]}
 if args.queue:
     order = [int(a) for a in open(args.queue).read().split() if a.isdigit()]

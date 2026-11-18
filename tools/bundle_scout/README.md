@@ -36,6 +36,7 @@ Quest For Stoken) and change:
 | `fit_keywords` | Points for a phrase in the store description, for styles Steam has no tag for, e.g. `{"low poly": 10}` (also matches "low-poly" and "lowpoly"). Found phrases show in the fit tags. |
 | `exclude_appids` | Games to always leave out. |
 | `max_dev_followers` | Leave out games whose developer's Steam creator page (store.steampowered.com/developer/... or /curator/...) has more followers than this, so outreach goes to small devs. Studio Sim uses 100. Leave it out for no limit. Games whose developer has no creator page are kept. |
+| `max_game_followers` | Leave out games that themselves have more Steam followers than this. Catches popular games from developers with no creator page. Studio Sim uses 100. Leave it out for no limit. |
 | `report_title`, `report_blurb` | Text at the top of report.html. |
 | `outreach` | The pitch: `title`, `game`, `intro` (one sentence, your store link is added after it), `contact`, `signature`, `liked_example`. Or give a full `body` and `subject` yourself. |
 
@@ -62,7 +63,8 @@ Useful options: `--max-upcoming 50 --max-soon 30 --max-recent 50` for a quick
 scan, `--no-website` to skip dev websites, `--min-fit 5` to drop weak fits,
 `--seen seen.txt` to flag games that are new since the last run,
 `--max-dev-followers 500` to change the developer-page limit for one run
-(`-1` turns it off). `python3 find_games.py --help` lists them all.
+(`-1` turns it off), and `--max-game-followers` the same for the game's own
+followers. `python3 find_games.py --help` lists them all.
 
 Results made before the developer-page limit existed can be checked without
 a new scan: `python3 dev_followers.py results.json` adds the counts, then

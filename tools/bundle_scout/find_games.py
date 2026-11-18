@@ -302,6 +302,9 @@ def main():
     ap.add_argument("--max-dev-followers", type=int,
                     help="skip games whose developer's Steam creator page has more followers than this "
                          "(default: the profile's max_dev_followers; -1 = no limit)")
+    ap.add_argument("--max-game-followers", type=int,
+                    help="skip games that themselves have more Steam followers than this "
+                         "(default: the profile's max_game_followers; -1 = no limit)")
     ap.add_argument("--min-fit", type=int, default=0, help="drop games whose fit score is below this")
     ap.add_argument("--no-website", action="store_true", help="skip fetching dev websites for emails (faster)")
     ap.add_argument("--seen", help="file of appids from earlier runs; new games are flagged and the file is updated")
@@ -314,6 +317,11 @@ def main():
         max_dev = None
     if max_dev is not None:
         print(f"Skipping games whose developer page has over {max_dev:,} followers", file=sys.stderr)
+    max_game = args.max_game_followers if args.max_game_followers is not None else prof.get("max_game_followers")
+    if max_game is not None and max_game < 0:
+        max_game = None
+    if max_game is not None:
+        print(f"Skipping games with over {max_game:,} followers", file=sys.stderr)
 
     ids = tag_ids()
     def resolve(names):
@@ -379,9 +387,9 @@ def main():
             pass
 
     meta = {"profile": {k: prof.get(k) for k in ("name", "our_appid", "report_title", "report_blurb", "outreach",
-                                                     "max_dev_followers")},
+                                                     "max_dev_followers", "max_game_followers")},
             "weights": weights}
-    rows, big_devs = [], 0
+    rows, big_devs, big_games = [], 0, 0
     total = len(cands)
     for i, c in enumerate(cands.values(), 1):
         print(f"[{i}/{total}] {c['name']}", file=sys.stderr)
@@ -425,6 +433,10 @@ def main():
         })
         if (c["followers"] or 0) < args.min_followers:
             continue
+        if max_game is not None and (c["followers"] or 0) > max_game:
+            print(f"  skipped: game has {c['followers']:,} followers", file=sys.stderr)
+            big_games += 1
+            continue
         c["tags"] = ", ".join(tags[:12])
         c["fit_score"] = fit
         c["fit_tags"] = ", ".join(found_kw + [t for t in tags if weights.get(t, 0) >= 3])
@@ -442,6 +454,8 @@ def main():
             f.write("\n".join(str(a) for a in sorted(seen | {r["appid"] for r in rows})) + "\n")
     if max_dev is not None:
         print(f"Skipped {big_devs} game(s) whose developer page has over {max_dev:,} followers", file=sys.stderr)
+    if max_game is not None:
+        print(f"Skipped {big_games} game(s) with over {max_game:,} followers", file=sys.stderr)
     print(f"Wrote {len(rows)} games to {args.out}.csv and {args.out}.json", file=sys.stderr)
 
 
