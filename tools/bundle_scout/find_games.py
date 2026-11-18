@@ -70,11 +70,12 @@ def tag_ids():
     return {t["name"]: t["tagid"] for t in data}
 
 
-def search(filter_name=None, sort_by=None, limit=200, tag=()):
-    """Yield (appid, name, release_text) from the Steam store search."""
+def search(filter_name=None, sort_by=None, limit=200, tag=(), term=""):
+    """Yield (appid, name, release_text) from the Steam store search. A term
+    is free text; Steam matches it against names and store descriptions."""
     out, start = [], 0
     while len(out) < limit:
-        q = {"query": "", "start": start, "count": 50, "category1": 998, "infinite": 1, "cc": "us", "l": "english"}
+        q = {"term": term, "start": start, "count": 50, "category1": 998, "infinite": 1, "cc": "us", "l": "english"}
         if tag:
             q["tags"] = ",".join(map(str, tag)) if isinstance(tag, (list, tuple)) else tag
         if filter_name:
@@ -210,6 +211,13 @@ def website_emails(url):
     return sorted(e for e in emails if not e.lower().endswith((".png", ".jpg")) and "sentry" not in e.lower())[:3]
 
 
+def keyword_re(phrase):
+    """Match a fit keyword in store text; spaces in it also match '-' or nothing
+    ("low poly" finds "low-poly" and "lowpoly")."""
+    parts = [re.escape(w) for w in phrase.lower().split()]
+    return re.compile(r"\b" + r"[\s-]?".join(parts) + r"\b", re.I)
+
+
 def parse_date(text):
     for fmt in ("%b %d, %Y", "%d %b, %Y", "%B %d, %Y", "%b %Y", "%B %Y", "%Y"):
         try:
@@ -315,6 +323,7 @@ def main():
             return None
         return [ids[n] for n in names]
 
+    keywords = {k: v for k, v in (prof.get("fit_keywords") or {}).items() if v}
     weights = {}
     similar = prof.get("similar_games") or []
     if similar:
@@ -346,15 +355,16 @@ def main():
                     break
                 cands.setdefault(appid, {"appid": appid, "name": name, "release": rel, "wishlist_rank": "", "source": "recent release"})
     for extra in prof.get("extra_searches") or []:
-        names, label = extra["tags"], extra.get("label") or " + ".join(extra["tags"])
-        tags = resolve(names)
-        if not tags:
+        names, term = extra.get("tags") or [], extra.get("term") or ""
+        label = extra.get("label") or " + ".join(names + ([f'"{term}"'] if term else []))
+        tags = resolve(names) if names else []
+        if tags is None or not (tags or term):
             print(f"Skipping search {label}", file=sys.stderr)
             continue
         print(f"Searching {label} (upcoming + recent)...", file=sys.stderr)
-        for appid, name, rel in search("comingsoon", limit=args.max_extra, tag=tags):
+        for appid, name, rel in search("comingsoon", limit=args.max_extra, tag=tags, term=term):
             cands.setdefault(appid, {"appid": appid, "name": name, "release": rel, "wishlist_rank": "", "source": f"upcoming ({label})"})
-        for appid, name, rel in search(sort_by="Released_DESC", limit=args.max_extra, tag=tags):
+        for appid, name, rel in search(sort_by="Released_DESC", limit=args.max_extra, tag=tags, term=term):
             d = parse_date(rel)
             if d and d <= today and (today - d).days <= max(args.recent_days, 180):
                 cands.setdefault(appid, {"appid": appid, "name": name, "release": rel, "wishlist_rank": "", "source": f"recent ({label})"})
@@ -379,7 +389,9 @@ def main():
         if not d or d.get("type") != "game":
             continue
         links, tags, devs_pages = store_page(c["appid"])
-        fit = sum(weights.get(t, 0) for t in tags)
+        text = " ".join(d.get(k) or "" for k in ("short_description", "about_the_game", "detailed_description"))
+        found_kw = [k for k in keywords if keyword_re(k).search(text)]
+        fit = sum(weights.get(t, 0) for t in tags) + sum(keywords[k] for k in found_kw)
         if fit < args.min_fit:
             continue
         dev_fol = dev_followers(devs_pages)
@@ -415,7 +427,7 @@ def main():
             continue
         c["tags"] = ", ".join(tags[:12])
         c["fit_score"] = fit
-        c["fit_tags"] = ", ".join(t for t in tags if weights.get(t, 0) >= 3)
+        c["fit_tags"] = ", ".join(found_kw + [t for t in tags if weights.get(t, 0) >= 3])
         for k in SOCIAL:
             c[k] = links.get(k, "")
         site_emails = [] if args.no_website else website_emails(c["website"])

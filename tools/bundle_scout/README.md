@@ -30,9 +30,10 @@ Quest For Stoken) and change:
 | `name` | Your game's name. |
 | `our_appid` | Your Steam appid (left out of results, used for the store link in the pitch). `null` if you don't have one yet. |
 | `search_tags` | Steam tags every searched game must have. Searched three ways: most-wishlisted upcoming, soonest upcoming, and recent releases. |
-| `extra_searches` | More tag combos to search (upcoming + recent), e.g. `{"tags": ["Tycoon"], "label": "tycoon"}`. |
+| `extra_searches` | More searches (upcoming + recent): tag combos, free text, or both, e.g. `{"tags": ["Tycoon"], "label": "tycoon"}` or `{"term": "low poly"}`. Free text finds things Steam has no tag for; Steam matches it against names and descriptions. |
 | `similar_games` | Appids of existing games like yours. Their store tags are learned into the fit score automatically (top tags count most; generic ones like Indie are capped at 1). |
 | `fit_weights` | Hand-set points per Steam tag. These win over learned ones. |
+| `fit_keywords` | Points for a phrase in the store description, for styles Steam has no tag for, e.g. `{"low poly": 10}` (also matches "low-poly" and "lowpoly"). Found phrases show in the fit tags. |
 | `exclude_appids` | Games to always leave out. |
 | `max_dev_followers` | Leave out games whose developer's Steam creator page (store.steampowered.com/developer/... or /curator/...) has more followers than this, so outreach goes to small devs. Studio Sim uses 100. Leave it out for no limit. Games whose developer has no creator page are kept. |
 | `report_title`, `report_blurb` | Text at the top of report.html. |
