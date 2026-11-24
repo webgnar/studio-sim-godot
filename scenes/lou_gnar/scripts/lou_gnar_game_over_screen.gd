@@ -75,7 +75,7 @@ func _ready() -> void:
 	root.add_child(_board)
 	_board_title = LouGnarUI.make_label("", 24, LouGnarUI.LIME)
 	_board.add_child(_board_title)
-	_board_title.text = "GLOBAL TOP %d" % LouGnarLeaderboard.MAX_ENTRIES
+	_board_title.text = "STEAM GLOBAL TOP %d" % LouGnarLeaderboard.MAX_ENTRIES
 	_board_message = LouGnarUI.make_label("", 22, Color.WHITE)
 	_board_message.position = Vector2(0, LIST_TOP)
 	_board.add_child(_board_message)

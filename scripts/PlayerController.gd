@@ -80,6 +80,10 @@ var _bob_time: float = 0.0
 var _original_camera_position: Vector3
 var _prev_bob_y: float = 0.0
 var _footstep_triggered: bool = false
+# Set while player input is off. Gamepad B is both go_back and crouch, so the B
+# press that backs out of e.g. the Lou Gnar cabinet would otherwise toggle a
+# crouch the moment input comes back. Cleared once crouch is released.
+var _ignore_crouch_until_release: bool = false
 
 # Footstep sounds
 var _footstep_streams: Array[AudioStream] = []
@@ -296,6 +300,7 @@ func _physics_process(delta: float) -> void:
 		# player along whatever they're touching (e.g. the arcade cabinet).
 		velocity.x = 0.0
 		velocity.z = 0.0
+		_ignore_crouch_until_release = true
 		# Still apply gravity and move_and_slide to keep physics working
 		if not is_on_floor():
 			velocity.y -= gravity * delta
@@ -332,7 +337,9 @@ func _physics_process(delta: float) -> void:
 				velocity.y = jump_velocity
 
 	# --- CROUCH TOGGLE ---
-	if SteamInput.is_action_just_pressed("crouch"):
+	if _ignore_crouch_until_release and not SteamInput.is_action_pressed("crouch"):
+		_ignore_crouch_until_release = false
+	if not _ignore_crouch_until_release and SteamInput.is_action_just_pressed("crouch"):
 		_is_crouching = !_is_crouching
 		_apply_crouch_shape()
 
