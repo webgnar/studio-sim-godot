@@ -191,10 +191,10 @@ func _update_manifest(mission_file_path: String):
 				if manifest.has("missions"):
 					missions = manifest["missions"]
 
-	# Add the new mission if not already in list
+	# Add the new mission at the end of the list (the manifest's order is the
+	# order the Commissions screen shows them in)
 	if not missions.has(filename):
 		missions.append(filename)
-		missions.sort()  # Keep alphabetically sorted
 
 	# Update manifest
 	manifest["missions"] = missions
