@@ -42,7 +42,7 @@ PC on Steam (GodotSteam, Steam Input, achievements, leaderboards), keyboard and 
 
 ### Missions (commissions)
 
-A second loop sits beside free painting. The Commissions tab in the pause menu lists missions, each with a reference image. The player recreates it on the canvas and presses Submit. The painting is scored by colour distribution (70%) and pixel match (30%); 70% passes. Missions record grade and best score, and passing pays a commission. A painting that passed a commission sells for only 25% when shipped, since the commission already paid for it.
+A second loop sits beside free painting. The Commissions tab in the pause menu lists 13 missions, each a painting from the hall of fame credited to its painter. Completed ones stay in the list for good; the other slots are re-picked at random from the hall of fame every launch (see `hall_of_fame/README.md`). The player recreates it on the canvas and presses Submit. The painting is scored by colour distribution (70%) and pixel match (30%); 70% passes. Missions record grade and best score, and passing pays a commission. A painting that passed a commission sells for only 25% when shipped, since the commission already paid for it.
 
 There are 17 missions today (`resources/missions/`), all at the default reward of $75. **[?]** Are missions a core pillar, a tutorial, or a side mode? Their reward is far below a free shipped painting, see Economy.
 

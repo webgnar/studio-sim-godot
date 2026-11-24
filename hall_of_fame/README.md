@@ -25,9 +25,11 @@ network calls, everything here is a build-time snapshot.
 
 ## Hall of fame commissions
 
-`MissionManager` also turns every square painting here into a commission. Five of them go at the
-end of the Commissions list: ones the player has completed stay there for good, and the other
-slots get random hall of fame paintings, picked again every time the game starts
-(`HALL_OF_FAME_SLOTS`). Wide paintings stay on the wall only. A painting with a `recording` gets
-Watch Replay. Hall of fame commissions don't count toward the "complete every commission"
-achievement. Unflag a painting on the website and re-sync to take it out of the next build.
+The Commissions list is made from the square paintings here (`MissionManager`). It has 13 slots
+(`HALL_OF_FAME_SLOTS`): ones the player has completed stay there for good, and the other slots get
+random hall of fame paintings, picked again every time the game starts. Each one is credited
+"by <painter>", centered under the painting. Wide paintings stay on the wall only. A painting with
+a `recording` gets Watch Replay. Completing all 13 earns the "complete every commission"
+achievement. The hand-made commissions in `resources/missions/` still load but are hidden
+(`SHOW_MANIFEST_COMMISSIONS`). Unflag a painting on the website and re-sync to take it out of the
+next build.
