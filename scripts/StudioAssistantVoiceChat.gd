@@ -173,11 +173,7 @@ func _remember_turns(message: String, reply: String) -> void:
 func _count_missions_completed() -> int:
 	if not has_node("/root/MissionManager"):
 		return 0
-	var count := 0
-	for entry in MissionManager.progression.values():
-		if typeof(entry) == TYPE_DICTIONARY and entry.get("completed", false):
-			count += 1
-	return count
+	return MissionManager.get_completed_count()
 
 func _count_paintings_shipped() -> int:
 	if not has_node("/root/WorldStateManager"):
