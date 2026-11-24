@@ -31,7 +31,6 @@ const MissionCardScene = preload("res://scenes/UI/MissionCard.tscn")
 
 # Time-lapse replay of the selected commission being painted (if it has a recording)
 var replay_button: Button = null
-var replay_label: Label = null
 var replay: PaintingReplay = null
 var replay_buttons_separation := 60
 
@@ -548,7 +547,6 @@ func _update_preview_panel():
 	var can_replay := selected_mission.has_recording()
 	replay_button.visible = can_replay
 	replay_button.text = tr("Watch Replay")
-	replay_label.visible = false
 	var shown_buttons := 0
 	for b in [view_results_button, replay_button, start_button]:
 		if b.visible:
@@ -640,7 +638,7 @@ func _on_results_back():
 
 func _setup_replay():
 	"""Add the Watch Replay button (between View Results and Start) and the
-	sticker counter under the preview image, plus the player that draws it."""
+	player that draws the replay."""
 	var container := view_results_button.get_parent() as HBoxContainer
 	replay_buttons_separation = container.get_theme_constant("separation")
 	replay_button = Button.new()
@@ -653,17 +651,9 @@ func _setup_replay():
 	container.move_child(replay_button, start_button.get_index())
 	replay_button.pressed.connect(_on_replay_pressed)
 
-	replay_label = Label.new()
-	replay_label.name = "ReplayLabel"
-	replay_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	replay_label.visible = false
-	preview_content.add_child(replay_label)
-	preview_content.move_child(replay_label, preview_image.get_index() + 1)
-
 	replay = PaintingReplay.new()
 	replay.name = "PaintingReplay"
 	add_child(replay)
-	replay.progress_changed.connect(_on_replay_progress)
 	replay.finished.connect(_on_replay_finished)
 
 func _on_replay_pressed():
@@ -679,10 +669,6 @@ func _on_replay_pressed():
 		return
 	preview_image.texture = replay.texture
 	replay_button.text = tr("Skip to End")
-	replay_label.visible = true
-
-func _on_replay_progress(shown: int, total: int):
-	replay_label.text = tr("Replay: sticker %d of %d") % [shown, total]
 
 func _on_replay_finished():
 	replay_button.text = tr("Watch Again")
@@ -692,7 +678,6 @@ func _stop_replay():
 	if not replay or not replay.has_content():
 		return
 	replay.stop()
-	replay_label.visible = false
 	replay_button.text = tr("Watch Replay")
 	if selected_mission and selected_mission.reference_image_path != "":
 		preview_image.texture = load(selected_mission.reference_image_path) as Texture2D
