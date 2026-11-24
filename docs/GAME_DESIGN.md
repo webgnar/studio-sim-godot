@@ -204,7 +204,7 @@ zack will paint an all-new set of commission paintings for the game, replacing t
 - While he paints each one, the game records the order he places stickers (which sticker, position, rotation, scale, and when), saved alongside the commission.
 - The Commissions screen plays that recording back as a time-lapse, so the player watches the painting being built sticker by sticker before trying to recreate it.
 - Built (first step): every 2D canvas now records its stickers as they're placed, undone and deleted (`PaintingRecording`, saved with the canvas). Saving a commission with F6 writes `<id>_recording.json` next to it, and the commission's target stickers come from the recording, so stickers the auto-bake flattened are no longer lost. Commissions with a recording get a **Watch Replay** button in the Commissions screen (`PaintingReplay`; press again to skip to the end). Replay speed: `SECONDS_PER_STICKER`, `MIN_SECONDS`, `MAX_SECONDS`, `LONGEST_PAUSE` at the top of `scripts/ui/PaintingReplay.gd`.
-- First recorded commission is painted by the bot: `bot_study_1` (studio style, every pick any sticker, seed 4). Make more with `tools/bot_commission/MakeBotCommission.tscn` (see the script's header). To record his own: paint on a fresh canvas (start from empty so the whole painting is recorded), then F6.
+- First recorded commissions are painted by the bot, picked by zack: `bot_study_1`, `_2`, `_3` (studio style, every pick any sticker; seeds 4, 1303, 6783). Make more with `tools/bot_commission/MakeBotCommission.tscn` (`--style` studio, hall_of_fame or aerial_map; see the script header). To record his own: paint on a fresh canvas (start from empty so the whole painting is recorded), then F6.
 
 ### Other directions found in code or notes
 
