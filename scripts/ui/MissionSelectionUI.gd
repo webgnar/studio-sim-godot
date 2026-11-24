@@ -741,9 +741,7 @@ func _update_stats_display():
 		return
 	var count := 0
 	if MissionManager:
-		for mission_id in MissionManager.progression:
-			if MissionManager.progression[mission_id].get("completed", false):
-				count += 1
+		count = MissionManager.get_completed_count()
 	completed_missions_label.text = tr("Commissions Completed: %d") % count
 
 func _on_locale_changed(_locale: String) -> void:

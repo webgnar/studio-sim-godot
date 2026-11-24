@@ -275,6 +275,17 @@ func is_mission_completed(mission_id: String) -> bool:
 	"""Check if a mission has been completed"""
 	return progression.has(mission_id) and progression[mission_id]["completed"]
 
+func get_completed_count() -> int:
+	"""Count completed commissions that are still in the game.
+	Saves can hold progression for commissions that were later removed
+	(zack7 "textureaholic", zack10 "patterns on the dark"); those entries
+	stay in the save but are not counted here."""
+	var count := 0
+	for m in available_missions:
+		if is_mission_completed(m.mission_id):
+			count += 1
+	return count
+
 func clear_progression():
 	"""Clear all mission progression (called on New Game)"""
 	progression.clear()
