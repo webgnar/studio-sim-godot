@@ -197,6 +197,14 @@ A screensaver-style bot that plays the game while the player is idle (in progres
 
 **[?]** Should the bot's paintings earn the same as the player's, and should it ship them? Should the bot ever spend money?
 
+### New commissions with time-lapse replays (zack)
+
+zack will paint an all-new set of commission paintings for the game, replacing the current mission reference images.
+
+- While he paints each one, the game records the order he places stickers (which sticker, position, rotation, scale, and when), saved alongside the commission.
+- The Commissions screen plays that recording back as a time-lapse, so the player watches the painting being built sticker by sticker before trying to recreate it.
+- Roadmap item only; nothing is built yet.
+
 ### Other directions found in code or notes
 
 - Freeform painting with a repetition penalty (`StyleTracker`, "Phase 4").
