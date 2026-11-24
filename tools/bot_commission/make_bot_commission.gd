@@ -3,9 +3,12 @@ extends Node
 ## Makes a commission painted by the autoplay bot's painter, with its
 ## sticker-by-sticker recording, so the Commissions screen can replay it.
 ##
-## Paints the bot's studio style with every pick any sticker (zack's
-## favourite, the "all-any-sticker" paintings: up to 8 squint-and-define
-## rounds), the same strokes in the same order the bot would make on a real
+## Paints one of the bot's styles (--style, default studio):
+##   studio        every pick any sticker (zack's favourite, the
+##                 "all-any-sticker" paintings: up to 8 squint-and-define rounds)
+##   hall_of_fame  the style before studio (layered, meticulous, burst-carved)
+##   aerial_map    land, water, rivers, forests, towns and roads
+## the same strokes in the same order the bot would make on a real
 ## canvas, mistakes and undos included, then writes
 ##   res://resources/missions/<id>.tres            the commission
 ##   res://resources/missions/<id>_ref.png         its reference image
@@ -16,8 +19,8 @@ extends Node
 ## the StickerLibrary autoload). Remove the StickerMarketplaceManager autoload
 ## first, or running the game claims pending sticker-sale credits:
 ##   godot --path . res://tools/bot_commission/MakeBotCommission.tscn -- --id=bot1 --seed=7 --title="..."
-## Options: --id, --seed (first seed tried; seeds that don't come out as an
-## any-sticker studio painting are skipped), --title, --description, --reward,
+## Options: --id, --style, --seed (first seed tried; seeds that don't come out
+## in the asked-for style are skipped), --title, --description, --reward,
 ## --out (folder, default res://resources/missions/).
 
 const CANVAS := Vector2(1024, 1024)   ## commission canvases (PaintingRoot2D.tscn)
@@ -44,6 +47,7 @@ func _make() -> void:
 	if not out.ends_with("/"):
 		out += "/"
 	var first_seed := int(args.get("seed", "1"))
+	var style: String = args.get("style", "studio")
 
 	var painter: AutoplayPainter
 	var plan_seed := first_seed
@@ -52,12 +56,12 @@ func _make() -> void:
 		seed(plan_seed)
 		painter = AutoplayPainter.new()
 		painter._min_size = MIN_SCALE * STICKER_SCALE   # smallest sticker the canvas allows, in canvas widths
-		painter.plan_painting(CANVAS.y / CANVAS.x)
-		if painter.last_style.begins_with("studio") and painter.last_style.contains("any sticker"):
+		painter.plan_painting(CANVAS.y / CANVAS.x, false, style != "hall_of_fame")
+		if _is_style(painter.last_style, style):
 			break
 		painter = null
 	if not painter:
-		push_error("MakeBotCommission: no any-sticker studio painting in %d seeds" % SEED_TRIES)
+		push_error("MakeBotCommission: no %s painting in %d seeds" % [style, SEED_TRIES])
 		return
 	print("MakeBotCommission: seed %d, %s" % [plan_seed, painter.last_style])
 
@@ -96,6 +100,16 @@ func _make() -> void:
 	PaintingRecording.save(rec, ProjectSettings.globalize_path(PaintingRecording.path_for_mission(mission_path)))
 	var err := ResourceSaver.save(mission, mission_path)
 	print("MakeBotCommission: saved %s (%s)" % [mission_path, error_string(err)])
+
+
+func _is_style(last_style: String, style: String) -> bool:
+	match style:
+		"hall_of_fame":
+			return true   # plan_painting with the studio style (and maps) left out
+		"aerial_map":
+			return last_style.begins_with("aerial map")
+		_:
+			return last_style.begins_with("studio") and last_style.contains("any sticker")
 
 
 func _paint(painter: AutoplayPainter) -> Dictionary:
