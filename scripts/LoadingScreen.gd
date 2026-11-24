@@ -48,13 +48,6 @@ const WARM_FAST_FRAME_MS: float = 40.0   ## Frames quicker than this let one mor
 const WARM_SLOW_FRAME_MS: float = 100.0  ## Frames slower than this halve how many go at once
 const WARM_TIMEOUT: float = 25.0         ## Give up on one-by-one warm-up past this and let the sweep finish it
 const MAX_WARM_MATERIALS: int = 1500
-const STICKER_SOUNDS := [
-	"res://sounds/picotron/sticker1.ogg",
-	"res://sounds/picotron/sticker2.ogg",
-	"res://sounds/picotron/sticker3.ogg",
-	"res://sounds/picotron/sticker4.ogg",
-	"res://sounds/picotron/sticker5.ogg",
-]
 
 # Some sticker PNGs have a faint near-transparent border that reads as a thin
 # box on black, so drop pixels under 10% alpha
@@ -68,10 +61,8 @@ var is_loading: bool = false
 var _root: Control
 var _sticker_layer: Node2D
 var _label: Label
-var _sound_players: Array[AudioStreamPlayer] = []
-var _next_sound_player: int = 0
 var _art_material: ShaderMaterial
-var _sounds: Array[AudioStream] = []
+var _was_muted: bool = false  ## Master bus mute state before the screen went up
 var _textures: Array[Texture2D] = []
 var _scan_task: int = -1
 var _watch: Array = []          ## Chunks not loaded yet: {path, size, folder}
@@ -122,22 +113,10 @@ func _ready() -> void:
 	_root.add_child(_label)
 	_label.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 
-	# A few players so overlapping slaps don't cut each other off
-	for i in range(4):
-		var player = AudioStreamPlayer.new()
-		player.bus = "SFX"
-		player.volume_db = -8.0
-		add_child(player)
-		_sound_players.append(player)
-
 	var art_shader = Shader.new()
 	art_shader.code = ART_SHADER
 	_art_material = ShaderMaterial.new()
 	_art_material.shader = art_shader
-	for path in STICKER_SOUNDS:
-		var stream = load(path) as AudioStream
-		if stream:
-			_sounds.append(stream)
 
 	visible = false
 	set_process(false)
@@ -174,6 +153,10 @@ func load_scene(scene_path: String) -> void:
 	var fade_in = create_tween()
 	fade_in.tween_property(_root, "modulate:a", 1.0, FADE_IN_TIME)
 	await fade_in.finished
+	# The loading screen is silent: no sticker sounds, and the world's audio
+	# (music, ambience, first-frame sounds) stays muted until it's revealed
+	_was_muted = AudioServer.is_bus_mute(0)
+	AudioServer.set_bus_mute(0, true)
 
 	# 1. Background-thread load
 	begin_preload(scene_path)
@@ -276,6 +259,7 @@ func _save_expected_time(seconds: float) -> void:
 	stats.save(STATS_PATH)
 
 func _finish(input_was_enabled: bool) -> void:
+	AudioServer.set_bus_mute(0, _was_muted)
 	_release_3d()
 	_resume_scene_views()
 	_phase = ""
@@ -770,10 +754,3 @@ func _slap_sticker(texture: Texture2D, spot: Vector2, target: float) -> void:
 	var tween = sticker.create_tween().set_parallel(true)
 	tween.tween_property(sticker, "scale", Vector2.ONE * final_scale, 0.14).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	tween.tween_property(sticker, "modulate:a", 1.0, 0.06)
-
-	if not _sounds.is_empty() and (not AudioManager or AudioManager.painting_sounds_enabled):
-		var player = _sound_players[_next_sound_player]
-		_next_sound_player = (_next_sound_player + 1) % _sound_players.size()
-		player.stream = _sounds.pick_random()
-		player.pitch_scale = randf_range(0.9, 1.15)
-		player.play()
