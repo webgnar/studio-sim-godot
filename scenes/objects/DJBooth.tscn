@@ -19,6 +19,7 @@ height = 1.8
 collision_layer = 2
 collision_mask = 0
 script = ExtResource("1_djbooth")
+metadata/shop_item_id = "dj"
 
 [node name="DeskCollision" type="CollisionShape3D" parent="." unique_id=1541104202]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.005053699, 0.56944335, 0.03955078)

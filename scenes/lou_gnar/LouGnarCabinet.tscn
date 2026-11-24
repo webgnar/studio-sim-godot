@@ -31,6 +31,7 @@ game = NodePath("LouGnar")
 screen = NodePath("Screen")
 play_camera = NodePath("PlayCamera")
 screen_material = ExtResource("3_crt")
+metadata/shop_item_id = "lou_gnar"
 
 [node name="LowerCol" type="CollisionShape3D" parent="." unique_id=401278688]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0105, 0.38775, 0.033)

@@ -4121,12 +4121,14 @@ spot_range = 8.270282
 
 [node name="DJBooth" parent="." unique_id=97919635 groups=["shop_prop"] instance=ExtResource("dj_booth_scene")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22, -15.53, 2.353505)
+metadata/shop_item_id = "dj"
 
 [node name="DanceParty" parent="." unique_id=1626250434 instance=ExtResource("dance_party_scene")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5, -15.53, 15.5)
 
 [node name="LouGnarCabinet" parent="." unique_id=1932707950 groups=["shop_prop"] instance=ExtResource("170_3r8ca")]
 transform = Transform3D(-5.2016553e-08, 0, -1.19, 0, 1.19, 0, 1.19, 0, -5.2016553e-08, 3.3071356, -0.007634282, 12.284582)
+metadata/shop_item_id = "lou_gnar"
 
 [node name="celing (baked)" type="MeshInstance3D" parent="." unique_id=1231979249]
 transform = Transform3D(-2.0107239e-08, 7.49, 0, -0.46, -3.2739828e-07, 0, 0, 0, 22.64, 0.003834039, 5.5446606, 4)
