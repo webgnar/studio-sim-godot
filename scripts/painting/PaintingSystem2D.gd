@@ -77,6 +77,10 @@ var was_commission_validated: bool = false
 # See PaintingProcess. Saved with the canvas.
 var process_log: Dictionary = PaintingProcess.new_log()
 
+# Sticker-by-sticker recording of this canvas, for time-lapse replays (see
+# PaintingRecording). Saved with the canvas; F6 commissions save it too.
+var recording: Dictionary = {}
+
 # --- Pencil freehand drawing ---
 # Drawing goes directly into the background image (same one _bake_to_background()
 # produces). Starting a pencil session bakes any currently-placed stickers first,
@@ -100,6 +104,8 @@ func _ready():
 	else:
 		push_error("canvas_viewport not assigned!")
 		viewport_size = Vector2(1024, 1024)
+	if recording.is_empty():
+		recording = PaintingRecording.create(viewport_size)
 
 	# Bind SubViewport texture to plane material
 	_setup_plane_material()
@@ -473,6 +479,7 @@ func spawn_sticker(world_position: Vector3):
 	var placed = PlacedLayer2D.new(definition.id, sprite)
 	placed.rotation_deg = preview_rotation  # Track the rotation that was set in preview
 	placed.scale_multiplier = preview_scale_multiplier  # Track the scale multiplier
+	placed.rec_index = PaintingRecording.record_place(recording, definition.id, viewport_pos, preview_rotation, preview_scale_multiplier, final_scale)
 	placed_layers.append(placed)
 	PaintingProcess.record_place(process_log, definition.id, preview_scale_multiplier, preview_rotation, AutoplayManager.is_active())
 	sticker_placed.emit()
@@ -644,6 +651,7 @@ func delete_selected_layer():
 	# Remove from array
 	placed_layers.erase(selected_layer)
 	PaintingProcess.record_delete(process_log)
+	PaintingRecording.record_remove(recording, selected_layer.rec_index)
 
 	selected_layer = null
 
@@ -657,6 +665,7 @@ func undo_last_sticker():
 		last_layer.node.queue_free()
 	placed_layers.pop_back()
 	PaintingProcess.record_undo(process_log)
+	PaintingRecording.record_remove(recording, last_layer.rec_index)
 
 	if selected_layer == last_layer:
 		selected_layer = null
@@ -683,6 +692,7 @@ func clear_canvas_full():
 	if _background_sprite:
 		_background_sprite.texture = null
 	process_log = PaintingProcess.new_log()
+	recording = PaintingRecording.create(viewport_size)
 
 
 func serialize_canvas() -> Dictionary:
@@ -701,12 +711,14 @@ func serialize_canvas() -> Dictionary:
 			"scale_multiplier": layer.scale_multiplier,
 			"scale_x": layer.node.scale.x,
 			"scale_y": layer.node.scale.y,
+			"rec_index": layer.rec_index,
 		})
 	data["layers"] = layers_data
 	data["has_background"] = _background_sprite != null and _background_sprite.texture != null
 	data["preview_rotation"] = preview_rotation
 	data["preview_scale_multiplier"] = preview_scale_multiplier
 	data["process"] = process_log
+	data["recording"] = PaintingRecording.to_save(recording)
 	return data
 
 
@@ -726,6 +738,7 @@ func restore_canvas(data: Dictionary, background_image: Image = null) -> void:
 		_background_sprite.scale = Vector2.ONE
 
 	process_log = PaintingProcess.from_save(data.get("process", {}))
+	recording = PaintingRecording.from_save(data.get("recording", {}), viewport_size)
 	preview_rotation = data.get("preview_rotation", -90.0)
 	preview_scale_multiplier = data.get("preview_scale_multiplier", 1.0)
 	if preview_sprite:
@@ -751,6 +764,7 @@ func restore_canvas(data: Dictionary, background_image: Image = null) -> void:
 		var placed = PlacedLayer2D.new(sticker_id, sprite)
 		placed.rotation_deg = layer_data.get("rotation_deg", 0.0)
 		placed.scale_multiplier = layer_data.get("scale_multiplier", 1.0)
+		placed.rec_index = int(layer_data.get("rec_index", -1))
 		placed_layers.append(placed)
 
 
