@@ -361,7 +361,7 @@ func _reconcile_missions_completed():
 	if actual > 0 and MissionManager.available_missions.size() > 0:
 		var all_done := true
 		for m in MissionManager.available_missions:
-			if not MissionManager.is_mission_completed(m.mission_id):
+			if MissionManager.counts_for_all_commissions_achievement(m) and not MissionManager.is_mission_completed(m.mission_id):
 				all_done = false
 				break
 		if all_done:

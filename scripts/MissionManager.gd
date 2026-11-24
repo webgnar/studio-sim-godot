@@ -21,10 +21,24 @@ var progression: Dictionary = {}
 # Mission timing for Steam achievements
 var mission_start_time: int = 0
 
+## Hall of fame commissions: HALL_OF_FAME_SLOTS paintings from the in-game hall of fame
+## (res://hall_of_fame/, synced from the gallery website at build time) go at the end of the
+## commission list. Ones the player has completed stay in their slots for good; the other slots
+## get random hall of fame paintings, picked again every time the game starts.
+const HALL_OF_FAME_SLOTS := 5
+const HALL_OF_FAME_DIR := "res://hall_of_fame/"
+const HALL_OF_FAME_ID_PREFIX := "hof_"
+const HALL_OF_FAME_REWARD := 100
+## Every square hall of fame painting as a commission, in this session's random order.
+var _hall_of_fame_pool: Array[PaintingMission] = []
+## The commissions from missions_manifest.json (available_missions minus the hall of fame slots).
+var _core_missions: Array[PaintingMission] = []
+
 func _ready():
 	ensure_paintings_directory()
 	load_all_missions()
 	load_progression()
+	refresh_hall_of_fame_slots()
 
 func ensure_paintings_directory():
 	"""Create mission_paintings directory if it doesn't exist"""
@@ -85,6 +99,81 @@ func load_all_missions():
 			push_error("MissionManager: Failed to load mission: %s" % path)
 
 	print("MissionManager: Loaded %d missions from manifest" % available_missions.size())
+	_core_missions = available_missions.duplicate()
+	_load_hall_of_fame_pool()
+	refresh_hall_of_fame_slots()
+
+func _load_hall_of_fame_pool():
+	"""Turn every square hall of fame painting into a commission, shuffled once per session."""
+	_hall_of_fame_pool.clear()
+	var manifest_path := HALL_OF_FAME_DIR + "manifest.json"
+	if not FileAccess.file_exists(manifest_path):
+		return
+	var data = JSON.parse_string(FileAccess.get_file_as_string(manifest_path))
+	if typeof(data) != TYPE_ARRAY:
+		push_warning("MissionManager: hall of fame manifest isn't an array, no hall of fame commissions")
+		return
+	for entry in data:
+		if typeof(entry) != TYPE_DICTIONARY:
+			continue
+		var png := str(entry.get("png", ""))
+		var id := str(entry.get("id", ""))
+		if png == "" or id == "":
+			continue
+		var png_path := HALL_OF_FAME_DIR + png
+		if not ResourceLoader.exists(png_path):
+			continue
+		# Commissions are square canvases; wide paintings stay on the hall of fame wall only
+		var texture := load(png_path) as Texture2D
+		if texture == null or texture.get_width() != texture.get_height():
+			continue
+		var mission := PaintingMission.new(HALL_OF_FAME_ID_PREFIX + id, HALL_OF_FAME_REWARD)
+		mission.set_meta("hof_order", _hall_of_fame_pool.size())
+		mission.is_hall_of_fame = true
+		mission.title = _manifest_text(entry, "title", "untitled")
+		mission.artist_name = _manifest_text(entry, "artistName", "")
+		mission.reference_image_path = png_path
+		var painter := mission.artist_name if mission.artist_name != "" else tr("an anonymous painter")
+		mission.description = tr("From the Hall of Fame. Painted by %s.") % painter
+		var recording := _manifest_text(entry, "recording", "")
+		if recording != "" and FileAccess.file_exists(HALL_OF_FAME_DIR + recording):
+			mission.recording_path_override = HALL_OF_FAME_DIR + recording
+		_hall_of_fame_pool.append(mission)
+	_hall_of_fame_pool.shuffle()
+
+static func _manifest_text(entry: Dictionary, key: String, fallback: String) -> String:
+	var value = entry.get(key)
+	if value == null:
+		return fallback
+	var text := str(value).strip_edges()
+	return text if text != "" else fallback
+
+func refresh_hall_of_fame_slots():
+	"""Fill the hall of fame slots at the end of available_missions: completed hall of fame
+	commissions first (they stay for good), then this session's random picks."""
+	var slots: Array[PaintingMission] = []
+	# Completed ones keep the same order every launch (hall of fame manifest order)
+	var completed := _hall_of_fame_pool.filter(func(m): return is_mission_completed(m.mission_id))
+	completed.sort_custom(func(a, b): return a.get_meta("hof_order", 0) < b.get_meta("hof_order", 0))
+	for mission in completed:
+		if slots.size() < HALL_OF_FAME_SLOTS:
+			slots.append(mission)
+	for mission in _hall_of_fame_pool:
+		if slots.size() >= HALL_OF_FAME_SLOTS:
+			break
+		if not slots.has(mission):
+			slots.append(mission)
+	# Keep the mission being painted in the list even if it would have rotated out
+	if current_mission and current_mission.is_hall_of_fame and not slots.has(current_mission):
+		if slots.size() >= HALL_OF_FAME_SLOTS:
+			slots.pop_back()
+		slots.append(current_mission)
+	available_missions = _core_missions.duplicate()
+	available_missions.append_array(slots)
+
+func counts_for_all_commissions_achievement(mission: PaintingMission) -> bool:
+	"""Hall of fame commissions rotate, so they don't count toward completing every commission."""
+	return not mission.is_hall_of_fame
 
 func start_mission(mission: PaintingMission):
 	"""Start a new mission"""
@@ -290,6 +379,7 @@ func clear_progression():
 	"""Clear all mission progression (called on New Game)"""
 	progression.clear()
 	current_mission = null
+	refresh_hall_of_fame_slots()
 	print("MissionManager: Progression cleared")
 
 func save_progression():
@@ -357,7 +447,7 @@ func _update_steam_on_mission_complete(_mission: PaintingMission, result: Valida
 	# Achievement: Complete all missions
 	var all_missions_done = true
 	for m in available_missions:
-		if not is_mission_completed(m.mission_id):
+		if counts_for_all_commissions_achievement(m) and not is_mission_completed(m.mission_id):
 			all_missions_done = false
 			break
 	if all_missions_done:
