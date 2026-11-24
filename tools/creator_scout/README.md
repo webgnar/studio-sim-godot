@@ -21,6 +21,12 @@ python3 fetch_avatars.py results.json queue.txt thumbs                      # pi
 ```
 
 `--max-searches 5 --max-channels 40 --pages 1` makes a quick test run.
+`--exclude-file contacts.csv` skips every channel already contacted (any file with `UC...` channel ids works).
+
+`profiles/studio_sim_oddball.json` aims at hidden gem, retro and oddball channels
+instead of cozy ones: oddball/lo-fi comparison games, weird-games searches, and
+penalties for channels that mostly post ASMR, coloring, decorating or horror.
+`profiles/studio_sim.json` is the original cozy search.
 `cache.json` keeps every channel already opened, so a rerun is fast.
 
 ## Profile
@@ -36,6 +42,7 @@ python3 fetch_avatars.py results.json queue.txt thumbs                      # pi
 | `keyword_weights` / `penalty_keywords` | Points for words in their video titles and channel description. |
 | `english_only`, `min_english` | Rough language filter on titles. |
 | `min_fit` | Drop weaker fits. |
+| `min_played` | Keep only channels with at least this many videos of the profile's games (0 = off). |
 | `outreach` | Page title, email subject, example opening line. |
 
 ## Review page
