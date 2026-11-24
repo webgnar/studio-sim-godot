@@ -32,6 +32,24 @@ func capture_current_canvas(mission_id: String, title: String, description: Stri
 	mission.description = description
 	mission.reward = reward
 
+	# The recording holds every sticker still on the canvas, including ones the
+	# auto-bake flattened into the background, so prefer it when it covers the
+	# whole canvas (it won't for a canvas painted before recordings existed).
+	var rec: Dictionary = painting_system_2d.recording
+	var rec_complete := not PaintingRecording.is_empty(rec)
+	for layer in painting_system_2d.placed_layers:
+		if layer.rec_index < 0:
+			rec_complete = false
+	if rec_complete:
+		for e in PaintingRecording.surviving(rec):
+			var placed := PlacedStickerData.new()
+			placed.sticker_id = e.id
+			placed.position = Vector2(e.x, e.y)
+			placed.rotation_deg = e.r
+			placed.scale = e.s
+			mission.target_stickers.append(placed)
+		return mission
+
 	# Convert PlacedLayer2D to PlacedStickerData (in placement order = draw order)
 	for layer in painting_system_2d.placed_layers:
 		if not layer.node:
@@ -63,6 +81,12 @@ func save_mission(mission: PaintingMission, file_path: String) -> bool:
 	var screenshot_path = await _generate_screenshot(file_path)
 	if screenshot_path:
 		mission.reference_image_path = screenshot_path
+
+	# Save the sticker-by-sticker recording next to it, for the Watch Replay button
+	if not PaintingRecording.is_empty(painting_system_2d.recording):
+		var rec_error := PaintingRecording.save(painting_system_2d.recording, PaintingRecording.path_for_mission(file_path))
+		if rec_error != OK:
+			push_error("MissionAuthoringTool: Failed to save the recording (error: %d)" % rec_error)
 
 	# Save the resource
 	var error = ResourceSaver.save(mission, file_path)

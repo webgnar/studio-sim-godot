@@ -18,6 +18,18 @@ func get_required_stickers() -> Array[String]:
 			sticker_ids.append(sticker_data.sticker_id)
 	return sticker_ids
 
+## The sticker-by-sticker recording saved next to this mission
+## (<mission>_recording.json), or {} if it has none. See PaintingRecording.
+func get_recording_path() -> String:
+	return PaintingRecording.path_for_mission(resource_path) if resource_path != "" else ""
+
+func has_recording() -> bool:
+	var path := get_recording_path()
+	return path != "" and FileAccess.file_exists(path)
+
+func load_recording() -> Dictionary:
+	return PaintingRecording.load_file(get_recording_path())
+
 func get_pass_threshold() -> float:
 	return 65.0
 
