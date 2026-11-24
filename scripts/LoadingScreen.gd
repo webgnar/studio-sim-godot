@@ -11,6 +11,11 @@ extends CanvasLayer
 ## Files load much faster than the warm-up takes, so stickers are paced to
 ## spread evenly over how long the last load took (saved in user://), rather
 ## than all going down the moment their file arrives.
+## Godot compiles a material's shader the first time it is drawn, which freezes
+## the whole game (stickers included) for as long as it takes. So the world is
+## never drawn all at once while the screen is up: 3D drawing stays off until a
+## camera has looked at one object of each distinct material, a few per frame
+## with everything else hidden from it, and only then does the full sweep run.
 ## Usage: LoadingScreen.begin_preload(path) as early as possible (optional),
 ##        then await LoadingScreen.load_scene(path)
 
@@ -37,6 +42,12 @@ const SETTLE_TIMEOUT: float = 4.0  ## Never hold the screen longer than this wai
 const SWEEP_FOV: float = 60.0            ## Narrow views, so each warm-up frame compiles only a few shaders
 const SWEEP_YAW_STEPS: int = 10
 const SWEEP_PITCHES := [0.0, -45.0, 45.0]
+const WARM_LAYER: int = 20               ## Render layer borrowed during warm-up (unused in the game)
+const WARM_MAX_PER_FRAME: int = 8        ## Most objects drawn together in one warm-up frame
+const WARM_FAST_FRAME_MS: float = 40.0   ## Frames quicker than this let one more material in per frame
+const WARM_SLOW_FRAME_MS: float = 100.0  ## Frames slower than this halve how many go at once
+const WARM_TIMEOUT: float = 25.0         ## Give up on one-by-one warm-up past this and let the sweep finish it
+const MAX_WARM_MATERIALS: int = 1500
 const STICKER_SOUNDS := [
 	"res://sounds/picotron/sticker1.ogg",
 	"res://sounds/picotron/sticker2.ogg",
@@ -72,6 +83,13 @@ var _expected_time: float = DEFAULT_EXPECTED_TIME
 var _sticker_allowance: float = 0.0
 var _flushing: bool = false
 var _dots_timer: float = 0.0
+var _phase: String = ""
+var _longest_frame_ms: float = 0.0
+var _longest_frame_phase: String = ""
+var _last_frame_us: int = 0
+var _3d_was_disabled: bool = false
+var _3d_held_off: bool = false
+var _paused_views: Dictionary = {}  ## The scene's own 3D views (mirrors...) -> their update mode
 
 func _ready() -> void:
 	layer = 110  # Above SceneTransition (100)
@@ -149,6 +167,10 @@ func load_scene(scene_path: String) -> void:
 	_start_animation()
 	var phase_at = Time.get_ticks_msec()
 	var timings := []
+	_phase = "load"
+	_longest_frame_ms = 0.0
+	_longest_frame_phase = ""
+	_last_frame_us = Time.get_ticks_usec()
 	var fade_in = create_tween()
 	fade_in.tween_property(_root, "modulate:a", 1.0, FADE_IN_TIME)
 	await fade_in.finished
@@ -164,15 +186,22 @@ func load_scene(scene_path: String) -> void:
 		return
 	_collect_loaded_chunks(true)
 	phase_at = _log_phase(timings, "load", phase_at)
+	_phase = "instantiate"
 
 	# 2. Build the scene's nodes on a worker thread (allowed for nodes outside
 	# the tree), so the stickers keep moving; then enter it on the main thread
 	var instance = await _instantiate_in_background(scene)
 	phase_at = _log_phase(timings, "instantiate", phase_at)
+	_phase = "enter tree"
 	if instance == null:
 		push_error("LoadingScreen: Failed to instantiate scene: %s" % scene_path)
 		_finish(input_was_enabled)
 		return
+	# Nothing 3D gets drawn until the warm-up below starts compiling the world's
+	# materials a few at a time. Otherwise the first frame draws (and compiles)
+	# everything the player can see at once, and the stickers stop dead.
+	_hold_3d_off()
+	_pause_scene_views(instance)
 	var error = get_tree().change_scene_to_node(instance)
 	if error != OK:
 		push_error("LoadingScreen: Failed to change scene (Error code: %d)" % error)
@@ -185,13 +214,23 @@ func load_scene(scene_path: String) -> void:
 	CameraManager.set_player_input(false)
 	phase_at = _log_phase(timings, "enter tree", phase_at)
 
-	# 3. Draw everything around the player once so materials compile now, not mid-play
+	# 3. Compile every material now, a few per frame, not mid-play
+	_phase = "material warm-up"
+	var warmed = await _warm_up_materials()
+	phase_at = _log_phase(timings, "material warm-up (%d)" % warmed, phase_at)
+	_release_3d()  # In case there was nothing to warm up
+	_resume_scene_views()
+
+	# Then look all the way around the player for anything still uncompiled
+	_phase = "shader sweep"
 	await _warm_up_shaders()
-	phase_at = _log_phase(timings, "shader warm-up", phase_at)
+	phase_at = _log_phase(timings, "shader sweep", phase_at)
+	_phase = "settle"
 
 	# 4. Hold until the world runs smoothly (first-frame scripts, streaming, etc.)
 	await _wait_for_smooth_frames()
 	phase_at = _log_phase(timings, "settle", phase_at)
+	_phase = "flush"
 
 	# Leftover chunk stickers go down quickly, then reveal
 	_flushing = true
@@ -203,7 +242,8 @@ func load_scene(scene_path: String) -> void:
 
 	var shown_for = (Time.get_ticks_msec() - _shown_at) / 1000.0
 	_save_expected_time(shown_for)
-	var summary = "[LoadingScreen] %.1fs total: %s" % [shown_for, ", ".join(timings)]
+	var summary = "[LoadingScreen] %.1fs total: %s. Longest frame %.0f ms (%s)" % [
+		shown_for, ", ".join(timings), _longest_frame_ms, _longest_frame_phase]
 	print(summary)
 	if DebugLogger and not OS.has_feature("editor"):
 		DebugLogger.write_log(summary)
@@ -236,6 +276,9 @@ func _save_expected_time(seconds: float) -> void:
 	stats.save(STATS_PATH)
 
 func _finish(input_was_enabled: bool) -> void:
+	_release_3d()
+	_resume_scene_views()
+	_phase = ""
 	CameraManager.set_player_input(input_was_enabled)
 	SceneTransition.is_transitioning = false
 	var fade_out = create_tween()
@@ -278,6 +321,214 @@ func _warm_up_shaders() -> void:
 		player_cam.make_current()
 	sweep_cam.queue_free()
 	await RenderingServer.frame_post_draw
+
+func _hold_3d_off() -> void:
+	if _3d_held_off:
+		return
+	var viewport = get_viewport()
+	_3d_was_disabled = viewport.disable_3d
+	viewport.disable_3d = true
+	_3d_held_off = true
+
+func _release_3d() -> void:
+	if not _3d_held_off:
+		return
+	get_viewport().disable_3d = _3d_was_disabled
+	_3d_held_off = false
+
+func _pause_scene_views(scene: Node) -> void:
+	"""Mirrors and other in-world cameras would draw the whole room on the
+	first frame no matter what; they wait until the warm-up is done"""
+	_paused_views.clear()
+	for node in scene.find_children("*", "SubViewport", true, false):
+		var view := node as SubViewport
+		if view.own_world_3d or view.find_children("*", "Camera3D", true, false).is_empty():
+			continue
+		_paused_views[view] = view.render_target_update_mode
+		view.render_target_update_mode = SubViewport.UPDATE_DISABLED
+
+func _resume_scene_views() -> void:
+	for view in _paused_views:
+		if is_instance_valid(view):
+			view.render_target_update_mode = _paused_views[view]
+	_paused_views.clear()
+
+func _warm_up_materials() -> int:
+	"""Show the camera one object for each distinct look in the world
+	(material, mesh format, lightmapped or not...), with everything else hidden
+	from it, as many per frame as keeps frames short. Each draw compiles that
+	look's shaders, so by the end the world can be drawn without long compile
+	freezes. Returns how many looks were drawn.
+	It has to be the game's own viewport: an off-screen SubViewport compiles
+	different shader variants and leaves most of the freeze for later."""
+	var viewport = get_viewport()
+	var player_cam = viewport.get_camera_3d()
+	var scene = get_tree().current_scene
+	if player_cam == null or scene == null:
+		return 0
+
+	# Lights (and probes, decals, lightmaps...) count only if the camera sees
+	# them too: shaders compile differently with no lights in view
+	var bit = 1 << (WARM_LAYER - 1)
+	var lit: Array[VisualInstance3D] = []
+	for node in scene.find_children("*", "VisualInstance3D", true, false):
+		if not node is GeometryInstance3D and node.is_visible_in_tree() and not (node.layers & bit):
+			node.layers |= bit
+			lit.append(node)
+	# A reflection probe draws the whole room into itself the first time it is
+	# seen, compiling everything at once. Until the end it only sees what is
+	# being warmed, refreshed every frame; put back, it redraws for real.
+	var probes := {}
+	for node in lit:
+		if node is ReflectionProbe:
+			probes[node] = [node.cull_mask, node.update_mode]
+			node.cull_mask = bit
+			node.update_mode = ReflectionProbe.UPDATE_ALWAYS
+
+	var todo: Array[GeometryInstance3D] = []
+	var seen := {}
+	for node in scene.find_children("*", "GeometryInstance3D", true, false):
+		var geometry := node as GeometryInstance3D
+		if geometry.layers == 0 or not geometry.is_visible_in_tree():
+			continue  # Never drawn (e.g. CSG shapes the baked meshes stand in for)
+		if geometry.get_viewport() != viewport:
+			continue  # Inside the game's own SubViewports, which draw themselves
+		var key = _look_key(geometry)
+		if key == "" or seen.has(key):
+			continue
+		seen[key] = true
+		todo.append(geometry)
+		if todo.size() >= MAX_WARM_MATERIALS:
+			break
+	if todo.is_empty():
+		_unborrow_layer(lit, bit, probes)
+		return 0
+
+	var cam = Camera3D.new()
+	cam.fov = SWEEP_FOV
+	cam.cull_mask = bit  # Sees only what's being warmed this frame
+	cam.environment = player_cam.environment
+	cam.attributes = player_cam.attributes
+	scene.add_child(cam)
+	cam.make_current()
+	_release_3d()
+
+	var eye = player_cam.global_position
+	var deadline = Time.get_ticks_msec() + WARM_TIMEOUT * 1000.0
+	var per_frame = 1
+	var index = 0
+	var drawn = 0
+	var last = Time.get_ticks_usec()
+	while index < todo.size() and Time.get_ticks_msec() < deadline:
+		var batch: Array[GeometryInstance3D] = []
+		var box := AABB()
+		while index < todo.size() and batch.size() < per_frame:
+			var geometry = todo[index]
+			index += 1
+			if not is_instance_valid(geometry) or not geometry.is_inside_tree():
+				continue
+			var geometry_box: AABB = geometry.global_transform * geometry.get_aabb()
+			box = geometry_box if batch.is_empty() else box.merge(geometry_box)
+			geometry.layers |= bit
+			batch.append(geometry)
+		if batch.is_empty():
+			break
+		_frame_camera(cam, box, eye)
+		await RenderingServer.frame_post_draw
+		for geometry in batch:
+			if is_instance_valid(geometry):
+				geometry.layers &= ~bit
+		drawn += batch.size()
+
+		var now = Time.get_ticks_usec()
+		var frame_ms = (now - last) / 1000.0
+		last = now
+		if frame_ms > WARM_SLOW_FRAME_MS:
+			per_frame = maxi(1, per_frame / 2)
+		elif frame_ms < WARM_FAST_FRAME_MS:
+			per_frame = mini(WARM_MAX_PER_FRAME, per_frame + 1)
+
+	_unborrow_layer(lit, bit, probes)
+	if is_instance_valid(player_cam):
+		player_cam.make_current()
+	cam.queue_free()
+	return drawn
+
+func _unborrow_layer(nodes: Array, bit: int, probes: Dictionary) -> void:
+	for node in nodes:
+		if is_instance_valid(node):
+			node.layers &= ~bit
+	for probe in probes:
+		if is_instance_valid(probe):
+			probe.cull_mask = probes[probe][0]
+			probe.update_mode = probes[probe][1]
+
+func _frame_camera(cam: Camera3D, box: AABB, eye: Vector3) -> void:
+	"""Point cam at box from the player's side, far enough back to see all of it"""
+	var center = box.get_center()
+	var reach = maxf(box.size.length(), 0.5)  # Whole box in view at SWEEP_FOV
+	var dir = eye - center
+	dir = dir.normalized() if dir.length() > 0.01 else Vector3(0.0, 0.3, 1.0).normalized()
+	var spot = center + dir * reach
+	cam.near = 0.05
+	cam.far = reach + box.size.length() + 10.0
+	var up = Vector3.UP if absf(dir.y) < 0.99 else Vector3.FORWARD
+	cam.look_at_from_position(spot, center, up)
+
+func _look_key(geometry: GeometryInstance3D) -> String:
+	"""What decides which shaders drawing this compiles: its kind, materials,
+	mesh formats, lightmap and shadow settings. Two objects with the same key
+	only need to be drawn once."""
+	var parts: Array = [geometry.get_class(), geometry.gi_mode, geometry.cast_shadow,
+		geometry.material_override.get_instance_id() if geometry.material_override else 0,
+		geometry.material_overlay.get_instance_id() if geometry.material_overlay else 0]
+	var mesh: Mesh = null
+	if geometry is MeshInstance3D:
+		var mesh_instance := geometry as MeshInstance3D
+		mesh = mesh_instance.mesh
+		if mesh == null:
+			return ""
+		for surface in range(mesh.get_surface_count()):
+			var material = mesh_instance.get_active_material(surface)
+			parts.append(material.get_instance_id() if material else 0)
+	elif geometry is MultiMeshInstance3D:
+		var multimesh = (geometry as MultiMeshInstance3D).multimesh
+		mesh = multimesh.mesh if multimesh else null
+		if mesh == null:
+			return ""
+		parts.append([multimesh.use_colors, multimesh.use_custom_data])
+		for surface in range(mesh.get_surface_count()):
+			var material = mesh.surface_get_material(surface)
+			parts.append(material.get_instance_id() if material else 0)
+	elif geometry is GPUParticles3D:
+		var particles := geometry as GPUParticles3D
+		parts.append(particles.process_material.get_instance_id() if particles.process_material else 0)
+		for pass_index in range(particles.draw_passes):
+			var pass_mesh = particles.get_draw_pass_mesh(pass_index)
+			if pass_mesh:
+				for surface in range(pass_mesh.get_surface_count()):
+					var material = pass_mesh.surface_get_material(surface)
+					parts.append(material.get_instance_id() if material else 0)
+	elif geometry is CPUParticles3D:
+		var cpu_mesh = (geometry as CPUParticles3D).mesh
+		if cpu_mesh:
+			for surface in range(cpu_mesh.get_surface_count()):
+				var material = cpu_mesh.surface_get_material(surface)
+				parts.append(material.get_instance_id() if material else 0)
+	elif geometry is SpriteBase3D:
+		var sprite := geometry as SpriteBase3D
+		parts.append([sprite.billboard, sprite.transparent, sprite.shaded, sprite.double_sided,
+			sprite.alpha_cut, sprite.texture_filter])
+	elif geometry is Label3D:
+		var label := geometry as Label3D
+		parts.append([label.billboard, label.shaded, label.double_sided, label.alpha_cut,
+			label.texture_filter, label.outline_size > 0])
+	else:
+		parts.append(geometry.get_instance_id())  # Unknown kind: draw each one
+	if mesh is ArrayMesh:
+		for surface in range(mesh.get_surface_count()):
+			parts.append((mesh as ArrayMesh).surface_get_format(surface))
+	return str(parts)
 
 func _wait_for_smooth_frames() -> void:
 	var deadline = Time.get_ticks_msec() + SETTLE_TIMEOUT * 1000.0
@@ -384,6 +635,13 @@ func _stop_animation() -> void:
 		child.queue_free()
 
 func _process(delta: float) -> void:
+	# Wall clock, since Godot caps delta after a long frame
+	var now_us = Time.get_ticks_usec()
+	var frame_ms = (now_us - _last_frame_us) / 1000.0
+	_last_frame_us = now_us
+	if _phase != "" and frame_ms > _longest_frame_ms:
+		_longest_frame_ms = frame_ms
+		_longest_frame_phase = _phase
 	_collect_loaded_chunks()
 	if not visible:
 		return  # Tracking chunks before the screen shows; they're placed once it does
