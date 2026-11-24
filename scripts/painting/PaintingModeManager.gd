@@ -315,8 +315,40 @@ func _perform_unified_raycast() -> Dictionary:
 	var query = PhysicsRayQueryParameters3D.create(from, to)
 	query.collide_with_areas = false
 	query.collide_with_bodies = true
+	query.exclude = get_carried_exclude_rids()  # Held objects never take or block stickers
 
 	return space_state.intersect_ray(query)
+
+func get_carried_exclude_rids() -> Array[RID]:
+	"""RIDs of every collider on the object the player is holding (its body plus any
+	child bodies, e.g. a carried painting's canvas plane or back face). Sticker raycasts
+	pass these to query.exclude so a held object can't receive a sticker and never blocks
+	or shifts the ghost: the ray goes straight through it to whatever is behind."""
+	var rids: Array[RID] = []
+	var player_interaction = _get_player_interaction()
+	if not player_interaction or not player_interaction.is_carrying:
+		return rids
+	var carried = player_interaction.carried_object
+	if not is_instance_valid(carried) or not is_instance_valid(carried.parent_rigid_body):
+		return rids
+	_collect_collider_rids(carried.parent_rigid_body, rids)
+	return rids
+
+func _collect_collider_rids(node: Node, rids: Array[RID]) -> void:
+	if node is CollisionObject3D:
+		rids.append(node.get_rid())
+	for child in node.get_children():
+		_collect_collider_rids(child, rids)
+
+func is_carried_object_using_adjust_keys() -> bool:
+	"""True while the held object is being turned with the rotate/scale keys (Q/E, Z/X).
+	The sticker systems skip their own rotate/scale then, so turning a held object
+	doesn't also spin or resize the next sticker."""
+	var player_interaction = _get_player_interaction()
+	if not player_interaction or not player_interaction.is_carrying:
+		return false
+	var carried = player_interaction.carried_object
+	return is_instance_valid(carried) and carried.enable_rotation_while_carried
 
 func _is_canvas_plane(raycast_result: Dictionary) -> bool:
 	"""Check if raycast hit the 2D painting canvas"""

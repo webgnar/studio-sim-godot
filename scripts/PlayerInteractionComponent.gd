@@ -43,6 +43,11 @@ var is_weapon_equipped: bool:
 # instead of chattering (e.g. pickup immediately followed by a throw).
 var _primary_action_held: bool = false
 var _secondary_action_held: bool = false
+# True when this squeeze picked up / threw / dropped / plugged in an object. Its trigger
+# chatter is then swallowed too, so it can't fall through to PaintingModeManager and
+# place (or undo) a sticker on the object that was just picked up or thrown.
+var _primary_press_consumed: bool = false
+var _secondary_press_consumed: bool = false
 
 # --- GODOT METHODS ---
 
@@ -81,9 +86,12 @@ func _input(event: InputEvent) -> void:
 	# LEFT CLICK / RIGHT TRIGGER - Pickup or Throw
 	if event.is_action_released("action_primary"):
 		_primary_action_held = false
+		_primary_press_consumed = false
 
 	if event.is_action_pressed("action_primary"):
 		if _primary_action_held:
+			if _primary_press_consumed:
+				get_viewport().set_input_as_handled()  # Don't let chatter place a sticker
 			return  # Ignore trigger chatter - already handled this press
 		_primary_action_held = true
 
@@ -95,12 +103,14 @@ func _input(event: InputEvent) -> void:
 				if plug.is_near_outlet():
 					# Plug it in instead of throwing
 					plug.drop()  # This will auto-plug due to auto_plug_on_release
+					_primary_press_consumed = true
 					get_viewport().set_input_as_handled()  # Prevent sticker placement
 					return
 
 			# Normal throw - use object's throw_power setting
 			var throw_force = carried_object.throw_power if carried_object else 15.0
 			throw_carried_object(throw_force)
+			_primary_press_consumed = true
 			get_viewport().set_input_as_handled()  # Prevent sticker placement
 			return
 
@@ -113,21 +123,26 @@ func _input(event: InputEvent) -> void:
 					return
 				# Pickup the object (don't call interact())
 				carryable.pickup(self)
+				_primary_press_consumed = true
 				get_viewport().set_input_as_handled()  # Prevent sticker placement
 				return
 	
 	# RIGHT CLICK / LEFT TRIGGER - Drop (gentle release)
 	if event.is_action_released("action_secondary"):
 		_secondary_action_held = false
+		_secondary_press_consumed = false
 
 	if event.is_action_pressed("action_secondary"):
 		if _secondary_action_held:
+			if _secondary_press_consumed:
+				get_viewport().set_input_as_handled()  # Don't let chatter undo a sticker
 			return  # Ignore trigger chatter - already handled this press
 		_secondary_action_held = true
 
 		if is_carrying and is_instance_valid(carried_object):
 			# Gentle drop
 			drop_carried_object()
+			_secondary_press_consumed = true
 			get_viewport().set_input_as_handled()
 			return
 	
