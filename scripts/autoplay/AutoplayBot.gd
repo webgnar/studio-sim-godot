@@ -742,7 +742,9 @@ func _canvas_visible_from(stand: Vector3, plane: MeshInstance3D) -> bool:
 	var eye := stand + Vector3.UP * EYE_HEIGHT
 	var beyond := plane.global_position + (plane.global_position - eye).normalized() * 0.3
 	var query := PhysicsRayQueryParameters3D.create(eye, beyond)
-	query.exclude = [player.get_rid()]
+	var skip: Array[RID] = [player.get_rid()]
+	skip.append_array(PaintingModeManager.get_carried_exclude_rids())
+	query.exclude = skip
 	return PaintingModeManager._is_canvas_plane(player.get_world_3d().direct_space_state.intersect_ray(query))
 
 

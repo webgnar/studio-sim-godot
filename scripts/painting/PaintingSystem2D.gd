@@ -194,6 +194,10 @@ func _process(delta):
 	if Input.is_action_just_pressed("ui_text_delete"):
 		delete_selected_layer()
 
+	# Q/E and Z/X turn a held object instead while carrying one; leave the sticker alone
+	if PaintingModeManager and PaintingModeManager.is_carried_object_using_adjust_keys():
+		return
+
 	# Handle rotation of preview sprite (continuous while button held)
 	if Input.is_action_pressed("rotate_counter"):
 		rotate_preview(delta, -1)  # Counter-clockwise
@@ -248,6 +252,8 @@ func _raycast_from_mouse() -> Dictionary:
 	var query = PhysicsRayQueryParameters3D.create(from, to)
 	query.collide_with_areas = false
 	query.collide_with_bodies = true
+	if PaintingModeManager:
+		query.exclude = PaintingModeManager.get_carried_exclude_rids()  # See through held objects
 
 	var result = space_state.intersect_ray(query)
 
