@@ -29,6 +29,12 @@ const MissionCardScene = preload("res://scenes/UI/MissionCard.tscn")
 # Results display component
 @onready var results_display: MissionResultsDisplay = $MarginContainer/HBoxContainer/RightPanel/PreviewPanel/MarginContainer/MissionResultsDisplay
 
+# Time-lapse replay of the selected commission being painted (if it has a recording)
+var replay_button: Button = null
+var replay_label: Label = null
+var replay: PaintingReplay = null
+var replay_buttons_separation := 60
+
 var selected_mission: PaintingMission = null
 var selected_index: int = 0
 var mission_cards: Array[MissionCard] = []
@@ -58,8 +64,10 @@ func _ready():
 	# Connect results display signals
 	results_display.retry_pressed.connect(_on_results_retry)
 
-	# Setup preview button navigation array (View Results, Start)
-	preview_buttons = [view_results_button, start_button]
+	_setup_replay()
+
+	# Setup preview button navigation array (View Results, Watch Replay, Start)
+	preview_buttons = [view_results_button, replay_button, start_button]
 
 	# Set up focus navigation
 	_setup_focus_navigation()
@@ -324,11 +332,18 @@ func _setup_focus_navigation():
 	start_button.focus_mode = Control.FOCUS_ALL
 
 	# Set up focus neighbors (horizontal navigation)
-	view_results_button.focus_neighbor_right = view_results_button.get_path_to(start_button)
-	view_results_button.focus_next = view_results_button.get_path_to(start_button)
+	replay_button.focus_mode = Control.FOCUS_ALL
 
-	start_button.focus_neighbor_left = start_button.get_path_to(view_results_button)
-	start_button.focus_previous = start_button.get_path_to(view_results_button)
+	view_results_button.focus_neighbor_right = view_results_button.get_path_to(replay_button)
+	view_results_button.focus_next = view_results_button.get_path_to(replay_button)
+
+	replay_button.focus_neighbor_left = replay_button.get_path_to(view_results_button)
+	replay_button.focus_previous = replay_button.get_path_to(view_results_button)
+	replay_button.focus_neighbor_right = replay_button.get_path_to(start_button)
+	replay_button.focus_next = replay_button.get_path_to(start_button)
+
+	start_button.focus_neighbor_left = start_button.get_path_to(replay_button)
+	start_button.focus_previous = start_button.get_path_to(replay_button)
 
 func activate():
 	"""Called when the commissions tab becomes active (called by PauseMenu)"""
@@ -340,6 +355,7 @@ func activate():
 	nav_mode = NavMode.MISSION_LIST
 	_clear_button_focus()
 	is_showing_live_results = false
+	_stop_replay()
 
 	# Make sure we're showing the preview, not results
 	_hide_results_view()
@@ -442,6 +458,8 @@ func _update_selection():
 	if selected_index < 0 or selected_index >= MissionManager.available_missions.size():
 		return
 
+	_stop_replay()
+
 	# Update card selection state
 	for i in range(mission_cards.size()):
 		mission_cards[i].set_selected(i == selected_index)
@@ -526,6 +544,17 @@ func _update_preview_panel():
 	view_results_button.disabled = not has_any_attempt
 	view_results_button.tooltip_text = "" if has_any_attempt else tr("No saved attempt available")
 
+	# Watch Replay: only for commissions saved with a sticker-by-sticker recording
+	var can_replay := selected_mission.has_recording()
+	replay_button.visible = can_replay
+	replay_button.text = tr("Watch Replay")
+	replay_label.visible = false
+	var shown_buttons := 0
+	for b in [view_results_button, replay_button, start_button]:
+		if b.visible:
+			shown_buttons += 1
+	view_results_button.get_parent().add_theme_constant_override("separation", 24 if shown_buttons >= 3 else replay_buttons_separation)
+
 	# Update preview image
 	if selected_mission.reference_image_path and selected_mission.reference_image_path != "":
 		var texture = load(selected_mission.reference_image_path) as Texture2D
@@ -545,6 +574,7 @@ func _on_view_results():
 
 	var completion_data = MissionManager.get_mission_completion(selected_mission.mission_id)
 
+	_stop_replay()
 	is_showing_live_results = false
 	showing_results = true
 	preview_content.visible = false
@@ -605,6 +635,67 @@ func _on_results_back():
 	_hide_results_view()
 	nav_mode = NavMode.MISSION_LIST
 	_clear_button_focus()
+
+# --- Replay ---
+
+func _setup_replay():
+	"""Add the Watch Replay button (between View Results and Start) and the
+	sticker counter under the preview image, plus the player that draws it."""
+	var container := view_results_button.get_parent() as HBoxContainer
+	replay_buttons_separation = container.get_theme_constant("separation")
+	replay_button = Button.new()
+	replay_button.name = "ReplayButton"
+	replay_button.custom_minimum_size = view_results_button.custom_minimum_size
+	replay_button.add_theme_font_size_override("font_size", view_results_button.get_theme_font_size("font_size"))
+	replay_button.text = tr("Watch Replay")
+	replay_button.visible = false
+	container.add_child(replay_button)
+	container.move_child(replay_button, start_button.get_index())
+	replay_button.pressed.connect(_on_replay_pressed)
+
+	replay_label = Label.new()
+	replay_label.name = "ReplayLabel"
+	replay_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	replay_label.visible = false
+	preview_content.add_child(replay_label)
+	preview_content.move_child(replay_label, preview_image.get_index() + 1)
+
+	replay = PaintingReplay.new()
+	replay.name = "PaintingReplay"
+	add_child(replay)
+	replay.progress_changed.connect(_on_replay_progress)
+	replay.finished.connect(_on_replay_finished)
+
+func _on_replay_pressed():
+	if not selected_mission:
+		return
+	if replay.playing:
+		# Second press while it plays: skip to the finished painting
+		replay.skip_to_end()
+		return
+	var recording := selected_mission.load_recording()
+	if not replay.start(recording):
+		push_warning("MissionSelectionUI: '%s' has no usable recording" % selected_mission.mission_id)
+		return
+	preview_image.texture = replay.texture
+	replay_button.text = tr("Skip to End")
+	replay_label.visible = true
+
+func _on_replay_progress(shown: int, total: int):
+	replay_label.text = tr("Replay: sticker %d of %d") % [shown, total]
+
+func _on_replay_finished():
+	replay_button.text = tr("Watch Again")
+
+func _stop_replay():
+	"""Stop any replay and put the reference image back."""
+	if not replay or not replay.has_content():
+		return
+	replay.stop()
+	replay_label.visible = false
+	replay_button.text = tr("Watch Replay")
+	if selected_mission and selected_mission.reference_image_path != "":
+		preview_image.texture = load(selected_mission.reference_image_path) as Texture2D
 
 # --- Other ---
 
