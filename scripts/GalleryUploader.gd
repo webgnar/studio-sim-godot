@@ -30,6 +30,10 @@ var _current_artist_statement: String = ""
 var _current_artist_name: String = ""
 var _current_instagram_handle: String = ""
 var _current_bluesky_handle: String = ""
+var _current_recording: Dictionary = {}
+
+## Sticker recordings bigger than this aren't sent (keeps the confirm request small).
+const MAX_RECORDING_BYTES := 1500000
 
 func _ready() -> void:
 	_presign_request = _create_http_request("PresignRequest")
@@ -51,7 +55,7 @@ func _create_http_request(node_name: String) -> HTTPRequest:
 	add_child(req)
 	return req
 
-func upload_painting(png_path: String, glb_path: String, painting_name: String = "", artist_statement: String = "", artist_name: String = "", instagram_handle: String = "", bluesky_handle: String = "") -> void:
+func upload_painting(png_path: String, glb_path: String, painting_name: String = "", artist_statement: String = "", artist_name: String = "", instagram_handle: String = "", bluesky_handle: String = "", recording: Dictionary = {}) -> void:
 	if is_uploading:
 		push_warning("GalleryUploader: Already uploading, skipping")
 		return
@@ -76,6 +80,7 @@ func upload_painting(png_path: String, glb_path: String, painting_name: String =
 	_current_artist_name = artist_name
 	_current_instagram_handle = instagram_handle
 	_current_bluesky_handle = bluesky_handle
+	_current_recording = recording
 
 	upload_started.emit(png_path, glb_path)
 	print("GalleryUploader: Starting upload...")
@@ -175,6 +180,12 @@ func _check_uploads_complete() -> void:
 		confirm_data["instagramHandle"] = _current_instagram_handle
 	if _current_bluesky_handle != "":
 		confirm_data["blueskyHandle"] = _current_bluesky_handle
+	# The sticker-by-sticker recording, so the gallery can give this painting a replay (and a
+	# Watch Replay button if it's ever picked for the hall of fame commissions)
+	if not PaintingRecording.is_empty(_current_recording):
+		var recording := PaintingRecording.to_save(_current_recording)
+		if JSON.stringify(recording).length() <= MAX_RECORDING_BYTES:
+			confirm_data["recording"] = recording
 	var steam_account_number = SteamManager.get_steam_account_number()
 	if steam_account_number != "":
 		confirm_data["steamAccountNumber"] = steam_account_number
@@ -215,3 +226,4 @@ func _reset_state() -> void:
 	_current_artist_name = ""
 	_current_instagram_handle = ""
 	_current_bluesky_handle = ""
+	_current_recording = {}

@@ -8,6 +8,7 @@ var painting_name: String = ""
 var artist_statement: String = ""
 var signature_texture_path: String = ""
 var is_commissioned: bool = false
+var recording: Dictionary = {} # sticker-by-sticker recording (PaintingRecording), sent with gallery uploads
 var process_stats: Dictionary = {} # how it was painted, for the art critic (see PaintingProcess)
 
 # Runtime reference

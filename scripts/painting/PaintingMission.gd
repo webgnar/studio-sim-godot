@@ -10,6 +10,14 @@ class_name PaintingMission
 @export var reference_image_path: String = ""  # Path to reference screenshot
 @export var reward: int = 75
 
+## Hall of fame commissions are built at startup from res://hall_of_fame/manifest.json
+## (see MissionManager.HALL_OF_FAME_SLOTS), not saved as .tres files.
+var is_hall_of_fame: bool = false
+## Who painted it (hall of fame only), shown in the commission's description.
+var artist_name: String = ""
+## Sticker recording that came with the upload (hall of fame only), for Watch Replay.
+var recording_path_override: String = ""
+
 # Helper to get list of required sticker IDs
 func get_required_stickers() -> Array[String]:
 	var sticker_ids: Array[String] = []
@@ -21,6 +29,8 @@ func get_required_stickers() -> Array[String]:
 ## The sticker-by-sticker recording saved next to this mission
 ## (<mission>_recording.json), or {} if it has none. See PaintingRecording.
 func get_recording_path() -> String:
+	if recording_path_override != "":
+		return recording_path_override
 	return PaintingRecording.path_for_mission(resource_path) if resource_path != "" else ""
 
 func has_recording() -> bool:

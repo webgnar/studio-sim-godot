@@ -407,6 +407,7 @@ func save_world_state() -> bool:
 			"is_landscape": painting.scene_file_path.contains("5x3"),
 			"is_commissioned": painting.is_commissioned if "is_commissioned" in painting else false,
 			"process": painting.process_stats if "process_stats" in painting else {},
+			"recording": painting.recording if "recording" in painting else {},
 			"position": {
 				"x": painting.global_position.x,
 				"y": painting.global_position.y,
@@ -794,6 +795,8 @@ func _load_painting(world_root: Node3D, painting_data: Dictionary, nail_id_map: 
 	painting.is_commissioned = painting_data.get("is_commissioned", false)
 	var saved_process = painting_data.get("process", {})
 	painting.process_stats = saved_process if typeof(saved_process) == TYPE_DICTIONARY else {}
+	var saved_recording = painting_data.get("recording", {})
+	painting.recording = saved_recording if typeof(saved_recording) == TYPE_DICTIONARY else {}
 
 	# Store status to apply after registration
 	var saved_status = painting_data.get("status", "WIP")

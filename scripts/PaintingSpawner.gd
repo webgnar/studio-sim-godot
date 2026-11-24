@@ -57,6 +57,7 @@ func replace_painting_with_carryable(world: Node3D) -> void:
 	carryable.texture_path = texture_path
 	carryable.is_commissioned = old_painting_system.was_commission_validated
 	carryable.process_stats = PaintingProcess.summarize(old_painting_system.process_log)
+	carryable.recording = PaintingRecording.to_save(old_painting_system.recording)
 
 	world.add_child(carryable)
 
@@ -143,6 +144,7 @@ func replace_painting_from_root(world: Node3D, painting_root: Node3D) -> void:
 	carryable.texture_path = texture_path
 	carryable.is_commissioned = painting_system.was_commission_validated
 	carryable.process_stats = PaintingProcess.summarize(painting_system.process_log, true)
+	carryable.recording = PaintingRecording.to_save(painting_system.recording)
 	world.add_child(carryable)
 
 	# Use spawn marker if available, otherwise fall back to painting_root position
