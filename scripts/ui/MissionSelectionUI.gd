@@ -506,6 +506,8 @@ func _update_preview_panel():
 
 	# Update description
 	mission_description.text = tr(selected_mission.description)
+	# Hall of fame credit ("by <painter>") sits centered under the painting
+	mission_description.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER if selected_mission.is_hall_of_fame else HORIZONTAL_ALIGNMENT_LEFT
 
 	# Check if this is the current mission
 	var is_current_mission = (MissionManager and MissionManager.current_mission == selected_mission)

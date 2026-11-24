@@ -21,11 +21,15 @@ var progression: Dictionary = {}
 # Mission timing for Steam achievements
 var mission_start_time: int = 0
 
-## Hall of fame commissions: HALL_OF_FAME_SLOTS paintings from the in-game hall of fame
-## (res://hall_of_fame/, synced from the gallery website at build time) go at the end of the
-## commission list. Ones the player has completed stay in their slots for good; the other slots
-## get random hall of fame paintings, picked again every time the game starts.
-const HALL_OF_FAME_SLOTS := 5
+## Hall of fame commissions: the commission list is HALL_OF_FAME_SLOTS paintings from the in-game
+## hall of fame (res://hall_of_fame/, synced from the gallery website at build time). Ones the
+## player has completed stay in their slots for good; the other slots get random hall of fame
+## paintings, picked again every time the game starts. Completing every slot earns
+## ACH_ALL_MISSIONS_COMPLETED.
+const HALL_OF_FAME_SLOTS := 13
+## The hand-made commissions in missions_manifest.json still load (F6 authoring, old saves keep
+## their progression) but aren't shown. Turn this on to list them before the hall of fame slots.
+const SHOW_MANIFEST_COMMISSIONS := false
 const HALL_OF_FAME_DIR := "res://hall_of_fame/"
 const HALL_OF_FAME_ID_PREFIX := "hof_"
 const HALL_OF_FAME_REWARD := 100
@@ -99,7 +103,9 @@ func load_all_missions():
 			push_error("MissionManager: Failed to load mission: %s" % path)
 
 	print("MissionManager: Loaded %d missions from manifest" % available_missions.size())
-	_core_missions = available_missions.duplicate()
+	_core_missions.clear()
+	if SHOW_MANIFEST_COMMISSIONS:
+		_core_missions = available_missions.duplicate()
 	_load_hall_of_fame_pool()
 	refresh_hall_of_fame_slots()
 
@@ -134,7 +140,7 @@ func _load_hall_of_fame_pool():
 		mission.artist_name = _manifest_text(entry, "artistName", "")
 		mission.reference_image_path = png_path
 		var painter := mission.artist_name if mission.artist_name != "" else tr("an anonymous painter")
-		mission.description = tr("From the Hall of Fame. Painted by %s.") % painter
+		mission.description = tr("by %s") % painter
 		var recording := _manifest_text(entry, "recording", "")
 		if recording != "" and FileAccess.file_exists(HALL_OF_FAME_DIR + recording):
 			mission.recording_path_override = HALL_OF_FAME_DIR + recording
@@ -170,10 +176,6 @@ func refresh_hall_of_fame_slots():
 		slots.append(current_mission)
 	available_missions = _core_missions.duplicate()
 	available_missions.append_array(slots)
-
-func counts_for_all_commissions_achievement(mission: PaintingMission) -> bool:
-	"""Hall of fame commissions rotate, so they don't count toward completing every commission."""
-	return not mission.is_hall_of_fame
 
 func start_mission(mission: PaintingMission):
 	"""Start a new mission"""
@@ -447,7 +449,7 @@ func _update_steam_on_mission_complete(_mission: PaintingMission, result: Valida
 	# Achievement: Complete all missions
 	var all_missions_done = true
 	for m in available_missions:
-		if counts_for_all_commissions_achievement(m) and not is_mission_completed(m.mission_id):
+		if not is_mission_completed(m.mission_id):
 			all_missions_done = false
 			break
 	if all_missions_done:
