@@ -296,6 +296,7 @@ def score(ch, prof, game_names):
     contact = bool(ch.get("emails")) or ch.get("business_email") or any(ch.get(k) for k in ("x", "bluesky", "discord"))
     if ch.get("emails"):
         pts += 2
+    ch["played_count"] = len(played)
     ch["fit_score"] = round(pts, 1)
     ch["fit_reasons"] = ", ".join(reasons)
     ch["played"] = ", ".join(played)
@@ -310,6 +311,7 @@ def main():
     ap.add_argument("--pages", type=int, default=2, help="result pages per search")
     ap.add_argument("--max-searches", type=int, default=0, help="stop after this many searches (quick test)")
     ap.add_argument("--max-channels", type=int, default=0, help="open at most this many channels (quick test)")
+    ap.add_argument("--exclude-file", help="channel ids to skip (one per line, or any text containing UC... ids, e.g. a contacts.csv)")
     ap.add_argument("--delay", type=float, default=DELAY)
     ap.add_argument("--cache", default="cache.json", help="channel details cache, so a rerun skips channels already opened")
     args = ap.parse_args()
@@ -318,6 +320,8 @@ def main():
     lo, hi = prof.get("min_subs", 20), prof.get("max_subs", 500)
     active_days = prof.get("active_days", 60)
     exclude = set(prof.get("exclude_channels", []))
+    if args.exclude_file:
+        exclude |= set(re.findall(r"UC[\w-]{22}", open(args.exclude_file, encoding="utf-8").read()))
 
     game_names = list(dict.fromkeys(prof.get("similar_games", []) + prof.get("small_similar_games", [])))
     searches = []
@@ -392,7 +396,7 @@ def main():
         ch["website"] = next((l for l in ch.get("links", []) if not any(re.search(p, l, re.I) for _, p in LINK_KINDS)
                               and "youtube.com" not in l and "steam" not in l), "")
         score(ch, prof, game_names)
-        if ch["fit_score"] < prof.get("min_fit", 0):
+        if ch["fit_score"] < prof.get("min_fit", 0) or ch["played_count"] < prof.get("min_played", 0):
             continue
         ch["url"] = f"https://www.youtube.com/channel/{cid}"
         ch["about_url"] = (f"https://www.youtube.com/{ch['handle']}/about" if ch.get("handle") else ch["url"] + "/about")
