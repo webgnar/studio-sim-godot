@@ -18,10 +18,31 @@ ap.add_argument("src")
 ap.add_argument("dst")
 ap.add_argument("queue", nargs="?", help="file of appids in the order to email them")
 ap.add_argument("--top", type=int, default=250, help="without a queue file: how many games to queue")
+ap.add_argument("--max-dev-followers", type=int,
+                help="leave out games whose developer page has more followers than this "
+                     "(default: the profile's max_dev_followers; -1 = no limit)")
+ap.add_argument("--max-game-followers", type=int,
+                help="leave out games with more Steam followers than this "
+                     "(default: the profile's max_game_followers; -1 = no limit)")
 ap.add_argument("--write-queue", help="also save the chosen order here (feed it to fetch_thumbs.py)")
 args = ap.parse_args()
 
 data = json.load(open(args.src, encoding="utf-8"))
+max_dev = args.max_dev_followers
+if max_dev is None:
+    max_dev = (data.get("profile") or {}).get("max_dev_followers")
+if max_dev is not None and max_dev >= 0:
+    big = lambda r: isinstance(r.get("dev_followers"), int) and r["dev_followers"] > max_dev
+    dropped = [r for r in data["rows"] if big(r)]
+    data["rows"] = [r for r in data["rows"] if not big(r)]
+    print(f"Left out {len(dropped)} game(s) whose developer page has over {max_dev:,} followers")
+max_game = args.max_game_followers
+if max_game is None:
+    max_game = (data.get("profile") or {}).get("max_game_followers")
+if max_game is not None and max_game >= 0:
+    n = len(data["rows"])
+    data["rows"] = [r for r in data["rows"] if not (isinstance(r.get("followers"), int) and r["followers"] > max_game)]
+    print(f"Left out {n - len(data['rows'])} game(s) with over {max_game:,} followers")
 rows = {r["appid"]: r for r in data["rows"]}
 if args.queue:
     order = [int(a) for a in open(args.queue).read().split() if a.isdigit()]
@@ -31,7 +52,7 @@ else:
 if args.write_queue:
     open(args.write_queue, "w").write("\n".join(map(str, order)) + "\n")
 keep = ["appid", "name", "release", "released", "developer", "publisher", "fit_score", "fit_tags", "followers",
-        "has_demo", "support_email", "website_emails", "discord", "x", "bluesky", "itch", "website", "store_url",
+        "dev_followers",        "has_demo", "support_email", "website_emails", "discord", "x", "bluesky", "itch", "website", "store_url",
         "short_description"]
 queue = [{k: rows[a].get(k, "") for k in keep} for a in order if a in rows]
 payload = json.dumps(queue).replace("</", "<\\/")
@@ -231,7 +252,7 @@ function render() {
       <div class="shot">
         <a class="img" href="${esc(g.store_url)}" target="_blank" rel="noopener"><img src="thumbs/${g.appid}.jpg" alt="${esc(g.name)}" loading="lazy" onerror="this.outerHTML='<div class=ph>'+this.alt.replace(/</g,'&lt;')+'</div>'"></a>
         <a class="gname" href="${esc(g.store_url)}" target="_blank" rel="noopener">${esc(g.name)}</a>
-        <div class="facts"><span>by <b>${esc(g.developer || "?")}</b></span><span>${esc(g.release || "TBA")} · ${g.released === "no" ? "upcoming" : "released"}${g.has_demo === "yes" ? " · has demo" : ""}</span><span><b>${(g.followers ?? "?").toLocaleString()}</b> followers · fit <span class="fit">${g.fit_score}</span></span></div>
+        <div class="facts"><span>by <b>${esc(g.developer || "?")}</b></span><span>${esc(g.release || "TBA")} · ${g.released === "no" ? "upcoming" : "released"}${g.has_demo === "yes" ? " · has demo" : ""}</span><span><b>${(g.followers ?? "?").toLocaleString()}</b> followers${g.dev_followers !== "" && g.dev_followers != null ? ` · dev page <b>${g.dev_followers.toLocaleString()}</b>` : ""} · fit <span class="fit">${g.fit_score}</span></span></div>
         ${g.fit_tags ? `<div class="why">${esc(g.fit_tags)}</div>` : ""}
         ${g.short_description ? `<div class="why">${esc(g.short_description)}</div>` : ""}
         <div class="links">${links}</div>
