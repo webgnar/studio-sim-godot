@@ -20,3 +20,4 @@ python3 bundle/make_bundle_art.py --out bundle \
 
 Partners so far:
 - `picking_fruits/`: A Game About Picking Fruits (app 5243280). Boxes: hero 110,380,660,690; main 246,260,1020,685; small 148,62,335,168.
+- `quest_for_stoken/`: Quest For Stoken (app 5436050). Boxes: hero 60,30,690,300 (also used for small, no stretch); main 20,180,780,510 for bundle_header + vertical.
